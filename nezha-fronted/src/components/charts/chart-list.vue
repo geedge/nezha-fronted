@@ -432,7 +432,7 @@
           from: params.from
         };
         //alert-rule单独处理
-        if (param.from == "alertRule") {
+        if (param.from == this.$CONSTANTS.fromRoute.rule) {
           this.dataList = [];
           this.dataList.push({
             id: -10,
@@ -478,7 +478,7 @@
           return;
         }
         //endpoint单独处理
-        if (param.from == "endpoint") {
+        if (param.from == this.$CONSTANTS.fromRoute.endpoint) {
           this.dataList = [];
           // this.dataList.push({
           //   id: -8,
@@ -571,12 +571,12 @@
                 this.dataList.forEach((item,index) => {
                   this.setChartSize(item, index);//设置该图表宽度
                   this.$set(item, "from", params.from);
-                  if (param.from == "asset") {
+                  if (param.from == this.$CONSTANTS.fromRoute.asset) {
                     if (item.type == "assetInfo") {
                       this.$set(item, "draggable", true);
                       this.$set(item, "resizable", true);
                     }
-                  } else if (param.from == "project") {
+                  } else if (param.from == this.$CONSTANTS.fromRoute.project) {
                     if (item.type == "projectInfo") {
                       this.$set(item, "draggable", true);
                       this.$set(item, "resizable", true);
@@ -690,7 +690,7 @@
         const chartItem = chartInfo;
         const index = pos; // 指标
         if(chartItem.type === 'assetInfo'){
-          if (chartItem.from != 'endpoint') {
+          if (chartItem.from != this.$CONSTANTS.fromRoute.endpoint) {
             this.$set(chartItem, "draggable", true);
             this.$set(chartItem, "resizable", true);
           }

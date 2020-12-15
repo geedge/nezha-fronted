@@ -724,7 +724,7 @@
     box-sizing: border-box;
   }
   .sub-side-bar-menu-edit{
-    margin-right: 18px;
+    margin-right: 13px;
   }
 
   .sidebar-info-item-project.sidebar-info-item{

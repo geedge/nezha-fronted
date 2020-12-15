@@ -34,16 +34,16 @@
               <li @click="refreshChart" class="el-dropdown-menu__item">
                 <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span>
               </li>
-              <li @click="editChart" class="el-dropdown-menu__item">
+              <li @click="editChart" class="el-dropdown-menu__item" v-has="`${from}_chart_toEdit`">
                 <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}
               </li>
-              <li @click="removeChart" class="el-dropdown-menu__item">
+              <li @click="removeChart" class="el-dropdown-menu__item" v-has="`${from}_chart_delete`">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}
               </li>
               <li @click="showAllScreen" class="el-dropdown-menu__item">
                 <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}
               </li>
-              <li @click="duplicate" class="el-dropdown-menu__item">
+              <li @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}
               </li>
             </ul>
@@ -140,7 +140,8 @@
       chartIndex: {
         type: Number,
         default: 0,
-      }
+      },
+      from: {type: String}
     },
     data() {
       return {

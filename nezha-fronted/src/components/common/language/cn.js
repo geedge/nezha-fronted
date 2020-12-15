@@ -1106,6 +1106,7 @@ const cn = {
   },
   buttons: {
     panel: {
+      view: "View panel",
       toAdd: "Add panel",
       toEdit: "Edit panel",
       delete: "Delete panel",
@@ -1121,10 +1122,12 @@ const cn = {
       }
     },
     explore: {
+      view: "View explore",
       toAdd: "Add chart",
       save: "Save chart",
     },
     asset: {
+      view: "View asset",
       toAdd: "Add asset",
       toEdit: "Edit asset",
       toBatchEdit: "Batch edit asset",
@@ -1163,6 +1166,7 @@ const cn = {
       }
     },
     project: {
+      view: "View project",
       toEdit: "Edit project",
       delete: "Delete project",
       save: "Save project",
@@ -1195,10 +1199,12 @@ const cn = {
       }
     },
     message: {
+      view: "View alerts",
       delete: "Delete alerts",
       export: "Export alerts",
     },
     rule: {
+      view: "View rule",
       toAdd: "Add rule",
       toEdit: "Edit rule",
       delete: "Delete rule",
@@ -1210,24 +1216,28 @@ const cn = {
       },
     },
     account: {
+      view: "View account",
       toAdd: "Add account",
       toEdit: "Edit account",
       delete: "Delete account",
       save: "Save account",
     },
     role: {
+      view: "View role",
       toAdd: "Add role",
       toEdit: "Edit role",
       delete: "Delete role",
       save: "Save role",
     },
     prom: {
+      view: "View prom",
       toAdd: "Add prom",
       toEdit: "Edit prom",
       delete: "Delete prom",
       save: "Save prom",
     },
     dc: {
+      view: "View data center",
       toAdd: "Add data center",
       toEdit: "Edit data center",
       delete: "Delete data center",
@@ -1235,6 +1245,7 @@ const cn = {
       trafficSetting: "Traffic setting",
       trafficSettingSave: "Save traffic setting",
       cabinet: {
+        view: "View cabinet",
         toAdd: "Add cabinet",
         toEdit: "Edit cabinet",
         delete: "Delete cabinet",
@@ -1242,12 +1253,14 @@ const cn = {
       }
     },
     model: {
+      view: "View model",
       toAdd: "Add model",
       toEdit: "Edit model",
       delete: "Delete model",
       save: "Save model",
       panel: "View panel",
       chart: {
+        view: "View chart",
         toAdd: "Add chart",
         toEdit: "Edit chart",
         delete: "Delete chart",
@@ -1259,12 +1272,14 @@ const cn = {
       },
     },
     snmp: {
+      view: "View mib file",
       toAdd: "Add mib file",
       toEdit: "Edit mib file",
       delete: "Delete mib file",
       save: "Save mib file",
       download: "Download mib file",
       browserExport: "Export mib browser",
+      browserView: "View mib browser"
     },
     system: {
       basic: "Basic save",

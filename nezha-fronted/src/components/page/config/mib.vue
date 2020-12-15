@@ -11,7 +11,7 @@
           <div class="nz-tab-item-box" id="module-type-1">
             <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
           </div>
-          <div @click="showTab = 'browser'" class="nz-tab-item-box" id="module-type-2">
+          <div @click="showTab = 'browser'" class="nz-tab-item-box" id="module-type-2" v-has="'snmp_browser_view'">
             <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
           </div>
         </div>
@@ -51,7 +51,7 @@
           <template slot-scope="scope" :column="item">
             <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
             <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-              <span @click="downloadMib(scope.row)" class="link" v-has="'snmp_file_download'">{{scope.row[item.prop]}}</span>
+              <span @click="downloadMib(scope.row)" class="link">{{scope.row[item.prop]}}</span>
             </template>
             <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
               <div style="height: 100%">
@@ -101,7 +101,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     </template>
     <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
@@ -204,7 +204,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -254,6 +254,10 @@
         });
       },
       getTableData() {
+        if (!this.hasButton('snmp_file_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -263,10 +267,10 @@
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.mibTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.mibTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }
@@ -302,6 +306,9 @@
         this.getTableData();
       },
       downloadMib(mib) {
+        if (!this.hasButton("snmp_file_download")) {
+          return;
+        }
         axios.get('/mib/download?id='+mib.id,{responseType: 'blob'}).then(data=>{
           let fileName = new Date().getTime()+'.txt';
           let disposition=data.headers['content-disposition'];

@@ -216,7 +216,7 @@
                     <el-input  v-model="item.filePath" width="460px" />
                   </el-form-item>
                   <el-form-item  prop="btn">
-                    <button @click="notificationUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_notification_update'">Update</button>
+                    <button @click="notificationUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_notification_save'">Update</button>
                     <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="notificationCancel(item)">Cancel</button>
                   </el-form-item>
                 </el-form>
@@ -230,7 +230,7 @@
                     <!--</span>-->
                   </div>
                   <div class="linkFormBtn">
-                    <i @click.stop="notificationEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_notification_edit'"></i>
+                    <i @click.stop="notificationEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_notification_toEdit'"></i>
                     <i @click="notificationDel(item)" class="nz-icon nz-icon-delete" v-has="'system_notification_delete'"></i>
                   </div>
                 </div>
@@ -282,19 +282,19 @@
                   <el-input  v-model="item.url" width="460px" />
                 </el-form-item>
                 <el-form-item  prop="btn">
-                  <button @click="linkUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_link_update'">Update</button>
+                  <button @click="linkUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_link_save'">Update</button>
                   <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="linkCancel(item)">Cancel</button>
                 </el-form-item>
               </el-form>
                 <div class="linkFormContent" v-else>
                   <div class="linkTitleName" :title="item.name">{{item.name}}</div>
                   <div class="linkTitleUrl">
-                    <span @click="openUrl(item)" @dblclick.stop="linkEdit(item)" class="linkTitleUrlContent" v-has="'system_link_edit'">
+                    <span @click="openUrl(item)" @dblclick.stop="linkEdit(item)" class="linkTitleUrlContent" v-has="'system_link_toEdit'">
                       <span>{{item.url}}</span>
                     </span>
                   </div>
                   <div class="linkFormBtn">
-                    <i @click.stop="linkEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_link_edit'" v-if="item.buildIn=='0'"></i>
+                    <i @click.stop="linkEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_link_toEdit'" v-if="item.buildIn=='0'"></i>
                     <i @click="linkDel(item)" class="nz-icon nz-icon-delete" v-has="'system_link_delete'" v-if="item.buildIn=='0'"></i>
                   </div>
                 </div>

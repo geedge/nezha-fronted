@@ -161,7 +161,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
     <!--<弹窗>-->
     <!--导出-->
     <div class="export-xlsx">
@@ -350,24 +350,11 @@
             width: 90
           }
         ],
-        viewRuleData: {
-          id: '',
-          alertName: '',
-          type: '',
-          linkObject: {id: '', name: ''},
-          linkId: '',
-          expr: '',
-          last: '',
-          severity: '',
-          summary: '',
-          description: '',
-          receiver: '',
-        },
         viewProjectData: {id: '', name: '', remark: ''},
         viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
         viewAssetState: false,
 
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     computed: {
@@ -568,10 +555,10 @@
         this.graphShow = false;
       },
       getAlertList() {
-        if (!this.scrollWrap) {
+        if (!this.scrollbarWrap) {
           this.$nextTick(() => {
-            this.scrollWrap = this.$refs.alertListTable.bodyWrapper;
-            this.toTopBtnHandler(this.scrollWrap);
+            this.scrollbarWrap = this.$refs.alertListTable.bodyWrapper;
+            this.toTopBtnHandler(this.scrollbarWrap);
           });
         }
       },
@@ -776,40 +763,6 @@
           }
         } else {
           return "";
-        }
-      },
-      viewRule(id) {
-        this.closeViews();
-        this.$get('alert/rule', {"id": id}).then(response => {
-          if (response.code == 200) {
-            this.viewRuleData = response.data.list[0];
-            this.$refs.alertConfigBox.show(true);
-          }
-        })
-      },
-      viewAlertType: function (type, typeObj) {
-        this.closeViews();
-        switch (type) {
-          case 1:
-            this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.projectBox.show(true);
-            break;
-          case 2:
-            // this.fillProject(typeObj);
-            let tempObj = JSON.parse(typeObj.param)
-            this.$set(typeObj, 'paramObj', []);
-            for (let k in tempObj) {
-              typeObj.paramObj.push({key: k, value: tempObj[k]});
-            }
-            this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-
-            this.$refs.moduleBox.show(true);
-            break;
-          case 3:
-            this.viewAssetState = true;
-            this.$refs.assetEditUnit.getAssetData(typeObj);
-            this.$refs.assetEditUnit.tabView = true;
-            break;
         }
       },
       fillProject: function (module) {

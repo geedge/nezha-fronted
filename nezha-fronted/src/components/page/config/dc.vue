@@ -82,7 +82,7 @@
                 v-model="scope.row.state"
                 active-value="ON"
                 inactive-value="OFF"
-                :disabled="!hasButton('dc_toEdit')"
+                :disabled="!hasButton('dc_toEdit') || !hasButton('dc_save')"
                 active-color="#ee9d3f"
                 @change="(val)=>{statusChange(scope.row)}"
               />
@@ -124,7 +124,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -267,7 +267,7 @@
         },
         searchLabel: {}, //搜索参数
         tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -396,6 +396,10 @@
         });
       },
       getTableData() {
+        if (!this.hasButton('dc_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.tools.loading = true;
@@ -404,10 +408,10 @@
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.dcTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.dcTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }

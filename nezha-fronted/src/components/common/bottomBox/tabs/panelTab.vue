@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <!--model和asset的工具栏-->
-    <div class="sub-top-tools" v-if="from != 'project'">
+    <div class="sub-top-tools" v-if="from != this.$CONSTANTS.fromRoute.project">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
           <template v-if="from == $CONSTANTS.fromRoute.model">{{obj.name}}</template>
@@ -10,15 +10,15 @@
           <template v-else-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
         </div><div class="sub-list-tab sub-list-tab-active" v-if="from == $CONSTANTS.fromRoute.model">{{$t("dashboard.panel.title")}}</div><template v-if="from == $CONSTANTS.fromRoute.asset"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
-          class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
-        </template><template v-if="from == 'alertRule'"><div
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
+          @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.tableTitle.modules")}}</div>
+        </template><template v-if="from == $CONSTANTS.fromRoute.rule"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'rule_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div>
         </template><template v-if="from == $CONSTANTS.fromRoute.endpoint"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          class="sub-list-tab " @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
-          class="sub-list-tab" @click="changeTab('endpointQuery')">{{$t("overall.query")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab " v-has="'project_endpoint_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
+          @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'">{{$t("overall.query")}}</div>
         </template>
       </div>
       <div class="top-tool-right">
@@ -326,7 +326,7 @@
       },
       //公用操作
       getTableData(linkId) {
-        if (this.from == "alertRule" || this.from == "endpoint") {
+        if (this.from == this.$CONSTANTS.fromRoute.rule || this.from == this.$CONSTANTS.fromRoute.endpoint) {
           this.getData(this.filter);
         } else {
           this.$get('panel', {type: this.from, link: linkId}).then(response => {
@@ -482,6 +482,7 @@
     beforeDestroy(){
       document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
       document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
 </script>

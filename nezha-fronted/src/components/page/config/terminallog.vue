@@ -8,7 +8,7 @@
     <div class="top-tools">
       <div></div>
       <div>
-        <div class="top-tool-search float-right">
+        <div class="top-tool-search margin-r-5">
           <search-input :searchMsg="searchMsg" @search="search"></search-input>
         </div>
       </div>
@@ -64,7 +64,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
   </div>
 </template>
@@ -214,7 +214,7 @@
           ],
         },
         searchLabel: {}, //搜索参数
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -230,10 +230,10 @@
             }
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.terminalLogTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.terminalLogTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }

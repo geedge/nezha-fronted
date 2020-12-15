@@ -54,16 +54,16 @@
             <div :class="{'menu-active' : route == '/asset'}" @click="jumpToAsset()" v-else>{{$t(menu.i18n)}}</div>
           </template>
           <template>
-            <el-menu-item index="3-0" v-if="assetData.length == 0"><div @click="createBox({type: 6})" v-has="'asset_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
+            <el-menu-item index="3-0" v-has="'asset_toAdd'" v-if="assetData.length == 0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
             <template v-else>
-              <div style='height: 360px; overflow: auto;' v-if="assetData.length>10">
+              <div style='height: 360px; overflow: auto;' v-has="'asset_view'" v-if="assetData.length>10">
                 <el-menu-item :index="'3-' + index" :key="index" v-for="(item, index) in assetData">
                   <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
                     <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
                   </div>
                 </el-menu-item>
               </div>
-              <el-menu-item :index="'3-' + index" :key="index" v-else v-for="(item, index) in assetData">
+              <el-menu-item :index="'3-' + index" :key="index" v-else v-for="(item, index) in assetData" v-has="'asset_view'">
                 <div :class="{'menu-item-active': route == '/asset' && activeItemIndex == item.id}" @click="jumpToAsset(item)" @mouseenter="hoverItemIndex = '3-' + index" @mouseleave="hoverItemIndex = ''">
                   <span class="too-long-split" style="width: 130px;">{{item.name}}</span>
                 </div>
@@ -77,9 +77,9 @@
             <div :class ="route == '/project' ? 'menu-active' :''" @click="jumpToProject(projectData[0])" v-else >{{$t(menu.i18n)}}</div>
           </template>
           <template>
-            <el-menu-item index="2-0" v-if="projectData.length == 0"><div @click="createBox({type: 1})" v-has="'project_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
+            <el-menu-item index="2-0" v-has="'project_toAdd'" v-if="projectData.length == 0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
             <template v-else>
-              <div style="height: 360px; overflow: auto;" v-if="projectData.length>10">
+              <div style="height: 360px; overflow: auto;" v-has="'project_view'" v-if="projectData.length>10">
                 <el-menu-item :index="'2-' + index" :key="index" v-for="(item, index) in projectData">
                   <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
                     <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
@@ -87,7 +87,7 @@
                   </div>
                 </el-menu-item>
               </div>
-              <el-menu-item :index="'2-' + index" :key="index" v-else v-for="(item, index) in projectData">
+              <el-menu-item :index="'2-' + index" :key="index" v-else v-for="(item, index) in projectData" v-has="'project_view'">
                 <div :class="{'menu-item-active': route == '/project' && activeItemIndex == item.id}" @click="jumpToProject(item)" @mouseenter="hoverItemIndex = '2-' + index" @mouseleave="hoverItemIndex = ''">
                   <span class="too-long-split" style="width: 135px;">{{item.name}}</span>
                   <div @click.stop="toEditProject(item)" class="menu-edit" v-has="'project_toEdit'" v-show="hoverItemIndex == '2-' + index && item.buildIn != 1"><i class="nz-icon nz-icon-edit"></i></div>
@@ -357,6 +357,9 @@
         this.jumpTo("/asset");
       },
       jumpToProject(p) {
+        if (!this.hasButton('project_view')) {
+          return;
+        }
         this.currentProject = p;
         this.$store.commit("currentProjectChange", p);
         this.activeItemIndex = p.id;

@@ -4,7 +4,7 @@
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{obj.host}}</div><div
         class="sub-list-tab" @click="changeTab('panel')">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div><div
+        @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
       </div>
       <div class="top-tool-right">

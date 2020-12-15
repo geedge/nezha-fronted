@@ -72,7 +72,7 @@
                 </el-popover>
             </template>
             <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :id="'model-panel-'+scope.row.id" :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" v-has="'model_panel'"><i class="nz-icon nz-icon-template"></i></span>
+              <span :id="'model-panel-'+scope.row.id" :title="$t('dashboard.panel.title')" @click="panel(scope.row)" class="content-right-option" v-has="'model_chart_view'"><i class="nz-icon nz-icon-template"></i></span>
               <span :id="'model-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'model_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               <span :id="'model-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'model_delete'"><i class="nz-icon nz-icon-delete"></i></span>
             </div>
@@ -88,7 +88,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -203,7 +203,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -214,6 +214,9 @@
         return "";
       },
       panel(obj) {
+        if (!this.hasButton('model_chart_view')) {
+          return;
+        }
         this.bottomBox.showSubList = true;
         this.bottomBox.model = obj;
         this.bottomBox.targetTab = "panel";
@@ -276,6 +279,10 @@
         });
       },
       getTableData() {
+        if (!this.hasButton('model_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
@@ -286,10 +293,10 @@
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.modelTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.modelTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }

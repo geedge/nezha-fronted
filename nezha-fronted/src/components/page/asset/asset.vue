@@ -173,7 +173,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -392,7 +392,7 @@
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
         tagKeys:[],
 
-        scrollWrap: null
+        scrollbarWrap: null
       }
     },
     computed:{
@@ -450,6 +450,9 @@
         this.$store.commit('addConsole', consoleParam);
       },
       jumpToAlertMsg(asset) {
+        if (!this.hasButton('asset_alerts_view')) {
+          return;
+        }
         this.bottomBox.targetTab = 'alertMessage';
         this.bottomBox.asset = JSON.parse(JSON.stringify(asset));
         this.bottomBox.showSubList = true;
@@ -483,10 +486,10 @@
             this.pageObj.total = response.data.total;
             bus.$emit('asset-property-change');
 
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.assetTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.assetTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }
@@ -559,6 +562,9 @@
         })
       },
       showEndpoint(asset) {
+        if (!this.hasButton('asset_endpoint_view')) {
+          return;
+        }
         this.bottomBox.asset = Object.assign({}, asset);
         this.bottomBox.targetTab = "endpoint";
         this.bottomBox.showSubList = true;
@@ -582,7 +588,6 @@
         }
       },
       afterTableListChange:function(){
-        // this.getTableData();
         bus.$emit('asset-list-change')
       },
       pageNo(val) {

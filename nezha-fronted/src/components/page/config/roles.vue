@@ -97,7 +97,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <transition name="right-box">
       <role-box :detail="rightBox.detail" :role="role" @close="closeRightBox" v-if="rightBox.show"></role-box>
@@ -178,7 +178,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -216,6 +216,10 @@
         });
       },
       getTableData() {
+        if (!this.hasButton('role_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.tools.loading = true;
@@ -225,10 +229,10 @@
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
             this.tools.loading = false;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.rolesTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.rolesTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }

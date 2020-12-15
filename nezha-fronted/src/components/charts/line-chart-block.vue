@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle" :class="{'drag-disabled': this.filter.from == 'alertRule'}" :id="'chartTitle'+chartIndex" >
+        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle" >
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -38,18 +38,18 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
-              <span class="chart-title-icon" v-if="filter.from != 'alertRule'"><i class="nz-icon nz-icon-xialaxuanze  " :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+              <span class="chart-title-icon" v-if="filter.from != $CONSTANTS.fromRoute.rule"><i :class="{'visible':caretShow,'hidden':!caretShow}" class="nz-icon nz-icon-xialaxuanze  "></i></span>
             </span>
-            <ul v-if="filter.from != 'alertRule'" slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex" :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}"    style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
+            <ul :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}" :id="'dropdownUl'+chartIndex" slot="dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" v-if="filter.from != $CONSTANTS.fromRoute.rule"    v-show="dropdownMenuShow" >
               <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
                 <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
-              <li @click="editChart" class="el-dropdown-menu__item" v-has="`${from}_chart_toEdit`"  v-show="!isExplore">
+              <li @click="editChart" class="el-dropdown-menu__item" v-has="`${from}_chart_toEdit`" v-show="!isExplore">
                 <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
-              <li @click="removeChart" class="el-dropdown-menu__item" v-has="`${from}_chart_delete`"  v-show="!isExplore">
+              <li @click="removeChart" class="el-dropdown-menu__item" v-has="`${from}_chart_delete`" v-show="!isExplore">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
               <li  @click="showAllScreen" class="el-dropdown-menu__item">
                 <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
-              <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`"  v-show="!isExplore">
+              <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`" v-show="!isExplore">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
             </ul>
           </el-dropdown>
@@ -57,14 +57,14 @@
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <template v-if="!hasLegendOptions">
-          <div class='legend-container'  ref="legendArea" v-show="firstShow">
+          <div class='legend-container' ref="legendArea" v-show="firstShow">
             <div v-for="(item, index) in legendListMore" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
               <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
             </div>
           </div>
         </template>
         <template v-else>
-          <div class='legend-container'  ref="legendArea" v-show="firstShow">
+          <div class='legend-container' ref="legendArea" v-show="firstShow">
             <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
               <th style="width: 100%"></th>
               <template v-for="legendOption in legendOptions">
@@ -174,7 +174,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != 'alertRule'"></span>
+      <span @mousedown="startResize" class="vue-resizable-handle" v-if="filter.from != $CONSTANTS.fromRoute.rule"></span>
     </div>
   </div>
 </template>

@@ -205,6 +205,10 @@
         this.rightBox.show = true;
       },
       getTableData() {
+        if (!this.hasButton('dc_cabinet_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.tableData = [];
         this.loading = true;
         this.$set(this.searchLabel, "pageNo", 1);

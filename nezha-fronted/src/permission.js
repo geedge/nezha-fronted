@@ -9,39 +9,39 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource);
 
 const loginWhiteList = ['/login']; // 免登陆白名单
-const permissionWhiteList = ['/login']; // 权限白名单
+const permissionWhiteList = ['/menu', ...loginWhiteList]; // 权限白名单
 
 router.beforeEach((to, from, next) => {
   if (sessionStorage.getItem('nz-token')) {
-    if (loginWhiteList.indexOf(to.path) !== -1) {
+    if (permissionWhiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      let configUrl = "static/config.json?Timestamp=" + new Date().getTime();
-      let result = Vue.http.get(configUrl).then(res => {
-        new Promise(resolve => {
-          if (store.getters.menuList.length === 0) {
+      new Promise(resolve => {
+        if (store.getters.menuList.length === 0) {
+          let configUrl = "static/config.json?Timestamp=" + new Date().getTime();
+          Vue.http.get(configUrl).then(res => {
             post(res.body.baseUrl + "/sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
               store.commit("setMenuList", sortByOrderNum(res.data.menus));
               store.commit("setButtonList", res.data.buttons);
               store.commit("setRoleList", res.data.roles);
               resolve();
             });
+          });
+        } else {
+          resolve();
+        }
+      }).then(res => {
+        if (to.path) {
+          if (hasMenu(store.getters.menuList, to.path)) {
+            next();
           } else {
-            resolve();
+            ElementUI.Message.error(i18n.t("tip.noAccess"));
           }
-        }).then(res => {
-          if (to.path) {
-            if (hasMenu(store.getters.menuList, to.path)) {
-              next();
-            } else {
-              ElementUI.Message.error(i18n.t("tip.noAccess"));
-            }
-          }
-        });
+        }
       });
     }
   } else {
-    if (permissionWhiteList.indexOf(to.path) !== -1) {
+    if (loginWhiteList.indexOf(to.path) !== -1) {
       next();
     } else {
       next({path: '/login'})

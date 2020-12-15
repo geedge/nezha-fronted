@@ -25,6 +25,7 @@
 }
 .legend-container{
   width: calc(100% - 30px);
+  overflow: auto;
   max-height:80px;
   min-height:25px;
   font-size:12px;

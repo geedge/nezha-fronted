@@ -108,7 +108,7 @@
                   active-value="1"
                   inactive-value="0"
                   active-color="#ee9d3f"
-                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit')"
+                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_save')"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
             </span>
@@ -127,7 +127,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -249,7 +249,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -309,6 +309,10 @@
         });
       },
       getTableData() {
+        if (!this.hasButton('account_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.tools.loading = true;
@@ -320,10 +324,10 @@
             }
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.accountTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.accountTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }

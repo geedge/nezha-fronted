@@ -99,7 +99,7 @@
         min-width="180">
       </pl-table-column>
     </pl-table>
-    <button class="to-top" v-show="showTopBtn" :class="{'to-top-is-hover': tableHover}" @click="$toTop('ps', 1)"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"
@@ -149,10 +149,12 @@
       return {
         chart: {},
         tableShow: true,
-        tableHover: false,
         dropdownShow: false,
         loading: false,
-        showTopBtn: false, //主列表top按钮
+        tools: {
+          showTopBtn: false, //主列表top按钮
+          tableHover: false,
+        },
         currentEndpoint: {},
         queryData: [],//endpoint 查询列表数据
         tableData:[],
@@ -172,6 +174,7 @@
         rightBox: {show: false},
         plTableSHow:true,
         scrollTop:0,
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -252,6 +255,13 @@
               this.tableData = this.handlerTableData(results);
               this.tableDataCopy = JSON.stringify(this.tableData);
               this.$nextTick(this.$refs.endpointQueryTable.doLayout());
+              if (!this.scrollbarWrap) {
+                this.$nextTick(() => {
+                  this.scrollbarWrap = this.$refs.endpointQueryTable.$refs.singleTable.bodyWrapper;
+                  console.info(this.scrollbarWrap)
+                  this.toTopBtnHandler(this.scrollbarWrap);
+                });
+              }
             }
           });
         }, 450);

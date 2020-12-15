@@ -30,10 +30,9 @@
       <div class="main-modal"></div>
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-          <div class="top-tool-search float-right">
+          <div class="top-tool-search float-right margin-r-20">
             <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <pick-time :refresh-data-func="getTableData" :showTimePicker="false" :use-chart-unit="false" class="float-right pickTime margin-l-20" ref="pickTime" v-model="searchTime"></pick-time>
           <export-excel
             export-file-name="AlertRule"
             export-url="/alert/rule/export"
@@ -130,7 +129,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
@@ -289,11 +288,14 @@
         viewModuleData: {},
         viewAsset: false,
         searchTime: bus.getTimezontDateRange(),
-        scrollWrap: null,
+        scrollbarWrap: null,
       }
     },
     methods: {
       queryMessage(alertRule) {
+        if (!this.hasButton('rule_alerts_view')) {
+          return;
+        }
         this.bottomBox.alertRule = alertRule;
         this.bottomBox.showSubList = true;
         this.bottomBox.targetTab = 'alertMessage';
@@ -355,6 +357,10 @@
         return '';
       },
       getTableData() {
+        if (!this.hasButton('rule_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.tools.loading = true;
@@ -372,10 +378,10 @@
             });
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
-            if (!this.scrollWrap) {
+            if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollWrap = this.$refs.alertRuleTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollWrap);
+                this.scrollbarWrap = this.$refs.alertRuleTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
               });
             }
           }
@@ -433,45 +439,6 @@
       listResize(e) {
         let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
-      },
-      viewAlertType(type, typeObj) {
-        this.closeViews();
-        switch (type) {
-          case 1:
-            this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.projectBox.show(true);
-            break;
-          case 2:
-            // this.fillProject(typeObj);
-            if (typeObj.param) {
-              let tempObj = JSON.parse(typeObj.param);
-              this.$set(typeObj, 'paramObj', []);
-              for (let k in tempObj) {
-                typeObj.paramObj.push({key: k, value: tempObj[k]});
-              }
-            }
-            this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.moduleBox.show(true);
-            break;
-          case 3:
-            this.viewAsset = true;
-            this.$refs.assetEditUnit.getAssetData(typeObj);
-            this.$refs.assetEditUnit.tabView = true;
-            break;
-        }
-      },
-      fillProject: function (module) {
-        this.$get('project', {"id": module.projectId}).then(response => {
-          if (response.code == 200) {
-            module.project = response.data.list[0];
-          }
-        })
-      },
-      closeViews: function () {
-        this.$refs.alertConfigBox.show(false, false);
-        this.$refs.projectBox.show(false, false);
-        this.$refs.moduleBox.show(false, false);
-        this.viewAsset = false;
       },
       convertToDetail(obj) {
         let detail = {

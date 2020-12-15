@@ -22,10 +22,9 @@
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
           <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
-          <div class="top-tool-search">
+          <div class="top-tool-search margin-r-20">
             <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
           </div>
-          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="getAlertList" v-model="searchTimeSelect" :use-chart-unit="false" ref="pickTime"></pick-time>
           <button :title="$t('overall.exportExcelLower')" @click="showExportDialog" type="button" v-has="'message_export'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
             <i class="nz-icon nz-icon-download1"></i>
@@ -290,21 +289,6 @@
         },
         tableData: [],
         requestIndex:0,
-        viewRuleData: {
-          id: '',
-          alertName: '',
-          type: '',
-          linkObject: {id: '', name: ''},
-          linkId: '',
-          expr: '',
-          last: '',
-          severity: '',
-          summary: '',
-          description: '',
-          receiver: '',
-        },
-        viewProjectData: {id: '', name: '', remark: ''},
-        viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
         viewAssetState: false,
       }
     },
@@ -350,7 +334,11 @@
         return result;
       },
 
-      getAlertList: function () {
+      getAlertList() {
+        if (!this.hasButton('message_view')) {
+          this.$message.error(this.$t("tip.noAccess"));
+          return;
+        }
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         if(this.searchTime&& this.searchTime.length>1){
@@ -648,40 +636,6 @@
         }
         this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0;
         this.getAlertList();
-      },
-      viewRule: function (id) {
-        this.closeViews();
-        this.$get('alert/rule', {"id": id}).then(response => {
-          if (response.code == 200) {
-            this.viewRuleData = response.data.list[0];
-            this.$refs.alertConfigBox.show(true);
-          }
-        })
-      },
-      viewAlertType: function (type, typeObj) {
-        this.closeViews();
-        switch (type) {
-          case 1:
-            this.viewProjectData = JSON.parse(JSON.stringify(typeObj));
-            this.$refs.projectBox.show(true);
-            break;
-          case 2:
-            // this.fillProject(typeObj);
-            let tempObj = JSON.parse(typeObj.param)
-            this.$set(typeObj, 'paramObj', []);
-            for (let k in tempObj) {
-              typeObj.paramObj.push({key: k, value: tempObj[k]});
-            }
-            this.viewModuleData = JSON.parse(JSON.stringify(typeObj));
-
-            this.$refs.moduleBox.show(true);
-            break;
-          case 3:
-            this.viewAssetState = true;
-            this.$refs.assetEditUnit.getAssetData(typeObj);
-            this.$refs.assetEditUnit.tabView = true;
-            break;
-        }
       },
       fillProject: function (module) {
         this.$get('project', {"id": module.projectId}).then(response => {

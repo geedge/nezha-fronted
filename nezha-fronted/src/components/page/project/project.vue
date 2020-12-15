@@ -168,7 +168,7 @@
         </el-table>
         <button class="to-top" :style="{top: tools.toTopBtnTop}"
                 :class="{'to-top-is-hover': tools.tableHover}"
-                @click="toTop(scrollWrap)" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i
+                @click="toTop(scrollbarWrap)" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i
           class="nz-icon nz-icon-top"></i></button>
         <div class="pagination-bottom" v-show="!bottomBox.showSubList">
           <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo'
@@ -379,7 +379,7 @@
             readonly:true,
           }],
         },
-        scrollWrap: null
+        scrollbarWrap: null
       }
     },
     methods:{
@@ -428,10 +428,10 @@
               }
               this.endpointTableData=response.data.list;
               this.endpointPageObj.total=response.data.total;
-              if (!this.scrollWrap) {
+              if (!this.scrollbarWrap) {
                 this.$nextTick(() => {
-                  this.scrollWrap = this.$refs.endpointTable.bodyWrapper;
-                  this.toTopBtnHandler(this.scrollWrap);
+                  this.scrollbarWrap = this.$refs.endpointTable.bodyWrapper;
+                  this.toTopBtnHandler(this.scrollbarWrap);
                 });
               }
             }
@@ -562,6 +562,9 @@
         });
       },
       jumpToAlertMsg(endpoint){
+        if (!this.hasButton('project_endpoint_alerts_view')) {
+          return;
+        }
         this.endpoint=Object.assign({},endpoint);
         this.bottomBox.targetTab='alertMessage';
         this.bottomBox.showSubList=true;

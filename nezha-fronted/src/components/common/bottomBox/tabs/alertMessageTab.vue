@@ -9,8 +9,8 @@
         </div><div
         @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset"
-        class="sub-list-tab" @click="changeTab('endpoint')">{{$t("asset.tableTitle.modules")}}</div>
-        <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("overall.query")}}</div>
+        @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.tableTitle.modules")}}</div>
+        <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
         <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="defaultPick" :show-empty="true"></pick-time>

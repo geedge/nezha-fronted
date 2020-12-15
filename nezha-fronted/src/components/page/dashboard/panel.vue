@@ -349,6 +349,9 @@
       },
       // 获取数据,用在子页面
       getData(params) {
+        if (!this.hasButton('panel_view')) {
+          return;
+        }
         if (params.start_time === '' || params.end_time === '') {
           let now = bus.getTimezontDateRange();
           let endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss');
@@ -407,6 +410,9 @@
         });
       },
       panelReloadOnlyPanel() { //仅刷新panel数据
+        if (!this.hasButton('panel_view')) {
+          return;
+        }
         this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;

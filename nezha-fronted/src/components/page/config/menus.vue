@@ -15,11 +15,11 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createMenus')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"
+          <button :title="$t('overall.createMenus')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'menu_toAdd'"
                   id="menus-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/menu"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/menu" v-has="'menu_delete'"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -69,9 +69,9 @@
         </template>
           <template :column="item" slot-scope="scope">
             <div class="content-right-options" v-if="item.prop == 'option'">
-              <span :id="'menus-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'menus-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'menu_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :id="'menus-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'menus-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'menu_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-if="item.prop == 'name'">
               <template v-if="scope.row.i18n">
@@ -98,7 +98,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="$toTop('ps', 0)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <transition name="right-box">
       <menu-box :menu="menu" @close="closeRightBox" v-if="rightBox.show"></menu-box>
@@ -108,6 +108,7 @@
 <script>
   import deleteButton from "../../common/deleteButton";
   import menuBox from '../../common/rightBox/menuBox';
+  import bus from "../../../libs/bus";
 
   export default {
     name: "menus",
@@ -204,6 +205,7 @@
           }],
         },
         searchLabel: {}, //搜索参数
+        scrollbarWrap: null,
       }
     },
     methods: {
@@ -249,6 +251,12 @@
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total
             this.tools.loading = false;
+            if (!this.scrollbarWrap) {
+              this.$nextTick(() => {
+                this.scrollbarWrap = this.$refs.menusTable.bodyWrapper;
+                this.toTopBtnHandler(this.scrollbarWrap);
+              });
+            }
           }
         })
       },
@@ -311,5 +319,8 @@
         : this.tableTitle;
       this.getTableData();
     },
+    beforeDestroy() {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+    }
   }
 </script>
