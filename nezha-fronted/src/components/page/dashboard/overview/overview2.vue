@@ -211,7 +211,6 @@
           <div class="content-col-content" style="overflow: hidden">
             <!--<chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>-->
             <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-            <!--<hexagonFigureSvg :hex-data="messageAssetData" :col="5" :hexagonSvgID="'hexagonSvg1'"/>-->
             <messageAsset v-show="messageModuleData.length>0" :data="messageModuleData" :col="col" :length="length" ref="moduleHexagon" :from="'module'" :hexagonSvgID="'hexagonSvg2'"/>
             <div class="chart-no-data" v-if="messageModuleData.length===0">No Data</div>
           </div>
@@ -241,7 +240,6 @@
   import chartConfig from './chartConfig'
   import overViewTopology from '../../../common/project/overViewTopology'
   import messageAsset from '../../../common/overView/messageAsset'
-  import hexagonFigureSvg from '../../../common/honeycomb/hexagonFigureSvg'
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
 
 
@@ -257,7 +255,6 @@
       'vue-countup': VueCountUp,
       'topology':overViewTopology,
       messageAsset,
-      hexagonFigureSvg,
     },
     data() {
       return {
