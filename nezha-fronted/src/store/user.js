@@ -49,7 +49,7 @@ const user = {
 
         bus.$emit("login");
         router.push({
-          path: menuList.find(menu => menu.route).route,
+          path: menuList.find(menu => {return menu.route && menu.route != "/menu" && menu.route != "/header"}).route,
           query: {
             t: +new Date()
           }
