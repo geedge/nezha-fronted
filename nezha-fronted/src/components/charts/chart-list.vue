@@ -51,7 +51,7 @@
 
     <span class="temp-dom"></span>
 
-    <draggable v-model="dataList" @start="start" @end="end" :move="move" :key
+    <draggable v-model="dataList" @start="start" @end="end" :move="move" :key :disabled="panelLock"
                :scroll-sensitivity="150"
                :options="{
                  group:{name:'chartGroup',pull:'false'},
@@ -75,6 +75,7 @@
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
                           :panel-id="filter.panelId"
+                          :is-lock="panelLock"
                           :chart-index="index"
                           :chart-data="item"></line-chart-block>
 
@@ -86,6 +87,7 @@
                      @on-drag-chart="editChartForDrag"
                      @on-edit-chart-block="editData"
                      :chart-data="item"
+                     :is-lock="panelLock"
                      :panel-id="filter.panelId"
                      :chart-index="index"></chart-single-stat>
 
@@ -96,6 +98,7 @@
                       @on-duplicate-chart-block="duplicateChart"
                       @on-drag-chart="editChartForDrag"
                       @on-edit-chart-block="editData"
+                      :is-lock="panelLock"
                       :panel-id="filter.panelId"
                       :chart-data="item"
                       :chart-index="index"></chart-table>
@@ -106,6 +109,7 @@
                      @on-remove-chart-block="removeChart"
                      @on-duplicate-chart-block="duplicateChart"
                      @on-drag-chart="editChartForDrag"
+                    :is-lock="panelLock"
                      @on-edit-chart-block="editData"
                      :panel-id="filter.panelId"
                      :chart-data="item"
@@ -115,6 +119,7 @@
                           :from="from" :panel-id="filter.panelId"
                           :chart-index="index"
                           @on-refresh-data="refreshChart"
+                          :is-lock="panelLock"
                           :chart-data="item"
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
@@ -125,6 +130,7 @@
                     @on-duplicate-chart-block="duplicateChart"
                     @on-drag-chart="editChartForDrag"
                     @on-edit-chart-block="editData"
+                    :is-lock="panelLock"
                     :panel-id="filter.panelId"
                     :chart-data="item"
                     :chart-index="index"
@@ -135,6 +141,7 @@
                           :chart-index="index"
                           v-if="item.type  === 'alertList'"
                           :editChartId="'editChartId' + item.id"
+                           :is-lock="panelLock"
                           :chart-info="item"
                           @on-refresh-data="refreshChart"
                           @on-search-data="searchData"
@@ -170,7 +177,8 @@
       additionalInfo:{},
       draggable: {type: Boolean, default: true},
       detail: Object,
-      from: {type: String}
+      from: {type: String},
+      panelLock:{type:Boolean,default:false}
     },
 
     components: {
@@ -219,7 +227,7 @@
         this.tempDom.width = span.offsetWidth;
       },
       start (event) {
-        //console.log('start', event, this.dataList);
+        // console.log('start', event, this.dataList);
         event.item.querySelector('.chartTitle').style.background = '#d8dce1';
         let projectAndAssetFeatureInfos = event.item.querySelectorAll(".feature-content");
         if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {

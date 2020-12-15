@@ -34,7 +34,7 @@
            </span>
           </el-popover>
           </span>
-          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
@@ -130,10 +130,10 @@
             <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
             <div class="float-right panel-calendar dialog-tool">
 
-              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>
-              <!--<pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>-->
+<!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
+              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;"></pick-time>
             </div>
-            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>
+<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
@@ -174,7 +174,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != 'alertRule'"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != 'alertRule'&&!isLock"></span>
     </div>
   </div>
 </template>
@@ -218,7 +218,8 @@
         default:false,
       },
       tempDom: Object,
-      from: {type: String}
+      from: {type: String},
+      isLock:{type:Boolean,default:false}
     },
     computed: {
       getButtonCode() {
@@ -344,8 +345,25 @@
           })
         }
       },
-
       clickLegend(legendName,index){
+        let curIsGrey=this.isGrey[index];
+        let echart=getChart(this.chartIndex)
+        if(echart) {
+          if(curIsGrey){
+            echart.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            })
+          }else{
+            echart.dispatchAction({
+              type: 'legendUnSelect',
+              name: legendName
+            })
+          }
+          this.$set(this.isGrey,index,!curIsGrey)
+        }
+      },
+      clickLegend2(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
         if(getChart(this.chartIndex)){
@@ -393,6 +411,23 @@
         }
       },
       clickScreenLegend(legendName,index){
+        let curIsGrey=this.isGreyScreen[index];
+        if(this.echartModalStore) {
+          if(curIsGrey){
+            this.echartModalStore.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            })
+          }else{
+            this.echartModalStore.dispatchAction({
+              type: 'legendUnSelect',
+              name: legendName
+            })
+          }
+          this.$set(this.isGreyScreen,index,!curIsGrey)
+        }
+      },
+      clickScreenLegend2(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGreyScreen[index];
         if(this.echartModalStore){
@@ -645,8 +680,7 @@
                 if(i===0){
                   let value=item.data[0];
                   let t_date = new Date(value);
-                  str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                    + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                  str += bus.timeFormate(t_date)
                   str +=`<br/>`;
                 }
                 let val =item.data[1]?parseFloat(Number(item.data[1]).toFixed(2)):'';
@@ -879,8 +913,7 @@
                           if(i===0){
                             let value=item.data[0];
                             let t_date = new Date(value);
-                            str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                              + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                            str += bus.timeFormate(t_date)
                             str +=`<br/>`;
                           }
                           let val = parseFloat(Number(item.data[1]).toFixed(2));
@@ -1043,8 +1076,7 @@
                         if(i===0){
                           let value=item.data[0];
                           let t_date = new Date(value);
-                          str += [t_date.getFullYear(), t_date.getMonth() + 1, t_date.getDate()].join('-') + " "
-                            + [t_date.getHours(), t_date.getMinutes(),t_date.getSeconds()].join(':');
+                          str += bus.timeFormate(t_date)
                           str +=`<br/>`;
                         }
                         let val = parseFloat(Number(item.data[1]).toFixed(2));
@@ -1262,7 +1294,7 @@
         //this.searchTime = this.oldSearchTime;
         this.$set(this.searchTime, 0, this.oldSearchTime[0]);
         this.$set(this.searchTime, 1, this.oldSearchTime[1]);
-        this.$refs.calendarPanel.setCustomTime(this.searchTime);
+        // this.$refs.calendarPanel.setCustomTime(this.searchTime);
         this.screenModal = true;
         this.isGreyScreen=[];
 
@@ -1300,7 +1332,6 @@
         });
       },
       dateChange(time) {
-        this.searchTime = [...time];
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.echartModalStore.clear();

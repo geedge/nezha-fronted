@@ -276,13 +276,13 @@
     height: 100%;
     position: relative;
     background-color: white;
-    .chart-title:hover {
+    .chartTitle:hover {
       background-color:#d8dce1;
     }
-    .chart-title:not(.drag-disabled) {
-      cursor: move;
-    }
-    .chart-title {
+    //.chartTitle:not(.drag-disabled) {
+    //  cursor: move;
+    //}
+    .chartTitle {
       text-align: center;
       width: 100%;
       line-height: 30px;
@@ -291,7 +291,7 @@
       .nz-chart-top{
         width:100%;
       }
-      .el-dropdown-link {
+      .move-able .el-dropdown-link {
         cursor: move;
       }
       .nz-icon-arrow-down {
@@ -505,7 +505,7 @@
       .nz-chart-top{
         width:100%;
       }
-      .el-dropdown-link {
+      .move-able .el-dropdown-link {
         cursor: move;
       }
       .nz-icon-arrow-down {

@@ -8,7 +8,7 @@
       <div class="chart-text"  :id="'chartSingleStatDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading  :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow}" :id="'chartTitle'+chartIndex">
-          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
@@ -52,7 +52,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock"></span>
     </div>
   </div>
 </template>
@@ -83,7 +83,8 @@
       chartIndex:{
         type: Number,
         default: 0,
-      }
+      },
+      isLock:{type:Boolean,default:false}
     },
     data() {
       return {

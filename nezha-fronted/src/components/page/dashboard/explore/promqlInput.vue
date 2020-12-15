@@ -153,13 +153,14 @@
         dropDownVisible:function(n,o){
           if (this.styleType == 1) {
             if (n) {
-              this.metricOptions = this.$parent.$parent.getMetricOptions();
+              this.metricOptions = this.$parent.getMetricOptions();
             } else {
               this.metricOptions = [];
             }
           } else if (this.styleType == 2) {
             if (n) {
-              this.metricOptions = this.$parent.$parent.$parent.$parent.getMetricOptions();
+              console.log(this.$parent.$parent)
+              this.metricOptions = this.$parent.$parent.$parent.getMetricOptions();
             } else {
               this.metricOptions = [];
             }

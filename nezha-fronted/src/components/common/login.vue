@@ -25,6 +25,9 @@
           <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
         </div>
       </div>
+      <div class="login-foot-buildOn">
+        <span><a target="_blank" rel="noopener norefferrer" href='https://prometheus.io'>@build on prometheus</a></span>
+      </div>
     </div>
   </div>
 </template>
@@ -224,6 +227,15 @@ export default {
   top: -20px;
   left: 50%;
   transform: translateX(-50%);
+}
+.login-foot-buildOn{
+  width: 460px;
+  text-align: center;
+  padding-top: 45px;
+  a{
+    color: white;
+    text-decoration: none;
+  }
 }
 .nz-icon-arrow-down, .nz-icon-arrow-up {
   position: absolute;

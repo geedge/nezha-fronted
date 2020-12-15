@@ -614,3 +614,9 @@ export const tableSet = {
 export function blankPromise() {
   return new Promise(resolve => {resolve();});
 }
+
+export function clickLegend(echart,legendName,index){
+  if(echart){
+
+  }
+}

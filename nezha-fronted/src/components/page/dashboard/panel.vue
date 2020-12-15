@@ -67,6 +67,7 @@
               export: 'panel_chart_export'
             }"
             @afterImport="dateChange"
+            class="margin-r-20"
           >
             <template slot="optionZone">
               <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_toAdd'"
@@ -75,13 +76,16 @@
               </button>
             </template>
           </export-excel>
+          <div class="relative-position ">
+            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light "  @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+          </div>
         </div>
       </template>
     </div>
     <div class="table-list" id="tableList">
       <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
-          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
+          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"></chart-list>
         </div>
       </div>
     </div>
@@ -108,6 +112,7 @@
     name: "panel",
     data() {
       return {
+        panelLock:true,
         showTopBtn: false, //top按钮
         visible: false,
         rightBox: { //面板弹出框相关

@@ -55,6 +55,9 @@
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
         </template>
+
+        <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light " style="margin-left: 20px;" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"  @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+
         <button :title="$t('overall.syncChart')" @click="syncChart" style="margin-left: 20px;" v-has="['model_chart_sync', 'asset_chart_sync']" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">
           <i class="nz-icon-sync nz-icon"></i>
@@ -84,7 +87,7 @@
       <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
           <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
-                      @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList"></chart-list>
+                      @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"></chart-list>
         </div>
       </div>
     </div>
@@ -112,6 +115,7 @@
     },
     data() {
       return {
+        panelLock:true,
         showTopBtn: false, //top按钮
         visible: false,
         rightBox: { //面板弹出框相关

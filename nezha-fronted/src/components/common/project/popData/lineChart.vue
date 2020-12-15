@@ -279,6 +279,24 @@
         }
       },
       clickLegend(legendName,index){
+        let curIsGrey=this.isGrey[index];
+        let echart = getChart(this.chartIndex)
+        if(echart){
+          if(curIsGrey){
+            echart.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            });
+          }else{
+            echart.dispatchAction({
+              type: 'legendUnSelect',
+              name: legendName
+            });
+          }
+          this.$set(this.isGrey,index,!curIsGrey)
+        }
+      },
+      clickLegend2(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGrey[index];
         if(getChart(this.chartIndex)){
@@ -326,6 +344,23 @@
         }
       },
       clickScreenLegend(legendName,index){
+        let curIsGrey=this.isGreyScreen[index];
+        if(this.echartModalStore) {
+          if(curIsGrey){
+            this.echartModalStore.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            })
+          }else{
+            this.echartModalStore.dispatchAction({
+              type: 'legendUnSelect',
+              name: legendName
+            })
+          }
+          this.$set(this.isGreyScreen,index,!curIsGrey)
+        }
+      },
+      clickScreenLegend2(legendName,index){
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
         let curIsGrey=this.isGreyScreen[index];
         if(this.echartModalStore){

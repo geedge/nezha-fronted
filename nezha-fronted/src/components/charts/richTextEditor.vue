@@ -11,7 +11,7 @@
   export default {
     name: "richTextEditor",
     props:{
-      editData:String
+      editData:String,
     },
     data(){
       return {
