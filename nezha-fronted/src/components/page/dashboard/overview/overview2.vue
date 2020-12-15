@@ -30,8 +30,8 @@
               <div class="content-col-content-num">
                 <vue-countup :decimals="(assetData ? assetData.totalStat.total  : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(assetData ? assetData.totalStat.total  : '') | numberFormat"
                              :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(assetData ? assetData.totalStat.total  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(assetData ? assetData.totalStat.total  : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
@@ -45,8 +45,8 @@
               <el-tooltip :content="projectData ? projectData.projectStat.length + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(projectData ? projectData.projectStat.length : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(projectData ? projectData.projectStat.length : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(projectData ? projectData.projectStat.length : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(projectData ? projectData.projectStat.length  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(projectData ? projectData.projectStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.project.project")}}</div>
@@ -60,8 +60,8 @@
               <el-tooltip :content="moduleData ? moduleData.moduleStat.length + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(moduleData ? moduleData.moduleStat.length : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(moduleData ? moduleData.moduleStat.length : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(moduleData ? moduleData.moduleStat.length  : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(moduleData ? moduleData.moduleStat.length : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.module.module")}}</div>
@@ -75,8 +75,8 @@
               <el-tooltip :content="endpointData ? endpointData.total + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(endpointData ? endpointData.total : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(endpointData ? endpointData.total : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(endpointData ? endpointData.total : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(endpointData ? endpointData.total : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.endpoint.endpoint")}}</div>
@@ -90,8 +90,8 @@
               <el-tooltip :content="alertMessageData ? alertMessageData.alertMessageTotal + '' : ''" class="item" effect="light" placement="top">
               <div class="content-col-content-num">
                 <vue-countup :decimals="(alertMessageData ? alertMessageData.alertMessageTotal : 0) < 1000 ? 0 : 1" :duration="1" :end-value="(alertMessageData ? alertMessageData.alertMessageTotal : '') | numberFormat" :start-value="0"></vue-countup>
-                <span class="over-num" v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 ">+</span>
                 <span class="overview-row-unit">{{(alertMessageData ? alertMessageData.alertMessageTotal : '') | unitFormat}}</span>
+                <span class="over-num" v-if="(alertMessageData ? alertMessageData.alertMessageTotal : 0) > 1000 ">+</span>
               </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("overall.alert")}}</div>
@@ -198,7 +198,7 @@
         <!--第三个图-->
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
+            <span>{{$t("dashboard.overview.alert.moduleTopN")}}</span>
             <!--<span> <el-input v-model="col"  size="small"/></span>-->
             <!--<span> <el-input v-model="length" size="small"/></span>-->
             <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
