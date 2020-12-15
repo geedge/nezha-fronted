@@ -188,16 +188,19 @@
               </span>-->
             </span>
           </div>
-          <div class="content-col-content">
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>
-            <chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>
-            <div class="chart-no-data" v-if="!alertMessageLoading && ((!messageByAssetSeries.data && !messageByAssetSeries.category) || (messageByAssetSeries.data.length == 0 && messageByAssetSeries.category.length == 0))">No Data</div>
+          <div class="content-col-content" style="overflow: hidden">
+            <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>-->
+            <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>-->
+            <messageAsset v-show="messageAssetData.length>0" :data="messageAssetData" :col="col" :length="length" ref="assetHexagon" :from="'asset'"/>
+            <div class="chart-no-data" v-if="messageAssetData.length===0">No Data</div>
           </div>
         </div>
         <!--第三个图-->
         <div class="content-col-box">
           <div class="content-col-title">
             <span>{{$t("dashboard.overview.alert.alertRuleTopN")}}</span>
+            <!--<span> <el-input v-model="col"  size="small"/></span>-->
+            <!--<span> <el-input v-model="length" size="small"/></span>-->
             <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
               <span>Top&nbsp;{{topFilter.rule}}<i class="nz-icon nz-icon-arrow-down el-icon&#45;&#45;right"></i></span>
               <el-dropdown-menu slot="dropdown">
@@ -205,10 +208,12 @@
               </el-dropdown-menu>
             </el-dropdown>-->
           </div>
-          <div class="content-col-content">
-            <chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>
+          <div class="content-col-content" style="overflow: hidden">
+            <!--<chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>-->
             <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-            <div class="chart-no-data" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">No Data</div>
+            <!--<hexagonFigureSvg :hex-data="messageAssetData" :col="5" :hexagonSvgID="'hexagonSvg1'"/>-->
+            <messageAsset v-show="messageModuleData.length>0" :data="messageModuleData" :col="col" :length="length" ref="moduleHexagon" :from="'module'" :hexagonSvgID="'hexagonSvg2'"/>
+            <div class="chart-no-data" v-if="messageModuleData.length===0">No Data</div>
           </div>
         </div>
       </div>
@@ -235,7 +240,8 @@
   import echarts from "echarts";
   import chartConfig from './chartConfig'
   import overViewTopology from '../../../common/project/overViewTopology'
-
+  import messageAsset from '../../../common/overView/messageAsset'
+  import hexagonFigureSvg from '../../../common/honeycomb/hexagonFigureSvg'
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
 
 
@@ -249,7 +255,9 @@
       'chart-box': chart,
       'time-picker': timePicker,
       'vue-countup': VueCountUp,
-      'topology':overViewTopology
+      'topology':overViewTopology,
+      messageAsset,
+      hexagonFigureSvg,
     },
     data() {
       return {
@@ -298,8 +306,8 @@
         topFilter:{
           optionals: [10, 20, 50],
           rule: 10,
-          asset: 10,
-          module: 10
+          asset: 48,
+          module: 20
         },
         system_server_time:null,
         freshDateTimer:null,
@@ -310,6 +318,10 @@
           y: 0
         },
         searchTime:bus.getTimezontDateRange(),
+        messageAssetData:[],
+        col:10,
+        length:9,
+        messageModuleData:[],
       }
     },
     filters: {
@@ -378,8 +390,9 @@
           this.queryAlertRuleData(),
           // this.queryAlertTrendData(),
           this.initMap(),
-          this.queryAlertStatByRule(),
-          this.queryAlertStatByAsset(),
+          this.queryAlertStatByRule(),//3-3
+          this.queryAlertStatByAsset(),//3-2 新的也是这个 3-2
+          this.queryAlertStatByModule(),// 新的3-3
           this.getDcTrafficData(),
           this.queryAllProjectData(),
         ]
@@ -1143,7 +1156,7 @@
       queryAlertStatByRule() {
         return new Promise(resolve=>{
 
-          this.$refs.ruleMessage.startLoading();
+          // this.$refs.ruleMessage.startLoading();
           this.$get('overview/alertStatByRule', {top: this.topFilter.rule}).then(response => {
             if (response.code === 200) {
               let seriesData = [];
@@ -1169,9 +1182,9 @@
                 },
                 category: categoryData, //自定义，用来判断N/A是否显示
               };
-              this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
-              this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
-              this.$refs.ruleMessage.endLoading();
+              // this.$refs.ruleMessage.modifyOption('yAxis', 'data', categoryData);
+              // this.$refs.ruleMessage.setSeries(this.messageByRuleSeries);
+              // this.$refs.ruleMessage.endLoading();
             }
             resolve()
           });
@@ -1180,35 +1193,11 @@
       queryAlertStatByAsset() {
         return new Promise(resolve => {
 
-          this.$refs.assetMessage.startLoading();
+          this.$refs.assetHexagon.startLoading();
           this.$get('overview/alertStatByAsset', {top: this.topFilter.asset}).then(response => {
             if (response.code === 200) {
-              let seriesData = [];
-              let categoryData = [];
-              response.data.list.forEach(item => {
-                seriesData.splice(0, 0, item.nums);
-                categoryData.splice(0, 0, item.host);
-              });
-              this.messageByAssetSeries = {
-                name: 'alertStatByAsset',
-                data: seriesData,
-                type: 'bar',
-                barMaxWidth: 15,
-                category: categoryData,
-                itemStyle: {
-                  color: function(params) {
-                    let colorList = ["#FAd4ab", "#d0e8d0"];;
-                    if(params.dataIndex % 2 == 0){
-                      return colorList[0]
-                    }else{
-                      return colorList[1]
-                    }
-                  },
-                },
-              };
-              this.$refs.assetMessage.modifyOption('yAxis', 'data', categoryData);
-              this.$refs.assetMessage.setSeries(this.messageByAssetSeries);
-              this.$refs.assetMessage.endLoading();
+              this.messageAssetData= response.data.list;
+              this.$refs.assetHexagon.endLoading();
             }
             resolve();
           });
@@ -1217,25 +1206,11 @@
       queryAlertStatByModule() {
         return new Promise(resolve => {
 
-          this.$refs.moduleMessage.startLoading();
+          this.$refs.moduleHexagon.startLoading();
           this.$get('overview/alertStatByModule', {top: this.topFilter.module}).then(response => {
             if (response.code === 200) {
-              let seriesData = [];
-              let categoryData = [];
-              response.data.list.forEach(item => {
-                seriesData.splice(0, 0, item.nums);
-                categoryData.splice(0, 0, item.module);
-              });
-              this.messageByModuleSeries = {
-                name: 'alertStatByModule',
-                data: seriesData,
-                type: 'bar',
-                barMaxWidth: 30,
-                category: categoryData
-              };
-              this.$refs.moduleMessage.modifyOption('xAxis', 'data', categoryData);
-              this.$refs.moduleMessage.setSeries(this.messageByModuleSeries);
-              this.$refs.moduleMessage.endLoading();
+              this.messageModuleData=response.data.list;
+              this.$refs.moduleHexagon.endLoading();
             }
             resolve();
           });
@@ -1617,7 +1592,7 @@
     watch: {
       "trendSearchParam.select": function(n, o) {
         this.queryAlertTrendData();
-      }
+      },
     },
     mounted() {
       this.initData();

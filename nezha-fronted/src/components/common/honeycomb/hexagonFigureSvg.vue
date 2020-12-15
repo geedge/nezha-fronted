@@ -1,10 +1,10 @@
 <template>
   <div ref="box" class="box-hexagon" v-clickoutside="hexagonSvgClearScale" v-if="boxhexagonShow">
     <!--<div class="hexagon-text" :style="{top:hexagonTextPos.top,left:hexagonTextPos.left}" v-show="hexagonTextPos.show">-->
-      <!--<span v-if="hexagonTextPos.data">-->
-        <!--{{hexagonTextPos.data?hexagonTextPos.data.alertName:''}}-->
-        <!--{{hexagonTextPos.data?hexagonTextPos.data.nums:''}}-->
-      <!--</span>-->
+    <!--<span v-if="hexagonTextPos.data">-->
+    <!--{{hexagonTextPos.data?hexagonTextPos.data.alertName:''}}-->
+    <!--{{hexagonTextPos.data?hexagonTextPos.data.nums:''}}-->
+    <!--</span>-->
     <!--</div>-->
     <div :id="hexagonSvgID">
 
@@ -15,21 +15,14 @@
 <script>
   import {SVG} from '@svgdotjs/svg.js'
   import '@svgdotjs/svg.panzoom.js'
-  import {getHexagon, setHexagon, delHexagon} from "../js/common";
-  function hexagonEnter(){// 移入六边形
-    let color=this.first().data('hoverColor');
-    this.first().animate(100).stroke({width:3,color: '#909090'}).fill(color);
-    this.animate(100).transform({scale: 1.1});
-    this.parent().find('polyline').animate(100).stroke({ color: '#909090'})
-    // svgPolyline.animate(100).stroke({ color: '#909090'})
+  import {getHexagon,setHexagon,delHexagon} from "../js/common";
+
+  function PolylineOver(){
+    this.stroke({color:'#909090'})
   }
 
-  function hexagonLeave(){// 移出六边形
-    let color=this.first().data('color');
-    this.first().animate(100).stroke({width:0,color: '#909090'}).fill(color);
-    this.animate(100).transform({scale: 1});
-    this.parent().find('polyline').animate(100).stroke({ color: '#DADADA'})
-    // svgPolyline.animate(100).stroke({ color: '#DADADA'})
+  function PolylineOut(){
+    this.stroke({color:'#DADADA'})
   }
 
   function hexagonPoint(x,y,edge){ // 根据左上角坐标点生成六边的六个点的坐标 通过 svg画出
@@ -63,18 +56,18 @@
       })
     })
   }
-  
+
   function midpoint(point1,point2){//计算中点
     return {
-     x:(point1.x+point2.x)/2,
-     y:(point1.y+point2.y)/2,
+      x:(point1.x+point2.x)/2,
+      y:(point1.y+point2.y)/2,
     }
   }
 
   function borderMove(left,top,borderSize,type,svgPolyline){//left,top, 坐标 borderSize 长度,type 外层边框线从哪走到那
     let point=[null,null];
     let MathSqrt3=Math.sqrt(3);
-    let arr = svgPolyline.array();
+    let arr=svgPolyline.array();
     switch(type){
       case 1: //从左到右的斜上方运动
         point[0]=left+MathSqrt3*borderSize/2;
@@ -101,10 +94,11 @@
         point[1]=top-borderSize;
         break;
     }
-      arr.push(point);
-      svgPolyline.plot(arr);
+    arr.push(point);
+    svgPolyline.plot(arr);
     return point
   }
+
   export default {
     name:"hexagonFigureSvg",
     props:{
@@ -123,7 +117,9 @@
       },
       colorSet:{ //设置方块对应颜色 参数 item 当前item的数据
         type:Function,
-        default:()=>{return { color:'#99D7C2',hoverColor:'#B2ECD9'}}
+        default:()=>{
+          return {color:'#99D7C2',hoverColor:'#B2ECD9'}
+        }
       },
       infoShow:{// 设置六边形内部内容 放大显示时的样式 参数 allHexagonRect
         type:Function,
@@ -170,20 +166,22 @@
       zoomMax:{//最小倍数
         type:Number,
         default:5,
-      }
+      },
+      from:{}
     },
     watch:{
       hexData:{
-        immediate: false,
-        deep: true,
-        handler(n) {
+        immediate:false,
+        deep:true,
+        handler(n){
+          console.log(n);
           this.init();
         }
       },
       col:{ // 列数
-        immediate: false,
-        deep: true,
-        handler() {
+        immediate:false,
+        deep:true,
+        handler(){
           this.init();
         }
       },
@@ -209,7 +207,9 @@
         timer:null,
         boxhexagonShow:false,
         pan:false,//是否移动
-        defaultColor:{ color:'#99D7C2',hoverColor:'#B2ECD9'},
+        defaultColor:{color:'#99D7C2',hoverColor:'#B2ECD9'},
+        viewBox:null,
+        isShowHover:true,//是否显示hover块
       }
     },
     computed:{
@@ -224,58 +224,69 @@
     },
     methods:{
       init(){ //创建svg实例
-       this.boxhexagonShow=false;
-       this.clearData();
-       setTimeout(()=>{
-         this.boxhexagonShow=true;
-         this.$nextTick(()=>{
-           this.hexagonData = JSON.parse(JSON.stringify(this.hexData));
-           let box=`#${this.hexagonSvgID}`;
-           let hexagonSvg=SVG().addTo(box).size('100%','100%')
-             .panZoom({
-               zoomMin:this.zoomMin,
-               zoomMax:this.zoomMax,
-               zoomFactor:this.zoomFactor,
-               pinchZoom:this.isPinchZoom,
-               wheelZoom:this.isWheelZoom,
-               panning:this.isPanning
-             })
-             .attr('id','SvgHex')
-             .attr('class',this.hexagonSvgID)
-             .attr('viewBox',`0 0 ${this.$refs.box.offsetWidth} ${this.$refs.box.offsetHeight}`); //svg实例
-           hexagonSvg.on('click',this.hexagonSvgClearScale);
-           hexagonSvg.on('panStart',this.hexagonSvgPanStart);
-           hexagonSvg.on('panEnd',this.hexagonSvgPanEnd);
-           setHexagon(this.hexagonSvgID,{hexagonSvg:hexagonSvg,svgPolyline:null,allHexagonRect:[],allHexagonText:[]})
-           this.getPadding().then(()=>{
-             this.getDataPoint();
-           });//获取到上方和左方的距离;
-         })
-       },100)
+        this.boxhexagonShow=false;
+        this.clearData();
+        setTimeout(()=>{
+          this.boxhexagonShow=true;
+          this.$nextTick(()=>{
+            this.hexagonData=JSON.parse(JSON.stringify(this.hexData));
+            let box=`#${this.hexagonSvgID}`;
+            let hexagonSvg=SVG().addTo(box).size('100%','100%')
+              .panZoom({
+                zoomMin:this.zoomMin,
+                zoomMax:this.zoomMax,
+                zoomFactor:this.zoomFactor,
+                pinchZoom:this.isPinchZoom,
+                wheelZoom:this.isWheelZoom,
+                panning:this.isPanning
+              })
+              .attr('id','SvgHex')
+              .attr('class',this.hexagonSvgID)
+              .attr('viewBox',`0 0 ${this.$refs.box.offsetWidth} ${this.$refs.box.offsetHeight}`); //svg实例
+            hexagonSvg.on('click',this.hexagonSvgClearScale);
+            hexagonSvg.on('panStart',this.hexagonSvgPanStart);
+            hexagonSvg.on('panEnd',this.hexagonSvgPanEnd);
+            setHexagon(this.hexagonSvgID,{
+              hexagonSvg:hexagonSvg,
+              svgPolyline:null,
+              allHexagonRect:[],
+              allHexagonText:[],
+              hover:null
+            })
+            this.getPadding().then(()=>{
+              getHexagon(this.hexagonSvgID).svgPolyline=getHexagon(this.hexagonSvgID).hexagonSvg.polyline().fill('none').stroke({
+                color:'#DADADA',
+                width:3,
+                linecap:'round',
+                linejoin:'round'
+              });
+              this.getDataPoint();
+            });//获取到上方和左方的距离;
+          })
+        },100)
       },
       getPadding(){//确定到上方和下方的距离 保持居中
-         return new Promise(resolve=>{
-           let hexagonWidth = this.MathSqrt3*this.hexagonEdge+this.interspace;
-           let hexagonHeight = this.hexagonEdge*2+this.interspace;
-           let row=parseInt((this.hexagonData.length)/(this.col*2-1))*2;//行数是总数除2倍列数-1的整数部分 加上根据余数的判断
-           let dolNum=(this.hexagonData.length)%(this.col*2-1)
-           if(dolNum>0&&dolNum<=this.col){ //余数的判断
-             row+=1
-           } else if(dolNum>0&&dolNum>this.col){
-             row+=2
-           }
-           this.row=row;
-           if(this.hexagonData.length-1<=this.col){
-             // boxPadLeft:200, boxPadTop:75,
-             this.boxPadLeft=(this.$refs.box.offsetWidth-this.hexagonData.length*hexagonWidth)/2;
-             this.boxPadTop=(this.$refs.box.offsetHeight - hexagonHeight)/2; //只有一行是 到上方距离应该是两倍边长
-           }else{
-             this.boxPadLeft=(this.$refs.box.offsetWidth-this.col*hexagonWidth)/2;
-             this.boxPadTop=(this.$refs.box.offsetHeight - (hexagonHeight + (this.row-1)*hexagonHeight*3/4))/2; // 大于一行时 为一行的行高 + 3/2的行高
-           }
-
-           resolve();
-         })
+        return new Promise(resolve=>{
+          let hexagonWidth=this.MathSqrt3*this.hexagonEdge+this.interspace;
+          let hexagonHeight=this.hexagonEdge*2+this.interspace;
+          let row=parseInt((this.hexagonData.length)/(this.col*2-1))*2;//行数是总数除2倍列数-1的整数部分 加上根据余数的判断
+          let dolNum=(this.hexagonData.length)%(this.col*2-1)
+          if(dolNum>0&&dolNum<=this.col){ //余数的判断
+            row+=1
+          }else if(dolNum>0&&dolNum>this.col){
+            row+=2
+          }
+          this.row=row;
+          if(this.hexagonData.length-1<=this.col){
+            // boxPadLeft:200, boxPadTop:75,
+            this.boxPadLeft=(this.$refs.box.offsetWidth-this.hexagonData.length*hexagonWidth)/2;
+            this.boxPadTop=(this.$refs.box.offsetHeight-hexagonHeight)/2; //只有一行是 到上方距离应该是两倍边长
+          }else{
+            this.boxPadLeft=(this.$refs.box.offsetWidth-this.col*hexagonWidth)/2;
+            this.boxPadTop=(this.$refs.box.offsetHeight-(hexagonHeight+(this.row-1)*hexagonHeight*3/4))/2; // 大于一行时 为一行的行高 + 3/2的行高
+          }
+          resolve();
+        })
       },
       getDataPoint(){ // 确定所有坐标点的位置
         let col=this.col;//确定列数
@@ -284,26 +295,32 @@
         let paddingLeft=this.boxPadLeft; //整体到左侧的距离
         let arrIndex=0;
         this.hexSize=this.MathSqrt3*this.hexagonEdge/2;
-        for(let i=0;i<row;i++){// 确定 所有 坐标点
-          if(arrIndex>this.hexagonData.length-1){break}
-          for(let j=0;j<col;j++){
-            if(arrIndex>this.hexagonData.length-1){break}
+        for(let i=0; i<row; i++){// 确定 所有 坐标点
+          if(arrIndex>this.hexagonData.length-1){
+            break
+          }
+          for(let j=0; j<col; j++){
+            if(arrIndex>this.hexagonData.length-1){
+              break
+            }
             if(i===0){
-              this.hexagonData[arrIndex].left=j*(this.hexSize*2 + this.interspace)+ paddingLeft;
-              this.hexagonData[arrIndex].top=i*(this.hexSize*2) + paddingTop;
+              this.hexagonData[arrIndex].left=j*(this.hexSize*2+this.interspace)+paddingLeft;
+              this.hexagonData[arrIndex].top=i*(this.hexSize*2)+paddingTop;
               this.hexagonData[arrIndex].sub=i+'-'+j
-            } else if(i%2===0) {
+            }else if(i%2===0){
               // if(i===2&&( j===1 || j==2)){
               //   this.hexagonData[arrIndex].left=j*(this.hexSize*2 + this.interspace)+ paddingLeft;
               //   this.hexagonData[arrIndex].top=i*(this.hexSize*2 + this.interspace/2 - this.hexSize*2*1/8)+ paddingTop;
               // }else{
               //   continue;
               // }
-              this.hexagonData[arrIndex].left=j*(this.hexSize*2 + this.interspace)+ paddingLeft;
-              this.hexagonData[arrIndex].top=i*(this.hexSize*2 + this.interspace/2*this.MathSqrt3 - this.hexSize*2/8)+ paddingTop;
+              this.hexagonData[arrIndex].left=j*(this.hexSize*2+this.interspace)+paddingLeft;
+              this.hexagonData[arrIndex].top=i*(this.hexSize*2+this.interspace/2*this.MathSqrt3-this.hexSize*2/8)+paddingTop;
               this.hexagonData[arrIndex].sub=i+'-'+j
             }else{
-              if(j===col-1) {break}
+              if(j===col-1){
+                break
+              }
               // if(i!==3){
               //   this.hexagonData[arrIndex].left=j*(this.hexSize*2 + this.interspace ) + this.hexSize*2/2 + this.interspace/2+ paddingLeft;
               //   this.hexagonData[arrIndex].top=i*(this.hexSize*2 + this.interspace/2 - this.hexSize*2*1/8) + paddingTop;
@@ -313,8 +330,8 @@
               // }else{
               //   continue;
               // }
-              this.hexagonData[arrIndex].left=j*(this.hexSize*2 + this.interspace ) + this.hexSize*2/2 + this.interspace/2+ paddingLeft;
-              this.hexagonData[arrIndex].top=i*(this.hexSize*2 + this.interspace/2*this.MathSqrt3 - this.hexSize*2/8) + paddingTop;
+              this.hexagonData[arrIndex].left=j*(this.hexSize*2+this.interspace)+this.hexSize*2/2+this.interspace/2+paddingLeft;
+              this.hexagonData[arrIndex].top=i*(this.hexSize*2+this.interspace/2*this.MathSqrt3-this.hexSize*2/8)+paddingTop;
               this.hexagonData[arrIndex].sub=i+'-'+j
             }
             arrIndex++;
@@ -328,70 +345,112 @@
         });
         setTimeout(()=>{
           this.borderHex();
-          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate)
+          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate);
+          let hoverRect=getHexagon(this.hexagonSvgID).hexagonSvg.group().addClass('hoverRect');
+          hoverRect.rect();
+          hoverRect.text('a');
+          hoverRect.hide();
+          getHexagon(this.hexagonSvgID).hover=hoverRect
         })
       },
       renderHexagon(item){ // 绘画六边形
-       hexagonPoint(item.left,item.top,this.hexagonEdge).then(data=>{
-         let color= this.colorSet?this.colorSet(item):this.defaultColor;
-         let group=getHexagon(this.hexagonSvgID).hexagonSvg.group();
-         let polygon=group.polygon(data.svgStrPoint).fill(color.color);
-         polygon.data({
-           ...data,
-           ...item,
-           ...color
-         });
-         group.on('mouseenter',hexagonEnter);
-         group.on('mouseleave',hexagonLeave);
-         group.on('click',this.hexagonSvgScale.bind(this, polygon.data('center'),item,data));
-         this.allHexagon.push(polygon);
-         this.allGroup.push(group);
-         // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
-         if(this.infoSet){
-           this.infoSet(group, getHexagon(this.hexagonSvgID).allHexagonRect, getHexagon(this.hexagonSvgID).allHexagonText,data,item,this);
-         }
-       });
+        hexagonPoint(item.left,item.top,this.hexagonEdge).then(data=>{
+          let color=this.colorSet?this.colorSet(item):this.defaultColor;
+          let group=getHexagon(this.hexagonSvgID).hexagonSvg.group();
+          let polygon=group.polygon(data.svgStrPoint).fill(color.color);
+          polygon.data({
+            ...data,
+            ...item,
+            ...color
+          });
+          group.on('mouseenter',this.hexagonOver.bind(this,group));
+          group.on('mouseleave',this.hexagonOut.bind(this,group));
+          group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data));
+          group.on('dbclick',this.hexagonSvgClearScale.bind(this,polygon.data('center'),item,data));
+          this.allHexagon.push(polygon);
+          this.allGroup.push(group);
+          // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
+          if(this.infoSet){
+            this.infoSet(group,getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText,data,item,this);
+          }
+        });
+      },
+      hexagonOver(that){// 移入六边形
+        let color=that.first().data('hoverColor');
+        that.first().animate(100).stroke({width:3,color:'#909090'}).fill(color);
+        that.animate(100).transform({scale:1.1});
+        that.parent().find('polyline').stroke({color:'#909090'});
+        let hover=that.parent().find('.hoverRect');
 
-
-
-
+        if(this.isShowHover&&hover&&this.from){
+          let center=that.first().data('center');
+          let str=this.from==='asset'?that.first().data('host'):that.first().data('module');
+          console.log(str);
+          str+='';
+          hover.show();
+          hover.get(0).attr(
+            {
+              x:center[0]-this.hexagonEdge-(str.length*20+30),
+              y:center[1]-36
+            }
+          ).fill({ color: `rgba(0,0,0,0.3)`}).size((str.length*20+30),72);
+          hover.get(1).attr(
+            {
+              x:center[0]-this.hexagonEdge-(str.length*20+15),
+              y:center[1]-32
+            }
+          ).fill({ color: '#fff',weight:400}).text(str).font({size:36});
+        }
+      },
+      hexagonOut(that){// 移出六边形
+        let color=that.first().data('color');
+        that.first().animate(100).stroke({width:0,color:'#909090'}).fill(color);
+        that.animate(100).transform({scale:1});
+        that.parent().find('polyline').stroke({color:'#DADADA'});
+        let hover=that.parent().find('.hoverRect');
+        if(hover){
+          hover.hide();
+        }
       },
       hexagonSvgScale(center,item1,data,e){
-        window.event? window.event.cancelBubble = true : e.stopPropagation();
-       if(!this.pan&&this.isClickRate){
-         getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{ x: center[0], y: center[1] });
-         if(this.infoShow){
-           this.infoShow( getHexagon(this.hexagonSvgID).allHexagonRect, getHexagon(this.hexagonSvgID).allHexagonText)
-         }
-       }
+        window.event?window.event.cancelBubble=true:e.stopPropagation();
+        if(!this.pan&&this.isClickRate){
+          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
+          if(this.infoShow){
+            this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
+          }
+          this.isShowHover=false;
+        }
       },
       hexagonSvgClearScale(){
         if(!this.pan&&this.isClickRate){
           getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate);
           if(this.infoHide){
-            this.infoHide( getHexagon(this.hexagonSvgID).allHexagonRect, getHexagon(this.hexagonSvgID).allHexagonText)
+            this.infoHide(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
+          this.isShowHover=true;
+          window.getSelection().empty();//取消选中文字
         }
       },
       hexColorToRgb(color){
-        let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+        let reg=/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
         // 把颜色值变成小写
-        if (reg.test(color)) {
+        if(reg.test(color)){
           // 如果只有三位的值，需变成六位，如：#fff => #ffffff
-          if (color.length === 4) {
-            let colorNew = "#";
-            for (let i = 1; i < 4; i += 1) {
-              colorNew += color.slice(i, i + 1).concat(color.slice(i, i + 1));
+          if(color.length===4){
+            let colorNew="#";
+            for(let i=1; i<4; i+=1){
+              colorNew+=color.slice(i,i+1).concat(color.slice(i,i+1));
             }
-            color = colorNew;
+            color=colorNew;
           }
           // 处理六位的颜色值，转为RGB
-          let colorChange = [];
-          for (let i = 1; i < 7; i += 2) {
-            colorChange.push(parseInt("0x" + color.slice(i, i + 2)));
+          let colorChange=[];
+          for(let i=1; i<7; i+=2){
+            colorChange.push(parseInt("0x"+color.slice(i,i+2)));
           }
           return colorChange.join(",");
-        } else {
+        }else{
           return color;
         }
       },
@@ -404,11 +463,11 @@
       hexagonSvgPanEnd(ev){ // 实例移动结束 重新绑定点击函数
         ev.preventDefault();
         setTimeout(()=>{ // 设置延时 解决移动后的缩放问题
-         this.pan=false;
-       },100)
+          this.pan=false;
+        },100)
       },
       borderHex(){//外层边框 数组点
-        let length = this.allHexagon.length;
+        let length=this.allHexagon.length;
         if(length==0){//为0 调出
           return
         }
@@ -418,264 +477,262 @@
         let borderCol=endItemSub[1];
         let borderRow=endItemSub[0];
         let borderPoint=[item.x+k.x,item.y+k.y];
-        let borderSize = this.hexagonEdge*1.2;
-        getHexagon(this.hexagonSvgID).svgPolyline=getHexagon(this.hexagonSvgID).hexagonSvg.polyline(borderPoint[0]+','+borderPoint[1]).fill('none').stroke({ color: '#DADADA', width: 3 , linecap: 'round', linejoin: 'round'});//边框 起点
+        let borderSize=this.hexagonEdge*1.2;
+        getHexagon(this.hexagonSvgID).svgPolyline.plot([borderPoint]);
         //先从左到右划线 应该是 col的长度
         let borderColTop=0;
         if(borderRow==0){
           borderColTop=borderCol;
-        } else{
+        }else{
           borderColTop=this.col-1;
         }
-        for(let i=0;i<=borderColTop*2;i++){
+        for(let i=0; i<=borderColTop*2; i++){
           if(i===1){
-            borderSize = this.hexagonEdge*1.1
+            borderSize=this.hexagonEdge*1.1
           }
           if(i%2===0){
-            borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
+            borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
           }else{
-            borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+            borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
           }
         }
-        borderSize = this.hexagonEdge*1.2
+        borderSize=this.hexagonEdge*1.2
         // 从上到下 应该是row的长度 分情况
         let borderRowRight=0;//右边循环次数
         // 情况1 borderCol<=this.col && row==0时
         if((borderCol<=this.col-1)&&borderRow==0){
           borderRowRight=3;
-          for(let i=0;i<borderRowRight-1;i++){
+          for(let i=0; i<borderRowRight-1; i++){
             if(i===1){
               // borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,,getHexagon(this.hexagonSvgID).svgPolylinetrue);
-              borderSize = this.hexagonEdge*1.2
+              borderSize=this.hexagonEdge*1.2
             }
             if(i===2){
               // borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,,getHexagon(this.hexagonSvgID).svgPolylinetrue);
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
             }
             if(i%4===0){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
         }
         // 情况2 border==this.col&& row>0时 且row 为奇数事
         if(borderCol==this.col-2&&borderRow>0&&borderRow%2==1){
           borderRowRight=2*(Number(borderRow)+1);
-          for(let i=0;i<borderRowRight;i++){
+          for(let i=0; i<borderRowRight; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.1;
+              borderSize=this.hexagonEdge*1.1;
               if(i==0){
-                borderSize = this.hexagonEdge*1.2;
+                borderSize=this.hexagonEdge*1.2;
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.2;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.2;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.03;
+              borderSize=this.hexagonEdge*1.03;
               if(i===borderRowRight-1){
-                borderSize = this.hexagonEdge*1.1;
+                borderSize=this.hexagonEdge*1.1;
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
         }
         // 情况3 borderCol==this.col && row>0 且 row 为偶数事
         if(borderCol==this.col-1&&borderRow>0&&borderRow%2==0){
           borderRowRight=2*(Number(borderRow)+1)+1;
-          for(let i=0;i<borderRowRight-1;i++){
+          for(let i=0; i<borderRowRight-1; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
               if(i==0){
-                borderSize = this.hexagonEdge*1.2
+                borderSize=this.hexagonEdge*1.2
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.2;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.2;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.03;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.03;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
         }
         // 情况4 border<this.col&& row>0时 且row 为奇数事
         if(borderCol<this.col-2&&borderRow>0&&borderRow%2==1){
           borderRowRight=2*(Number(borderRow-1)+1);
-          for(let i=0;i<borderRowRight;i++){
+          for(let i=0; i<borderRowRight; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
               if(i==0){
-                borderSize = this.hexagonEdge*1.2
+                borderSize=this.hexagonEdge*1.2
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.2;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.2;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.03;
+              borderSize=this.hexagonEdge*1.03;
               if(i===borderRowRight-1){
-                borderSize = this.hexagonEdge*1.1;
+                borderSize=this.hexagonEdge*1.1;
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }//向下移动
-          borderSize = this.hexagonEdge*1.2
-          for(let i=0;i<(this.col-borderCol-1)*2-1;i++){//向左移动
+          borderSize=this.hexagonEdge*1.2
+          for(let i=0; i<(this.col-borderCol-1)*2-1; i++){//向左移动
             if(i===1){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
             }
             if(i==(this.col-borderCol-1)*2-2){
-              borderSize = this.hexagonEdge
+              borderSize=this.hexagonEdge
             }
             if(i%2===0){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else{
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
-          borderSize = this.hexagonEdge*1.1
-          borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+          borderSize=this.hexagonEdge*1.1
+          borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
         }
         // 情况5 borderCol<this.col && row>0 且 row 为偶数事
         if(borderCol<this.col-1&&borderRow>0&&borderRow%2==0){
           borderRowRight=2*(Number(borderRow-1)+1)+1;
-          for(let i=0;i<borderRowRight-1;i++){
+          for(let i=0; i<borderRowRight-1; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
               if(i==0){
-                borderSize = this.hexagonEdge*1.2
+                borderSize=this.hexagonEdge*1.2
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,2,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.2;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.2;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.03;
+              borderSize=this.hexagonEdge*1.03;
               if(i===borderRowRight-2){
-                borderSize = this.hexagonEdge*1.15;
+                borderSize=this.hexagonEdge*1.15;
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
-          borderSize = this.hexagonEdge*1.2
-          for(let i=0;i<(this.col-borderCol-1)*2-1;i++){//向左移动
+          borderSize=this.hexagonEdge*1.2
+          for(let i=0; i<(this.col-borderCol-1)*2-1; i++){//向左移动
             if(i==1){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
             }
             if(i==(this.col-borderCol-1)*2-2){
-              borderSize = this.hexagonEdge*1
+              borderSize=this.hexagonEdge*1
             }
             if(((Number(borderCol)+2)==this.col)&&(i==0)){
-              borderSize = this.hexagonEdge*1.1
+              borderSize=this.hexagonEdge*1.1
             }
             if(i%2===0){
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
             }else{
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
-          borderSize = this.hexagonEdge*1.1
-          borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
+          borderSize=this.hexagonEdge*1.1
+          borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,3,getHexagon(this.hexagonSvgID).svgPolyline);
         }
         // 从右到左 就是结束时的列数
-        borderSize = this.hexagonEdge*1.2
-        for(let i=0;i<=borderCol*2+1;i++){
+        borderSize=this.hexagonEdge*1.2
+        for(let i=0; i<=borderCol*2+1; i++){
           if(i===1){
             // borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,2,,getHexagon(this.hexagonSvgID).svgPolylinetrue);
-            borderSize = this.hexagonEdge*1.1
+            borderSize=this.hexagonEdge*1.1
           }
-          if(i==borderCol*2+1) {
-            borderSize = this.hexagonEdge*1.2
+          if(i==borderCol*2+1){
+            borderSize=this.hexagonEdge*1.2
           }
           if(i%2===0){
-            borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
+            borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,4,getHexagon(this.hexagonSvgID).svgPolyline);
           }else{
-            borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
+            borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
           }
         }
         // 从下向上的移动
         // 分兩種情況
-        borderSize = this.hexagonEdge*1.2;
+        borderSize=this.hexagonEdge*1.2;
         if(borderRow%2==1){
-          for(let i=0;i<=borderRow*2;i++){
+          for(let i=0; i<=borderRow*2; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.1;
-              if(i!== 0){
-                borderSize = this.hexagonEdge*1.03;
+              borderSize=this.hexagonEdge*1.1;
+              if(i!==0){
+                borderSize=this.hexagonEdge*1.03;
               }
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.2;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.2;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
         }
         if(borderRow%2==0){
-          for(let i=0;i<=borderRow*2;i++){
+          for(let i=0; i<=borderRow*2; i++){
             if(i%4===0){
-              borderSize = this.hexagonEdge*1.2
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.2
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===1){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
-            }
-            else if(i%4===2){
-              borderSize = this.hexagonEdge*1.03;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,1,getHexagon(this.hexagonSvgID).svgPolyline);
+            }else if(i%4===2){
+              borderSize=this.hexagonEdge*1.03;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,6,getHexagon(this.hexagonSvgID).svgPolyline);
             }else if(i%4===3){
-              borderSize = this.hexagonEdge*1.1;
-              borderPoint = borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
+              borderSize=this.hexagonEdge*1.1;
+              borderPoint=borderMove(borderPoint[0],borderPoint[1],borderSize,5,getHexagon(this.hexagonSvgID).svgPolyline);
             }
           }
         }
+
+
+        getHexagon(this.hexagonSvgID).svgPolyline.on('mouseover',PolylineOver)
+        getHexagon(this.hexagonSvgID).svgPolyline.on('mouseout',PolylineOut)
       },
       clearData(){// 清除数据 以及解绑事件 防止内存崩溃
-       if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
-         this.allHexagon.forEach((item)=>{
-           item.off('mouseenter',hexagonEnter);
-           item.off('mouseleave',hexagonLeave);
-           item.off('click',this.hexagonSvgScale);
-           item.clear();
-         })
-         this.allHexagon=[];
-         this.hexagonData=[];
-         getHexagon(this.hexagonSvgID).hexagonSvg.off('click',this.hexagonSvgClearScale);
-         getHexagon(this.hexagonSvgID).hexagonSvg.off('panStart',this.hexagonSvgPanStart);
-         getHexagon(this.hexagonSvgID).hexagonSvg.off('panEnd',this.hexagonSvgPanEnd);
-         getHexagon(this.hexagonSvgID).hexagonSvg=null;  //Svg的实例
-         getHexagon(this.hexagonSvgID).svgPolyline=null;// Svg hexagon的边框
-         delHexagon(this.hexagonSvgID)
-       }
+        if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
+          this.allHexagon.forEach((item)=>{
+            item.off('mouseover',this.hexagonOver);
+            item.off('mouseout',this.hexagonOut);
+            item.off('click',this.hexagonSvgScale);
+            item.off('dbclick',this.hexagonSvgClearScale);
+            item.clear();
+          })
+          this.allHexagon=[];
+          this.hexagonData=[];
+          getHexagon(this.hexagonSvgID).hexagonSvg.off('click',this.hexagonSvgClearScale);
+          getHexagon(this.hexagonSvgID).hexagonSvg.off('panStart',this.hexagonSvgPanStart);
+          getHexagon(this.hexagonSvgID).hexagonSvg.off('panEnd',this.hexagonSvgPanEnd);
+          getHexagon(this.hexagonSvgID).hexagonSvg=null;  //Svg的实例
+          getHexagon(this.hexagonSvgID).svgPolyline=null;// Svg hexagon的边框
+          delHexagon(this.hexagonSvgID)
+        }
       },
 
     },
@@ -697,18 +754,20 @@
     min-width: 200px;
     min-height: 200px;
   }
-  .hexagon-text{
+
+  .hexagon-text {
     position: absolute;
     z-index: 1;
     font-size: 10px;
   }
 </style>
 <style>
-  #SvgHex{
+  #SvgHex {
     transition: transform .25s linear;
     transform-origin: 0 0;
   }
-  #SvgHex.hexagonSvgBox{
+
+  #SvgHex.hexagonSvgBox {
     transition: .25s linear;
   }
 </style>
