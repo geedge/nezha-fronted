@@ -76,13 +76,13 @@
         let alert=item.alert[0];
         if(alert.P1>0){
           return{
-            color:'#FFAB99',
-            hoverColor:'#FABEB2',
+            color:'#FAAFAF',
+            hoverColor:'#FFCDCD',
           };
         } else if(alert.P2>0){
           return{
-            color:'#FAAFAF',
-            hoverColor:'#FFCDCD',
+            color:'#FFAB99',
+            hoverColor:'#FABEB2',
           };
         } else if(alert.P3>0){
           return{
