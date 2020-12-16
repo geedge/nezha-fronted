@@ -156,7 +156,7 @@
         unit: {},
         isError: false,
         errorContent: '',
-        pageSizes: [50, 100, 200],
+        pageSizes: [20, 50, 100],
         pageObj: {
           pageNo: 1,
           pageSize: 50,

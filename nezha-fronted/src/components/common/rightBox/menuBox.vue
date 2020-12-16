@@ -2,7 +2,7 @@
   <div class="right-box right-box-menu" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="menus-edit-del" v-has="'menu_delete'"
+      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="menus-edit-del"
               type="button"
               v-if="editMenu.id">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -68,7 +68,7 @@
               id="menus-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'menu_save'"
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
               id="menus-save">
         <span>{{$t('overall.save')}}</span>
       </button>

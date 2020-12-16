@@ -175,7 +175,7 @@
       </el-table>
       <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+        <Pagination :pageObj="pageObj" :post-page-sizes="[20, 50, 100]" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>
     </div>
     <transition name="el-zoom-in-bottom">

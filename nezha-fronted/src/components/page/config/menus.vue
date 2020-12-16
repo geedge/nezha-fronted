@@ -15,11 +15,11 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createMenus')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'menu_toAdd'"
+          <button :title="$t('overall.createMenus')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20"
                   id="menus-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/menu" v-has="'menu_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/menu"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -69,9 +69,9 @@
         </template>
           <template :column="item" slot-scope="scope">
             <div class="content-right-options" v-if="item.prop == 'option'">
-              <span :id="'menus-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'menu_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
+              <span :id="'menus-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :id="'menus-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'menu_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'menus-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
             </div>
             <template v-if="item.prop == 'name'">
               <template v-if="scope.row.i18n">
