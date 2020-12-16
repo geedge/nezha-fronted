@@ -1646,11 +1646,17 @@
           } else if(n.type === 'alertList'){
             this.setIsAlertList();
           } else if(n.type === 'singleStat'){
-            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]})
+            if(n.param&&!n.param.valueMapping){
+              this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
+              this.showPicker.push({bac:false,text:false});
+            }
             this.setIsSingleStat();
           } else if(n.type  === 'table'){
             n.param.last?this.$set(this.editChart.param,'last',n.param.last):this.$set(this.editChart.param,'last',0)
-            n.param&&!n.param.valueMapping&&this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
+            if(n.param&&!n.param.valueMapping){
+              this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
+              this.showPicker.push({bac:false,text:false});
+            }
           }else {
             this.setIsOtherChart();
             n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
