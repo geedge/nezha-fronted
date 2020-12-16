@@ -46,7 +46,7 @@
         <el-tabs :before-leave="beforeLeave"
                  @tab-click="handleClick"
                  @tab-remove="removeTab"
-                 style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;'
+                 style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;margin-top: -4px'
                  type="border-card"
                  v-model="editableTabsValue" >
           <el-tab-pane :key="item.name"
