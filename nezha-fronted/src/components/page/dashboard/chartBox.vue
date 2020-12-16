@@ -1567,8 +1567,10 @@
         if(flag){
           return
         }
-        this.showPicker[index].bac=false;
-        this.showPicker[index].text=false;
+        if(this.showPicker[index]){
+          this.showPicker[index].bac=false;
+          this.showPicker[index].text=false;
+        }
       },
       delMapping:function(index){
         this.editChart.param.valueMapping.mapping.splice(index,1)
