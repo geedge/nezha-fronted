@@ -541,6 +541,7 @@
     position: relative;
   }
   .chart-room .legend-container{
+    overflow: auto;
     width: calc(100% - 30px);
     max-height:80px;
     min-height:25px;

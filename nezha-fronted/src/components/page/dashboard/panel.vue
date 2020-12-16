@@ -2,7 +2,7 @@
   <div class="panel">
     <div class="top-tools">
       <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
-        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
       </div>
       <template v-else>
         <div class="top-tool-main-left">
@@ -77,7 +77,7 @@
             </template>
           </export-excel>
           <div class="relative-position ">
-            <button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light "  @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" v-has="'panel_save'"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
           </div>
         </div>
       </template>
@@ -248,6 +248,9 @@
         this.$refs.panelBox.show(true);
       },
       toAdd() {
+        if (!this.hasButton('panel_view')) {
+          return;
+        }
         this.$refs.panelBox.show(true);
         this.panel = {
           id: '',
