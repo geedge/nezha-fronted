@@ -3,7 +3,6 @@
 * index:yAxis 默认第二个参数 y轴的位置
 * type:自定义参数，用于区分是y轴调用还是tooltip调用,以设置不同精度  type =1 y轴调用 type=2 tooltip调用
 * */
-import {parse} from "echarts/extension-src/dataTool/gexf";
 import bus from "../../libs/bus"
 
 function none(value, index){
@@ -680,14 +679,14 @@ export default {
     if(type ==='Time'){
         return value
     }
-    
+
     if(type==='Data'){
      if(value>1){
        while(value>1024){
          pow++;
          value=value/1024
        }
-  
+
        if(flow==='ceil'){
          let length=JSON.stringify(Math.ceil(value)).length;
          value=value/Math.pow(10,length-1);
@@ -701,14 +700,14 @@ export default {
        return value
      }
     }
-  
+
     if(type==='Misc' || type==='DataRate'){
       if(value>1){
         while(value>1000){
           pow++;
           value=value/1000
         }
-      
+
         if(flow==='ceil'){
           let length=JSON.stringify(Math.ceil(value)).length;
           value=value/Math.pow(10,length-1);
@@ -722,9 +721,9 @@ export default {
         return value
       }
     }
-    
+
     return value;
-    
+
   },
   copies:function(value){
     switch(parseInt(value)){
@@ -747,7 +746,7 @@ export default {
       }
       return value?value:1;
     }
-    
+
     if(value<1024&&type==='Data'){
       let interVal=value/copies;
       return interVal

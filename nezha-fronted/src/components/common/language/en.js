@@ -407,6 +407,7 @@ const en = {
     syncTip:'This operation may cause the original data or chart to be overwritten. Are you sure to synchronize?',
     noImportFile:'No import file found',
     noAccess: "No access",
+    confirmDuplicate:"Are you sure to duplicate this chart?"
   },
   asset:{
     asset: 'Asset',
