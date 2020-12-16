@@ -460,8 +460,9 @@
       logout() {
         this.$get('logout').then(() => {
           this.logoutSuccess();
+          document.location.href = "/";
         });
-        document.location.reload();
+
         //this.jumpTo('/login');
       },
       refreshLang() {

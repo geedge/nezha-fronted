@@ -34,9 +34,9 @@
         </el-form-item>
 
         <el-form-item label="Icon" prop="iconId" class="icon">
-          <el-select v-model="form.iconId" placeholder=""  popper-class="asset-dropdown" size="small" :loading="imgageLoading">
+          <el-select :loading="imgageLoading" class="icon-select" placeholder="" popper-class="asset-dropdown" size="small" v-model="form.iconId">
             <div slot="prefix" class="sel-image">
-              <img v-if="form.iconId" :src="selImage.image" style="height: 24px;margin-top: 2px"/>
+              <img :src="selImage.image" style="height: 24px; width: auto; max-width: 48px; margin-top: 2px" v-if="form.iconId"/>
               <span v-if="form.iconId" class="sel-image-name">{{selImage.imageName}}</span>
             </div>
             <el-option
@@ -44,10 +44,10 @@
               :key="item.id"
               :label="item.label"
               :value="item.id">
-              <span style="float: left;width: 50%">
-                <img :src="item.image" style="height: 28px;margin-top: 2px"/>
+              <span style="float: left; width: 55px;">
+                <img :src="item.image" style="height: 28px; width: auto; max-width: 48px; margin-top: 2px"/>
               </span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
+              <span style="color: #8492a6; font-size: 13px">{{ item.imageName }}</span>
             </el-option>
           </el-select>
           <el-upload
@@ -65,9 +65,9 @@
           <span>{{$t('alert.config.expr')}}</span>
           <span class="float-right" @click="addExpression"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
-        <el-row class="element-item expr form-row-item" style="" v-for="index of promqlKeys.length" :key="'ele' + index">
-          <span class="nz-icon-minus-medium nz-icon-minus-position" style="padding: 0 8px"><i class="nz-icon nz-icon-minus" @click="removeExpression(index-1)"></i></span>
-          <el-form-item  :rules="{required: true,message: '名称不能为空', trigger: 'blur'}" :prop="'name.' + (index-1)">
+        <el-row :key="'ele' + index" class="element-item expr form-row-item" v-for="index of promqlKeys.length">
+          <span class="nz-icon-minus-medium nz-icon-minus-position" style="padding: 0 8px; margin-left: 8px;"><i @click="removeExpression(index-1)" class="nz-icon nz-icon-minus"></i></span>
+          <el-form-item :prop="'name.' + (index-1)" :rules="{required: true,message: '名称不能为空', trigger: 'blur'}">
             <el-row>
               <template>
                 <el-col class="expr-title" style="">
@@ -223,9 +223,15 @@
           ],
         },
         iconArray:[],
+        metricList: [], // metric列表
+        metricCascaderList:[],//metric级联列表
+        metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
+        metricOptions: [],
       }
     },
     mounted(){
+      this.getSuggestMetric();
+      this.queryMetrics();
       // this.addExpression();
       this.addNodeInit();
       if( this.nodeData.expressions){
@@ -235,6 +241,43 @@
       }
     },
     methods:{
+      queryMetrics() {
+        this.metricOptions = [];
+        this.$get('prom/api/v1/label/__name__/values').then(response=>{
+          if(response.status == 'success'){
+            let metrics=response.data.sort();
+            let metricMap=new Map();
+            metrics.forEach((item)=>{
+              let key='';
+              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
+                key=item.split('_')[0];
+              }else if(/^_\w*/.test(item)){
+                key='      ';
+              }else{
+                key=item;
+              }
+              if(metricMap.get(key)){
+                let values=metricMap.get(key);
+                values.push({label:item,value:item});
+              }else{
+                let values=[{label:item,value:item}];
+                metricMap.set(key,values);
+              }
+              //this.metricStore.push({label:item,value:item,insertText:item})
+            });
+            for(let key of metricMap.keys()){
+              let option={
+                label:key,
+                value:key,
+              };
+              if(metricMap.get(key) && metricMap.get(key).length>1){
+                option.children=metricMap.get(key);
+              }
+              this.metricOptions.push(option);
+            }
+          }
+        })
+      },
       addNodeInit(selImageId){
         this.$get('/project/topo/icon').then(res=>{
           this.imgageLoading=true;
@@ -299,6 +342,63 @@
       },
       expressionChange: function () {
 
+      },
+      // 获取metric列表
+      getSuggestMetric() {
+        //this.$get('/prom/api/v1/label/__name__/values').then(response => {
+        this.$get('/module?pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.metricList = response.data.list;
+            const cascaderMap = new Map();
+            this.metricList.forEach((item,index) => {
+              let projectName = item.project.name;
+              let moduleName = item.name;
+              const childOption = {
+                value: moduleName,
+                label: moduleName,
+                children:[],
+              };
+              if(cascaderMap.has(projectName)){
+                cascaderMap.get(projectName).push(childOption);
+              }else {
+                let childArr = [];
+                childArr.push(childOption);
+                cascaderMap.set(projectName,childArr);
+              }
+
+              //缓存全局数据
+              const moduleItem = {
+                name:moduleName,
+                metricMap:new Map()
+              };
+              if(this.metricAllData.has(projectName)){
+                let moduleGroup = this.metricAllData.get(projectName);
+                this.metricAllData.get(projectName).push(moduleItem);
+              }else {
+                let moduleList = [];
+                moduleList.push(moduleItem);
+                this.metricAllData.set(projectName,moduleList);
+              }
+            });
+            let metricCascaderArr = [];
+            cascaderMap.forEach(function(value,index){
+              const option = {
+                value: index+"_par",
+                label: index,
+                children:value,
+              };
+              metricCascaderArr.push(option);
+            });
+
+            this.metricCascaderList = metricCascaderArr;
+          }else {
+            this.metricList = [];
+            this.metricCascaderList = [];
+          }
+        })
+      },
+      getMetricOptions() {
+        return this.metricOptions;
       },
       addExpression() {
         this.expressions.push('');
@@ -398,8 +498,13 @@
 
   }
 </script>
-
+<style>
+  .icon-select>.el-input {
+    border-radius: 4px;
+  }
+</style>
 <style scoped>
+
   .mc{
     position: fixed;
     width: 100vw;
@@ -624,9 +729,9 @@
   }
   /*metric样式--begin*/
   .element-item {
-    padding: 20px 0;
+    padding: 20px;
     border-bottom: 1px dashed #dfe7f2;
-    width: 100%;
+    width: 700px;
   }
   /*metric样式--end*/
   .label-center{

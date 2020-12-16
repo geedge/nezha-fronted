@@ -749,6 +749,6 @@
     width: 14px;
   }
   .walk-close {
-    margin-left: -6px;
+    font-size: 12px;
   }
 </style>

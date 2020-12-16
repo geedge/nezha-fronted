@@ -726,6 +726,7 @@
     font-size: 14px;
     padding-bottom: 5px;
     width: 100%;
+    overflow: auto;
   }
   .mib-browser-detail {
     height: 31%;
@@ -758,8 +759,9 @@
     position: absolute;
     left: calc(25% + 2px);
     width: calc(75% - 20px);
-    min-height: 100%;
+    height: 100%;
     padding-right: 12px;
+    overflow: auto;
   }
   /*第一列宽25%*/
   .mib-browser-detail-row>div:first-of-type {

@@ -1216,7 +1216,7 @@
   }
   .edit-topology{
     color: #1a1a1a;
-    font-size: 18px;
+    font-size: 14px;
     /*font-weight: bold;*/
     height: 28px;
     position: absolute;
