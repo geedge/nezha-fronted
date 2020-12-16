@@ -471,11 +471,13 @@
     border-radius: 0 4px 4px 0;
     flex: 1;
     height: calc(100% - 2px);
+    padding: 0 8px;
+    min-width: 40px;
   }
   .content-P1-title{
     background: #F2866E;
     border-radius: 4px 0 0 4px;
-    width: 54px;
+    width: 40px;
     height: 100%;
   }
   .content-P1-title + div{
@@ -487,7 +489,7 @@
   .content-P2-title{
     background: #F89984;
     border-radius: 4px 0 0 4px;
-    width: 54px;
+    width: 40px;
     height: 100%;
   }
   .content-P2-title + div{
@@ -499,7 +501,7 @@
   .content-P3-title{
     background: #F7BA78;
     border-radius: 4px 0 0 4px;
-    width: 54px;
+    width: 40px;
     height: 100%;
   }
   .content-P3-title + div{
