@@ -5,8 +5,8 @@
     <!--标题-->
     <div class="overview-content-header">
       <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
-      <div class="overview-loading"><loading ref="overviewLoading" ></loading></div>
       <div class="header-tool">
+        <div class="overview-loading"><loading ref="overviewLoading" ></loading></div>
         <div class="tool-container">
           <div class="time">{{sysTime}}</div>
           <div class="date">
