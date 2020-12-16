@@ -249,6 +249,7 @@
         return color;
       },
       clickLegend(legendName,index){
+
         let curIsGrey=this.legend[index].isGray;
         if(this.chart){
           if(curIsGrey){
@@ -262,7 +263,7 @@
               name: legendName
             });
           }
-          this.$set(this.legend,index,!curIsGrey)
+          this.$set(this.legend[index],'isGray',!curIsGrey)
         }
       },
       clickLegend2(legendName,index){

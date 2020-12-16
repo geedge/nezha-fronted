@@ -65,7 +65,9 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" class-name="costom-value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >{{ scope.row.value}}</div>
+                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
+                  <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -98,7 +100,9 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}">{{ scope.row.value}}</div>
+                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" >
+                  <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
+                </div>
               </template>
             </el-table-column>
           </el-table>
