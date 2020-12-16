@@ -302,7 +302,8 @@
               <template v-if="editChart.type != 'singleStat'">
                 <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" trigger="hover" width="150">
+                  <el-popover placement="top" trigger="hover" width="211">
+                    <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
