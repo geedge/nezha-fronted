@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="login-foot-buildOn">
-      <span><a target="_blank" rel="noopener norefferrer" href='https://prometheus.io'>Build on Prometheus</a></span>
+      <span><a target="_blank" rel="noopener noreferrer" href='https://prometheus.io'>Build on Prometheus</a></span>
     </div>
   </div>
 </template>
@@ -229,8 +229,9 @@ export default {
   transform: translateX(-50%);
 }
 .login-foot-buildOn{
-  position: fixed;
+  position: absolute;
   bottom: 30px;
+  z-index: 100;
   left: calc(50% - 90px);
   a{
     color: white;
