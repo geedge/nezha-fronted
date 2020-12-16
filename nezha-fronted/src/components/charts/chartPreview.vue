@@ -141,9 +141,11 @@
               {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
             </template>
           </el-table-column>
-          <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90">
+          <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90" class-name="costom-value">
             <template slot-scope="scope">
-              <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
+              <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}">
+                <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
+              </div>
             </template>
           </el-table-column>
         </el-table>

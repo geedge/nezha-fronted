@@ -663,7 +663,8 @@
   background-color: rgba(0,0,0,.1);
   z-index: 100;
 }*/
-.chart-table .nz-table .el-table__row .costom-value .cell{
-  padding: 1px 0;
-
+.chart-table ,.chart-preview-dialog {
+  .nz-table .el-table__row .costom-value .cell{
+    padding: 1px 0;
+  }
 }
