@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <!--model和asset的工具栏-->
-    <div class="sub-top-tools" v-if="from != this.$CONSTANTS.fromRoute.project">
+    <div class="sub-top-tools" v-if="from != $CONSTANTS.fromRoute.project">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">
           <template v-if="from == $CONSTANTS.fromRoute.model">{{obj.name}}</template>

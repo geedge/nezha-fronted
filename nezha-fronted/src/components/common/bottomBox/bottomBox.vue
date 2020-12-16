@@ -85,7 +85,7 @@
         this.$emit('update:targetTab', tab);
       },
       afterResize() {
-        if (this.from == $CONSTANTS.fromRoute.endpoint && this.targetTab == 'endpointQuery') {
+        if (this.from == this.$CONSTANTS.fromRoute.endpoint && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
         }
       }

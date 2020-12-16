@@ -649,11 +649,11 @@
         if(this.searchLabel.orderBy){
           orderBy=this.searchLabel.orderBy
         }
-        if (this.from == $CONSTANTS.fromRoute.rule) {
+        if (this.from == this.$CONSTANTS.fromRoute.rule) {
           this.searchLabel.ruleId = this.obj.id;
-        } else if (this.from == $CONSTANTS.fromRoute.asset) {
+        } else if (this.from == this.$CONSTANTS.fromRoute.asset) {
           this.searchLabel.assetId = this.obj.id;
-        }else if(this.from == $CONSTANTS.fromRoute.endpoint){
+        }else if(this.from == this.$CONSTANTS.fromRoute.endpoint){
           this.searchLabel.endpointId=this.obj.id;
         }
         this.pageObj.pageNo = 1;
@@ -693,17 +693,17 @@
           }else{
             this.defaultPick=12;
           }
-          if (this.from == $CONSTANTS.fromRoute.rule) {
+          if (this.from == this.$CONSTANTS.fromRoute.rule) {
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertName" && item.label != "severity"
             });
             this.searchLabel.ruleId = n.id;
-          } else if (this.from == $CONSTANTS.fromRoute.asset) {
+          } else if (this.from == this.$CONSTANTS.fromRoute.asset) {
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertType" && item.label != "asset"
             });
             this.searchLabel.assetId = n.id;
-          } else if(this.from == $CONSTANTS.fromRoute.endpoint){
+          } else if(this.from == this.$CONSTANTS.fromRoute.endpoint){
             this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
               return item.label != "alertType" && item.label != "endpoint"
             });
