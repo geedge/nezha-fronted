@@ -56,7 +56,7 @@
           </button>
         </template>
 
-        <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 20px;" type="button" v-has="`${from}_chart_save`" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+        <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" style="margin-left: 20px;" type="button" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
 
         <button :title="$t('overall.syncChart')" @click="syncChart" style="margin-left: 20px;" v-has="['model_chart_sync', 'asset_chart_sync']" v-if="from == $CONSTANTS.fromRoute.asset||from == $CONSTANTS.fromRoute.model"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light ">

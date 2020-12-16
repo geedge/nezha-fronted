@@ -77,7 +77,7 @@
             </template>
           </export-excel>
           <div class="relative-position ">
-            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" v-has="'panel_save'"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
           </div>
         </div>
       </template>
