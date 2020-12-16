@@ -54,7 +54,7 @@
             <div :class="{'menu-active' : route == '/asset'}" @click="jumpToAsset()" v-else>{{$t(menu.i18n)}}</div>
           </template>
           <template>
-            <el-menu-item index="3-0" v-has="'asset_toAdd'" v-if="assetData.length == 0"><div @click="createBox({type: 6})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
+            <el-menu-item index="3-0" v-if="assetData.length == 0"><div @click="createBox({type: 6})" v-has="'asset_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createDatacenter")}}</div></el-menu-item>
             <template v-else>
               <div style='height: 360px; overflow: auto;' v-has="'asset_view'" v-if="assetData.length>10">
                 <el-menu-item :index="'3-' + index" :key="index" v-for="(item, index) in assetData">
@@ -77,7 +77,7 @@
             <div :class ="route == '/project' ? 'menu-active' :''" @click="jumpToProject(projectData[0])" v-else >{{$t(menu.i18n)}}</div>
           </template>
           <template>
-            <el-menu-item index="2-0" v-has="'project_toAdd'" v-if="projectData.length == 0"><div @click="createBox({type: 1})"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
+            <el-menu-item index="2-0" v-if="projectData.length == 0"><div @click="createBox({type: 1})" v-has="'project_toAdd'"><i class="nz-icon nz-icon-create-square header-dropdown-add"></i>&nbsp;&nbsp;{{$t("overall.createProject")}}</div></el-menu-item>
             <template v-else>
               <div style="height: 360px; overflow: auto;" v-has="'project_view'" v-if="projectData.length>10">
                 <el-menu-item :index="'2-' + index" :key="index" v-for="(item, index) in projectData">
