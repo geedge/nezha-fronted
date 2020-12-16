@@ -698,9 +698,18 @@
         this.init('modal');
         this.network.on("resize", function (params) {//检测resize
           setTimeout(()=>{
-            this_.modelTopUpdate();
-            this_.selNodeArrUpdate();
-            this_.networkPopShow=false;
+            this_.setData();
+            setTimeout(()=>{
+              this_.zoom=this_.network.view.targetScale;
+              this_.network.moveTo({
+                // position: this_.viewsCenter,
+                scale: this_.zoom-0.1,
+                offset: {x:0, y:0},
+              });
+              this_.modelTopUpdate();
+              this_.selNodeArrUpdate();
+              this_.networkPopShow=false;
+            },100)
           });
           return false
         });

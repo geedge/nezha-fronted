@@ -174,7 +174,6 @@
         immediate:false,
         deep:true,
         handler(n){
-          console.log(n);
           this.init();
         }
       },
@@ -210,6 +209,7 @@
         defaultColor:{color:'#99D7C2',hoverColor:'#B2ECD9'},
         viewBox:null,
         isShowHover:true,//是否显示hover块
+        timer:null,// 定时器用来处理单击双击的冲突
       }
     },
     computed:{
@@ -350,7 +350,10 @@
           hoverRect.rect();
           hoverRect.text('a');
           hoverRect.hide();
-          getHexagon(this.hexagonSvgID).hover=hoverRect
+          getHexagon(this.hexagonSvgID).hover=hoverRect;
+          setTimeout(()=>{
+            this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox')
+          },300)
         })
       },
       renderHexagon(item){ // 绘画六边形
@@ -366,7 +369,7 @@
           group.on('mouseenter',this.hexagonOver.bind(this,group));
           group.on('mouseleave',this.hexagonOut.bind(this,group));
           group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data));
-          group.on('dbclick',this.hexagonSvgClearScale.bind(this,polygon.data('center'),item,data));
+          group.on('dblclick',this.hexagonSvgClearScale.bind(this,polygon.data('center'),item,data));
           this.allHexagon.push(polygon);
           this.allGroup.push(group);
           // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
@@ -375,7 +378,7 @@
           }
         });
       },
-      hexagonOver(that){// 移入六边形
+      hexagonOver(that,e){// 移入六边形
         let color=that.first().data('hoverColor');
         that.first().animate(100).stroke({width:3,color:'#909090'}).fill(color);
         that.animate(100).transform({scale:1.1});
@@ -385,21 +388,27 @@
         if(this.isShowHover&&hover&&this.from){
           let center=that.first().data('center');
           let str=this.from==='asset'?that.first().data('host'):that.first().data('module');
-          console.log(str);
           str+='';
           hover.show();
-          hover.get(0).attr(
-            {
-              x:center[0]-this.hexagonEdge-(str.length*20+30),
-              y:center[1]-36
-            }
-          ).fill({ color: `rgba(0,0,0,0.3)`}).size((str.length*20+30),72);
           hover.get(1).attr(
             {
-              x:center[0]-this.hexagonEdge-(str.length*20+15),
-              y:center[1]-32
+              x:center[0]-(str.length*20+30)/2,
+              y:center[1]-this.hexagonEdge-76,
             }
           ).fill({ color: '#fff',weight:400}).text(str).font({size:36});
+          let textPaddingWidth=((str.length*20+30)-hover.get(1).bbox()[0].width)/2;
+          hover.get(1).attr(
+            {
+              x:center[0]-(str.length*20+30)/2+textPaddingWidth,
+              y:center[1]-this.hexagonEdge-76,
+            }
+          );
+          hover.get(0).attr(
+            {
+              x:center[0]-(str.length*20+30)/2,
+              y:center[1]-this.hexagonEdge-80,
+            }
+          ).fill({ color: `rgba(0,0,0,0.3)`}).size((str.length*20+30),72).attr({ rx:"10",ry:"10"});
         }
       },
       hexagonOut(that){// 移出六边形
@@ -414,17 +423,20 @@
       },
       hexagonSvgScale(center,item1,data,e){
         window.event?window.event.cancelBubble=true:e.stopPropagation();
-        if(!this.pan&&this.isClickRate){
-          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
-          if(this.infoShow){
-            this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
+        this.timer=setTimeout(()=>{
+          if(!this.pan&&this.isClickRate){
+            getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
+            if(this.infoShow){
+              this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
+            }
+            this.isShowHover=false;
           }
-          this.isShowHover=false;
-        }
+        },220);
       },
       hexagonSvgClearScale(){
+        clearTimeout(this.timer);
         if(!this.pan&&this.isClickRate){
-          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate);
+          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate).attr('viewBox',this.viewBox);
           if(this.infoHide){
             this.infoHide(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
@@ -465,6 +477,9 @@
         setTimeout(()=>{ // 设置延时 解决移动后的缩放问题
           this.pan=false;
         },100)
+        if(this.isShowHover){
+          this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox');
+        }
       },
       borderHex(){//外层边框 数组点
         let length=this.allHexagon.length;
@@ -721,7 +736,7 @@
             item.off('mouseover',this.hexagonOver);
             item.off('mouseout',this.hexagonOut);
             item.off('click',this.hexagonSvgScale);
-            item.off('dbclick',this.hexagonSvgClearScale);
+            item.off('dblclick',this.hexagonSvgClearScale);
             item.clear();
           })
           this.allHexagon=[];

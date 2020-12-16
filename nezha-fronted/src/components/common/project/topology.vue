@@ -1145,13 +1145,13 @@
     color: #EC7F66;
   }
   .network-pop .no-selPop{
-    color: #666;
+    color: #999;
   }
   .network-pop .no-selPop .nz-icon-liubianxing{
-    color: rgba(102,102,102,0.5);
+    color: rgb(218,218,218);
   }
   .network-pop .no-selPop .nz-icon-chart{
-    color: #666;
+    color: #999;
   }
   /*.network-pop .nz-icon-hexagonBorder.error-model-stat:hover{*/
     /*color: #EC7F66;*/
