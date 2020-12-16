@@ -48,7 +48,7 @@
               </button>
             </template>
           </export-excel>
-          <delete-button :delete-objs="batchDeleteObjs" api="alert/rule" @after="getTableData"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="alert/rule" v-has="'rule_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>

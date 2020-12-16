@@ -230,11 +230,13 @@ export default {
 }
 .login-foot-buildOn{
   position: absolute;
-  bottom: 30px;
+  bottom: 20px;
   z-index: 100;
   left: calc(50% - 90px);
   a{
-    color: white;
+    font-size: 14px;
+    color: #eee;
+    text-shadow: 1px 1px 3px #333;
     text-decoration: none;
   }
 }
