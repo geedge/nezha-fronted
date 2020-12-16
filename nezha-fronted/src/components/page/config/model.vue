@@ -15,7 +15,7 @@
           <button :title="$t('overall.createModel')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="model-add" v-has="'model_toAdd'">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" api="model" @after="getTableData"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="model" v-has="'model_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>

@@ -157,4 +157,7 @@
   .interval-refresh-popover{
     min-width: unset !important;
   }
+  .sub-top-tools .interval-refresh {
+    margin-top: -1px;
+  }
 </style>

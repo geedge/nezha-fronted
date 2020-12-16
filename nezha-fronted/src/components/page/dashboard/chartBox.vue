@@ -64,7 +64,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 410;
+    z-index: 2100;
   }
   /deep/ .el-color-picker{
     position: absolute;

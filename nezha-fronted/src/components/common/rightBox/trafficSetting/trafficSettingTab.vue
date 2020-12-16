@@ -16,8 +16,8 @@
           :highlight-first-item="true"
           @input="hostInputChange"
           @blur="validateHostEmpty"
-        ></el-autocomplete>
-        <el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide" popper-class="no-style-class">
+        ></el-autocomplete><el-popover
+        @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="click">
           <div class="mib-browser-ad-search">
             <el-row class="mib-browser-ad-search-item" style="font-weight: bold">{{$t('config.dc.traffic.snmpSetting')}}</el-row>
             <el-row class="mib-browser-ad-search-item">
@@ -112,7 +112,14 @@
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
-        <span class="right-box-form-minus-box" @click="delSelf" style="vertical-align: middle"><i class="nz-icon nz-icon-minus"></i></span>
+        <span @click="delSelf" class="right-box-form-minus-box"
+              style="vertical-align: middle;right: 0;
+                      position: absolute;
+                      line-height: 21px;
+                      height: 21px;
+                      top: 50%;
+                      transform: translateY(-50%);"
+        ><i class="nz-icon nz-icon-minus"></i></span>
         <div>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
           <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
@@ -623,8 +630,8 @@
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     height: 30px;
-    position: relative;
-    left: -3px;
+    top: 1px;
+    left: -1px;
   }
   .asset-config-tab .right-box-row-with-btn{
     width: calc(100% - 69px);
@@ -650,14 +657,15 @@
     margin-bottom: 5px;
     height: 20px;
     line-height: 18px;
-    justify-content: flex-end;
+    justify-content: center;
   }
   .tab-tags-item .tag-item-key{
     border:1px solid #409eff;;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     background-color: #409eff;
-    width: 52px;
+    min-width: 40px;
+    padding: 0 8px;
     color: white;
   }
   .tab-tags-item .tag-item-value{
@@ -665,7 +673,8 @@
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     background-color: #FFF;
-    width: 52px;
+    min-width: 40px;
+    padding: 0 8px;
   }
   .tab-tags-item .tag-item-text{
     background-color: #FFF;
