@@ -62,10 +62,10 @@
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
+            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" class-name="costom-value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
+                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >{{ scope.row.value}}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -98,7 +98,7 @@
             <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff',margin: '10px 0'}">{{ scope.row.value}}</div>
+                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}">{{ scope.row.value}}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -334,26 +334,32 @@
       clearChart() {
         this.data = {};
       },
-      duplicate() {
-        this.dropdownMenuShow = false;
-        const param = {id: this.data.id};
-        this.$post('panel/' + this.data.panelId + '/charts/duplicate', (param)).then(response => {
-          if (response.code === 200) {
-            this.$message({
-              duration: 2000,
-              type: 'success',
-              message: this.$t("tip.duplicateSuccess")
-            });
-            this.$emit('on-duplicate-chart-block', this.data.id, response.data);
-          } else {
-            if (response.msg) {
-              this.$message.error(response.msg);
-            } else if (response.error) {
-              this.$message.error(response.error);
-            } else {
-              this.$message.error(response);
+      duplicate(){
+        this.dropdownMenuShow=false;
+        this.$confirm(this.$t("tip.confirmDuplicate"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'info'
+        }).then(() => {
+          const param = {id:this.data.id};
+          this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
+            if (response.code === 200) {
+              this.$message({
+                duration: 2000,
+                type: 'success',
+                message: this.$t("tip.duplicateSuccess")
+              });
+              this.$emit('on-duplicate-chart-block', this.data.id,response.data);
+            }else {
+              if(response.msg){
+                this.$message.error(response.msg);
+              }else if(response.error){
+                this.$message.error(response.error);
+              }else {
+                this.$message.error(response);
+              }
             }
-          }
+          });
         });
       },
       // 全屏查看

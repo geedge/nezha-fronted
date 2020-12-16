@@ -170,24 +170,30 @@
       },
       duplicate(){
         this.dropdownMenuShow=false;
-        const param = {id:this.data.id};
-        this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
-          if (response.code === 200) {
-            this.$message({
-              duration: 2000,
-              type: 'success',
-              message: this.$t("tip.duplicateSuccess")
-            });
-            this.$emit('on-duplicate-chart-block', this.data.id,response.data);
-          }else {
-            if(response.msg){
-              this.$message.error(response.msg);
-            }else if(response.error){
-              this.$message.error(response.error);
+        this.$confirm(this.$t("tip.confirmDuplicate"), {
+          confirmButtonText: this.$t("tip.yes"),
+          cancelButtonText: this.$t("tip.no"),
+          type: 'info'
+        }).then(() => {
+          const param = {id:this.data.id};
+          this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
+            if (response.code === 200) {
+              this.$message({
+                duration: 2000,
+                type: 'success',
+                message: this.$t("tip.duplicateSuccess")
+              });
+              this.$emit('on-duplicate-chart-block', this.data.id,response.data);
             }else {
-              this.$message.error(response);
+              if(response.msg){
+                this.$message.error(response.msg);
+              }else if(response.error){
+                this.$message.error(response.error);
+              }else {
+                this.$message.error(response);
+              }
             }
-          }
+          });
         });
       },
       // 全屏查看
