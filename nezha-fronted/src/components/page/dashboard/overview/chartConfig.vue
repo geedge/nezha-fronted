@@ -38,9 +38,9 @@
         show:false,
         top:'0',
         right:'18',
-        showTitle:true,
+        showTitle:false,
         tooltip:{
-          show:false,
+          show:true,
         },
         feature:{
           dataZoom:{
@@ -54,6 +54,20 @@
             title:{}
           },
           // restore: {},
+        },
+        tooltip: { // 和 option.tooltip 的配置项相同
+          show: true,
+          position:'top',
+          formatter: function (param) {
+            debugger
+            return param.title; // 自定义的 DOM 结构
+          },
+          backgroundColor:'rgba(255,255,255,0)',
+          borderColor :'rgba(255,255,255,0)',
+          textStyle: {
+            fontSize: 12,
+            color : '#439AC6'
+          },
         }
       },
       tooltip: {

@@ -164,6 +164,8 @@
 
         if(this.chartType == 'line' || this.chartType == 'overviewLine'){
           this.option.xAxis.axisLabel.formatter=this.defaultXAxisFormatter;
+          this.option.toolbox.tooltip.formatter=this.defaultToolBoxFormatter;
+
           if(this.yAxisFormatter){
             this.option.yAxis.axisLabel.formatter=this.yAxisFormatter;
           }else{
@@ -350,6 +352,12 @@
         let minute=t_date.getMinutes()>9?t_date.getMinutes():'0'+t_date.getMinutes();
         return [ month, day].join('-') + "\n"
           + [hour, minute].join(':');
+      },
+      defaultToolBoxFormatter(params){
+        if(params.name==='stack'){
+          return this.$t('overall.toolBox.stack')
+        }
+        return params.title
       },
       defaultTooltipFormatter:function(params){
         let str = `<div>`;
