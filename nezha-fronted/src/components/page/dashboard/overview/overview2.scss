@@ -4,9 +4,9 @@
 .overview-content-header{
   display: flex;
   padding: 8px 0 2px 0;
+  justify-content: space-between;
 }
 .overview-content-header .header-title{
-  flex:12;
   height: 35px;
   line-height: 35px;
   font-size: 1.5rem !important;
@@ -14,15 +14,21 @@
   margin-left: 15px;
 }
 .overview-content-header .header-tool{
-  flex: 2;
   height: 35px;
+  min-width: 340px;
+  display: flex;
+  padding: 5px;
 }
 .header-tool .tool-container{
   display: flex;
   text-align: center;
+  justify-content: space-between;
+  min-width: 310px;
+}
+.tool-container .pickTime{
+  margin-right: -20px;
 }
 .tool-container .time{
-  flex: 4;
   font-size: 1rem !important;
   display: inline-block;
   height: 35px;
@@ -31,7 +37,6 @@
   vertical-align: middle;
 }
 .tool-container .date{
-  flex: 4;
   height: 35px;
 }
 .date .week{
@@ -44,7 +49,6 @@
   line-height: 0.75rem;
 }
 .tool-container .operation{
-  flex: 2;
   display: inline-block;
   line-height: 35px;
 }

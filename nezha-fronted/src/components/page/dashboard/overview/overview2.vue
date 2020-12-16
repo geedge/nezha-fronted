@@ -5,15 +5,15 @@
     <!--标题-->
     <div class="overview-content-header">
       <div class="header-title" :class="{'hide-div':!isFullScreen}">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</div>
-      <div class="overview-loading"><loading ref="overviewLoading" ></loading></div>
       <div class="header-tool">
+        <div class="overview-loading"><loading ref="overviewLoading" ></loading></div>
         <div class="tool-container">
           <div class="time">{{sysTime}}</div>
           <div class="date">
             <div class="week">{{sysWeek}}</div>
             <div class="sys-date">{{sysDate}}</div>
           </div>
-          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="setFreshDataTimer" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
+          <pick-time  :showTimePicker="false" class="float-right pickTime" :refresh-data-func="setFreshDataTimer" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
           <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
         </div>
       </div>
