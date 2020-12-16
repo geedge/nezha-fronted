@@ -97,7 +97,7 @@
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90"
+            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" class-name="costom-value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" >
