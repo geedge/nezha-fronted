@@ -368,8 +368,8 @@
           });
           group.on('mouseenter',this.hexagonOver.bind(this,group));
           group.on('mouseleave',this.hexagonOut.bind(this,group));
-          group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data));
-          group.on('dblclick',this.hexagonSvgClearScale.bind(this,polygon.data('center'),item,data));
+          group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data,group));
+
           this.allHexagon.push(polygon);
           this.allGroup.push(group);
           // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
@@ -421,20 +421,25 @@
           hover.hide();
         }
       },
-      hexagonSvgScale(center,item1,data,e){
-        window.event?window.event.cancelBubble=true:e.stopPropagation();
-        this.timer=setTimeout(()=>{
-          if(!this.pan&&this.isClickRate){
-            getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
-            if(this.infoShow){
-              this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
-            }
-            this.isShowHover=false;
+      hexagonSvgScale(center,item1,data,group,e){
+        window.event? window.event.cancelBubble = true:e.stopPropagation();
+        this.group=group;
+        setTimeout(()=>{
+          this.group.on('dblclick',this.hexagonSvgClearScale);
+        },300);
+        if(!this.pan&&this.isClickRate){
+          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
+          if(this.infoShow){
+            this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
-        },220);
+          this.isShowHover=false;
+        }
       },
       hexagonSvgClearScale(){
-        clearTimeout(this.timer);
+        if(this.group){
+          this.group.off('dblclick',this.hexagonSvgClearScale);
+          this.group=null;
+        }
         if(!this.pan&&this.isClickRate){
           getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate).attr('viewBox',this.viewBox);
           if(this.infoHide){
