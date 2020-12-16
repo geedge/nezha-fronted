@@ -155,6 +155,7 @@
 <script>
   import bus from '../../libs/bus';
   import dcBox from "./rightBox/dcBox"; //dc弹框
+  import {mapActions} from "vuex";
   import changePwd from "../page/config/changePwd";
   export default {
     name: "Header",
@@ -279,6 +280,7 @@
       }
     },
     methods: {
+      ...mapActions(["logoutSuccess"]),
       cli(){
         this.$store.commit('openConsole');
       },
@@ -456,8 +458,11 @@
         this.rightBox.project.show = true;
       },
       logout() {
-        this.$get('logout');
-        this.jumpTo('/login');
+        this.$get('logout').then(() => {
+          this.logoutSuccess();
+        });
+        document.location.reload();
+        //this.jumpTo('/login');
       },
       refreshLang() {
         this.language = localStorage.getItem("nz-language");

@@ -551,7 +551,7 @@
                       this.noData=false;
                     }
                     let _chartItem = JSON.parse(JSON.stringify(chartItem));
-                    if (chartItem.from == "endpoint") {
+                    if (chartItem.from == $CONSTANTS.fromRoute.endpoint) {
                       _chartItem.type = "line";
                     }
                     this.setData(_chartItem, series, legend);
@@ -1105,7 +1105,7 @@
           this.getChartData();
         } else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || this.chart.from == 'endpoint') {
           this.echartModalStore.clear();
-          if (this.chart.from != 'endpoint') {
+          if (this.chart.from != $CONSTANTS.fromRoute.endpoint) {
             this.showLegend = false;
           }
           this.$refs.loadingPreview.startLoading();

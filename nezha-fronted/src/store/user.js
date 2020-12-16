@@ -19,6 +19,11 @@ const user = {
     },
     setRoleList(state, roleList) {
       state.roleList = [...roleList];
+    },
+    clean(state) {
+      state.menuList = [];
+      state.buttonList = [];
+      state.roleList = [];
     }
   },
   getters: {
@@ -55,6 +60,11 @@ const user = {
           }
         });
       });
+    },
+    logoutSuccess(store, res) {
+      sessionStorage.removeItem("nz-username");
+      localStorage.removeItem("nz-username");
+      sessionStorage.removeItem("nz-token");
     }
   },
 };

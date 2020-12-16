@@ -13,7 +13,7 @@
             <div class="week">{{sysWeek}}</div>
             <div class="sys-date">{{sysDate}}</div>
           </div>
-          <pick-time  :showTimePicker="false" class="float-right pickTime margin-l-20" :refresh-data-func="setFreshDataTimer" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
+          <pick-time :refresh-data-func="setFreshDataTimer" :showTimePicker="false" :use-chart-unit="false" class="float-right pickTime margin-l-5" ref="pickTime" v-model="searchTime"></pick-time>
           <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
         </div>
       </div>

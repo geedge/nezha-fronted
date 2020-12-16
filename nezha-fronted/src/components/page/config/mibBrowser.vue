@@ -137,7 +137,7 @@
         <div class="mib-browser-tree-title">
           <span>SNMP MIBs</span>
           <el-dropdown :hide-on-click="false" @command="selectModel" ref="modelDropdown" trigger="click">
-            <span class="mib-browser-table-op" @click="scrollbarHeightHandler">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
+            <span class="mib-browser-table-op">{{$t("config.model.model") + " "}}<i class="nz-icon nz-icon-funnel"></i></span>
             <el-dropdown-menu slot="dropdown" class="mib-browser-model-dropdown el-dropdown-multi">
               <el-dropdown-item :class="{'dropdown-item-active': walkParam.models.indexOf(item.id) > -1}" :command="item" v-for="item, index in modelData" :key="index">{{item.name}}</el-dropdown-item>
             </el-dropdown-menu>

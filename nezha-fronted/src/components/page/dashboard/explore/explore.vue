@@ -1,5 +1,5 @@
 <template>
-  <div class="explore">
+  <div class="explore" v-has="'explore_view'">
     <div class="main-list main-and-sub-transition">
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
