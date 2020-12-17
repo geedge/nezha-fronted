@@ -139,6 +139,7 @@
   .color-arrows .nz-icon{
     font-size: 12px;
   }
+
 </style>
 <template key="chartBox">
   <div @click.self="clickOutside" class="mc">
@@ -1714,6 +1715,9 @@
   }
   .el-color-picker__panel{
     border-radius: 0 0 5px 5px;
+  }
+  .el-color-dropdown{
+    z-index: 2200!important;
   }
 </style>
 
