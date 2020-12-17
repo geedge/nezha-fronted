@@ -304,15 +304,17 @@
         let this_ = this;
         this.nodes = new Vis.DataSet(nodes);
         this.edges = new Vis.DataSet(edges);
-        this.network.setData({
-          nodes: this_.nodes,
-          edges: this_.edges
-        });
-        this_.network.moveTo({
-          position: this_.viewsCenter,
-          // scale: this_.zoom,
-          offset: {x:0, y:0},
-        });
+        if(this.network){
+          this.network.setData({
+            nodes: this_.nodes,
+            edges: this_.edges
+          });
+          this_.network.moveTo({
+            position: this_.viewsCenter,
+            // scale: this_.zoom,
+            offset: {x:0, y:0},
+          });
+        }
         if(!flag){
           this.$nextTick(()=>{
             this_.modelTopUpdate();
@@ -691,7 +693,7 @@
     mounted(){
       // this.timeInterval=setInterval(()=>{
       //   this.qqq();
-      //   console.log(123);
+      //   console.log(123);this.network.setData({
       // },300);
       setTimeout(()=>{
         let this_=this;

@@ -93,11 +93,13 @@
           return{ color:'#99D7C2',hoverColor:'#B2ECD9'}
         }
       },
-      infoSet(group,allHexagonRect,allHexagonText,data,item,that){
+      infoSet(group,allHexagonRect,allHexagonText,data,item,fontSize,that){
         // 设置内部文本
         // group 对应六边形所在的组。allHexagonRect吧所有文本框放入，方便控制显示隐藏。data 六边形的相关数 data.center 中心点。that 子组件实例
         let rgbColor='0,0,0';
         let str='';
+        let textPaddingWidth='';
+        let textPaddingHeight='';
         let rect0=group.rect(that.hexagonEdge+20, that.hexagonEdge/3)
           .attr({
             x: data.center[0]-that.hexagonEdge/2-10,
@@ -107,11 +109,20 @@
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str=this.from==='asset'?item.host:item.module;
         str+='';
-        let text0=group.text(str).attr({
-          x: data.center[0]-(str.length*3.5),
-          y: data.center[1]-that.hexagonEdge+3,
-        })
-          .font({size:14}).fill({opacity:0,color:'#fff',weight:600}).hide();
+        if(str.length>=10){
+          str=str.slice(0,6)+"..."
+        }
+        let text0=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        console.log(text0.bbox());
+        textPaddingWidth=(that.hexagonEdge+20)-(text0.bbox().width);
+        textPaddingHeight=(that.hexagonEdge/3)-(text0.bbox().height);
+        text0.attr({
+          x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
+          y: data.center[1]-that.hexagonEdge + textPaddingHeight/2-4,
+        }).hide()
+
+
+
         allHexagonRect.push(rect0);
         allHexagonText.push(text0);
         text0.on('mousedown',textMouseDown);
@@ -124,26 +135,41 @@
             rx:6,
             ry:6,
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
-        str="P1 : "+item.alert[0].P1
-        let text1=group.text(str).attr({
-          x: data.center[0]-(str.length*3.5),
-          y: data.center[1]-that.hexagonEdge/2-7.5+3})
-          .font({size:14}).fill({opacity:0,color:'#fff',weight:600}).hide();
+        str="P1 : "+item.alert[0].P1;
+        if(str.length>=10){
+          str=str.slice(0,6)+"..."
+        }
+        let text1=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        textPaddingWidth=(that.hexagonEdge+20)-(text1.bbox().width);
+        textPaddingHeight=(that.hexagonEdge/3)-(text1.bbox().height);
+        text1.attr({
+          x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
+          y: data.center[1]-that.hexagonEdge/2-7.5 +textPaddingHeight/2-4,
+        }).hide()
+
+
+
         allHexagonRect.push(rect1);
         allHexagonText.push(text1);
 
 
         let rect2=group.rect(that.hexagonEdge+20, that.hexagonEdge/3).attr({
           x: data.center[0]-that.hexagonEdge/2-10,
-          y: data.center[1]-that.hexagonEdge/2 + that.hexagonEdge/3 +5-7.5+3,
+          y: data.center[1]-that.hexagonEdge/2 + that.hexagonEdge/3 +0.5,
           rx:6,
           ry:6,
         }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
-        str="P2 : "+item.alert[0].P2
-        let text2=group.text(str).attr({
-          x: data.center[0]-(str.length*3.5),
-          y: data.center[1]-that.hexagonEdge/2 + that.hexagonEdge/3 +5-7.5+3})
-          .font({size:14}).fill({opacity:0,color:'#fff',weight:600}).hide();
+        str="P2 : "+item.alert[0].P2;
+        if(str.length>=10){
+          str=str.slice(0,6)+"..."
+        }
+        let text2=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        textPaddingWidth=(that.hexagonEdge+20)-(text2.bbox().width);
+        textPaddingHeight=(that.hexagonEdge/3)-(text2.bbox().height);
+        text2.attr({
+          x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
+          y: data.center[1]-that.hexagonEdge/2 + that.hexagonEdge/3 + 0.5+textPaddingHeight/2-4,
+        }).hide()
         allHexagonRect.push(rect2);
         allHexagonText.push(text2);
 
@@ -151,15 +177,25 @@
         let rect3=group.rect(that.hexagonEdge+20, that.hexagonEdge/3)
           .attr({
             x: data.center[0]-that.hexagonEdge/2-10,
-            y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 + 10-7.5+3,
+            y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 + 5.5,
             rx:6,
             ry:6,
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str="P3 : "+item.alert[0].P3;
+        if(str.length>=10){
+          str=str.slice(0,6)+"..."
+        }
         let text3=group.text(str).attr({
-          x: data.center[0]-(str.length*3.5),
-          y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 + 10-7.5+3+3})
-          .font({size:14}).fill({opacity:0,color:'#fff',weight:600}).hide();
+          x: data.center[0]-5,
+          y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 + 10-7.5+3})
+          .font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        textPaddingWidth=(that.hexagonEdge+20)-(text3.bbox().width);
+        textPaddingHeight=(that.hexagonEdge/3)-(text3.bbox().height);
+        text3.attr({
+          x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
+          y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 +5.5+textPaddingHeight/2-4,
+        }).hide()
+
         allHexagonRect.push(rect3);
         allHexagonText.push(text3);
 

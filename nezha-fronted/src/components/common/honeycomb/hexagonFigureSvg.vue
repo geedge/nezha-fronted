@@ -127,13 +127,9 @@
       infoHide:{// 设置六边形内部内容 缩小显示时的样式 参数 allHexagonRect
         type:Function,
       },
-      hexagonEdge:{ // 边框长度
+      hexagonEdgeProp:{ // 边框长度
         type:Number,
         default:90,
-      },
-      defaultRate:{//默认倍率
-        type:Number,
-        default:0.33,
       },
       magnifyRate:{//放大倍率
         type:Number,
@@ -167,7 +163,10 @@
         type:Number,
         default:5,
       },
-      from:{}
+      from:{
+        type:String,
+        default:'asset',
+      }
     },
     watch:{
       hexData:{
@@ -184,6 +183,13 @@
           this.init();
         }
       },
+      hexagonEdgeProp:{
+        immediate:false,
+        deep:true,
+        handler(n){
+          console.log(n,123213123123);
+        }
+      }
     },
     data(){
       return {
@@ -203,13 +209,17 @@
           show:false,
           data:null
         },
-        timer:null,
         boxhexagonShow:false,
         pan:false,//是否移动
         defaultColor:{color:'#99D7C2',hoverColor:'#B2ECD9'},
         viewBox:null,
         isShowHover:true,//是否显示hover块
         timer:null,// 定时器用来处理单击双击的冲突
+        firstInit:true,//优化刚加载时的多次点击造成放大缩小功能的不正常
+        defaultRate:0.33,// 默认倍率 最小0.2
+        defaultBoxWidth:2288,
+        hexagonEdge:90,
+        fontSize:14,
       }
     },
     computed:{
@@ -221,12 +231,12 @@
     },
     mounted(){
       // this.init()
+
     },
     methods:{
       init(){ //创建svg实例
         this.boxhexagonShow=false;
-        this.clearData();
-        setTimeout(()=>{
+        this.clearData().then(()=>{
           this.boxhexagonShow=true;
           this.$nextTick(()=>{
             this.hexagonData=JSON.parse(JSON.stringify(this.hexData));
@@ -246,6 +256,12 @@
             hexagonSvg.on('click',this.hexagonSvgClearScale);
             hexagonSvg.on('panStart',this.hexagonSvgPanStart);
             hexagonSvg.on('panEnd',this.hexagonSvgPanEnd);
+            let Rate=(this.$refs.box.offsetWidth/this.defaultBoxWidth);
+            Rate=(Rate>0.2?Rate:0.2);
+            console.log(this.hexagonEdge,1);
+            this.hexagonEdge=(this.hexagonEdge/this.defaultRate)*Rate;
+            this.fontSize=(this.fontSize/this.defaultRate)*Rate;
+            console.log(this.hexagonEdge,2);
             setHexagon(this.hexagonSvgID,{
               hexagonSvg:hexagonSvg,
               svgPolyline:null,
@@ -262,8 +278,11 @@
               });
               this.getDataPoint();
             });//获取到上方和左方的距离;
+            setTimeout(()=>{
+              this.firstInit=false;
+            },500)
           })
-        },100)
+        });
       },
       getPadding(){//确定到上方和下方的距离 保持居中
         return new Promise(resolve=>{
@@ -340,46 +359,57 @@
         this.renderSomeHexagonAll();
       },
       renderSomeHexagonAll(){// 遍历所有数据 绘画六边形 之后画边框
+        let arr=[]
         this.hexagonData.forEach(item=>{
-          this.renderHexagon(item)
+          this.renderHexagon(item);
+          arr.push(this.renderHexagon.bind(this,item))
         });
-        setTimeout(()=>{
-          this.borderHex();
-          getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate);
-          let hoverRect=getHexagon(this.hexagonSvgID).hexagonSvg.group().addClass('hoverRect');
-          hoverRect.rect();
-          hoverRect.text('a');
-          hoverRect.hide();
-          getHexagon(this.hexagonSvgID).hover=hoverRect;
-          setTimeout(()=>{
-            this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox')
-          },300)
-        })
-      },
-      renderHexagon(item){ // 绘画六边形
-        hexagonPoint(item.left,item.top,this.hexagonEdge).then(data=>{
-          let color=this.colorSet?this.colorSet(item):this.defaultColor;
-          let group=getHexagon(this.hexagonSvgID).hexagonSvg.group();
-          let polygon=group.polygon(data.svgStrPoint).fill(color.color);
-          polygon.data({
-            ...data,
-            ...item,
-            ...color
-          });
-          group.on('mouseenter',this.hexagonOver.bind(this,group));
-          group.on('mouseleave',this.hexagonOut.bind(this,group));
-          group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data,group));
-
-          this.allHexagon.push(polygon);
-          this.allGroup.push(group);
-          // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
-          if(this.infoSet){
-            this.infoSet(group,getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText,data,item,this);
+        Promise.all(arr).then(()=>{
+          if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
+            this.borderHex();
+            getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate);
+            let hoverRect=getHexagon(this.hexagonSvgID).hexagonSvg.group().addClass('hoverRect');
+            hoverRect.rect();
+            hoverRect.text('a');
+            hoverRect.hide();
+            getHexagon(this.hexagonSvgID).hover=hoverRect;
+            setTimeout(()=>{
+              if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
+                this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox')
+              }
+            },300)
           }
         });
       },
+      renderHexagon(item){ // 绘画六边形
+        return new Promise(resolve=>{
+          hexagonPoint(item.left,item.top,this.hexagonEdge).then(data=>{
+            let color=this.colorSet?this.colorSet(item):this.defaultColor;
+            let group=getHexagon(this.hexagonSvgID).hexagonSvg.group();
+            let polygon=group.polygon(data.svgStrPoint).fill(color.color);
+            polygon.data({
+              ...data,
+              ...item,
+              ...color
+            });
+            group.on('mouseenter',this.hexagonOver.bind(this,group));
+            group.on('mouseleave',this.hexagonOut.bind(this,group));
+            group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data,group));
+
+            this.allHexagon.push(polygon);
+            this.allGroup.push(group);
+            // 向六边形内 添加文本 本质是根据六边形的中心点确定各个文本位置
+            if(this.infoSet){
+              this.infoSet(group,getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText,data,item,this.fontSize,this);
+            }
+            resolve();
+          });
+        })
+      },
       hexagonOver(that,e){// 移入六边形
         let color=that.first().data('hoverColor');
+        that.first().timeline().unschedule(that.first().animate());
+        that.timeline().unschedule(that.first().animate());
         that.first().animate(100).stroke({width:3,color:'#909090'}).fill(color);
         that.animate(100).transform({scale:1.1});
         that.parent().find('polyline').stroke({color:'#909090'});
@@ -413,6 +443,8 @@
       },
       hexagonOut(that){// 移出六边形
         let color=that.first().data('color');
+        that.first().timeline().unschedule(that.first().animate());
+        that.timeline().unschedule(that.first().animate());
         that.first().animate(100).stroke({width:0,color:'#909090'}).fill(color);
         that.animate(100).transform({scale:1});
         that.parent().find('polyline').stroke({color:'#DADADA'});
@@ -434,8 +466,13 @@
           }
           this.isShowHover=false;
         }
+        let hover=getHexagon(this.hexagonSvgID).hexagonSvg.find('.hoverRect');
+        if(hover){
+          hover.hide();
+        }
       },
       hexagonSvgClearScale(){
+        if(this.firstInit){return}
         if(this.group){
           this.group.off('dblclick',this.hexagonSvgClearScale);
           this.group=null;
@@ -482,7 +519,7 @@
         setTimeout(()=>{ // 设置延时 解决移动后的缩放问题
           this.pan=false;
         },100)
-        if(this.isShowHover){
+        if(this.isShowHover&&getHexagon(this.hexagonSvgID).hexagonSvg){
           this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox');
         }
       },
@@ -733,7 +770,7 @@
 
 
         getHexagon(this.hexagonSvgID).svgPolyline.on('mouseover',PolylineOver)
-        getHexagon(this.hexagonSvgID).svgPolyline.on('mouseout',PolylineOut)
+        getHexagon(this.hexagonSvgID).svgPolyline.on('mouseout',PolylineOut);
       },
       clearData(){// 清除数据 以及解绑事件 防止内存崩溃
         if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
@@ -753,6 +790,9 @@
           getHexagon(this.hexagonSvgID).svgPolyline=null;// Svg hexagon的边框
           delHexagon(this.hexagonSvgID)
         }
+        return new Promise(resolve=>{
+          resolve()
+        })
       },
 
     },
@@ -762,6 +802,7 @@
         getHexagon(this.hexagonSvgID).allHexagonRect=null;//文本框
         getHexagon(this.hexagonSvgID).allHexagonText=null;// 文本内容
       }
+      // clearTimeout(this.timer)
     }
   }
 </script>
