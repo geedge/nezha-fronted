@@ -249,7 +249,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
         tableVisible: true,
         pageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         tableData: [],

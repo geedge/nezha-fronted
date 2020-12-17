@@ -199,7 +199,7 @@
         },
         pageObj: { //分页对象
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         tableTitle: [ //原table列

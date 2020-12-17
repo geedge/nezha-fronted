@@ -7,7 +7,7 @@
         @next-click="next"
         @current-change="current"
         :current-page="pageObj.pageNo"
-        :page-sizes="pageSizes?pageSizes:[50, 100, 200]"
+        :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
         :page-size="Number(pageObj.pageSize)"
         layout="total, prev, pager, next, slot"
         :total="this.pageObj.total"
@@ -33,8 +33,12 @@ export default {
   },
   data() {
     return {
-      pageSize: 50,
+      pageSize: this.$CONSTANTS.defaultPageSize,
       pageSizes:[
+        {
+          label:'20'+this.$t('pageSize'),
+          value:20
+        },
         {
           label:'50'+this.$t('pageSize'),
           value:50
@@ -42,10 +46,6 @@ export default {
         {
           label:'100'+this.$t('pageSize'),
           value:100
-        },
-        {
-          label:'200'+this.$t('pageSize'),
-          value:200
         },
       ]
     };

@@ -159,12 +159,12 @@
         pageSizes: [20, 50, 100],
         pageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         screenPageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         storedTableDataOld: [],//原始信息

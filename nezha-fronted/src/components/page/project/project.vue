@@ -340,9 +340,9 @@
         ],
         endpointTableData:[],
         endpointPageObj:{
-          pageNo:1,
-          pageSize:50,
-          total:0
+          pageNo: 1,
+          pageSize: this.$CONSTANTS.defaultPageSize,
+          total: 0
         },
 
         currentProjectTitle:'',

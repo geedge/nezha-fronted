@@ -283,7 +283,7 @@
         chartUnit: 5,
         pageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         tableTitle: [

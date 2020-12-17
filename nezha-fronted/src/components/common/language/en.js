@@ -54,6 +54,7 @@ const en = {
     createAsset:'Create asset',
     createAlertRule:'Create alert rule',
     createAccount:'Create account',
+    createRole: 'Create role',
     createPrometheusServer:'Create prometheus server',
     createDatacenter:'Create Data Center',
     createCabinet:'Create cabinet',

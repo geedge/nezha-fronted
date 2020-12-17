@@ -1,5 +1,7 @@
 import i18n from "../i18n";
 
+export const defaultPageSize = 20;
+
 export const staticMenus = {
   settings: {
     title: i18n.t('overall.config'),

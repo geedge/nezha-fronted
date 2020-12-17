@@ -160,7 +160,7 @@
         tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
         pageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         tableTitle: [

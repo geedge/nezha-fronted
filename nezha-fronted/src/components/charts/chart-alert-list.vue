@@ -164,13 +164,13 @@ export default {
         errorContent:'',
         pageObj: {
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         loadingTable:false,// 表格数据加载loading
         screenPageObj:{
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         storedTableData:[],

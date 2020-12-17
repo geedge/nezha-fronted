@@ -14,7 +14,7 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createRoles')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'role_toAdd'"
+          <button :title="$t('overall.createRole')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'role_toAdd'"
                   id="roles-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
@@ -141,7 +141,7 @@
         },
         pageObj: { //分页对象
           pageNo: 1,
-          pageSize: 50,
+          pageSize: this.$CONSTANTS.defaultPageSize,
           total: 0
         },
         tableTitle: [ //原table列

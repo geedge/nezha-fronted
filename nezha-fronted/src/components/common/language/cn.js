@@ -47,6 +47,7 @@ const cn = {
     createAsset: "新增资产",
     createAlertRule: "新增告警规则",
     createAccount: "新增用户名",
+    createRole: '新增角色',
     createPrometheusServer: "新增prometheus服务",
     createDatacenter: "新增数据中心",
     active: "活跃",

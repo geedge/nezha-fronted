@@ -92,68 +92,68 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
 };
 
 Vue.mixin({
-    methods: {
-      utcTimeToTimezone:function(time){
-        if(time){
-          return bus.UTCTimeToConfigTimezone(time)
-        }
-      },
-      utcTimeToTimezoneStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
-        if(time){
-          return bus.timeFormate(bus.UTCTimeToConfigTimezone(time),format)
-        }else{
-          return '-'
-        }
-      },
-      timezoneToUtcTime:function(time){
-        if(time){
-          return bus.configTimezoneToUTCTime(time)
-        }
-      },
-      timezoneToUtcTimeStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
-        if(time){
-          return bus.timeFormate(this.timezoneToUtcTime(time),format)
-        }
-      },
-      tableTitleReset:function(src,dist){
-        dist.forEach(item=>{
-          let title=src.find(t=>t.prop == item.prop)
-          if(title&&title.label){
-            item.label=title.label;
-          }
-        })
-      },
-      hasButton(code) {
-        return hasButton(this.$store.getters.buttonList, code);
-      },
-      toTop(wrap) {
-        let currentTop = wrap.scrollTop;
-        let interval = currentTop/10;
-        let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
-          if (currentTop == 0) {
-            clearInterval(intervalFunc);
-          } else {
-            currentTop = (currentTop - interval) < interval*0.5 ? 0 : currentTop - interval;
-            wrap.scrollTop = currentTop;
-          }
-        }, 20);
-      },
-      toTopBtnHandler(wrap) {
-        let vm = this;
-        wrap.addEventListener('scroll', bus.debounce(function() {
-          vm.tools.showTopBtn = wrap.scrollTop > 50;
-          vm.tools.tableHover = wrap.scrollTop > 50;
-        }, 100));
+  methods: {
+    utcTimeToTimezone:function(time){
+      if(time){
+        return bus.UTCTimeToConfigTimezone(time)
       }
     },
-    computed: {
-      getMenuList() {
-        return this.$store.state.user.menuList;
-      },
-      getButtonList() {
-        return this.$store.state.buttonList;
+    utcTimeToTimezoneStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
+      if(time){
+        return bus.timeFormate(bus.UTCTimeToConfigTimezone(time),format)
+      }else{
+        return '-'
       }
+    },
+    timezoneToUtcTime:function(time){
+      if(time){
+        return bus.configTimezoneToUTCTime(time)
+      }
+    },
+    timezoneToUtcTimeStr:function(time,format='yyyy-MM-dd hh:mm:ss'){
+      if(time){
+        return bus.timeFormate(this.timezoneToUtcTime(time),format)
+      }
+    },
+    tableTitleReset:function(src,dist){
+      dist.forEach(item=>{
+        let title=src.find(t=>t.prop == item.prop)
+        if(title&&title.label){
+          item.label=title.label;
+        }
+      })
+    },
+    hasButton(code) {
+      return hasButton(this.$store.getters.buttonList, code);
+    },
+    toTop(wrap) {
+      let currentTop = wrap.scrollTop;
+      let interval = currentTop/10;
+      let intervalFunc = setInterval(function(){ //花200ms分10次回到顶部，模拟动画效果
+        if (currentTop == 0) {
+          clearInterval(intervalFunc);
+        } else {
+          currentTop = (currentTop - interval) < interval*0.5 ? 0 : currentTop - interval;
+          wrap.scrollTop = currentTop;
+        }
+      }, 20);
+    },
+    toTopBtnHandler(wrap) {
+      let vm = this;
+      wrap.addEventListener('scroll', bus.debounce(function() {
+        vm.tools.showTopBtn = wrap.scrollTop > 50;
+        vm.tools.tableHover = wrap.scrollTop > 50;
+      }, 100));
     }
+  },
+  computed: {
+    getMenuList() {
+      return this.$store.state.user.menuList;
+    },
+    getButtonList() {
+      return this.$store.state.buttonList;
+    }
+  }
 });
 
 
