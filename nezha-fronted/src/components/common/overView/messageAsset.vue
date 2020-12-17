@@ -113,16 +113,12 @@
           str=str.slice(0,6)+"..."
         }
         let text0=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
-        console.log(text0.bbox());
         textPaddingWidth=(that.hexagonEdge+20)-(text0.bbox().width);
         textPaddingHeight=(that.hexagonEdge/3)-(text0.bbox().height);
         text0.attr({
           x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
           y: data.center[1]-that.hexagonEdge + textPaddingHeight/2-4,
         }).hide()
-
-
-
         allHexagonRect.push(rect0);
         allHexagonText.push(text0);
         text0.on('mousedown',textMouseDown);

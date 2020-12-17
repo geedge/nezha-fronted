@@ -187,7 +187,6 @@
         immediate:false,
         deep:true,
         handler(n){
-          console.log(n,123213123123);
         }
       }
     },
@@ -258,10 +257,8 @@
             hexagonSvg.on('panEnd',this.hexagonSvgPanEnd);
             let Rate=(this.$refs.box.offsetWidth/this.defaultBoxWidth);
             Rate=(Rate>0.2?Rate:0.2);
-            console.log(this.hexagonEdge,1);
             this.hexagonEdge=(this.hexagonEdge/this.defaultRate)*Rate;
             this.fontSize=(this.fontSize/this.defaultRate)*Rate;
-            console.log(this.hexagonEdge,2);
             setHexagon(this.hexagonSvgID,{
               hexagonSvg:hexagonSvg,
               svgPolyline:null,
