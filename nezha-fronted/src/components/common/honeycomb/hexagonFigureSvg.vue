@@ -452,10 +452,12 @@
       },
       hexagonSvgScale(center,item1,data,group,e){
         window.event? window.event.cancelBubble = true:e.stopPropagation();
+        if(this.timer){
+          clearTimeout(this.timer);
+          this.timer=null;
+        }
         this.group=group;
-        setTimeout(()=>{
-          this.group.on('dblclick',this.hexagonSvgClearScale);
-        },300);
+        this.group.on('dblclick',this.hexagonSvgClearScale);
         if(!this.pan&&this.isClickRate){
           getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
           if(this.infoShow){
@@ -479,7 +481,9 @@
           if(this.infoHide){
             this.infoHide(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
-          this.isShowHover=true;
+          this.timer=setTimeout(()=>{
+            this.isShowHover=true;
+          },100)
           window.getSelection().empty();//取消选中文字
         }
       },
@@ -516,9 +520,9 @@
         setTimeout(()=>{ // 设置延时 解决移动后的缩放问题
           this.pan=false;
         },100)
-        if(this.isShowHover&&getHexagon(this.hexagonSvgID).hexagonSvg){
-          this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox');
-        }
+        // if(this.isShowHover&&getHexagon(this.hexagonSvgID).hexagonSvg){ // 记录移动位置 对双击事件有一定影响 暂时关闭 后续优化
+        //   this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox');
+        // }
       },
       borderHex(){//外层边框 数组点
         let length=this.allHexagon.length;

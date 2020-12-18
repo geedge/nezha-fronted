@@ -112,13 +112,13 @@
         if(str.length>=10){
           str=str.slice(0,6)+"..."
         }
-        let text0=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        let text0=group.text(str).attr({x:0,y:0,style:'cursor:text'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'text'});
         textPaddingWidth=(that.hexagonEdge+20)-(text0.bbox().width);
         textPaddingHeight=(that.hexagonEdge/3)-(text0.bbox().height);
         text0.attr({
           x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
           y: data.center[1]-that.hexagonEdge + textPaddingHeight/2-4,
-        }).hide()
+        }).hide();
         allHexagonRect.push(rect0);
         allHexagonText.push(text0);
         text0.on('mousedown',textMouseDown);
@@ -135,13 +135,13 @@
         if(str.length>=10){
           str=str.slice(0,6)+"..."
         }
-        let text1=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        let text1=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text1.bbox().width);
         textPaddingHeight=(that.hexagonEdge/3)-(text1.bbox().height);
         text1.attr({
           x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
           y: data.center[1]-that.hexagonEdge/2-7.5 +textPaddingHeight/2-4,
-        }).hide()
+        }).hide();
 
 
 
@@ -159,13 +159,13 @@
         if(str.length>=10){
           str=str.slice(0,6)+"..."
         }
-        let text2=group.text(str).attr({x:0,y:0}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        let text2=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text2.bbox().width);
         textPaddingHeight=(that.hexagonEdge/3)-(text2.bbox().height);
         text2.attr({
           x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
           y: data.center[1]-that.hexagonEdge/2 + that.hexagonEdge/3 + 0.5+textPaddingHeight/2-4,
-        }).hide()
+        }).hide();
         allHexagonRect.push(rect2);
         allHexagonText.push(text2);
 
@@ -181,16 +181,13 @@
         if(str.length>=10){
           str=str.slice(0,6)+"..."
         }
-        let text3=group.text(str).attr({
-          x: data.center[0]-5,
-          y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 + 10-7.5+3})
-          .font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600});
+        let text3=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text3.bbox().width);
         textPaddingHeight=(that.hexagonEdge/3)-(text3.bbox().height);
         text3.attr({
           x: data.center[0]-that.hexagonEdge/2-10 +textPaddingWidth/2,
           y: data.center[1]-that.hexagonEdge/2+ that.hexagonEdge/3*2 +5.5+textPaddingHeight/2-4,
-        }).hide()
+        }).hide();
 
         allHexagonRect.push(rect3);
         allHexagonText.push(text3);
@@ -211,7 +208,7 @@
           item.fill({ color: `rgba(${rgbColor},0)`})
         });
         allHexagonText.forEach(item=>{
-          item.fill({ opacity:0}).hide()
+          item.fill({ opacity:0}).hide();
         });
       },
       endLoading(){
