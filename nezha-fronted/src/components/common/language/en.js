@@ -562,7 +562,7 @@ const en = {
       accountList: 'Account list',//"用户列表"
       //列表表头
       account: 'Account',//"用户"
-      roles:"Roles",
+      roles:"Role",
       language: 'Language',//"语言"
       receiver: 'Receiver',//"用户组"
       createTime: 'Create time',//"创建时间"
