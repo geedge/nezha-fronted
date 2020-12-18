@@ -159,7 +159,7 @@
             }
           } else if (this.styleType == 2) {
             if (n) {
-              console.log(this.$parent.$parent)
+              //console.log(this.$parent.$parent)
               this.metricOptions = this.$parent.$parent.$parent.getMetricOptions();
             } else {
               this.metricOptions = [];

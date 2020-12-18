@@ -117,10 +117,12 @@
   }
   .color-show{
     border: 1px solid #E7EAED;
-    border-radius: 5px;
+    border-radius: 4px;
+    top: -2px;
     align-items: center;
     width: 28px;
     height: 28px;
+    box-sizing: border-box;
     display: inline-block;
     vertical-align: middle;
     position: relative;
@@ -128,7 +130,8 @@
   .color-show-left{
     width: 28px;
     height: 28px;
-    border-radius: 5px;
+    border-radius: 4px;
+    box-sizing: border-box;
     text-align: center;
     line-height: 28px;
   }
