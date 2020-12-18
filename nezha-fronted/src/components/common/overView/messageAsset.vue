@@ -109,8 +109,8 @@
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str=this.from==='asset'?item.host:item.module;
         str+='';
-        if(str.length>=10){
-          str=str.slice(0,6)+"..."
+        if(str.length>=15){
+          str=str.slice(0,12)+"..."
         }
         let text0=group.text(str).attr({x:0,y:0,style:'cursor:text'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'text'});
         textPaddingWidth=(that.hexagonEdge+20)-(text0.bbox().width);
@@ -132,8 +132,8 @@
             ry:6,
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str="P1 : "+item.alert[0].P1;
-        if(str.length>=10){
-          str=str.slice(0,6)+"..."
+        if(str.length>=15){
+          str=str.slice(0,12)+"..."
         }
         let text1=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text1.bbox().width);
@@ -156,8 +156,8 @@
           ry:6,
         }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str="P2 : "+item.alert[0].P2;
-        if(str.length>=10){
-          str=str.slice(0,6)+"..."
+        if(str.length>=15){
+          str=str.slice(0,12)+"..."
         }
         let text2=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text2.bbox().width);
@@ -178,8 +178,8 @@
             ry:6,
           }).fill({ color: `rgba(${rgbColor},0)`}).data({color:rgbColor});
         str="P3 : "+item.alert[0].P3;
-        if(str.length>=10){
-          str=str.slice(0,6)+"..."
+        if(str.length>=15){
+          str=str.slice(0,12)+"..."
         }
         let text3=group.text(str).attr({x:0,y:0,style:'cursor:default'}).font({size:fontSize}).fill({opacity:0,color:'#fff',weight:600,cursor:'default'});
         textPaddingWidth=(that.hexagonEdge+20)-(text3.bbox().width);
