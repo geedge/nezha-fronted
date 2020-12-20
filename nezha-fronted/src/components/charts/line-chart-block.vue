@@ -239,13 +239,13 @@
         data: {}, // 该图表信息,chartItem
         noData:false,
         seriesLength:20,
-        /*seriesItem: [], // 保存信息
+        seriesItem: [], // 保存信息
         seriesItemArr:[],// 初次加载的数据
         seriesItemScreen:[],
-        seriesItemArrScreen:[],*/
-        /*legendListMore:[],
+        seriesItemArrScreen:[],
+        legendListMore:[],
         screenLegendListMore:[],
-        chartInfo:{},*/
+        chartInfo:{},
         images: '',
         isStackArea:false,
         isError:false,
@@ -1489,9 +1489,10 @@
                         if(!alias || alias===''){
                           alias = host;
                         }
-                        legend.push({name:host+innerPos,alias:alias});
+                        legend.push({name: host+"-"+this.data.elements[pos].id+"-" + innerPos, alias: alias});
                         // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                        seriesItem.theData.name = host+innerPos;
+
+                        seriesItem.theData.name = host +"-"+this.data.elements[pos].id+"-"+ innerPos;
                         seriesItem.metric_name = seriesItem.theData.name;
                         // 将秒改为毫秒
                         //alert('table=='+JSON.stringify(queryItem))
