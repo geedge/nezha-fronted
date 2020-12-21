@@ -528,7 +528,6 @@
       },
       setAccountValidResult(result, protocol) {
         this.accountValidResult = result;
-        this.prevent_opt.save=false;
         let index = this.errorProtocol.indexOf(protocol);
         if (result) {
           index != -1 ? this.errorProtocol.splice(index, 1) : "";

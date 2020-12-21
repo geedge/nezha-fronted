@@ -143,8 +143,8 @@
             let editUser = JSON.parse(JSON.stringify(this.editUser))
             editUser.roleIds = [editUser.roleIds]
             if (this.editUser.userId) {
-              this.prevent_opt.save=false;
               this.$put('sys/user/update',editUser).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
