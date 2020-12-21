@@ -12,7 +12,7 @@
         <!--<span class="edit-topology-remove" @click="lineDel">Remove</span>-->
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
-        <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" v-has="'project_topo_save'">{{$t('project.topology.save')}}</button>
+        <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" v-has="'project_topo_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('project.topology.save')}}</button>
         <button @click="cancelTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork"> {{$t('project.topology.selTwoNode')}} <span class="edit-topologyCancel" @click="closeAddLine">{{$t('project.topology.cancel')}}</span></span>
@@ -300,10 +300,13 @@
     },
     methods:{// 保存拓扑图数据
       saveTopology(){
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$emit('topologyLoad');
         let nodes=this.formatNodes([...this.nodesArray]);
         let edges=this.formatEdges([...this.edgesArray]);
         this.$put('/project/topo',{topo:JSON.stringify({nodes:nodes,lines:edges,viewsCenter:this.viewsCenter,zoom:(this.zoom*1920/this.screenX)}),projectId:this.allModuleInfo.basic.id}).then(res=>{
+          this.prevent_opt.save=false;
           if(res.code===200){
             this.$message({
               message: this.$t("tip.saveSuccess"),
@@ -312,6 +315,7 @@
             this.$emit('reload');
           }
         }).catch(res=>{
+          this.prevent_opt.save=false;
           this.$message({
             message: res.msg,
             type: 'error'

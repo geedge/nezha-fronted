@@ -82,7 +82,7 @@
         <button @click="esc" id="dc-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="dc-box-save" v-has="'dc_save'">
+        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="dc-box-save" v-has="'dc_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>
@@ -120,6 +120,7 @@
     methods: {
       /*关闭弹框*/
       esc(refresh) {
+        this.prevent_opt.save=false;
         this.$emit("close", refresh);
       },
       clickOutside() {
@@ -132,6 +133,8 @@
 
       /*保存*/
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$refs.dcForm.validate((valid) => {
           if (valid) {
             if (this.editDc.id) {
@@ -147,6 +150,7 @@
               }
 
               this.$put('idc', param).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -166,6 +170,7 @@
                 param.latitude=null;
               }
               this.$post('idc', param).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -175,18 +180,22 @@
               });
             }
           } else {
+            this.prevent_opt.save=false;
             return false;
           }
         });
       },
       /*删除*/
       del() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
           this.$delete("idc?ids=" + this.editDc.id).then(response => {
+            this.prevent_opt.save=false;
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.esc(true);
@@ -194,6 +203,8 @@
               this.$message.error(response.msg);
             }
           });
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
       // getAreaData() {

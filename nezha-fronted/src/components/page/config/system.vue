@@ -39,8 +39,11 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <button @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
-              <button @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'">{{$t('overall.submit')}}</button>
+              <button
+                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button"
+                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
+              >{{$t('overall.reset')}}</button>
+              <button @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -86,8 +89,8 @@
             </el-form-item>
             <el-form-item>
               <button @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
-              <button :class="{'nz-btn-disabled':email.email_enable == 'off'}" :disabled="email.email_enable == 'off'" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'">{{$t('overall.submit')}}</button>
+              <button :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
+              <button @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -99,7 +102,7 @@
               <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50"></el-input-number>
             </el-form-item>
             <el-form-item>
-              <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'">{{$t('overall.submit')}}</button>
+              <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -130,8 +133,8 @@
             </el-form-item>
             <el-form-item>
               <button @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
-              <button @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'">{{$t('overall.submit')}}</button>
+              <button @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
+              <button @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -325,7 +328,7 @@
               </div>
             </el-form-item>
             <el-form-item>
-              <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'">{{$t('overall.reset')}}</button>
+              <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -561,6 +564,8 @@
             })
           },
           saveSetInfo:function(type,formName){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 let param={};
@@ -571,6 +576,7 @@
                   postParam[type][key]=postParam[type][key]+'';
                 }
                 this.$put('/sysConfig',postParam).then(response=>{
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                     // this.resetForm(formName);
@@ -581,10 +587,15 @@
                     this.$message.error(response.msg);
                   }
                 })
+              }else{
+                this.prevent_opt.save=true;
+                return false
               }
             });
           },
           testSetInfo:function(type,formName){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 let param={};
@@ -595,16 +606,22 @@
                   postParam[type][key]=postParam[type][key]+'';
                 }
                 this.$put('/sysConfig',postParam).then(response=>{
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.testSuccess")});
                   }else{
                     this.$message.error(response.msg);
                   }
                 })
+              }else{
+                this.prevent_opt.save=false;
+                return false
               }
             });
           },
           resetSys:function(){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             let $temp=this;
             this.$prompt(this.$t('config.system.reset.pwdTip'), this.$t('config.system.reset.promptTitle'), {
               confirmButtonText: this.$t('config.system.reset.yes'),
@@ -615,12 +632,15 @@
               $temp.$refs['resetForm'].validate(valid=>{
                 if(valid){
                   $temp.$put('/sysConfig/reset',$temp.reset).then(response=>{
+                    $temp.prevent_opt.save=false;
                     if(response.code == 200){
                       $temp.$message({duration: 2000, type: 'success', message: this.$t("tip.resetSuccess")});
                     }else{
                       $temp.$message.error(response.msg);
                     }
                   })
+                }else{
+                  $temp.prevent_opt.save=false;
                 }
               })
             }).catch(() => {
@@ -721,9 +741,12 @@
           },
           // link add
           linkAdd(){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs['linkTempForm'].validate((valid) => {
               if (valid) {
                 this.$post('/link',this.linkTemp).then(response=>{//新增link
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     this.linkTemp={name:'',url:''};
                     this.linkAddCallBack();
@@ -733,6 +756,7 @@
                   }
                 })
               } else {
+                this.prevent_opt.save=false;
                 return false;
               }
             });
@@ -751,6 +775,8 @@
           },
           // link update
           linkUpdate(item){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs['linkForm'+item.id][0].validate((valid) => {
               if (valid) {
                 let params={
@@ -759,6 +785,7 @@
                   url:item.url,
                 };
                 this.$put('/link',params).then(response=>{
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     let index=this.link.findIndex((item1)=>item.id==item1.id);
                     this.$set(this.link,index,{...this.link[index],isEdit:false});
@@ -770,6 +797,7 @@
                   }
                 })
               } else {
+                this.prevent_opt.save=false;
                 return false;
               }
             });
@@ -782,7 +810,10 @@
           },
           // link del
           linkDel(item){
+            if(this.prevent_opt.query){ return } ;
+            this.prevent_opt.query=true;
             this.$delete('/link?ids='+item.id).then((response)=>{
+              this.prevent_opt.query=false;
               if(response.code == 200){
                 this.link=this.link.filter((item1)=>item.id!==item1.id);
                 this.linkReserved=this.linkReserved.filter((item1)=>item.id!==item1.id);
@@ -804,9 +835,12 @@
           },
           // link add
           notificationAdd(){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs['notificationTempForm'].validate((valid) => {
               if (valid) {
-                this.$post('/alert/script',this.notificationTemp).then(response=>{//新增link
+                this.$post('/alert/script',this.notificationTemp).then(response=>{//新增notification
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     this.notificationTemp={name:'',filePath:''};
                     this.notificationAddCallBack();
@@ -816,6 +850,7 @@
                   }
                 })
               } else {
+                this.prevent_opt.save=false;
                 return false;
               }
             });
@@ -834,6 +869,8 @@
           },
           // link update
           notificationUpdate(item){
+            if(this.prevent_opt.save){ return } ;
+            this.prevent_opt.save=true;
             this.$refs['notificationForm'+item.id][0].validate((valid) => {
               if (valid) {
                 let params={
@@ -842,6 +879,7 @@
                   filePath:item.filePath,
                 };
                 this.$put('/alert/script',params).then(response=>{
+                  this.prevent_opt.save=false;
                   if(response.code == 200){
                     let index=this.notification.findIndex((item1)=>item.id==item1.id);
                     this.$set(this.notification,index,{...this.notification[index],isEdit:false});
@@ -853,6 +891,7 @@
                   }
                 })
               } else {
+                this.prevent_opt.save=false;
                 return false;
               }
             });
@@ -865,7 +904,10 @@
           },
           // link del
           notificationDel(item){
+            if(this.prevent_opt.query){ return } ;
+            this.prevent_opt.query=true;
             this.$delete('/alert/script?ids='+item.id).then((response)=>{
+              this.prevent_opt.query=false;
               if(response.code == 200){
                 this.notification=this.notification.filter((item1)=>item.id!==item1.id);
                 this.notificationReserved=this.notificationReserved.filter((item1)=>item.id!==item1.id);

@@ -127,7 +127,7 @@
       <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-edit-save" v-has="['asset_endpoint_save', 'project_endpoint_save']">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-edit-save" v-has="['asset_endpoint_save', 'project_endpoint_save']" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -344,6 +344,8 @@
       },
       //保存endpoint
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$refs.endpointForm.validate((valide=>{
           if(valide){
             this.editEndpoint.param = this.paramToJson(this.editEndpoint.paramObj);
@@ -351,6 +353,7 @@
             let requestData = [];
             requestData.push(this.editEndpoint);
             this.$put('endpoint', requestData).then(response => {
+              this.prevent_opt.save=false;
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.esc(true);
@@ -359,6 +362,7 @@
               }
             });
           }else{
+            this.prevent_opt.save=false;
             return false;
           }
         }))
@@ -366,12 +370,15 @@
 
       //删除endpoint
       del() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
           this.$delete("endpoint?ids=" + this.editEndpoint.id).then(response => {
+            this.prevent_opt.save=false;
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.esc(true);
@@ -379,6 +386,8 @@
               this.$message.error(response.msg);
             }
           });
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
       // endpoint弹框的asset子弹框顶部搜索条件选中事件

@@ -154,7 +154,7 @@
       <button @click="esc(false)" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -304,6 +304,7 @@
       },
       /*关闭弹框*/
       esc(refresh) {
+        this.prevent_opt.save=false;
         this.$emit("close", refresh);
       },
       modelReload() {
@@ -527,6 +528,7 @@
       },
       setAccountValidResult(result, protocol) {
         this.accountValidResult = result;
+        this.prevent_opt.save=false;
         let index = this.errorProtocol.indexOf(protocol);
         if (result) {
           index != -1 ? this.errorProtocol.splice(index, 1) : "";
@@ -535,11 +537,14 @@
         }
       },
       del() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
+          this.prevent_opt.save=false;
           this.$delete("asset?ids=" + this.editAsset.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
@@ -548,12 +553,16 @@
               this.$message.error(response.msg);
             }
           })
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
       changeProtocolType(type) {
         this.accountType = type;
       },
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         if(this.locationInfo) {
           if(this.locationInfo.idc){
             this.editAsset.idcId = this.locationInfo.idc.id;
@@ -581,6 +590,7 @@
           if (valid && this.accountValidResult) {
             if (this.editAsset.id) {
               this.$put('asset', this.editAsset).then(res => {
+                this.prevent_opt.save=false;
                 if (res.code === 200) {
                   this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -593,6 +603,7 @@
                 this.$refs.accountConfigBox[0].validateAccount();
               }
               this.$post('asset', this.editAsset).then(res => {
+                this.prevent_opt.save=false;
                 if (res.code === 200) {
                   this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -602,6 +613,7 @@
               });
             }
           } else {
+            this.prevent_opt.save=false;
             return false;
           }
         });

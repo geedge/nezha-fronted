@@ -111,7 +111,7 @@
       <button @click="esc(false)" id="alert-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save" v-has="'rule_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save" v-has="'rule_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -202,15 +202,19 @@
         this.esc(false);
       },
       esc(refresh) {
+        this.prevent_opt.save=false;
         this.$emit("close", refresh);
       },
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.editAlertRule.expr = this.expressions[0];
         this.$refs.alertRuleForm.validate((valid) => {
           if (valid) {
             this.editAlertRule.receiver = this.editAlertRule.receiverShow.join(",");
             if (this.editAlertRule.id) {
               this.$put('alert/rule', this.editAlertRule).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -219,6 +223,7 @@
                 }
               });
             } else {
+              this.prevent_opt.save=false;
               this.$post('alert/rule', this.editAlertRule).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -229,17 +234,21 @@
               });
             }
           } else {
+            this.prevent_opt.save=false;
             return false;
           }
         })
       },
       del() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
           this.$delete("alert/rule?ids=" + this.editAlertRule.id).then(response => {
+            this.prevent_opt.save=false;
             if (response.code === 200) {
               this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
               this.esc(true);
@@ -247,6 +256,8 @@
               this.$message.error(response.msg);
             }
           })
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
       getUserList() {

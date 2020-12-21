@@ -36,7 +36,7 @@
       <button @click="esc" id="cab-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light nz-btn-min-width-100">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="cab-box-save" v-has="'dc_cabinet_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal nz-btn-style-normal nz-btn-min-width-100" id="cab-box-save" v-has="'dc_cabinet_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -69,14 +69,18 @@
           this.esc(false);
         },
         esc(refresh) {
+          this.prevent_opt.save=false;
           this.$emit("close", refresh);
         },
         save() {
+          if(this.prevent_opt.save){ return } ;
+          this.prevent_opt.save=true;
           this.$refs.cabinetForm.validate((valid => {
             if(valid){
               this.editCabinet.idcId = this.currentDc.id;
               if (this.editCabinet.id) {
                 this.$put('cabinet', this.editCabinet).then(res => {
+                  this.prevent_opt.save=false;
                   if (res.code === 200) {
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                     this.esc(true);
@@ -86,6 +90,7 @@
                 })
               } else {
                 this.$post('cabinet', this.editCabinet).then(res => {
+                  this.prevent_opt.save=false;
                   if (res.code === 200) {
                     this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                     this.esc(true);
@@ -95,17 +100,21 @@
                 })
               }
             }else{
+              this.prevent_opt.save=false;
               return false;
             }
           }))
         },
         del() {
+          if(this.prevent_opt.save){ return } ;
+          this.prevent_opt.save=true;
           this.$confirm(this.$t("tip.confirmDelete"), {
             confirmButtonText: this.$t("tip.yes"),
             cancelButtonText: this.$t("tip.no"),
             type: 'warning'
           }).then(() => {
             this.$delete('/cabinet?ids=' + this.editCabinet.id).then(response=>{
+              this.prevent_opt.save=false;
               if(response.code ==  200){
                 this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.esc(true);
@@ -113,6 +122,8 @@
                 this.$message.error(response.msg);
               }
             })
+          }).catch(()=>{
+            this.prevent_opt.save=false;
           })
         }
       },

@@ -250,7 +250,7 @@
       <button @click="esc(false)" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -410,6 +410,7 @@
       },
       /*关闭弹框*/
       esc(refresh){
+        this.prevent_opt.save=false;
         this.$emit("close",refresh);
       },
       modelReload(){
@@ -630,6 +631,8 @@
         });
       },
       save(){
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         if(this.locationInfo){
           if(this.locationInfo.idc){
             this.editAsset.idcId=this.locationInfo.idc.id;
@@ -662,6 +665,7 @@
               this.editAsset.assetIds.push(item.id);
             });
             this.$put('/asset/batch',this.editAsset).then(res=>{
+              this.prevent_opt.save=false;
               if(res.code===200){
                 this.$message({duration:2000,type:'success',message:this.$t("tip.saveSuccess")});
                 this.esc(true);
@@ -670,6 +674,7 @@
               }
             });
           }else{
+            this.prevent_opt.save=false;
             return false;
           }
         });

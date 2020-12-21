@@ -414,7 +414,7 @@
         assetListHalf:false,
         typeList: [],
         dcList: [],
-        modelList: []
+        modelList: [],
       }
     },
     methods: {
@@ -514,6 +514,7 @@
 
       /*关闭弹框*/
       esc(refresh) {
+        this.prevent_opt.save=false;
         this.$emit("close", refresh);
       },
 
@@ -848,6 +849,8 @@
 
       //保存endpoint
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.endpoint.projectId = this.currentProjectCopy.id;
         this.endpoint.moduleId = this.currentModuleCopy.id;
         if (this.endpointList.length == 0) {
@@ -864,6 +867,7 @@
         this.$refs.addEndpoint.validate((valid) => {
           if (valid) {
             this.$post('endpoint', endpointList).then(response => {
+              this.prevent_opt.save=false;
               if (response.code === 200) {
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.esc(true);
@@ -872,6 +876,7 @@
               }
             });
           } else {
+            this.prevent_opt.save=false;
             return false;
           }
         })
@@ -894,12 +899,15 @@
 
       //删除endpoint
       del() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
           this.$delete("endpoint?ids=" + this.endpoint.id).then(response => {
+            this.prevent_opt.save=false;
             if (response.code === 200) {
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.esc(true);
@@ -907,6 +915,8 @@
               this.$message.error(response.msg);
             }
           });
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
       // endpoint弹框的asset子弹框顶部搜索条件选中事件

@@ -75,7 +75,9 @@
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" id="account-save" v-has="'account_save'"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+              :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
+      >
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -121,12 +123,12 @@
         editUser: {},
         scripts: [],
         selectableScripts: [],
-        roles:[],
       }
     },
     methods: {
       /*关闭弹框*/
       esc(refresh) {
+        this.prevent_opt.save=false;
         this.$emit("close", refresh);
       },
       clickOutside() {
@@ -134,11 +136,14 @@
       },
       /*保存*/
       save() {
+        if(this.prevent_opt.save){ return } ;
+        this.prevent_opt.save=true;
         this.$refs.accountForm.validate(valid => {
           if (valid) {
             let editUser = JSON.parse(JSON.stringify(this.editUser))
             editUser.roleIds = [editUser.roleIds]
             if (this.editUser.userId) {
+              this.prevent_opt.save=false;
               this.$put('sys/user/update',editUser).then(response => {
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
@@ -149,6 +154,7 @@
               });
             } else {
               this.$post('sys/user/save', editUser).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
@@ -158,12 +164,15 @@
               });
             }
           } else {
+            this.prevent_opt.save=false;
             return false;
           }
         })
       },
       /*删除*/
       del() {
+        if(this.prevent_opt.save){ return }
+        this.prevent_opt.save=true;
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),
@@ -177,6 +186,9 @@
               this.$message.error(response.msg);
             }
           });
+          this.prevent_opt.save=false;
+        }).catch(()=>{
+          this.prevent_opt.save=false;
         });
       },
 

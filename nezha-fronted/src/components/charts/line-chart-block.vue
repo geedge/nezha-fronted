@@ -1307,7 +1307,7 @@
                 this.seriesItemScreen = this.seriesItem;
                 this.screenModal = true;
                 */
-        //this.dateChange();
+        // this.dateChange();
       },
       duplicate(){
         this.dropdownMenuShow=false;

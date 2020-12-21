@@ -470,7 +470,8 @@
           hover.hide();
         }
       },
-      hexagonSvgClearScale(){
+      hexagonSvgClearScale(e){
+        window.event? window.event.cancelBubble = true:e.stopPropagation();
         if(this.firstInit){return}
         if(this.group){
           this.group.off('dblclick',this.hexagonSvgClearScale);
