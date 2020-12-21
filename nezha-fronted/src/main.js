@@ -95,7 +95,7 @@ Vue.mixin({
   data:function(){
     return {
       prevent_opt:{
-        svae:false,
+        save:false,
         import:false,
         dumplicate:false,
         delete:false,
