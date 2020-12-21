@@ -92,6 +92,18 @@ Vue.prototype.$tableHeight = { //列表页表格的高度
 };
 
 Vue.mixin({
+  data:function(){
+    return {
+      prevent_opt:{
+        svae:false,
+        import:false,
+        dumplicate:false,
+        delete:false,
+        refresh:false,
+        query:false,
+      }
+    }
+  },
   methods: {
     utcTimeToTimezone:function(time){
       if(time){
