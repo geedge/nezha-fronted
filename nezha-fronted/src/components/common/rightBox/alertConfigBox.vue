@@ -223,8 +223,8 @@
                 }
               });
             } else {
-              this.prevent_opt.save=false;
               this.$post('alert/rule', this.editAlertRule).then(response => {
+                this.prevent_opt.save=false;
                 if (response.code === 200) {
                   this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                   this.esc(true);
