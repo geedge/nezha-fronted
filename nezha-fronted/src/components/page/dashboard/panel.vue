@@ -732,8 +732,10 @@
       },
     },
     beforeDestroy(){
-      document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
-      document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
+      if(document.querySelector("#tableList")){
+        document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
+        document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
+      }
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
     }
   }
