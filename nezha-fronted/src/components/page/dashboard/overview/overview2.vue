@@ -947,6 +947,10 @@
           this.$get('sysConfig',param).then(response=>{
             if(response.code == 200){
               let mapConfig=JSON.parse(response.data.paramKey.map_center_config);
+              if(this.map){
+                this.map.remove();
+                this.map=null;
+              }
               let map = L.map("map",{
                 minZoom:mapConfig.minZoom,
                 maxZoom:mapConfig.maxZoom,
