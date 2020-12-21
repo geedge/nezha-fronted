@@ -156,6 +156,7 @@
 <style>
   .interval-refresh-popover{
     min-width: unset !important;
+    z-index:3000 !important;
   }
   .sub-top-tools .interval-refresh {
     margin-top: -1px;

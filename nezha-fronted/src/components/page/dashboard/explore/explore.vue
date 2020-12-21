@@ -200,7 +200,7 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 
     </div>
     <transition name="right-box">
-      <chart-box :chart="chart" :from="$CONSTANTS.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess" ref="addChartModal" v-if="rightBox.show"></chart-box>
+      <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </div>
 </template>

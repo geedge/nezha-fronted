@@ -59,7 +59,8 @@
         <span class="nz-dialog-title chart-title-text">{{chart.title}}</span>
         <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url' && chart.type !=='alertList'">
 
-          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange" v-if="chart.type !='text'"></time-picker>
+<!--          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange" v-if="chart.type !='text'"></time-picker>-->
+          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;"></pick-time>
           <!--
           <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
                           format="yyyy/MM/dd HH:mm"
@@ -1088,7 +1089,6 @@
       },
       */
       dateChange(time) {
-        this.searchTime = [...time];
         let chartType = this.chart.type;
         if (chartType === 'table') {
           this.seriesItemScreen = [];
@@ -1121,7 +1121,6 @@
       getQueryChart(type) {
         let axiosArr = [];
         const chartItem = this.chart;
-        console.log(chartItem);
         this.$nextTick(() => {
           let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
           let endTime = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');

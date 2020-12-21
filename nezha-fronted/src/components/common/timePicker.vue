@@ -2,6 +2,9 @@
   .loading-font{
     color:#232f3e !important;
   }
+  popper-z-index{
+    z-index: 3000 !important;
+  }
   .calendar{
   }
   .nz-dashboard-dropdown-bg {
@@ -86,6 +89,7 @@
         :visible-arrow="false"
         :disabled="isPopoverDisabled"
         trigger="hover"
+        popper-class="popper-z-index"
         id="panel-calender-popover">
         <template v-if="this.searchTime&&this.searchTime.length>1">
           <el-row  :gutter="10" class="calendar-popover">
@@ -107,7 +111,7 @@
           <i class="nz-icon nz-icon-arrow-down"  style="padding-left:0px !important;width:20px;"></i>
         </div>
       </el-popover>
-      <el-dropdown-menu class="nz-dashboard-dropdown" slot="dropdown">
+      <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
         <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
         <template v-for="item in timeData" >
           <el-dropdown-item :class="showTime.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item" v-if="item.id != 12 || showEmpty">
