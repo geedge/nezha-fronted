@@ -311,8 +311,9 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
                   let promqlIndex=promqlInputIndexs[index];
                   if (response.data&&response.status == 'success') {
                     let data = response.data.result;
-                    if((!data||data.length<1)&&response.data.message){
-
+                    if((!data||data.length<1)&&response.message){
+                      this.$refs['promql-'+promqlIndex][0].setError(response.message)
+                      return;
                     }
                     data.forEach((result, i) => {
                       let seriesItem = {
