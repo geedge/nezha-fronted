@@ -51,7 +51,7 @@
       <button @click="esc(false)" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save" v-has="'snmp_file_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save" v-has="'snmp_file_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -183,6 +183,7 @@
       save() {
         this.$refs.mibForm.validate((valid) => {
           if (valid) {
+            this.prevent_opt.save=true;
             let form = new FormData();
             form.append('name',this.editMib.name);
             form.append('remark',this.editMib.remark);
@@ -196,6 +197,7 @@
                 }else{
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               })
             }else{
               form.append('id',this.editMib.id);
@@ -206,8 +208,11 @@
                 }else{
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               })
             }
+          }else{
+            this.prevent_opt.save=false;
           }
         })
       },

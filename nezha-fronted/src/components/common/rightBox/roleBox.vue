@@ -51,7 +51,7 @@
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'role_save'"
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'role_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
               id="roles-save">
         <span>{{$t('overall.save')}}</span>
       </button>
@@ -92,6 +92,7 @@
       save() {
         this.$refs.roleForm.validate(valid => {
           if (valid) {
+            this.prevent_opt.save=true;
             if (this.editRole.id) {
               this.$put('sys/role', this.editRole).then(response => {
                 if (response.code === 200) {
@@ -100,6 +101,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             } else {
               this.$post('sys/role', this.editRole).then(response => {
@@ -109,6 +111,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             }
           } else {

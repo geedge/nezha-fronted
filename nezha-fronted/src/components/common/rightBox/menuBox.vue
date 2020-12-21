@@ -120,6 +120,10 @@
         },
         editMenu: {},
         menus:[],
+        option:{
+          save:false,
+
+        }
       }
     },
     methods: {

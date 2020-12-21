@@ -76,7 +76,7 @@
       <button @click="esc(false)" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save" v-has="['model_save', 'asset_vendor_save']">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save" v-has="['model_save', 'asset_vendor_save']" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -150,6 +150,7 @@
       save() {
         this.$refs.modelForm.validate((valid) => {
           if (valid) {
+            this.prevent_opt.save = true;
             let errMsg = [];
             //vendor和type如果是新记录，需要先请求后台新增，再获取code
             let vendorReady;
@@ -182,6 +183,7 @@
                   } else {
                     this.$message.error(response.msg);
                   }
+                  this.prevent_opt.save=false;
                 });
               } else {
                 this.$post('model', this.editModel).then(response => {
@@ -192,6 +194,7 @@
                   } else {
                     this.$message.error(response.msg);
                   }
+                  this.prevent_opt.save=false;
                 });
               }
             });

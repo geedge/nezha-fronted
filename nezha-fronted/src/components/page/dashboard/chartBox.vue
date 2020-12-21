@@ -475,7 +475,7 @@
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_save`">
+      <button @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_save`" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}" >
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -514,6 +514,9 @@
     mixins: [rz],
     data() {
       return {
+        optionBtn:{
+          save:false,
+        },
         editChart: {},
 
         statisticsList: this.$CONSTANTS.statisticsList,
@@ -876,6 +879,7 @@
                   this.$message.error(response);
                 }
               }
+              this.prevent_opt.save=false
             });
           }
         })
@@ -896,6 +900,7 @@
               this.$message.error(response2);
             }
           }
+          this.prevent_opt.save=false
         });
       },
       // 获取每个tag组件内部校验后数据,点击生成图表时触发
@@ -1001,6 +1006,7 @@
         this.confirmAdd();
       },
       confirmAdd() {
+        this.prevent_opt.save=true
         this.elementTarget = []; // 初始化清空参数
         if(this.editChart.type!=='url'&&this.editChart.type != 'text'){
           /*if(this.editChart.type == 'alertList'){

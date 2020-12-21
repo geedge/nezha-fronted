@@ -29,7 +29,7 @@
             <button @click="downloadTemplate"  class="el-button el-button--default el-button--small">
               <span>{{$t('overall.template')}}</span>
             </button>
-            <button  @click="importExcel"  class="el-button el-button--default el-button--small">
+            <button  @click="importExcel"  class="nz-btn el-button el-button--default el-button--small" :disabled="prevent_opt.import" :class="{'nz-btn-disabled':prevent_opt.import}">
               <span>{{$t('overall.importExcel')}}</span>
             </button>
             <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
@@ -167,6 +167,7 @@
       },
       importExcel:function(){
         if(this.importFile && this.importFile.raw){
+          this.prevent_opt.import =true;
           let form = new FormData();
           form.append('excelFile',this.importFile.raw);
           if(this.paramsType){
@@ -185,6 +186,7 @@
             }else{
               this.$message.error(response.msg);
             }
+            this.prevent_opt.import =false;
           })
         }else{
           this.$message.error(this.$t('tip.noImportFile'));

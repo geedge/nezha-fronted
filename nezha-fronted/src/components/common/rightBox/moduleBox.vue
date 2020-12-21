@@ -308,7 +308,7 @@
       <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'project_module_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'project_module_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -537,6 +537,7 @@
         this.editModule.labels = this.labelsToJson(this.editModule.labelModule);
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
+            this.prevent_opt.save=true;
             if (this.editModule.type.toLowerCase() == 'snmp') {
               this.parseSnmpParam(this.editModule);
             } else {
@@ -554,6 +555,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             } else {
               this.$post('module', this.editModule).then(response => {
@@ -564,6 +566,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             }
           } else {

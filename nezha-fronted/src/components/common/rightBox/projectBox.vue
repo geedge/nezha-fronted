@@ -28,7 +28,7 @@
       <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" v-has="'project_save'">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" v-has="'project_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -66,6 +66,7 @@
       save() {
         this.$refs['projectForm'].validate((valid) => {
           if (valid) {
+            this.prevent_opt.save=true;
             if (this.editProject.id) {
               this.$put('project', this.editProject).then(response => {
                 if (response.code === 200) {
@@ -76,6 +77,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             } else {
               this.$post('project', this.editProject).then(response => {
@@ -86,6 +88,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             }
           } else {

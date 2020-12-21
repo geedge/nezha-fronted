@@ -29,7 +29,7 @@
         <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'panel_save'">
+        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'panel_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>
@@ -83,6 +83,7 @@
       save: function() {
         this.$refs.panelForm.validate((valid) => {
           if (valid) {
+            this.prevent_opt.save=true;
             if (this.panel.id) {
               this.$put('panel', this.panel).then(response => {
                 if (response.code === 200) {
@@ -92,6 +93,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             } else {
               this.$post('panel', this.panel).then(response => {
@@ -102,6 +104,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             }
           } else {

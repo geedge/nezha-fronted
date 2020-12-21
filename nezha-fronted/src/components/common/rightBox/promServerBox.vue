@@ -58,7 +58,7 @@
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" id="prom-save" v-has="'prom_save'"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -107,6 +107,7 @@
       save() {
         this.$refs.promServerForm.validate(valid => {
           if (valid) {
+            this.prevent_opt.save=true;
             if (this.editPromServer.id) {
               this.$put('promServer', this.editPromServer).then(response => {
                 if (response.code === 200) {
@@ -115,6 +116,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             } else {
               this.$post('promServer', this.editPromServer).then(response => {
@@ -124,6 +126,7 @@
                 } else {
                   this.$message.error(response.msg);
                 }
+                this.prevent_opt.save=false;
               });
             }
           } else {
