@@ -13,8 +13,8 @@
               {{i.label}}
             </li>
           </ul>
-          <button type="button" style="border-radius: 0 4px 4px 0;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}&nbsp</span><i style="font-size: 14px" class="nz-icon nz-icon-arrow-down"></i>
+          <button type="button" style="border-radius: 0 4px 4px 0;padding:0px;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
+            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}</span><i style="font-size: 14px" class="nz-icon nz-icon-arrow-down"></i>
           </button>
         </el-popover>
       </div>
