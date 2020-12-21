@@ -217,7 +217,7 @@
         firstInit:true,//优化刚加载时的多次点击造成放大缩小功能的不正常
         defaultRate:0.33,// 默认倍率 最小0.2
         defaultBoxWidth:2288,
-        hexagonEdge:90,
+        hexagonEdge:JSON.stringify(this.hexagonEdgeProp),
         fontSize:14,
       }
     },
@@ -235,6 +235,7 @@
     methods:{
       init(){ //创建svg实例
         this.boxhexagonShow=false;
+        this.hexagonEdge=this.hexagonEdgeProp;
         this.clearData().then(()=>{
           this.boxhexagonShow=true;
           this.$nextTick(()=>{
