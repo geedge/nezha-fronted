@@ -81,7 +81,7 @@
 
                 <el-row class="mib-browser-ad-search-item" v-if="searchParamPop.auth.securityLevel == 'authNoPriv' || searchParamPop.auth.securityLevel == 'authPriv'">
                   <el-col :span="6">
-                    <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
+                    <div class="mib-browser-ad-search-label">{{$t('login.mima')}}</div>
                   </el-col>
                   <el-col :span="17">
                     <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.password"></el-input>
@@ -114,7 +114,7 @@
 
                 <el-row class="mib-browser-ad-search-item" v-if="searchParamPop.auth.securityLevel == 'authPriv'">
                   <el-col :span="6">
-                    <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.privMima')}}</div>
                   </el-col>
                   <el-col :span="17">
                     <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword"></el-input>

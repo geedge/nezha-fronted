@@ -1,18 +1,18 @@
 <template>
   <div>
-    <el-dialog class="nz-dialog" :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
+    <el-dialog class="nz-dialog" :title="$t('overall.changeMima')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
       <el-form :model="user" label-position="right" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
         <el-form-item :label="$t('config.account.account')" prop="username" v-show="curUser != sysUser">
           <el-input type="text" autocomplete="false" v-model="user.username" disabled></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.account.oldPwd')" prop="pwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.account.inputOldPwd')"></el-input>
+        <el-form-item :label="$t('config.account.oldMima')" prop="pwd">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.account.inputOldMima')"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.account.newPwd')" prop="newPwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.account.inputNewPwd')"></el-input>
+        <el-form-item :label="$t('config.account.newMima')" prop="newPwd">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.account.inputNewMima')"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.account.confirmPwd')" prop="confirmPwd">
-          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.account.inputConfirmPwd')"></el-input>
+        <el-form-item :label="$t('config.account.confirmMima')" prop="confirmPwd">
+          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.account.inputConfirmMima')"></el-input>
         </el-form-item>
       </el-form>
       <!--底部按钮-->
@@ -46,7 +46,7 @@
           if(value && value != '' ){
             callback();
           }else{
-            callback(new Error(temp.$t('config.account.invalidPwd')))
+            callback(new Error(temp.$t('config.account.invalidMima')))
           }
         };
         var validateConfirmPass=(rule,value,callback) => {
@@ -67,7 +67,7 @@
           rules:{
             pwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'}],
             newPwd:[{required:true,message: this.$t('validate.required'), trigger: 'blur'},{validator:validatePass,trigger: 'blur'}],
-            confirmPwd:[{required:true,message: this.$t('config.account.reinputPwd'), trigger: 'blur'},{validator:validateConfirmPass,trigger: 'blur'}]
+            confirmPwd:[{required:true,message: this.$t('config.account.reinputMima'), trigger: 'blur'},{validator:validateConfirmPass,trigger: 'blur'}]
           },
           visible:false,
         }

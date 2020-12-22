@@ -47,7 +47,7 @@ const en = {
     back: 'Back', //返回
     unavailable: 'Unavailable',
     available: 'Available',
-    changePwd:'Change password',//修改密码
+    changeMima:'Change password',//修改密码
     createChart:'Create chart',
     createProject:'Create project',
     createEndpoint:'Create endpoint',
@@ -113,7 +113,7 @@ const en = {
   },
   login: {
     username: 'Username',
-    password: 'Password',
+    mima: 'Password',
     login: 'Login'
   },
   dashboard:{
@@ -425,16 +425,16 @@ const en = {
     remark:'Description',//'描述'
     cli:'CLI account',//'CLI账号'
     loginType:'Login type',//'登录类型'
-    password:'Password',//'密码'
+    mima:'Password',//'密码'
     ssh:'SSH key',//'SSH-Key'
     protocol:"Protocol",
     sshProtocol:"SSH",
     telnetProtocol:"Telnet",
     userTip:"User tip",//用户名提示
-    passwordTip:"Password tip",//密码提示
-    reloginPasswordTip:"Relogin tip",//密码提示
-    userPwdIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
-    reLoginPwdIntroduce:'Please specify the password prompt so that the login process can run automatically',
+    mimaTip:"Password tip",//密码提示
+    reloginMimaTip:"Relogin tip",//密码提示
+    userMimaIntroduce:'Please specify a user name and password so that the telenet login process can automatically log in',
+    reLoginMimaIntroduce:'Please specify the password prompt so that the login process can run automatically',
     account:'User name',//'用户名'
     port:'Port',//'端口'
     upload:'Upload',//'上传'
@@ -520,7 +520,7 @@ const en = {
       remark:'Description',//'描述'
       cli:'CLI account',//'CLI账号'
       loginType:'Login type',//'登录类型'
-      password:'Password',//'密码'
+      mima:'Password',//'密码'
       ssh:'SSH-Key',//'SSH-Key'
       account:'Username',//'用户名'
       port:'Port',//'端口'
@@ -573,16 +573,16 @@ const en = {
       createAccount: 'New account',//"新增用户"
       editAccount: 'Edit account',//"编辑用户"
       notCurrentlySupport: 'Not available',//'暂不支持'
-      password: 'Password',//'密码'
-      oldPwd:'Old password',
-      inputOldPwd:'Please input old password',
-      newPwd:'New password',
-      inputNewPwd:'Please input new password',
-      confirmPwd:'Confirm password',
-      inputConfirmPwd:'Please input confirm password',
-      invalidPwd:'invalide password,the length at least 6',
-      confirmPwdErr:'The two passwords are inconsistent',
-      reinputPwd:'Enter password again',
+      mima: 'Password',//'密码'
+      oldMima:'Old password',
+      inputOldMima:'Please input old password',
+      newMima:'New password',
+      inputNewMima:'Please input new password',
+      confirmMima:'Confirm password',
+      inputConfirmMima:'Please input confirm password',
+      invalidMima:'invalide password,the length at least 6',
+      confirmMimaErr:'The two passwords are inconsistent',
+      reinputMima:'Enter password again',
       notification: 'Notification'
     },
     roles:{
@@ -753,13 +753,13 @@ const en = {
         smtpHost:'SMTP host',
         smtpPort:'SMTP port',
         smtpAccount:'SMTP account',
-        smtpPwd:'SMTP password',
+        smtpMima:'SMTP password',
         sendAccount:'Send account',
         testAccount:'Test account',
         useSSL:'SSL',
         useTLS:'TLS',
         testConnection:'Test connection',
-        pwdTip:'Tip:Some email providers need to enter token',
+        mimaTip:'Tip:Some email providers need to enter token',
         sendAccountTip:'Tip:The SMTP account is used as the sending account by default',
         testAccountTip:'Tip:Used only as test mail recipient',
         sslTip:'If the SMTP port is 465, you usually need to enable SSL',
@@ -773,7 +773,7 @@ const en = {
         ldap:'LDAP',
         address:'LDAP address',
         dn:'Bind DN',
-        pwd:'Password',
+        mima:'Password',
         ou:'User OU',
         filter:'User filter',
         map:'LDAP field mapping',
@@ -805,11 +805,11 @@ const en = {
       reset:{
         reset:'Reset',
         type:'Type',
-        pwd:'Password',
+        mima:'Password',
         metric:'metric',
         alert:'alert',
         sysConfig:'System config',
-        pwdTip:'Please input your password',
+        mimaTip:'Please input your password',
         promptTitle:'Confirm',
         yes:'Yes',
         no:'No',
@@ -909,7 +909,7 @@ const en = {
       authProtocol: 'Auth protocol',
       privProtocol: 'Priv protocol',
       contextName: 'Context name',
-      privPassword: 'Priv password',
+      privMima: 'Priv password',
       tip: {
         defaultEndpointSet: 'Default endpoint settings',//"默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'//"组件关联的Endpoint将默认配置以下端口/路径/参数"

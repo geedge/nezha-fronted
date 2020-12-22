@@ -11,7 +11,7 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.password" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
+        <input v-model="loginData.password" type="password" name="password" autocomplete="on" :placeholder="$t('login.mima')"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login" v-loading="loading">{{$t("login.login")}}</button>

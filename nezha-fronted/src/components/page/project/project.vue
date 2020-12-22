@@ -692,7 +692,7 @@
           detail.account=account.user;
           let loginType="";
           if(account.authType==1){
-            loginType=this.$t('asset.password');
+            loginType=this.$t('asset.mima');
           }else if(account.authType==2){
             loginType=this.$t('asset.ssh');
           }
