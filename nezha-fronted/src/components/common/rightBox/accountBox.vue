@@ -102,6 +102,9 @@
         return enabled.length === 0;
       }
     },
+    created() {
+      this.getRoles();
+    },
     data() {
       return {
         scriptIds: [],
@@ -123,6 +126,7 @@
         editUser: {},
         scripts: [],
         selectableScripts: [],
+        roles:[],
       }
     },
     methods: {
@@ -197,7 +201,6 @@
           this.scripts = response.data.list;
           this.getSelectableScripts();
         });
-        this.getRoles();
         /*this.scripts = [
           {id: 1, name: "DOLBY"},
           {id: 2, name: "IMAX"},
@@ -231,7 +234,7 @@
       },
       getRoles:function(){
         this.roles = [];
-        this.$get("sys/role").then(response=>{
+        this.$get("sys/role?pageSize=-1").then(response=>{
           if (response.code  == 200){
             this.roles = response.data.list;
             if(!this.editUser.userId){
