@@ -376,7 +376,8 @@ const cn = {
     url: "不合法的URL",
     uSize: "必须是(1 - 47)的数字",
     requiredIdc:'机房为必选项',
-    tooLong:"文本太长"
+    tooLong:"文本太长",
+    key:"不合法的值",
   },
   search: {
     searchTip: "点击或回车执行搜索",
