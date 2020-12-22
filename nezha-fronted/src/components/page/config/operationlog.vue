@@ -48,6 +48,7 @@
           <span v-if="item.prop == 'time'">
             {{scope.row[item.prop]}} ms
           </span>
+          <span v-else-if="item.prop == 'username'">{{formatUsername(scope.row)}}</span>
           <span v-else-if="item.prop == 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <span v-else>{{scope.row[item.prop]}}</span>
         </template>
@@ -232,6 +233,15 @@
         this.pageObj.pageSize = val;
         localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
         this.getTableData();
+      },
+      formatUsername(row){
+        if(row.username){
+          return row.username;
+        } else if(row.operation==='login'&&!row.username){//如果是登录 且登录失败
+          return JSON.parse(row.params).username
+        } else{
+          return '-'
+        }
       },
       search: function (searchObj) {
         let orderBy = '';
