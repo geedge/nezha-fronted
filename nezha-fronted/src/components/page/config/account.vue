@@ -82,7 +82,7 @@
             <div v-if="item.prop == 'option'" class="content-right-options">
               <span :id="'account-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'account_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
               &nbsp;
-              <span :id="'account-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'account_delete'"><i class="nz-icon nz-icon-delete"></i></span>
+              <span :id="'account-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'account_delete'"><i class="nz-icon nz-icon-delete" :class="{'gray-filter':(scope.row.username==='admin' || scope.row.userId==1 )}"></i></span>
             </div>
             <template v-if="item.prop == 'roles'">
               <template v-if="scope.row[item.prop]">
@@ -108,7 +108,7 @@
                   active-value="1"
                   inactive-value="0"
                   active-color="#ee9d3f"
-                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_save')"
+                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_save') || (scope.row.username==='admin' && scope.row.userId==1)"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
             </span>
@@ -293,6 +293,7 @@
         this.bottomBox.showSubList = true;
       },
       del(u) {
+        if(u.userId==1&&u.username==='admin'){return}
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
           cancelButtonText: this.$t("tip.no"),

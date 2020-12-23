@@ -2,7 +2,7 @@
   <div class="right-box right-box-account" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId"
+      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId!==1"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -21,7 +21,7 @@
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
           <el-input autocomplete="new-password" type="text" placeholder=""
-                    v-model="editUser.username" maxlength="64" show-word-limit size="small"></el-input>
+                    v-model="editUser.username" maxlength="64" show-word-limit size="small" :disabled="editUser.username==='admin' && editUser.userId==1"></el-input>
         </el-form-item>
         <!--password-->
         <el-form-item :label="$t('config.account.password')" prop="password" v-if="!editUser.userId">
@@ -34,13 +34,13 @@
         </el-form-item>
         <!--enable-->
         <el-form-item :label="$t('config.account.enable')">
-          <el-switch v-model="editUser.status" active-color="#ee9d3f" :disabled="isCurrentUser(editUser.username)" active-value="1"
+          <el-switch v-model="editUser.status" active-color="#ee9d3f" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.userId==1) " active-value="1"
                      inactive-value="0">
           </el-switch>
         </el-form-item>
         <!--roles-->
         <el-form-item :label="$t('config.account.roles')" prop="roleIds">
-          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds">
+          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.userId==1">
             <template v-for="role in roles">
               <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
             </template>
@@ -119,7 +119,6 @@
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
           ],
           email: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
             {type: 'email', message: this.$t('validate.email')}
           ]
         },
