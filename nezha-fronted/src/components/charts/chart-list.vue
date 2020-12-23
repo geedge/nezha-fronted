@@ -1081,7 +1081,7 @@
           let dpsArr = [];
           let timeStamp = Math.floor(new Date().getTime() / 1000);
           for (let i = 0; i < 20; i++) {
-            tempArr.push([timeStamp - (20 - i) * 15, Math.floor(Math.random() * 10) + ""]);
+            tempArr.push([timeStamp - (20 - i) * 15, Math.floor(window.crypto.getRandomValues() * 10) + ""]);
             queryItem.values.push(tempArr[i])
             dpsArr.push([i + "", tempArr[i]]);
           }
