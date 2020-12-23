@@ -41,6 +41,7 @@
           }"
           @afterImport="dateChange"
           v-if="$route.path==='/asset' || $route.path==='/model'"
+          :showCur="false"
         >
           <template slot="optionZone">
             <button :title="$t('overall.createChart')" @click="addChart" v-has="['model_chart_toAdd', 'asset_chart_toAdd']" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint"
