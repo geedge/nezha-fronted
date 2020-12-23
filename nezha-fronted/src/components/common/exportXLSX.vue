@@ -290,7 +290,7 @@
       showImportBox:function(type){
         this.importBox.show=true;
         this.importBox.type=type;
-        if(type == 2&&(this.$route.path==='/asset'|| this.$route.path==='/model')){
+        if(type == 2&&(this.$route.path==='/model')){
           this.exportCur()
           return
         }
