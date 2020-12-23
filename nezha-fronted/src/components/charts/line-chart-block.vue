@@ -178,6 +178,7 @@
     </div>
   </div>
 </template>
+
 <script>
   import axios from 'axios';
   import echarts from 'echarts';
@@ -345,22 +346,46 @@
           })
         }
       },
-      clickLegend(legendName,index){
-        let curIsGrey=this.isGrey[index];
-        let echart=getChart(this.chartIndex)
-        if(echart) {
-          if(curIsGrey){
+      clickLegend(legendName, index){
+        /*点击legend
+        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+        * 3.否则只改变被点击的legend状态
+        * */
+        let highlightNum = 0; //高亮数量
+        this.isGrey.forEach(g => {
+          if (!g) {
+            highlightNum++;
+          }
+        });
+        let hasGrey = highlightNum < this.isGrey.length; //是否有置灰的
+        let curIsGrey = this.isGrey[index]; //当前legend的状态
+        let currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1; //当前legend是否是目前唯一高亮的
+
+        let echart = getChart(this.chartIndex)
+        if (echart) {
+          if (!hasGrey) { //1.除当前legend外全置灰
+            echart.dispatchAction({
+              type: 'legendInverseSelect'
+            });
             echart.dispatchAction({
               type: 'legendSelect',
               name: legendName
-            })
-          }else{
+            });
+            this.isGrey = this.isGrey.map((g, i) => i !== index);
+          } else if (currentIsTheOnlyOneHighlight) { //2.全高亮
             echart.dispatchAction({
-              type: 'legendUnSelect',
+              type: 'legendAllSelect'
+            });
+            this.isGrey = this.isGrey.map(() => false);
+          } else {
+            let type = curIsGrey ? "legendSelect" : "legendUnSelect";
+            echart.dispatchAction({
+              type: type,
               name: legendName
-            })
+            });
+            this.$set(this.isGrey, index, !this.isGrey[index]);
           }
-          this.$set(this.isGrey,index,!curIsGrey)
         }
       },
       clickLegend2(legendName,index){
@@ -411,20 +436,45 @@
         }
       },
       clickScreenLegend(legendName,index){
-        let curIsGrey=this.isGreyScreen[index];
-        if(this.echartModalStore) {
-          if(curIsGrey){
-            this.echartModalStore.dispatchAction({
+        /*点击legend
+        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+        * 3.否则只改变被点击的legend状态
+        * */
+        let highlightNum = 0; //高亮数量
+        this.isGreyScreen.forEach(g => {
+          if (!g) {
+            highlightNum++;
+          }
+        });
+        let hasGrey = highlightNum < this.isGreyScreen.length; //是否有置灰的
+        let curIsGrey = this.isGreyScreen[index]; //当前legend的状态
+        let currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1; //当前legend是否是目前唯一高亮的
+
+        let echart = this.echartModalStore;
+        if (echart) {
+          if (!hasGrey) { //1.除当前legend外全置灰
+            echart.dispatchAction({
+              type: 'legendInverseSelect'
+            });
+            echart.dispatchAction({
               type: 'legendSelect',
               name: legendName
-            })
-          }else{
-            this.echartModalStore.dispatchAction({
-              type: 'legendUnSelect',
+            });
+            this.isGreyScreen = this.isGreyScreen.map((g, i) => i !== index);
+          } else if (currentIsTheOnlyOneHighlight) { //2.全高亮
+            echart.dispatchAction({
+              type: 'legendAllSelect'
+            });
+            this.isGreyScreen = this.isGreyScreen.map(() => false);
+          } else {
+            let type = curIsGrey ? "legendSelect" : "legendUnSelect";
+            echart.dispatchAction({
+              type: type,
               name: legendName
-            })
+            });
+            this.$set(this.isGreyScreen, index, !this.isGreyScreen[index]);
           }
-          this.$set(this.isGreyScreen,index,!curIsGrey)
         }
       },
       clickScreenLegend2(legendName,index){
@@ -877,75 +927,74 @@
 
             window.addEventListener('resize', this.chartResize);
             getChart(this.chartIndex).on('magictypechanged', function (params) {
-                self.isStackArea = !self.isStackArea;
-                if(self.isStackArea){
-                  console.log(123123);
-                  getChart(self.chartIndex).setOption({
-                    toolbox:{
-                      feature:{
-                        dataZoom:{
-                          yAxisIndex:false,
-                          title:{
-                            zoom:self.$t('overall.toolBox.zoom'),
-                            back:self.$t('overall.toolBox.back'),
-                          }
-                        },
-                        magicType:{
-                          type:['stack'],
-                          title:{
-                            stack:self.$t('overall.toolBox.stack')
-                          },
-                          iconStyle:{
-                            borderColor:'#7e7e7e',
-                          },
-                          emphasis:{
-                            borderColor:stackIconChooseBorderColor,
-                          }
-                        },
-                      }
-                    },
-                    tooltip: {
-                      formatter:function(params){
-                        let str = `<div>`;
-                        let sum = 0;
-                        params.forEach((item, i) => {let tip=legend[item.seriesIndex];
-                          let color = self.bgColorList[item.seriesIndex];
-                          if(i===0){
-                            let value=item.data[0];
-                            let t_date = new Date(value);
-                            str += bus.timeFormate(t_date)
-                            str +=`<br/>`;
-                          }
-                          let val = parseFloat(Number(item.data[1]).toFixed(2));
-                          if(val===0){
-                            val = Number(item.data[1]).toExponential(2);
-                          }
-                          sum +=val;
-                          str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                          str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
-                          str += `<div style="padding-left: 10px;">`;
-                          str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
-                          str += `</div>`;
-                          str += `</div>`;
-                        });
-                        if(self.data.type==='stackArea' || self.isStackArea){
-                          sum = parseFloat(Number(sum).toFixed(2));
-                          str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
-                          str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
-                          str +=self.$t("dashboard.panel.chartTotal");
-                          str +=`</div>`;
-                          str +=`<div style="padding-left: 10px;">`;
-                          str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
-                          str +=`</div>`;
-                          str += `</div>`;
+              self.isStackArea = !self.isStackArea;
+              if(self.isStackArea){
+                getChart(self.chartIndex).setOption({
+                  toolbox:{
+                    feature:{
+                      dataZoom:{
+                        yAxisIndex:false,
+                        title:{
+                          zoom:self.$t('overall.toolBox.zoom'),
+                          back:self.$t('overall.toolBox.back'),
                         }
-
-                        str +=`</div>`;
-                        return str;
+                      },
+                      magicType:{
+                        type:['stack'],
+                        title:{
+                          stack:self.$t('overall.toolBox.stack')
                         },
+                        iconStyle:{
+                          borderColor:'#7e7e7e',
+                        },
+                        emphasis:{
+                          borderColor:stackIconChooseBorderColor,
+                        }
+                      },
                     }
-                  });
-                }else{
+                  },
+                  tooltip: {
+                    formatter:function(params){
+                      let str = `<div>`;
+                      let sum = 0;
+                      params.forEach((item, i) => {let tip=legend[item.seriesIndex];
+                        let color = self.bgColorList[item.seriesIndex];
+                        if(i===0){
+                          let value=item.data[0];
+                          let t_date = new Date(value);
+                          str += bus.timeFormate(t_date)
+                          str +=`<br/>`;
+                        }
+                        let val = parseFloat(Number(item.data[1]).toFixed(2));
+                        if(val===0){
+                          val = Number(item.data[1]).toExponential(2);
+                        }
+                        sum +=val;
+                        str += `<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                        str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip?(tip.alias?tip.alias:tip.name):item.seriesName}  </div>`;
+                        str += `<div style="padding-left: 10px;">`;
+                        str += chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(val,null,2);
+                        str += `</div>`;
+                        str += `</div>`;
+                      });
+                      if(self.data.type==='stackArea' || self.isStackArea){
+                        sum = parseFloat(Number(sum).toFixed(2));
+                        str +=`<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">`;
+                        str +=`<div style="line-height: 18px; font-size: 12px;padding-left:20px;">`
+                        str +=self.$t("dashboard.panel.chartTotal");
+                        str +=`</div>`;
+                        str +=`<div style="padding-left: 10px;">`;
+                        str +=chartDataFormat.getUnit(chartInfo.unit?chartInfo.unit:2).compute(sum,null,2);
+                        str +=`</div>`;
+                        str += `</div>`;
+                      }
+
+                      str +=`</div>`;
+                      return str;
+                    },
+                  }
+                });
+              }else{
                 getChart(self.chartIndex).setOption({
                   toolbox:{
                     feature:{
@@ -1786,10 +1835,10 @@
           minValue=0;
           for(let j = 0; j < dataArg.length ; j++){
             for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-             if(dataArg[j].data[i+1][1]!=='NaN'){
-               maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
-               minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
-             }
+              if(dataArg[j].data[i+1][1]!=='NaN'){
+                maxValue = (maxValue < Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : maxValue);
+                minValue = (minValue > Number(dataArg[j].data[i+1][1]) ? Number(dataArg[j].data[i+1][1]) : minValue);
+              }
             }
           }
         }
@@ -1848,17 +1897,17 @@
       this.screenLegendOptions = [];
 
       this.highchartStore = null, // 保存图表数据
-      this.echartStore = null,// 保存图表数据
-      this.echartModalStore = null, // 全屏查看时数据
+        this.echartStore = null,// 保存图表数据
+        this.echartModalStore = null, // 全屏查看时数据
 
-      this.bgColorList = ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
-        '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
-        '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
-        '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
-        '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
-        '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-        '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-      ];
+        this.bgColorList = ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
+          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
+          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
+          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
+          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
+          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
+          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
+        ];
     },
     mounted() {
       this.firstLoad = false;

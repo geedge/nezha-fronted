@@ -606,8 +606,48 @@
         }
       },
       clickScreenLegend(legendName,index){
+        /*点击legend
+        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+        * 3.否则只改变被点击的legend状态
+        * */
+        let highlightNum = 0; //高亮数量
+        this.isGreyScreen.forEach(g => {
+          if (!g) {
+            highlightNum++;
+          }
+        });
+        let hasGrey = highlightNum < this.isGreyScreen.length; //是否有置灰的
+        let curIsGrey = this.isGreyScreen[index]; //当前legend的状态
+        let currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1; //当前legend是否是目前唯一高亮的
+
+        let echart = this.echartModalStore;
+        if (echart) {
+          if (!hasGrey) { //1.除当前legend外全置灰
+            echart.dispatchAction({
+              type: 'legendInverseSelect'
+            });
+            echart.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            });
+            this.isGreyScreen = this.isGreyScreen.map((g, i) => i !== index);
+          } else if (currentIsTheOnlyOneHighlight) { //2.全高亮
+            echart.dispatchAction({
+              type: 'legendAllSelect'
+            });
+            this.isGreyScreen = this.isGreyScreen.map(() => false);
+          } else {
+            let type = curIsGrey ? "legendSelect" : "legendUnSelect";
+            echart.dispatchAction({
+              type: type,
+              name: legendName
+            });
+            this.$set(this.isGreyScreen, index, !this.isGreyScreen[index]);
+          }
+        }
         //点击图表某一个legend，图表只显示当前点击的曲线或柱状图，其它隐藏，再次点击已选中的legend ，显示全部
-        let curIsGrey=this.isGreyScreen[index];
+        /*let curIsGrey=this.isGreyScreen[index];
         if(this.echartModalStore){
           this.screenLegendList.forEach((item,i)=>{
             let isGrey = this.isGreyScreen[i];
@@ -650,7 +690,7 @@
               }
             }
           })
-        }
+        }*/
       },
       formatLegend(chartWidth,name){
         if(!name){

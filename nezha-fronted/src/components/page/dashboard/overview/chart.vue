@@ -249,8 +249,58 @@
         return color;
       },
       clickLegend(legendName,index){
+        /*点击legend
+        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+        * 3.否则只改变被点击的legend状态
+        * */
+        let highlightNum = 0; //高亮数量
+        this.legend.forEach(g => {
+          if (!g.isGray) {
+            highlightNum++;
+          }
+        });
+        let hasGray = highlightNum < this.legend.length; //是否有置灰的
+        let curIsGray = this.legend[index].isGray; //当前legend的状态
+        let currentIsTheOnlyOneHighlight = !curIsGray && highlightNum === 1; //当前legend是否是目前唯一高亮的
 
-        let curIsGrey=this.legend[index].isGray;
+        let echart = this.chart;
+        if (echart) {
+          if (!hasGray) { //1.除当前legend外全置灰
+            echart.dispatchAction({
+              type: 'legendInverseSelect'
+            });
+            echart.dispatchAction({
+              type: 'legendSelect',
+              name: legendName
+            });
+            this.legend = this.legend.map((g, i) => {
+              if (i === index) {
+                g.isGray = false;
+              } else {
+                g.isGray = true;
+              }
+              return g;
+            });
+          } else if (currentIsTheOnlyOneHighlight) { //2.全高亮
+            echart.dispatchAction({
+              type: 'legendAllSelect'
+            });
+            this.legend = this.legend.map(g => {
+              g.isGray = false;
+              return g;
+            });
+          } else {
+            let type = curIsGray ? "legendSelect" : "legendUnSelect";
+            echart.dispatchAction({
+              type: type,
+              name: legendName
+            });
+            let vm = this;
+            this.$set(this.legend, index, function(){let legend = vm.legend[index]; legend.isGray = !legend.isGray; return legend;}());
+          }
+        }
+        /*let curIsGrey=this.legend[index].isGray;
         if(this.chart){
           if(curIsGrey){
             this.chart.dispatchAction({
@@ -264,7 +314,7 @@
             });
           }
           this.$set(this.legend[index],'isGray',!curIsGrey)
-        }
+        }*/
       },
       clickLegend2(legendName,index){
         let curIsGrey=this.legend[index].isGray;
