@@ -26,6 +26,11 @@
         <!--password-->
         <el-form-item :label="$t('config.account.password')" prop="password" v-if="!editUser.userId">
           <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.password"
+                    maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
+        </el-form-item>
+        <!--passwordChange-->
+        <el-form-item :label="$t('config.account.confirmPwd')" prop="passwordChange" v-if="!editUser.userId" class="passwordChange" label-width="160px">
+          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.passwordChange"
                     maxlength="16" show-word-limit size="small"></el-input>
         </el-form-item>
         <!--email-->
@@ -106,6 +111,18 @@
       this.getRoles();
     },
     data() {
+      let validatePassword = (rule, value, callback) => { // 确认密码的二次校验
+        console.log(value);
+        if (value === ''&& this.editUser.password) {
+          callback(new Error(this.$t('validate.required')));
+        }else if(!this.editUser.password){
+          callback(new Error(this.$t('config.account.inputConfirmPwd')));
+        }else if (value !== this.editUser.password) {
+          callback(new Error(this.$t('config.account.confirmPwdErr')));
+        } else {
+          callback();
+        }
+      };
       return {
         scriptIds: [],
         rules: { //表单校验规则
@@ -114,6 +131,10 @@
           ],
           password: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          passwordChange: [
+            { validator: validatePassword, trigger: 'blur' },
+            {required: true, message:'', trigger: 'blur'},
           ],
           roleIds: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -126,6 +147,7 @@
         scripts: [],
         selectableScripts: [],
         roles:[],
+        passwordChange:'',
       }
     },
     methods: {
@@ -194,7 +216,12 @@
           this.prevent_opt.save=false;
         });
       },
-
+      /*密码失去焦点 检验确认密码*/
+      passwordBlur(){
+        if(this.editUser.password&&this.editUser.passwordChange){
+          this.$refs.accountForm.validateField('passwordChange')
+        }
+      },
       getScripts() {
         this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
           this.scripts = response.data.list;
@@ -310,5 +337,9 @@
   .form-item-title{
     position: absolute;
     left: -120px;
+  }
+  .passwordChange{
+    margin-left: 30px;
+    width: calc(100% - 30px);
   }
 </style>
