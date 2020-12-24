@@ -113,9 +113,9 @@
     data() {
       let validatePassword = (rule, value, callback) => { // 确认密码的二次校验
         console.log(value);
-        if (value === ''&& this.editUser.password) {
+        if (value === ''&& !this.editUser.password) {
           callback(new Error(this.$t('validate.required')));
-        }else if(!this.editUser.password){
+        }else if(this.editUser.password){
           callback(new Error(this.$t('config.account.inputConfirmPwd')));
         }else if (value !== this.editUser.password) {
           callback(new Error(this.$t('config.account.confirmPwdErr')));
