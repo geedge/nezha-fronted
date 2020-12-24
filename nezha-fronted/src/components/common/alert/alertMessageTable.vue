@@ -321,7 +321,7 @@
           },{
             label: this.$t('alert.list.remark'),
             prop: 'remark',
-            show: true,
+            show: false,
             minWidth:200
           }, {
             label: this.$t('alert.list.state'),
