@@ -2,7 +2,7 @@
   <div class="right-box right-box-account" v-clickoutside="clickOutside">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId!==1"
+      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId&&editUser.userId!==1"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
