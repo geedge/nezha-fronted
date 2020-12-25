@@ -13,7 +13,7 @@
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="cabinet" v-has="'dc_cabinet_delete'"></delete-button>
+        <delete-button :delete-objs="batchDeleteObjs" @after="allDelAfter" api="cabinet" v-has="'dc_cabinet_delete'"></delete-button>
       </div>
     </div>
     <el-table
@@ -255,6 +255,10 @@
             }
           })
         })
+      },
+      allDelAfter(){
+        this.getTableData();
+        this.$store.commit('setDcDataRefresh');
       },
     },
     watch: {
