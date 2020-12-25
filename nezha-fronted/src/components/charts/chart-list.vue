@@ -192,10 +192,6 @@
       textChart
       // visNetwork,
     },
-    watch:{
-      dataList(n){
-      }
-    },
     data() {
       return {
         filter: {},
@@ -695,7 +691,6 @@
       },
       // 获取一个图表具体数据,图表信息，图表位置index
       getChartData(chartInfo, pos, filterType) {
-        console.info(filterType)
         const chartItem = chartInfo;
         const index = pos; // 指标
         if(chartItem.type === 'assetInfo'){
@@ -1612,7 +1607,7 @@
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }
-        }, 100);
+        }, 500);
       },
     },
     created() {
