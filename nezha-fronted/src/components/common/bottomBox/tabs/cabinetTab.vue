@@ -195,6 +195,7 @@
         this.rightBox.show = false;
         if (refresh) {
           this.getTableData();
+          this.$store.commit('setDcDataRefresh');
         }
       },
       newCabinet() {
@@ -248,6 +249,7 @@
             if(response.code ==  200){
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getTableData();
+              this.$store.commit('setDcDataRefresh');
             }else{
               this.$message.error(response.msg);
             }
