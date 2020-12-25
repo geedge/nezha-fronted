@@ -115,7 +115,7 @@
         console.log(value);
         if (value === ''&& !this.editUser.password) {
           callback(new Error(this.$t('validate.required')));
-        }else if(this.editUser.password){
+        }else if(value === ''&&this.editUser.password){
           callback(new Error(this.$t('config.account.inputConfirmPwd')));
         }else if (value !== this.editUser.password) {
           callback(new Error(this.$t('config.account.confirmPwdErr')));
