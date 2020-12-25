@@ -1342,11 +1342,12 @@
         }else {
           this.setIsOtherChart();
           if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
-            this.editChart.param={nullType:this.editChart.param.nullType,threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
+            this.editChart.param={nullType:'connected',threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
           }else if(chartType == 'table'){
             this.$set(this.editChart.param,'last',0)
             this.editChart.param={
               statistics:'',
+              nullType:'connected',
               valueMapping:{
                 type:'value',
                 mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]

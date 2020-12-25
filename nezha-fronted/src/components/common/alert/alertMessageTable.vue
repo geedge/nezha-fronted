@@ -178,7 +178,7 @@
     </div>
     <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message" @opened="openedDialog">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item prop="remark" :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]">
@@ -655,6 +655,9 @@
       },
       showExportDialog() {
         this.importBox.show = true;
+      },
+      openedDialog(){
+        this.$refs.remarkForm.clearValidate()
       },
       closeDialog() {
         this.importBox.show = false;
