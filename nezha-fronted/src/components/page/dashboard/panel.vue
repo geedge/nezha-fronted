@@ -332,6 +332,7 @@
                   }
                 }
               }
+              this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop);
               if(nextChart&&prevChart){ //删除图表为中间位置
                 prevChart.next = nextChart.id;
                 nextChart.prev = prevChart.id;

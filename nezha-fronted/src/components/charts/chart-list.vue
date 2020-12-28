@@ -192,10 +192,6 @@
       textChart
       // visNetwork,
     },
-    watch:{
-      dataList(n){
-      }
-    },
     data() {
       return {
         filter: {},
@@ -1456,7 +1452,6 @@
       },
       //复制图表
       duplicateChart(chartId,duplicateChartBack){
-        console.info(chartId, duplicateChartBack);
         let duplicateChartId = duplicateChartBack.id;
         let chart;
         let chartIndex = -1;
@@ -1506,28 +1501,35 @@
 
           this.currentRecordNum = this.currentRecordNum+1;
           let chartData = this.chartDataCacheGroup.get(chart.id);
-          // console.log("__chartItem00__",JSON.stringify(chartData))
-          let duplicateChartData ={};
-          try{
-            duplicateChartData = JSON.parse(JSON.stringify(chartData));
-          }catch (e) {
-            console.warn(e);
+          //console.log("__chartItem00__", chartData)
+          if (duplicateChartBack.type === "alertList") {
+            this.$nextTick(() => {
+              this.getAlertListChartData(duplicateChartBack);
+              this.setChartSize(duplicateChart, chartNextIndex); // 设置该图表宽度
+            })
+          } else {
+            let duplicateChartData ={};
+            try{
+              duplicateChartData = JSON.parse(JSON.stringify(chartData));
+            }catch (e) {
+              console.warn(e);
+            }
+            duplicateChartData.chartItem = duplicateChart;
+            this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
+            this.$nextTick(() => {
+              if (this.$refs['editChart'+duplicateChartId][0]) {
+
+                this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
+              }
+
+              let chartType = duplicateChart.type;
+              if(chartType!=='url'){
+                this.getChartDataForSearch(duplicateChart,chartNextIndex);
+              }
+              this.setChartSize(duplicateChart, chartNextIndex); // 设置该图表宽度
+
+            });
           }
-          duplicateChartData.chartItem = duplicateChart;
-          this.chartDataCacheGroup.set(duplicateChartId,duplicateChartData);
-          this.$nextTick(() => {
-            if (this.$refs['editChart'+duplicateChartId][0]) {
-
-              this.$refs['editChart'+duplicateChartId][0].showLoad(duplicateChart);//之后要实现
-            }
-
-            let chartType = duplicateChart.type;
-            if(chartType!=='url'){
-              this.getChartDataForSearch(duplicateChart,chartNextIndex);
-            }
-            this.setChartSize(duplicateChart, chartNextIndex); // 设置该图表宽度
-
-          });
         }
       },
       // 编辑图表
@@ -1605,7 +1607,7 @@
               that.$refs['editChart'+item.id][0].showLoad(item);
             }
           }
-        }, 100);
+        }, 500);
       },
     },
     created() {

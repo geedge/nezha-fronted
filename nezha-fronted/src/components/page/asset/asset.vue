@@ -243,7 +243,7 @@
           id: '',
           sn: '',
           host: '',
-          state: '',
+          state: 1,
           purchaseDate: '',
           idcId: '',
           cabinetId: '',

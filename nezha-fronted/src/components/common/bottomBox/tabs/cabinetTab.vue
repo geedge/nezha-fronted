@@ -13,7 +13,7 @@
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="cabinet" v-has="'dc_cabinet_delete'"></delete-button>
+        <delete-button :delete-objs="batchDeleteObjs" @after="allDelAfter" api="cabinet" v-has="'dc_cabinet_delete'"></delete-button>
       </div>
     </div>
     <el-table
@@ -195,6 +195,7 @@
         this.rightBox.show = false;
         if (refresh) {
           this.getTableData();
+          this.$store.commit('setDcDataRefresh');
         }
       },
       newCabinet() {
@@ -248,11 +249,16 @@
             if(response.code ==  200){
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
               this.getTableData();
+              this.$store.commit('setDcDataRefresh');
             }else{
               this.$message.error(response.msg);
             }
           })
         })
+      },
+      allDelAfter(){
+        this.getTableData();
+        this.$store.commit('setDcDataRefresh');
       },
     },
     watch: {

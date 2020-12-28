@@ -512,7 +512,7 @@
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom")
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom"))
         : this.tableTitle;
-
+      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
       this.initEvent();
     },
     beforeDestroy(){

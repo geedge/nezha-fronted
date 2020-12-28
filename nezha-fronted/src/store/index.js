@@ -31,6 +31,7 @@ const store = new Vuex.Store({
     },
     idcArr:[],
     overViewProject:{},
+    dcDataRefresh:false,
   },
   getters: {
     getLinkData(state){
@@ -47,6 +48,9 @@ const store = new Vuex.Store({
     },
     getOverViewProject(state){
       return state.overViewProject
+    },
+    getDcDataRefresh(state){
+      return state.dcDataRefresh
     },
   },
   mutations: {
@@ -115,6 +119,13 @@ const store = new Vuex.Store({
     },
     setOverViewProject(state,data){
       state.overViewProject=data;
+    },
+    setDcDataRefresh(state){
+      console.log(123)
+      state.dcDataRefresh=true;
+      setTimeout(()=>{
+        state.dcDataRefresh=false;
+      },100)
     },
   },
   actions: {

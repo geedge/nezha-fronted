@@ -107,7 +107,8 @@
       exportFileName:{type:String},
       importUrl: {type:String,required:true},
       link:{type:Object},
-      permissions: {type: Object}
+      permissions: {type: Object},
+      showCur:{type:Boolean,default:true}
     },
     data:function(){
       return {
@@ -290,7 +291,7 @@
       showImportBox:function(type){
         this.importBox.show=true;
         this.importBox.type=type;
-        if(type == 2&&(this.$route.path==='/asset'|| this.$route.path==='/model')){
+        if(type == 2&&(!this.showCur)){
           this.exportCur()
           return
         }

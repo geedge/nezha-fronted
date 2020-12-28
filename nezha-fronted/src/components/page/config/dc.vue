@@ -140,6 +140,7 @@
     <transition name="right-box">
       <traffic-setting-box @close="closeTrafficBox" :dc="dc" ref="trafficBox" v-if="rightBox.trafficSetting.show"></traffic-setting-box>
     </transition>
+    <span v-if="dcDataRefresh" style="display: none"></span>
   </div>
 </template>
 <script>
@@ -269,6 +270,14 @@
         tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
         scrollbarWrap: null,
       }
+    },
+    computed:{
+      dcDataRefresh(){//通过vuex更新dc   需要该属性到页面 否则不被监听
+        if(this.$store.getters.getDcDataRefresh){
+          this.getTableData();
+        }
+        return this.$store.getters.getDcDataRefresh;
+      },
     },
     methods: {
       assetStatClassName(param) {

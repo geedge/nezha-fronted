@@ -156,7 +156,33 @@ Vue.mixin({
         vm.tools.showTopBtn = wrap.scrollTop > 50;
         vm.tools.tableHover = wrap.scrollTop > 50;
       }, 100));
-    }
+    },
+    numberWithEConvent(num) {
+      if (num) {
+        if ((("" + num).indexOf('E') != -1) || (("" + num).indexOf('e') != -1)) {
+          let regExp = new RegExp('^((\\d+.?\\d+)[Ee]{1}(\\d+))$', 'ig');
+          let result = regExp.exec(num);
+          let resultValue = "";
+          let power = "";
+          if (result != null) {
+            resultValue = result[2];
+            power = result[3];
+            result = regExp.exec(num);
+          }
+
+          if (resultValue != "") {
+            if (power != "") {
+              let powVer = Math.pow(10, power);
+              resultValue = resultValue * powVer;
+              return resultValue;
+            }
+          }
+        } else {
+          return num;
+        }
+      }
+      return 0;
+    },
   },
   computed: {
     getMenuList() {

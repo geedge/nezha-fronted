@@ -468,7 +468,7 @@
       },
       getDcData() {
         return new Promise(resolve => {
-          this.$get('idc').then(response => {
+          this.$get('idc?pageSize=-1').then(response => {
             if (response.code === 200) {
               this.dcData = response.data.list;
             }
@@ -504,6 +504,9 @@
           this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
             if (response.code === 200) {
               this.assetTypeData = response.data;
+              if(this.editAsset.model&&!this.editAsset.model.type.code){
+                this.editAsset.model.type.code=response.data[0].value;
+              }
             }
             resolve(this.assetTypeData);
           });

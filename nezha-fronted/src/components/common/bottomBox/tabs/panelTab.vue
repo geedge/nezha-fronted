@@ -41,6 +41,7 @@
           }"
           @afterImport="dateChange"
           v-if="$route.path==='/asset' || $route.path==='/model'"
+          :showCur="false"
         >
           <template slot="optionZone">
             <button :title="$t('overall.createChart')" @click="addChart" v-has="['model_chart_toAdd', 'asset_chart_toAdd']" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint"
@@ -256,6 +257,7 @@
                   }
                 }
               }
+              this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop);
               if(nextChart&&prevChart){ //删除图表为中间位置
                 prevChart.next = nextChart.id;
                 nextChart.prev = prevChart.id;

@@ -178,7 +178,7 @@
     </div>
     <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message">
+      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message" @opened="openedDialog">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item prop="remark" :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]">
@@ -321,7 +321,7 @@
           },{
             label: this.$t('alert.list.remark'),
             prop: 'remark',
-            show: true,
+            show: false,
             minWidth:200
           }, {
             label: this.$t('alert.list.state'),
@@ -656,6 +656,9 @@
       showExportDialog() {
         this.importBox.show = true;
       },
+      openedDialog(){
+        this.$refs.remarkForm.clearValidate()
+      },
       closeDialog() {
         this.importBox.show = false;
         this.deleteBox.show = false;
@@ -848,6 +851,7 @@
       this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
         ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
         : this.tableTitle;
+      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
       //是否存在分页缓存
       let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
       if (pageSize != 'undefined' && pageSize != null) {
