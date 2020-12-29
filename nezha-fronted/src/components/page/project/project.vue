@@ -836,6 +836,14 @@
           });
         }
       },
+      endpointTableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.endpointPageObj.pageNo > 1) {
+            this.endpointPageNo(this.endpointPageObj.pageNo-1);
+          }
+        }
+      }
     },
     beforeDestroy() {
       bus.$off("project-page-type");

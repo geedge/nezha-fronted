@@ -510,6 +510,14 @@
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+        }
+      }
     },
     beforeDestroy(){
       bus.$off("dc-list-change");

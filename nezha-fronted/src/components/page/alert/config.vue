@@ -503,6 +503,14 @@
           this.bottomBox.ruleDetail = this.convertToDetail(n);
         }
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+        }
+      }
     },
     beforeDestroy() {
       bus.$off("alert-rule-list-change");
