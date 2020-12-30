@@ -785,6 +785,10 @@
       tableDataSort(item){
         this.$emit('tableDataSort',item);
       },
+      pageNo(val) {
+        this.pageObj.pageNo = val;
+        this.getTableData();
+      },
       // label tooltip是否显示
       labelToolTipDis(labelType){
         switch(labelType){
@@ -844,6 +848,14 @@
         },
         immediate: true,
         deep:true,
+      },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+        }
       }
     },
     mounted() {

@@ -21,7 +21,7 @@
           <button :title="$t('overall.batchEdit')" @click.stop="batchEdit" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset" style="margin-left: 15px" v-has="'asset_toBatchEdit'">
             <i class="nz-icon nz-icon-batch-edit"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="afterTableListChange" api="asset" v-has="'asset_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="asset" v-has="'asset_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -426,6 +426,16 @@
           }
         }
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }else if(n.length === 0 && this.pageObj.pageNo === 1){
+            this.afterTableListChange();
+          }
+        }
+      }
     },
     methods: {
       fullScreen() {
@@ -545,7 +555,7 @@
           this.$delete("asset?ids=" + asset.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-             this.afterTableListChange()
+             this.getTableData()
             } else {
               this.$message.error(response.msg);
             }
@@ -583,7 +593,7 @@
         this.rightBox.show = false;
         this.rightBox.batchShow = false;
         if (refresh) {
-         this.afterTableListChange()
+         this.getTableData()
           this.loadKeys();
         }
       },
