@@ -48,7 +48,7 @@
               </button>
             </template>
           </export-excel>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="alert/rule" v-has="'rule_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="alert/rule" v-has="'rule_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -289,6 +289,7 @@
         viewAsset: false,
         searchTime: bus.getTimezontDateRange(),
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods: {
@@ -307,6 +308,7 @@
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -318,6 +320,7 @@
         }).then(() => {
           this.$delete("alert/rule?ids=" + u.id).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
             } else {
@@ -508,6 +511,11 @@
         handler(n) {
           if (n.length === 0 && this.pageObj.pageNo > 1) {
             this.pageNo(this.pageObj.pageNo-1);
+          }
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.alertRuleTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
           }
         }
       }

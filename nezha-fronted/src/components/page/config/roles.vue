@@ -18,7 +18,7 @@
                   id="roles-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/role" v-has="'role_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" @before="delFlag=true" api="sys/role" v-has="'role_delete'"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -182,12 +182,14 @@
         },
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods: {
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -210,6 +212,7 @@
         }).then(() => {
           this.$delete("sys/role?ids=" + u.id).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
             } else {
@@ -299,6 +302,11 @@
         handler(n) {
           if (n.length === 0 && this.pageObj.pageNo > 1) {
             this.pageNo(this.pageObj.pageNo-1);
+          }
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.rolesTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
           }
         }
       }

@@ -22,7 +22,7 @@
           <button :title="$t('overall.createMib')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20" id="mib-add"  type="button" v-has="'snmp_file_toAdd'">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="mib" v-has="'snmp_file_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="mib" v-has="'snmp_file_delete'"></delete-button>
         </div>
       </div>
       <!-- 自定义table列 -->
@@ -205,6 +205,7 @@
         },
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods: {
@@ -218,6 +219,7 @@
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -229,6 +231,7 @@
         }).then(() => {
           this.$delete("mib?ids=" + u.id).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
             } else {
@@ -351,6 +354,11 @@
         handler(n) {
           if (n.length === 0 && this.pageObj.pageNo > 1) {
             this.pageNo(this.pageObj.pageNo-1);
+          }
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.mibTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
           }
         }
       }
