@@ -40,7 +40,7 @@
         </el-form>
       </div>
     </div>
-    <span :class="buttonClass" @click.prevent.stop="" slot="reference" :id="'cabinet-edit-'+Math.random().toString(36).slice(-8)">
+    <span :class="buttonClass" @click.prevent.stop="" slot="reference" :id="'cabinet-edit-'+window.crypto.getRandomValues().toString(36).slice(-8)">
       <slot name="optionZone">
         <i class="nz-icon nz-icon-plus" id="cabinet-plus"></i>
       </slot>

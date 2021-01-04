@@ -165,7 +165,7 @@
 
             <el-row v-if="editModule.security_level == 'authNoPriv' || editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
+                <div class="sub-label sub-label-required">{{$t('login.mima')}}</div>
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="password">
@@ -204,7 +204,7 @@
 
             <el-row v-if="editModule.security_level == 'authPriv'">
               <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
+                <div class="sub-label sub-label-required">{{$t('project.module.privMima')}}</div>
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="priv_password">

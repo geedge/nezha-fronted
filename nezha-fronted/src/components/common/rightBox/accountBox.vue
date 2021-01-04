@@ -24,7 +24,7 @@
                     v-model="editUser.username" maxlength="64" show-word-limit size="small" :disabled="editUser.username==='admin' && editUser.userId==1"></el-input>
         </el-form-item>
         <!--password-->
-        <el-form-item :label="$t('config.account.password')" prop="password" v-if="!editUser.userId">
+        <el-form-item :label="$t('config.account.mima')" prop="password" v-if="!editUser.userId">
           <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.password"
                     maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
         </el-form-item>

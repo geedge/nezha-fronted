@@ -63,7 +63,7 @@
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_smtp_account">
               <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'"> autocomplete="off"</el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPwd')" prop="email_smtp_password">
+            <el-form-item :label="$t('config.system.email.smtpMima')" prop="email_smtp_password">
               <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off"></el-input>
               <div><span>{{$t('config.system.email.pwdTip')}}</span></div>
             </el-form-item>
@@ -119,7 +119,7 @@
             <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
               <el-input v-model="ldap.ldap_dn"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.pwd')" prop="ldap_password">
+            <el-form-item :label="$t('config.system.ldap.mima')" prop="ldap_password">
               <el-input v-model="ldap.ldap_password" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" prop="ldap_ou">

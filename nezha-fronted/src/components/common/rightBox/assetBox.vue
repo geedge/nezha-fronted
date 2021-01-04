@@ -505,7 +505,7 @@
             if (response.code === 200) {
               this.assetTypeData = response.data;
               if(this.editAsset.model&&!this.editAsset.model.type.code){
-                this.editAsset.model.type.code=response.data[0].value;
+                this.editAsset.model.type.code=response.data[0].code;
               }
             }
             resolve(this.assetTypeData);
@@ -588,6 +588,9 @@
             box.validateAccount();
           });
         }
+        // if(this.editAsset.model){
+        //   delete this.editAsset.model;
+        // }
         this.$refs.assetEditForm.validate((valid) => {
           if (valid && this.accountValidResult) {
             if (this.editAsset.id) {

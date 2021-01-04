@@ -420,7 +420,7 @@
               };
             } else{
               model.smooth={
-                roundness:0.5 ,// (Math.random()*8 +1)/10 获取0.1-0.9之间的随机数
+                roundness:0.5 ,// (window.crypto.getRandomValues()*8 +1)/10 获取0.1-0.9之间的随机数
                 type:this.form.type,
               };
             }
