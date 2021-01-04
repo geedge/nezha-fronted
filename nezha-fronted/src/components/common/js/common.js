@@ -30,6 +30,17 @@ export function getHexagon(key) {
   return hexagonCache[`hexagon${key}`];
 }
 
+const topologyCache = {};
+
+export function getTopology(key) {
+  return topologyCache[`topology${key}`];
+}
+
+export function setTopology(key, value) {
+  topologyCache[`topology${key}`] = value;
+}
+
+
 export function setHexagon(key, value) {
   hexagonCache[`hexagon${key}`] = value;
 }
