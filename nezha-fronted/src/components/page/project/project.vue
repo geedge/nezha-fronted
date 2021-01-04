@@ -49,7 +49,7 @@
                 </button>
               </template>
             </export-excel>
-            <delete-button :delete-objs="batchDeleteObjs" @after="afterCloseImport" api="endpoint" v-has="'project_endpoint_delete'"></delete-button>
+            <delete-button :delete-objs="batchDeleteObjs" @after="afterCloseImport" @before="delFlag=true" api="endpoint" v-has="'project_endpoint_delete'"></delete-button>
           </div>
           <div class="pagination-top pagination-top-hide display-none"></div>
         </div>
@@ -379,7 +379,8 @@
             readonly:true,
           }],
         },
-        scrollbarWrap: null
+        scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods:{
@@ -553,6 +554,7 @@
         }).then(()=>{
           this.$delete("endpoint?ids="+endpoint.id).then(response=>{
             if(response.code===200){
+              this.delFlag=true;
               this.$message({duration:1000,type:'success',message:this.$t("tip.deleteSuccess")});
               this.getEndpointTableData();
             }else{
@@ -836,6 +838,19 @@
           });
         }
       },
+      endpointTableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.endpointPageObj.pageNo > 1) {
+            this.endpointPageNo(this.endpointPageObj.pageNo-1);
+          }
+          if(!this.delFlag){ // 不是删除时回到顶部 以及修改时
+            this.$refs.endpointTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
+          }
+        }
+      }
     },
     beforeDestroy() {
       bus.$off("project-page-type");

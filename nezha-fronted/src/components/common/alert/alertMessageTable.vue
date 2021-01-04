@@ -355,6 +355,8 @@
         viewAssetState: false,
 
         scrollbarWrap: null,
+        delFlag:false,
+        tableDataInitNum:0,
       }
     },
     computed: {
@@ -636,6 +638,7 @@
       deleteMessage() {
         this.$refs.remarkForm.validate(valid => {
           if (valid) {
+            this.delFlag=true;
             this.$emit('deleteMessage',this.deleteBox,()=>{
               this.deleteBox.ids=[];
               bus.$emit("alert-message-change")
@@ -785,6 +788,10 @@
       tableDataSort(item){
         this.$emit('tableDataSort',item);
       },
+      pageNo(val) {
+        this.pageObj.pageNo = val;
+        this.getTableData();
+      },
       // label tooltip是否显示
       labelToolTipDis(labelType){
         switch(labelType){
@@ -844,6 +851,23 @@
         },
         immediate: true,
         deep:true,
+      },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+          if(!this.delFlag){
+            this.$refs.alertListTable.bodyWrapper.scrollTop = 0
+          }
+          this.tableDataInitNum++;//因为异步加载的问题导致该表格加载三次 只有最后一次是稳定 故只有第三次是去除是否删除的标记
+          if(this.tableDataInitNum===2){
+            this.tableDataInitNum=0;
+            this.delFlag=false;
+          }
+        }
+
       }
     },
     mounted() {

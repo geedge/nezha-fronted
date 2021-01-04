@@ -21,7 +21,7 @@
           <button :title="$t('overall.batchEdit')" @click.stop="batchEdit" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset" style="margin-left: 15px" v-has="'asset_toBatchEdit'">
             <i class="nz-icon nz-icon-batch-edit"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="afterTableListChange" api="asset" v-has="'asset_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="asset" v-has="'asset_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -388,11 +388,11 @@
           idcId: '',
           idcIds: ''
         },
-
         assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
         tagKeys:[],
 
-        scrollbarWrap: null
+        scrollbarWrap: null,
+        delFlag:false,
       }
     },
     computed:{
@@ -426,6 +426,24 @@
           }
         }
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }else if(n.length === 0 && this.pageObj.pageNo === 1){
+            this.afterTableListChange();
+          }
+
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.assetTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
+          }
+
+
+        }
+      }
     },
     methods: {
       fullScreen() {
@@ -545,7 +563,8 @@
           this.$delete("asset?ids=" + asset.id).then(response => {
             if (response.code === 200) {
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-             this.afterTableListChange()
+              this.delFlag=true;
+             this.getTableData()
             } else {
               this.$message.error(response.msg);
             }
@@ -583,7 +602,8 @@
         this.rightBox.show = false;
         this.rightBox.batchShow = false;
         if (refresh) {
-         this.afterTableListChange()
+          this.delFlag=true;
+         this.getTableData()
           this.loadKeys();
         }
       },

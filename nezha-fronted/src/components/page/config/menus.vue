@@ -19,7 +19,7 @@
                   id="menus-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" api="sys/menu"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @before="delFlag=true" @after="getTableData" api="sys/menu"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -206,12 +206,14 @@
         },
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods: {
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -233,6 +235,7 @@
         }).then(() => {
           this.$delete("sys/menu?ids=" + u.id).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
             } else {
@@ -304,6 +307,24 @@
         this.$set(this.searchLabel, "orderBy", orderBy);
         this.getTableData();
       },
+    },
+    watch:{
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.menusTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
+          }
+
+
+        }
+      }
     },
     created(){
       //是否存在分页缓存

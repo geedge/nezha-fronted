@@ -17,7 +17,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="idc" v-has="'dc_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @before="delFlag=true" @after="getTableData" api="idc" v-has="'dc_delete'"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -269,6 +269,7 @@
         searchLabel: {}, //搜索参数
         tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     computed:{
@@ -366,6 +367,7 @@
       closeDcBox(refresh) {
         this.rightBox.dc.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
           bus.$emit("dc-list-change");
         }
@@ -373,6 +375,7 @@
       closeTrafficBox(refresh) {
         this.rightBox.trafficSetting.show = false;
         if (refresh) {
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -384,6 +387,7 @@
         }).then(() => {
           this.$delete("idc?ids=" + u.id).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
               bus.$emit("dc-list-change");
@@ -510,6 +514,20 @@
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.dcTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
+          }
+        }
+      }
     },
     beforeDestroy(){
       bus.$off("dc-list-change");

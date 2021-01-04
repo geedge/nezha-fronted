@@ -339,7 +339,7 @@
     left: -120px;
   }
   .passwordChange{
-    margin-left: 30px;
-    width: calc(100% - 30px);
+    margin-left: 30px !important;
+    width: calc(100% - 30px) !important;
   }
 </style>

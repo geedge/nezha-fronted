@@ -25,6 +25,7 @@
           cancelButtonText: this.$t("tip.no"),
           type: 'warning'
         }).then(() => {
+          this.$emit('before');
           let params=this.filterParam();
           this.$delete(this.api+params).then(response => {
             if (response.code === 200) {

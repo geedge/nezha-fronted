@@ -31,7 +31,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" @after="getTableData" api="sys/user/delete" v-has="'account_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" @after="getTableData" api="sys/user/delete" v-has="'account_delete'" @before="delFlag=true"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -250,6 +250,7 @@
         },
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
+        delFlag:false,
       }
     },
     methods: {
@@ -280,6 +281,8 @@
       closeRightBox(refresh) {
         this.rightBox.show = false;
         if (refresh) {
+          this.delFlag=true;
+          this.delFlag=true;
           this.getTableData();
         }
       },
@@ -301,6 +304,7 @@
         }).then(() => {
           this.$delete("sys/user/delete?userIds=" + u.userId).then(response => {
             if (response.code === 200) {
+              this.delFlag=true;
               this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
               this.getTableData();
             } else {
@@ -452,6 +456,21 @@
         let vm = this;
         this.$bottomBoxWindow.showSubListWatch(vm, n);
       },
+      tableData: {
+        deep: true,
+        handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
+
+          if(!this.delFlag){ // 不是删除时回到顶部
+            this.$refs.accountTable.bodyWrapper.scrollTop = 0
+          }else{
+            this.delFlag=false;
+          }
+
+        }
+      }
     },
     created(){
       //是否存在分页缓存
