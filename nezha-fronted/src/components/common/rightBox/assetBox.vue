@@ -588,6 +588,9 @@
             box.validateAccount();
           });
         }
+        if(this.editAsset.model){
+          delete this.editAsset.model;
+        }
         this.$refs.assetEditForm.validate((valid) => {
           if (valid && this.accountValidResult) {
             if (this.editAsset.id) {
