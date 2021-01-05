@@ -122,7 +122,7 @@
           <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
         </el-menu-item>
         <el-menu-item index="101-3">
-          <div @click="showPwdDialog">{{$t('overall.changeMima')}}</div>
+          <div @click="showPwdDialog">{{$t('overall.changePwd')}}</div>
         </el-menu-item>
         <el-menu-item index="101-4">
           <div @click="logout">{{$t('overall.signOut')}}</div>

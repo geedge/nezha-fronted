@@ -6,17 +6,17 @@
       </el-form-item>
       <el-form-item :label="$t('asset.loginType')" prop="params.method">
         <el-radio-group v-model="account.params.method" size="small">
-          <el-radio-button label="password">{{$t('asset.mima')}}</el-radio-button>
+          <el-radio-button label="password">{{$t('asset.password')}}</el-radio-button>
           <el-radio-button label="key">{{$t('asset.ssh')}}</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('asset.mima')" v-if="account.params.method == 'password'">
+      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'password'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password"/>
       </el-form-item>
       <el-form-item :label="$t('asset.ssh')" v-if="account.params.method == 'key'" prop="file">
         <el-input rows="4" type="textarea" placeholder="" v-model="account.params.key" size="small"></el-input>
       </el-form-item>
-      <el-form-item :label="$t('asset.mima')" v-if="account.params.method == 'key'">
+      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'key'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.keyPassword"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
@@ -30,7 +30,7 @@
       <el-form-item :label="$t('asset.userTip')" prop="userTip">
         <el-input autocomplete="new-password" size="small" v-model="account.params.userTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.mima')">
+      <el-form-item :label="$t('asset.password')">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password"/>
       </el-form-item>
       <el-form-item :label="this.$t('asset.passwordTip')">
@@ -71,7 +71,7 @@
             <el-radio-button label="authPriv"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('login.mima')" prop="params.password" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
+        <el-form-item :label="$t('login.password')" prop="params.password" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password"/>
         </el-form-item>
         <el-form-item :label="$t('project.module.authProtocol')" prop="params.authProtocol" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
@@ -86,7 +86,7 @@
             <el-radio-button label="AES"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('project.module.privMima')" prop="params.privPassword" v-if="account.params.securityLevel == 'authPriv'">
+        <el-form-item :label="$t('project.module.privPassword')" prop="params.privPassword" v-if="account.params.securityLevel == 'authPriv'">
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.privPassword"/>
         </el-form-item>
       </template>
