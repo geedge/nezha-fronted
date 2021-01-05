@@ -112,7 +112,7 @@ function randomcolor() {
           return "hsl(" + n[0] + ", " + n[1] + "%, " + n[2] + "%)";
         case "hsla":
           var s = a(e),
-            o = t.alpha || window.crypto.getRandomValues();
+            o = t.alpha || Math.random();
           return "hsla(" + s[0] + ", " + s[1] + "%, " + s[2] + "%, " + o + ")";
         case "rgbArray":
           return i(e);
@@ -120,7 +120,7 @@ function randomcolor() {
           return "rgb(" + i(e).join(", ") + ")";
         case "rgba":
           var r = i(e);
-          o = t.alpha || window.crypto.getRandomValues();
+          o = t.alpha || Math.random();
           return "rgba(" + r.join(", ") + ", " + o + ")";
         default:
           return function(e) {
@@ -242,7 +242,7 @@ function randomcolor() {
 
   function o(t) {
     if (null === e)
-      return Math.floor(t[0] + window.crypto.getRandomValues() * (t[1] + 1 - t[0]));
+      return Math.floor(t[0] + Math.random() * (t[1] + 1 - t[0]));
     var n = t[1] || 1,
       s = t[0] || 0,
       o = (e = (9301 * e + 49297) % 233280) / 233280;

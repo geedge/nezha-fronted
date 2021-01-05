@@ -18,7 +18,7 @@
             </template>
             <template v-for="(item, index) in linkData">
               <el-menu-item :index="'0-' + index">
-                <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener noreferrer" target="_blank">{{item.name}}</a></span>
+                <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
               </el-menu-item>
             </template>
           </el-submenu>
