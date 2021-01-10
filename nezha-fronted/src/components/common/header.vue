@@ -355,6 +355,7 @@
           bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
         } else {
           this.activeItemIndex = "";
+          this.$store.commit('setCurrentDc','');
           bus.$emit("clear-asset-filter"); //清除leftMenu左侧菜单过滤条件
         }
         this.jumpTo("/asset");
