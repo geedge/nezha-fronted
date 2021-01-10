@@ -496,10 +496,14 @@
         if(this.searchLabel.tags && this.searchLabel.tags!=''){
           this.searchLabel.tags=encodeURIComponent(this.searchLabel.tags)
         }
+        Object.keys(this.searchLabel).forEach(key=>{
+          if(!this.searchLabel[key]&&this.searchLabel[key]!==0){
+            delete this.searchLabel[key]
+          }
+        });
         this.$get('asset', this.searchLabel).then(response => {
           this.tools.loading = false;
           if (response.code === 200) {
-            // response.data.list=response.data.list.concat(response.data.list,response.data.list,response.data.list,response.data.list,response.data.list,response.data.list,response.data.list)
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
             bus.$emit('asset-property-change');
