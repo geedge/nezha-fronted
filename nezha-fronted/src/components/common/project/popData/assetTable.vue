@@ -67,7 +67,9 @@
               </div>
               <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
               <div v-if="item.prop=='state'">
-                <span>{{scope.row.state==1 ? $t('asset.inStock') : $t('asset.notInStock')}}</span>
+                <span v-if="scope.row.state==1">{{ $t('asset.inStock')}}</span>
+                <span v-if="scope.row.state==2">{{ $t('asset.notInStock')}}</span>
+                <span v-if="scope.row.state==3">{{ $t('asset.suspended')}}</span>
               </div>
               <div v-if="item.prop == 'pingStatus'">
                 <el-popover
