@@ -388,7 +388,7 @@
         if(this.$refs.chartList){
           this.$refs.chartList.initData(params);
         }
-        this.panelReloadOnlyPanel();
+        //this.panelReloadOnlyPanel();
       },
 
       /*图表相关操作--end*/
