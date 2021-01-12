@@ -11,6 +11,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
+const WebpackZipPlugin = require('webpack-zip-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
 
@@ -144,6 +145,12 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['*']
       }
     ]),
+    new WebpackZipPlugin({
+      initialFile: './dist',
+      endPath: './dist',
+      zipName: 'nz-gui.zip',
+      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip"
+    }),
     new fileManagerPlugin({
       onStart:[
         {
