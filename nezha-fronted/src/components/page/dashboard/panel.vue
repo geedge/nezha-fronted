@@ -6,8 +6,8 @@
       </div>
       <template v-else>
         <div class="top-tool-main-left">
-          <select-panel :current-panel="showPanel" :filter-panel="filterPanel" :panel-lock="panelLock" :panelData="panelData" :placement="'bottom-start'" @deletePanel="del" @editPanel="edit"
-                        @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
+          <select-panel :current-panel="showPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'" :show-panel="showPanel"
+                        @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
             <template v-slot:header>
               <div class="panel-select-header">
                 <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel"></el-input>
@@ -452,12 +452,13 @@
           }
         });
       },
+
       getTableData(clearShowPanel) {
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             this.showPanelList = this.panelData;
-            this.dataTotalListBak=[...response.data.list]
+            this.dataTotalListBak = [...response.data.list];
             let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
@@ -472,7 +473,7 @@
                 this.getData(this.filter);
                 isInitData = true;
               }else{
-                this.showPanel=response.data.list.find(item=>{return item.id == this.showPanel.id})
+                handler(response.data.list);
               }
               this.filter.panelId = this.showPanel.id;
             } else {
@@ -498,9 +499,24 @@
         }).catch((error) => {
           //console.log('error................'+JSON.stringify(error));
           if (error) {
+            console.error(error);
             this.$message.error(error.toString());
           }
         });
+
+        let vm = this;
+
+        function handler(panelData) {
+          panelData.forEach(panel => {
+            if (panel.id == vm.showPanel.id) {
+              vm.showPanel = panel;
+            } else {
+              if (panel.children && panel.children.length > 0) {
+                handler(panel.children)
+              }
+            }
+          });
+        }
       },
       //定期刷新
       selectInterval(val) {

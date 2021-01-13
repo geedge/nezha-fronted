@@ -45,7 +45,7 @@
         placement: {type: String},
         isEdit: {type: Boolean, default: true},
         panelData: {type: Array},
-        showPanel: {type: Number},
+        showPanel: {type: Object},
         panelLock: {type: Boolean, default: true},
         filterPanel: {type: String},
       },
@@ -57,6 +57,14 @@
           immediate: true,
           handler(n) {
             this.$refs.panelTree && this.$refs.panelTree.filter(n);
+          }
+        },
+        showPanel: {
+          immediate: true,
+          handler(n) {
+            if (n && n.id) {
+              this.$refs.panelTree.setCurrentKey(this.showPanel);
+            }
           }
         }
       },
@@ -120,6 +128,7 @@
         selectPanel(data, checked, child) {
           this.panel = data;
           this.$emit('selectPanel', this.panel);
+          this.$refs.panelTree.setCurrentKey(this.panel);
           this.esc();
         },
         //tree设为单选
