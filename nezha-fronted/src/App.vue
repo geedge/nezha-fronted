@@ -10,9 +10,11 @@
 export default {
   name: 'App',
   async created(){
-    const config = require('../static/config.json')
-    this.$axios.defaults.baseURL = config.baseUrl;
-    const version=config.version;
+    const Timestamp=new Date().getTime();
+    let url="static/config.json?Timestamp="+Timestamp;
+    let result= await this.$http.get(url);
+    this.$axios.defaults.baseURL = result.body.baseUrl;
+    const version=result.body.version;
     if(version!==localStorage.getItem('nz-version')){
       sessionStorage.clear();
       localStorage.clear();
