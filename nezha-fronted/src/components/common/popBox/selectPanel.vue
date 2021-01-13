@@ -5,7 +5,7 @@
 
         <slot name="header"></slot>
 
-        <div class="select-panel-tree">
+        <div :class="{'movable': !panelLock}" class="select-panel-tree">
           <el-tree
             :data="panelData"
             :draggable="!panelLock"
@@ -148,6 +148,20 @@
 </script>
 
 <style lang="scss">
+.movable {
+  .el-tree-node__content {
+    cursor: move;
+    .tree--node>span:first-of-type {
+      cursor: pointer;
+    }
+    .tree--node>span:last-of-type>span {
+      cursor: pointer;
+    }
+  }
+}
+.tree--node>span:last-of-type>span>i {
+  font-weight: normal !important;
+}
 .select-panel-tree {
   height: 350px;
   overflow: auto;
@@ -175,7 +189,6 @@
 .tree--node:hover .tree--operation {
   opacity: 1;
 }
-
 .panel-dropdown-btn {
   color: #60BEFF;
 }
