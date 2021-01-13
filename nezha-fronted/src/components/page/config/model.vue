@@ -383,7 +383,9 @@
       }
     },
     beforeDestroy() {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     }
   }
 </script>

@@ -488,7 +488,9 @@
     beforeDestroy(){
       document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
       document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     }
   }
 </script>
