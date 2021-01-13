@@ -9,6 +9,9 @@
     <div :id="hexagonSvgID">
 
     </div>
+    <div class="mask" v-if="maskShow">
+
+    </div>
   </div>
 </template>
 
@@ -219,6 +222,7 @@
         defaultBoxWidth:2288,
         hexagonEdge:JSON.stringify(this.hexagonEdgeProp),
         fontSize:14,
+        maskShow:true,
       }
     },
     computed:{
@@ -235,6 +239,7 @@
     methods:{
       init(){ //创建svg实例
         this.boxhexagonShow=false;
+        this.maskShow=true;
         this.hexagonEdge=this.hexagonEdgeProp;
         this.clearData().then(()=>{
           this.boxhexagonShow=true;
@@ -375,6 +380,7 @@
               if(getHexagon(this.hexagonSvgID)&&getHexagon(this.hexagonSvgID).hexagonSvg){
                 this.viewBox=getHexagon(this.hexagonSvgID).hexagonSvg.attr('viewBox')
               }
+              this.maskShow=false;
             },300)
           }
         });
@@ -392,7 +398,7 @@
             });
             group.on('mouseenter',this.hexagonOver.bind(this,group));
             group.on('mouseleave',this.hexagonOut.bind(this,group));
-            group.on('click',this.hexagonSvgScale.bind(this,polygon.data('center'),item,data,group));
+            group.on('click',this.changeScale.bind(this,polygon.data('center'),item,data,group));
 
             this.allHexagon.push(polygon);
             this.allGroup.push(group);
@@ -451,6 +457,15 @@
           hover.hide();
         }
       },
+      changeScale(center,item1,data,group,e){
+        window.event? window.event.cancelBubble = true:e.stopPropagation();
+        if(this.scaleFlag){
+          this.hexagonSvgScale(center,item1,data,group,e);
+        }else{
+          this.hexagonSvgClearScale(e)
+        }
+
+      },
       hexagonSvgScale(center,item1,data,group,e){
         window.event? window.event.cancelBubble = true:e.stopPropagation();
         if(this.timer){
@@ -458,13 +473,14 @@
           this.timer=null;
         }
         this.group=group;
-        this.group.on('dblclick',this.hexagonSvgClearScale);
+        // this.group.on('dblclick',this.hexagonSvgClearScale);
         if(!this.pan&&this.isClickRate){
           getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.magnifyRate,{x:center[0],y:center[1]});
           if(this.infoShow){
             this.infoShow(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
           this.isShowHover=false;
+          this.scaleFlag=false;
         }
         let hover=getHexagon(this.hexagonSvgID).hexagonSvg.find('.hoverRect');
         if(hover){
@@ -475,11 +491,12 @@
         window.event? window.event.cancelBubble = true:e.stopPropagation();
         if(this.firstInit){return}
         if(this.group){
-          this.group.off('dblclick',this.hexagonSvgClearScale);
+          // this.group.off('dblclick',this.hexagonSvgClearScale);
           this.group=null;
         }
         if(!this.pan&&this.isClickRate){
           getHexagon(this.hexagonSvgID).hexagonSvg.animate(300).zoom(this.defaultRate).attr('viewBox',this.viewBox);
+          this.scaleFlag=true;
           if(this.infoHide){
             this.infoHide(getHexagon(this.hexagonSvgID).allHexagonRect,getHexagon(this.hexagonSvgID).allHexagonText)
           }
@@ -780,8 +797,8 @@
           this.allHexagon.forEach((item)=>{
             item.off('mouseover',this.hexagonOver);
             item.off('mouseout',this.hexagonOut);
-            item.off('click',this.hexagonSvgScale);
-            item.off('dblclick',this.hexagonSvgClearScale);
+            item.off('click',this.changeScale);
+            // item.off('dblclick',this.hexagonSvgClearScale);
             item.clear();
           })
           this.allHexagon=[];
@@ -823,6 +840,24 @@
     position: absolute;
     z-index: 1;
     font-size: 10px;
+  }
+  .stop {
+
+    -webkit-animation-play-state: paused;
+
+    -moz-animation-play-state: paused;
+
+    animation-play-state: paused;
+
+  }
+  .mask{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    z-index: 20;
+    top:0;
+    left: 0;
   }
 </style>
 <style>

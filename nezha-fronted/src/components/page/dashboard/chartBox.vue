@@ -168,7 +168,7 @@
       <div class="right-box-form-box" ref="scrollbar">
         <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position="right" label-width="120px" ref="chartForm">
           <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
-            <el-autocomplete
+            <!--<el-autocomplete
               :fetch-suggestions="panelSuggestion"
               @input="inputPanel"
               placeholder=""
@@ -178,7 +178,18 @@
               v-model.trim="editChart.panelName"
               value-key="name"
             >
-            </el-autocomplete>
+            </el-autocomplete>-->
+            <select-panel :filter-panel="filterPanel" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel" ref="selectPanel"
+                          v-if="!editChart.id">
+              <template v-slot:header>
+                <div class="panel-select-header">
+                  <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel"></el-input>
+                </div>
+              </template>
+              <template v-slot:trigger>
+                <el-input placeholder="" readonly="readonly" size="small" v-model="panelName"></el-input>
+              </template>
+            </select-panel>
             <el-input :value="editChart.panelName" readonly="readonly" size="small" v-if="editChart.id"></el-input>
 
           </el-form-item>
@@ -495,6 +506,8 @@
   import promqlInput from "./explore/promqlInput";
   import {nzNumber} from "../../common/js/validate";
   import richTextEditor from "../../charts/richTextEditor";
+  import selectPanel from "../../common/popBox/selectPanel";
+
   var rz = {
     methods: {
       rz(e) {
@@ -518,7 +531,7 @@
           save:false,
         },
         editChart: {},
-
+        filterPanel: "",
         statisticsList: this.$CONSTANTS.statisticsList,
 
         promqlCount: 1,
@@ -625,7 +638,8 @@
       'chart-preview':chartPreview,
       'alert-chart-param':alertChartParam,
       'promql-input': promqlInput,
-      'rich-text-editor':richTextEditor
+      'rich-text-editor':richTextEditor,
+      selectPanel,
     },
     mounted() {
       this.$nextTick(() => {
@@ -640,6 +654,10 @@
     methods: {
       clickOutside() {
         this.esc(false);
+      },
+      selectPanel(panel) {
+        this.panelName = panel.name;
+        this.panelId = panel.id;
       },
       toAddPanel() {
         this.$refs.panelBox2.show(true);
@@ -829,10 +847,8 @@
       },
       // 新建图表
       addCharts(params) {
-        let panelId;
-        let panel;
         //先处理panel
-        let panelPromise=new Promise(resolve => {
+        /*let panelPromise=new Promise(resolve => {
           if (this.panelId) {
             panelId = this.panelId;
             panel=this.panelData.find(p => p.id === this.panelId);
@@ -861,17 +877,16 @@
               });
             }
           }
-        });
+        });*/
 
-        panelPromise.then(()=>{
-          if (panelId) {
-            this.panelId = panelId;
+        //panelPromise.then(()=>{
+          if (this.panelId) {
             this.$post('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response => {
               if (response.code === 200) {
                 this.esc();
                 this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
                 this.$refs.chartForm.resetFields();//清空表单
-                this.$emit('on-create-success', 'create', response.data, params, panel);
+                this.$emit('on-create-success', 'create', response.data, params, {id: this.panelId, name: this.panelName});
               } else {
                 if (response.msg) {
                   this.$message.error(response.msg);
@@ -882,7 +897,7 @@
               this.prevent_opt.save=false
             });
           }
-        })
+        //})
       },
       // 更新图表
       updateCharts(params) {
@@ -1684,21 +1699,6 @@
           }
         }
       },
-      editChart: {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          let panel = this.panelData.find(p => {
-            return p.name == n.panelName;
-          });
-
-          if(panel){
-            this.panelId = panel.id;
-          }else{
-            this.panelId = null;
-          }
-        }
-      }
     },
     beforeDestroy() {
       if(this.$refs.chartTag){

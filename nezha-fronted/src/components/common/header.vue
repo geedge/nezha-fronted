@@ -611,7 +611,7 @@
   }
   .header .el-menu--horizontal>.icon-menu-item .el-submenu__title {
     min-width: 50px !important;
-    line-height: 46px;
+    line-height: 50px;
     /*margin-right:20px;*/
   }
   .header .vertical-line{

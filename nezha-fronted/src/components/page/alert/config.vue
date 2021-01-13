@@ -524,7 +524,9 @@
       bus.$off("alert-rule-list-change");
       bus.$off("dc-list-change");
       bus.$off('alert-message-change');
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     },
     created(){
       //是否存在分页缓存

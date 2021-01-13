@@ -6,13 +6,27 @@
       </div>
       <template v-else>
         <div class="top-tool-main-left">
-          <el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" >
+          <select-panel :current-panel="showPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'" :show-panel="showPanel"
+                        @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
+            <template v-slot:header>
+              <div class="panel-select-header">
+                <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel"></el-input>
+                <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-plus"></i></span>
+              </div>
+            </template>
+            <template v-slot:trigger>
+              <el-input class="panel-name input-x-mini-26" placeholder="" readonly="readonly" v-model="showPanel.name">
+                <i class="el-icon-menu" slot="prefix"></i>
+              </el-input>
+            </template>
+          </select-panel>
+          <!--<el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" >
             <el-row  :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
               <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
               <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
             </el-row>
             <el-dropdown-menu class="nz-dashboard-dropdown panel-dropdown-title-space" slot="dropdown"  >
-              <!--<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>-->
+              &lt;!&ndash;<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>&ndash;&gt;
               <div ref="dashboardScrollbar" style="height: 100%; overflow: auto">
                 <el-dropdown-item >
                   <el-row class="panel-list-width" :gutter="10" >
@@ -47,7 +61,7 @@
                 </draggable>
               </div>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown>-->
         </div>
         <div class="top-tool-main-right">
           <div class="top-tool-search relative-position margin-r-20">
@@ -108,6 +122,8 @@
   import draggable from 'vuedraggable'
   import pickTime from "../../common/pickTime";
   import exportXLSX from "../../common/exportXLSX";
+  import selectPanel from "../../common/popBox/selectPanel";
+  
   export default {
     name: "panel",
     data() {
@@ -192,6 +208,7 @@
       draggable,
       'pick-time':pickTime,
       'export-excel':exportXLSX,
+      selectPanel,
     },
     methods: {
       //刷新
@@ -217,8 +234,8 @@
         //this.$refs.chartList.initCurrentRecordNum();
         this.$refs.chartList.cleanData();
         this.getData(this.filter);
-
       },
+
       del(u) {
         this.$confirm(this.$t("tip.confirmDelete"), {
           confirmButtonText: this.$t("tip.yes"),
@@ -371,7 +388,7 @@
         if(this.$refs.chartList){
           this.$refs.chartList.initData(params);
         }
-        this.panelReloadOnlyPanel();
+        //this.panelReloadOnlyPanel();
       },
 
       /*图表相关操作--end*/
@@ -435,12 +452,13 @@
           }
         });
       },
+
       getTableData(clearShowPanel) {
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
             this.showPanelList = this.panelData;
-            this.dataTotalListBak=[...response.data.list]
+            this.dataTotalListBak = [...response.data.list];
             let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
@@ -455,7 +473,7 @@
                 this.getData(this.filter);
                 isInitData = true;
               }else{
-                this.showPanel=response.data.list.find(item=>{return item.id == this.showPanel.id})
+                handler(response.data.list);
               }
               this.filter.panelId = this.showPanel.id;
             } else {
@@ -481,9 +499,24 @@
         }).catch((error) => {
           //console.log('error................'+JSON.stringify(error));
           if (error) {
+            console.error(error);
             this.$message.error(error.toString());
           }
         });
+
+        let vm = this;
+
+        function handler(panelData) {
+          panelData.forEach(panel => {
+            if (panel.id == vm.showPanel.id) {
+              vm.showPanel = panel;
+            } else {
+              if (panel.children && panel.children.length > 0) {
+                handler(panel.children)
+              }
+            }
+          });
+        }
       },
       //定期刷新
       selectInterval(val) {
@@ -696,7 +729,7 @@
         panelContent.style.background = '#d8dce1';
 
       },
-      filterPanelFocus:function(e){
+      /*filterPanelFocus:function(e){
         e.stopPropagation();
       },
       filterPanelFunc:function(){
@@ -706,7 +739,7 @@
         }else{
           this.showPanelList = this.panelData;
         }
-      },
+      },*/
       tableListEnter(){
         this.tableHover = true;
       },
@@ -737,7 +770,9 @@
         document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
         document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
       }
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     }
   }
 </script>
@@ -751,8 +786,7 @@
   }
 
   .panel-list-width {
-    width:240px;
-    overflow: hidden;
+    width: 400px;
   }
 
   .panel-dropdown-title {
@@ -857,10 +891,6 @@
   }
 
   /* end--Panel-自定义可编辑的el-select下拉框样式*/
-  .panel-select-width {
-    width: 150px;
-  }
-
   .panel-refresh-interval {
     margin-right: 5px;
     float: right;
@@ -949,6 +979,31 @@
   }
 </style>
 <style lang="scss">
+  .panel-name {
+    position: relative;
+
+    .el-input__prefix i {
+      position: absolute;
+      left: 3px;
+      top: calc(50% + 1px);
+      transform: translateY(-50%);
+    }
+  }
+  .panel-name>input {
+    cursor: pointer;
+    padding-left: 27px !important;
+  }
+  .panel-select-header {
+    padding: 0 0 10px 16px;
+    width: 400px;
+  }
+  .panel-select-add {
+    cursor: pointer;
+  }
+  .panel-select-add:hover {
+    color: $global-text-color-active;
+  }
+
   .panel .top-tools input {
     background-color: $content-right-background-color;
   }

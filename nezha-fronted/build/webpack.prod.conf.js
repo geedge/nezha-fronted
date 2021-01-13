@@ -10,6 +10,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const fileManagerPlugin = require('filemanager-webpack-plugin')
+const WebpackZipPlugin = require('webpack-zip-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+
+const serverConfig = require('../static/config.json')//引入根目录下的配置文件
+
+const gitRevisionPlugin = new GitRevisionPlugin();
+const createJson = function() {
+  serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
+  return JSON.stringify(serverConfig);
+};
 
 const env = require('../config/prod.env')
 /*const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
@@ -57,7 +69,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
+      // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`,
       // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
       allChunks: true,
     }),
@@ -84,6 +96,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
+    }),
+    new GenerateAssetPlugin({
+      filename: 'static/config.json',
+      fn: (compilation, cb) => {
+        cb(null, createJson());
+      },
     }),
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),
@@ -124,9 +142,29 @@ const webpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
-        ignore: ['.*']
+        ignore: ['*']
       }
-    ])
+    ]),
+    new WebpackZipPlugin({
+      initialFile: './dist',
+      endPath: './dist',
+      zipName: 'nz-gui.zip',
+      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(env.BUILD_MODE=='"all"'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will table a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
+    }),
+    new fileManagerPlugin({
+      onStart:[
+        {
+          delete:[path.join(__dirname,'../dist/') ]
+        }
+      ],
+      // onEnd: [
+      //   {
+      //     move:[
+      //       { source: path.join(__dirname,'../dist','/nz-gui.zip'), destination: path.join(__dirname,'../dist','/nz-gui-[chunkhash].zip') }
+      //     ]
+      //   }
+      // ]
+    })
   ]
 })
 

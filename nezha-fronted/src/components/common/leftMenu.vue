@@ -218,6 +218,7 @@
               if (this.currentProject && this.currentProject.id && this.showProjectPanel) {
                 this.detailProject(this.currentProject);
               }
+              this.changeCurrentModule('');
             }
           },
         },
@@ -258,6 +259,9 @@
         getParentMenu(route) {
           let parentMenu = "";
           let end = false;
+          if (route != '/project'){
+            this.changeCurrentModule('');
+          }
           if (route != '/project' && route != '/asset') {
             this.$store.getters.menuList.forEach(menu => {
               if (!end) {

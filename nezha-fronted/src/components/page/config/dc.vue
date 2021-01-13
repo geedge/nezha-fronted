@@ -531,7 +531,9 @@
     },
     beforeDestroy(){
       bus.$off("dc-list-change");
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     },
     created(){
       //是否存在分页缓存
