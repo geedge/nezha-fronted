@@ -149,7 +149,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       initialFile: './dist',
       endPath: './dist',
       zipName: 'nz-gui.zip',
-      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip"+(env.BUILD_MODE=='"all"'?'mkdir -p dist/static;cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles;rm -rf dist;':'')
+      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(env.BUILD_MODE=='"all"'?'mkdir -p ./dist/static;cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles;rm -rf dist;':'')
     }),
     new fileManagerPlugin({
       onStart:[
