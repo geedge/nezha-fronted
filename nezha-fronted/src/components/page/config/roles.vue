@@ -176,7 +176,7 @@
             id: 10,
             name: this.$t('config.roles.name'),
             type: 'input',
-            label: this.$t('config.roles.name'),
+            label: 'name',
             disabled: false
           }],
         },

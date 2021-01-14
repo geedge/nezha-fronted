@@ -196,7 +196,7 @@
             disabled: false
           }, {
             id: 5,
-            name: 'DC',
+            name: this.$t('config.promServer.dataCenter'),
             type: 'dc',
             label: 'dc',
             disabled: false

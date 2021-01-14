@@ -482,18 +482,18 @@ const en = {
       },
       purchaseDate:'Purchase date',//'购买日期'
       dataSelectTip:'Please select date',//'请选择日期'
-      dc:'DC',
-      dcName:'DC name',//'DC名称'
+      dc:'Data center',
+      dcName:'Data center name',//'DC名称'
       AddIdcTab:{
         title:'New Data Center',//'新增DC'
-        dcName:'DC name',//'DC名称'
+        dcName:'Data center name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
       },
       editIdcTab:{
-        title:'Edit DC',//'编辑DC'
-        dcName:'DC name',//'DC名称'
+        title:'Edit Data center',//'编辑DC'
+        dcName:'Data center name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
         tel:'Telephone'//'电话'
@@ -507,14 +507,14 @@ const en = {
         name:'Name',//'名称'
         uSize:'U size',//'U位'
         remark:'Description',//'描述'
-        DC:'DC',//DC
+        DC:'Data center',//DC
       },
       editCabinetTab:{
         title:'Edit cabinet',//'编辑机柜'
         name:'Name',//'名称'
         uSize:'U size',//'U位'
         remark:'Description',//'描述'
-        DC:'DC',//DC
+        DC:'Data center',//DC
       },
       uSize:'U size',//'U位'
       remark:'Description',//'描述'
@@ -626,7 +626,7 @@ const en = {
     dc: {
       dc: 'Data center',
       area: "Area",
-      dcName: 'DC name',
+      dcName: 'Data center name',
       selectArea: 'Select area',
       cabinetNum: "Cabinet number",
       assets: "Assets",
