@@ -4,7 +4,7 @@
       <div class="sidebar-title too-long-split">{{$t(parentMenu.i18n)}}</div>
       <div class="sidebar-info" style="height: 90%; overflow: auto;">
         <template v-if="parentMenu == '/project'">
-          <el-collapse accordion class="left-menu-bg" ref="projectLeft" style="padding-top: 0;">
+          <el-collapse v-model="projectChoose" accordion class="left-menu-bg" ref="projectLeft" style="padding-top: 0;">
             <el-collapse-item :key="item.id" :name="item.id + ''" v-for="(item, index) in projectList">
               <template slot="title">
                 <div :class="{'sidebar-info-item-active': item.id == currentProject.id}" :id="'project-module-'+item.id" @click="detailProject(item)" class="sidebar-info-item-project sidebar-info-item">
@@ -172,6 +172,7 @@
           lastCheckSize:0,
           assetPingSwitch:true,
           isRouterAlive: true,
+          projectChoose:[],
         }
       },
       computed: {
@@ -217,6 +218,7 @@
               this.currentProject = n;
               if (this.currentProject && this.currentProject.id && this.showProjectPanel) {
                 this.detailProject(this.currentProject);
+                // this.projectChoose=[];
               }
               this.changeCurrentModule('');
             }

@@ -365,6 +365,9 @@
           return;
         }
         this.currentProject = p;
+        if(p.id!==this.$store.state.currentProject.id){
+          bus.$emit("project-page-type", "project");
+        }
         this.$store.commit("currentProjectChange", p);
         this.activeItemIndex = p.id;
         this.jumpTo('/project');

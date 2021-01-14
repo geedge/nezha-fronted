@@ -856,14 +856,6 @@
           }
         }
       },
-      currentProject: {
-        handler(n, o) {
-          console.log(n);
-          if (n && o.id != this.currentProject.id) {
-            this.pageType='project';
-          }
-        },
-      },
     },
     beforeDestroy() {
       bus.$off("project-page-type");
