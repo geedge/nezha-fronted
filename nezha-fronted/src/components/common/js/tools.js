@@ -233,7 +233,7 @@ export const chartResizeTool = {
   chartBlankHeight: 12, //图表空白占位高度(padding-top + border)
   chartTableBlankHeight: 6, //表格型图表额外空白占位高度
   chartBlankWidth: 10, //图表空白占位宽度
-  containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
+  containerBlankWidth: 15, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
   stepHeight: 50, //单元高度
   timeouter:null,
