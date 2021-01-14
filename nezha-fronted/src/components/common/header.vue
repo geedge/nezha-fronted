@@ -365,6 +365,9 @@
           return;
         }
         this.currentProject = p;
+        if(p.id!==this.$store.state.currentProject.id){
+          bus.$emit("project-page-type", "project");
+        }
         this.$store.commit("currentProjectChange", p);
         this.activeItemIndex = p.id;
         this.jumpTo('/project');
@@ -611,7 +614,7 @@
   }
   .header .el-menu--horizontal>.icon-menu-item .el-submenu__title {
     min-width: 50px !important;
-    line-height: 46px;
+    line-height: 50px;
     /*margin-right:20px;*/
   }
   .header .vertical-line{

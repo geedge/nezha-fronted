@@ -226,6 +226,11 @@
       facade,
       'delete-button':deleteButton,
     },
+    computed:{
+      currentProjectChange() {
+        return this.$store.state.currentProject;
+      }
+    },
     data(){
       return {
         rightBox:{
@@ -844,13 +849,13 @@
           if (n.length === 0 && this.endpointPageObj.pageNo > 1) {
             this.endpointPageNo(this.endpointPageObj.pageNo-1);
           }
-          if(!this.delFlag){ // 不是删除时回到顶部 以及修改时
+          if(!this.delFlag&&this.pageType==='endpoint'){ // 不是删除时回到顶部 以及修改时
             this.$refs.endpointTable.bodyWrapper.scrollTop = 0
           }else{
             this.delFlag=false;
           }
         }
-      }
+      },
     },
     beforeDestroy() {
       bus.$off("project-page-type");
@@ -860,7 +865,9 @@
       bus.$off("module-list-change");
       bus.$off("endpoint-list-change");
       bus.$off('alert-message-change');
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     },
   }
 </script>

@@ -851,7 +851,9 @@
     beforeDestroy() {
       bus.$off("asset-filter-change");
       bus.$off('alert-message-change');
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      if(this.scrollbarWrap){
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+      };
     }
   }
 </script>
