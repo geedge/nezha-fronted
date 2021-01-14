@@ -56,7 +56,7 @@ const en = {
     createAccount:'Create account',
     createRole: 'Create role',
     createPrometheusServer:'Create prometheus server',
-    createDatacenter:'Create Data Center',
+    createDatacenter:'Create Data center',
     createCabinet:'Create cabinet',
     createModel:'Create model',
     createModule: 'Create module',
@@ -485,7 +485,7 @@ const en = {
       dc:'Data center',
       dcName:'Data center name',//'DC名称'
       AddIdcTab:{
-        title:'New Data Center',//'新增DC'
+        title:'New Data center',//'新增DC'
         dcName:'Data center name',//'DC名称'
         location:'Location',//'地区'
         principal:'Administrator',//'负责人'
@@ -621,7 +621,7 @@ const en = {
       editProm: 'Edit prometheus server',//"修改Prometheus Server"
       type: 'Type',//"类别"
       checkTime: 'Check time',
-      dataCenter:'Data Center',
+      dataCenter:'Data center',
     },
     dc: {
       dc: 'Data center',
