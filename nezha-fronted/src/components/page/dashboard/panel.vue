@@ -390,11 +390,12 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
+        let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
         this.setSearchTime(nowTimeType.type,nowTimeType.value);
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
+        this.getTableData();
         this.getData(this.filter);
       },
       setSearchTime(type,val){//设置searchTime
