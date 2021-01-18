@@ -138,7 +138,7 @@
                   @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
     </transition>
     <transition name="right-box">
-      <account-box v-if="rightBox.show" :user="user" @close="closeRightBox"></account-box>
+      <account-box v-if="rightBox.show" :user="user" :roles="roles" @close="closeRightBox"></account-box>
     </transition>
   </div>
 </template>
@@ -251,6 +251,7 @@
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
         delFlag:false,
+        roles:[],
       }
     },
     methods: {
@@ -288,6 +289,9 @@
       },
       edit(u) {
         this.user = JSON.parse(JSON.stringify(u));
+        if(!this.user.userId){
+          this.user.roleIds = this.roles.find(t=>t.name == 'common').id;
+        }
         this.rightBox.show = true;
       },
       detail(u) {
@@ -340,6 +344,9 @@
       },
       add() {
         this.user = this.newUser();
+        if(!this.user.userId){
+          this.user.roleIds = this.roles.find(t=>t.name == 'common').id;
+        }
         this.rightBox.show = true;
       },
       statusChange(user) {
@@ -361,6 +368,16 @@
       },
       newUser() {
         return JSON.parse(JSON.stringify(this.blankUser));
+      },
+      getRoles:function(){
+        this.roles = [];
+        this.$get("sys/role?pageSize=-1").then(response=>{
+          if (response.code  == 200){
+            this.roles = response.data.list;
+          }else{
+            this.$message.error("load roles faild")
+          }
+        })
       },
       pageNo(val) {
         this.pageObj.pageNo = val;
@@ -480,6 +497,7 @@
       if (pageSize != 'undefined' && pageSize != null) {
         this.pageObj.pageSize = pageSize
       }
+      this.getRoles();
     },
     mounted() {
       //初始化表头

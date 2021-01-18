@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-project" v-clickoutside="clickOutside">
+  <div class="right-box right-box-project" v-clickoutside="{obj:editProject,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="project-del" type="button" v-has="'project_delete'" v-if="project.id">
@@ -25,7 +25,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:editProject,func:esc}" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" v-has="'project_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

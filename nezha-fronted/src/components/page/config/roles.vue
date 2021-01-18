@@ -198,8 +198,13 @@
           return ;
         }
         this.role = JSON.parse(JSON.stringify(u));
-        this.rightBox.show = true;
-        this.rightBox.detail=false;
+        this.$get("sys/role/menu/"+this.role.id).then(response=>{
+          if(response.code == 200){
+            this.role.menuIds = response.data.selectedIds;
+            this.rightBox.show = true;
+            this.rightBox.detail=false;
+          }
+        })
       },
       del(u) {
         if(u.buildIn == 1){

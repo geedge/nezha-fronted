@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-asset" v-clickoutside="clickOutside">
+  <div class="right-box right-box-asset" v-clickoutside="{obj:editAsset,func:clickOutside}">
     <!--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" id="asset-edit-del" type="button" v-has="'asset_delete'" v-if="editAsset.id"
@@ -151,7 +151,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc(false)" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
+      <button v-cancel="{obj:editAsset,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save" v-has="'asset_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

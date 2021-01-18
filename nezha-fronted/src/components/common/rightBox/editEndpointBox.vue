@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-edit-endpoint" v-clickoutside="clickOutside">
+  <div class="right-box right-box-edit-endpoint" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="edit-ep-del" type="button" v-has="['project_endpoint_delete', 'asset_endpoint_delete']" v-if="editEndpoint.id">
@@ -124,7 +124,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="ep-edit-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:editEndpoint,func:esc}" id="ep-edit-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-edit-save" v-has="['asset_endpoint_save', 'project_endpoint_save']" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

@@ -594,6 +594,13 @@
       },
       add() {
         this.asset = this.newAsset();
+        this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            if(this.asset.model&&!this.asset.model.type.code){
+              this.asset.model.type.code=response.data[0].code;
+            }
+          }
+        });
         this.rightBox.show = true;
       },
       batchEdit(){

@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-role" v-clickoutside="clickOutside">
+  <div class="right-box right-box-role" v-clickoutside="{obj:editRole,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="roles-edit-del"
@@ -47,7 +47,7 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns" v-if="!detail">
-      <button @click="esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+      <button v-cancel="{obj:editRole,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
@@ -138,27 +138,15 @@
       },
       getMenus:function(){
         this.menus = [];
-        if(this.editRole.id){
-          this.$get("sys/role/menu/"+this.editRole.id).then(response=>{
-            if(response.code == 200){
-              this.menus = response.data.menus;
-              this.editRole.menuIds = response.data.selectedIds;
-              if(this.$refs.menuTree){
-                this.$refs.menuTree.setCheckedKeys(this.editRole.menuIds,true);
-              }
-            }else{
-              this.$message.error("load menu faild")
-            }
-          })
-        }else{
-          this.$get("sys/menu").then(response=>{
-            if (response.code  == 200){
-              this.menus = response.data.list;
-            }else{
-              this.$message.error("load menu faild")
-            }
-          })
-        }
+
+        this.$get("sys/menu").then(response=>{
+          if (response.code  == 200){
+            this.menus = response.data.list;
+          }else{
+            this.$message.error("load menu faild")
+          }
+        })
+
       },
       labelFormatter:function(data,node){
         return data&&data.i18n?this.$t(data.i18n):data.name;
@@ -188,8 +176,11 @@
         }
       }
     },
-    mounted() {
+    created() {
       this.getMenus();
+    },
+    mounted() {
+
     },
     watch: {
       //将prop里的user转为组件内部对象

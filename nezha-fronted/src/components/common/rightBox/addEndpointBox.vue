@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="()=>{showEditParamBox(false);showEditLabelsBox(false)}" v-clickoutside="clickOutside">
+  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="()=>{showEditParamBox(false);showEditLabelsBox(false)}" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns"></div>
     <!-- end--顶部按钮-->
@@ -291,7 +291,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-add" v-has="['asset_endpoint_save', 'project_endpoint_save']">

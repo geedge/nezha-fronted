@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-account" v-clickoutside="clickOutside">
+  <div class="right-box right-box-account" v-clickoutside="{obj:editUser,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId&&editUser.userId!==1"
@@ -75,7 +75,7 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="account-esc"
+      <button id="account-esc" v-cancel="{obj:editUser,func:esc}"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
@@ -92,7 +92,8 @@
   export default {
     name: "accountBox",
     props: {
-      user: Object
+      user: Object,
+      roles:Array
     },
     computed: {
       isCurrentUser() {
@@ -165,6 +166,7 @@
       /*关闭弹框*/
       esc(refresh) {
         this.prevent_opt.save=false;
+        console.log('cancel function ')
         this.$emit("close", refresh);
       },
       clickOutside() {
@@ -268,19 +270,6 @@
             return item;
           });
         }
-      },
-      getRoles:function(){
-        this.roles = [];
-        this.$get("sys/role?pageSize=-1").then(response=>{
-          if (response.code  == 200){
-            this.roles = response.data.list;
-            if(!this.editUser.userId){
-              this.editUser.roleIds = this.roles.find(t=>t.name == 'common').id;
-            }
-          }else{
-            this.$message.error("load roles faild")
-          }
-        })
       },
       addNotification() {
         let scripts = this.selectableScripts.find(item => {

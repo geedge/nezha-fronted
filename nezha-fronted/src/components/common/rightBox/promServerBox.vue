@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-prom" v-clickoutside="clickOutside">
+  <div class="right-box right-box-prom" v-clickoutside="{obj:editPromServer,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" type="button" v-has="'prom_delete'" v-if="editPromServer.id"
@@ -53,7 +53,7 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="prom-esc"
+      <button v-cancel="{obj:editPromServer,func:esc}" id="prom-esc"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>

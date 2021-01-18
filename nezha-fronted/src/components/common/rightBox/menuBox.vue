@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-menu" v-clickoutside="clickOutside">
+  <div class="right-box right-box-menu" v-clickoutside="{obj:editMenu,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="menus-edit-del"
@@ -64,7 +64,7 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc(false)" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+      <button v-cancel="{obj:editMenu,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
               id="menus-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
