@@ -499,8 +499,8 @@
         if(!model){return}
         let nodesArray=[...this.nodesArray];
         if(!this.isNodeAdd){
-          model={...nodesArray.find(item=>item.id===model.id),...model};
-          nodesArray=nodesArray.filter(item=>item.id!==model.id);
+          model={...nodesArray.find(item=>item.id===this.selNodeId),...model};
+          nodesArray=nodesArray.filter(item=>item.id!==this.selNodeId);
         }else{
           model={...model,...this.network.DOMtoCanvas({x:80,y:100})};
         }
