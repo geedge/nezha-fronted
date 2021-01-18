@@ -291,6 +291,11 @@ export default {
       });
     },
   },
+  watch: {
+    dropdownMenuShow(n) {
+      this.$emit("dropmenu-change", n);
+    }
+  },
   mounted() {
     this.firstLoad = false;
   },

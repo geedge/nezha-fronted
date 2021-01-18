@@ -108,7 +108,11 @@
     created() {
     },
     computed: {},
-    watch: {},
+    watch: {
+      dropdownMenuShow(n) {
+        this.$emit("dropmenu-change", n);
+      }
+    },
     methods: {
       startResize(e) {
         let vm = this;
