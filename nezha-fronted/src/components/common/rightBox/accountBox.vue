@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-account" v-clickoutside="clickOutside">
+  <div class="right-box right-box-account" v-clickoutside="{obj:editUser,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId&&editUser.userId!==1"
@@ -17,19 +17,19 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editUser" :rules="rules" ref="accountForm" label-position="right" label-width="120px">
+      <el-form :model="editUser" :rules="editUser.userId ? rules2 : rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="accountForm">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
           <el-input autocomplete="new-password" type="text" placeholder=""
                     v-model="editUser.username" maxlength="64" show-word-limit size="small" :disabled="editUser.username==='admin' && editUser.userId==1"></el-input>
         </el-form-item>
         <!--password-->
-        <el-form-item :label="$t('config.account.password')" prop="password" v-if="!editUser.userId">
+        <el-form-item :label="$t('config.account.password')" prop="password">
           <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.password"
                     maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
         </el-form-item>
         <!--passwordChange-->
-        <el-form-item :label="$t('config.account.confirmPwd')" prop="passwordChange" v-if="!editUser.userId" class="passwordChange" label-width="160px">
+        <el-form-item :label="$t('config.account.confirmPwd')" class="passwordChange" label-width="160px" prop="passwordChange">
           <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.passwordChange"
                     maxlength="16" show-word-limit size="small"></el-input>
         </el-form-item>
@@ -75,7 +75,7 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="account-esc"
+      <button id="account-esc" v-cancel="{obj:editUser,func:esc}"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
@@ -92,7 +92,8 @@
   export default {
     name: "accountBox",
     props: {
-      user: Object
+      user: Object,
+      roles:Array
     },
     computed: {
       isCurrentUser() {
@@ -112,10 +113,7 @@
     },
     data() {
       let validatePassword = (rule, value, callback) => { // 确认密码的二次校验
-        console.log(value);
-        if (value === ''&& !this.editUser.password) {
-          callback(new Error(this.$t('validate.required')));
-        }else if(value === ''&&this.editUser.password){
+        if(value === '' && this.editUser.password){
           callback(new Error(this.$t('config.account.inputConfirmPwd')));
         }else if (value !== this.editUser.password) {
           callback(new Error(this.$t('config.account.confirmPwdErr')));
@@ -134,7 +132,21 @@
           ],
           passwordChange: [
             { validator: validatePassword, trigger: 'blur' },
-            {required: true, message:'', trigger: 'blur'},
+            {required: true, message: '', trigger: 'blur'},
+          ],
+          roleIds: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          email: [
+            {type: 'email', message: this.$t('validate.email')}
+          ]
+        },
+        rules2: { //表单校验规则
+          username: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          ],
+          passwordChange: [
+            { validator: validatePassword, trigger: 'blur' },
           ],
           roleIds: [
             {required: true, message: this.$t('validate.required'), trigger: 'blur'}
@@ -154,6 +166,7 @@
       /*关闭弹框*/
       esc(refresh) {
         this.prevent_opt.save=false;
+        console.log('cancel function ')
         this.$emit("close", refresh);
       },
       clickOutside() {
@@ -257,19 +270,6 @@
             return item;
           });
         }
-      },
-      getRoles:function(){
-        this.roles = [];
-        this.$get("sys/role?pageSize=-1").then(response=>{
-          if (response.code  == 200){
-            this.roles = response.data.list;
-            if(!this.editUser.userId){
-              this.editUser.roleIds = this.roles.find(t=>t.name == 'common').id;
-            }
-          }else{
-            this.$message.error("load roles faild")
-          }
-        })
       },
       addNotification() {
         let scripts = this.selectableScripts.find(item => {

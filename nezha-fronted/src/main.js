@@ -47,6 +47,7 @@ import mibBox from "./components/common/rightBox/mibBox";
 import leftMenu from "./components/common/leftMenu";
 import pickTime from "./components/common/pickTime";
 import bus from "./libs/bus";
+import {cancelWithChange} from "./components/common/js/tools";
 
 Vue.component("Pagination", Pagination);
 Vue.component("searchInput", searchInput);
@@ -203,6 +204,7 @@ Vue.use(plTable);
 Vue.use(hasPermission);
 
 /*指令*/
+Vue.directive('cancel',cancelWithChange)
 Vue.directive('clickoutside', clickoutside);
 window.resizing = false;
 window.vm = new Vue({

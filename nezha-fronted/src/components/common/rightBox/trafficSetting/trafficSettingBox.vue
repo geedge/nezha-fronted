@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-project" v-clickoutside="clickOutside" >
+  <div class="right-box right-box-project" v-clickoutside="{obj:traffic,func:clickOutside}" >
 
     <!-- begin--标题-->
     <div class="right-box-title">{{$t('config.dc.traffic.title')}}</div>
@@ -16,7 +16,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button type="button" @click="esc" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button type="button" v-cancel="{obj:traffic,func:esc}" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save" type="button" v-has="'dc_trafficSetting_save'">

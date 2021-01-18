@@ -405,7 +405,8 @@ const cn = {
     syncTip:"此操作可能造成原有数据或图表被覆盖，确认同步吗？",
     noImportFile:'没有可导入的文件',
     noAccess: "无访问权限",
-    confirmDuplicate:"确认复制吗？"
+    confirmDuplicate:"确认复制吗？",
+    confirmCancel:'您所做的修改将不会被保存？',
   },
   asset: {
     asset: "资产",
