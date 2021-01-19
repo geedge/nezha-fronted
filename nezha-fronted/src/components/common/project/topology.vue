@@ -492,6 +492,10 @@
             this_.arrayDiff();
             this_.popDataShowUpdate();
           })
+        }else{
+          this.$nextTick(()=>{
+            this.modelTopUpdate();
+          })
         }
       },
       addModel(model){ // 添加model
@@ -504,6 +508,14 @@
         }else{
           model={...model,...this.network.DOMtoCanvas({x:80,y:100})};
         }
+        this.edgesArray.forEach(item=>{
+          if(item.from===this.selNodeId){
+            item.from=model.id;
+          }
+          if(item.to===this.selNodeId){
+            item.to=model.id;
+          }
+        })
         this.$get('/module/stat',{id:model.id}).then(res=>{
           model.state=res.data;
           nodesArray.push(model);
