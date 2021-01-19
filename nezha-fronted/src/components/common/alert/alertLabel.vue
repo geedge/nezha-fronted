@@ -348,6 +348,7 @@
     width: 150px;
     color: #1a1a1a;
     padding: 0 3px 0 13px;
+    word-break: break-all;
   }
   .danger{
     background-color: #d64f40;

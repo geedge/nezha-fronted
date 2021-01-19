@@ -1,6 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%" v-loading="loading">
     <hexagonBox
+      ref="hexagonBox"
       :hexData="data"
       :col="col"
       :length="length"
@@ -12,12 +13,30 @@
       :hexagonEdge="hexagonEdge"
       :from="from"
       :hexagonSvgID="hexagonSvgID"
+      :showTooltip="showTooltip"
+      @changeAsset="changeAsset"
+      @assetMove="assetMove"
+      @closeAsset="closeAsset"
     />
+    <alertLabel
+      v-if="showTooltip&&assetData.show"
+      v-loading="assetData.loading"
+      ref="alertLabel"
+      :id="assetData.id"
+      :that="assetData"
+      :type="'asset'"
+      :LRTriangle="LRTriangle"
+      :style="{
+        'transform-origin': `0px 300px`,
+        transform:`scale(${assetData.rate})`
+      }"
+    ></alertLabel>
   </div>
 </template>
 
 <script>
   import hexagonBox from '../honeycomb/hexagonFigureSvg'
+  import alertLabel from '../alert/alertLabel2'
   function textMouseDown(e){
     window.event? window.event.cancelBubble = true : e.stopPropagation();
   }
@@ -30,7 +49,8 @@
 	export default {
 		name:"messageAsset",
     components:{
-      hexagonBox
+      hexagonBox,
+      alertLabel
     },
     props:{
       data:{},
@@ -40,7 +60,11 @@
       hexagonSvgID:{
         type:String,
         default:'hexagonSvg'
-      }
+      },
+      showTooltip:{
+        type:Boolean,
+        default:false,
+      },
     },
     watch:{
       data:{
@@ -66,7 +90,20 @@
     data(){
 		  return{
         hexagonEdge:90,
-        loading:true,
+        loading:false,
+        assetData:{
+          id:'',
+          loading:false,
+          show:false,
+          rate:1,
+          position:{
+            top:0,
+            left:0,
+            mt:0,
+          },
+        },
+        boxWidth:'',
+        LRTriangle:true,//true 左三角 false 右
       }
     },
     methods:{
@@ -210,6 +247,45 @@
         allHexagonText.forEach(item=>{
           item.fill({ opacity:0}).hide();
         });
+      },
+      changeAsset(data,e){
+        this.assetData.id=data;
+        let boxWidth=document.getElementsByClassName('content-right')[0].offsetWidth;
+        console.log(boxWidth);
+        this.boxWidth=boxWidth;
+        // this.assetData.rate=window.screen.height/1297;
+        this.$nextTick(()=>{
+          this.assetData.show=true;
+          this.$nextTick(()=>{
+            this.calcPosition(e)
+          })
+        })
+      },
+      assetMove(e){
+        if(!this.assetData.show){return}
+        this.calcPosition(e)
+      },
+      calcPosition(e){
+        let boxWidth=this.boxWidth;
+        let minus=(e.pageY-300)+this.$refs.alertLabel.$el.offsetHeight-window.innerHeight;
+        // window.innerHeight
+        if(minus<=0){
+          this.assetData.position.top=e.pageY-300;
+          this.assetData.position.mt=300;
+        } else if(minus>0){
+          this.assetData.position.top=window.innerHeight-this.$refs.alertLabel.$el.offsetHeight;
+          this.assetData.position.mt=e.pageY-(window.innerHeight-this.$refs.alertLabel.$el.offsetHeight);
+        }
+        if(boxWidth/2>e.pageX-200){
+          this.assetData.position.left=e.pageX + 35;
+          this.LRTriangle=true;
+        }else{
+          this.assetData.position.left=e.pageX - 35 - this.$refs.alertLabel.$el.offsetWidth;
+          this.LRTriangle=false
+        }
+      },
+      closeAsset(){
+        this.assetData.show=false
       },
       endLoading(){
         this.loading=false;
