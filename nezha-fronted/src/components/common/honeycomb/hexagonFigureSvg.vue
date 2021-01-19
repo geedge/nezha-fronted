@@ -228,6 +228,7 @@
         fontSize:14,
         maskShow:true,
         windowRate:1,
+        scaleFlag:true,
       }
     },
     computed:{
