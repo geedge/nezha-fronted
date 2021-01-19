@@ -189,7 +189,7 @@ if(process.env.NODE_ENV == 'development'){
       initialFile: './dist',
       endPath: './dist',
       zipName: 'nz-gui.zip',
-      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -grP nezha2020 nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
+      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
     }),
     new fileManagerPlugin({
       onStart:[
