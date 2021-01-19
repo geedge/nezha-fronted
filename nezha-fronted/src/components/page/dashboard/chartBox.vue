@@ -64,7 +64,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 2100;
+    /*z-index: 2100;*/
   }
   /deep/ .el-color-picker{
     position: absolute;
@@ -145,8 +145,8 @@
 
 </style>
 <template key="chartBox">
-  <div @click.self="clickOutside" class="mc">
-    <div :class="boxClass" class="right-box right-box-add-chart z-top right-box-chart">
+  <div  class="mc">
+    <div :class="boxClass" class="right-box right-box-add-chart z-top right-box-chart" v-clickoutside="{obj:editChart,func:clickOutside}">
       <transition name="right-box">
         <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
       </transition>
@@ -477,7 +477,7 @@
       </div>
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc(false)" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:editChart,func:esc}" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_save`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">

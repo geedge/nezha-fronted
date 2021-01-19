@@ -1,11 +1,14 @@
 import PerfectScrollbar from "perfect-scrollbar";
 import {getChart} from "./common";
-
+import MessageBox from "element-ui/packages/message-box/src/main";
+import i18n from "../i18n";
 /*弹窗点击外部后关闭*/
 const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box','nz-dashboard-dropdown', "el-autocomplete-suggestion"]; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
+    if(!binding.value||!binding.value.obj) return;
+    let oldValue = JSON.parse(JSON.stringify(binding.value.obj));
     function documentHandler(e) {
       if (el.contains(e.target)) {
         return false;
@@ -23,18 +26,21 @@ export const clickoutside = {
         if (!flag) {
           return false;
         }
-      }
-      // 判断指令中是否绑定了函数
-      if (binding.expression) {
-        // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
-        if (binding.arg) {
-          binding.value(e, binding.arg);
-        } else {
-          if(binding.value){
-            binding.value(e);
-          }
-        }
 
+        let newValue = JSON.parse(JSON.stringify(binding.value.obj));
+        if(!isEqual(oldValue,newValue)){
+          MessageBox.confirm(i18n.t("tip.confirmCancel"), {
+            confirmButtonText: i18n.t("tip.yes"),
+            cancelButtonText: i18n.t("tip.no"),
+            type: 'warning'
+          }).then(() => {
+            if(binding.value.func){
+              binding.value.func();
+            }
+          })
+        }else{
+          binding.value.func();
+        }
       }
     }
 
@@ -48,7 +54,63 @@ export const clickoutside = {
     delete el.__vueClickOutside__;
   },
 };
+function isEqual (o1, o2) {
+  console.log(o1,o2)
+  var isEqualForInner = function (obj1, obj2) {
+    var o1 = obj1 instanceof Object;
+    var o2 = obj2 instanceof Object;
+    if (!o1 || !o2) {
+      return obj1 === obj2;
+    }
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+      return false;
+    }
 
+    for (var attr of Object.keys(obj1)) {
+
+      var t1 = obj1[attr] instanceof Object;
+      var t2 = obj2[attr] instanceof Object;
+      if (t1 && t2) {
+        if(!isEqualForInner(obj1[attr], obj2[attr])){
+          return false;
+        }
+      } else if (obj1[attr] !== obj2[attr]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return isEqualForInner(o1, o2);
+}
+export const cancelWithChange={
+  bind:function(el,binding){
+    if(!binding.value||!binding.value.obj) return;
+    let oldValue = JSON.parse(JSON.stringify(binding.value.obj));
+    function domClick(e){
+      let newValue = JSON.parse(JSON.stringify(binding.value.obj));
+      if(!isEqual(oldValue,newValue)){
+        MessageBox.confirm(i18n.t("tip.confirmCancel"), {
+          confirmButtonText: i18n.t("tip.yes"),
+          cancelButtonText: i18n.t("tip.no"),
+          type: 'warning'
+        }).then(() => {
+          if(binding.value.func){
+            binding.value.func();
+          }
+        })
+      }else{
+        binding.value.func();
+      }
+    }
+    el.__vueDomClick__ = domClick
+    el.addEventListener('click',domClick)
+  },
+  unbind:function(el,binding){
+// 解除事件监听
+    document.removeEventListener('click', el.__vueDomClick__);
+    delete el.__vueDomClick__;
+  }
+}
 // 底部上滑框窗口控制
 export const bottomBoxWindow = {
   // 鼠标拖动二级列表
@@ -233,7 +295,7 @@ export const chartResizeTool = {
   chartBlankHeight: 12, //图表空白占位高度(padding-top + border)
   chartTableBlankHeight: 6, //表格型图表额外空白占位高度
   chartBlankWidth: 10, //图表空白占位宽度
-  containerBlankWidth: 25, //容器空白占位宽度（#listContainer的padding）
+  containerBlankWidth: 15, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
   stepHeight: 50, //单元高度
   timeouter:null,

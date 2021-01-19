@@ -13,7 +13,7 @@
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" v-has="'project_topo_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('project.topology.save')}}</button>
-        <button @click="cancelTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
+        <button v-cancel="{obj:{nodes:nodes,edges:edges},func:cancelTopology}" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork"> {{$t('project.topology.selTwoNode')}} <span class="edit-topologyCancel" @click="closeAddLine">{{$t('project.topology.cancel')}}</span></span>
     </div>
@@ -492,6 +492,10 @@
             this_.arrayDiff();
             this_.popDataShowUpdate();
           })
+        }else{
+          this.$nextTick(()=>{
+            this.modelTopUpdate();
+          })
         }
       },
       addModel(model){ // 添加model
@@ -499,11 +503,19 @@
         if(!model){return}
         let nodesArray=[...this.nodesArray];
         if(!this.isNodeAdd){
-          model={...nodesArray.find(item=>item.id===model.id),...model};
-          nodesArray=nodesArray.filter(item=>item.id!==model.id);
+          model={...nodesArray.find(item=>item.id===this.selNodeId),...model};
+          nodesArray=nodesArray.filter(item=>item.id!==this.selNodeId);
         }else{
           model={...model,...this.network.DOMtoCanvas({x:80,y:100})};
         }
+        this.edgesArray.forEach(item=>{
+          if(item.from===this.selNodeId){
+            item.from=model.id;
+          }
+          if(item.to===this.selNodeId){
+            item.to=model.id;
+          }
+        })
         this.$get('/module/stat',{id:model.id}).then(res=>{
           model.state=res.data;
           nodesArray.push(model);
@@ -587,10 +599,10 @@
         }
         this.NodeArr=[...this.NodeArr]
       },
-      networkPopClose(){//关闭节点工具栏
+      networkPopClose(flag){//关闭节点工具栏
         this.networkPopShow=false;
         // this.selNodeId=''
-        if(this.network){
+        if(this.network&&!flag){
           this.network.unselectAll();
         }
       },

@@ -145,11 +145,51 @@ const webpackConfig = merge(baseWebpackConfig, {
         ignore: ['*']
       }
     ]),
+  ]
+})
+
+if(process.env.NODE_ENV == 'development'){
+  webpackConfig.plugins.push(
+    new fileManagerPlugin({
+      onStart:[
+        {
+          delete:[path.join(__dirname,'../dist/') ]
+        }
+      ],
+      onEnd: [
+        {
+          move:[
+            { source: path.join(__dirname,'../dist','/static/config.json'), destination: path.join(__dirname,'../dist/config.json') },
+            { source: path.join(__dirname,'../dist','/static'), destination: path.join(__dirname,'../dist','/nezha') }
+          ],
+          mkdir:[
+            path.join(__dirname,'../dist','/static')
+          ],
+          copy:[
+            { source: path.join(__dirname,'../dist','/config.json'), destination: path.join(__dirname,'../dist','/static/config.json') }
+          ],
+        },
+        {
+          delete:[
+            path.join(__dirname,'../dist','/config.json')
+          ]
+        },
+        {
+          archive:[
+            { source: path.join(__dirname,'../dist'), destination: path.join(__dirname,'../dist','/nz-gui.zip') }
+          ]
+        }
+      ]
+    }),
+
+  )
+}else{
+  webpackConfig.plugins.push(
     new WebpackZipPlugin({
       initialFile: './dist',
       endPath: './dist',
       zipName: 'nz-gui.zip',
-      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(env.BUILD_MODE=='"all"'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will table a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
+      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
     }),
     new fileManagerPlugin({
       onStart:[
@@ -157,16 +197,9 @@ const webpackConfig = merge(baseWebpackConfig, {
           delete:[path.join(__dirname,'../dist/') ]
         }
       ],
-      // onEnd: [
-      //   {
-      //     move:[
-      //       { source: path.join(__dirname,'../dist','/nz-gui.zip'), destination: path.join(__dirname,'../dist','/nz-gui-[chunkhash].zip') }
-      //     ]
-      //   }
-      // ]
     })
-  ]
-})
+  )
+}
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin')

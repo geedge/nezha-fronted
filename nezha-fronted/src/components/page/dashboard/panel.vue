@@ -6,7 +6,7 @@
       </div>
       <template v-else>
         <div class="top-tool-main-left">
-          <select-panel :current-panel="showPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'" :show-panel="showPanel"
+          <select-panel :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'" :show-panel="showPanel"
                         @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
             <template v-slot:header>
               <div class="panel-select-header">
@@ -171,7 +171,6 @@
         chartsData: [], //中间部分图表相关数据
         panelData: [],
         panelDataDragTmp:[],
-        dataTotalListBak:[],
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [
@@ -196,7 +195,6 @@
         },
         panelId: 0,
         filterPanel:'',
-        showPanelList:[],
         //---图表相关参数--end
         scrollbarWrap: null,
       }
@@ -249,10 +247,7 @@
                 type: 'success',
                 message: this.$t("tip.deleteSuccess")
               });
-              if (this.showPanel.id === u.id) {
-                this.showPanel.id = '';
-              }
-              this.getTableData();
+              this.getTableData(true);
             } else {
               this.$message.error(response.msg);
             }
@@ -395,11 +390,12 @@
       /*时间条件查询--start*/
       // 选择日期变化
       dateChange(val) {
-        let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
+        let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
         this.setSearchTime(nowTimeType.type,nowTimeType.value);
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
         this.filter.panelId = this.showPanel.id;
+        this.getTableData();
         this.getData(this.filter);
       },
       setSearchTime(type,val){//设置searchTime
@@ -442,7 +438,6 @@
         this.$get('panel').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
-            this.showPanelList = this.panelData;
             for (let i = 0; i < this.panelData.length; i++) {
               if (this.panelData[i].id == this.showPanel.id) {
                 this.showPanel.name = this.panelData[i].name;
@@ -454,11 +449,11 @@
       },
 
       getTableData(clearShowPanel) {
+        let vm = this;
+
         this.$get('panel?type=dashboard').then(response => {
           if (response.code === 200) {
             this.panelData = response.data.list;
-            this.showPanelList = this.panelData;
-            this.dataTotalListBak = [...response.data.list];
             let isInitData = false;
             if (response.data.list.length > 0) {
               if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
@@ -474,8 +469,11 @@
                 isInitData = true;
               }else{
                 handler(response.data.list);
+                this.filter.panelId = this.showPanel.id;
               }
-              this.filter.panelId = this.showPanel.id;
+              this.$nextTick(() => {
+                this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel);
+              });
             } else {
               this.showPanel.id = '';
               this.filter.panelId = '';
@@ -503,8 +501,6 @@
             this.$message.error(error.toString());
           }
         });
-
-        let vm = this;
 
         function handler(panelData) {
           panelData.forEach(panel => {
@@ -586,7 +582,7 @@
       clearInput() {
         this.$refs.queryPanel.focus();
       },
-      start (event) {
+      /*start (event) {
         // console.log('start', event, this.panelData);
 
         event.item.querySelector('.panelContent').style.background = '#d8dce1';
@@ -728,7 +724,7 @@
         let panelContent = dragClass.querySelector('.panelContent');
         panelContent.style.background = '#d8dce1';
 
-      },
+      },*/
       /*filterPanelFocus:function(e){
         e.stopPropagation();
       },

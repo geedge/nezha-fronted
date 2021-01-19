@@ -1,6 +1,6 @@
 <template key="panelBox">
   <transition name="right-box-580">
-    <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="clickos">
+    <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="{obj:panel,func:clickos}">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns right-box-form-delete">
         <button @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" type="button" v-has="'panel_delete'" v-if="panel.id != ''">
@@ -26,7 +26,7 @@
 
       <!-- begin--底部按钮-->
       <div class="right-box-bottom-btns">
-        <button @click="esc" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+        <button v-cancel="{obj:panel,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
         <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save" v-has="'panel_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

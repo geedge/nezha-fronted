@@ -340,6 +340,7 @@
         this.editVisNetwork=flag;
         if(flag){
           this.$refs.topology.popDataShowUpdate('',true);
+          this.$refs.topology.networkPopClose(true);
         }
         if(!flag){
           // this.reload();

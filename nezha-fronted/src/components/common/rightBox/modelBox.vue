@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-model" v-clickoutside="clickOutside" @click="inputHandler">
+  <div class="right-box right-box-model" v-clickoutside="{obj:editModel,func:clickOutside}" @click="inputHandler">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="model-del" type="button" v-has="'model_delete'" v-if="editModel.id">
@@ -73,7 +73,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc(false)" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:editModel,func:esc}" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save" v-has="['model_save', 'asset_vendor_save']" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

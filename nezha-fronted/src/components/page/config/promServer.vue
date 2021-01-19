@@ -197,7 +197,7 @@
             disabled: false
           }, {
             id: 5,
-            name: 'DC',
+            name: this.$t('config.promServer.dataCenter'),
             type: 'dc',
             label: 'dc',
             disabled: false
@@ -317,7 +317,6 @@
           this.$message.error(this.$t("tip.noAccess"));
           return;
         }
-        this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.loading = true;
@@ -347,6 +346,7 @@
         return JSON.parse(JSON.stringify(this.blankPromServer));
       },
       pageNo(val) {
+        console.log('page',val)
         this.pageObj.pageNo = val;
         this.getTableData();
       },

@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-cabinet" v-clickoutside="clickOutside">
+  <div class="right-box right-box-cabinet" v-clickoutside="{obj:editCabinet,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="cab-del" type="button" v-has="'dc_cabinet_delete'" v-if="!editCabinet.id">
@@ -33,7 +33,7 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button @click="esc" id="cab-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button v-cancel="{obj:editCabinet,func:esc}" id="cab-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="cab-box-save" v-has="'dc_cabinet_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">

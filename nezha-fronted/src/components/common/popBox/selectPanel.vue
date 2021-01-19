@@ -12,7 +12,6 @@
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             :props="{label: 'name', children: 'children'}"
-            @check-change="clearOthers"
             @node-click="selectPanel"
             @node-drop="nodeDrop"
             check-on-click-node
@@ -50,7 +49,7 @@
         filterPanel: {type: String},
       },
       mounted() {
-        this.$refs.panelTree.setCurrentKey(this.showPanel);
+        this.$refs.panelTree.setCurrentKey(this.panel);
       },
       watch: {
         filterPanel: {
@@ -62,16 +61,23 @@
         showPanel: {
           immediate: true,
           handler(n) {
-            if (n && n.id) {
-              this.$refs.panelTree.setCurrentKey(this.showPanel);
+            this.panel = JSON.parse(JSON.stringify(n));
+          }
+        },
+        /*panel: {
+          immediate: true,
+          handler(n) {
+            if (this.$refs.panelTree) {
+              console.info(n.id, n.name)
+              this.$refs.panelTree.setCurrentKey(n);
             }
           }
-        }
+        }*/
       },
       data(){
         return {
           popBox: {show: false},
-          panel: {id: '', name: ''}
+          panel: {id: 0, name: ""},
         }
       },
       methods:{
@@ -115,35 +121,25 @@
         editPanel(data) {
           this.$emit("editPanel", data);
         },
-        openBox(panel){
-          if (panel) {
-            this.panel = panel;
-            this.$refs.panelTree.setChecked(this.panel.id, true, false);
-          }
-        },
         esc(){
           this.popBox.show = false;
         },
         //确认选择某个节点，与父组件交互
         selectPanel(data, checked, child) {
-          this.panel = data;
-          this.$emit('selectPanel', this.panel);
-          this.$refs.panelTree.setCurrentKey(this.panel);
+          this.$emit('selectPanel', data);
+          this.$refs.panelTree.setCurrentKey(data);
           this.esc();
         },
         //tree设为单选
-        clearOthers(data, checked, child) {
+        /*clearOthers(data, checked, child) {
           if (checked) {
             this.panel = data;
             this.$refs.panelTree.setCheckedKeys([data.id]);
           } else {
             this.panel = {id: '', name: ''};
           }
-        }
+        }*/
       },
-      beforeDestroy(){
-
-      }
     }
 </script>
 

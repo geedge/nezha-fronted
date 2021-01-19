@@ -47,7 +47,7 @@
   }
 </style>
 <template>
-  <div class="list-width"  id="listContainer"><!--v-drag-->
+  <div class="list-width"  id="listContainer" ref="listContainer"><!--v-drag-->
 
     <span class="temp-dom"></span>
 
@@ -66,7 +66,7 @@
                  animation: 150,
                  handle: '.chart-title'
                }"  >
-      <div v-for="(item, index) in dataList" :key="item.id" :id="'chart-' + item.id" :name="item.title" :class="{'drag-disabled': !draggable,'chartBox':true}" v-show="!item.isHide">
+      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
@@ -77,6 +77,7 @@
                           :panel-id="filter.panelId"
                           :is-lock="panelLock"
                           :chart-index="index"
+                          @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                           :chart-data="item"></line-chart-block>
 
         <chart-single-stat  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'singleStat'"
@@ -89,6 +90,7 @@
                      :chart-data="item"
                      :is-lock="panelLock"
                      :panel-id="filter.panelId"
+                     @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                      :chart-index="index"></chart-single-stat>
 
         <chart-table  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'table'"
@@ -101,6 +103,7 @@
                       :is-lock="panelLock"
                       :panel-id="filter.panelId"
                       :chart-data="item"
+                      @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                       :chart-index="index"></chart-table>
 
         <chart-url  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'url'"
@@ -113,6 +116,7 @@
                      @on-edit-chart-block="editData"
                      :panel-id="filter.panelId"
                      :chart-data="item"
+                      @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                      :chart-index="index"></chart-url>
 
         <chart-detail  v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
@@ -121,6 +125,7 @@
                           @on-refresh-data="refreshChart"
                           :is-lock="panelLock"
                           :chart-data="item"
+                          @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                           :editChartId="'editChartId' + item.id"
         ></chart-detail>
 
@@ -130,6 +135,7 @@
                     @on-duplicate-chart-block="duplicateChart"
                     @on-drag-chart="editChartForDrag"
                     @on-edit-chart-block="editData"
+                    @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                     :is-lock="panelLock"
                     :panel-id="filter.panelId"
                     :chart-data="item"
@@ -149,6 +155,7 @@
                           @on-duplicate-chart-block="duplicateChart"
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
+                          @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
         ></chart-alert-list>
       </div>
    </draggable>
@@ -201,6 +208,7 @@
           start: '',
           end: '',
         },
+        extraMarginBottom: 0, //dom额外的margin
         panelId: '',
         timer: null,
         dataTotalList:[],//懒加载：总记录数
@@ -218,6 +226,21 @@
       };
     },
     methods: {
+      dropmenuChange(id, show) {
+        if (show) {
+          let chart = this.$refs["chart" + id][0];
+          let container = this.$refs.listContainer;
+          let heightDifference = container.offsetHeight - chart.offsetTop;
+          if (heightDifference < 235) {
+            this.extraMarginBottom = 235-heightDifference;
+            this.$nextTick(() => {
+              container.scrollTop = container.offsetHeight;
+            });
+          }
+        } else {
+          this.extraMarginBottom = 0;
+        }
+      },
       tempDomInit() {
         let span = document.querySelector(".temp-dom");
         this.tempDom.width = span.offsetWidth;

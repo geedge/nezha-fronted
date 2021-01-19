@@ -318,6 +318,9 @@ export default {
         handler(n,o){
           this.panelIdInner=n
         }
+      },
+      dropdownMenuShow(n) {
+        this.$emit("dropmenu-change", n);
       }
     },
     methods: {

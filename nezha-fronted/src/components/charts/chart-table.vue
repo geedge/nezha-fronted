@@ -225,7 +225,11 @@
       this.screenPageObj.pageSize = this.pageSizes[0];
     },
     computed: {},
-    watch: {},
+    watch: {
+      dropdownMenuShow(n) {
+        this.$emit("dropmenu-change", n);
+      }
+    },
     methods: {
       pageNo(val) {
         this.pageObj.pageNo = val;

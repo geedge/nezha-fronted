@@ -1,5 +1,5 @@
 <template>
-  <div ref="box" class="box-hexagon" v-clickoutside="hexagonSvgClearScale" v-if="boxhexagonShow">
+  <div ref="box" class="box-hexagon" v-clickoutside="{obj:{},func:hexagonSvgClearScale}" v-if="boxhexagonShow">
     <!--<div class="hexagon-text" :style="{top:hexagonTextPos.top,left:hexagonTextPos.left}" v-show="hexagonTextPos.show">-->
     <!--<span v-if="hexagonTextPos.data">-->
     <!--{{hexagonTextPos.data?hexagonTextPos.data.alertName:''}}-->
@@ -108,7 +108,7 @@
       hexData:{},//数据
       hexagonSvgID:{//在同一个页面创建多个实例时 需要通过id区分
         type:String,
-        default:'hexagonSvg',
+        required:true,
       },
       col:{},//列数
       colorFrom:{//通过什么决定颜色
@@ -141,6 +141,10 @@
       isClickRate:{ // 是否支持点击放大
         type:Boolean,
         default:true,
+      },
+      showTooltip:{
+        type:Boolean,
+        default:false,
       },
       isPanning:{ // 是否支持移动
         type:Boolean,
@@ -223,6 +227,7 @@
         hexagonEdge:JSON.stringify(this.hexagonEdgeProp),
         fontSize:14,
         maskShow:true,
+        windowRate:1,
       }
     },
     computed:{
@@ -234,7 +239,7 @@
     },
     mounted(){
       // this.init()
-
+      window.addEventListener("visibilitychange",this.reload);
     },
     methods:{
       init(){ //创建svg实例
@@ -260,9 +265,11 @@
               .attr('viewBox',`0 0 ${this.$refs.box.offsetWidth} ${this.$refs.box.offsetHeight}`); //svg实例
             hexagonSvg.on('click',this.hexagonSvgClearScale);
             hexagonSvg.on('panStart',this.hexagonSvgPanStart);
+            hexagonSvg.on('mousemove',this.hexagonMove);
             hexagonSvg.on('panEnd',this.hexagonSvgPanEnd);
             let Rate=(this.$refs.box.offsetWidth/this.defaultBoxWidth);
             Rate=(Rate>0.2?Rate:0.2);
+            this.windowRate=Rate;
             this.hexagonEdge=(this.hexagonEdge/this.defaultRate)*Rate;
             this.fontSize=(this.fontSize/this.defaultRate)*Rate;
             setHexagon(this.hexagonSvgID,{
@@ -286,6 +293,11 @@
             },500)
           })
         });
+      },
+      reload(){
+        if(!document.hidden){
+          this.init();
+        }
       },
       getPadding(){//确定到上方和下方的距离 保持居中
         return new Promise(resolve=>{
@@ -419,7 +431,7 @@
         that.parent().find('polyline').stroke({color:'#909090'});
         let hover=that.parent().find('.hoverRect');
 
-        if(this.isShowHover&&hover&&this.from){
+        if(this.isShowHover&&hover&&this.from&&!this.showTooltip){//不显示气泡 显示基本信息
           let center=that.first().data('center');
           let str=this.from==='asset'?that.first().data('host'):that.first().data('module');
           str+='';
@@ -444,6 +456,15 @@
             }
           ).fill({ color: `rgba(0,0,0,0.3)`}).size((str.length*20+30),72).attr({ rx:"10",ry:"10"});
         }
+        if(this.isShowHover&&this.showTooltip){//显示气泡
+          this.$emit('changeAsset',that.first().data('id'),e)
+        }
+      },
+      hexagonMove(e){//六边形内移动
+        if(this.showTooltip){//显示气泡
+          this.$emit('assetMove',e)
+        }
+        // this.$emit('assetMove',e)
       },
       hexagonOut(that){// 移出六边形
         let color=that.first().data('color');
@@ -453,8 +474,11 @@
         that.animate(100).transform({scale:1});
         that.parent().find('polyline').stroke({color:'#DADADA'});
         let hover=that.parent().find('.hoverRect');
-        if(hover){
+        if(hover&&!this.showTooltip){//不显示气泡 显示基本信息
           hover.hide();
+        }
+        if(this.showTooltip){//显示气泡
+          this.$emit('closeAsset')
         }
       },
       changeScale(center,item1,data,group,e){
@@ -468,6 +492,7 @@
       },
       hexagonSvgScale(center,item1,data,group,e){
         window.event? window.event.cancelBubble = true:e.stopPropagation();
+        this.$emit('closeAsset');
         if(this.timer){
           clearTimeout(this.timer);
           this.timer=null;
@@ -804,6 +829,7 @@
           this.allHexagon=[];
           this.hexagonData=[];
           getHexagon(this.hexagonSvgID).hexagonSvg.off('click',this.hexagonSvgClearScale);
+          getHexagon(this.hexagonSvgID).hexagonSvg.off('mouseover',this.hexagonMove);
           getHexagon(this.hexagonSvgID).hexagonSvg.off('panStart',this.hexagonSvgPanStart);
           getHexagon(this.hexagonSvgID).hexagonSvg.off('panEnd',this.hexagonSvgPanEnd);
           getHexagon(this.hexagonSvgID).hexagonSvg=null;  //Svg的实例
@@ -822,6 +848,7 @@
         getHexagon(this.hexagonSvgID).allHexagonRect=null;//文本框
         getHexagon(this.hexagonSvgID).allHexagonText=null;// 文本内容
       }
+      window.removeEventListener("visibilitychange",this.reload);
       // clearTimeout(this.timer)
     }
   }
