@@ -599,10 +599,10 @@
         }
         this.NodeArr=[...this.NodeArr]
       },
-      networkPopClose(){//关闭节点工具栏
+      networkPopClose(flag){//关闭节点工具栏
         this.networkPopShow=false;
         // this.selNodeId=''
-        if(this.network){
+        if(this.network&&!flag){
           this.network.unselectAll();
         }
       },
