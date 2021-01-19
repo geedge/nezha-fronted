@@ -272,7 +272,8 @@
             Rate=(Rate>0.2?Rate:0.2);
             this.windowRate=Rate;
             this.hexagonEdge=(this.hexagonEdge/this.defaultRate)*Rate;
-            this.fontSize=(this.fontSize/this.defaultRate)*Rate;
+            let fontSize=((this.fontSize/this.defaultRate)*Rate);
+            this.fontSize=fontSize<8?8:fontSize;
             setHexagon(this.hexagonSvgID,{
               hexagonSvg:hexagonSvg,
               svgPolyline:null,
@@ -514,7 +515,7 @@
         }
       },
       hexagonSvgClearScale(e){
-        window.event? window.event.cancelBubble = true:e.stopPropagation();
+        // window.event? window.event.cancelBubble = true:e.stopPropagation();
         if(this.firstInit){return}
         if(this.group){
           // this.group.off('dblclick',this.hexagonSvgClearScale);
