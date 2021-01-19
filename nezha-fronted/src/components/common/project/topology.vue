@@ -13,7 +13,7 @@
       </span>
       <span v-show="!selectNodeTitle&&editVisNetwork" class="edit-topologyLine">
         <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" v-has="'project_topo_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('project.topology.save')}}</button>
-        <button @click="cancelTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
+        <button v-cancel="{obj:{nodes:nodes,edges:edges},func:cancelTopology}" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">{{$t('project.topology.cancel')}}</button>
       </span>
       <span class="edit-topology-line-cancel" v-show="selectNodeTitle&&editVisNetwork"> {{$t('project.topology.selTwoNode')}} <span class="edit-topologyCancel" @click="closeAddLine">{{$t('project.topology.cancel')}}</span></span>
     </div>
