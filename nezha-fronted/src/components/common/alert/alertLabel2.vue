@@ -3,42 +3,42 @@
     <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">SN</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Host</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">State</div>
-        <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
+        <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Ping</div>
         <div class="alert-label-value">
           <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
-          <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
+          <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':'--'}}</span>
         </div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Asset Type</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Vendor</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Model</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.model:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.model:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">PingLastReply</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
+        <div class="alert-label-value">{{(alertLabelData&&alertLabelData.pingLastReply)?alertLabelData.pingLastReply:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Alert</div>
@@ -48,80 +48,80 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">DC</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Endpoint</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Administrator</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:'--'}}</div>
       </div>
     </div>
 
     <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Name</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Project</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Description</div>
-        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):'--'}}</div>
       </div>
     </div>
 
     <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Name</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Description</div>
-        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
+        <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):'--'}}</div>
       </div>
     </div>
 
     <div class="alert-label-info" v-if="type==='endpoint'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.id:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Project</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Module</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.module.name:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.module.name:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Labels</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.labels:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.labels:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Host</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.host:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Port</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.port:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.port:'--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Path</div>
-        <div class="alert-label-value">{{alertLabelData?alertLabelData.path:''}}</div>
+        <div class="alert-label-value">{{alertLabelData?alertLabelData.path:'--'}}</div>
       </div>
     </div>
   </div>
@@ -173,6 +173,13 @@
       //     }
       //   }
       // }
+      id:{
+        immediate: true,
+        deep:true,
+        handler(n){
+          this.init()
+        }
+      },
       that:{
         immediate: true,
         deep:true,
@@ -231,6 +238,49 @@
       }
     },
     methods:{
+      init(){
+        this.loading=true;
+        if(this.type==='asset'){
+          this.$get('/asset/info?id='+this.id).then((res)=>{
+            if(res.msg==='success'){
+              this.loading=false;
+              this.alertLabelData=res.data.Basic;
+            } else{
+              this.$message.error(res.msg);
+            }
+          })
+        }
+        if(this.type==='project'){
+          this.$get('/project?id='+this.id).then((res)=>{
+            if(res.msg==='success'){
+              this.loading=false;
+              this.alertLabelData=res.data.list[0];
+            } else{
+              this.$message.error(res.msg);
+            }
+          })
+        }
+        if(this.type==='module'){
+          this.$get('/module?id='+this.id).then((res)=>{
+            if(res.msg==='success'){
+              this.loading=false;
+              this.alertLabelData=res.data.list[0];
+            } else{
+              this.$message.error(res.msg);
+            }
+          })
+        }
+        if(this.type==='endpoint'){
+          this.$get('/endpoint?id='+this.id).then((res)=>{
+            if(res.msg==='success'){
+              this.loading=false;
+              this.alertLabelData=res.data.list[0];
+            } else{
+              this.$message.error(res.msg);
+            }
+          })
+        }
+      },
       alertActiveStr(){
         return this.$t('overall.active');
       },
@@ -243,46 +293,7 @@
       },
     },
     mounted(){
-      if(this.type==='asset'){
-        this.$get('/asset/info?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.Basic;
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='project'){
-        this.$get('/project?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='module'){
-        this.$get('/module?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='endpoint'){
-        this.$get('/endpoint?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
+
     },
     beforeDestroy(){
 

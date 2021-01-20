@@ -104,6 +104,7 @@
         },
         boxWidth:'',
         LRTriangle:true,//true 左三角 false 右
+        timer:null,
       }
     },
     methods:{
@@ -249,9 +250,11 @@
         });
       },
       changeAsset(data,e){
+        if(this.timer){
+          clearTimeout(this.timer);
+        }
         this.assetData.id=data;
         let boxWidth=document.getElementsByClassName('content-right')[0].offsetWidth;
-        console.log(boxWidth);
         this.boxWidth=boxWidth;
         // this.assetData.rate=window.screen.height/1297;
         this.$nextTick(()=>{
@@ -285,7 +288,18 @@
         }
       },
       closeAsset(){
-        this.assetData.show=false
+        if(!this.timer){
+          this.timer=setTimeout(()=>{
+            this.assetData.show=false;
+            this.timer=null;
+          },100)
+        }else{
+          clearTimeout(this.timer);
+          this.timer=setTimeout(()=>{
+            this.assetData.show=false;
+            this.timer=null;
+          },100)
+        }
       },
       endLoading(){
         this.loading=false;
