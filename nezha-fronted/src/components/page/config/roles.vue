@@ -158,7 +158,7 @@
             prop: 'name',
             show: true,
           }, {
-            label: this.$t("config.roles.remark"),
+            label: this.$t("config.roles.description"),
             prop: 'remark',
             show: true,
           }, {

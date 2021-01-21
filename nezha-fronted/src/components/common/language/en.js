@@ -589,7 +589,7 @@ const en = {
     roles:{
       roles:"Roles",
       name:"Name",
-      remark:"Remark",
+      description:"Description",
       option: 'Operation',//"操作"
       permission:"Permission",
       menu:"Menu",

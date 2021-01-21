@@ -586,7 +586,7 @@ const cn = {
     roles:{
       roles:"角色",
       name:"名称",
-      remark:"备注",
+      description:"描述",
       option: '操作',//"操作"
       permission:"权限",
       menu:"菜单",
