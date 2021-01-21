@@ -7,8 +7,13 @@ const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dr
 export const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
-    if(!binding.value||!binding.value.obj) return;
-    let oldValue = JSON.parse(JSON.stringify(binding.value.obj));
+    if(!binding.expression) return;
+    let oldValue;
+    try{
+      oldValue= JSON.parse(JSON.stringify(binding.value.obj));
+    }catch (e) {
+
+    }
     function documentHandler(e) {
       if (el.contains(e.target)) {
         return false;
@@ -26,20 +31,29 @@ export const clickoutside = {
         if (!flag) {
           return false;
         }
-
-        let newValue = JSON.parse(JSON.stringify(binding.value.obj));
-        if(!isEqual(oldValue,newValue)){
-          MessageBox.confirm(i18n.t("tip.confirmCancel"), {
-            confirmButtonText: i18n.t("tip.yes"),
-            cancelButtonText: i18n.t("tip.no"),
-            type: 'warning'
-          }).then(() => {
-            if(binding.value.func){
-              binding.value.func();
-            }
-          })
+        if(oldValue){
+          let newValue = JSON.parse(JSON.stringify(binding.value.obj));
+          if(!isEqual(oldValue,newValue)){
+            MessageBox.confirm(i18n.t("tip.confirmCancel"), {
+              confirmButtonText: i18n.t("tip.yes"),
+              cancelButtonText: i18n.t("tip.no"),
+              type: 'warning'
+            }).then(() => {
+              if(binding.value.func){
+                binding.value.func();
+              }
+            })
+          }else{
+            binding.value.func();
+          }
         }else{
-          binding.value.func();
+          if (binding.arg) {
+            binding.value(e, binding.arg);
+          } else {
+            if(binding.value){
+              binding.value(e);
+            }
+          }
         }
       }
     }
