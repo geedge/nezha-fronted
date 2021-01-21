@@ -180,7 +180,9 @@
       this.getMenus();
     },
     mounted() {
-
+      if(this.$refs.menuTree&&this.editRole.menuIds&&this.editRole.menuIds.length>0){
+        this.$refs.menuTree.setCheckedKeys(this.editRole.menuIds,true);
+      }
     },
     watch: {
       //将prop里的user转为组件内部对象
