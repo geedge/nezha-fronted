@@ -747,6 +747,7 @@ const en = {
         second:'second',
         day:'day',
         maxSeries:'Query max series',
+        unsaved:'Unsaved tip'
       },
       email:{
         email:'Email',

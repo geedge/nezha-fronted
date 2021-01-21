@@ -743,6 +743,7 @@ const cn = {
         second:'秒',
         day:'天',
         maxSeries:'Query max series',
+        unsaved:'未保存提示'
       },
       email: {
         email: "邮件",

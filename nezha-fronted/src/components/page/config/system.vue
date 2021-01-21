@@ -38,6 +38,10 @@
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
+              <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'>
+              </el-switch>
+            </el-form-item>
             <el-form-item>
               <button
                 @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button"
@@ -362,7 +366,8 @@
               current_site_url:'',
               timezone:'',
               default_cabinet_usize:'',
-              query_max_series:''
+              query_max_series:'',
+              unsaved_change:'on',
             },
             basicCopy:null,
             basicRules:{
@@ -553,6 +558,7 @@
                   localStorage.setItem('nz-sys-timezone',this.basic.timezone);
                   localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
                   localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
+                  localStorage.setItem('nz-unnsaved-change',this.basic.unsaved_change)
                 }else if(type == 'terminal'){
                   localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
                 }
