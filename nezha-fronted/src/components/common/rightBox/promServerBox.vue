@@ -57,7 +57,7 @@
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="prom-save" v-has="'prom_save'"
+      <button @click="save" id="prom-save"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
         <span>{{$t('overall.save')}}</span>
       </button>

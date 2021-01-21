@@ -294,7 +294,7 @@
       <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-add" v-has="['asset_endpoint_save', 'project_endpoint_save']">
+      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-add">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
