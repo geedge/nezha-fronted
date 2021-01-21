@@ -64,7 +64,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    /*z-index: 2100;*/
+    z-index: 1;
   }
   /deep/ .el-color-picker{
     position: absolute;
@@ -352,7 +352,7 @@
               <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
             </el-popover>
           </span>
-          <span  class="float-right" @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
+          <span  class="float-right"  @click="addMapping"><i style="font-size: 16px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i></span>
         </div>
         <div style="margin-bottom: 20px; width: 100%" v-if="editChart.type == 'singleStat'||editChart.type == 'table'"></div>
         <el-form-item :label="$t('dashboard.panel.chartForm.type')" prop="span" v-if="editChart.type == 'singleStat'||editChart.type == 'table'">
@@ -1247,6 +1247,8 @@
             this.$refs.alertParamBox.setData(data)
           })
           //this.elements=[1];
+        }else if(this.editChart.type==='singleStat'){
+          this.setIsSingleStat();
         }else{
           if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='singleStat')&&data.param){
             this.editChart.param.threshold=data.param.threshold;
