@@ -24,7 +24,7 @@
                 <!--<span class="chart-title-icon"><i class="nz-icon nz-icon-caret-bottom el-icon&#45;&#45;right"  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>-->
               </span>
               <div style="height: 34px">
-                <button @click="editVisNetworkChange(true)" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime" style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" v-has="'project_topo_edit'" v-show="!editVisNetwork">
+                <button @click="editVisNetworkChange(true)" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime" style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" v-show="!editVisNetwork">
                   <i class="nz-icon nz-icon-edit"   :title="$t('project.topology.edit')"></i>
                 </button>
                 <pick-time v-show="!editVisNetwork" :showTimePicker="false" class="float-right pickTime" :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
