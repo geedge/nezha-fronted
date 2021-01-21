@@ -191,7 +191,7 @@
           <div class="content-col-content" style="overflow: hidden">
             <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'asset'" :tooltip-formatter="simpleFormatter" chart-type="ruleBar" ref="assetMessage" name="assetMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.assetMessageLoading = isLoading}"></chart-box>-->
             <!--<chart-box axis-tooltip="y" v-show="alertMessageShow == 'module'" :tooltip-formatter="simpleFormatter" chart-type="bar" ref="moduleMessage" name="moduleMessage" :show-toolbox="false" @is-loading="(isLoading)=>{this.moduleMessageLoading = isLoading}"></chart-box>-->
-            <messageAsset v-show="messageAssetData.length>0" :data="messageAssetData" :col="col" :length="length" ref="assetHexagon" :from="'asset'" :hexagonSvgID="'hexagonSvg1'" :show-tooltip="true"/>
+            <messageAsset v-show="messageAssetData.length>0" :data="messageAssetData" :col="col" :length="length" ref="assetHexagon" :from="'asset'" :hexagonSvgID="'hexagonSvg1'" :show-tooltip="true" :from-type="'asset'"/>
             <div class="chart-no-data" v-if="messageAssetData.length===0">No Data</div>
           </div>
         </div>
@@ -211,7 +211,7 @@
           <div class="content-col-content" style="overflow: hidden">
             <!--<chart-box axis-tooltip="y" chart-type="ruleBar" ref="ruleMessage" :tooltip-formatter="simpleFormatter" :show-toolbox="false" name="ruleMessage" @is-loading="(isLoading)=>{this.ruleMessageLoading = isLoading}"></chart-box>-->
             <!--                <div class="no-data-tip" v-if="!ruleMessageLoading && ((!messageByRuleSeries.data && !messageByRuleSeries.category) || (messageByRuleSeries.data.length == 0 && messageByRuleSeries.category.length == 0))">N/A</div>-->
-            <messageAsset v-show="messageModuleData.length>0" :data="messageModuleData" :col="col" :length="length" ref="moduleHexagon" :from="'module'" :hexagonSvgID="'hexagonSvg2'"/>
+            <messageAsset v-show="messageModuleData.length>0" :data="messageModuleData" :col="col" :length="length" ref="moduleHexagon" :from="'module'" :hexagonSvgID="'hexagonSvg2'" :show-tooltip="true" :from-type="'module'"/>
             <div class="chart-no-data" v-if="messageModuleData.length===0">No Data</div>
           </div>
         </div>

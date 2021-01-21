@@ -24,7 +24,7 @@
       ref="alertLabel"
       :id="assetData.id"
       :that="assetData"
-      :type="'asset'"
+      :type="fromType"
       :LRTriangle="LRTriangle"
       :style="{
         'transform-origin': `0px 300px`,
@@ -59,11 +59,13 @@
       from:{},
       hexagonSvgID:{
         type:String,
-        default:'hexagonSvg'
       },
       showTooltip:{
         type:Boolean,
         default:false,
+      },
+      fromType:{
+        type:String,
       },
     },
     watch:{
@@ -270,11 +272,12 @@
       },
       calcPosition(e){
         let boxWidth=this.boxWidth;
-        let minus=(e.pageY-300)+this.$refs.alertLabel.$el.offsetHeight-window.innerHeight;
+        let distance=this.fromType==='asset'?300:50;
+        let minus=(e.pageY-distance)+this.$refs.alertLabel.$el.offsetHeight-window.innerHeight;
         // window.innerHeight
         if(minus<=0){
-          this.assetData.position.top=e.pageY-300;
-          this.assetData.position.mt=300;
+          this.assetData.position.top=e.pageY-distance;
+          this.assetData.position.mt=distance;
         } else if(minus>0){
           this.assetData.position.top=window.innerHeight-this.$refs.alertLabel.$el.offsetHeight;
           this.assetData.position.mt=e.pageY-(window.innerHeight-this.$refs.alertLabel.$el.offsetHeight);
