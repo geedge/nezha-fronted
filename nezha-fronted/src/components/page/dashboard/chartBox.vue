@@ -331,7 +331,7 @@
                   <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
                 </el-col>
                 <el-col style="width: calc(100% - 120px);">
-                  <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="statistics">
+                  <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="editChart.param.statistics">
                     <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
                       <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                     </el-option>
@@ -382,6 +382,7 @@
                 <el-color-picker
                   :ref="'colorPickerBac'+index"
                   @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
+                  popper-class="no-style-class"
                   v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
                 >
                 </el-color-picker>
@@ -426,6 +427,7 @@
               <div class="color-content" ref="color-content">
                 <el-color-picker
                   :ref="'colorPickerBac'+index"
+                  popper-class="no-style-class"
                   @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
                   v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
                 >
@@ -937,7 +939,7 @@
               sync: this.editChart.sync
             };
             if(this.editChart.type === 'singleStat'){
-              params.param.statistics=this.statistics;
+              // params.param.statistics=this.statistics;
             } else {
               delete params.param.statistics;
             }
@@ -1037,7 +1039,7 @@
             return ;
           }
           if(this.editChart.type == 'singleStat'){
-            this.$set(this.editChart.param, "statistics", this.statistics);
+            // this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
             delete this.editChart.param.statistics;
           }
@@ -1436,7 +1438,7 @@
                 sync: this.editChart.sync
               };
               if(this.editChart.type === 'singleStat'){
-                params.param.statistics=this.statistics;
+                // params.param.statistics=this.statistics;
                 params.param.valueMapping=this.editChart.param.valueMapping;
               } else {
                 delete params.param.statistics;

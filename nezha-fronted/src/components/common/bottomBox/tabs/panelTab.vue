@@ -142,7 +142,7 @@
             url:'',
             threshold:'',
           },
-          elements:[],
+          elements:[{expression: "", legend: "", type: "expert", id: ""}],
           panel: '',
           sync: 0
         },

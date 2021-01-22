@@ -123,7 +123,7 @@
   import pickTime from "../../common/pickTime";
   import exportXLSX from "../../common/exportXLSX";
   import selectPanel from "../../common/popBox/selectPanel";
-  
+
   export default {
     name: "panel",
     data() {
@@ -159,7 +159,7 @@
             url:'',
             threshold:'',
           },
-          elements:[],
+          elements:[{expression: "", legend: "", type: "expert", id: ""}],
           panel: '',
           sync: 0
         },
