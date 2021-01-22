@@ -480,13 +480,13 @@
       <button v-cancel="{obj:editChart,func:esc}" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_save`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">
+      <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_toAdd`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_save`" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}" >
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_toAdd`" >
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
