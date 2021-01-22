@@ -51,7 +51,7 @@
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-has="'role_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
               id="roles-save">
         <span>{{$t('overall.save')}}</span>
       </button>
@@ -180,7 +180,9 @@
       this.getMenus();
     },
     mounted() {
-
+      if(this.$refs.menuTree&&this.editRole.menuIds&&this.editRole.menuIds.length>0){
+        this.$refs.menuTree.setCheckedKeys(this.editRole.menuIds,true);
+      }
     },
     watch: {
       //将prop里的user转为组件内部对象

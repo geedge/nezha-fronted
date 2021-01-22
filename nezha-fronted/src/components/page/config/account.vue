@@ -108,7 +108,7 @@
                   active-value="1"
                   inactive-value="0"
                   active-color="#ee9d3f"
-                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_save') || (scope.row.username==='admin' && scope.row.userId==1)"
+                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_toAdd') || (scope.row.username==='admin' && scope.row.userId==1)"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
             </span>

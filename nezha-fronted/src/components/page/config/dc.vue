@@ -82,7 +82,7 @@
                 v-model="scope.row.state"
                 active-value="ON"
                 inactive-value="OFF"
-                :disabled="!hasButton('dc_toEdit') || !hasButton('dc_save')"
+                :disabled="!hasButton('dc_toEdit') || !hasButton('dc_toEdit')"
                 active-color="#ee9d3f"
                 @change="(val)=>{statusChange(scope.row)}"
               />

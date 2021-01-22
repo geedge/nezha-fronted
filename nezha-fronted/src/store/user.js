@@ -8,7 +8,7 @@ const user = {
   state: {
     menuList: [],
     buttonList: [],
-    roleList: []
+    roleList: [],
   },
   mutations: {
     setMenuList(state, menuList) {
@@ -45,7 +45,7 @@ const user = {
       localStorage.setItem('nz-sys-default-cabinet-usize',res.data.defaultCabinetUsize);
       localStorage.setItem('nz-sys-max-terminal-num',res.data.maxTerminalNum);
       localStorage.setItem('nz-sys-asset-ping-switch',res.data.assetPingSwitch);
-
+      localStorage.setItem('nz-unnsaved-change',res.data.unsavedChange)
       post("/sys/user/permissions", {token: res.data.token}).then(res => {
         let menuList = sortByOrderNum(res.data.menus);
         store.commit("setMenuList", menuList);

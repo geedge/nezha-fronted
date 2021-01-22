@@ -1,6 +1,7 @@
 import PerfectScrollbar from "perfect-scrollbar";
 import {getChart} from "./common";
 import MessageBox from "element-ui/packages/message-box/src/main";
+import vuex from 'vuex'
 import i18n from "../i18n";
 /*弹窗点击外部后关闭*/
 const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box','nz-dashboard-dropdown', "el-autocomplete-suggestion"]; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
@@ -8,6 +9,7 @@ export const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
     if(!binding.expression) return;
+    let unsavedChange = localStorage.getItem('nz-unnsaved-change');
     let oldValue;
     try{
       oldValue= JSON.parse(JSON.stringify(binding.value.obj));
@@ -33,7 +35,7 @@ export const clickoutside = {
         }
         if(oldValue){
           let newValue = JSON.parse(JSON.stringify(binding.value.obj));
-          if(!isEqual(oldValue,newValue)){
+          if(unsavedChange=='on'&&!isEqual(oldValue,newValue)){
             MessageBox.confirm(i18n.t("tip.confirmCancel"), {
               confirmButtonText: i18n.t("tip.yes"),
               cancelButtonText: i18n.t("tip.no"),
@@ -69,7 +71,6 @@ export const clickoutside = {
   },
 };
 function isEqual (o1, o2) {
-  console.log(o1,o2)
   var isEqualForInner = function (obj1, obj2) {
     var o1 = obj1 instanceof Object;
     var o2 = obj2 instanceof Object;
@@ -99,10 +100,11 @@ function isEqual (o1, o2) {
 export const cancelWithChange={
   bind:function(el,binding){
     if(!binding.value||!binding.value.obj) return;
+    let unsavedChange = localStorage.getItem('nz-unnsaved-change');
     let oldValue = JSON.parse(JSON.stringify(binding.value.obj));
     function domClick(e){
       let newValue = JSON.parse(JSON.stringify(binding.value.obj));
-      if(!isEqual(oldValue,newValue)){
+      if(unsavedChange=='on'&&!isEqual(oldValue,newValue)){
         MessageBox.confirm(i18n.t("tip.confirmCancel"), {
           confirmButtonText: i18n.t("tip.yes"),
           cancelButtonText: i18n.t("tip.no"),

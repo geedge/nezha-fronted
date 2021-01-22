@@ -589,7 +589,7 @@ const en = {
     roles:{
       roles:"Roles",
       name:"Name",
-      remark:"Remark",
+      description:"Description",
       option: 'Operation',//"操作"
       permission:"Permission",
       menu:"Menu",
@@ -747,6 +747,7 @@ const en = {
         second:'second',
         day:'day',
         maxSeries:'Query max series',
+        unsaved:'Unsaved tip'
       },
       email:{
         email:'Email',

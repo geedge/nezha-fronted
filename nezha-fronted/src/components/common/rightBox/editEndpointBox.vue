@@ -127,7 +127,7 @@
       <button v-cancel="{obj:editEndpoint,func:esc}" id="ep-edit-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-edit-save" v-has="['asset_endpoint_save', 'project_endpoint_save']" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-edit-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

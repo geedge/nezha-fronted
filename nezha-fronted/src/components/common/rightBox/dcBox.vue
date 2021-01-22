@@ -82,7 +82,7 @@
         <button v-cancel="{obj:editDc,func:esc}" id="dc-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="dc-box-save" v-has="'dc_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
+        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="dc-box-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>
