@@ -331,7 +331,7 @@
                   <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
                 </el-col>
                 <el-col style="width: calc(100% - 120px);">
-                  <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="statistics">
+                  <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="editChart.param.statistics">
                     <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
                       <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                     </el-option>
@@ -382,6 +382,7 @@
                 <el-color-picker
                   :ref="'colorPickerBac'+index"
                   @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
+                  popper-class="no-style-class"
                   v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
                 >
                 </el-color-picker>
@@ -426,6 +427,7 @@
               <div class="color-content" ref="color-content">
                 <el-color-picker
                   :ref="'colorPickerBac'+index"
+                  popper-class="no-style-class"
                   @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
                   v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
                 >
@@ -480,13 +482,13 @@
       <button v-cancel="{obj:editChart,func:esc}" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_save`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">
+      <button @click="SyncSave" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-Sync" v-has:all="[`${from}_chart_toAdd`, `${from}_chart_sync`]" v-if="showPanel.type && showPanel.type == 'model'">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_save`" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}" >
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="confirmAdd" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`${from}_chart_toAdd`" >
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -937,7 +939,7 @@
               sync: this.editChart.sync
             };
             if(this.editChart.type === 'singleStat'){
-              params.param.statistics=this.statistics;
+              // params.param.statistics=this.statistics;
             } else {
               delete params.param.statistics;
             }
@@ -1037,7 +1039,7 @@
             return ;
           }
           if(this.editChart.type == 'singleStat'){
-            this.$set(this.editChart.param, "statistics", this.statistics);
+            // this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
             delete this.editChart.param.statistics;
           }
@@ -1436,7 +1438,7 @@
                 sync: this.editChart.sync
               };
               if(this.editChart.type === 'singleStat'){
-                params.param.statistics=this.statistics;
+                // params.param.statistics=this.statistics;
                 params.param.valueMapping=this.editChart.param.valueMapping;
               } else {
                 delete params.param.statistics;

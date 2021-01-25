@@ -36,7 +36,7 @@
                 <div class="dropdown-btns" v-show="dropdownHoverItem == 'type' + item.id">
                   <span :id="'model-type-op-del-' + item.id" @click.stop="delType(item.id)" class="dropdown-btn dropdown-btn-delete" v-has="'model_type_delete'"><i class="nz-icon nz-icon-delete"></i></span>
                   <span :id="'model-type-op-edit-' + item.id" @click.stop="editType(item)" class="dropdown-btn dropdown-btn-edit" v-has="'model_type_toEdit'" v-if="!item.isEdit"><i class="nz-icon nz-icon-edit"></i></span>
-                  <span :id="'model-type-op-edit-' + item.id" @click.stop="saveType(item)" class="dropdown-btn dropdown-btn-edit" v-else v-has="'model_type_save'"><i class="nz-icon nz-icon-check"></i></span>
+                  <span :id="'model-type-op-edit-' + item.id" @click.stop="saveType(item)" class="dropdown-btn dropdown-btn-edit" v-else><i class="nz-icon nz-icon-check"></i></span>
                 </div>
               </div>
             </template>
@@ -59,7 +59,7 @@
                 <div class="dropdown-btns" v-show="dropdownHoverItem == 'vendor' + item.id">
                   <span :id="'model-vendor-op-del-' + item.id" @click.stop="delVendor(item.id)" class="dropdown-btn dropdown-btn-delete" v-has="'model_vendor_delete'"><i class="nz-icon nz-icon-delete"></i></span>
                   <span :id="'model-vendor-op-edit-' + item.id" @click.stop="editVendor(item)" class="dropdown-btn dropdown-btn-edit" v-has="'model_vendor_toEdit'" v-if="!item.isEdit"><i class="nz-icon nz-icon-edit"></i></span>
-                  <span :id="'model-type-op-edit-' + item.id" @click.stop="saveVendor(item)" class="dropdown-btn dropdown-btn-edit" v-else v-has="'model_vendor_save'"><i class="nz-icon nz-icon-check"></i></span>
+                  <span :id="'model-type-op-edit-' + item.id" @click.stop="saveVendor(item)" class="dropdown-btn dropdown-btn-edit" v-else><i class="nz-icon nz-icon-check"></i></span>
                 </div>
               </div>
             </template>
