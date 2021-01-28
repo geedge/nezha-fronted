@@ -161,7 +161,7 @@ export default {
         //容器高度设置100%
         const consoleBox = document.getElementById('ternimalContainer'+this.idIndex);
         let height = document.body.clientHeight;//高度
-        consoleBox.style.height = `${100}%`;
+        consoleBox.style.height = `${height-55}px`;
         rows = (height-this.topMenuHeight)/(this.fontSize+this.fontSpaceHeight);
         rows = parseInt(rows);
       }else{
