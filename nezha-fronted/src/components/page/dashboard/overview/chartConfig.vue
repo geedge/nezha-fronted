@@ -76,7 +76,11 @@
         extraCssText:'z-index:1000;',
         backgroundColor:'rgba(221,228,237,1)',
         borderColor:'rgba(221,228,237,1)',
-        textStyle:{color: "#000"}
+        textStyle:{color: "#000"},
+        axisPointer:{
+          snap:false,
+          animation:false,
+        },
         // formatter:null,
         // position:null,
       },
