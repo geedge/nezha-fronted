@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import echarts from 'echarts';
+  import * as echarts from 'echarts';
   import chartDataFormat from "../../../charts/chartDataFormat";
   import loading from "../../../common/loading";
   import chartConfig from './chartConfig'
@@ -180,6 +180,7 @@
           if(this.option.series instanceof Array){
             this.option.series=this.option.series.filter((item,index)=>index<this.dataSize);
           }
+          console.log('option',this.option)
           this.chart.setOption(this.option);
         }else{
           this.noData=true;

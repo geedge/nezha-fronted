@@ -181,7 +181,7 @@
 
 <script>
   import axios from 'axios';
-  import echarts from 'echarts';
+  import * as echarts from 'echarts';
   import bus from '../../libs/bus';
   import loading from "../common/loading";
   import chartDataFormat from './chartDataFormat';
@@ -661,6 +661,10 @@
             textStyle:{
               color:'#000'
             },
+            axisPointer:{
+              snap:false,
+              animation:false,
+            },
             extraCssText:'z-index:1000;',
             /*enterable:true, 导致tooltip不消失，显示多个tooltip*/
             position:function(point,params,dom,rect,size){
@@ -962,6 +966,10 @@
                     }
                   },
                   tooltip: {
+                    axisPointer:{
+                      snap:false,
+                      animation:false,
+                    },
                     formatter:function(params){
                       let str = `<div>`;
                       let sum = 0;
@@ -1125,6 +1133,10 @@
 
                   },
                   tooltip: {
+                    axisPointer:{
+                      snap:false,
+                      animation:false,
+                    },
                     formatter:function(params){
                       let str = `<div>`;
                       let sum = 0;
