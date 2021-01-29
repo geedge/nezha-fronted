@@ -33,7 +33,7 @@
               <el-col style="width: calc(100% - 120px); height: 100%;">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                   <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
-                  <el-input v-model="expressionList[index]"></el-input>
+                  <el-input v-model="expressionList[index]" @change="metricChange"></el-input>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                   <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
                 </div>
@@ -70,6 +70,7 @@
         historyParam:{type:Object},
         showRemove:{type:Boolean,default:true},
         projectRightBox:{type:Boolean,default:false},
+        metricOptionsParent:{type:Array},
         //metricOptions: {type: Array},
         //metricStore: {type: Array}
       },
@@ -136,7 +137,7 @@
           this.expressionList[this.index]=value;
           //this.$refs.editor.setContent(value)
           this.dropDownVisible=false;
-          this.$emit('change')
+          this.$emit('change',value)
         },
         expressionChange:function(){
           this.$emit('change')
@@ -160,7 +161,11 @@
           } else if (this.styleType == 2) {
             if (n) {
               //console.log(this.$parent.$parent)
-              this.metricOptions = this.$parent.$parent.$parent.getMetricOptions();
+              if(this.metricOptionsParent){
+                this.metricOptions=this.metricOptionsParent
+              }else{
+                this.metricOptions = this.$parent.$parent.$parent.getMetricOptions();
+              }
             } else {
               this.metricOptions = [];
             }

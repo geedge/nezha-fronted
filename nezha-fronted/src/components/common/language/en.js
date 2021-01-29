@@ -210,7 +210,10 @@ const en = {
           range:'Range',
         },
         legendValue:'Legend option',
-        content:'Content'
+        content:'Content',
+        tooltip:'Tooltip',
+        displayChart:'Display chart',
+        aggregation:"Aggregation",
       },
       chartTableColumn:{
         metric:'Metric', //'指标'

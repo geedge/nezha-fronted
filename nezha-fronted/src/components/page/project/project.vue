@@ -178,7 +178,8 @@
     </template>
     <template v-else-if="pageType == 'project'">
       <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
-      <facade :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>
+      <!--<facade :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>-->
+      <topologyL5 :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>
     </template>
 
     <transition name="el-zoom-in-bottom">
@@ -215,6 +216,7 @@
   import panelTab from '../../common/bottomBox/tabs/panelTab'
   import bus from '../../../libs/bus'
   import facade from '@/components/common/project/projectFacade'
+  import topologyL5 from '@/components/common/project/topologyL5'
   import deleteButton from "../../common/deleteButton";
 
   export default {
@@ -224,6 +226,7 @@
       'loading':loading,
       'panel-tab':panelTab,
       facade,
+      topologyL5,
       'delete-button':deleteButton,
     },
     computed:{

@@ -203,7 +203,10 @@ const cn = {
           range:'Range',
         },
         legendValue:'Legend option',
-        content:'内容'
+        content:'内容',
+        tooltip:'Tooltip',
+        displayChart:'Display chart',
+        aggregation:"Aggregation",
       },
       chartTableColumn: {
         metric: "指标",
