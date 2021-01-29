@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle" >
+        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle" v-if="chartTitleShow">
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -220,7 +220,11 @@
       },
       tempDom: Object,
       from: {type: String},
-      isLock:{type:Boolean,default:false}
+      isLock:{type:Boolean,default:false},
+      chartTitleShow:{
+        type:Boolean,
+        default:true
+      }
     },
     computed: {
       getButtonCode() {
