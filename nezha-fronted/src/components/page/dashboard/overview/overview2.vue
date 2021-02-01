@@ -236,7 +236,7 @@
   import * as L from 'leaflet'
   import icon from 'leaflet/dist/images/marker-icon.png';
   import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-  import echarts from "echarts";
+  import * as echarts from "echarts";
   import chartConfig from './chartConfig'
   import overViewTopology from '../../../common/project/overViewTopology'
   import messageAsset from '../../../common/overView/messageAsset'

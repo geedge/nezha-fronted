@@ -124,7 +124,7 @@
 </template>
 
 <script>
-  import echarts from 'echarts';
+  import * as echarts from 'echarts';
   import chartBox from "../../../page/dashboard/chartBox";
   import axios from 'axios';
   import loading from "../../loading";

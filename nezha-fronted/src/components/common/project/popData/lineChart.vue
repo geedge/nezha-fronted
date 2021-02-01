@@ -133,7 +133,7 @@
 </template>
 <script>
   import axios from 'axios';
-  import echarts from 'echarts';
+  import * as echarts from 'echarts';
   import bus from '@/libs/bus';
   import loading from "@/components/common/loading";
   import chartDataFormat from '@/components/charts/chartDataFormat'
