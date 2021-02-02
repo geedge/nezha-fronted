@@ -1,15 +1,28 @@
 <template>
-  <div class="tool-top">
-    <div class="top-tool-item"  @click="undo"> 撤销 </div>
-    <div class="top-tool-item" @click="redo"> 重做 </div>
-    <div class="top-tool-item" @click="centerView"> 居中</div>
-    <div class="top-tool-item" @click="fitView"> 自适应</div>
-    <div class="top-tool-item"> 缩放大小 <el-input-number size="mini" v-model="option.scale" @change="scale" :min="0.25" :max="5" :step="0.2" :precision="2"></el-input-number> </div>
-    <div :class="['top-tool-item',toolShow.node?'tool-item-active':'']" @click="toolShowChange('node')"> 节点工具 </div>
-    <div :class="['top-tool-item',toolShow.attr?'tool-item-active':'']" @click="toolShowChange('attr')"> 属性工具 </div>
+  <div class="tool-top" id="tool-top">
+    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-jiantou-left" /> </div>
+    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-jiantou-right" /> </div>
+    <!--<div class="top-tool-item" @click="centerView"> 居中</div>-->
+    <!--<div class="top-tool-item" @click="fitView"> 自适应</div>-->
+    <!--<div :class="['top-tool-item',toolShow.node?'tool-item-active':'']" @click="toolShowChange('node')"> 节点工具 </div>-->
+    <!--<div :class="['top-tool-item',toolShow.attr?'tool-item-active':'']" @click="toolShowChange('attr')"> 属性工具 </div>-->
     <!--<div> 保存为图片 </div>-->
-    <div class="top-tool-item" @click="del"> 删除 </div>
-    <div class="top-tool-item" @click="clear"> 清空画布 </div>
+    <div class="top-tool-item" @click="del">  <i class="nz-icon nz-icon-delete"/> </div>
+    <div class="top-tool-item top-tool-item-scale">
+      <el-input-number
+        size="mini"
+        v-model="scaleNum"
+        :max="500"
+        :min="25"
+        :step="20"
+        :precision="0"
+        id="scaleNum"
+        @change="scale">
+      </el-input-number>
+      <span class="percent">%</span>
+    </div>
+    <!--<div class="top-tool-item" @click="clear"> 清空画布 </div>-->
+
   </div>
 </template>
 
@@ -25,8 +38,9 @@
           lineWidth:1,
           fromArrow:'',
           toArrow:'triangleSolid',
-          scale:1,
+          scale:100,
         },
+        scaleNum:100,
         penLineType:[
           {d:'M5 14 a100,50 0 0,1 85,0',"stroke-dasharray":"",name:'curve'},
           {d:'M5 8 l40 0 l0 12 l40 0',"stroke-dasharray":"",name:'polyline'},
@@ -40,6 +54,7 @@
           {d:'M5 14 l85 0',fill:'#000000', stroke:"",'stroke-width':"",cx:"10",cy:"14",r:"5",name:'circleSolid'},
           {d:'M5 14 l85 0',fill:'#ffffff', stroke:"#000000",'stroke-width':"1",cx:"10",cy:"14",r:"5",name:'circle'},
         ],
+        redoFlag:false,
       }
     },
     props:{
@@ -54,12 +69,20 @@
       toolShow:{
         type:Object,
         require:true
+      },
+      cachesIndex:{
+        type:Number,
+        require:true,
       }
     },
     mounted(){
       let dataOption=getTopology(this.index).data;
       Object.keys(this.option).forEach(key=>{
-        this.option[key]=(dataOption[key]?dataOption[key]:this.option[key]);
+        if(key==='scale'){
+          this.scaleNum=(JSON.stringify(dataOption[key])?dataOption[key]*100:this.scaleNum)
+        }else{
+          this.option[key]=(dataOption[key]?dataOption[key]:this.option[key]);
+        }
       })
     },
     methods:{
@@ -69,6 +92,9 @@
       },
       undo(){//撤销
         getTopology(this.index).undo();
+        setTimeout(()=>{
+          this.redoFlag=true;
+        },200)
       },
       redo(){//重做
         getTopology(this.index).redo();
@@ -79,8 +105,8 @@
       fitView(){//自适应画布大小
         getTopology(this.index).fitView();
       },
-      scale(){
-        getTopology(this.index).scaleTo(this.option.scale);
+      scale(val){
+        getTopology(this.index).scaleTo(val/100);
       },
       del(){
         let delObj=this.selection.pen?this.selection.pen.id:this.selection.pens
@@ -99,20 +125,60 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .tool-top {
-    border: 1px solid #1a1a1a;
     border-radius: 2px;
     display: inline-flex;
-  }
-  .tool-top > div{
-    padding: 3px 5px;
-  }
-  .tool-top > div:not(:last-child){
-    border-right: 1px solid #1a1a1a ;
+    .nz-icon{
+      font-size: 14px;
+      color: #666666;
+    }
   }
   .top-tool-item{
     cursor: pointer;
+    background: #FFFFFF;
+    border: 1px solid #DEDEDE;
+    border-radius: 2px;
+    padding: 8px 11px;
+    line-height: 14px;
+    margin-right: 10px;
+  }
+  .top-tool-item-scale{
+    margin-left: 40px;
+    padding: 0;
+    position: relative;
+    .percent{
+      position: absolute;
+      top: 7px;
+      left: 68px;
+      font-size:12px ;
+    }
+    /deep/ .el-input--mini{
+      input{
+        border: none;
+      }
+    }
+    /deep/ .el-input-number--mini {
+      width: 111px;
+    }
+    /deep/ .el-input-number__decrease,/deep/ .el-input-number__increase{
+        border: none;
+        border-radius: 100%;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        margin-top: 6px;
+      }
+    /deep/ .el-input-number__decrease{
+        margin-left: 5px;
+      }
+    /deep/ .el-input-number__increase{
+        margin-right: 5px;
+      }
+  }
+  .top-tool-item-disabled{
+    color: #CECECE;
+    opacity: 0.3;
   }
   .tool-item-active{
     background: #1a1a1a;

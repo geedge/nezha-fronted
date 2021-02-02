@@ -107,22 +107,62 @@
           </span>
           </el-row>
           <!--value mapping-->
-          <el-row class="value-mapping-title">
-            <el-col>level</el-col>
-            <el-col>color</el-col>
-            <el-col>value</el-col>
-            <el-col>animation</el-col>
-            <el-col></el-col>
-          </el-row>
-          <el-row class="value-mapping-content">
-            <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
-              <el-col>level</el-col>
-              <el-col>color</el-col>
-              <el-col>value</el-col>
-              <el-col>animation</el-col>
-              <el-col></el-col>
-            </el-row>
-          </el-row>
+          <!--<el-row class="value-mapping-title">-->
+            <!--<el-col>level</el-col>-->
+            <!--<el-col>color</el-col>-->
+            <!--<el-col>value</el-col>-->
+            <!--<el-col>animation</el-col>-->
+            <!--<el-col></el-col>-->
+          <!--</el-row>-->
+          <!--<el-row class="value-mapping-content">-->
+            <!--<el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">-->
+              <!--<el-col>level</el-col>-->
+              <!--<el-col>color</el-col>-->
+              <!--<el-col>value</el-col>-->
+              <!--<el-col>animation</el-col>-->
+              <!--<el-col></el-col>-->
+            <!--</el-row>-->
+          <!--</el-row>-->
+          <el-table v-model="selection.pen.data.valueMapping">
+            <el-table-column
+              prop="level"
+              :label="'level'"
+              >
+              <template slot-scope="scope">
+                {{scope.$index}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="color"
+              :label="'color'"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="value"
+              :label="'value'"
+            >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.value" @change="valueMappingValueChange(scope.$index, scope.row)"/>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="animation"
+              :label="'animation'"
+            >
+            </el-table-column>
+            <el-table-column>
+              <template slot="header" slot-scope="scope">
+
+              </template>
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="valueMappingDel(scope.$index, scope.row)">Delete</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div @click="valueMappingAdd()">add</div>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="属性" name="4">
@@ -506,292 +546,320 @@
     </el-tabs>
 
 
-    <div v-if="selection.pens" class="">
-      <el-collapse v-model="activeNames">
-        <!--对齐方式-->
-        <el-collapse-item title="对齐" name="1" v-if="selection.pens">
-          <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">
-            <i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"
-               @click="onNodesAlign(item.value)"></i>
-          </label>
-        </el-collapse-item>
-        <!--排版-->
-        <el-collapse-item title="排版" name="2" v-if="selection.pens">
-          <div class="mt10">
-            <div class="flex middle mb10">
-              <label>最大宽度：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.maxWidth" title="超出最大宽度换行"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle mb10">
-              <label>节点宽度：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.nodeWidth" title="固定每个节点的宽度"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle mb10">
-              <label>节点高度：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.nodeHeight" title="固定每个节点的高度"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle mb10">
-              <label>水平个数：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" type="number" controls-position="right" class="input" size="small"
-                                 v-model.number="layout.maxCount"
-                                 title="超出最大个数，将自动计算水平间距（下面水平间距设置将无效）"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle mb10">
-              <label>水平间距：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.spaceWidth" title="节点之间水平间距（px）"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle mb10">
-              <label>垂直间距：</label>
-              <div class="full pr10">
-                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.spaceHeight" title="节点之间垂直间距（px）"></el-input-number>
-              </div>
-            </div>
-            <div class="flex middle">
-              <label></label>
-              <div class="full pr10">
-                <button class="button primary" @click="onLayout">开始排版</button>
-              </div>
-            </div>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
-    </div>
+    <!--选择多个节点-->
+    <!--<div v-if="selection.pens" class="">-->
+      <!--<el-collapse v-model="activeNames">-->
+        <!--&lt;!&ndash;对齐方式&ndash;&gt;-->
+        <!--<el-collapse-item title="对齐" name="1" v-if="selection.pens">-->
+          <!--<label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">-->
+            <!--<i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"-->
+               <!--@click="onNodesAlign(item.value)"></i>-->
+          <!--</label>-->
+        <!--</el-collapse-item>-->
+        <!--&lt;!&ndash;排版&ndash;&gt;-->
+        <!--<el-collapse-item title="排版" name="2" v-if="selection.pens">-->
+          <!--<div class="mt10">-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>最大宽度：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
+                                 <!--v-model.number="layout.maxWidth" title="超出最大宽度换行"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>节点宽度：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
+                                 <!--v-model.number="layout.nodeWidth" title="固定每个节点的宽度"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>节点高度：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
+                                 <!--v-model.number="layout.nodeHeight" title="固定每个节点的高度"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>水平个数：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" type="number" controls-position="right" class="input" size="small"-->
+                                 <!--v-model.number="layout.maxCount"-->
+                                 <!--title="超出最大个数，将自动计算水平间距（下面水平间距设置将无效）"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>水平间距：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
+                                 <!--v-model.number="layout.spaceWidth" title="节点之间水平间距（px）"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle mb10">-->
+              <!--<label>垂直间距：</label>-->
+              <!--<div class="full pr10">-->
+                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
+                                 <!--v-model.number="layout.spaceHeight" title="节点之间垂直间距（px）"></el-input-number>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="flex middle">-->
+              <!--<label></label>-->
+              <!--<div class="full pr10">-->
+                <!--<button class="button primary" @click="onLayout">开始排版</button>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</el-collapse-item>-->
+      <!--</el-collapse>-->
+    <!--</div>-->
     <!-- 选中为空 -->
     <div v-if="!selection.pen && !selection.pens">
-      <div class="mt10">
-        <div class="flex middle mb10">
-          <label>文件名称：</label>
-          <div class="full pr10">
-            <el-input class="input" size="small" v-model="topologyData.data.name" placeholder="topo名称"></el-input>
+      <div class="project-title">
+        Project
+      </div>
+      <div class="project-content">
+        <div class="project-content-title">Title</div>
+
+        <div class="project-content-box" style="width: 100%">
+
+          <div class="project-content-item">
+            <label>Name：</label>
+            <div class="full pr10">
+              <el-input class="input" size="small" v-model="topologyData.data.name" placeholder="请输入名称"  @change="changeTopologyOpt"></el-input>
+            </div>
           </div>
         </div>
 
-        <div class="flex middle special-select mb10">
-          <label>默认线型：</label>
-          <div class="full pr10">
-            <el-select v-model="topologyData.data.lineName" placeholder="请选择" size="small"
-                       :popper-append-to-body="false"
-                       @change="changeTopologyOpt(topologyData.data.lineName,'lineName')">
-              <div slot="prefix">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" stroke="black" stroke-width="1">
-                      <path
-                        :d="penLineType.find((item,i)=>item.name==topologyData.data.lineName).d"
-                      >
-                      </path>
-                    </g>
-                  </svg>
+        <div class="project-content-title">Appearance</div>
+
+        <div class="project-content-box" style="width: 100%">
+          <div class="project-content-item half">
+            <label>Backgroud：</label>
+            <div class="full pr10 h32">
+              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'bkColor')"
+                               v-model="topologyData.data.bkColor" size="mini"></el-color-picker>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>Image：</label>
+            <div class="full pr10 h32">
+              <!--暂时是input 输入网址-->
+              <el-input class="input" size="small" v-model="topologyData.data.bkImage" placeholder="背景图片网址"></el-input>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>默认线宽：</label>
+            <div class="full pr10 h32">
+              <el-input-number :precision="2"
+                               controls-position="right"
+                               size="small"
+                               name="x" class="input"
+                               v-model.number="topologyData.data.lineWidth"
+                               required
+                               @change="changeTopologyOpt(topologyData.data.lineWidth,'lineWidth')">
+              </el-input-number>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>背景网格：</label>
+            <div class="full pr10 h32">
+              <el-switch
+                v-model="topologyData.data.grid"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+                @change="changeTopologyOpt(topologyData.data.grid,'grid')">
+              </el-switch>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>网格大小：</label>
+            <div class="full pr10 h32">
+              <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
+                               v-model.number="topologyData.data.gridSize"
+                               :readonly="readonly" required
+                               @change="changeTopologyOpt(topologyData.data.gridSize,'gridSize')"></el-input-number>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>网格颜色：</label>
+            <div class="full pr10 h32">
+              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'gridColor')"
+                               v-model="topologyData.data.gridColor" size="mini"
+                               popper-class="can-clear"></el-color-picker>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>标尺：</label>
+            <div class="full pr10 h32">
+              <el-switch
+                v-model="topologyData.data.rule"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+                @change="changeTopologyOpt(topologyData.data.rule,'rule')">
+              </el-switch>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>标尺颜色：</label>
+            <div class="full pr10 h32">
+              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'ruleColor')"
+                               v-model="topologyData.data.ruleColor" size="mini"
+                               popper-class="can-clear"></el-color-picker>
+            </div>
+          </div>
+
+          <div class="project-content-item half special-select">
+            <label>默认开始箭头：</label>
+            <div class="full pr10 h32">
+              <el-select v-model="topologyData.data.fromArrow" placeholder="请选择" size="small"
+                         :popper-append-to-body="false"
+                         @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
+                <div slot="prefix">
+                  <div class="icon-item">
+                    <svg>
+                      <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                         :key="index" v-if="topologyData.data.fromArrow==item.name">
+                        <path :d="item.d"></path>
+                        <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
+                                 :strokeWidth="item['stroke-width']"></polygon>
+                        <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
+                                :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
+                      </g>
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" :stroke="(topologyData.data.lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
-                      <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
-                    </g>
-                  </svg>
+                <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
+                  <div class="icon-item">
+                    <svg>
+                      <g fill="none" :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':'black'"
+                         stroke-width="1">
+                        <path :d="item.d"></path>
+                        <polygon
+                          v-if="item.points"
+                          :points="item.points"
+                          :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                          :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
+                          :strokeWidth="item['stroke-width']"
+                        ></polygon>
+                        <circle
+                          v-if="item.cx"
+                          :cx="item.cx"
+                          :cy="item.cy"
+                          :r="item.r"
+                          :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                          :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
+                          :strokeWidth="item['stroke-width']"
+                        ></circle>
+                      </g>
+                    </svg>
+                  </div>
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+
+          <div class="project-content-item half special-select">
+            <label>默认结束箭头：</label>
+            <div class="full pr10 h32">
+              <el-select v-model="topologyData.data.toArrow" placeholder="请选择" size="small" :popper-append-to-body="false"
+                         @change="changeTopologyOpt('toArrow')">
+                <div slot="prefix">
+                  <div class="icon-item">
+                    <svg>
+                      <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                         :key="index" v-if="topologyData.data.toArrow==item.name">
+                        <path :d="item.d"></path>
+                        <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
+                                 :strokeWidth="item['stroke-width']"></polygon>
+                        <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
+                                :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
+                      </g>
+                    </svg>
+                  </div>
                 </div>
-              </el-option>
-            </el-select>
+                <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
+                  <div class="icon-item">
+                    <svg>
+                      <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'" stroke-width="1">
+                        <path :d="item.d"></path>
+                        <polygon
+                          v-if="item.points"
+                          :points="item.points"
+                          :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                          :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
+                          :strokeWidth="item['stroke-width']"
+                        ></polygon>
+                        <circle
+                          v-if="item.cx"
+                          :cx="item.cx"
+                          :cy="item.cy"
+                          :r="item.r"
+                          :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                          :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
+                          :strokeWidth="item['stroke-width']"
+                        ></circle>
+                      </g>
+                    </svg>
+                  </div>
+                </el-option>
+              </el-select>
+            </div>
           </div>
+
         </div>
 
-        <div class="flex middle mb10">
-          <label>默认线宽：</label>
-          <div class="full pr10">
-            <el-input-number :precision="2"
-                             controls-position="right"
-                             size="small"
-                             name="x" class="input"
-                             v-model.number="topologyData.data.lineWidth"
-                             required
-                             @change="changeTopologyOpt(topologyData.data.lineWidth,'lineWidth')">
-            </el-input-number>
+        <div class="project-content-title">Appearance</div>
+
+        <div class="project-content-box" style="width: 100%">
+
+          <div class="project-content-item half">
+            <label>Project Info：</label>
+            <div class="full pr10 h32">
+              <el-switch
+                v-model="topologyData.data.projectInfo"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+                @change="changeTopologyOpt(topologyData.data.projectInfo,'projectInfo')">
+              </el-switch>
+            </div>
           </div>
+
+          <div class="project-content-item half">
+            <label>Alert Info：</label>
+            <div class="full pr10 h32">
+              <el-switch
+                v-model="topologyData.data.alertInfo"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+                @change="changeTopologyOpt(topologyData.data.alertInfo,'alertInfo')">
+              </el-switch>
+            </div>
+          </div>
+
         </div>
 
-        <div class="flex middle special-select mb10">
-          <label>默认开始箭头：</label>
-          <div class="full pr10">
-            <el-select v-model="topologyData.data.fromArrow" placeholder="请选择" size="small"
-                       :popper-append-to-body="false"
-                       @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
-              <div slot="prefix">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
-                       :key="index" v-if="topologyData.data.fromArrow==item.name">
-                      <path :d="item.d"></path>
-                      <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
-                               :strokeWidth="item['stroke-width']"></polygon>
-                      <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
-                              :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':'black'"
-                       stroke-width="1">
-                      <path :d="item.d"></path>
-                      <polygon
-                        v-if="item.points"
-                        :points="item.points"
-                        :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                        :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
-                        :strokeWidth="item['stroke-width']"
-                      ></polygon>
-                      <circle
-                        v-if="item.cx"
-                        :cx="item.cx"
-                        :cy="item.cy"
-                        :r="item.r"
-                        :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                        :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
-                        :strokeWidth="item['stroke-width']"
-                      ></circle>
-                    </g>
-                  </svg>
-                </div>
-              </el-option>
-            </el-select>
-          </div>
-        </div>
+        <div class="project-content-title">Link</div>
 
-        <div class="flex middle special-select mb10">
-          <label>默认结束箭头：</label>
-          <div class="full pr10">
-            <el-select v-model="topologyData.data.toArrow" placeholder="请选择" size="small" :popper-append-to-body="false"
-                       @change="changeTopologyOpt('toArrow')">
-              <div slot="prefix">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
-                       :key="index" v-if="topologyData.data.toArrow==item.name">
-                      <path :d="item.d"></path>
-                      <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
-                               :strokeWidth="item['stroke-width']"></polygon>
-                      <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
-                              :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
-                <div class="icon-item">
-                  <svg>
-                    <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'" stroke-width="1">
-                      <path :d="item.d"></path>
-                      <polygon
-                        v-if="item.points"
-                        :points="item.points"
-                        :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                        :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
-                        :strokeWidth="item['stroke-width']"
-                      ></polygon>
-                      <circle
-                        v-if="item.cx"
-                        :cx="item.cx"
-                        :cy="item.cy"
-                        :r="item.r"
-                        :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                        :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
-                        :strokeWidth="item['stroke-width']"
-                      ></circle>
-                    </g>
-                  </svg>
-                </div>
-              </el-option>
-            </el-select>
-          </div>
-        </div>
+        <div class="project-content-box" style="width: 100%">
 
-        <div class="flex middle mb10">
-          <label>背景颜色：</label>
-          <div class="full pr10">
-            <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'bkColor')"
-                             v-model="topologyData.data.bkColor" size="mini" popper-class="can-clear"></el-color-picker>
+          <div class="project-content-item">
+            <label>Url：</label>
+            <div class="full pr10">
+              <el-input class="input" size="small" v-model="topologyData.data.url" placeholder="请输入名称"  @change="changeTopologyOpt"></el-input>
+            </div>
           </div>
-        </div>
 
-        <div class="flex middle mb10">
-          <label>背景图片：</label>
-          <div class="full pr10">
-            <!--暂时是input 输入网址-->
-            <el-input class="input" size="small" v-model="topologyData.data.bkImage" placeholder="背景图片网址"></el-input>
-          </div>
-        </div>
-
-        <div class="flex middle mb10">
-          <label>背景网格：</label>
-          <div class="full pr10">
-            <el-switch
-              v-model="topologyData.data.grid"
-              :active-value="true"
-              :inactive-value="false"
-              active-color="#ee9d3f"
-              @change="changeTopologyOpt(topologyData.data.grid,'grid')">
-            </el-switch>
-          </div>
-        </div>
-
-        <div class="flex middle mb10">
-          <label>网格颜色：</label>
-          <div class="full pr10">
-            <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'gridColor')"
-                             v-model="topologyData.data.gridColor" size="mini"
-                             popper-class="can-clear"></el-color-picker>
-          </div>
-        </div>
-
-        <div class="flex middle mb10">
-          <label>网格大小：</label>
-          <div class="full pr10">
-            <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                             v-model.number="topologyData.data.gridSize"
-                             :readonly="readonly" required
-                             @change="changeTopologyOpt(topologyData.data.gridSize,'gridSize')"></el-input-number>
-          </div>
-        </div>
-
-        <div class="flex middle mb10">
-          <label>标尺：</label>
-          <div class="full pr10">
-            <el-switch
-              v-model="topologyData.data.rule"
-              :active-value="true"
-              :inactive-value="false"
-              active-color="#ee9d3f"
-              @change="changeTopologyOpt(topologyData.data.rule,'rule')">
-            </el-switch>
-          </div>
-        </div>
-
-        <div class="flex middle mb10">
-          <label>标尺颜色：</label>
-          <div class="full pr10">
-            <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'ruleColor')"
-                             v-model="topologyData.data.ruleColor" size="mini"
-                             popper-class="can-clear"></el-color-picker>
-          </div>
         </div>
 
       </div>
@@ -878,7 +946,7 @@
         topologyData:{
           data:{
             name:'',
-            bkColor:undefined,
+            bkColor:'#FFFFFF',
             bkImage:'',
             grid:false,
             gridSize:'',
@@ -889,6 +957,9 @@
             lineWidth:1,
             fromArrow:'',
             toArrow:'triangleSolid',
+            projectInfo:true,
+            alertInfo:true,
+            url:'',
           }
         },
         pen:{
@@ -997,28 +1068,35 @@
         deep:true,
         immediate:true,
       },
-      'topologyData.data':{
-        handler(n){
-          setTimeout(()=>{
-            let data=getTopology(this.index).data;
-            Object.keys(this.topologyData.data).forEach((key)=>{
-              data[key]=this.topologyData.data[key];
-            });
-            getTopology(this.index).render();
-          })
-        },
-        deep:true,
-        immediate:true,
-      }
+      // 'topologyData.data':{
+      //   handler(n){
+      //     setTimeout(()=>{
+      //       let dataOption=getTopology(this.index).data;
+      //       Object.keys(this.topologyData.data).forEach((key)=>{
+      //         dataOption[key]=this.topologyData.data[key];
+      //       });
+      //       getTopology(this.index).render();
+      //     })
+      //   },
+      //   deep:true,
+      //   immediate:false,
+      // }
+    },
+    created(){
+      let dataOption=getTopology(this.index).data;
+      console.log(dataOption);
+      Object.keys(this.topologyData.data).forEach((key)=>{
+        console.log()
+        this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
+      });
     },
     mounted(){
       this.queryMetrics();
-      let dataOption=getTopology(this.index).data;
-      Object.keys(this.topologyData.data).forEach((key)=>{
-        this.topologyData.data[key]=dataOption[key]?dataOption[key]:this.topologyData.data[key]
-      });
-      this.topologyData.data.grid= !!getTopology(this.index).data.grid;
-      this.topologyData.data.rule= !!getTopology(this.index).data.rule;
+      // this.topologyData.data.grid= !!dataOption.grid;
+      // this.topologyData.data.rule= !!dataOption.rule;
+      // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
+      // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
+      console.log(this.topologyData);
     },
     updated(){
       if(!this.selection.pen){//没选中node line返回
@@ -1158,11 +1236,19 @@
         this.onChange();
       },
       changeTopologyOpt(val,key){
-        this.topologyData.data[key]=this.colorRGBtoHex(val);
+        // this.topologyData.data[key]=this.colorRGBtoHex(val);
         // getTopology(this.index).data[key]=val;
         // getTopology(this.index).render();
+        this.topologyData.data[key]=val;
+        Object.keys(this.topologyData.data).forEach((key1)=>{
+          getTopology(this.index).data[key1]=this.topologyData.data[key1];
+        });
+        // console.log(dataOption[key]);
+        getTopology(this.index).render();
+        console.log(123213123);
       },
       colorRGBtoHex(color){//获取颜色16进制数
+        return color;
         if(!color){
           return ""
         }
@@ -1217,6 +1303,23 @@
           });
         }
       },
+      valueMappingAdd(){
+        this.selection.pen.data.valueMapping.push({
+          color:{
+            border:'#000',
+            bac:'#fff',
+            text:'#000',
+          },
+          animation:'upDown',
+          value:'',
+        });
+      },
+      valueMappingValueChange(index,row){
+        console.log(index,row)
+      },
+      valueMappingDel(index,row){
+        console.log(index,row)
+      },
     }
   }
 </script>
@@ -1243,6 +1346,51 @@
   }
 </style>
 <style lang="scss" scoped>
+  .project-title{
+    background: #eeeeee;
+    height: 36px;
+    line-height: 36px;
+    border-radius:10px 0 0 0;
+    padding-left: 10px;
+  }
+  .project-content{
+    margin: 10px;
+    .project-content-title{
+      background: #F6F6F6;
+      padding-left: 10px;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      font-weight: 400;
+      height: 32px;
+      line-height: 31px;
+      margin-bottom: 5px;
+    }
+    .project-content-box{
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    .half.project-content-item{
+      width: calc(50% - 15px);
+      height: 64px;
+    }
+    .project-content-item{
+      padding-left: 10px;
+      display: inline-block;
+      width: 100%;
+      label{
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #666666;
+        letter-spacing: 0;
+        font-weight: 400;
+      }
+      .h32{
+        height: 32px;
+      }
+    }
+  }
   /deep/ .el-tabs.el-tabs--card {
     height: 100%;
 
@@ -1281,7 +1429,6 @@
   .pl0 {
     padding-left: 0;
   }
-
   .special-select .el-select.el-select--small {
     width: 100%;
   }
@@ -1310,9 +1457,9 @@
   .props-box {
     position: relative;
     width: calc(100% - 20px);
-    height: calc(100% - 35px);
-    padding-left: 10px;
-
+    height: calc(100% - 20px);
+    overflow-y: scroll;
+    padding-bottom: 20px;
     .iconfont {
       cursor: pointer;
     }

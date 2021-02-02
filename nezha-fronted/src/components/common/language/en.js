@@ -957,6 +957,7 @@ const en = {
       selTwoNode:'Please select two module',
       save:'save',
       cancel:'cancel',
+      preview:'preview',
       addLine:'Add line',
       editLine:'Edit line',
       lineName:'Line Name',

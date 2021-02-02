@@ -951,6 +951,7 @@ const cn = {
       selTwoNode:'请选择两个模块',
       save:'保存',
       cancel:'取消',
+      preview:'预览',
       addLine:'添加连线',
       editLine:'编辑连线',
       lineName:'连线名称',

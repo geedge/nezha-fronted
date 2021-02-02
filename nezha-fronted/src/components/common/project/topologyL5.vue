@@ -8,23 +8,111 @@
       <div v-show="editTopologyFlag" class="edit-topologyLine">
         <!--工具栏-->
         <span class="project-topology-tool">
-          <topology-top-tool v-if="editTopologyFlag" :selection.sync="props" @del="delPen" :index="topologyIndex"
-                             ref="topTool" @toolShowChange="toolShowChange" :toolShow="toolShow">
+          <el-dropdown trigger="click" size="small" placement="bottom-start">
+            <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i class="nz-icon nz-icon-arrow-down"></i></span>
+            <el-dropdown-menu slot="dropdown" @click="dropdownClick">
+              <div style="height: 450px">
+                <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto" class="project-topology-add-node">
+                <!--<div class="drag-header">——</div>-->
+                <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index">
+                  <el-collapse-item :title="item.group" :name="item.group">
+                    <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
+                      <a
+                        :key="i"
+                        :title="btn.data.text"
+                        :draggable="btn.data"
+                        @dragstart.stop="onDrag($event, btn)"
+                        @mousedown="dragFlag=false"
+                        @mouseup="dragFlagChange(btn)"
+                        class="btn"
+                      >
+                        <img :src="btn.data.image" v-if="btn.data.image">
+                        <i v-else :class="`iconfont ${btn.icon}`"></i>
+                      </a>
+                      <span v-if="item.group==='自定义图片'" class="delIcon" @click="delImg(btn)">x</span>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-card>
+                <el-upload
+                class="avatar-uploader"
+                action=" "
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :auto-upload="true"
+                list-type="picture-card"
+                style="width: 284px;height: 30px"
+              >
+                  <i class="el-icon-plus"></i>
+                  <span>
+                     Upload custom picture
+                  </span>
+                </el-upload>
+              </div>
+            </el-dropdown-menu>
+          </el-dropdown>
 
+          <div class="flex middle special-select mb10" style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px">
+            <div class="full pr10">
+              <el-select v-model="lineName" placeholder="请选择" size="small"
+              :popper-append-to-body="false"
+              @change="changeTopologyOpt(lineName,'lineName')">
+               <div slot="prefix">
+                <div class="icon-item">
+                  <svg>
+                    <g fill="none" stroke="black" stroke-width="1">
+                      <path
+                        :d="penLineType.find((item,i)=>item.name==lineName).d"
+                      >
+                      </path>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+                <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
+                  <div class="icon-item">
+                    <svg>
+                    <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
+                    <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
+                    </g>
+                    </svg>
+                  </div>
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+
+
+          <topology-top-tool
+            v-if="editTopologyFlag"
+            :selection.sync="props"
+            @del="delPen"
+            :index="topologyIndex"
+            ref="topTool"
+            @toolShowChange="toolShowChange"
+            :cachesIndex="cachesIndex"
+            :toolShow="toolShow">
           </topology-top-tool>
+
         </span>
-        <span>
-           <button @click="saveTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new"
+        <span class="float-right">
+          <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+                  v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                  :class="{'nz-btn-disabled':prevent_opt.save}">
+             {{$t('project.topology.preview')}}
+           </button>
+           <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
                    v-has="'project_topo_save'" :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}">
              {{$t('project.topology.save')}}
            </button>
-           <button @click="cancelTopology" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">
+           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
              {{$t('project.topology.cancel')}}
            </button>
          </span>
       </div>
-      <span class="edit-topologyLine" v-show="!editTopologyFlag">
+      <span class="edit-topologyLine float-right" style="padding-top: 5px" v-show="!editTopologyFlag">
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button"
         >
@@ -36,97 +124,30 @@
       </span>
     </div>
     <div class="page">
-      <!--拖拽节点-->
-      <VueDraggableResizable
-        v-show="editTopologyFlag&&toolShow.node"
-        class="tools"
-        :parent="true"
-        :resizable="true"
-        :draggable="dragFlag"
-        :x="toolShow.nodeCord[0]"
-        :y="toolShow.nodeCord[1]"
-        :min-width="250"
-        :min-height="200"
-        :w="250"
-        :h="toolShow.height-100"
-        drag-handle=".drag-header"
-      >
-        <el-card shadow="hover" style="height:100%;width: 100%;overflow-y: auto">
-          <div class="drag-header">——</div>
-          <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index">
-            <el-collapse-item :title="item.group" :name="item.group">
-              <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
-                <a
-                  :key="i"
-                  :title="btn.data.text"
-                  :draggable="btn.data"
-                  @dragstart.stop="onDrag($event, btn)"
-                  @mousedown="dragFlag=false"
-                  @mouseup="dragFlagChange(btn)"
-                  class="btn"
-                >
-                  <img :src="btn.data.image" v-if="btn.data.image">
-                  <i v-else :class="`iconfont ${btn.icon}`"></i>
-                </a>
-                <span v-if="item.group==='自定义图片'" class="delIcon" @click="delImg(btn)">x</span>
-              </div>
-              <div v-if="item.group==='自定义图片'" class="buttons">
-                <el-upload
-                  class="avatar-uploader"
-                  action=" "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                  :auto-upload="true"
-                  list-type="picture-card"
-                  style="width: 50px;height: 50px"
-                >
-                  <div class="upload-icon-box">
-                    <i class="el-icon-plus"></i>
-                    <span style="font-size: 12px">{{$t('project.topology.upload')}}</span>
-                  </div>
-
-                </el-upload>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-      </VueDraggableResizable>
       <!--画布部分-->
-      <div id="topology-canvas" class="full"></div>
+      <div id="topology-canvas" class="full" ref="topology-canvas"></div>
       <!--设置属性-->
-      <VueDraggableResizable
-        v-if="editTopologyFlag"
-        v-show="toolShow.attr"
-        class="props"
-        :parent="true"
-        :resizable="true"
-        :draggable="dragFlag"
-        :x="toolShow.attrCord[0]"
-        :y="toolShow.attrCord[1]"
-        :min-width="340"
-        :max-width="340"
-        :min-height="200"
-        :w="340"
-        :h="toolShow.height-100"
-        drag-handle=".drag-header"
-        :handles="['tm','bm']"
-      >
-        <el-card shadow="hover" style="height: 100%;width: 325px;overflow-y: auto;padding: 0 0 0 0">
-          <div class="drag-header">——</div>
-          <CanvasProps :selection.sync="props" @change="onUpdateProps" @animate="animateCanvas"
-                       :index="topologyIndex" @del="delPen" :modules="modules" ref="CanvasProps"></CanvasProps>
-        </el-card>
-      </VueDraggableResizable>
+      <div class="props" v-if="editTopologyFlag&&toolShow.attr">
+        <CanvasProps :selection.sync="props"
+                     @change="onUpdateProps"
+                     @animate="animateCanvas"
+                     :index="topologyIndex"
+                     @del="delPen"
+                     :modules="modules"
+                     ref="CanvasProps">
+        </CanvasProps>
+      </div>
       <!--所有节点上的小图标-->
       <div v-for="(item,index) in nodesArr"
-           :style="{position: 'absolute',top:item.rect.y - 48+'px',left:item.rect.center.x - 24 +'px'}" v-if="!editTopologyFlag"
-            class="network-pop"
+           :style="{position: 'absolute',top:item.rect.y - 48+'px',left:item.rect.center.x - 24 +'px'}"
+           v-if="!editTopologyFlag"
+           class="network-pop"
       >
 
-        <i :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.error&&!item.data.show,'model-error-active':item.data.error&&item.data.show}"
-           :ref="'modelTopId'+index"
-           @click="showNodeTools(index)"
+        <i
+          :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.error&&!item.data.show,'model-error-active':item.data.error&&item.data.show}"
+          :ref="'modelTopId'+index"
+          @click="showNodeTools(index)"
         >
           <i class="nz-icon nz-icon-model"></i>
         </i>
@@ -150,21 +171,21 @@
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
            @mouseout="tooltipOut">
-        <topoTooltip :chartDataParent="chartData" />
+        <topoTooltip :chartDataParent="chartData"/>
       </div>
     </div>
-    <div class="left-bottom" v-if="editTopologyFlag">
-      <div class="title">小提示</div>
-      <ul class="group">
-        <li>编辑时：</li>
-        <li>1.Ctrl + 鼠标移动：移动整个画布</li>
-        <li>2.Ctrl + 鼠标滚轮：缩放</li>
-        <li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>
-      </ul>
-    </div>
+    <!--<div class="left-bottom" v-if="editTopologyFlag">-->
+      <!--<div class="title">小提示</div>-->
+      <!--<ul class="group">-->
+        <!--<li>编辑时：</li>-->
+        <!--<li>1.Ctrl + 鼠标移动：移动整个画布</li>-->
+        <!--<li>2.Ctrl + 鼠标滚轮：缩放</li>-->
+        <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
+      <!--</ul>-->
+    <!--</div>-->
     <!--悬浮network部分-->
     <div class="network-info">
-      <div  v-if="popDataShow.main">
+      <div v-if="popDataShow.main">
         <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
       </div>
       <div v-if="popDataShow.total">
@@ -198,10 +219,23 @@
 <script>
   import {Topology,Node,Line,registerNode} from '@topology/core';
   import * as FileSaver from 'file-saver';
-  import {Tools,canvasRegister,imageTemp,myShape,myAnchors,myIconRect,myTextRect,onChangeAnimate,onChangeAnimateLine,changeImage,myCubec,myCubeAnchors} from './L5/services/canvas.js';
+  import {
+    Tools,
+    canvasRegister,
+    imageTemp,
+    myShape,
+    myAnchors,
+    myIconRect,
+    myTextRect,
+    onChangeAnimate,
+    onChangeAnimateLine,
+    changeImage,
+    myCubec,
+    myCubeAnchors
+  } from './L5/services/canvas.js';
   // 注册到画布
-  registerNode('rectangleImg',myShape,myAnchors,myIconRect, myTextRect);
-  registerNode('myCube',myCubec,myCubeAnchors,null, null);
+  registerNode('rectangleImg',myShape,myAnchors,myIconRect,myTextRect);
+  registerNode('myCube',myCubec,myCubeAnchors,null,null);
   import {getTopology,setTopology} from "../js/common";
   import CanvasProps from './L5/CanvasProps';
   import CanvasContextMenu from './L5//CanvasContextMenu';
@@ -218,6 +252,7 @@
   import topoTooltip from "./L5/topoTooltip";
   import bus from "../../../libs/bus";
   import axios from 'axios';
+
   const canvasOptions={
     rotateCursor:'/img/rotate.cur',
     translateKey:'None',
@@ -237,7 +272,7 @@
           top:null,
           bottom:null
         },
-        filterTime: [
+        filterTime:[
           bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
           bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
         ],
@@ -272,12 +307,18 @@
         timer3:null,//处理tooltip的显示定时器
         nodesArr:[],
         popData:[
-          {top:'-40px', left:'-21px',className:'nz-icon-endpoint',id:'endpoint',title:this.$t('project.topology.endpoint')},
-          {top:'-40px', left:'19px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
-          {top:'-4px',  left:'40px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
-          {top:'30px', left:'19px',className:'',id:'other',title:''},
-          {top:'30px', left:'-21px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
-          {top:'-4px', left:'-40px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
+          {
+            top:'-40px',
+            left:'-21px',
+            className:'nz-icon-endpoint',
+            id:'endpoint',
+            title:this.$t('project.topology.endpoint')
+          },
+          {top:'-40px',left:'19px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
+          {top:'-4px',left:'40px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
+          {top:'30px',left:'19px',className:'',id:'other',title:''},
+          {top:'30px',left:'-21px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
+          {top:'-4px',left:'-40px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
         ],
         popDataShow:{
           endpoint:false,
@@ -296,6 +337,14 @@
         },
         chartData:{},
         chartGetData:[],
+        penLineType:[
+          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:'curve'},
+          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:'polyline'},
+          {d:'M5 14 l40 0',"stroke-dasharray":"",name:'line'},
+          // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+        ],
+        lineName:'curve',
+        cachesIndex:0,
       };
     },
     components:{
@@ -377,18 +426,19 @@
           this.openTopologyData(data).then(()=>{
             //获取对应的值 给节点 连线添加对应动画
             console.log(data);
+            this.lineName=data.lineName?data.lineName:this.lineName;
             this.chartGetData=[];
-            let  axiosArr=[];
+            let axiosArr=[];
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
-            let step = bus.getStep(startTime, endTime);
-            data.pens.forEach(item=>{
+            let step=bus.getStep(startTime,endTime);
+            data.pens&&data.pens.forEach(item=>{
               console.log(item.id);
               this.chartGetData.push({id:item.id,res:[]});
-              let arr=item.data.expressArr.map((ele) => {
-                let query = encodeURIComponent(ele);
+              let arr=item.data.expressArr.map((ele)=>{
+                let query=encodeURIComponent(ele);
                 query+='&nullType='+'connected';
-                return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(startTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+                return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
               });
               axiosArr.push({item,arr});
             });
@@ -396,11 +446,11 @@
             axios.all(axiosArr).then(all=>{
               all.forEach((obj,index)=>{
                 this.chartGetData[index].res=obj.arr;
-                if(obj.item.type===0){
-                  obj.item.animateType='warning';
-                  onChangeAnimate(obj.item,'warning')
-                } else if(obj.item.type===1){
-                  onChangeAnimateLine(obj.item,'beads')
+                if(obj.item.type===0){// 判断valueMapping 给相应的状态
+                  // obj.item.animateType='warning';
+                  // onChangeAnimate(obj.item,'warning')
+                }else if(obj.item.type===1){// 判断valueMapping 给相应的状态
+                  // onChangeAnimateLine(obj.item,'beads')
                 }
               })
             }).then(()=>{
@@ -421,8 +471,8 @@
         });
       },
       openTopologyData(data){
-       return new Promise(resolve=>{
-         let canvas=new Topology('topology-canvas',canvasOptions);
+        return new Promise(resolve=>{
+          let canvas=new Topology('topology-canvas',canvasOptions);
           canvas.open(data);
           setTopology(this.topologyIndex,canvas);
           if(!getTopology(this.topologyIndex).data.name){
@@ -439,7 +489,7 @@
       getTopologyData(){
         return new Promise(resolve=>{
           let data=localStorage.getItem('data');
-          data=data?JSON.parse(data):{};
+          data=data?JSON.parse(data):{bkColor:'#FFFFFF'};
           this.saveData={...data};
           resolve(data);
         });
@@ -519,9 +569,9 @@
       //具体内容点击
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
-       setTimeout(()=>{
-         this.popDataShowUpdate(tool.id)
-       },100)
+        setTimeout(()=>{
+          this.popDataShowUpdate(tool.id)
+        },100)
       },
 
       popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
@@ -541,7 +591,7 @@
           this.moduleId='';
           this.showNodeTools('');
         }
-        if(key==='asset' || key==='alert' || key==='endpoint'){
+        if(key==='asset'||key==='alert'||key==='endpoint'){
           this.showNodeTools('');
         }
       },
@@ -555,17 +605,31 @@
         event.dataTransfer.setData('Text',JSON.stringify(node.data));
       },
       dragFlagChange(node){
-        getTopology(this.topologyIndex).addNode(node.data)
+        getTopology(this.topologyIndex).addNode(
+          {
+            ...node.data,
+            rect:{
+              ...node.data.rect,
+              x:this.$refs['topology-canvas'].offsetWidth/2-50,
+              y:this.$refs['topology-canvas'].offsetHeight/2-50
+            }
+          });
         setTimeout(()=>{
           this.dragFlag=true;
         },100);
       },
 
       onMessage(event,data){
-        // console.log('onMessage',event,data);
-
+        console.log('onMessage',event,data);
+        console.log(getTopology(this.topologyIndex))
+        if(getTopology(this.topologyIndex)){
+          this.cachesIndex=getTopology(this.topologyIndex).caches.index;
+          if(this.$refs.topTool){
+            this.$refs.topTool.redoFlag=false
+          };
+        }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
-          if(data.type===0&&!data.data){
+          if(data.type===0&& !data.data){
             data.data={
               moduleId:'',
               moduleName:'',
@@ -587,8 +651,9 @@
               displayChart:true,
               aggregation:'last',
             }
-          }else if(data.type==1&&!data.data){
-            data.manualCps=true;
+          }else if(data.type==1&& !data.data){
+            //连线是否自动计算锚点
+            // data.manualCps=true;
             data.data={
               animatePlay:data.animatePlay,
               strokeStyle:data.strokeStyle,
@@ -609,7 +674,7 @@
               aggregation:'last',
             }
           }
-          if(data.type===0 || data.type===1){
+          if(data.type===0||data.type===1){
             data.lineWidth=data.data.lineWidth;
           }
         }
@@ -1011,11 +1076,24 @@
         // canvas.open()
       },
 
+      dropdownClick(){
+
+      },
+
+      changeTopologyOpt(val,key){
+        // this.topologyData.data[key]=this.colorRGBtoHex(val);
+        // getTopology(this.index).data[key]=val;
+        // getTopology(this.index).render();
+        let dataOption=getTopology(this.topologyIndex).data;
+        dataOption[key]=this.lineName;
+        getTopology(this.topologyIndex).render();
+      },
+      //保存
       saveTopology(){
         let topologyData=getTopology(this.topologyIndex).data;
         let flag=true;
         topologyData.pens.forEach(item=>{
-          if(item.type===0&&((flag&&!item.data) || (flag&&item.data&&!item.data.moduleId))){
+          if(item.type===0&&((flag&& !item.data)||(flag&&item.data&& !item.data.moduleId))){
             flag=false;
           }
         });
@@ -1032,13 +1110,13 @@
           this.getNodesArr();
         }else{
           this.$message({
-            showClose: true,
-            message: '请个所有节点绑定module',
-            type: 'warning'
+            showClose:true,
+            message:'请个所有节点绑定module',
+            type:'warning'
           })
         }
       },
-
+      //取消
       cancelTopology(){
         this.editTopologyFlag=false;
         this.$nextTick(()=>{
@@ -1050,6 +1128,10 @@
         });
         this.reload();
       },
+      //预览
+      previewTopology(){
+
+      },
       /*tools 方法*/
 
       winResize(){
@@ -1060,7 +1142,9 @@
         getTopology(this.topologyIndex).centerView();
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
-        if(!this.tooltipPosition.show || this.timer3){return}
+        if(!this.tooltipPosition.show||this.timer3){
+          return
+        }
         this.tooltipPosition.top=e.offsetY;
         this.tooltipPosition.left=e.offsetX+20;
       },
@@ -1083,78 +1167,185 @@
     }
   }
 </script>
+<style lang="scss">
+  .el-dropdown-menu{
+    .project-topology-add-node{
+      .el-collapse-item__header {
+        padding: 0 10px;
+        background-color: #ffffff;
+      }
+      .el-collapse-item__header.is-active{
+        background: #F6F6F6;
+        ont-family: Roboto-Bold;
+        font-size: 14px;
+        color: #FA901C;
+        font-weight: 700;
+        el-collapse-item__arrow{
+          color: #666;
+        }
+      }
+      .el-collapse-item__wrap {
+        padding: 0 10px;
+        background-color: #ffffff;
+      }
+
+      .el-collapse-item__content {
+        padding: 12px 0px;
+        display: flex;
+        flex-wrap: wrap;
+        /*justify-content: space-around;*/
+      }
+
+      .el-card__body {
+        padding: 0;
+        height: 100%;
+      }
+
+      .handle {
+        position: absolute;
+        z-index: 2;
+      }
+      .buttons {
+        padding: 12px;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        width:26px;
+
+        .delIcon {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border-radius: 10px;
+          font-size: 12px;
+          line-height: 16px;
+          text-align: center;
+          background: red;
+          right: -8px;
+          top: -8px;
+          color: #fff;
+          display: none;
+          cursor: pointer;
+        }
+
+        a {
+          display: inline-block;
+          color: #314659;
+          width: 26px;
+          height: 26px;
+          text-align: center;
+          text-decoration: none !important;
+          cursor: pointer;
+          line-height: 26px;
+
+          .iconfont {
+            font-size: 24px;
+          }
+
+          img {
+            max-width: 26px;
+            max-height: 26px;
+          }
+
+          &:hover {
+            color: #1890ff;
+          }
+        }
+
+        .upload-icon-box {
+          .el-icon-plus {
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .buttons:hover {
+        .delIcon {
+          /*display: inline-block;*/
+        }
+      }
+    }
+    .avatar-uploader{
+      line-height: 30px;
+      .el-icon-plus{
+        font-size: 12px;
+        color: #FA901C;
+        margin: 0 8px 0 15px;
+      }
+      .el-upload--picture-card{
+        width: 100%;
+        height: 100%;
+        border: none;
+        color: #666;
+        font-size: 14px;
+        line-height: 30px;
+        text-align: left;
+      }
+      .el-upload--picture-card:hover, .el-upload:focus{
+        color: #666;
+      }
+    }
+    .avatar-uploader:active el-upload--picture-card{
+      color: #DB8B8B;
+    }
+    .avatar-uploader:active .el-upload--picture-card:hover,.avatar-uploader:active .el-upload:focus{
+      color: #DB8B8B;
+    }
+  }
+</style>
 <style scoped>
-  /deep/ .el-collapse-item__header {
-    padding: 0 10px;
-    background-color: #F9F9F9;
-  }
-
-  /deep/ .el-collapse-item__wrap {
-    padding: 0 10px;
-    background-color: #F9F9F9;
-  }
-
-  /deep/ .el-collapse-item__content {
-    padding: 12px 0px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  /deep/ .el-upload--picture-card {
-    width: 100%;
-    height: 100%;
-    line-height: 0;
-  }
-  /deep/ .el-card__body{
-    padding: 0;
-    height: 100%;
-  }
-  /deep/ .handle {
-    position: absolute;
-    z-index: 2;
-  }
-
-  @keyframes model-error-animation{
-    0%   {
+  @keyframes model-error-animation {
+    0% {
       transform: scale(0.7);
     }
-    50%   {
+    50% {
       transform: scale(1);
     }
     100% {
       transform: scale(0.7);
     }
   }
-  @keyframes model-icon-animation{
-    0%   {
+
+  @keyframes model-icon-animation {
+    0% {
       transform: scale(1.2) translateX(1px);
     }
-    50%   {
+    50% {
       transform: scale(0.9) translateX(0px);
     }
     100% {
       transform: scale(1.2) translateX(1px);
     }
   }
-  .nz-icon-shuidi{
+
+  .nz-icon-shuidi {
     position: absolute;
     font-size: 48px;
-    color: rgba(190,233,222,0.45);
+    color: rgba(190, 233, 222, 0.45);
     border-radius: 50%;
     height: 48px;
     width: 48px;
     line-height: 48px;
   }
-  .model-error.nz-icon-shuidi{
-    color: #FADED7 ;
+
+  .model-error.nz-icon-shuidi {
+    color: #FADED7;
     animation: model-error-animation .6s infinite ease-in-out;
-    animation-direction:normal;
+    animation-direction: normal;
   }
-  .model-error-active.nz-icon-shuidi{
-    color: #FADED7 ;
+
+  .model-error-active.nz-icon-shuidi {
+    color: #FADED7;
   }
-  .nz-icon-model{
+
+  .nz-icon-model {
     color: #23BF9A;
     position: absolute;
     top: -4px;
@@ -1162,28 +1353,34 @@
     font-size: 18px;
     line-height: 48px;
   }
-  .model-error .nz-icon-model{
+
+  .model-error .nz-icon-model {
     color: #EC7F66;
     animation: model-icon-animation .6s infinite ease-in-out;
-    animation-direction:normal;
+    animation-direction: normal;
   }
-  .model-error-active .nz-icon-model{
+
+  .model-error-active .nz-icon-model {
     color: #EC7F66;
   }
+
   .scaleTool-enter-active {
     animation: scaleTool-in .15s;
   }
+
   .scaleTool-leave-active {
     animation: scaleTool-in .15s reverse;
   }
+
   @keyframes scaleTool-in {
-    from{
-      top:0px;
+    from {
+      top: 0px;
       left: 0px;
       transform: scale(0.5);
     }
   }
-  .network-pop .nz-icon-hexagonBorder{
+
+  .network-pop .nz-icon-hexagonBorder {
     position: absolute;
     font-size: 48px;
     color: #84d5c2;
@@ -1191,18 +1388,22 @@
     width: 48px;
     line-height: 48px;
   }
-  .network-pop .nz-icon-hexagonBorder:hover{
+
+  .network-pop .nz-icon-hexagonBorder:hover {
     transform: scale(1.1);
     color: #4BB49B;
   }
-  .network-pop .nz-icon-hexagonBorder.error-model-stat{
+
+  .network-pop .nz-icon-hexagonBorder.error-model-stat {
     color: #F5BAAC;
   }
-  .network-pop .nz-icon-hexagonBorder.error-model-stat:hover{
+
+  .network-pop .nz-icon-hexagonBorder.error-model-stat:hover {
     color: #EC7F66;
   }
-  .network-pop  .nz-icon-liubianxing{
-    color:#e2f3ef;
+
+  .network-pop .nz-icon-liubianxing {
+    color: #e2f3ef;
     font-size: 44px;
     position: absolute;
     top: 1px;
@@ -1210,34 +1411,57 @@
     transform: scale(0.9);
     z-index: 0;
   }
-  .network-pop .error-model-stat .nz-icon-liubianxing{
-    color: #FADED7 ;
+
+  .network-pop .error-model-stat .nz-icon-liubianxing {
+    color: #FADED7;
   }
-  .network-pop .nz-icon.noMove{
+
+  .network-pop .nz-icon.noMove {
     position: absolute;
     left: 14px;
     font-size: 20px;
     color: #27c09c;
   }
-  .network-pop .error-model-stat .nz-icon.noMove{
+
+  .network-pop .error-model-stat .nz-icon.noMove {
     color: #EC7F66;
   }
-  .network-pop .no-selPop{
+
+  .network-pop .no-selPop {
     color: #999;
   }
-  .network-pop .no-selPop .nz-icon-liubianxing{
-    color: rgb(218,218,218);
+
+  .network-pop .no-selPop .nz-icon-liubianxing {
+    color: rgb(218, 218, 218);
   }
-  .network-pop .no-selPop .nz-icon-chart{
+
+  .network-pop .no-selPop .nz-icon-chart {
     color: #999;
   }
-  .network-info{
+
+  .network-info {
     position: absolute;
     right: 0;
     top: 50px;
   }
 </style>
 <style lang="scss" scoped>
+  .project-topology-tool{
+    display: inline-flex;
+    height: 30px;
+  }
+  .el-dropdown-title{
+    background: #FFFFFF;
+    border: 1px solid #DEDEDE;
+    border-radius: 2px;
+    width: 66px;
+    height: 28px;
+    display: inline-block;
+    line-height: 28px;
+    .icon-cube{
+      margin-left: 15px;
+    }
+  }
   .project-box {
     width: 100%;
     height: 100%;
@@ -1279,75 +1503,6 @@
       .title {
         float: left;
       }
-
-      .buttons {
-        margin-top: 15px;
-        padding-bottom: 10px;
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-
-        .delIcon {
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          border-radius: 10px;
-          font-size: 12px;
-          line-height: 16px;
-          text-align: center;
-          background: red;
-          right: -8px;
-          top: -8px;
-          color: #fff;
-          display: none;
-          cursor: pointer;
-        }
-
-        a {
-          display: inline-block;
-          color: #314659;
-          width: 50px;
-          height: 50px;
-          margin: 0 3px;
-          text-align: center;
-          text-decoration: none !important;
-          cursor: pointer;
-          line-height: 50px;
-
-          .iconfont {
-            font-size: 48px;
-          }
-
-          img {
-            max-width: 50px;
-            max-height: 50px;
-          }
-
-          &:hover {
-            color: #1890ff;
-          }
-        }
-
-        .upload-icon-box {
-          .el-icon-plus {
-            font-size: 14px;
-            margin-bottom: 10px;
-          }
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .buttons:hover {
-        .delIcon {
-          /*display: inline-block;*/
-        }
-      }
     }
 
     .full {
@@ -1356,12 +1511,50 @@
     }
 
     .props {
-      width: 300px;
+      width: 400px;
       height: 100%;
       border: none;
       position: absolute;
       z-index: 1 !important;
-      background-color: #f9f9f9;
+      right: 0;
+      top: 0;
+      background: #FFFFFF;
+      box-shadow: inset 1px 0 0 0 rgba(0, 0, 0, 0.09);
+      border-radius: 10px;
     }
+  }
+  .special-select svg{
+    width: 75px;
+    height: 30px;
+  }
+
+  .special-select .el-select.el-select--small {
+    width: 100%;
+  }
+  .special-select /deep/ .el-select-dropdown{
+    width: 75px!important;
+    .el-select-dropdown__item{
+      padding: 0 0 0 10px;
+    }
+  }
+  .special-select /deep/ .el-input.el-input--prefix.el-input--suffix, .line-width /deep/ .el-input.el-input--prefix.el-input--suffix {
+    border: 1px solid #DCDFE6;
+    height: 28px;
+  }
+
+  .special-select /deep/ .el-input__inner, .line-width /deep/ .el-input__inner {
+    display: none;
+  }
+
+  .special-select /deep/ .el-input__prefix, .line-width /deep/ .el-input__prefix {
+    height: 28px;
+    line-height: 28px;
+    color: #899FB7;
+    width: 100%;
+  }
+
+  .special-select /deep/ .el-input__prefix > div {
+    width: 100%;
+    height: 100%;
   }
 </style>
