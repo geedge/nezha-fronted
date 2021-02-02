@@ -1,17 +1,17 @@
 <template>
   <div class="props-box">
     <!--删除按钮-->
-    <button id="edit-ep-del" type="button" class="nz-btn nz-btn-size-normal nz-btn-size-alien del-btn"
-            v-if="selection.pen" @click="delTopologyPen">
-      <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-      <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-    </button>
+    <!--<button id="edit-ep-del" type="button" class="nz-btn nz-btn-size-normal nz-btn-size-alien del-btn"-->
+            <!--v-if="selection.pen" @click="delTopologyPen">-->
+      <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
+      <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+    <!--</button>-->
     <!--所有属性-->
     <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
       <el-tab-pane label="数据" name="1">
-        <el-form v-model="selection.pen.data">
+        <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
-          <el-form-item label="Module Name" prop="moduleId" v-if="!selection.pen.type">
+          <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type" class="half-form-item">
             <el-select v-model="selection.pen.data.moduleId" placeholder="" popper-class="asset-dropdown" size="small"
                        @change="moduleIdChange" :popper-append-to-body="false">
               <el-option
@@ -22,53 +22,20 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--tooltip-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.tooltip')" class="half-form-item" prop="type">
-            <el-switch v-model="selection.pen.data.tooltipShow"/>
+          <!--iconToolState-->
+          <el-form-item :label="'icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">
+            <el-switch
+              v-model="selection.pen.data.iconToolState"
+              :active-value="true"
+              :inactive-value="false"
+              active-color="#ee9d3f"
+            />
           </el-form-item>
 
-          <!--chart type-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">
-            <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
-                       v-model="selection.pen.data.aggregation" value-key="chartType">
-              <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
-                <span class="panel-dropdown-label-txt">{{item.name}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-
-          <!--chart type-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-            <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
-                       v-model="selection.pen.data.type" value-key="chartType">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
-                <span class="panel-dropdown-label-txt">{{item.name}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--chart unit-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit"
-                        v-show="selection.pen.data.type !='text'">
-            <el-cascader :options="unitOptions"
-                         :props="{ expandTrigger: 'hover',emitPath:false }"
-                         :show-all-levels="false"
-                         filterable
-                         placeholder=""
-                         popper-class="dc-dropdown"
-                         size="mini"
-                         v-model="selection.pen.data.unit"
-            >
-            </el-cascader>
-          </el-form-item>
-
-          <!--displayChart-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.displayChart')" class="half-form-item" prop="type">
-            <el-switch v-model="selection.pen.data.displayChart"/>
-          </el-form-item>
           <!--metric-->
-          <div class="right-box-sub-title" style="margin-bottom: 20px">
+          <div class="right-box-sub-title" style="margin-bottom: 10px">
             <span>{{$t('alert.config.expr')}}</span>
-              <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;">
+            <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;">
               <span class="create-square-box">
                 <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
               </span>
@@ -103,66 +70,126 @@
               </template>
             </el-row>
             <span class="nz-icon-minus-medium nz-icon-minus-position">
-            <i class="nz-icon nz-icon-minus" @click="removeExpression(index - 1)"></i>
+            <i class="nz-icon nz-icon-minus" @click="removeExpression(index)"></i>
           </span>
           </el-row>
-          <!--value mapping-->
-          <!--<el-row class="value-mapping-title">-->
-            <!--<el-col>level</el-col>-->
-            <!--<el-col>color</el-col>-->
-            <!--<el-col>value</el-col>-->
-            <!--<el-col>animation</el-col>-->
-            <!--<el-col></el-col>-->
-          <!--</el-row>-->
-          <!--<el-row class="value-mapping-content">-->
-            <!--<el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">-->
-              <!--<el-col>level</el-col>-->
-              <!--<el-col>color</el-col>-->
-              <!--<el-col>value</el-col>-->
-              <!--<el-col>animation</el-col>-->
-              <!--<el-col></el-col>-->
-            <!--</el-row>-->
-          <!--</el-row>-->
-          <el-table v-model="selection.pen.data.valueMapping">
-            <el-table-column
-              prop="level"
-              :label="'level'"
-              >
-              <template slot-scope="scope">
-                {{scope.$index}}
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="color"
-              :label="'color'"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="value"
-              :label="'value'"
-            >
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.value" @change="valueMappingValueChange(scope.$index, scope.row)"/>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="animation"
-              :label="'animation'"
-            >
-            </el-table-column>
-            <el-table-column>
-              <template slot="header" slot-scope="scope">
 
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="valueMappingDel(scope.$index, scope.row)">Delete</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <!--tooltip-->
+          <el-row class="form-row-title">
+            {{$t('dashboard.panel.chartForm.tooltip')}}
+            <el-form-item class="float-right" prop="type" style="height: 100%;">
+              <el-switch
+                v-model="selection.pen.data.tooltipShow"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+              />
+            </el-form-item>
+          </el-row>
+
+          <div class="tooltip-box">
+            <!--title-->
+            <el-form-item :label="'Title'" class="full-form-item" prop="type">
+              <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small" ></el-input>
+            </el-form-item>
+            <!--chart aggregation-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">
+              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
+                         v-model="selection.pen.data.aggregation" value-key="chartType">
+                <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
+                  <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!--chart unit-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit"
+                          v-show="selection.pen.data.type !='text'">
+              <el-cascader :options="unitOptions"
+                           :props="{ expandTrigger: 'hover',emitPath:false }"
+                           :show-all-levels="false"
+                           filterable
+                           placeholder=""
+                           popper-class="dc-dropdown"
+                           size="mini"
+                           v-model="selection.pen.data.unit"
+              >
+              </el-cascader>
+            </el-form-item>
+            <!--displayChart-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.displayChart')" class="half-form-item" prop="type">
+              <el-switch
+                v-model="selection.pen.data.displayChart"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+              />
+            </el-form-item>
+            <!--chart type-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
+              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
+                         v-model="selection.pen.data.type" value-key="chartType">
+                <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+                  <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <!--value mapping-->
+          <el-row class="form-row-title">
+            {{'Thresholds'}} <span style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >2:Critical）</span>
+          </el-row>
+          <div style="width: 100%">
+            <el-table v-model="selection.pen.data.valueMapping">
+              <el-table-column
+                prop="level"
+                :label="'level'"
+              >
+                <template slot-scope="scope">
+                  {{scope.$index}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="color"
+                :label="'color'"
+              >
+              </el-table-column>
+              <el-table-column
+                prop="value"
+                :label="'value'"
+              >
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.value" @change="valueMappingValueChange(scope.$index, scope.row)"/>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="animation"
+                :label="'animation'"
+              >
+              </el-table-column>
+              <el-table-column>
+                <template slot="header" slot-scope="scope">
+
+                </template>
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="valueMappingDel(scope.$index, scope.row)">Delete</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
           <div @click="valueMappingAdd()">add</div>
+
+          <!--link-->
+          <el-row class="form-row-title">
+            {{'Link'}}
+          </el-row>
+          <el-form-item :label="'URL'" class="full-form-item" prop="type">
+            <el-input v-model="selection.pen.data.url" class="input" size="small"></el-input>
+          </el-form-item>
+
+
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="属性" name="4">
@@ -174,90 +201,189 @@
               <div class="props-pen-item">
                 <div>X（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.rect.x"
-                                   :readonly="readonly" required @change="onChange()"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.x"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                  ></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>Y（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.rect.y"
-                                   :readonly="readonly" required @change="onChange()"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.y"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>宽（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.rect.width"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.width"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>高（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.rect.height"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.height"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div title="百分比%对应的小数值">圆角（0 - 1）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" :min="0" :max="1" :step="0.1"
-                                   name="x" class="input" v-model.number="selection.pen.borderRadius"
-                                   :readonly="readonly" required @change="onChange()"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    :min="0"
+                    :max="1"
+                    :step="0.1"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.borderRadius"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>旋转（°）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.rotate"
-                                   :readonly="readonly" required @change="onChange()"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small" name="x"
+                    class="input"
+                    v-model.number="selection.pen.rotate"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>内边距 上（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.paddingTop"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.paddingTop"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>内边距 下（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.paddingBottom"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.paddingBottom"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>内边距 左（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.paddingLeft"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.paddingLeft"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>内边距 右（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.paddingRight"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.paddingRight"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
@@ -266,7 +392,7 @@
           <!--样式-->
           <el-collapse-item title="样式" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
-              <div class="props-pen-item special-select" v-if="selection.pen.name!=='image'">
+              <div class="props-pen-item special-select">
                 <div>线条样式</div>
                 <div class="p10 pl0">
                   <el-select v-model="selection.pen.dash" placeholder="请选择" size="small" :popper-append-to-body="false"
@@ -424,46 +550,107 @@
                 </div>
               </div>
 
-              <div class="props-pen-item" v-if="selection.pen.name!=='image'">
+              <div class="props-pen-item">
                 <div>线条宽度（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.data.lineWidth"
-                                   :readonly="readonly" required @change="onChange('lineWidth')"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.data.lineWidth"
+                    :readonly="readonly"
+                    required
+                    :min="selection.pen.type?1:(selection.pen.name==='rectangleImg' ||selection.pen.name==='myCube'?0:1)"
+                    @change="onChange('lineWidth')"></el-input-number>
                 </div>
               </div>
 
-              <div class="props-pen-item" v-if="selection.pen.name!=='image'">
+              <div class="props-pen-item">
                 <div>线条颜色</div>
                 <div class="p10 pl0">
-                  <el-color-picker @active-change="(val)=>colorChange(val,'strokeStyle')"
-                                   v-model="selection.pen.strokeStyle" size="mini"></el-color-picker>
+                  <div class="color-show" @click="colorPickerClick('strokeStyle')">
+                    <div class="color-show-left" :style="{background:selection.pen.strokeStyle}"></div>
+                    <span class="color-text"> {{selection.pen.strokeStyle}}</span>
+                    <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['strokeStyle']&&!$refs['strokeStyle'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['strokeStyle']&&$refs['strokeStyle'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.strokeStyle"
+                      ref="strokeStyle"
+                      @active-change="(val)=>colorChange(val,'strokeStyle')"
+                    >
+                    </el-color-picker>
+                  </div>
                 </div>
               </div>
-              <div class="props-pen-item" v-if="selection.pen.name!=='image'">
+              <div class="props-pen-item" v-if="selection.pen.type">
                 <div>箭头颜色</div>
                 <div class="p10 pl0">
-                  <el-color-picker @active-change="(val)=>colorChange(val,'arrowColor')"
-                                   v-model="selection.pen.fromArrowColor" size="mini"></el-color-picker>
+                  <div class="color-show" @click="colorPickerClick('arrowColor')">
+                    <div class="color-show-left" :style="{background:selection.pen.arrowColor}"></div>
+                    <span class="color-text"> {{selection.pen.arrowColor}}</span>
+                    <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['arrowColor']&&!$refs['arrowColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['arrowColor']&&$refs['arrowColor'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.arrowColor"
+                      ref="arrowColor"
+                      @active-change="(val)=>colorChange(val,'arrowColor')"
+                    >
+                    </el-color-picker>
+                  </div>
                 </div>
               </div>
 
               <div class="props-pen-item" v-if="selection.pen && !selection.pen.bkType&&!selection.pen.type">
                 <div>背景颜色</div>
                 <div class="p10 pl0">
-                  <el-color-picker @active-change="(val)=>colorChange(val,'fillStyle')"
-                                   v-model="selection.pen.fillStyle" size="mini"></el-color-picker>
+                  <div class="color-show" @click="colorPickerClick('fillStyle')">
+                    <div class="color-show-left" :style="{background:selection.pen.fillStyle}"></div>
+                    <span class="color-text"> {{selection.pen.fillStyle}}</span>
+                    <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fillStyle']&&!$refs['fillStyle'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fillStyle']&&$refs['fillStyle'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.fillStyle"
+                      ref="fillStyle"
+                      @active-change="(val)=>colorChange(val,'fillStyle')"
+                    >
+                    </el-color-picker>
+                  </div>
                 </div>
               </div>
 
               <div class="props-pen-item" v-if="selection.pen">
                 <div>透明度（0 - 1）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" name="globalAlpha" class="input full"
-                                   v-model.Number="selection.pen.globalAlpha"
-                                   controls-position="right" size="small" :readonly="readonly" @change="onChange()"
-                                   :min="0.01"
-                                   :max="1"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    name="globalAlpha"
+                    class="input full"
+                    v-model.Number="selection.pen.globalAlpha"
+                    controls-position="right"
+                    size="small"
+                    :readonly="readonly"
+                    @change="onChange()"
+                    :step="0.1"
+                    :min="0.01"
+                    :max="1"></el-input-number>
                 </div>
               </div>
 
@@ -486,17 +673,41 @@
               <div class="props-pen-item">
                 <div>圆点大小（px）</div>
                 <div class="p10 pl0">
-                  <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                                   v-model.number="selection.pen.animateDotSize"
-                                   :readonly="readonly" required @change="onChange()" :min="0"></el-input-number>
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.animateDotSize"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0"></el-input-number>
                 </div>
               </div>
 
               <div class="props-pen-item">
                 <div>线条颜色</div>
                 <div class="p10 pl0">
-                  <el-color-picker @active-change="(val)=>colorChange(val,'animateColor')"
-                                   v-model="selection.pen.animateColor" size="mini"></el-color-picker>
+                  <div class="color-show" @click="colorPickerClick('animateColor')">
+                    <div class="color-show-left" :style="{background:selection.pen.animateColor}"></div>
+                    <span class="color-text"> {{selection.pen.animateColor}}</span>
+                    <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['animateColor']&&!$refs['animateColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['animateColor']&&$refs['animateColor'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.animateColor"
+                      ref="animateColor"
+                      @active-change="(val)=>colorChange(val,'animateColor')"
+                    >
+                    </el-color-picker>
+                  </div>
                 </div>
               </div>
 
@@ -518,100 +729,39 @@
               <!--</el-button>-->
               <!--</div>-->
               <!--</div>-->
-
-              <div class="props-pen-item">
-                <div>开启</div>
-                <!--自动播放-->
-                <div class="p10 pl0">
-                  <el-switch
-                    v-model="selection.pen.animatePlay"
-                    :active-value="true"
-                    :inactive-value="false"
-                    active-color="#ee9d3f"
-                    @change="()=>{onAnimate()}">
-                  </el-switch>
-                </div>
-              </div>
             </div>
 
           </el-collapse-item>
         </el-collapse>
-        <div>
-
+        <div class="project-content node-content">
+          <div class="project-content-title">Animation
+            <span class="float-right" style="margin-right: 10px">
+              <el-switch
+                v-model="selection.pen.animatePlay"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+                @change="()=>{onAnimate()}">
+              </el-switch>
+            </span>
+          </div>
+          <div class="project-content-box" style="width: 100%">
+            <div class="project-content-item" v-if="!selection.pen.type">
+              <label>Type：</label>
+              <div class="full pr10">
+                <el-select
+                  v-model="selection.pen.animateType"
+                  size="small"
+                  :popper-append-to-body="false"
+                  @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
+                  <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index" :label="item.name"></el-option>
+                </el-select>
+              </div>
+            </div>
+          </div>
         </div>
       </el-tab-pane>
-      <!--<el-tab-pane label="事件" name="2">事件</el-tab-pane>-->
-      <!--<el-tab-pane label="动效" name="3" v-if="selection.pen.type">--><!--</el-tab-pane>-->
-      <!--<el-tab-pane label="结构" name="5">结构</el-tab-pane>-->
     </el-tabs>
-
-
-    <!--选择多个节点-->
-    <!--<div v-if="selection.pens" class="">-->
-      <!--<el-collapse v-model="activeNames">-->
-        <!--&lt;!&ndash;对齐方式&ndash;&gt;-->
-        <!--<el-collapse-item title="对齐" name="1" v-if="selection.pens">-->
-          <!--<label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">-->
-            <!--<i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"-->
-               <!--@click="onNodesAlign(item.value)"></i>-->
-          <!--</label>-->
-        <!--</el-collapse-item>-->
-        <!--&lt;!&ndash;排版&ndash;&gt;-->
-        <!--<el-collapse-item title="排版" name="2" v-if="selection.pens">-->
-          <!--<div class="mt10">-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>最大宽度：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
-                                 <!--v-model.number="layout.maxWidth" title="超出最大宽度换行"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>节点宽度：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
-                                 <!--v-model.number="layout.nodeWidth" title="固定每个节点的宽度"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>节点高度：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
-                                 <!--v-model.number="layout.nodeHeight" title="固定每个节点的高度"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>水平个数：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" type="number" controls-position="right" class="input" size="small"-->
-                                 <!--v-model.number="layout.maxCount"-->
-                                 <!--title="超出最大个数，将自动计算水平间距（下面水平间距设置将无效）"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>水平间距：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
-                                 <!--v-model.number="layout.spaceWidth" title="节点之间水平间距（px）"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle mb10">-->
-              <!--<label>垂直间距：</label>-->
-              <!--<div class="full pr10">-->
-                <!--<el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"-->
-                                 <!--v-model.number="layout.spaceHeight" title="节点之间垂直间距（px）"></el-input-number>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="flex middle">-->
-              <!--<label></label>-->
-              <!--<div class="full pr10">-->
-                <!--<button class="button primary" @click="onLayout">开始排版</button>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</el-collapse-item>-->
-      <!--</el-collapse>-->
-    <!--</div>-->
     <!-- 选中为空 -->
     <div v-if="!selection.pen && !selection.pens">
       <div class="project-title">
@@ -636,8 +786,22 @@
           <div class="project-content-item half">
             <label>Backgroud：</label>
             <div class="full pr10 h32">
-              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'bkColor')"
-                               v-model="topologyData.data.bkColor" size="mini"></el-color-picker>
+              <div class="color-show" @click="colorPickerClick('bkColor')">
+                <div class="color-show-left" :style="{background:topologyData.data.bkColor}"></div>
+                <span class="color-text"> {{topologyData.data.bkColor}}</span>
+                <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['bkColor']&&!$refs['bkColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['bkColor']&&$refs['bkColor'].showPicker"></i>
+                </span>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  v-model="topologyData.data.bkColor"
+                  ref="bkColor"
+                  @active-change="(val)=>changeTopologyOpt(val,'bkColor',true)"
+                >
+                </el-color-picker>
+              </div>
             </div>
           </div>
 
@@ -652,13 +816,18 @@
           <div class="project-content-item half">
             <label>默认线宽：</label>
             <div class="full pr10 h32">
-              <el-input-number :precision="2"
-                               controls-position="right"
-                               size="small"
-                               name="x" class="input"
-                               v-model.number="topologyData.data.lineWidth"
-                               required
-                               @change="changeTopologyOpt(topologyData.data.lineWidth,'lineWidth')">
+              <el-input-number
+                @focus="inputFocus"
+                @blur="inputBlur"
+                :precision="2"
+                controls-position="right"
+                size="small"
+                name="x"
+                class="input"
+                v-model.number="topologyData.data.lineWidth"
+                required
+                :min="1"
+                @change="changeTopologyOpt(topologyData.data.lineWidth,'lineWidth')">
               </el-input-number>
             </div>
           </div>
@@ -679,19 +848,42 @@
           <div class="project-content-item half">
             <label>网格大小：</label>
             <div class="full pr10 h32">
-              <el-input-number :precision="2" controls-position="right" size="small" name="x" class="input"
-                               v-model.number="topologyData.data.gridSize"
-                               :readonly="readonly" required
-                               @change="changeTopologyOpt(topologyData.data.gridSize,'gridSize')"></el-input-number>
+              <el-input-number
+                @focus="inputFocus"
+                @blur="inputBlur"
+                :precision="2"
+                controls-position="right"
+                size="small"
+                name="x"
+                class="input"
+                v-model.number="topologyData.data.gridSize"
+                :readonly="readonly"
+                required
+                @change="changeTopologyOpt(topologyData.data.gridSize,'gridSize')"></el-input-number>
             </div>
           </div>
 
           <div class="project-content-item half">
             <label>网格颜色：</label>
             <div class="full pr10 h32">
-              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'gridColor')"
-                               v-model="topologyData.data.gridColor" size="mini"
-                               popper-class="can-clear"></el-color-picker>
+              <div class="color-show" @click="colorPickerClick('gridColor')">
+                <div class="color-show-left" :style="{background:topologyData.data.gridColor}"></div>
+                <span class="color-text"> {{topologyData.data.gridColor}}</span>
+                <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['gridColor']&&!$refs['gridColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['gridColor']&&$refs['gridColor'].showPicker"></i>
+                </span>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  v-model="topologyData.data.gridColor"
+                  ref="gridColor"
+                  @active-change="(val)=>changeTopologyOpt(val,'gridColor',true)"
+                >
+                </el-color-picker>
+              </div>
+
+
             </div>
           </div>
 
@@ -711,9 +903,22 @@
           <div class="project-content-item half">
             <label>标尺颜色：</label>
             <div class="full pr10 h32">
-              <el-color-picker @active-change="(val)=>changeTopologyOpt(val,'ruleColor')"
-                               v-model="topologyData.data.ruleColor" size="mini"
-                               popper-class="can-clear"></el-color-picker>
+              <div class="color-show" @click="colorPickerClick('ruleColor')">
+                <div class="color-show-left" :style="{background:topologyData.data.ruleColor}"></div>
+                <span class="color-text"> {{topologyData.data.ruleColor}}</span>
+                <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['ruleColor']&&!$refs['ruleColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['ruleColor']&&$refs['ruleColor'].showPicker"></i>
+                </span>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  v-model="topologyData.data.ruleColor"
+                  ref="ruleColor"
+                  @active-change="(val)=>changeTopologyOpt(val,'ruleColor',true)"
+                >
+                </el-color-picker>
+              </div>
             </div>
           </div>
 
@@ -854,7 +1059,7 @@
         <div class="project-content-box" style="width: 100%">
 
           <div class="project-content-item">
-            <label>Url：</label>
+            <label>Url</label>
             <div class="full pr10">
               <el-input class="input" size="small" v-model="topologyData.data.url" placeholder="请输入名称"  @change="changeTopologyOpt"></el-input>
             </div>
@@ -1040,6 +1245,36 @@
           {id:'dot',name:'圆点'},
           {id:'comet',name:'彗星'},
         ],
+        nodeAnimateOptions :[
+            {
+              id: 'upDown',
+              name: '上下跳动'
+            },
+            {
+              id: 'leftRight',
+              name: '左右跳动'
+            },
+            {
+              id: 'heart',
+              name: '心跳'
+            },
+            {
+              id: 'success',
+              name: '成功'
+            },
+            {
+              id: 'warning',
+              name: '警告'
+            },
+            {
+              id: 'error',
+              name: '错误'
+            },
+            {
+              id: 'show',
+              name: '炫耀'
+            },
+          ],
       }
     },
     mixins: [rz],
@@ -1161,28 +1396,27 @@
       },
       moduleIdChange(n){
         this.selection.pen.data.moduleName=this.modules.find(item=>item.id===n).name;
+        if(!this.selection.pen.data.title){
+          this.selection.pen.data.title=this.selection.pen.data.moduleName
+          this.selection.pen.text=this.selection.pen.data.title;
+          this.onChange()
+        }
+      },
+      changeTitle(val){
+        this.selection.pen.text=val;
+        this.onChange()
       },
       onChange(value){
+        console.log(value,this.selection.pen.lineWidth)
         if(value==='lineWidth'){
-          this.pen.lineWidth=this.selection.pen.data.lineWidth;
+          this.selection.pen.lineWidth=this.selection.pen.data.lineWidth;
         }
-        if(this.selection.pens){
-          for(const item of this.selection.pens){
-            item.dash=this.pen.dash;
-            item.strokeStyle=this.pen.strokeStyle;
-            item.lineWidth=this.pen.lineWidth;
-            item.globalAlpha=this.pen.globalAlpha;
-            item.font=Object.assign({},this.pen.font);
-            item.textMaxLine=this.pen.textMaxLine;
-            item.textOffsetX=this.pen.textOffsetX;
-            item.textOffsetY=this.pen.textOffsetY;
-          }
-        }
-        if(!this.selection.pen.type||this.selection.pens){
-          this.$emit('change',this.selection.pen||this.selection.pens);
-        }else{// 线更新
-          this.$emit('change');
-        }
+        this.$emit('change',this.selection.pen);
+        // if(!this.selection.pen.type||this.selection.pens){
+        //   this.$emit('change',this.selection.pen||this.selection.pens);
+        // }else{// 线更新
+        //   this.$emit('change');
+        // }
       },
       changeExpand(){
         this.selection.expand= !this.selection.expand;
@@ -1235,20 +1469,22 @@
 
         this.onChange();
       },
-      changeTopologyOpt(val,key){
-        // this.topologyData.data[key]=this.colorRGBtoHex(val);
+      changeTopologyOpt(val,key,isColor){
+        //
         // getTopology(this.index).data[key]=val;
         // getTopology(this.index).render();
-        this.topologyData.data[key]=val;
+        if(isColor){
+          this.topologyData.data[key]=this.colorRGBtoHex(val);
+        } else{
+          this.topologyData.data[key]=val;
+        }
         Object.keys(this.topologyData.data).forEach((key1)=>{
           getTopology(this.index).data[key1]=this.topologyData.data[key1];
         });
         // console.log(dataOption[key]);
         getTopology(this.index).render();
-        console.log(123213123);
       },
       colorRGBtoHex(color){//获取颜色16进制数
-        return color;
         if(!color){
           return ""
         }
@@ -1320,6 +1556,17 @@
       valueMappingDel(index,row){
         console.log(index,row)
       },
+      inputFocus(e){
+        // console.log(e);
+        // console.log(e.path[2]);
+        // e.path[2].classList.add('el-input-number-show-button');
+      },
+      inputBlur(e){
+        // console.log(e);
+      },
+      colorPickerClick(ref){
+        this.$refs[ref].showPicker=true;
+      },
     }
   }
 </script>
@@ -1337,7 +1584,22 @@
     font-size: 14px;
     text-align: center;
   }
-
+  .props-box /deep/ .el-tabs--card>.el-tabs__header{
+    background: #EEEEEE;
+    border: none;
+  }
+  .props-box /deep/  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active{
+    background: #FFFFFF;
+    font-family: Roboto-Bold;
+    font-size: 14px;
+    color: #FA901C;
+    font-weight: 700;
+    border-bottom-color: #FFF;
+    border-top: 3px solid #FA901C;
+  }
+  .props-box /deep/ .el-tabs--card>.el-tabs__header .el-tabs__item{
+    box-sizing: content-box;
+  }
 </style>
 <style>
   .can-clear.el-color-dropdown .el-color-dropdown__link-btn {
@@ -1355,6 +1617,8 @@
   }
   .project-content{
     margin: 10px;
+    height: calc(100% - 50px);
+    overflow-y: auto;
     .project-content-title{
       background: #F6F6F6;
       padding-left: 10px;
@@ -1378,6 +1642,7 @@
     .project-content-item{
       padding-left: 10px;
       display: inline-block;
+      position: relative;
       width: 100%;
       label{
         font-family: PingFangSC-Regular;
@@ -1391,28 +1656,127 @@
       }
     }
   }
-  /deep/ .el-tabs.el-tabs--card {
-    height: 100%;
+  .project-content.node-content{
+    overflow-y: unset;
+    height: auto;
+    /deep/ .el-select-dropdown__wrap{
+      max-height: 190px;
+    }
+  }
+  .pens-data{
+    /deep/ .el-form-item{
+      margin-bottom: 10px;
+    }
+    .half-form-item{
+      width: calc(50% - 20px);
+      display: inline-block;
+      padding: 0 8px;
+    }
+    .full-form-item{
+      width: calc(100% - 10px);
+      display: inline-block;
+      padding: 0 8px;
+    }
+    .form-row-title{
+      height: 32px;
+      line-height: 32px;
+      background: #F6F6F6;
+      padding: 0 10px;
+      /deep/ .el-form-item__content{
+        height: 100%;
+        line-height: 32px;
+        > div{
+          width: 100%;
+        }
+      }
+    }
+      /deep/ .el-form-item__content{
+      > div{
+        width: 100%;
+      }
+    }
+    /deep/.el-form--label-top .el-form-item__label{
+      line-height: 0;
+      padding: 0;
+    }
 
-    .el-tabs__content {
-      height: calc(100% - 55px) !important;
-      overflow-y: auto;
+    .element-item {
+      padding: 10px 10px 10px 0;
+      border: 1px dashed #dfe7f2;
+      width: calc(100% - 60px);
+      margin-bottom: 10px;
+      margin-left: 10px;
+    }
+    .right-box-form .element-item.form-row-item{
+      width: calc(100% - 120px);
+      padding: 20px 20px 20px 0;
+    }
+    .form-row-item .nz-icon-minus-position {
+      position: absolute;
+      top: 50%;
+      right: -55px;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      background: rgba(236,127,102,0.1);
+      border-radius: 4px;
+      padding: 0 5px;
+      .nz-icon-minus{
+        color: #EC7F66;
+      }
+    }
+    .tooltip-box{
+      padding-left: 10px;
+      width: calc(100% - 10px);
     }
   }
 
-  /deep/ .el-collapse-item__header {
-    padding: 0 10px;
-    background-color: #F9F9F9;
+  .props-box{
+    /deep/ .el-tabs.el-tabs--card {
+      height: 100%;
+
+      .el-tabs__content {
+        height: calc(100% - 55px) !important;
+        overflow-y: auto;
+        padding: 0 10px ;
+      }
+  }
+    /deep/ .el-collapse{
+      background: #f6f6f6;
+      border: none;
+      font-size: 14px;
+    }
+    /deep/ .el-collapse-item__header {
+      padding: 0 10px;
+      background-color: #F9F9F9;
+      height: 32px;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      font-weight: 400;
+      line-height: 14px;
+    }
+
+    /deep/ .el-collapse-item__wrap {
+      padding: 0 10px;
+      background-color: #ffffff;
+      border: none;
+    }
+
+    /deep/ .el-collapse-item__content {
+      padding: 12px 0px;
+    }
+
+
+    /*/deep/ .el-input-number__decrease, /deep/ .el-input-number__increase{*/
+      /*visibility: hidden;*/
+    /*}*/
+    /*/deep/ .el-input-number-show-button{*/
+      /*/deep/ .el-input-number__decrease,/deep/ .el-input-number__increase{*/
+        /*visibility: visible;*/
+      /*}*/
+    /*}*/
   }
 
-  /deep/ .el-collapse-item__wrap {
-    padding: 0 10px;
-    background-color: #F9F9F9;
-  }
-
-  /deep/ .el-collapse-item__content {
-    padding: 12px 0px;
-  }
 
   .mb10 {
     margin-bottom: 10px;
@@ -1456,9 +1820,8 @@
 
   .props-box {
     position: relative;
-    width: calc(100% - 20px);
+    width: 100%;
     height: calc(100% - 20px);
-    overflow-y: scroll;
     padding-bottom: 20px;
     .iconfont {
       cursor: pointer;
@@ -1483,11 +1846,15 @@
 
     .props-pen-item {
       width: 50%;
+      .p10{
+       position: relative;
+      }
     }
 
     .icon-item {
-      width: 100%;
+      width: 75%;
       height: 100%;
+      padding-left: 25%;
     }
 
     .icon-item svg {
@@ -1518,5 +1885,46 @@
     /deep/ .el-input-number--small {
       width: auto;
     }
+  }
+  .color-content{
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 32px;
+    left: 66px;
+  }
+  .color{
+    position: relative;
+  }
+  .color-show{
+    border: 1px solid #E7EAED;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 32px);
+    height: 30px;
+  }
+  .color-show .color-text{
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .color-show-left{
+    width: 18px;
+    height: 18px;
+    border: 1px solid #E7EAED;
+    border-radius: 5px;
+    margin: 0 5px;
+  }
+  .color-arrows{
+    color: #C0C4CC;
+    position: absolute;
+    right: 42px;
+  }
+  .color-arrows .nz-icon{
+    font-size: 12px;
   }
 </style>

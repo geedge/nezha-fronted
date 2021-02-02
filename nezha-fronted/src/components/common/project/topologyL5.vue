@@ -53,7 +53,7 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <div class="flex middle special-select mb10" style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px">
+          <div class="flex middle special-select mb10" style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px;background: #fff">
             <div class="full pr10">
               <el-select v-model="lineName" placeholder="请选择" size="small"
               :popper-append-to-body="false"
@@ -107,7 +107,7 @@
                    :class="{'nz-btn-disabled':prevent_opt.save}">
              {{$t('project.topology.save')}}
            </button>
-           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
              {{$t('project.topology.cancel')}}
            </button>
          </span>
@@ -448,7 +448,9 @@
                 this.chartGetData[index].res=obj.arr;
                 if(obj.item.type===0){// 判断valueMapping 给相应的状态
                   // obj.item.animateType='warning';
-                  // onChangeAnimate(obj.item,'warning')
+                  if(obj.item.animateType){
+                    onChangeAnimate(obj.item,obj.item.animateType)
+                  }
                 }else if(obj.item.type===1){// 判断valueMapping 给相应的状态
                   // onChangeAnimateLine(obj.item,'beads')
                 }
@@ -465,9 +467,45 @@
 
       reload(){
         this.getTopologyData().then((data)=>{
-          getTopology(this.topologyIndex).open(data);
-          getTopology(this.topologyIndex).lock(1);
-          this.getNodesArr();
+          this.openTopologyData(data).then(()=>{
+            //获取对应的值 给节点 连线添加对应动画
+            console.log(data);
+            this.lineName=data.lineName?data.lineName:this.lineName;
+            this.chartGetData=[];
+            let axiosArr=[];
+            let endTime=this.filterTime[1];
+            let startTime=this.filterTime[0];
+            let step=bus.getStep(startTime,endTime);
+            data.pens&&data.pens.forEach(item=>{
+              console.log(item.id);
+              this.chartGetData.push({id:item.id,res:[]});
+              let arr=item.data.expressArr.map((ele)=>{
+                let query=encodeURIComponent(ele);
+                query+='&nullType='+'connected';
+                return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
+              });
+              axiosArr.push({item,arr});
+            });
+
+            axios.all(axiosArr).then(all=>{
+              all.forEach((obj,index)=>{
+                this.chartGetData[index].res=obj.arr;
+                if(obj.item.type===0){// 判断valueMapping 给相应的状态
+                  // obj.item.animateType='warning';
+                  if(obj.item.animateType){
+                    onChangeAnimate(obj.item,obj.item.animateType)
+                  }
+                }else if(obj.item.type===1){// 判断valueMapping 给相应的状态
+                  // onChangeAnimateLine(obj.item,'beads')
+                }
+              })
+            }).then(()=>{
+              getTopology(this.topologyIndex).open(data);
+              getTopology(this.topologyIndex).lock(1);
+            });
+
+            this.getNodesArr();
+          })
         });
       },
       openTopologyData(data){
@@ -489,7 +527,7 @@
       getTopologyData(){
         return new Promise(resolve=>{
           let data=localStorage.getItem('data');
-          data=data?JSON.parse(data):{bkColor:'#FFFFFF'};
+          data=data?JSON.parse(data):{bkColor:'#FFFFFF',gridSize:10,gridColor:'#ededed',lineWidth:1,ruleColor:"#4e4e4e"};
           this.saveData={...data};
           resolve(data);
         });
@@ -638,7 +676,7 @@
               animatePlay:data.animatePlay,
               fillStyle:data.fillStyle,
               strokeStyle:data.strokeStyle,
-              lineWidth:0,
+              lineWidth:this.nodeDefaultWidth(data.name),
               iconToolState:true,
               //chart 配置项
               valueMapping:[],
@@ -650,6 +688,8 @@
               type:'line',
               displayChart:true,
               aggregation:'last',
+              title:'',
+              url:'',
             }
           }else if(data.type==1&& !data.data){
             //连线是否自动计算锚点
@@ -672,6 +712,9 @@
               type:'line',
               displayChart:true,
               aggregation:'last',
+              title:'',
+              moduleName:'',
+              url:'',
             }
           }
           if(data.type===0||data.type===1){
@@ -717,6 +760,10 @@
             case 'node':
             case 'addNode':
               this.modulesDiff(data);
+              if(data.data.expressArr.length===0){
+                data.data.expressArr.push('');
+                data.data.legends.push('');
+              }
               this.props={
                 node:data,
                 line:null,
@@ -744,6 +791,10 @@
                 pen:data,
                 pens:null,
               };
+              if(data.data.expressArr.length===0){
+                data.data.expressArr.push('');
+                data.data.legends.push('');
+              }
               this.$nextTick(()=>{
                 if(this.$refs.CanvasProps){
                   this.$refs.CanvasProps.tab='1';
@@ -1106,6 +1157,7 @@
             this.toolShow.attrCord=[domRect.width-350,0];
             this.toolShow.height=domRect.height;
             getTopology(this.topologyIndex).canvasPos=domRect;
+            this.reload();
           })
           this.getNodesArr();
         }else{
@@ -1158,6 +1210,15 @@
           this.timer3=null
         },300)
       },
+      nodeDefaultWidth(nodeName){
+        switch(nodeName){
+          case 'myCube':
+          case "rectangleImg":
+            return 0;
+          default:
+            return 1;
+        }
+      }
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();
@@ -1173,6 +1234,7 @@
       .el-collapse-item__header {
         padding: 0 10px;
         background-color: #ffffff;
+        height: 32px;
       }
       .el-collapse-item__header.is-active{
         background: #F6F6F6;
@@ -1511,7 +1573,7 @@
     }
 
     .props {
-      width: 400px;
+      width: 500px;
       height: 100%;
       border: none;
       position: absolute;

@@ -9,17 +9,24 @@
     <!--<div> 保存为图片 </div>-->
     <div class="top-tool-item" @click="del">  <i class="nz-icon nz-icon-delete"/> </div>
     <div class="top-tool-item top-tool-item-scale">
-      <el-input-number
-        size="mini"
-        v-model="scaleNum"
-        :max="500"
-        :min="25"
-        :step="20"
-        :precision="0"
-        id="scaleNum"
-        @change="scale">
-      </el-input-number>
-      <span class="percent">%</span>
+      <span class="scale-number">
+          <span class="scale-number-minus scale-number-symbol" @click="changeScale(-25)">-</span>
+          <el-popover
+            placement="bottom"
+            width="111"
+            trigger="click"
+            class="scale-number-box"
+            popper-class="scale-number-popover"
+           >
+            <div class="scale-num-pop" style=" width: 91px;min-width: 91px">
+              <div @click="scale(50)" :class="['scale-num-pop',scaleNum==50?'is-active':'']">50</div>
+              <div @click="scale(100)" :class="['scale-num-pop',scaleNum==100?'is-active':'']">100</div>
+              <div @click="scale(200)" :class="['scale-num-pop',scaleNum==200?'is-active':'']">200</div>
+            </div>
+            <span class="scale-number-content" slot="reference">{{scaleNum}}%</span>
+          </el-popover>
+          <span class="scale-number-add scale-number-symbol" @click="changeScale(25)">+</span>
+        </span>
     </div>
     <!--<div class="top-tool-item" @click="clear"> 清空画布 </div>-->
 
@@ -105,7 +112,18 @@
       fitView(){//自适应画布大小
         getTopology(this.index).fitView();
       },
+      changeScale(num){
+        this.scaleNum+=num;
+        if(this.scaleNum<25){
+          this.scaleNum=25
+        }
+        if(this.scaleNum>400){
+          this.scaleNum=400
+        }
+        this.scale(this.scaleNum)
+      },
       scale(val){
+        this.scaleNum=val;
         getTopology(this.index).scaleTo(val/100);
       },
       del(){
@@ -124,7 +142,26 @@
     }
   }
 </script>
-
+<style lang="scss">
+  .scale-number-popover{
+    width: 111px;
+    min-width: 111px;
+    .el-popover{
+      width: 100%;
+    }
+  }
+  .scale-number-popover .scale-num-pop{
+    text-align: center;
+    font-size: 14px;
+    color: #666666;
+    font-weight: 400;
+    width: 91px;
+    cursor: pointer;
+  }
+  .scale-number-popover .scale-num-pop.is-active{
+    color: #FA901C;
+  }
+</style>
 <style lang="scss" scoped>
   .tool-top {
     border-radius: 2px;
@@ -152,6 +189,35 @@
       top: 7px;
       left: 68px;
       font-size:12px ;
+    }
+    .scale-number{
+      width: 91px;
+      display: flex;
+      height: 30px;
+      line-height: 30px;
+      position: relative;
+      padding: 0 10px;
+      justify-content: space-between;
+      .scale-number-content{
+        width: 59px;
+        height: 100%;
+        text-align: center;
+        font-size: 12px;
+        display: block;
+        line-height: 28px;
+      }
+      .scale-number-symbol{
+        background: #E9E9E9;
+        height: 16px;
+        width: 16px;
+        display: inline-block;
+        color: #333;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 50%;
+        text-align: center;
+        margin-top: 6px;
+      }
     }
     /deep/ .el-input--mini{
       input{
