@@ -266,7 +266,7 @@
   import loading from "../common/loading";
   import timePicker from '../common/timePicker';
   import chartPreview from './chartPreview';
-  import echarts from 'echarts';
+  import * as echarts from 'echarts';
   import nzAlertTag from '../page/alert/nzAlertTag';
   import bus from '../../libs/bus';
 

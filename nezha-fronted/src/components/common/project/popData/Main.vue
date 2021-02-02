@@ -66,7 +66,7 @@
 
 <script>
   import chartConfig from '../../../page/dashboard/overview/chartConfig';
-  import echarts from "echarts";
+  import * as echarts from "echarts";
   
   var endpointChart;
   var assetChart;
