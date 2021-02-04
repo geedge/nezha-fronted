@@ -5,49 +5,49 @@
         <div class="system-config-form basicForm">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
-              <el-input v-model="basic.system_name"></el-input>
+              <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
-              <el-input v-model="basic.alert_api"></el-input>
+              <el-input v-model="basic.alert_api"id="system-baisc-alert_api"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.assetPingSwith')" prop="asset_ping_switch">
-              <el-switch v-model.number="basic.asset_ping_switch" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'>
+              <el-switch v-model.number="basic.asset_ping_switch" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'id="system-baisc-asset_ping_switch">
               </el-switch>
             </el-form-item>
             <!--<el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
               <el-input v-model.number="basic.asset_ping_interval" :disabled="basic.asset_ping_switch == 'off'"></el-input><span class="nz-input-append">s</span>
             </el-form-item>-->
             <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
-              <el-input v-model.number="basic.default_cabinet_usize" ></el-input>
+              <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
             </el-form-item>
             <!--<el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
               <el-input v-model="basic.node_exporter_target_path"></el-input>
             </el-form-item>-->
             <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval">
-              <el-input v-model.number="basic.scrape_interval" ></el-input><span class="nz-input-append">{{$t('config.system.basic.second')}}</span>
+              <el-input v-model.number="basic.scrape_interval" id="system-baisc-scrape_interval"></el-input><span class="nz-input-append">{{$t('config.system.basic.second')}}</span>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
-              <el-input v-model.number="basic.storage_local_retention" ></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
+              <el-input v-model.number="basic.storage_local_retention" id="system-baisc-storage_local_retention"></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
-              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0"></el-input-number>
+              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-baisc-query_max_series"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
-              <el-select v-model="basic.timezone">
-                <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value"></el-option>
+              <el-select v-model="basic.timezone" id="system-baisc-timezone" >
+                <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value" ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
-              <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'>
+              <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
               </el-switch>
             </el-form-item>
             <el-form-item>
               <button
-                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button"
+                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"
                 :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
               >{{$t('overall.reset')}}</button>
-              <button @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -56,45 +56,45 @@
         <div class="system-config-form">
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
-              <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')"></el-checkbox>
+              <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpHost')" prop="email_smtp_host">
-              <el-input v-model="email.email_smtp_host" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input v-model="email.email_smtp_host" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_host"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpPort')" prop="email_smtp_port">
-              <el-input v-model.number="email.email_smtp_port" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input v-model.number="email.email_smtp_port" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_port"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_smtp_account">
-              <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'"> autocomplete="off"</el-input>
+              <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.smtpPwd')" prop="email_smtp_password">
-              <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off"></el-input>
+              <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
               <div><span>{{$t('config.system.email.pwdTip')}}</span></div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" prop="email_send_account">
-              <el-input v-model="email.email_send_account" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input v-model="email.email_send_account" :disabled="email.email_enable == 'off'" id="system-email-email_send_account"></el-input>
               <div><span>{{$t('config.system.email.sendAccountTip')}}</span></div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.testAccount')" prop="email_test_reciver">
-              <el-input v-model="email.email_test_reciver" :disabled="email.email_enable == 'off'"></el-input>
+              <el-input v-model="email.email_test_reciver" :disabled="email.email_enable == 'off'" id="system-email-email_test_reciver"></el-input>
               <div><span>{{$t('config.system.email.testAccountTip')}}</span></div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.useSSL')" prop="email_ssl_flag">
               <el-row :gutter="10">
-                <el-col :span="5"><el-checkbox v-model="email.email_ssl_flag" true-label="on" false-label="off" :disabled="email.email_enable == 'off'"></el-checkbox></el-col>
+                <el-col :span="5"><el-checkbox v-model="email.email_ssl_flag" true-label="on" false-label="off" :disabled="email.email_enable == 'off'" id="system-email-email_ssl_flag"></el-checkbox></el-col>
                 <el-col :span="15"><div><span>{{$t('config.system.email.sslTip')}}</span></div></el-col>
               </el-row>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.useTLS')" prop="email_tls_flag">
               <el-row :gutter="10">
-                <el-col :span="5"><el-checkbox v-model="email.email_tls_flag" true-label='on' false-label='off' :disabled="email.email_enable == 'off'"></el-checkbox></el-col>
+                <el-col :span="5"><el-checkbox v-model="email.email_tls_flag" true-label='on' false-label='off' :disabled="email.email_enable == 'off'" id="system-email-email_tls_flag"></el-checkbox></el-col>
                 <el-col :span="16"><span>{{$t('config.system.email.tlsTip')}}</span></el-col>
               </el-row>
             </el-form-item>
             <el-form-item>
-              <button @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
-              <button :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
+              <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
+              <button id="system-email-save" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -103,7 +103,7 @@
         <div class="system-config-form terminal">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
             <el-form-item :label="$t('config.system.terminal.terminalNum')" prop="max_terminal_num">
-              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50"></el-input-number>
+              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50" id="system-terminal-max_terminal_num"></el-input-number>
             </el-form-item>
             <el-form-item>
               <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
@@ -115,30 +115,30 @@
         <div class="system-config-form">
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
-              <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')"></el-checkbox>
+              <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.address')" prop="ldap_address">
-              <el-input v-model="ldap.ldap_address"></el-input>
+              <el-input v-model="ldap.ldap_address" id="system-ldap-ldap_address"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
-              <el-input v-model="ldap.ldap_dn"></el-input>
+              <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.pwd')" prop="ldap_password">
-              <el-input v-model="ldap.ldap_password" type="password"></el-input>
+              <el-input v-model="ldap.ldap_password" type="password" id="system-ldap-ldap_password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" prop="ldap_ou">
-              <el-input v-model="ldap.ldap_ou"></el-input>
+              <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.filter')" prop="ldap_user_filter">
-              <el-input v-model="ldap.ldap_user_filter"></el-input>
+              <el-input v-model="ldap.ldap_user_filter" id="system-ldap-ldap_user_filter"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.map')" prop="ldap_mapping">
-              <el-input v-model="ldap.ldap_mapping"></el-input>
+              <el-input v-model="ldap.ldap_mapping" id="system-ldap-ldap_mapping"></el-input>
             </el-form-item>
             <el-form-item>
-              <button @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
-              <button @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
-              <button @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
+              <button id='system-ldap-test' @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
+              <button id='system-ldap-save' @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -192,13 +192,13 @@
             <span class="linkTitleHandle"></span>
             <el-form :inline="true"  :model="notificationTemp"  label-width="180px" size="small" ref="notificationTempForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form">
               <el-form-item  prop="name">
-                <el-input v-model="notificationTemp.name"  class="linkName"/>
+                <el-input v-model="notificationTemp.name"  class="linkName" id="system-notification-name"/>
               </el-form-item>
               <el-form-item  prop="filePath">
-                <el-input  v-model="notificationTemp.filePath" class="linkUrl"/>
+                <el-input  v-model="notificationTemp.filePath" class="linkUrl" id="system-notification-filepath"/>
               </el-form-item>
               <el-form-item  prop="btn">
-                <i @click="notificationAdd" class="nz-icon-create-square nz-icon" v-has="'system_notification_add'"></i>
+                <i @click="notificationAdd" id="system-notification-add" class="nz-icon-create-square nz-icon" v-has="'system_notification_add'"></i>
               </el-form-item>
             </el-form>
           </div>
@@ -259,13 +259,13 @@
             <span class="linkTitleHandle"></span>
             <el-form :inline="true"  :model="linkTemp"  label-width="180px" size="small" ref="linkTempForm" :rules="linkRules" :validate-on-rule-change="false" class="reset-form">
               <el-form-item  prop="name">
-                <el-input v-model="linkTemp.name"  class="linkName"/>
+                <el-input v-model="linkTemp.name"  class="linkName" id="system-link-name"/>
               </el-form-item>
               <el-form-item  prop="url">
-                <el-input  v-model="linkTemp.url" class="linkUrl"/>
+                <el-input  v-model="linkTemp.url" class="linkUrl"  id="system-link-url"/>
               </el-form-item>
               <el-form-item  prop="btn">
-                <i @click="linkAdd" class="nz-icon-create-square nz-icon" v-has="'system_link_add'"></i>
+                <i @click="linkAdd" class="nz-icon-create-square nz-icon" v-has="'system_link_add'" id="system-link-add"></i>
               </el-form-item>
             </el-form>
           </div>

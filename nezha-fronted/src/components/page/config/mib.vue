@@ -22,12 +22,13 @@
           <button :title="$t('overall.createMib')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20" id="mib-add"  type="button" v-has="'snmp_file_toAdd'">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="mib" v-has="'snmp_file_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="mib" v-has="'snmp_file_delete'" id="mib-list-batch-delete"></delete-button>
         </div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="mib-list"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -35,7 +36,7 @@
           ref="customTableTitle"
         ></element-set>
       </transition>
-      <el-table :data="tableData" :height="$tableHeight.normal" @sort-change="tableDataSort" border class="nz-table mib-table" ref="mibTable" style="width: 100%;" v-loading="tools.loading"
+      <el-table :data="tableData" :height="$tableHeight.normal" @sort-change="tableDataSort" border class="nz-table mib-table" ref="mibTable" style="width: 100%;" v-loading="tools.loading" id="mib-list-table"
                 @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
       >
         <el-table-column
@@ -101,7 +102,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="mib-list-totop"><i class="nz-icon nz-icon-top"></i></button>
       <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     </template>
     <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>

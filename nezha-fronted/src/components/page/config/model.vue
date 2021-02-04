@@ -15,13 +15,14 @@
           <button :title="$t('overall.createModel')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="model-add" v-has="'model_toAdd'">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="model" v-has="'model_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="model" v-has="'model_delete'" id="model-list-batch-delete"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="model-list"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -30,6 +31,7 @@
         ></element-set>
       </transition>
       <el-table :data="tableData"
+                id="model-list-table"
                 border style="width: 100%;"
                 ref="modelTable"
                 class="nz-table"
@@ -88,7 +90,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="model-list-totop"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>

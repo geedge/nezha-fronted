@@ -19,32 +19,32 @@
     <div class="right-box-form-box">
       <el-form :model="editMenu" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="130px" ref="menuForm" size="small">
         <el-form-item :label="$t('config.menus.parent')" prop="parentId">
-          <tree-select :multiple="false" :options="menus" label="id" noChildrenText="" noOptionsText="" placeholder="" v-model="editMenu.parentId"></tree-select>
+          <tree-select :multiple="false" :options="menus" label="id" noChildrenText="" noOptionsText="" placeholder="" v-model="editMenu.parentId" id="menu-box-input-parent"></tree-select>
         </el-form-item>
         <el-form-item :label="$t('config.menus.type')" prop="type">
-          <el-radio-group v-model="editMenu.type">
+          <el-radio-group v-model="editMenu.type" id="menu-box-input-type">
             <el-radio :label="1">{{$t('config.menus.menu')}}</el-radio>
             <el-radio :label="2">{{$t('config.menus.button')}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <!--name-->
         <el-form-item :label="$t('config.menus.name')" prop="name">
-          <el-input  placeholder="" type="text" v-model="editMenu.name" ></el-input>
+          <el-input  placeholder="" type="text" v-model="editMenu.name" id="menu-box-input-name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.menus.code')" prop="code">
-          <el-input  placeholder="" type="text" v-model="editMenu.code" ></el-input>
+          <el-input  placeholder="" type="text" v-model="editMenu.code" id="menu-box-input-code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.menus.i18n')" prop="i18n">
-          <el-input  placeholder="" type="text" v-model="editMenu.i18n" ></el-input>
+          <el-input  placeholder="" type="text" v-model="editMenu.i18n" id="menu-box-input-i18n"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.menus.route')" prop="route">
-          <el-input  placeholder="" type="text" v-model="editMenu.route" ></el-input>
+          <el-input  placeholder="" type="text" v-model="editMenu.route" id="menu-box-input-route"></el-input>
         </el-form-item>
         <!--<el-form-item :label="$t('config.menus.perms')" prop="perms">
           <el-input  type="text" placeholder="" v-model="editMenu.perms" ></el-input>
         </el-form-item>-->
         <el-form-item :label="$t('config.menus.orderNum')" prop="orderNum">
-          <el-input-number :max="1000" :min="1" :precision="0" controls-position="right" style="width: 100%;" v-model="editMenu.orderNum" ></el-input-number>
+          <el-input-number :max="1000" :min="1" :precision="0" controls-position="right" style="width: 100%;" v-model="editMenu.orderNum" id="menu-box-input-orderNum"></el-input-number>
         </el-form-item>
 
         <div class="right-box-sub-title">{{$t('config.menus.perms')}}
@@ -54,11 +54,12 @@
         </div>
 
         <div class="right-box-line"></div>
-
-        <el-form-item :key="index" :label="index+1+''" v-for="(permission,index) in editMenu.permissions" >
-          <el-input oninput="this.value = this.value.replace(/[,]/g,'')" placeholder="" style="width: calc(100% - 37px);" type="text" v-model="editMenu.permissions[index].value"></el-input>
-          <span @click="removePermission(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
-        </el-form-item>
+        <div id="menu-box-permissions">
+          <el-form-item :key="index" :label="index+1+''" v-for="(permission,index) in editMenu.permissions" >
+            <el-input oninput="this.value = this.value.replace(/[,]/g,'')" placeholder="" style="width: calc(100% - 37px);" type="text" v-model="editMenu.permissions[index].value" ></el-input>
+            <span @click="removePermission(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
     <!-- end--表单-->

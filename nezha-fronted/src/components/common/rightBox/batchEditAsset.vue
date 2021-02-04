@@ -33,7 +33,7 @@
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
                 </button>
-                <el-input style="width: 100px;" @keydown.enter.native="searchAssetKeydown"
+                <el-input style="width: 100px;" @keydown.enter.native="searchAssetKeydown" id="batch-edit-search-input"
                           class="input-x-mini-24 nz-input-group-middle" placeholder=""
                           v-model="assetSearch.text"></el-input>
                 <button
@@ -45,7 +45,7 @@
                   <div @click="dropdownSelect('Host')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">
                     Host
                   </div>
-                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">
+                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn" >
                     SN
                   </div>
                 </div>
@@ -57,7 +57,7 @@
             <div class="endpoint-sub-table">
               <div class="endpoint-sub-table-head">
                 <div class="endpoint-sub-table-col" style="width: 15px;">
-                  <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf"
+                  <el-checkbox v-model="assetListAll" :indeterminate="assetListHalf" id="batch-edit-select-all"
                                @change="assetListSelAll"></el-checkbox>
                 </div>
                 <div class="endpoint-sub-table-col">Host</div>
@@ -69,7 +69,7 @@
                   <div :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row"
                        :id="'select-asset-'+item.id">
                     <div class="endpoint-sub-table-col" style="width: 15px;">
-                      <el-checkbox v-model="item.sel" @change="selectAsset"></el-checkbox>
+                      <el-checkbox v-model="item.sel" @change="selectAsset" id="batch-edit-select-one"></el-checkbox>
                     </div>
                     <div class="endpoint-sub-table-col" style="width: 50%">{{item.host}}</div>
                     <el-popover trigger="hover" placement="right-start" :content="item.sn">
@@ -82,7 +82,7 @@
             </div>
             <div class="line-100" style="border-color:#dcdfe6"></div>
             <div>
-              <button type="button" @click="addToEndpointList"
+              <button type="button" @click="addToEndpointList" id="batch-edit-add-list"
                       class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn"
               style="margin-top: 3px;">
                 {{$t('overall.addAssetList')}}
@@ -182,7 +182,7 @@
               <div>Value</div>
               <div>Action</div>
             </div>
-            <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;">
+            <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;" id="batch-edit-tags-box">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
                 <el-form-item class="tag-edit tag-edit-tag"
                               :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
@@ -215,8 +215,8 @@
                     :class="{'nz-btn-disabled': editAsset.accounts.length == 3}">
               <span><i class="nz-icon nz-icon-create-square"></i></span>
             </button>
-            <ul class="el-select-dropdown__list">
-              <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index"
+            <ul class="el-select-dropdown__list" >
+              <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" :id="'batch-edit-account-'+type"
                   class="el-select-dropdown__item"><span>{{type}}</span></li>
             </ul>
           </el-popover>

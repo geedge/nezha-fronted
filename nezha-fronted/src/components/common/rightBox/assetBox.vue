@@ -36,7 +36,7 @@
         <div class="right-box-line"></div>
         <!------------------------------------------资产类型---------------------------------------------->
         <el-form-item :label="$t('asset.assetType')" class="right-box-form-content" prop="model.type.code">
-          <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code,$event)">
+          <el-select popper-class="asset-dropdown" size="small" v-model="editAsset.model.type.code" @change="getVendorAndModelOptionData(editAsset.model.type.code,$event)" id="alert-box-input-model-type">
             <el-option
               :id="'asset-edit-type-op-'+item.id"
               v-for="item in assetTypeData"
@@ -50,6 +50,7 @@
         <!------------------------------------------厂商/型号---------------------------------------------->
         <el-form-item :label="$t('asset.vendorModel')" class="right-box-form-content" prop="modelId">
           <el-cascader
+            id="alert-box-input-model-id"
             :options="vendorAndModelOptionData"
             :props="{emitPath: false}"
             :disabled="editAsset.model.type.code ? false : true"
@@ -61,11 +62,12 @@
             @change="modelChange"
           >
           </el-cascader>
-          <span @click="addVendor(editAsset.model.type.code)"  class="right-box-form-add" style="vertical-align: middle" v-has="'asset_vendor_toAdd'"><i class="nz-icon nz-icon-plus"></i></span>
+          <span id="asset-box-add-vendor" @click="addVendor(editAsset.model.type.code)"  class="right-box-form-add" style="vertical-align: middle" v-has="'asset_vendor_toAdd'"><i class="nz-icon nz-icon-plus"></i></span>
         </el-form-item>
         <el-form-item :label="$t('asset.purchaseDate')">
           <div class="select-style">
             <el-date-picker
+              id="asset-box-input-parchase-date"
               size="small"
               v-model="editAsset.purchaseDate"
               value-format="yyyy-MM-dd"
@@ -99,7 +101,7 @@
               <div>Value</div>
               <div>Action</div>
             </div>
-            <div style="height: calc(100% - 32px); overflow: auto">
+            <div style="height: calc(100% - 32px); overflow: auto" id="asset-box-tags">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
                 <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.tag'">
                   <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey" @blur="loadValues(item)" @select="loadValues" popper-class="no-style-class"></el-autocomplete>
@@ -123,7 +125,7 @@
               <span><i class="nz-icon nz-icon-create-square"></i></span>
             </button>
             <ul class="el-select-dropdown__list">
-              <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item"><span>{{type}}</span></li>
+              <li @click="addAccount(type)" v-for="(type, index) in selectableAccountTypes" :key="index" class="el-select-dropdown__item" :id="'asset-box-acount-'+type"><span>{{type}}</span></li>
             </ul>
           </el-popover>
         </div>
@@ -143,7 +145,7 @@
 
         <template v-if="accountType == 'SSH' && !editAsset.id">
           <el-form-item :label="$t('asset.exporter')" class="exporter-label" style="margin-left: 66px">
-            <el-switch class="exporter-switch" v-model="editAsset.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch"></el-switch>
+            <el-switch class="exporter-switch" v-model="editAsset.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch" id="account-box-input-exporter"></el-switch>
           </el-form-item>
         </template>
       </el-form>

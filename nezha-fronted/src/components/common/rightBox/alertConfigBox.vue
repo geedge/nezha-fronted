@@ -18,7 +18,7 @@
       <el-form class="right-box-form right-box-form-left" :model="editAlertRule" label-position="right" label-width="120px" :rules="rules" ref="alertRuleForm">
         <!--alertName-->
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small"></el-input>
+          <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small" id="alert-box-input-name"></el-input>
         </el-form-item>
         <div style="width: calc(100% - 70px);margin-left: 70px">
           <promql-input
@@ -27,22 +27,23 @@
             :index="0"
             :styleType="2"
             :plugins="['metric-input']"
+            id="alert-box-input-promql"
           ></promql-input>
         </div>
         <!--operator-->
         <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
-          <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small">
+          <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator">
             <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="width: 415px;display: inline-block;">
-          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" >
+          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
           </el-input>
         </el-form-item>
         <!--unit-->
         <el-form-item :label="$t('alert.config.unit')" prop="unit">
-          <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%"
+          <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%" id="alert-box-input-unit"
                        :options="unitOptions"
                        :props="{ expandTrigger: 'click',emitPath:false }"
                        :show-all-levels="false"
@@ -52,13 +53,13 @@
         </el-form-item>
         <!--last-->
         <el-form-item :label="$t('alert.config.for')" prop="last">
-          <el-input type="text" placeholder="" v-model.number="editAlertRule.last" size="small">
+          <el-input type="text" placeholder="" v-model.number="editAlertRule.last" size="small" id="alert-box-input-last">
             <template slot="append">{{$t('alert.config.second')}}</template>
           </el-input>
         </el-form-item>
         <!--severity-->
         <el-form-item :label="$t('alert.severity')" prop="severity">
-          <el-select popper-class="config-dropdown" v-model="editAlertRule.severity" placeholder=""  size="small">
+          <el-select popper-class="config-dropdown" v-model="editAlertRule.severity" placeholder=""  size="small" id="alert-box-input-severity">
             <el-option :id="'alert-severity-'+item.value" v-for="item in $CONSTANTS.alertMessage.severityData" :key="item.value" :label="item.label" :value="item.value">
               <template v-if="!item.isEdit">{{item.label}}</template>
               <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
@@ -78,6 +79,7 @@
         <!--receiver-->
         <el-form-item :label="$t('config.account.receiver')" prop="receiver">
           <el-select
+            id="alert-box-input-receiver"
             v-model.trim="editAlertRule.receiverShow"
             placeholder=""
             multiple
@@ -96,11 +98,11 @@
         </el-form-item>
         <!--summary-->
         <el-form-item :label="$t('alert.summary')" prop="summary">
-          <el-input maxlength="512" rows="3" type="textarea" show-word-limit placeholder="" v-model="editAlertRule.summary" size="small"></el-input>
+          <el-input maxlength="512" rows="3" type="textarea" show-word-limit placeholder="" v-model="editAlertRule.summary" size="small" id="alert-box-input-summary"></el-input>
         </el-form-item>
         <!--description-->
         <el-form-item :label="$t('alert.description')" prop="description">
-          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editAlertRule.description" size="small"></el-input>
+          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editAlertRule.description" size="small" id="alert-box-input-description"></el-input>
         </el-form-item>
       </el-form>
     </div>

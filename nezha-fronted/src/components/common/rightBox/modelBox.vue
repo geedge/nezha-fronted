@@ -18,11 +18,12 @@
       <el-form class="right-box-form right-box-form-left" :model="editModel" label-position="right" label-width="120px"  :rules="rules" ref="modelForm">
         <!--model名称-->
         <el-form-item :label='$t("overall.name")' prop="name">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editModel.name" size="small"></el-input>
+          <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editModel.name" size="small" id="model-box-input-name"></el-input>
         </el-form-item>
         <!--设备类型-->
         <el-form-item :label="$t('config.model.type')" prop="type">
           <el-autocomplete
+            id="model-box-input-type"
             :fetch-suggestions="typeSuggestion"
             v-model.trim="editModel.type.value"
             placeholder=""
@@ -46,6 +47,7 @@
         <!--厂商-->
         <el-form-item :label="$t('config.model.vendor')" prop="vendor">
           <el-autocomplete
+            id="model-box-input-vendor"
             :fetch-suggestions="vendorSuggestion"
             v-model.trim="editModel.vendor.value"
             placeholder=""
@@ -66,7 +68,7 @@
           </el-autocomplete>
         </el-form-item>
         <el-form-item :label="$t('asset.uSize')" prop="usize">
-          <el-input v-model.number="editModel.usize" :max="47" size="small"></el-input>
+          <el-input v-model.number="editModel.usize" :max="47" size="small" id="model-box-input-usize"></el-input>
         </el-form-item>
       </el-form>
     </div>

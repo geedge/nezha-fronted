@@ -18,7 +18,7 @@
       <div class="right-box-form-box">
         <el-form class="right-box-form right-box-form-left" label-width="120px"  :model="panel" label-position="right" ref="panelForm">
           <el-form-item :label='$t("overall.name")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small" ></el-input>
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small" id="panel-box-input-name"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -26,10 +26,10 @@
 
       <!-- begin--底部按钮-->
       <div class="right-box-bottom-btns">
-        <button v-cancel="{obj:panel,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+        <button v-cancel="{obj:panel,func:esc}" id="panel-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save">
+        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="panel-box-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

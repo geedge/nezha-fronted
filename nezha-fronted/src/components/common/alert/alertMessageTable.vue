@@ -6,6 +6,7 @@
     <!-- 自定义table列 -->
     <transition name="el-zoom-in-top">
       <element-set
+        :id="projectAlertId+'-element-set'"
         v-if="tools.showCustomTableTitle"
         @close="tools.showCustomTableTitle = false"
         :custom-table-title.sync="tools.customTableTitle"
@@ -232,6 +233,7 @@
     },
     mixins:[bus],
     props:{
+      id:String,
       tableData:{},
       loading:{},
       tableHeight:{},

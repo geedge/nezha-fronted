@@ -13,8 +13,8 @@
             <div class="week">{{sysWeek}}</div>
             <div class="sys-date">{{sysDate}}</div>
           </div>
-          <pick-time :refresh-data-func="setFreshDataTimer" :showTimePicker="false" :use-chart-unit="false" class="float-right pickTime margin-l-5" ref="pickTime" v-model="searchTime"></pick-time>
-          <div class="operation" @click="switchFullScreen" ><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
+          <pick-time :refresh-data-func="setFreshDataTimer" :showTimePicker="false" :use-chart-unit="false" class="float-right pickTime margin-l-5" ref="pickTime" v-model="searchTime" id="overview-search"></pick-time>
+          <div class="operation" @click="switchFullScreen" id="overview-full-screen"><span ><i class="nz-icon screen-icon" :class="{'nz-icon-maxview':!isFullScreen,'nz-icon-exit-full-screen':isFullScreen}"></i></span></div>
         </div>
       </div>
     </div>
@@ -23,7 +23,7 @@
       <!--第一行-->
       <div class="content-row-box">
         <div class="content-col-box">
-          <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')">
+          <div class="content-col-content clickable" v-loading="assetLoading" @click="jumpTo('asset')" id="overview-to-asset">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="assetData ? assetData.totalStat.total  + '' : ''" class="item" effect="light" placement="top">
@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')">
+          <div class="content-col-content clickable" v-loading="alertMessageLoading" @click="jumpTo('alertList')" id="overview-to-alertlist" >
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="alertMessageData ? alertMessageData.alertMessageTotal + '' : ''" class="item" effect="light" placement="top">

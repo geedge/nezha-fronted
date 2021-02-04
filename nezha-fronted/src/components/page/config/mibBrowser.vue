@@ -12,6 +12,7 @@
       <div class="top-tool-main-right">
         <div class="top-tool-search host-input">
           <el-autocomplete
+            id="mib-browser-host"
             v-model="searchParam.host"
             :fetch-suggestions="assetSuggestion"
             placeholder="Host"
@@ -26,30 +27,30 @@
           </el-autocomplete>
         </div>
         <div class="top-tool-search margin-l-20 oid-input">
-          <el-input size="mini" v-model="searchParam.oid" placeholder="OID"></el-input>
+          <el-input size="mini" v-model="searchParam.oid" placeholder="OID" id="mib-browser-oid"></el-input>
         </div>
         <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-l-20 mib-browser-btn-group">
           <!--<div class="el-popover mib-browser-ad-tip" v-show="searchParam.version != 2 || searchParam.port != 161 || searchParam.community != 'public'"><i class="el-icon-more"></i></div>-->
-          <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation">
+          <el-select class="nz-input-group-left input-x-mini-24 operation" v-model="searchParam.operation" id="mib-browser-host">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select><el-popover trigger="click" placement="bottom" @show="popShow" @hide="popHide">
             <div class="mib-browser-ad-search">
               <el-row class="mib-browser-ad-search-item">
                 <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.number="searchParamPop.port"></el-input>
+                  <el-input class="input-x-mini-24" v-model.number="searchParamPop.port" id="mib-browser-port"></el-input>
                 </el-col>
               </el-row>
               <el-row class="mib-browser-ad-search-item">
                 <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.community')}}</div></el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model="searchParamPop.community"></el-input>
+                  <el-input class="input-x-mini-24" v-model="searchParamPop.community" id="mib-browser-community"></el-input>
                 </el-col>
               </el-row>
               <el-row class="mib-browser-ad-search-item">
                 <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.version')}}</div></el-col>
                 <el-col :span="17">
-                  <el-radio-group v-model.number="searchParamPop.version">
+                  <el-radio-group v-model.number="searchParamPop.version" id="mib-browser-version">
                     <el-radio-button :label="2"></el-radio-button>
                     <el-radio-button :label="3"></el-radio-button>
                   </el-radio-group>
@@ -62,7 +63,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('login.username')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input class="input-x-mini-24" v-model.trim="searchParamPop.auth.username"></el-input>
+                    <el-input class="input-x-mini-24" v-model.trim="searchParamPop.auth.username" id="mib-browser-username"></el-input>
                   </el-col>
                 </el-row>
 
@@ -71,7 +72,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.securityLevel')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-radio-group v-model="searchParamPop.auth.securityLevel" size="small">
+                    <el-radio-group v-model="searchParamPop.auth.securityLevel" size="small" id="mib-browser-securityLevel">
                       <el-radio-button label="noAuthNoPriv"></el-radio-button>
                       <el-radio-button label="authNoPriv"></el-radio-button>
                       <el-radio-button label="authPriv"></el-radio-button>
@@ -84,7 +85,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.password"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.password" id="mib-browser-password"></el-input>
                   </el-col>
                 </el-row>
 
@@ -93,7 +94,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.authProtocol')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-radio-group v-model="searchParamPop.auth.authProtocol">
+                    <el-radio-group v-model="searchParamPop.auth.authProtocol" id="mib-browser-authProtocol">
                       <el-radio-button label="MD5"></el-radio-button>
                       <el-radio-button label="SHA"></el-radio-button>
                     </el-radio-group>
@@ -105,7 +106,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.privProtocol')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-radio-group v-model="searchParamPop.auth.privProtocol">
+                    <el-radio-group v-model="searchParamPop.auth.privProtocol" id="mib-browser-privProtocol">
                       <el-radio-button label="DES"></el-radio-button>
                       <el-radio-button label="AES"></el-radio-button>
                     </el-radio-group>
@@ -117,7 +118,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword" id="mib-browser-privPassword"></el-input>
                   </el-col>
                 </el-row>
               </template>
@@ -215,8 +216,8 @@
         <div class="mib-browser-table-title">
           <span>Result table</span>
           <span>
-            <span :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')" @click="exportXlsx" class="mib-browser-table-op" v-has="'snmp_browser_export'"><i class="nz-icon nz-icon-download1"></i></span>
-            <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')"><i class="nz-icon nz-icon-close"></i></span>
+            <span :class="{'mib-browser-table-op-light': resultData.length == 0}" :title="$t('overall.exportExcel')" @click="exportXlsx" class="mib-browser-table-op" v-has="'snmp_browser_export'" id="mib-browser-export"><i class="nz-icon nz-icon-download1"></i></span>
+            <span @click="clearResult" class="mib-browser-table-op" :title="$t('overall.clear')" id="mib-browser-clear"><i class="nz-icon nz-icon-close"></i></span>
           </span>
         </div>
         <pl-table :row-height="28" use-virtual :datas="resultData" border :empty-text="$t('config.mib.noData')" ref="resultTable"
@@ -251,7 +252,7 @@
       <div slot="footer" class="footer">
         <div class="el-message-box__btns">
           <button @click="snmpSetFormVisible = false" class="el-button el-button--default el-button--small">{{$t("overall.cancel")}}</button>
-          <button @click="search(true)" class="el-button el-button--default el-button--small">{{$t("overall.ok")}}</button>
+          <button @click="search(true)" class="el-button el-button--default el-button--small" id="mib-browser-search">{{$t("overall.ok")}}</button>
         </div>
       </div>
     </el-dialog>

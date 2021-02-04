@@ -1,6 +1,6 @@
 <template>
     <div :class="['delete-button',(deleteObjs.length<1?'':'delete-button-light')]">
-      <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'nz-btn-disabled' : deleteObjs.length<1}" @click="batchDelete"><span><i class="nz-icon nz-icon-delete"></i></span></el-button>
+      <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'nz-btn-disabled' : deleteObjs.length<1}" @click="batchDelete" :id="id"><span><i class="nz-icon nz-icon-delete" ></i></span></el-button>
     </div>
 </template>
 
@@ -11,7 +11,8 @@
       filterFunction:Function,
       deleteObjs:Array,
       api:String,
-      clickFunction:Function
+      clickFunction:Function,
+      id:String
     },
     methods:{
       batchDelete:function(){

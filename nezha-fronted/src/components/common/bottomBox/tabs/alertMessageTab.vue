@@ -6,11 +6,11 @@
           <template v-if="from == $CONSTANTS.fromRoute.asset">{{obj.host}}</template>
           <template v-if="from == $CONSTANTS.fromRoute.rule">{{obj.alertName}}</template>
           <template v-if="from == $CONSTANTS.fromRoute.endpoint"><div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{obj ? obj.id : ''}}</div></template>
-        </div><div
+        </div><div :id="from+'-change-panelordetail'"
         @click="changeTab(from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint? 'panel' : 'detail')" class="sub-list-tab">{{$t("overall.detail")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset"
+        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.alerts")}}</div><div v-if="from == $CONSTANTS.fromRoute.asset" :id="from+'-change-modules'"
         @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.tableTitle.modules")}}</div>
-        <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("overall.query")}}</div>
+        <div @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'" v-if="from == $CONSTANTS.fromRoute.endpoint" :id="from+'-change-endpoint'">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
         <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="defaultPick" :show-empty="true"></pick-time>
@@ -21,10 +21,11 @@
             class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">
           <i class="nz-icon nz-icon-download1"></i>
         </button>
-        <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="['rule_alerts_delete', 'project_endpoint_alerts_delete', 'asset_alerts_delete']"></delete-button>
+        <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="['rule_alerts_delete', 'project_endpoint_alerts_delete', 'asset_alerts_delete']" :id="from+'-sub-batch-delete'"></delete-button>
       </div>
     </div>
     <alertMessageTable
+      :projectAlertId="from+'-sub-alert-table'"
       ref="alertMessageTable"
       :tableData="tableData"
       :loading="loading"

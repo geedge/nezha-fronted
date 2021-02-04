@@ -5,8 +5,8 @@
         <i class="nz-icon nz-icon-arrow-down"></i>
         <transition name="el-zoom-in-top">
           <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" style="z-index: 101" v-show="exportShow">
-            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.import"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
-            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.export"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
+            <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.import" :id="id+'-xlsx-import'"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
+            <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.export" :id="id+'-xlsx-export'"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>
         </transition>
       </button>
@@ -15,7 +15,7 @@
     <el-dialog :visible.sync="importBox.show" :title="importBox.title" modal-append-to-body append-to-body :modal-append-to-body='false' :show-close="true" :width="importBox.width" @close="closeDialog" class="nz-dialog" :close-on-click-modal="importBox.type!=3">
       <div v-if="importBox.type==1">
         <div class="upload-body">
-          <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls">
+          <el-upload drag class="upload-demo" ref="uploadExcel"  action="" :file-list="importFileList" :on-change="importChange"  :auto-upload="false" accept=".xlsx,.xls" :id="id+'-xlsx-input-file'">
             <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
             <i class="nz-icon nz-icon-upload"></i>
             <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
@@ -26,13 +26,13 @@
         </div>
         <div slot="footer" class="footer">
           <div class="el-message-box__btns" style="text-align: right;">
-            <button @click="downloadTemplate"  class="el-button el-button--default el-button--small">
+            <button @click="downloadTemplate"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-import-template'">
               <span>{{$t('overall.template')}}</span>
             </button>
-            <button  @click="importExcel"  class="nz-btn el-button el-button--default el-button--small" :disabled="prevent_opt.import" :class="{'nz-btn-disabled':prevent_opt.import}">
+            <button  @click="importExcel"  class="nz-btn el-button el-button--default el-button--small" :disabled="prevent_opt.import" :class="{'nz-btn-disabled':prevent_opt.import}" :id="id+'-xlsx-import-add'">
               <span>{{$t('overall.importExcel')}}</span>
             </button>
-            <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+            <button @click="closeDialog"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-import-esc'">
               <span>{{$t('overall.cancel')}}</span>
             </button>
           </div>
@@ -40,10 +40,10 @@
       </div>
       <div v-if="importBox.type == 2">
         <div class="upload-body">
-          <button @click="exportCur"  class="el-button el-button--default el-button--small">
+          <button @click="exportCur"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-export-current'">
             <span>{{$t('overall.exportCur')}}</span>
           </button>
-          <button  @click="exportAll"  class="el-button el-button--default el-button--small">
+          <button  @click="exportAll"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-export-all'">
             <span>{{$t('overall.exportAll')}}</span>
           </button>
         </div>
@@ -83,7 +83,7 @@
           </div>
           <div slot="footer" class="footer">
             <div class="el-message-box__btns">
-              <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new">
+              <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" :id="id+'-xlsx-import-rollback'">
                 <span>{{$t('overall.rollbackImport')}}</span>
               </button>
               <!--<button  @click="closeDialog"  class="el-button el-button&#45;&#45;default el-button&#45;&#45;small">-->
@@ -108,7 +108,8 @@
       importUrl: {type:String,required:true},
       link:{type:Object},
       permissions: {type: Object},
-      showCur:{type:Boolean,default:true}
+      showCur:{type:Boolean,default:true},
+      id:{type:String,default:'export'}
     },
     data:function(){
       return {

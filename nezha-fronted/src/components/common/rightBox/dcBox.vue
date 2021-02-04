@@ -17,16 +17,16 @@
       <div class="right-box-form-box">
         <el-form class="right-box-form right-box-form-left" label-width="120px" :model="editDc" label-position="right" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small"></el-input>
+            <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
           </el-form-item>
           <el-form-item :label='$t("asset.location")' prop="location">
-            <el-input placeholder="" v-model="editDc.location" size="small"></el-input>
+            <el-input placeholder="" v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
           </el-form-item>
           <el-form-item :label='$t("asset.tel")' prop="tel">
-            <el-input placeholder="" v-model="editDc.tel" size="small"></el-input>
+            <el-input placeholder="" v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
           </el-form-item>
           <el-form-item :label='$t("asset.principal")' prop="principal">
-            <el-select value-key="id" popper-class="config-dropdown" v-model="editDc.principal" placeholder="" size="small">
+            <el-select value-key="id" popper-class="config-dropdown" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
               <el-option @click.native="" v-for="item in userData" :key="item.userId" :label="item.username" :value="item.userId" :id="'dc-principal-op-'+item.userId">
                 <span>{{item.username}}</span>
               </el-option>
@@ -41,6 +41,7 @@
           <!--</el-form-item>-->
           <el-form-item :label='$t("config.dc.state")' prop="state">
             <el-switch
+              id="dc-box-input-name"
               v-model="editDc.state"
               active-value="ON"
               inactive-value="OFF"
@@ -50,6 +51,7 @@
           </el-form-item>
           <el-form-item :label='$t("config.dc.longitude")' prop="longitude" :rules="[{required:coordinateFlag,trigger:'blur'}]">
             <el-input-number
+              id="dc-box-input-longitude"
               placeholder=""
               v-model="editDc.longitude"
               size="small"
@@ -63,6 +65,7 @@
           </el-form-item>
           <el-form-item :label='$t("config.dc.latitude")' prop="latitude"  :rules="[{required:coordinateFlag,trigger:'blur'}]">
             <el-input-number
+              id="dc-box-input-latitude"
               placeholder=""
               v-model="editDc.latitude"
               size="small"

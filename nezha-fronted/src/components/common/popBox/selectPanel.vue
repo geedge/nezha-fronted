@@ -23,7 +23,7 @@
             <div class="tree--node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span class="tree--operation" v-if="!panelLock">
-                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete"><i class="nz-icon nz-icon-delete"></i></span>
+                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" ><i class="nz-icon nz-icon-delete"></i></span>
                 <span @click.stop="editPanel(data)" class="panel-dropdown-btn"><i class="nz-icon nz-icon-edit"></i></span>
               </span>
             </div>

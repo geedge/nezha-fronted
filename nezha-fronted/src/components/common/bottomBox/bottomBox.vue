@@ -9,11 +9,11 @@
         <!--窗口大小控制-->
       <div class="sub-list-window-control">
         <!--退出全屏-->
-        <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen"><i class="nz-icon nz-icon-exit-full-screen"></i></div>
+        <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen" :id="from+'-bottom-exit-full'"><i class="nz-icon nz-icon-exit-full-screen" ></i></div>
         <!--全屏-->
-        <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen"><i class="el-icon-full-screen"></i></div>
+        <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen" :id="from+'-bottom-full'"><i class="el-icon-full-screen"></i></div>
         <!--关闭-->
-        <div class="window-control-btn" @click="closeSubList"><i class="nz-icon nz-icon-close"></i></div>
+        <div class="window-control-btn" @click="closeSubList" :id="from+'-bottom-close'"><i class="nz-icon nz-icon-close"></i></div>
       </div>
 
         <!------TAB区------>

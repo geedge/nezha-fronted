@@ -4,10 +4,10 @@
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
           <div class="top-tool-main-right">
-            <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime">
+            <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime" id="explore">
               <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
             </pick-time>
-            <button :disabled="saveDisabled" @click="saveChart" type="button" v-has="'explore_chart_toAdd'"
+            <button :disabled="saveDisabled" @click="saveChart" type="button" v-has="'explore_chart_toAdd'" id="explore-save-chart"
                     class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
                     :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
               {{$t('dashboard.metric.saveChart')}}
@@ -16,7 +16,7 @@
         </div>
         <div style="height: calc(100% - 50px);width: 100%;" >
           <div ref="scrollWrap" style="height: 100%; overflow: auto;">
-            <div class="expression-room right-margin" style="padding-top: 5px">
+            <div class="expression-room right-margin" style="padding-top: 5px" id="explore-promql-box">
               <!--坑，这个index居然是从1开始-->
               <promql-input
                 v-for="index of promqlKeys.length"

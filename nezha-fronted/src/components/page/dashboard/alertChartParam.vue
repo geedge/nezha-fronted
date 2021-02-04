@@ -2,6 +2,7 @@
     <el-form :model="parameters" ref="alertChartParam" size="small" label-position="left" label-width="80px" class="alert-chart-param-form">
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.select')" >
         <el-cascader
+          id="alert-param-select"
           v-model="parameters.select"
           :options="options"
           :props="props"
@@ -10,17 +11,17 @@
           clearable></el-cascader>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.alertRule')">
-        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.alertRule" clearable>
+        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
           <el-option v-for="(rule,index) in alertRules" :key="rule.id" :label="rule.alertName" :value="rule.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.level')">
-        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.level" clearable>
+        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.level" clearable id="alert-param-level">
           <el-option v-for="(item,index) in levels" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.state')">
-        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.state" clearable>
+        <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.state" clearable id="alert-param-state">
           <el-option v-for="(item,index) in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
@@ -28,8 +29,6 @@
 </template>
 
 <script>
-  import i18n from "../../common/i18n";
-
   export default {
     name: "alertChartParam",
     props:{

@@ -6,6 +6,7 @@
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
           <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input></div>
           <export-excel
+            id="asset-list"
             export-file-name="asset"
             export-url="/asset/export"
             import-url="/asset/import"
@@ -21,13 +22,14 @@
           <button :title="$t('overall.batchEdit')" @click.stop="batchEdit" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset" style="margin-left: 15px" v-has="'asset_toBatchEdit'">
             <i class="nz-icon nz-icon-batch-edit"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="asset" v-has="'asset_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="asset" v-has="'asset_delete'" id="asset-list-batch-delete"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="asset-list"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -36,6 +38,7 @@
         ></element-set>
       </transition>
       <el-table
+        id="asset-list-table"
         class="nz-table"
         :height="mainTableHeight"
         style="width: 100%;position: relative;z-index: 99"

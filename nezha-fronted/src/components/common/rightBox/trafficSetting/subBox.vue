@@ -3,7 +3,7 @@
     <div class="right-sub-box sub-box" v-if="editTagsBox.show" :style="'top: ' + editTagsBox.top + 'px; left: ' + editTagsBox.left + 'px;'" >
       <div class="param-box" style="height: calc(100% - 25px)">
         <div style="height: 100%; overflow: auto;">
-          <div class="param-box-row" v-for="(item, index) in tempTagsObj" :key="index">
+          <div class="param-box-row" v-for="(item, index) in tempTagsObj" :key="index" id="traffic-setting-tags">
             <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key" @input="validateInput(item.key,index)" :class="{'input-error':inputKeyErr[index]}"></el-input>
             <span class="param-box-row-eq">=</span>
             <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>

@@ -22,17 +22,17 @@
       </div>
     </div>
     <div class="custom-bottom-btns">
-      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel">
+      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel" :id="id+'-element-set-none'">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
-      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">
+      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" :id="id+'-element-set-all'">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new">
+        <button type="button" @click="esc" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" :id="id+'-element-set-esc'">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new">
+        <button type="button" @click="save" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" :id="id+'-element-set-save'">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
       </div>
@@ -47,6 +47,7 @@ export default {
     originalTableTitle: Array, //原始title
     path: String,
     allowedAll: {default: false},
+    id:{type:String,default:'table'}
   },
   data() {
     return {

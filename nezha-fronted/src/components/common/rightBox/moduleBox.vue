@@ -17,12 +17,12 @@
     <div class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
         <el-form-item :label='$t("project.project.project")' prop="project">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small" id="module-box-input-project">
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="180px" style="width: calc(100% - 8px);margin-left: 8px;">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small"></el-input>
+          <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
 
         <div class="nz-tab module-box-type" style="margin-bottom: 15px;">
@@ -74,7 +74,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="version">
-                <el-radio-group v-model.number="editModule.version" size="small">
+                <el-radio-group v-model.number="editModule.version" size="small" id="module-box-input-version">
                   <el-radio-button :label="2"></el-radio-button>
                   <el-radio-button :label="3"></el-radio-button>
                 </el-radio-group>
@@ -88,7 +88,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="max_repetitions">
-                <el-input v-model.number="editModule.max_repetitions" size="small"></el-input>
+                <el-input v-model.number="editModule.max_repetitions" size="small" id="module-box-input-max_repetitions"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -99,7 +99,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="retries">
-                <el-input v-model.number="editModule.retries" size="small"></el-input>
+                <el-input v-model.number="editModule.retries" size="small" id="module-box-input-retries"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -110,7 +110,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="timeout">
-                <el-input v-model.number="editModule.timeout" size="small">
+                <el-input v-model.number="editModule.timeout" size="small" id="module-box-input-timeout">
                   <template slot="append">second</template>
                 </el-input>
               </el-form-item>
@@ -130,7 +130,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="community">
-                <el-input v-model.trim="editModule.community" maxlength="64" show-word-limit size="small"></el-input>
+                <el-input v-model.trim="editModule.community" maxlength="64" show-word-limit size="small" id="module-box-input-community"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -143,7 +143,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="username">
-                  <el-input v-model.trim="editModule.username" maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="editModule.username" maxlength="64" show-word-limit size="small" id="module-box-input-username"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -154,7 +154,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="security_level">
-                  <el-radio-group size="small" v-model="editModule.security_level">
+                  <el-radio-group size="small" v-model="editModule.security_level" id="module-box-input-security_level">
                     <el-radio-button label="noAuthNoPriv"></el-radio-button>
                     <el-radio-button label="authNoPriv"></el-radio-button>
                     <el-radio-button label="authPriv"></el-radio-button>
@@ -169,7 +169,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="password">
-                  <el-input v-model.trim="editModule.password" type="password" show-password maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="editModule.password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-password"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -180,7 +180,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="auth_protocol">
-                  <el-radio-group v-model="editModule.auth_protocol" size="small">
+                  <el-radio-group v-model="editModule.auth_protocol" size="small" id="module-box-input-auth_protocol">
                     <el-radio-button label="MD5"></el-radio-button>
                     <el-radio-button label="SHA"></el-radio-button>
                   </el-radio-group>
@@ -194,7 +194,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="priv_protocol">
-                  <el-radio-group v-model="editModule.priv_protocol" size="small">
+                  <el-radio-group v-model="editModule.priv_protocol" size="small" id="module-box-input-priv_protocol">
                     <el-radio-button label="DES"></el-radio-button>
                     <el-radio-button label="AES"></el-radio-button>
                   </el-radio-group>
@@ -208,7 +208,7 @@
               </el-col>
               <el-col :span="18">
                 <el-form-item prop="priv_password">
-                  <el-input v-model.trim="editModule.priv_password" type="password" show-password maxlength="64" show-word-limit size="small"></el-input>
+                  <el-input v-model.trim="editModule.priv_password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-priv_password"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -220,7 +220,7 @@
             </el-col>
             <el-col :span="18">
               <el-form-item prop="context_name">
-                <el-input v-model.trim="editModule.context_name" maxlength="64" show-word-limit size="small"></el-input>
+                <el-input v-model.trim="editModule.context_name" maxlength="64" show-word-limit size="small" id="module-box-input-context_name"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -233,11 +233,11 @@
         </div>
 
         <el-form-item :label='$t("project.endpoint.port")' prop="port" >
-          <el-input placeholder="" v-model.number="editModule.port" size="small"></el-input>
+          <el-input placeholder="" v-model.number="editModule.port" size="small" id="module-box-input-port"></el-input>
         </el-form-item>
 
         <el-form-item v-if="editModule.type && editModule.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
-          <el-input placeholder="" v-model="editModule.path" size="small"></el-input>
+          <el-input placeholder="" v-model="editModule.path" size="small" id="module-box-input-path"></el-input>
         </el-form-item>
 
         <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param" v-if="editModule.type.toLowerCase() == 'http'">
@@ -253,10 +253,10 @@
           </div>
 
           <div class="param-box param-box-module">
-            <div style="height: 100%; overflow: auto;">
+            <div style="height: 100%; overflow: auto;" id="module-box-params">
               <div class="param-box-row" v-for="(item, index) in editModule.paramObj">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                  <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
                 </el-form-item>
                 <span class="param-box-row-eq">=</span>
                 <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
@@ -281,7 +281,7 @@
           </div>
 
           <div class="param-box param-box-module">
-            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
               <div class="param-box-row" v-for="(item, index) in editModule.labelModule">
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
@@ -297,7 +297,7 @@
         </el-form-item>
 
         <el-form-item :label='$t("project.module.description")' prop="remark">
-          <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="editModule.remark" size="small"></el-input>
+          <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="editModule.remark" size="small" id="module-box-input-project"></el-input>
         </el-form-item>
 
       </el-form>

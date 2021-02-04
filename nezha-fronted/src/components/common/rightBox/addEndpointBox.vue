@@ -13,13 +13,13 @@
       <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
-          <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small">
+          <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small" id="add-endpoint-project">
             <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
           </el-select>
         </el-form-item>
         <!--module-->
         <el-form-item :label='$t("project.module.module")' prop="moduleId" class="select-warp">
-          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small">
+          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small" id="add-endpoint-module">
             <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -38,10 +38,11 @@
                     <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-up"></i>
                     <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
                   </span>
-                </button><el-input style="width: 100px;" v-if="assetSearch.label === 'Host' || assetSearch.label === 'SN'" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text">
-                </el-input><el-select placeholder="" v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                </button><el-input style="width: 100px;" v-if="assetSearch.label === 'Host' || assetSearch.label === 'SN'" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" id="add-endpoint-filter-input">
+                </el-input><el-select placeholder="" v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class" id="add-endpoint-filter-select">
                   <el-option v-for="item in dcList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select><el-cascader
+                  id="add-endpoint-filter-cascader"
                   v-else-if="assetSearch.label === 'Model'"
                   :options="vendorAndModelOptionData"
                   :props="{emitPath: false}"
@@ -53,7 +54,7 @@
                   class="nz-input-group-middle"
                   @change="selectModel"
                 >
-                </el-cascader><el-select placeholder="" v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class">
+                </el-cascader><el-select placeholder="" v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class" id="add-endpoint-filter-typeIds">
                   <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select><!--<el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'DC'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterDCValue" @select="selectDC" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
                 </el-autocomplete><el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'Type'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterTypeValue" @select="selectType" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
@@ -128,7 +129,7 @@
             <div class="line-100" style="border-color:#dcdfe6"></div>
             <div>
               <button type="button" @click="addToEndpointList"
-                      class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn" style="margin-top: 3px;">
+                      class="nz-btn nz-btn-size-small-new nz-btn-style-light-new endpoints-clear-btn" style="margin-top: 3px;" id="add-endpoint-add-asset">
                 {{$t('overall.addAssetList')}}
               </button>
               <span style="display: inline-block; font-size: 14px; float: right;padding-right: 15px;margin-top: 3px;">All: {{this.assetList.length}}</span>
@@ -140,7 +141,7 @@
             <!--module-->
             <div class="endpoints-box-module-info">
               <div class="title">{{$t('project.endpoint.moduleParameter')}}:</div>
-              <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port"></el-input>
+              <el-input class="module-info module-info-port input-x-mini-22" :class="{'module-info-port-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.port" id="add-endpoint-module-port"></el-input>
               <el-popover
                 placement="bottom"
                 width="100"
@@ -150,7 +151,7 @@
                 <div class="endpoint-param-pop">
                   <div v-for="item,index in currentModuleCopy.paramObj">{{item.key}}={{item.value}}</div>
                 </div>
-                <el-input id="edit-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param  input-x-mini-22" v-model="currentModuleCopy.param"></el-input>
+                <el-input id="add-endpoint-module-param" @click.native.stop="showEditParamBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param  input-x-mini-22" v-model="currentModuleCopy.param" ></el-input>
               </el-popover>
 
               <el-popover
@@ -164,7 +165,7 @@
                 <el-input id="edit-labels" @click.native.stop="showEditLabelsBox(true, currentModuleCopy, 1, $event)" slot="reference" disabled class="module-info module-info-param module-info-labels input-x-mini-22" :class="{'module-info-labels-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-model="currentModuleCopy.labels"></el-input>
               </el-popover>
 
-              <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path"></el-input>
+              <el-input v-if="currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'http'" class="module-info module-info-path input-x-mini-22" v-model="currentModuleCopy.path" id="add-endpoint-module-path"></el-input>
               <button type="button" id="cover-param" @click="coverEndpoint" class="nz-btn nz-btn-size-small nz-btn-style-light module-info module-info-cover"><i class="nz-icon nz-icon-override"></i></button>
             </div>
             <!--endpoints-->
@@ -175,6 +176,7 @@
                 style="width: 100%;border-radius: 4px;"
                 height="calc(100% - 36px)"
                 :row-class-name="setRowIndex"
+                id="add-endpoint-asset-table"
                 empty-text=" ">
                 <el-table-column
                   type="selection"
