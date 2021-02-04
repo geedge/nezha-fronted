@@ -1664,7 +1664,10 @@
         console.log(index,row)
       },
       valueMappingDel(index,row){
-        console.log(index,row)
+        this.selection.pen.data.valueMapping.splice(index,1);
+        this.selection.pen.data.valueMapping.forEach((item,index)=>{
+          item.level=index
+        });
       },
       inputFocus(e){
         console.log(e.path[2].children[0],e.path[2].children[1]);

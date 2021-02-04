@@ -4,7 +4,7 @@
 </style>
 <template>
   <div class="project-box">
-    <div class="project-title" v-if="showTopTools">
+    <div class="project-title" v-if="showTopTools&&!fromOverView">
       <div v-show="editTopologyFlag" class="edit-topologyLine">
         <!--工具栏-->
         <span class="project-topology-tool">
@@ -128,7 +128,7 @@
     </div>
     <div class="page">
       <!--画布部分-->
-      <div id="topology-canvas" class="full" ref="topology-canvas"></div>
+      <div :id="'topology-canvas' + topologyIndexF" class="full" ref="topology-canvas"></div>
       <!--设置属性-->
       <div class="props" v-if="editTopologyFlag&&toolShow.attr">
         <CanvasProps :selection.sync="props"
@@ -253,6 +253,7 @@
   import endpointTable from "./popData/endpointTable";
   import ExpressionInfo from "./popData/expressionInfo";
   import topoTooltip from "./L5/topoTooltip";
+  import {getMetricTypeValue} from '../js/tools'
   import bus from "../../../libs/bus";
   import axios from 'axios';
 
@@ -374,6 +375,10 @@
       showTopTools:{
         type:Boolean,
         default:true,
+      },
+      fromOverView:{
+        type:Boolean,
+        default:false,
       }
     },
     watch:{
@@ -419,7 +424,7 @@
       }
     },
     mounted(){
-      document.getElementById('topology-canvas').addEventListener('mousemove',this.canvasMove);
+      document.getElementById('topology-canvas'+this.topologyIndexF).addEventListener('mousemove',this.canvasMove);
       window.addEventListener('resize',this.winResize)
     },
     methods:{
@@ -463,10 +468,12 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
+              if(this.fromOverView){
+                getTopology(this.topologyIndex).centerView();
+                // getTopology(this.topologyIndex).fitView();
+                this.getNodesArr();
+              }
             });
-
-
-            this.getNodesArr();
           })
         });
       },
@@ -510,16 +517,14 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
+              this.getNodesArr();
             });
-
-
-            this.getNodesArr();
           })
         });
       },
       openTopologyData(data){
         return new Promise(resolve=>{
-          let canvas=new Topology('topology-canvas',canvasOptions);
+          let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
           canvas.open(data);
           setTopology(this.topologyIndex,canvas);
           if(!getTopology(this.topologyIndex).data.name){
@@ -535,16 +540,20 @@
       //获取topology数据
       getTopologyData(){
         return new Promise(resolve=>{
-          let data=localStorage.getItem('data');
-          data=data?JSON.parse(data):{
-            bkColor:'#FFFFFF',
-            gridSize:10,
-            gridColor:'#ededed',
-            lineWidth:1,
-            ruleColor:"#4e4e4e"
-          };
-          this.saveData={...data};
-          resolve(data);
+          this.$get('/project/topo',{projectId:this.obj.id}).then(res=>{
+            let data=res.data.topo;
+            if(!data.pens){
+              data={
+                bkColor:'#FFFFFF',
+                gridSize:10,
+                gridColor:'#ededed',
+                lineWidth:1,
+                ruleColor:"#4e4e4e"
+              };
+            }
+            this.saveData={...data};
+            resolve(data);
+          })
         });
       },
       //赋值动画
@@ -557,7 +566,6 @@
             }
             if (response.data.result) {
               response.data.result.forEach((queryItem, resIndex) => {
-                queryItem.showValue=9;
                 pen.data.valueMapping.forEach((item,index)=>{
                   if(item.value==='base'){return}
                   if( queryItem.showValue >item.value){
@@ -577,14 +585,15 @@
         if(maxLevel!==0){
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
-            onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
             pen.font.color=selLevel.color.text;
+            onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
           }else if(pen.type===1){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
 
             pen.animateColor=selLevel.color.fill;
             pen.strokeStyle=selLevel.color.line;
             pen.animateType=selLevel.animateType;
+            pen.font.color=selLevel.color.text;
             onChangeAnimateLine(pen,pen.animateType);
             pen.font.color=selLevel.color.text;
           }
@@ -641,7 +650,7 @@
                     alias = host;
                   }
                   queryItem.legend={name: host+"-"+pen.data.legends[innerPos]+"-" + resIndex, alias: alias};
-                  queryItem.showValue=this.getMetricTypeValue(queryItem,type);
+                  queryItem.showValue= getMetricTypeValue(queryItem.values,type);
                   // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
                 }
               });
@@ -666,33 +675,6 @@
           return labelValue
         }else{
           return expression;
-        }
-      },
-      getMetricTypeValue(queryItem,type){
-        let copy='';
-        copy=JSON.parse(JSON.stringify(queryItem.values));
-        switch (type) {
-          case 'min':
-            let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1];
-            return min;
-          case 'max':
-            let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1];
-            return max;
-          case 'avg':
-            copy = copy.map(t=>parseFloat(t[1]));
-            let sum = eval(copy.join('+'));
-            let avg = sum / copy.length;
-            return avg;
-          case 'last':
-            let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1];
-            return last;
-          case 'first':
-            let first =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[copy.length][1];
-            return first;
-          case 'total':
-            copy = copy.map(t=>parseFloat(t[1]));
-            let total = eval(copy.join('+'));
-            return total;
         }
       },
       //获取module
@@ -810,8 +792,8 @@
             ...node.data,
             rect:{
               ...node.data.rect,
-              x:this.$refs['topology-canvas'].offsetWidth/2-50,
-              y:this.$refs['topology-canvas'].offsetHeight/2-50
+              x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth/2-50,
+              y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight/2-50
             }
           });
         setTimeout(()=>{
@@ -1027,7 +1009,7 @@
               }
               break;
             case 'resize':
-              let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
+              let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
               this.toolShow.attrCord=[domRect.width-350,0];
               this.toolShow.height=domRect.height;
               getTopology(this.topologyIndex).canvasPos=domRect;
@@ -1290,7 +1272,7 @@
               item.font.color="#000000";
             }
           })
-          let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
+          let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
           this.toolShow.attrCord=[domRect.width-350,0];
           this.toolShow.height=domRect.height;
           getTopology(this.topologyIndex).canvasPos=domRect;
@@ -1330,15 +1312,33 @@
         if(flag){
           this.editTopologyFlag=false;
           localStorage.setItem('data',JSON.stringify(topologyData));
-          this.$nextTick(()=>{
-            getTopology(this.topologyIndex).lock(1);
-            let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
-            this.toolShow.attrCord=[domRect.width-350,0];
-            this.toolShow.height=domRect.height;
-            getTopology(this.topologyIndex).canvasPos=domRect;
-            this.reload();
-          })
-          this.getNodesArr();
+
+          this.$put('/project/topo',{topo:JSON.stringify(topologyData),projectId:this.projectInfo.id}).then(res=>{
+            this.prevent_opt.save=false;
+            if(res.code===200){
+              this.$message({
+                message: this.$t("tip.saveSuccess"),
+                type: 'success'
+              });
+              this.$nextTick(()=>{
+                getTopology(this.topologyIndex).lock(1);
+                let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
+                this.toolShow.attrCord=[domRect.width-350,0];
+                this.toolShow.height=domRect.height;
+                getTopology(this.topologyIndex).canvasPos=domRect;
+                this.reload();
+              })
+              this.getNodesArr();
+            }
+          }).catch(res=>{
+            this.prevent_opt.save=false;
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            });
+          });
+
+
         }else{
           this.$message({
             showClose:true,
@@ -1352,7 +1352,7 @@
         this.editTopologyFlag=false;
         this.$nextTick(()=>{
           getTopology(this.topologyIndex).lock(1);
-          let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
+          let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
           this.toolShow.attrCord=[domRect.width-350,0];
           this.toolShow.height=domRect.height;
           getTopology(this.topologyIndex).canvasPos=domRect;
@@ -1366,7 +1366,7 @@
       /*tools 方法*/
 
       winResize(){
-        let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
+        let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
         this.toolShow.attrCord=[domRect.width-350,0];
         this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos=domRect;
@@ -1402,7 +1402,7 @@
     destroyed(){
       getTopology(this.topologyIndex).destroy();
       setTopology(this.topologyIndex,null);
-      document.getElementById('topology-canvas').removeEventListener('mousemove',this.canvasMove);
+      document.getElementById('topology-canvas'+this.topologyIndexF).removeEventListener('mousemove',this.canvasMove);
       window.removeEventListener('resize',this.winResize)
     }
   }

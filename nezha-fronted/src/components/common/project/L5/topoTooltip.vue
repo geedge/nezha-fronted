@@ -1,18 +1,21 @@
 <template>
-  <div style="width: 400px;height: 400px;">
+  <div style="display: flex;">
     <span class="temp-dom"></span>
-    <line-chart-block v-if="chartData.type !== 'table'"
-                      :key="'inner' + chartData.id"
-                      :from="'project'"
-                      :ref="'editChart' + 0"
-                      :temp-dom="tempDom"
-                      :panel-id="-1"
-                      :is-lock="true"
-                      :chart-index="0"
-                      :chartTitleShow="false"
-                      :chart-data="chartData">
+    <div style="width: 400px;height: 400px;" v-if="chartData.displayChart">
+      <line-chart-block v-if="chartData.type !== 'table'"
+                        :key="'inner' + chartData.id"
+                        :from="'project'"
+                        :ref="'editChart' + 0"
+                        :temp-dom="tempDom"
+                        :panel-id="-1"
+                        :is-lock="true"
+                        :chart-index="0"
+                        :chartTitleShow="false"
+                        :chart-data="chartData">
 
-    </line-chart-block>
+      </line-chart-block>
+    </div>
+
     <!--<chart-table  v-if="chartData.type === 'table'"-->
                   <!--:ref="'editChart'+0"-->
                   <!--:key="'inner' + 0"-->
@@ -22,7 +25,7 @@
                   <!--:panel-id="-1"-->
                   <!--:chart-data="chartData"-->
                   <!--:chart-index="0"></chart-table>-->
-    <>
+    <expression-info :chart-data="chartData"/>
   </div>
 </template>
 
@@ -31,9 +34,11 @@
   import lineChartBlock from '../../../charts/line-chart-block';
   import bus from "../../../../libs/bus";
   import axios from 'axios';
+  import ExpressionInfo from "../popData/expressionInfo";
 	export default {
 		name:"topoTooltip",
     components:{
+      ExpressionInfo,
       lineChartBlock,
     },
     props:{
@@ -99,7 +104,6 @@
         };
         chartData.span=12;
         this.chartData=chartData;
-        console.log(chartData);
         setTimeout(()=>{
           this.getChartData(chartData,0);
         });
@@ -107,7 +111,6 @@
       },
       // 获取一个图表具体数据,图表信息，图表位置index
       getChartData(chartInfo, pos, filterType) {
-        console.log(chartInfo,'chartInfo')
         const chartItem = chartInfo;
         const index = pos; // 指标
           // 没有数据的设置提示信息暂无数据-针对每一个图
@@ -145,7 +148,6 @@
             setTimeout(()=>{
               this.$nextTick(() => {
                 let res=chartItem.res;
-                console.log(res);
                 if (res.length > 0) {
                   let series = [];
                   let singleStatRlt = '';
@@ -174,7 +176,6 @@
                           }
                         } else {
                           response.data.result.forEach((queryItem, resIndex) => {
-                            console.log(queryItem, resIndex);
                             let seriesItem = {
                               theData: {
                                 name: '',
@@ -311,7 +312,6 @@
                       }
                     }
                   });
-                  console.log(this.$refs['editChart' + chartItem.id],chartItem.id);
                   if (this.$refs['editChart' + chartItem.id]) {
                     let chartData = {
                       chartItem: chartItem,
@@ -340,8 +340,6 @@
                         this.$refs['editChart' + chartItem.id].setData(chartItem, series,
                           this.filter.panelId, this.filter, legend, filterType, errorMsg);
                       } else {
-                        console.log(123123123123123123,chartItem, series,
-                          this.filter.panelId, this.filter, legend, '', errorMsg);
                         this.$refs['editChart' + chartItem.id].setData(chartItem, series,
                           this.filter.panelId, this.filter, legend, '', errorMsg);
                       }

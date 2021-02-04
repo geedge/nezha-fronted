@@ -132,9 +132,9 @@
                     <div class="maskLayer" @click="toProject(item)"></div>
                     <span class="project-name">{{item.name}}</span>
                     <topology
-                      :nodesArray="item.nodesArray"
-                      :edgesArray="item.edgesArray"
-                      :viewsCenter="item.topo.viewsCenter"
+                      :obj="item"
+                      :fromOverView="true"
+                      :topologyIndexF="index"
                     />
                   </el-carousel-item>
                 </el-carousel>
@@ -238,7 +238,7 @@
   import iconShadow from 'leaflet/dist/images/marker-shadow.png';
   import * as echarts from "echarts";
   import chartConfig from './chartConfig'
-  import overViewTopology from '../../../common/project/overViewTopology'
+  import overViewTopology from '../../../common/project/topologyL5'
   import messageAsset from '../../../common/overView/messageAsset'
   var timeout; //第三行第三个图的dropdown下拉菜单timeout
 
@@ -443,22 +443,15 @@
             res2=res2.map((item,index)=>{
               return {...item.data.data,...res.data.list[index]}
             })
-            res2=res2.filter((item)=>item.topo&&(item.topo.nodes.length ||item.topo.lines.length));
+            res2=res2.filter((item)=>item.topo&&item.topo.pens&&item.topo.pens.length);
             if(res2.length==0){
               this.topologyLoading=false;
             }
             res2.forEach(item=>{
-              promiseArr.push(this.formatNodesArr(item.topo.nodes));
-              item.edgesArray=this.formatEdgesArr(item.topo.lines);
               temp.push(item)
             });
-            Promise.all(promiseArr).then(res=>{
-              temp.forEach((item,index)=>{
-                item.nodesArray=res[index]
-              });
-              this.allProject=temp;
-              this.topologyLoading=false;
-            });
+            this.allProject=temp;
+            this.topologyLoading=false;
           })
         })
       },
