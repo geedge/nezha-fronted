@@ -311,7 +311,7 @@ export function myCubeAnchors(node) {//立方体锚点
 
 
 
-export function onChangeAnimate(node,animateType) {
+export function onChangeAnimate(node,animateType,fillStyle,strokeStyle) {
   if (node.animateType === 'custom') {
     return;
   }
@@ -392,7 +392,7 @@ export function onChangeAnimate(node,animateType) {
       });
       break;
     case 'success':
-      state.strokeStyle = '#237804';
+      state.strokeStyle =  strokeStyle?strokeStyle:'#237804';
       node.animateFrames.push({
         duration: 100,
         linear: true,
@@ -414,8 +414,8 @@ export function onChangeAnimate(node,animateType) {
         linear: true,
         state: Node.cloneState(node)
       });
-      state.strokeStyle = '#237804';
-      state.fillStyle = '#389e0d22';
+      state.strokeStyle = strokeStyle?strokeStyle: '#237804';
+      state.fillStyle = fillStyle?fillStyle:'#389e0d22';
       node.animateFrames.push({
         duration: 3000,
         linear: true,
@@ -423,8 +423,8 @@ export function onChangeAnimate(node,animateType) {
       });
       break;
     case 'warning':
-      state.strokeStyle = '#fa8c16';
-      state.fillStyle = '#fa8c16';
+      state.strokeStyle = strokeStyle?strokeStyle:'#fa8c16';
+      state.fillStyle = fillStyle?fillStyle:'#fa8c16';
       state.lineWidth=5;
       state.dash = 2;
       node.animateFrames.push({
@@ -432,7 +432,7 @@ export function onChangeAnimate(node,animateType) {
         linear: true,
         state
       });
-      state.strokeStyle = '#fa8c16';
+      state.strokeStyle = strokeStyle?strokeStyle: '#fa8c16';
       state.dash = 0;
       state.lineWidth=1;
       state.fillStyle = '#ffffff';
@@ -441,10 +441,10 @@ export function onChangeAnimate(node,animateType) {
         linear: true,
         state: Node.cloneState(state)
       });
-      state.strokeStyle = '#fa8c16';
+      state.strokeStyle = strokeStyle?strokeStyle: '#fa8c16';
       state.dash = 2;
       state.lineWidth=5;
-      state.fillStyle = '#fa8c16';
+      state.fillStyle = fillStyle?fillStyle: '#fa8c16';
       node.animateFrames.push({
         duration: 300,
         linear: true,
@@ -452,8 +452,8 @@ export function onChangeAnimate(node,animateType) {
       });
       break;
     case 'error':
-      state.strokeStyle = '#cf1322';
-      // state.fillStyle = '#cf132222';
+      state.strokeStyle = strokeStyle?strokeStyle: '#cf1322';
+      state.fillStyle = fillStyle?fillStyle:'#cf132222';
       state.lineWidth=5;
       state.dash = 2;
       node.animateFrames.push({
@@ -461,7 +461,8 @@ export function onChangeAnimate(node,animateType) {
         linear: true,
         state
       });
-      state.strokeStyle = '#cf1322';
+      state.strokeStyle = strokeStyle?strokeStyle:'#cf1322';
+      state.fillStyle = '#ffffff';
       state.dash = 0;
       state.lineWidth=1;
       node.animateFrames.push({
@@ -469,7 +470,8 @@ export function onChangeAnimate(node,animateType) {
         linear: true,
         state: Node.cloneState(state)
       });
-      state.strokeStyle = '#cf1322';
+      state.strokeStyle = strokeStyle?strokeStyle: '#cf1322';
+      state.fillStyle = fillStyle?fillStyle:'#cf132222';
       state.dash = 2;
       state.lineWidth=5;
       node.animateFrames.push({
@@ -479,14 +481,14 @@ export function onChangeAnimate(node,animateType) {
       });
       break;
     case 'show':
-      state.strokeStyle = '#fa541c';
-      state.rotate = -10;
+      state.strokeStyle = strokeStyle?strokeStyle: '#fa541c';
+      state.rotate = -5;
       node.animateFrames.push({
         duration: 100,
         linear: true,
         state: Node.cloneState(state)
       });
-      state.rotate = 10;
+      state.rotate = 5;
       node.animateFrames.push({
         duration: 100,
         linear: true,

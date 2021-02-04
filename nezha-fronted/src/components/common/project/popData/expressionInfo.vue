@@ -4,7 +4,7 @@
     <div class="expression-info-content" v-if="expressionInfoData.length===0">No Data</div>
     <div class="expression-info-content" v-if="expressionInfoData.length>0">
       <el-row v-for="(item,index) in expressionInfoData" :key="index" v-if="index<20">
-        <el-col class="info-title" :span="18">{{item.legend.alias}}</el-col>
+        <el-col class="info-title" :span="18" :title="item.legend.name">{{item.legend.alias}}</el-col>
         <el-col class="info-content" :span="6" :style="{background:computeData(item).fill,color:computeData(item).text}">{{item.showValue}}</el-col>
       </el-row>
     </div>

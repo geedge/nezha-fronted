@@ -3,7 +3,7 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box">
+  <div class="project-box" v-loading="topologyLoading">
     <div class="project-title" v-if="showTopTools&&!fromOverView">
       <div v-show="editTopologyFlag" class="edit-topologyLine">
         <!--工具栏-->
@@ -128,7 +128,7 @@
     </div>
     <div class="page">
       <!--画布部分-->
-      <div :id="'topology-canvas' + topologyIndexF" class="full" ref="topology-canvas"></div>
+      <div :id="'topology-canvas' + topologyIndexF" class="full" :ref="'topology-canvas'+ topologyIndexF"></div>
       <!--设置属性-->
       <div class="props" v-if="editTopologyFlag&&toolShow.attr">
         <CanvasProps :selection.sync="props"
@@ -272,6 +272,7 @@
         editFlag:true,
         tools:Tools,
         props:{},
+        topologyLoading:false,
         contextmenu:{
           left:null,
           top:null,
@@ -395,14 +396,18 @@
         immediate:true,
         handler(n){
           if(n){
+            this.editTopologyFlag=false;
+            this.topologyLoading=true;
             if(!this.timer){
               this.timer=setTimeout(()=>{
+                this.topologyLoading=true;
                 this.init();
                 this.timer=null
               },300)
             }else{
               clearTimeout(this.timer);
               this.timer=setTimeout(()=>{
+                this.topologyLoading=true;
                 this.init();
                 this.timer=null
               },300)
@@ -474,7 +479,22 @@
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
               if(this.fromOverView){
-                getTopology(this.topologyIndex).centerView();
+                let flag=false;
+
+                let position={
+                  x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+                  y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
+                }
+                getTopology(this.topologyIndex).centerView(50);
+                getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                  if(flag){
+                    return
+                  }
+                  if(item.rect.x>position.x || item.rect.y>position.y){
+                    getTopology(this.topologyIndex).fitView(50);
+                    flag=true
+                  }
+                });
                 // getTopology(this.topologyIndex).fitView();
                 this.getNodesArr();
               }
@@ -523,11 +543,6 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
-              if(this.fromOverView){
-                getTopology(this.topologyIndex).centerView();
-                // getTopology(this.topologyIndex).fitView();
-                this.getNodesArr();
-              }
             });
           })
         });
@@ -536,6 +551,7 @@
         return new Promise(resolve=>{
           let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
           canvas.open(data);
+          this.topologyLoading=false;
           setTopology(this.topologyIndex,canvas);
           if(!getTopology(this.topologyIndex).data.name){
             getTopology(this.topologyIndex).data.name=this.obj.name;
@@ -611,6 +627,8 @@
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
             pen.font.color=selLevel.color.text;
+            pen.fillStyle=selLevel.color.fill;
+            pen.strokeStyle=selLevel.color.line;
             onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
           }else if(pen.type===1){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
@@ -705,7 +723,6 @@
       //获取module
       getModule(){
         this.projectInfo.loading=true;
-        // this.$refs['visNetwork'].topologyLoading=true;
         this.$get('project/info',{id:this.obj.id}).then(response=>{
           if(response.code===200){
             this.projectInfo.loading=false;
@@ -827,7 +844,7 @@
         },100);
       },
 
-      onMessage(event,data){
+      onMessage(event,data,e){
         console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
         if(getTopology(this.topologyIndex)){
@@ -916,28 +933,31 @@
         switch(event){
           case 'moveInNode':
           case 'moveInLine':
-            // if(this.timer3){
-            //   clearTimeout(this.timer3);
-            //   this.timer3=null
-            // }
+            if(this.timer3){
+              clearTimeout(this.timer3);
+              this.timer3=null
+            }
             this.chartData={...data.data,...this.chartGetData.find(item=>item.id===data.id)};
-            this.tooltipPosition.show=true;
+            this.tooltipPosition.show=false;
+            setTimeout(()=>{
+              this.tooltipPosition.show=true;
+            },50);
             break;
           case 'moveOutNode':
           case 'moveOutLine':
-            this.tooltipPosition.show=false;
-            return
+            // this.tooltipPosition.show=false;
+            // return
             if(!this.timer3){
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },300)
+              },150)
             }else{
               clearTimeout(this.timer3);
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },300)
+              },150)
             }
             break;
         }
@@ -1408,21 +1428,21 @@
         getTopology(this.topologyIndex).centerView();
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
-        if(!this.tooltipPosition.show||this.timer3){
+        if(this.tooltipPosition.show){
           return
         }
         this.tooltipPosition.top=e.offsetY;
         this.tooltipPosition.left=e.offsetX+20;
       },
       tooltipOver(){
-        // clearTimeout(this.timer3);
-        // this.timer3=null
+        clearTimeout(this.timer3);
+        this.timer3=null
       },
       tooltipOut(){
-        // this.timer3=setTimeout(()=>{
-        //   this.tooltipPosition.show=false;
-        //   this.timer3=null
-        // },300)
+        this.timer3=setTimeout(()=>{
+          this.tooltipPosition.show=false;
+          this.timer3=null
+        },150)
       },
       nodeDefaultWidth(nodeName){
         switch(nodeName){
