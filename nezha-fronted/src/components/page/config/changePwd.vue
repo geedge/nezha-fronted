@@ -3,26 +3,26 @@
     <el-dialog class="nz-dialog" :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
       <el-form :model="user" label-position="right" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
         <el-form-item :label="$t('config.account.account')" prop="username" v-show="curUser != sysUser">
-          <el-input type="text" autocomplete="false" v-model="user.username" disabled></el-input>
+          <el-input type="text" autocomplete="false" v-model="user.username" disabled id="change-pwd-username"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.account.oldPwd')" prop="pwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.account.inputOldPwd')"></el-input>
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.account.inputOldPwd')" id="change-pwd-pwd"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.account.newPwd')" prop="newPwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.account.inputNewPwd')"></el-input>
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.account.inputNewPwd')" id="change-pwd-newPwd"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.account.confirmPwd')" prop="confirmPwd">
-          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.account.inputConfirmPwd')"></el-input>
+          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.account.inputConfirmPwd')" id="change-pwd-confirmPwd"></el-input>
         </el-form-item>
       </el-form>
       <!--底部按钮-->
       <template slot="footer">
         <div class="right-box-bottom-btns" >
-          <button @click="close" id="account-esc"
+          <button @click="close" id="change-pwd-esc"
                   class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
             <span>{{$t('overall.cancel')}}</span>
           </button>
-          <button  @click="changePwd" id="account-save"
+          <button  @click="changePwd" id="change-pwd-save"
                    class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
             <span>{{$t('overall.save')}}</span>
           </button>

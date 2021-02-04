@@ -5,6 +5,7 @@
           <el-option v-for="(item,index) in assetList" :label="item.host" :disabled="item.isOccupy" :value="item.id" :key="item.host+'-'+item.id"></el-option>
         </el-select>-->
         <el-autocomplete
+          id="traffic-setting-asset"
           clearable
           :class="{'input-error':hostInvalid || hostRepeat}"
           class="asset-input right-box-row-with-btn"
@@ -23,19 +24,19 @@
             <el-row class="mib-browser-ad-search-item">
               <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t("project.endpoint.port")}}</div></el-col>
               <el-col :span="17">
-                <el-input class="input-x-mini-24" v-model.number="assetSetting.port"></el-input>
+                <el-input class="input-x-mini-24" v-model.number="assetSetting.port" id="traffic-setting-port"></el-input>
               </el-col>
             </el-row>
             <el-row class="mib-browser-ad-search-item">
               <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.community')}}</div></el-col>
               <el-col :span="17">
-                <el-input class="input-x-mini-24" v-model="assetSetting.community"></el-input>
+                <el-input class="input-x-mini-24" v-model="assetSetting.community" id="traffic-setting-community"></el-input>
               </el-col>
             </el-row>
             <el-row class="mib-browser-ad-search-item">
               <el-col :span="6"><div class="mib-browser-ad-search-label">{{$t('project.module.version')}}</div></el-col>
               <el-col :span="17">
-                <el-radio-group v-model.number="assetSetting.version" >
+                <el-radio-group v-model.number="assetSetting.version" id="traffic-setting-version">
                   <el-radio-button :label="2"></el-radio-button>
                   <el-radio-button :label="3"></el-radio-button>
                 </el-radio-group>
@@ -48,7 +49,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('login.username')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.username"></el-input>
+                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.username" id="traffic-setting-username"></el-input>
                 </el-col>
               </el-row>
 
@@ -57,7 +58,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('project.module.securityLevel')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-radio-group v-model="assetSetting.auth.securityLevel" size="small">
+                  <el-radio-group v-model="assetSetting.auth.securityLevel" size="small" id="traffic-setting-securityLevel">
                     <el-radio-button label="noAuthNoPriv"></el-radio-button>
                     <el-radio-button label="authNoPriv"></el-radio-button>
                     <el-radio-button label="authPriv"></el-radio-button>
@@ -70,7 +71,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.password"></el-input>
+                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.password" id="traffic-setting-password"></el-input>
                 </el-col>
               </el-row>
 
@@ -79,7 +80,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('project.module.authProtocol')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-radio-group v-model="assetSetting.auth.authProtocol">
+                  <el-radio-group v-model="assetSetting.auth.authProtocol" id="traffic-setting-authProtocol">
                     <el-radio-button label="MD5"></el-radio-button>
                     <el-radio-button label="SHA"></el-radio-button>
                   </el-radio-group>
@@ -91,7 +92,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('project.module.privProtocol')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-radio-group v-model="assetSetting.auth.privProtocol">
+                  <el-radio-group v-model="assetSetting.auth.privProtocol" id="traffic-setting-privProtocol">
                     <el-radio-button label="DES"></el-radio-button>
                     <el-radio-button label="AES"></el-radio-button>
                   </el-radio-group>
@@ -103,7 +104,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.privPassword"></el-input>
+                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.privPassword" id="traffic-setting-privPassword"></el-input>
                 </el-col>
               </el-row>
             </template>
@@ -112,7 +113,7 @@
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
-        <span @click="delSelf" class="right-box-form-minus-box"
+        <span @click="delSelf" class="right-box-form-minus-box" id="traffic-setting-delself"
               style="vertical-align: middle;right: 0;
                       position: absolute;
                       line-height: 21px;
@@ -136,6 +137,7 @@
                   @row-click="validateRows"
                   class="taffic-setting-tab"
                   v-if="refreshTab"
+                  :id="'traffic-setting-option-table-'+index"
                   style="width: 100%;">
           <el-table-column
             label-class-name="traffic-set-table-title"
@@ -153,7 +155,7 @@
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'tags'">
-                <div class="tab-tags" @click="showEditTagsBox(true,scope.$index,scope.row,$event)">
+                <div class="tab-tags" @click="showEditTagsBox(true,scope.$index,scope.row,$event)" id="traffic-setting-show-tags">
                   <!--<el-scrollbar style="height: 100%;">
                     <el-tag
                       v-for="(value, key, index) in scope.row[item.prop]"

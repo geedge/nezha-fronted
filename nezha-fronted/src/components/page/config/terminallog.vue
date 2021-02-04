@@ -16,6 +16,7 @@
     <!-- 自定义table列 -->
     <transition name="el-zoom-in-top">
       <element-set
+        id="terminal-log"
         v-if="tools.showCustomTableTitle"
         @close="tools.showCustomTableTitle = false"
         :custom-table-title.sync="tools.customTableTitle"
@@ -24,6 +25,7 @@
       ></element-set>
     </transition>
     <el-table
+      id="terminal-log-table"
       class="nz-table"
       :data="tableData"
       border
@@ -64,7 +66,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="terminal-log-totop"><i class="nz-icon nz-icon-top"></i></button>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
   </div>
 </template>

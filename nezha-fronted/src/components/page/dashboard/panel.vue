@@ -2,7 +2,7 @@
   <div class="panel">
     <div class="top-tools">
       <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
-        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
+        <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small" id="panel-add-panel"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
       </div>
       <template v-else>
         <div class="top-tool-main-left">
@@ -10,8 +10,8 @@
                         @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
             <template v-slot:header>
               <div class="panel-select-header">
-                <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel"></el-input>
-                <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-plus"></i></span>
+                <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel" id="panel-list-search"></el-input>
+                <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_toAdd'" id="panel-list-toadd"><i class="nz-icon nz-icon-plus"></i></span>
               </div>
             </template>
             <template v-slot:trigger>
@@ -65,13 +65,14 @@
         </div>
         <div class="top-tool-main-right">
           <div class="top-tool-search relative-position margin-r-20">
-            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable  >
               <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
             </el-input>
           </div>
 
-          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime"></pick-time>
+          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" ssh"panel"></pick-time>
           <export-excel
+            id="panel"
             export-file-name="chart"
             export-url="/panel/export"
             import-url="/panel/import"
@@ -85,13 +86,13 @@
           >
             <template slot="optionZone">
               <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_toAdd'"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light ">
+                      class="nz-btn nz-btn-size-normal nz-btn-style-light " id="panel-add-chart">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
             </template>
           </export-excel>
           <div class="relative-position ">
-            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
           </div>
         </div>
       </template>

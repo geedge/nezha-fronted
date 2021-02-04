@@ -21,7 +21,7 @@
         <!--DC-->
         <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
           <div class="right-box-form-content">
-            <el-select value-key="id" popper-class="config-dropdown" v-model="editPromServer.idc" placeholder="" size="small">
+            <el-select value-key="id" popper-class="config-dropdown" v-model="editPromServer.idc" placeholder="" size="small" id="prom-box-input-idc">
               <el-option v-for="item in dcData" :key="item.id" :label="item.name" :value="item" :id="'prom-edit-idc-op-'+item.id">
                 <span class="config-dropdown-label-txt">{{item.name}}</span>
               </el-option>
@@ -31,15 +31,16 @@
 
         <!--host-->
         <el-form-item label="Host" prop="host">
-          <el-input type="text" placeholder="" v-model="editPromServer.host" size="small"></el-input>
+          <el-input type="text" placeholder="" v-model="editPromServer.host" size="small" id="prom-box-input-host"></el-input>
         </el-form-item>
         <!--Port-->
         <el-form-item label="Port" prop="port">
-          <el-input type="text" placeholder="" v-model.number="editPromServer.port" size="small"></el-input>
+          <el-input type="text" placeholder="" v-model.number="editPromServer.port" size="small" id="prom-box-input-port"></el-input>
         </el-form-item>
         <!--type-->
         <el-form-item :label="$t('config.promServer.type')" prop="type">
           <el-cascader
+            id="prom-box-input-type"
             style="width: 100%"
             v-model="editPromServer.type"
             placeholder=""

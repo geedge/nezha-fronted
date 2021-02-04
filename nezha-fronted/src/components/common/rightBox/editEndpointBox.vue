@@ -18,19 +18,20 @@
       <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position="right" label-width="120px" :rules="rules" ref="endpointForm">
         <!--project-->
         <el-form-item :label="$t('project.project.project')" prop="project.id">
-          <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small">
+          <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small" id="edit-endpoint-input-project">
             <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <!--module-->
         <el-form-item :label="$t('project.module.module')" prop="module.id">
-          <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.moduleId" placeholder="" size="small">
+          <el-select @change="((val) => {changeModule(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.moduleId" placeholder="" size="small" id="edit-endpoint-input-project">
             <el-option :id="'edit-module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <!--asset-->
         <el-form-item :label="$t('asset.asset')" prop="assetId">
           <el-autocomplete
+            id="edit-endpoint-input-project"
             :fetch-suggestions="assetSuggestion"
             v-model.trim="editEndpoint.asset.host"
             placeholder=""
@@ -46,15 +47,15 @@
         </el-form-item>
         <!--host-->
         <el-form-item :label="$t('project.endpoint.host')" prop="host">
-          <el-input placeholder="" v-model="editEndpoint.host" size="small"></el-input>
+          <el-input placeholder="" v-model="editEndpoint.host" size="small" id="edit-endpoint-input-host"></el-input>
         </el-form-item>
         <!--port-->
         <el-form-item :label="$t('project.endpoint.port')" prop="port">
-          <el-input placeholder="" v-model="editEndpoint.port" size="small"></el-input>
+          <el-input placeholder="" v-model="editEndpoint.port" size="small" id="edit-endpoint-input-port"></el-input>
         </el-form-item>
         <!--path-->
         <el-form-item :label="$t('project.endpoint.path')" prop="path" v-if="editEndpoint.module.type.toLowerCase() == 'http'">
-          <el-input placeholder="" v-model="editEndpoint.path" size="small"></el-input>
+          <el-input placeholder="" v-model="editEndpoint.path" size="small" id="edit-endpoint-input-path"></el-input>
         </el-form-item>
         <!--param-->
         <el-form-item class="right-box-form-param" v-if="editEndpoint.module.type.toLowerCase() == 'http'">
@@ -71,8 +72,8 @@
             </span>
           </div>
           <div class="param-box param-box-module">
-            <div style="height: 100%; overflow: auto">
-              <div class="param-box-row" v-for="(item, index) in editEndpoint.paramObj">
+            <div style="height: 100%; overflow: auto" id="edit-endpoint-params">
+              <div class="param-box-row" v-for="(item, index) in editEndpoint.paramObj" >
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -99,8 +100,8 @@
           </div>
 
           <div class="param-box param-box-module">
-            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
-              <div class="param-box-row" v-for="(item, index) in editEndpoint.labelModule">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="edit-endpoint-labels">
+              <div class="param-box-row" v-for="(item, index) in editEndpoint.labelModule" >
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -115,7 +116,7 @@
         </el-form-item>
         <!--enable-->
         <el-form-item :label="$t('config.account.enable')">
-          <el-switch v-model.number="editEndpoint.enabled" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>
+          <el-switch v-model.number="editEndpoint.enabled" active-color="#ee9d3f" :active-value="1" :inactive-value="0" id="edit-endpoint-input-enabled"></el-switch>
         </el-form-item>
       </el-form>
     </div>

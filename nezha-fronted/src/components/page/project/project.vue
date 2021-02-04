@@ -34,6 +34,7 @@
               <search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input>
             </div>
             <export-excel
+              id="endpoint-list"
               export-file-name="endpoint"
               export-url="/endpoint/export"
               import-url="/endpoint/import"
@@ -56,6 +57,7 @@
         <!-- 自定义table列 -->
         <transition name="el-zoom-in-top">
           <element-set
+            id="endpoint-list"
             v-if="tools.showCustomTableTitle"
             @close="tools.showCustomTableTitle = false"
             :custom-table-title.sync="tools.customTableTitle"
@@ -64,6 +66,7 @@
           ></element-set>
         </transition>
         <el-table
+          id="endpoint-list-table"
           :data="endpointTableData"
           border
           class="nz-table endpoint-table"
@@ -166,7 +169,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <button class="to-top" :style="{top: tools.toTopBtnTop}"
+        <button class="to-top" :style="{top: tools.toTopBtnTop}" id="endpoint-list-totop"
                 :class="{'to-top-is-hover': tools.tableHover}"
                 @click="toTop(scrollbarWrap)" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i
           class="nz-icon nz-icon-top"></i></button>

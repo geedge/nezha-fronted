@@ -34,6 +34,7 @@
             <search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
           <export-excel
+            id="alert-rule"
             export-file-name="AlertRule"
             export-url="/alert/rule/export"
             import-url="/alert/rule/import"
@@ -48,13 +49,14 @@
               </button>
             </template>
           </export-excel>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="alert/rule" v-has="'rule_delete'"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="alert/rule" v-has="'rule_delete'" id="alert-rule-batch-delete"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="alert-rule-element-set"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -63,6 +65,7 @@
         ></element-set>
       </transition>
       <el-table
+        id="alert-rule-table"
         class="nz-table"
         :data="tableData"
         border
@@ -129,7 +132,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow" id="alert-rule-toTop"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>

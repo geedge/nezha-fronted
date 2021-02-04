@@ -3,8 +3,8 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{obj.host}}</div><div
-        class="sub-list-tab" @click="changeTab('panel')">{{$t("overall.detail")}}</div><div
-        @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
+        class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div><div
+        @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("asset.tableTitle.alerts")}}</div><div
         class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
       </div>
       <div class="top-tool-right">
@@ -12,6 +12,7 @@
           <search-input :searchMsg="searchMsg" @search="search" position="endpoint-bottom"></search-input>
         </div>
         <export-excel
+          id="endpoint-sub-list"
           export-file-name="endpoint"
           export-url="/endpoint/export"
           import-url="/endpoint/import"
@@ -26,12 +27,13 @@
             </button>
           </template>
         </export-excel>
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="endpoint" v-has="'asset_endpoint_delete'"></delete-button>
+        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" api="endpoint" v-has="'asset_endpoint_delete'" id="endpoint-tab-batch-delete"></delete-button>
       </div>
     </div>
     <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="endpoint-sub-list"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -41,6 +43,7 @@
         ></element-set>
       </transition>
     <el-table
+      id="endpoint-sub-list-table"
       :data="tableData"
       border
       v-loading="tools.loading"

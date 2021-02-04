@@ -15,10 +15,10 @@
     <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" :model="editProject" label-position="right" label-width="120px" :rules="rules" ref="projectForm">
         <el-form-item :label='$t("project.project.projectName")' prop="name">
-          <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name"></el-input>
+          <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name" id="project-box-input-name"></el-input>
         </el-form-item>
         <el-form-item :label='$t("project.project.description")'>
-          <el-input size="mini" type="textarea" maxlength="1024" show-word-limit v-model="editProject.remark"></el-input>
+          <el-input size="mini" type="textarea" maxlength="1024" show-word-limit v-model="editProject.remark" id="project-box-input-remark"></el-input>
         </el-form-item>
       </el-form>
     </div>

@@ -31,7 +31,7 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="account-add">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" @after="getTableData" api="sys/user/delete" v-has="'account_delete'" @before="delFlag=true"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" @after="getTableData" api="sys/user/delete" v-has="'account_delete'" @before="delFlag=true" id="account-list-batch-delete"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -39,6 +39,7 @@
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="account-list"
           v-if="tools.showCustomTableTitle"
           @close="tools.showCustomTableTitle = false"
           :custom-table-title.sync="tools.customTableTitle"
@@ -47,6 +48,7 @@
         ></element-set>
       </transition>
       <el-table
+        id="account-list-table"
         class="nz-table"
         :data="tableData"
         border
@@ -127,7 +129,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow" id="account-list-totop"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
       </div>

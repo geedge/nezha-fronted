@@ -19,7 +19,7 @@
                   id="menus-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
-          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @before="delFlag=true" @after="getTableData" api="sys/menu"></delete-button>
+          <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @before="delFlag=true" @after="getTableData" api="sys/menu" id="menus-list-batch-delete"></delete-button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -27,6 +27,7 @@
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
+          id="menu-list"
           :custom-table-title.sync="tools.customTableTitle"
           :original-table-title="tableTitle"
           @close="tools.showCustomTableTitle = false"
@@ -35,6 +36,7 @@
         ></element-set>
       </transition>
       <el-table
+        id="menu-list-table"
         :data="tableData"
         :height="mainTableHeight"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -98,7 +100,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn "><i class="nz-icon nz-icon-top"></i></button>
+      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn " id="menu-list-totop"><i class="nz-icon nz-icon-top"></i></button>
     </div>
     <transition name="right-box">
       <menu-box :menu="menu" @close="closeRightBox" v-if="rightBox.show"></menu-box>

@@ -61,7 +61,7 @@
           <div slot="title">
             <span class="nz-dialog-title">{{data.title}}</span>
             <div class="float-right panel-calendar dialog-tool">
-              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :show-time-picker="false" :use-chart-unit="false" ref="pickTime" style="height: 28px;"></pick-time>
+              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :show-time-picker="false" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="alert-chart"></pick-time>
             </div>
 <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
@@ -84,7 +84,7 @@
             <div class="upload-body">
               <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
               <div style="text-align: right; margin-top: 10px;">
-                <button @click="closeDialog" class="el-button el-button--default el-button--small">
+                <button @click="closeDialog" class="el-button el-button--default el-button--small" >
                   <span>{{$t('tip.no')}}</span>
                 </button>
                 <button @click="deleteMessage" class="el-button el-button--default el-button--small el-button--primary">
@@ -104,7 +104,7 @@
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
             <div class="float-right panel-calendar dialog-tool" style="display: flex">
-              <pick-time :refresh-data-func="queryChartDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+              <pick-time :refresh-data-func="queryChartDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="alert-sub-chart"></pick-time>
             </div>
           </div>
           <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit" ></chart>

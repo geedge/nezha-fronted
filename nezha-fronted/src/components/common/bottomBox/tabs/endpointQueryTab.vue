@@ -19,8 +19,8 @@
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
-        class="sub-list-tab" @click="changeTab('panel')">{{$t("overall.detail")}}</div>
-        <div class="sub-list-tab" @click="changeTab('alertMessage')">{{$t("asset.tableTitle.alerts")}}</div>
+        class="sub-list-tab" @click="changeTab('panel')" id="endpoint-query-changepanel">{{$t("overall.detail")}}</div>
+        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("asset.tableTitle.alerts")}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">
@@ -30,7 +30,7 @@
           </el-input>
         </div>
         <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
-          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend"><i class="el-icon-d-arrow-left"></i></button><el-date-picker
+          <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button><el-date-picker
           v-model="formatTime"
           type="datetime"
           size="mini"
@@ -61,7 +61,7 @@
     <div class="table-header-inner" @click="clearSelectedMetrics"><span><i style="font-size: 12px;margin-left: 2px;" class="nz-icon nz-icon-close " :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i></span></div>
      <pl-table :row-height="28" use-virtual :datas="tableData" border :empty-text="$t('config.mib.noData')" :header-cell-class-name="cellClass" :style="{height: $tableHeight.noPagination}"
                :pagination-show="false" class="nz-table endpoint-query-table" ref="endpointQueryTable" style="width: 100%;" v-loading="loading"
-               @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true" :tooltip-effect="'light'">
+               @selection-change="selectChange" v-if="tableShow && plTableSHow" :border="true" :tooltip-effect="'light'" id="endpoint-list-table">
       <pl-table-column
         type="selection"
         width="39"
@@ -99,7 +99,7 @@
         min-width="180">
       </pl-table-column>
     </pl-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
+    <button :class="{'to-top-is-hover': tools.tableHover}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="endpoint-list-totop"><i class="nz-icon nz-icon-top"></i></button>
 
     <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"
@@ -111,8 +111,8 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-          <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'project_endpoint_query_chart_toAdd'">{{$t('dashboard.metric.saveChart')}}</button>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart"></pick-time>
+          <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'project_endpoint_query_chart_toAdd'" id="endpoint-query-full-chart-save">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
       <chart ref="endpointChart" :unit="chartUnit"></chart>

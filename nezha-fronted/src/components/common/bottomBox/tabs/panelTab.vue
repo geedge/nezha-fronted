@@ -10,11 +10,11 @@
           <template v-else-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
         </div><div class="sub-list-tab sub-list-tab-active" v-if="from == $CONSTANTS.fromRoute.model">{{$t("dashboard.panel.title")}}</div><template v-if="from == $CONSTANTS.fromRoute.asset"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
-          @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'">{{$t("asset.tableTitle.modules")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="panel-tab-change-asset-alertmsg">{{$t("asset.tableTitle.alerts")}}</div><div
+          @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'" id="panel-tab-change-endpoint">{{$t("asset.tableTitle.modules")}}</div>
         </template><template v-if="from == $CONSTANTS.fromRoute.rule"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'rule_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'rule_alerts_view'" id="panel-tab-change-rule-alertmsg">{{$t("asset.tableTitle.alerts")}}</div>
         </template><template v-if="from == $CONSTANTS.fromRoute.endpoint"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
           @click="changeTab('alertMessage')" class="sub-list-tab " v-has="'project_endpoint_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
@@ -23,12 +23,13 @@
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search margin-r-20" v-if="from != $CONSTANTS.fromRoute.rule && from != $CONSTANTS.fromRoute.endpoint">
-          <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   >
+          <el-input ref="queryPanel" @clear="clearInput"  @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable   id="panel-tab-search">
             <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
           </el-input>
         </div>
         <pick-time :refresh-data-func="dateChange" :use-chart-unit="false" ref="pickTime" v-if="from == $CONSTANTS.fromRoute.asset" v-model="searchTime"></pick-time>
         <export-excel
+          id="panel-tab"
           export-file-name="chart"
           export-url="/panel/export"
           import-url="/panel/import"

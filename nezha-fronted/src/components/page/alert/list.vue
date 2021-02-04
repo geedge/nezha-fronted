@@ -29,11 +29,12 @@
                   class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
             <i class="nz-icon nz-icon-download1"></i>
           </button>
-          <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="'message_delete'"></delete-button>
+          <delete-button :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getAlertList" api="alert/message" v-has="'message_delete'" id="alert-msg-batch-delete"></delete-button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <alertMessageTable
+        projectAlertId="alert-msg-table"
         ref="alertMessageTable"
         :tableData="tableData"
         :loading="tools.loading"
@@ -54,10 +55,10 @@
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
         <div class="upload-body">
-          <button @click="exportCur" class="el-button el-button--default el-button--small">
+          <button @click="exportCur" class="el-button el-button--default el-button--small" id="alert-msg-exportcur">
             <span>{{$t('overall.exportCur')}}</span>
           </button>
-          <button @click="exportAll" class="el-button el-button--default el-button--small">
+          <button @click="exportAll" class="el-button el-button--default el-button--small" id="alert-msg-exportall">
             <span>{{$t('overall.exportAll')}}</span>
           </button>
         </div>

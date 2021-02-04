@@ -20,11 +20,11 @@
       <el-form :disabled="detail" :model="editRole" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="roleForm">
         <!--name-->
         <el-form-item :label="$t('config.roles.name')" prop="name">
-          <el-input  maxlength="64" placeholder=""
+          <el-input  maxlength="64" placeholder="" id="role-box-input-name"
                     show-word-limit size="small" type="text" v-model="editRole.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.roles.remark')">
-          <el-input :rows="2" size='mini' type="textarea" v-model="editRole.remark"/>
+          <el-input :rows="2" size='mini' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>
         </el-form-item>
 
         <el-form-item :label="$t('config.roles.permission')">
@@ -32,7 +32,7 @@
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" style="margin-left: 0px;" @click="expandAllOrNone" :class="{'btn-active':expandAllFlag}">展开/收缩</button>
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
           </div>-->
-          <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}"  @check-change="selectChange" class="tree-border" node-key="id" ref="menuTree" show-checkbox>
+          <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}"  @check-change="selectChange" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
             <div slot-scope="{node, data}" >
               <span>
                 <i class="el-icon-menu" v-if="data.type == '1'"></i>

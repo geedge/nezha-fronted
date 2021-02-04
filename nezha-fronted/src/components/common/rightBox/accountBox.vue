@@ -20,32 +20,32 @@
       <el-form :model="editUser" :rules="editUser.userId ? rules2 : rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="accountForm">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
-          <el-input autocomplete="new-password" type="text" placeholder=""
+          <el-input autocomplete="new-password" type="text" placeholder="" id="account-input-username"
                     v-model="editUser.username" maxlength="64" show-word-limit size="small" :disabled="editUser.username==='admin' && editUser.userId==1"></el-input>
         </el-form-item>
         <!--password-->
         <el-form-item :label="$t('config.account.password')" prop="password">
-          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.password"
+          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.password" id="account-input-password"
                     maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
         </el-form-item>
         <!--passwordChange-->
         <el-form-item :label="$t('config.account.confirmPwd')" class="passwordChange" label-width="160px" prop="passwordChange">
-          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.passwordChange"
+          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.passwordChange" id="account-input-passwordChange"
                     maxlength="16" show-word-limit size="small"></el-input>
         </el-form-item>
         <!--email-->
         <el-form-item label="E-mail" prop="email">
-          <el-input type="text" placeholder="" v-model="editUser.email" size="small"></el-input>
+          <el-input type="text" placeholder="" v-model="editUser.email" size="small" id="account-input-email"></el-input>
         </el-form-item>
         <!--enable-->
         <el-form-item :label="$t('config.account.enable')">
-          <el-switch v-model="editUser.status" active-color="#ee9d3f" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.userId==1) " active-value="1"
+          <el-switch v-model="editUser.status" active-color="#ee9d3f" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.userId==1) " active-value="1" id="account-input-status"
                      inactive-value="0">
           </el-switch>
         </el-form-item>
         <!--roles-->
         <el-form-item :label="$t('config.account.roles')" prop="roleIds">
-          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.userId==1">
+          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.userId==1" id="account-input-roleIds">
             <template v-for="role in roles">
               <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
             </template>
@@ -62,14 +62,15 @@
         </div>
 
         <div class="right-box-line"></div>
-
-        <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
-          <el-select class='form-item-title' placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId">
-            <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
-          </el-select>
-          <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 37px);"></el-input>
-          <span @click="removeNotification(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
-        </el-form-item>
+        <div id="account-input-box">
+          <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
+            <el-select class='form-item-title' placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId">
+              <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
+            </el-select>
+            <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 37px);"></el-input>
+            <span @click="removeNotification(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
     <!-- end--表单-->
