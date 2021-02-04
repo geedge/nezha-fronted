@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle" v-if="chartTitleShow">
+        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -38,9 +38,9 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
               <span class="chart-title-text">{{chartData.title}}</span>
-              <span class="chart-title-icon" v-if="filter.from != $CONSTANTS.fromRoute.rule"><i :class="{'visible':caretShow,'hidden':!caretShow}" class="nz-icon nz-icon-xialaxuanze  "></i></span>
+              <span class="chart-title-icon" v-if="filter.from != $CONSTANTS.fromRoute.rule&&chartTitleShow"><i :class="{'visible':caretShow,'hidden':!caretShow}" class="nz-icon nz-icon-xialaxuanze  "></i></span>
             </span>
-            <ul :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}" :id="'dropdownUl'+chartIndex" slot="dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" v-if="filter.from != $CONSTANTS.fromRoute.rule"    v-show="dropdownMenuShow" >
+            <ul :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}" :id="'dropdownUl'+chartIndex" slot="dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" v-if="filter.from != $CONSTANTS.fromRoute.rule&&chartTitleShow"    v-show="dropdownMenuShow" >
               <li v-show="!isExplore"  @click="refreshChart"  class="el-dropdown-menu__item">
                 <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
               <li @click="editChart" class="el-dropdown-menu__item" v-has="`${from}_chart_toEdit`" v-show="!isExplore">

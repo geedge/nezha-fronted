@@ -174,7 +174,7 @@
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
            @mouseout="tooltipOut">
-        <topoTooltip :chartDataParent="chartData"/>
+        <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
       </div>
     </div>
     <!--<div class="left-bottom" v-if="editTopologyFlag">-->
@@ -267,6 +267,7 @@
   export default {
     data(){
       return {
+        imgInit:false,//判断图片是否加载完成
         toolGroup:'基本形状',
         editFlag:true,
         tools:Tools,
@@ -423,6 +424,9 @@
         };
       }
     },
+    created(){
+      this.addNodeInit();
+    },
     mounted(){
       document.getElementById('topology-canvas'+this.topologyIndexF).addEventListener('mousemove',this.canvasMove);
       window.addEventListener('resize',this.winResize)
@@ -450,6 +454,7 @@
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
+            console.log(data);
             data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
@@ -499,6 +504,7 @@
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
+            console.log(data);
             data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
@@ -517,7 +523,11 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
-              this.getNodesArr();
+              if(this.fromOverView){
+                getTopology(this.topologyIndex).centerView();
+                // getTopology(this.topologyIndex).fitView();
+                this.getNodesArr();
+              }
             });
           })
         });
@@ -532,7 +542,7 @@
           }
           getTopology(this.topologyIndex).data.projectId=this.obj.id;
           getTopology(this.topologyIndex).lock(1);
-          this.addNodeInit();
+
           this.getModule()//获取module
           resolve()
         })
@@ -542,7 +552,7 @@
         return new Promise(resolve=>{
           this.$get('/project/topo',{projectId:this.obj.id}).then(res=>{
             let data=res.data.topo;
-            if(!data.pens){
+            if(!res.data.topo || !data.pens){
               data={
                 bkColor:'#FFFFFF',
                 gridSize:10,
@@ -550,9 +560,24 @@
                 lineWidth:1,
                 ruleColor:"#4e4e4e"
               };
+              this.saveData={...data};
+              resolve(data);
+            }else{
+              let timer=setInterval(()=>{
+                if(!this.imgInit){
+                  return
+                }
+                clearInterval(timer);
+                data.pens.forEach((item=>{
+                  console.log(item,this.iconArray.find(item1=>item1.id==item.imageId))
+                  if(item.type===0&&item.data.imageId){
+                    item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
+                  }
+                }))
+                this.saveData={...data};
+                resolve(data);
+              },100)
             }
-            this.saveData={...data};
-            resolve(data);
           })
         });
       },
@@ -595,12 +620,12 @@
             pen.animateType=selLevel.animateType;
             pen.font.color=selLevel.color.text;
             onChangeAnimateLine(pen,pen.animateType);
-            pen.font.color=selLevel.color.text;
           }
         } else {
           if(pen.type===0&&pen.animatePlay){// 判断valueMapping 给相应的状态
             onChangeAnimate(pen,pen.animateType);
           }else if(pen.type===1&&pen.animatePlay){// 判断valueMapping 给相应的状态
+            console.log(123123123);
             onChangeAnimateLine(pen,pen.animateType);
           }
         }
@@ -784,7 +809,7 @@
         setTimeout(()=>{
           this.dragFlag=true;
         },100);
-        event.dataTransfer.setData('Text',JSON.stringify(node.data));
+        event.dataTransfer.setData('Text',JSON.stringify({...node.data,data:{imageId:node.data.imageId}}));
       },
       dragFlagChange(node){
         getTopology(this.topologyIndex).addNode(
@@ -794,7 +819,8 @@
               ...node.data.rect,
               x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth/2-50,
               y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight/2-50
-            }
+            },
+            data:{imageId:node.data.imageId}
           });
         setTimeout(()=>{
           this.dragFlag=true;
@@ -802,7 +828,7 @@
       },
 
       onMessage(event,data){
-        // console.log('onMessage',event,data);
+        console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
         if(getTopology(this.topologyIndex)){
           this.cachesIndex=getTopology(this.topologyIndex).caches.index;
@@ -812,8 +838,9 @@
           ;
         }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
-          if(data.type===0&& !data.data){
+          if(data.type===0&& !data.data.moduleId){
             data.data={
+              ...data.data,
               moduleId:'',
               moduleName:'',
               show:false,
@@ -889,15 +916,17 @@
         switch(event){
           case 'moveInNode':
           case 'moveInLine':
-            if(this.timer3){
-              clearTimeout(this.timer3);
-              this.timer3=null
-            }
+            // if(this.timer3){
+            //   clearTimeout(this.timer3);
+            //   this.timer3=null
+            // }
             this.chartData={...data.data,...this.chartGetData.find(item=>item.id===data.id)};
             this.tooltipPosition.show=true;
             break;
           case 'moveOutNode':
           case 'moveOutLine':
+            this.tooltipPosition.show=false;
+            return
             if(!this.timer3){
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
@@ -911,7 +940,6 @@
               },300)
             }
             break;
-
         }
         // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
         setTimeout(()=>{
@@ -1184,34 +1212,35 @@
         })
       },
 
-      addNodeInit(selImageId){
+      addNodeInit(){
         this.$get('/project/topo/icon').then(res=>{
           this.imgageLoading=true;
           this.tools[1].children=[];
+          let promiseArr=[];
           res.data.list.forEach((item,index)=>{
             item.imageName=item.name;
             delete item.name;
-            this.dealImg(`/project/topo/icon/${item.id}`).then((data)=>{
-              item.image=data;
-              if(index===res.data.list.length-1){
-                setTimeout(()=>{
-                  this.iconArray=[...res.data.list];
-                  this.iconArray.forEach(item=>{
-                    this.tools[1].children.push({
-                      ...imageTemp,
-                      data:{
-                        ...imageTemp.data,
-                        text:item.imageName,
-                        image:item.image,
-                        imageId:item.id,
-                      }
-                    })
-                  });
-                  this.imgageLoading=false;
-                },100)
-              }
-            })
+            promiseArr.push( this.dealImg(`/project/topo/icon/${item.id}`));
           });
+          Promise.all(promiseArr).then(res2=>{
+            this.iconArray=[...res.data.list];
+            this.iconArray.forEach((item,index)=>{
+              this.tools[1].children.push({
+                ...imageTemp,
+                data:{
+                  ...imageTemp.data,
+                  text:item.imageName,
+                  image:res2[index],
+                  imageId:item.id,
+                }
+              })
+              item.image=res2[index];
+            });
+            console.log(this.iconArray);
+            this.imgInit=true;
+          })
+
+
         })
       },
 
@@ -1302,7 +1331,7 @@
       },
       //保存
       saveTopology(){
-        let topologyData=getTopology(this.topologyIndex).data;
+        let topologyData=getTopology(this.topologyIndex).pureData();
         let flag=true;
         topologyData.pens.forEach(item=>{
           if(item.type===0&&((flag&& !item.data)||(flag&&item.data&& !item.data.moduleId))){
@@ -1311,8 +1340,15 @@
         });
         if(flag){
           this.editTopologyFlag=false;
-          localStorage.setItem('data',JSON.stringify(topologyData));
-
+          topologyData.pens.forEach(item=>{
+            if(item.type===0&&JSON.stringify(item.data.imageId)){
+              item.image="";
+              item.animateFrames=[];
+              item.animateReady=null;
+              delete  item.img;
+              delete  item.lastImage;
+            }
+          });
           this.$put('/project/topo',{topo:JSON.stringify(topologyData),projectId:this.projectInfo.id}).then(res=>{
             this.prevent_opt.save=false;
             if(res.code===200){
@@ -1328,7 +1364,6 @@
                 getTopology(this.topologyIndex).canvasPos=domRect;
                 this.reload();
               })
-              this.getNodesArr();
             }
           }).catch(res=>{
             this.prevent_opt.save=false;
@@ -1380,14 +1415,14 @@
         this.tooltipPosition.left=e.offsetX+20;
       },
       tooltipOver(){
-        clearTimeout(this.timer3);
-        this.timer3=null
+        // clearTimeout(this.timer3);
+        // this.timer3=null
       },
       tooltipOut(){
-        this.timer3=setTimeout(()=>{
-          this.tooltipPosition.show=false;
-          this.timer3=null
-        },300)
+        // this.timer3=setTimeout(()=>{
+        //   this.tooltipPosition.show=false;
+        //   this.timer3=null
+        // },300)
       },
       nodeDefaultWidth(nodeName){
         switch(nodeName){
@@ -1402,7 +1437,9 @@
     destroyed(){
       getTopology(this.topologyIndex).destroy();
       setTopology(this.topologyIndex,null);
-      document.getElementById('topology-canvas'+this.topologyIndexF).removeEventListener('mousemove',this.canvasMove);
+      if(document.getElementById('topology-canvas'+this.topologyIndexF)){
+       document.getElementById('topology-canvas'+this.topologyIndexF).removeEventListener('mousemove',this.canvasMove);
+      }
       window.removeEventListener('resize',this.winResize)
     }
   }

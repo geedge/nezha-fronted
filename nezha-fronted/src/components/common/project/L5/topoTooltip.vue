@@ -1,7 +1,7 @@
 <template>
-  <div style="display: flex;">
+  <div class="tooltip-box" style="display: flex;" v-if="chartData.tooltipShow">
     <span class="temp-dom"></span>
-    <div style="width: 400px;height: 400px;" v-if="chartData.displayChart">
+    <div class="tooltip-box-chart" style="" v-if="chartData.displayChart&&chartData.tooltipShow">
       <line-chart-block v-if="chartData.type !== 'table'"
                         :key="'inner' + chartData.id"
                         :from="'project'"
@@ -12,7 +12,6 @@
                         :chart-index="0"
                         :chartTitleShow="false"
                         :chart-data="chartData">
-
       </line-chart-block>
     </div>
 
@@ -25,7 +24,9 @@
                   <!--:panel-id="-1"-->
                   <!--:chart-data="chartData"-->
                   <!--:chart-index="0"></chart-table>-->
-    <expression-info :chart-data="chartData"/>
+    <div class="tooltip-box-info">
+      <expression-info :chart-data="chartData" :filterTime="filterTime"/>
+    </div>
   </div>
 </template>
 
@@ -45,6 +46,7 @@
       chartDataParent:{
         type:Object,
       },
+      filterTime:{},
     },
     watch:{
       chartDataParent:{
@@ -58,10 +60,6 @@
     data(){
 		  return{
         tempDom: {height: 400, width: ""},
-        filterTime: [
-          bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
-          bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
-        ],
         chartDataTemp:{"id":8832,"prev":null,"next":null,"panelId":0,"title":"123","span":12,"height":400,"createAt":"2021-01-27 07:36:19","type":"line","unit":2,"weight":0,"pid":null,"buildIn":null,"seq":null,"param":{"last":0,"legendValue":{"total":"off","min":"off","avg":"off","last":"off","max":"off"},"threshold":"","valueMapping":{"mapping":[{"color":{"bac":"#fff","text":"#000"},"text":"","value":""}],"type":"text"},"url":"","nullType":"connected"},"elements":[{"id":14926,"chartId":null,"expression":"cache_evictions_total","type":"expert","legend":"","buildIn":null,"seq":null},{"id":14927,"chartId":null,"expression":"appDevice","type":"expert","legend":"","buildIn":null,"seq":null}],"sync":null,"asset":null,"isLoaded":true,"from":"__vue_devtool_undefined__","draggable":true,"resizable":true,"editable":true},
         chartData:{},
         filter:{
@@ -148,6 +146,7 @@
             setTimeout(()=>{
               this.$nextTick(() => {
                 let res=chartItem.res;
+                console.log(res);
                 if (res.length > 0) {
                   let series = [];
                   let singleStatRlt = '';
@@ -391,10 +390,34 @@
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .temp-dom {
     visibility: hidden;
     font-size: 14px;
     position: fixed;
   }
+  .tooltip-box{
+    background: #FFFFFF;
+    box-shadow: 1px 2px 8px 0 rgba(0,0,0,0.11);
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 400px;
+    min-height: 200px;
+    .tooltip-box-chart{
+      border: 1px solid #E7EAED;
+      width: 400px;
+      height: 400px;
+      margin-right: 10px;
+    }
+    .tooltip-box-info{
+      border: 1px solid #E7EAED;
+      background: #FFFFFF;
+      max-height: 400px;
+      min-height: 200px;
+      min-width: 186px;
+      max-width: 300px;
+    }
+  }
+
+
 </style>
