@@ -180,21 +180,22 @@
                       </div>
                       <div
                         class="color-tab"
-                        v-if="item.showColor">
+                        v-show="item.showColor">
                         <div :class="{'color-active':item.showType=='fill'}" @click="changeShowPicker(item ,'fill')">Fill</div>
                         <div :class="{'color-active':item.showType=='line'}" @click="changeShowPicker(item , 'line')">Line</div>
                         <div :class="{'color-active':item.showType=='text'}" @click="changeShowPicker(item , 'text')">Text</div>
                       </div>
                     </div>
-                    <span> > </span>
                   </span>
                   <span v-else>base</span>
                 </el-col>
-                <el-col class="thresholds-cell" :span="4">
-                  <el-input
+                <el-col class="thresholds-cell" :span="4" style="display: flex">
+                  <span> > </span>
+                  <el-input-number
                     v-if="item.level!==0"
                     v-model="item.value"
                     @change="valueMappingValueChange(item)"
+                    :controls="false"
                     size="small"
                   />
                   <span v-else>base</span>
@@ -229,7 +230,7 @@
                   <!--默认-->
                   <span v-if="item.level===0">base</span>
                 </el-col>
-                <el-col class="thresholds-cell" :span="4">
+                <el-col class="thresholds-cell" :span="4" style="text-align: center">
                   <i v-if="item.level!==0" @click="valueMappingDel(index, item)"
                      class="nz-icon nz-icon-minus">
                   </i>
@@ -237,7 +238,7 @@
               </el-row>
             </div>
           </div>
-          <div @click="valueMappingAdd()" style="text-align: center">
+          <div @click="valueMappingAdd()" style="text-align: center" class="value-mapping-add">
             <i class="nz-icon nz-icon-plus"></i>
           </div>
 
@@ -1655,7 +1656,7 @@
           },
           showColor:undefined,
           animateType:this.selection.pen.type?1:'upDown',
-          value:'',
+          value:0,
           level:this.selection.pen.data.valueMapping.length,
           showType:'fill',//bac text border
         });
@@ -1711,6 +1712,8 @@
 
   .props-box /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item {
     box-sizing: content-box;
+    height: 31px;
+    line-height: 31px;
   }
 </style>
 <style>
@@ -1728,7 +1731,7 @@
     background: #eeeeee;
     height: 36px;
     line-height: 36px;
-    border-radius: 10px 0 0 0;
+    border-radius: 0;
     padding-left: 10px;
   }
 
@@ -1942,7 +1945,13 @@
       line-height: 32px;
     }
   }
-
+  .value-mapping-add{
+    background: #FA901C30;
+    margin-bottom: 10px;
+    height: 24px;
+    line-height: 24px;
+    color:  #FA901C;
+  }
   .mb10 {
     margin-bottom: 10px;
   }

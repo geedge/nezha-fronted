@@ -1,7 +1,7 @@
 <template>
   <div class="tool-top" id="tool-top">
-    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-jiantou-left" /> </div>
-    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-jiantou-right" /> </div>
+    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-revoke" /> </div>
+    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-revoke1" /> </div>
     <!--<div class="top-tool-item" @click="centerView"> 居中</div>-->
     <!--<div class="top-tool-item" @click="fitView"> 自适应</div>-->
     <!--<div :class="['top-tool-item',toolShow.node?'tool-item-active':'']" @click="toolShowChange('node')"> 节点工具 </div>-->

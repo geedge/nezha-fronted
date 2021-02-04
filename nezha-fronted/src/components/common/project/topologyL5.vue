@@ -1832,7 +1832,7 @@
       top: 0;
       background: #FFFFFF;
       box-shadow: inset 1px 0 0 0 rgba(0, 0, 0, 0.09);
-      border-radius: 10px;
+      border-radius: 0px;
     }
   }
 
