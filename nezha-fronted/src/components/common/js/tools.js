@@ -14,7 +14,7 @@ export const clickoutside = {
     try{
       oldValue= JSON.parse(JSON.stringify(binding.value.obj));
     }catch (e) {
-
+    
     }
     function documentHandler(e) {
       if (el.contains(e.target)) {
@@ -59,7 +59,7 @@ export const clickoutside = {
         }
       }
     }
-
+    
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler;
     document.addEventListener('mousedown', documentHandler);
@@ -80,9 +80,9 @@ function isEqual (o1, o2) {
     if (Object.keys(obj1).length !== Object.keys(obj2).length) {
       return false;
     }
-
+    
     for (var attr of Object.keys(obj1)) {
-
+      
       var t1 = obj1[attr] instanceof Object;
       var t2 = obj2[attr] instanceof Object;
       if (t1 && t2) {
@@ -142,25 +142,25 @@ export const bottomBoxWindow = {
     let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
     let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
     let resizeBarDom = document.querySelector(".sub-list-resize"); //拖动条
-
+    
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //点击时俩dom的初始高度：
     let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
-
+    
     mainModalDom.style.display = "block";
     resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
     resizeBarDom.style.display = "none";
     let resizeModalEndHeight;
     //点击时鼠标的Y轴位置
     let mouseInitialY = e.clientY;
-
+    
     document.onmousemove = (e) => {
       window.resizing = true;
       e.preventDefault();
       //得到鼠标拖动的距离
       let mouseMoveY = e.clientY-mouseInitialY;
       resizeModalEndHeight = subInitialHeight-mouseMoveY;
-
+      
       // 主、副列表高度限制
       if(resizeModalEndHeight > contentRightHeight-minHeight){
         resizeModalEndHeight = contentRightHeight-minHeight;
@@ -178,7 +178,7 @@ export const bottomBoxWindow = {
       resizeModalDom.style.display = "none";
       mainModalDom.style.display = "none";
       resizeBarDom.style.display = "";
-
+      
       //当主副列表可视区域小于一定值时，不展示内容
       if(contentRightHeight-resizeModalEndHeight <= contentHideHeight){
         if (vm.bottomBox.mainResizeShow) {
@@ -198,7 +198,7 @@ export const bottomBoxWindow = {
           vm.bottomBox.subResizeShow = true;
         }
       }
-
+      
       document.onmousemove = null;
       document.onmouseup = null;
     }
@@ -209,7 +209,7 @@ export const bottomBoxWindow = {
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //主列表
     document.querySelector(".main-list-with-sub").style.height = vm.bottomBox.mainListHeight ? vm.bottomBox.mainListHeight + 'px' : 'calc(50% - 4px)';
-
+    
     //副列表
     document.querySelector(".sub-list").style.height = vm.bottomBox.mainListHeight ? contentRightHeight-vm.bottomBox.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
     setTimeout(() => {
@@ -256,7 +256,7 @@ export const bottomBoxWindow = {
         paginationTop.classList.add("display-none");
         paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
       }, 210);
-
+      
       // 主列表恢复全屏
       vm.bottomBox.mainResizeShow = vm.bottomBox.subResizeShow = true;
       document.querySelector('.main-list').style.height = "";
@@ -342,22 +342,22 @@ export const chartResizeTool = {
     let titleHeight = this.titleHeight;
     let stepWidth = this.stepWidth(document.getElementById('listContainer').offsetWidth);
     let stepHeight = this.stepHeight;
-
+    
     let mouseOriginalX = event.clientX; //鼠标初始坐标
     let mouseOriginalY = event.clientY;
     let originalWidth = stepWidth*data.span; //图表、阴影初始宽高
     let shadowNewWidth = originalWidth;
     let originalHeight = data.height;
     let shadowNewHeight = originalHeight;
-
+    
     //1.激活背景阴影
     shadow.classList.add("resize-shadow-active");
     //2.鼠标移动时调整resize-box的宽高，同时监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
     document.addEventListener("mousemove", moveListener);
     //3.鼠标松开，将resize-box宽高改为resize-shadow宽高，结束
     document.addEventListener("mouseup", mouseupListener);
-
-
+    
+    
     function moveListener(e) {
       let mouseX = e.clientX;
       let mouseY = e.clientY;
@@ -377,14 +377,14 @@ export const chartResizeTool = {
       data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更
       if (data.height != originalData.height || data.span != originalData.span) {
-
+        
         originalData.height = data.height;
         originalData.span = data.span;
         vm.$put("panel/" + vm.panelIdInner + "/charts/modify", originalData);
       }
       //关闭背景阴影
       shadow.classList.remove("resize-shadow-active");
-
+      
       document.removeEventListener("mousemove", moveListener);
       document.removeEventListener("mouseup", mouseupListener);
     }
@@ -418,7 +418,7 @@ export const chartResizeTool = {
       if (heightChange) {
         shadowNewHeight = shadow.offsetHeight+chartBlankHeight;
       }
-
+      
       if (widthChange || heightChange) {
         clearTimeout($self.timeouter)
         $self.timeouter=setTimeout(()=>{
@@ -432,7 +432,7 @@ export const chartResizeTool = {
         outerBox.style.height = `${shadow.offsetHeight+chartPaddingTop}px`;
         outerBox.style.width = `${parseFloat(shadow.style.width.split("px")[0])+chartBlankWidth}px`;
       }
-
+      
     }
   }
 };
@@ -509,7 +509,7 @@ export const tableSet = {
           case 'principal': return 'su.username';
           default : return prop;
         }
-
+      
       case 'alertMessage':
         switch(prop){
           case 'id': return'am.id';
@@ -520,20 +520,20 @@ export const tableSet = {
           case 'endAt': return'am.end_at';
           default : return prop;
         }
-
+      
       case 'project':
         switch(prop){
-        case 'id': return'e.id';
-        case 'asset': return'a.host';
-        case 'port': return'e.port';
-        case 'project': return'p.name';
-        case 'module': return'm.name';
-        case 'type':  return'm.type';
-        case 'state' :return 'es.state';
-        // case 'path': return'e.path';
-        default : return prop;
-      }
-
+          case 'id': return'e.id';
+          case 'asset': return'a.host';
+          case 'port': return'e.port';
+          case 'project': return'p.name';
+          case 'module': return'm.name';
+          case 'type':  return'm.type';
+          case 'state' :return 'es.state';
+          // case 'path': return'e.path';
+          default : return prop;
+        }
+      
       case 'dc':
         switch(prop){
           case 'id': return'i.id';
@@ -541,7 +541,7 @@ export const tableSet = {
           case 'area': return'sa.name';
           default : return prop;
         }
-
+      
       case 'endpointTab':
         switch(prop){
           case 'id': return'e.id';
@@ -689,12 +689,39 @@ export const tableSet = {
   }
 }
 
+export function  getMetricTypeValue(queryItem,type){
+  let copy=JSON.parse(JSON.stringify(queryItem));
+  switch (type) {
+    case 'min':
+      let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1];
+      return min;
+    case 'max':
+      let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1];
+      return max;
+    case 'avg':
+      copy = copy.map(t=>parseFloat(t[1]));
+      let sum = eval(copy.join('+'));
+      let avg = sum / copy.length;
+      return avg;
+    case 'last':
+      let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1];
+      return last;
+    case 'first':
+      let first =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[copy.length][1];
+      return first;
+    case 'total':
+      copy = copy.map(t=>parseFloat(t[1]));
+      let total = eval(copy.join('+'));
+      return total;
+  }
+}
+
 export function blankPromise() {
   return new Promise(resolve => {resolve();});
 }
 
 export function clickLegend(echart,legendName,index){
   if(echart){
-
+  
   }
 }
