@@ -2,9 +2,9 @@
   <div class="props-box">
     <!--删除按钮-->
     <!--<button id="edit-ep-del" type="button" class="nz-btn nz-btn-size-normal nz-btn-size-alien del-btn"-->
-            <!--v-if="selection.pen" @click="delTopologyPen">-->
-      <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
-      <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+    <!--v-if="selection.pen" @click="delTopologyPen">-->
+    <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
+    <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
     <!--</button>-->
     <!--所有属性-->
     <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
@@ -41,7 +41,8 @@
               </span>
             </span>
           </div>
-          <el-row :key="index" class="element-item form-row-item" style="" v-for="(item,index) in selection.pen.data.expressArr">
+          <el-row :key="index" class="element-item form-row-item" style=""
+                  v-for="(item,index) in selection.pen.data.expressArr">
             <promql-input
               :expression-list="selection.pen.data.expressArr"
               :id="index"
@@ -61,7 +62,8 @@
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover placement="top" trigger="hover" width="211">
                     <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
-                    <i class="nz-icon nz-icon-info-normal" slot="reference" @mouseover="rz" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                    <i class="nz-icon nz-icon-info-normal" slot="reference" @mouseover="rz"
+                       style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
                 <el-col style="width: calc(100% - 120px);">
@@ -90,11 +92,12 @@
           <div class="tooltip-box">
             <!--title-->
             <el-form-item :label="'Title'" class="full-form-item" prop="type">
-              <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small" ></el-input>
+              <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
             </el-form-item>
             <!--chart aggregation-->
             <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
+              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small"
+                         size="mini"
                          v-model="selection.pen.data.aggregation" value-key="chartType">
                 <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
                   <span class="panel-dropdown-label-txt">{{item.name}}</span>
@@ -126,7 +129,8 @@
             </el-form-item>
             <!--chart type-->
             <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini"
+              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small"
+                         size="mini"
                          v-model="selection.pen.data.type" value-key="chartType">
                 <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
                   <span class="panel-dropdown-label-txt">{{item.name}}</span>
@@ -136,50 +140,106 @@
           </div>
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{'Thresholds'}} <span style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >2:Critical）</span>
+            {{'Thresholds'}} <span
+            style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >2:Critical）</span>
           </el-row>
-          <div style="width: 100%">
-            <el-table v-model="selection.pen.data.valueMapping">
-              <el-table-column
-                prop="level"
-                :label="'level'"
-              >
-                <template slot-scope="scope">
-                  {{scope.$index}}
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="color"
-                :label="'color'"
-              >
-              </el-table-column>
-              <el-table-column
-                prop="value"
-                :label="'value'"
-              >
-                <template slot-scope="scope">
-                  <el-input v-model="scope.row.value" @change="valueMappingValueChange(scope.$index, scope.row)"/>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="animation"
-                :label="'animation'"
-              >
-              </el-table-column>
-              <el-table-column>
-                <template slot="header" slot-scope="scope">
+          <div style="width: 100%;margin-top: 10px">
+            <div class="thresholds-box">
+              <el-row class="thresholds-title">
+                <el-col class="thresholds-cell" :span="4">Level</el-col>
+                <el-col class="thresholds-cell" :span="4">Color</el-col>
+                <el-col class="thresholds-cell" :span="4">Value</el-col>
+                <el-col class="thresholds-cell" :span="8">Animation</el-col>
+                <el-col class="thresholds-cell" :span="4"></el-col>
+              </el-row>
 
-                </template>
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="valueMappingDel(scope.$index, scope.row)">Delete</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+              <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
+                <el-col class="thresholds-cell" :span="4"> {{item.level}}</el-col>
+                <el-col class="thresholds-cell" :span="4">
+                   <span v-if="item.level!==0">
+                    <div style="display: inline-block">
+                      <div @click="colorPickerClickTable('colorPickerBac'+item.level,item)"
+                           class="color-show"
+                           v-clickoutside="(e)=>{colorOut(item,e)}"
+                           style="width: 32px"
+                      >
+                        <div :style="{background:item.color.fill,border:'2px solid '+item.color.line,'line-height':'18px'}" class="color-show-left">
+                          <span :style="{color:item.color.text}" style="line-height: 18px;margin-left: 6px">
+                              T
+                          </span>
+                        </div>
+                      </div>
+                      <div class="color-content" ref="color-content">
+                        <el-color-picker
+                          :ref="'colorPickerBac'+item.level"
+                          @active-change="(val)=>colorChangeTable(item,val)"
+                          popper-class="no-style-class"
+                          v-model="item.showColor"
+                        >
+                        </el-color-picker>
+                      </div>
+                      <div
+                        class="color-tab"
+                        v-if="item.showColor">
+                        <div :class="{'color-active':item.showType=='fill'}" @click="changeShowPicker(item ,'fill')">Fill</div>
+                        <div :class="{'color-active':item.showType=='line'}" @click="changeShowPicker(item , 'line')">Line</div>
+                        <div :class="{'color-active':item.showType=='text'}" @click="changeShowPicker(item , 'text')">Text</div>
+                      </div>
+                    </div>
+                    <span> > </span>
+                  </span>
+                  <span v-else>base</span>
+                </el-col>
+                <el-col class="thresholds-cell" :span="4">
+                  <el-input
+                    v-if="item.level!==0"
+                    v-model="item.value"
+                    @change="valueMappingValueChange(item)"
+                    size="small"
+                  />
+                  <span v-else>base</span>
+                </el-col>
+                <el-col class="thresholds-cell" :span="8">
+                  <!--线-->
+                  <el-select
+                    v-model="item.animateType"
+                    placeholder="请选择"
+                    size="small"
+                    v-if="selection.pen&&selection.pen.type&&item.level!==0">
+                    <el-option
+                      v-for="(item,index) in lineAnimateOptions"
+                      :value="item.id"
+                      :key="index"
+                      :label="item.name">
+                    </el-option>
+                  </el-select>
+                  <!--点-->
+                  <el-select
+                    v-model="item.animateType"
+                    placeholder="请选择"
+                    size="small"
+                    v-if="selection.pen&&!selection.pen.type&&item.level!==0">
+                    <el-option
+                      v-for="(item,index) in nodeAnimateOptions"
+                      :value="item.id"
+                      :key="index"
+                      :label="item.name">
+                    </el-option>
+                  </el-select>
+                  <!--默认-->
+                  <span v-if="item.level===0">base</span>
+                </el-col>
+                <el-col class="thresholds-cell" :span="4">
+                  <i v-if="item.level!==0" @click="valueMappingDel(index, item)"
+                     class="nz-icon nz-icon-minus">
+                  </i>
+                </el-col>
+              </el-row>
+            </div>
           </div>
-          <div @click="valueMappingAdd()">add</div>
+          <div @click="valueMappingAdd()" style="text-align: center">
+            <i class="nz-icon nz-icon-plus"></i>
+          </div>
 
           <!--link-->
           <el-row class="form-row-title">
@@ -392,6 +452,67 @@
           <!--样式-->
           <el-collapse-item title="样式" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>背景颜色</div>
+                <div class="p10 pl0">
+                  <div class="color-show" @click="colorPickerClick('fillStyle')">
+                    <div class="color-show-left" :style="{background:selection.pen.fillStyle}"></div>
+                    <span class="color-text"> {{selection.pen.fillStyle}}</span>
+                    <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fillStyle']&&!$refs['fillStyle'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fillStyle']&&$refs['fillStyle'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.fillStyle"
+                      ref="fillStyle"
+                      @active-change="(val)=>colorChange(val,'fillStyle')"
+                    >
+                    </el-color-picker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>Gradient</div>
+                <div class="p10 pl0 gradient-to">
+                  <el-color-picker
+                    v-model="selection.pen.gradientToColor"
+                    ref="gradientToColor"
+                    @active-change="(val)=>colorChange(val,'gradientToColor')"
+                    size="small"
+                  >
+                  </el-color-picker>
+                  <el-select v-model="selection.pen.bkType" placeholder="请选择" size="small"
+                             :popper-append-to-body="false" @change="bkTypeChange">
+                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index"
+                               :label="item.name">
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen">
+                <div>透明度（0 - 1）</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    name="globalAlpha"
+                    class="input full"
+                    v-model.Number="selection.pen.globalAlpha"
+                    controls-position="right"
+                    size="small"
+                    :readonly="readonly"
+                    @change="onChange()"
+                    :step="0.1"
+                    :min="0.01"
+                    :max="1"></el-input-number>
+                </div>
+              </div>
+
               <div class="props-pen-item special-select">
                 <div>线条样式</div>
                 <div class="p10 pl0">
@@ -576,7 +697,8 @@
                     <div class="color-show-left" :style="{background:selection.pen.strokeStyle}"></div>
                     <span class="color-text"> {{selection.pen.strokeStyle}}</span>
                     <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['strokeStyle']&&!$refs['strokeStyle'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-down"
+                     v-if="$refs['strokeStyle']&&!$refs['strokeStyle'].showPicker"></i>
                   <i class="nz-icon nz-icon-arrow-up" v-if="$refs['strokeStyle']&&$refs['strokeStyle'].showPicker"></i>
                 </span>
                   </div>
@@ -612,125 +734,7 @@
                 </div>
               </div>
 
-              <div class="props-pen-item" v-if="selection.pen && !selection.pen.bkType&&!selection.pen.type">
-                <div>背景颜色</div>
-                <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('fillStyle')">
-                    <div class="color-show-left" :style="{background:selection.pen.fillStyle}"></div>
-                    <span class="color-text"> {{selection.pen.fillStyle}}</span>
-                    <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fillStyle']&&!$refs['fillStyle'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fillStyle']&&$refs['fillStyle'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.fillStyle"
-                      ref="fillStyle"
-                      @active-change="(val)=>colorChange(val,'fillStyle')"
-                    >
-                    </el-color-picker>
-                  </div>
-                </div>
-              </div>
-
-              <div class="props-pen-item" v-if="selection.pen">
-                <div>透明度（0 - 1）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    name="globalAlpha"
-                    class="input full"
-                    v-model.Number="selection.pen.globalAlpha"
-                    controls-position="right"
-                    size="small"
-                    :readonly="readonly"
-                    @change="onChange()"
-                    :step="0.1"
-                    :min="0.01"
-                    :max="1"></el-input-number>
-                </div>
-              </div>
-
             </div>
-          </el-collapse-item>
-          <!--动画-->
-          <el-collapse-item title="动画" name="5" v-if="selection.pen&&selection.pen.type">
-            <div class="flex flex-warp">
-              <div class="props-pen-item">
-                <div>动画类型</div>
-                <div class="p10 pl0">
-                  <el-select v-model="selection.pen.animateType" placeholder="请选择" size="small"
-                             :popper-append-to-body="false" @change="onAnimate">
-                    <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
-                               :label="item.name"></el-option>
-                  </el-select>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>圆点大小（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.animateDotSize"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>线条颜色</div>
-                <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('animateColor')">
-                    <div class="color-show-left" :style="{background:selection.pen.animateColor}"></div>
-                    <span class="color-text"> {{selection.pen.animateColor}}</span>
-                    <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['animateColor']&&!$refs['animateColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['animateColor']&&$refs['animateColor'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.animateColor"
-                      ref="animateColor"
-                      @active-change="(val)=>colorChange(val,'animateColor')"
-                    >
-                    </el-color-picker>
-                  </div>
-                </div>
-              </div>
-
-              <!--<div class="props-pen-item">-->
-              <!--<div>快慢</div>-->
-              <!--<div class="p10 pl0">-->
-              <!--<el-slider v-model="selection.pen.animateSpan" :min="1"  :max="5"></el-slider>-->
-              <!--</div>-->
-              <!--</div>-->
-
-              <!--<div class="props-pen-item">-->
-              <!--<div>是否播放 </div>-->
-              <!--<div class="p10 pl0">-->
-              <!--<el-button @click="selection.pen.animateStart=1;onAnimate()" size="mini">-->
-              <!--播放-->
-              <!--</el-button>-->
-              <!--<el-button @click="selection.pen.animateStart=0;onAnimate()" size="mini">-->
-              <!--暂停-->
-              <!--</el-button>-->
-              <!--</div>-->
-              <!--</div>-->
-            </div>
-
           </el-collapse-item>
         </el-collapse>
         <div class="project-content node-content">
@@ -746,6 +750,7 @@
             </span>
           </div>
           <div class="project-content-box" style="width: 100%">
+            <!--节点动画-->
             <div class="project-content-item" v-if="!selection.pen.type">
               <label>Type：</label>
               <div class="full pr10">
@@ -753,11 +758,48 @@
                   v-model="selection.pen.animateType"
                   size="small"
                   :popper-append-to-body="false"
-                  @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
-                  <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index" :label="item.name"></el-option>
+                >
+                  <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index"
+                             :label="item.name"></el-option>
                 </el-select>
               </div>
             </div>
+            <!--连线-->
+            <div class="project-content-item half" v-if="selection.pen.type">
+              <label>Type：</label>
+              <div class="full pr10">
+                <el-select v-model="selection.pen.animateType" placeholder="请选择" size="small"
+                           :popper-append-to-body="false" @change="onAnimate">
+                  <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
+                             :label="item.name"></el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="project-content-item half" v-if="selection.pen.type">
+              <label>Type：</label>
+              <div class="full pr10">
+                <div class="color-show" @click="colorPickerClick('animateColor')">
+                  <div class="color-show-left" :style="{background:selection.pen.animateColor}"></div>
+                  <span class="color-text"> {{selection.pen.animateColor}}</span>
+                  <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down"
+                     v-if="$refs['animateColor']&&!$refs['animateColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up"
+                     v-if="$refs['animateColor']&&$refs['animateColor'].showPicker"></i>
+                </span>
+                </div>
+                <div class="color-content" ref="color-content">
+                  <el-color-picker
+                    v-model="selection.pen.animateColor"
+                    ref="animateColor"
+                    @active-change="(val)=>colorChange(val,'animateColor')"
+                  >
+                  </el-color-picker>
+                </div>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </el-tab-pane>
@@ -775,7 +817,8 @@
           <div class="project-content-item">
             <label>Name：</label>
             <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.name" placeholder="请输入名称"  @change="changeTopologyOpt"></el-input>
+              <el-input class="input" size="small" v-model="topologyData.data.name" placeholder="请输入名称"
+                        @change="changeTopologyOpt"></el-input>
             </div>
           </div>
         </div>
@@ -975,7 +1018,8 @@
           <div class="project-content-item half special-select">
             <label>默认结束箭头：</label>
             <div class="full pr10 h32">
-              <el-select v-model="topologyData.data.toArrow" placeholder="请选择" size="small" :popper-append-to-body="false"
+              <el-select v-model="topologyData.data.toArrow" placeholder="请选择" size="small"
+                         :popper-append-to-body="false"
                          @change="changeTopologyOpt('toArrow')">
                 <div slot="prefix">
                   <div class="icon-item">
@@ -994,7 +1038,8 @@
                 <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
                   <div class="icon-item">
                     <svg>
-                      <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'" stroke-width="1">
+                      <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'"
+                         stroke-width="1">
                         <path :d="item.d"></path>
                         <polygon
                           v-if="item.points"
@@ -1061,7 +1106,8 @@
           <div class="project-content-item">
             <label>Url</label>
             <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.url" placeholder="请输入名称"  @change="changeTopologyOpt"></el-input>
+              <el-input class="input" size="small" v-model="topologyData.data.url" placeholder="请输入名称"
+                        @change="changeTopologyOpt"></el-input>
             </div>
           </div>
 
@@ -1079,10 +1125,11 @@
   // import ChartMetric from "./chartMetric";
   import chartDataFormat from '../../../charts/chartDataFormat';
   import promqlInput from "../../../page/dashboard/explore/promqlInput";
-  import {getUUID, resetZIndex} from "../../../common/js/common";
-  var rz = {
-    methods: {
-      rz(e) {
+  import {getUUID,resetZIndex} from "../../../common/js/common";
+
+  var rz={
+    methods:{
+      rz(e){
         resetZIndex(e);
       }
     }
@@ -1091,7 +1138,7 @@
     //pen.type 0为node 1位line
     data(){
       return {
-        expressions: [],
+        expressions:[],
         chartTypeList:[
           {
             id:"line",
@@ -1127,17 +1174,14 @@
             id:"avg",
             name:'avg'
           },{
-            id:"count",
-            name:'count'
-          },{
-            id:"sum",
-            name:'sum'
+            id:"total",
+            name:'total'
           }
         ],
-        metricList: [], // metric列表
+        metricList:[], // metric列表
         metricCascaderList:[],//metric级联列表
         metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
-        metricOptions: [],
+        metricOptions:[],
         unitOptions:chartDataFormat.unitOptions(),
         lineId:null,
         lineIsJson:false,
@@ -1213,6 +1257,20 @@
           looks:true,
         },
         data:{},
+        bkTypeOption:[
+          {
+            id:0,
+            name:'X'
+          },
+          {
+            id:1,
+            name:'→'
+          },
+          {
+            id:2,
+            name:'↑'
+          }
+        ],
         penDash:[
           {d:'M5 14 l85 0',"stroke-dasharray":""},
           {d:'M5 14 l85 0',"stroke-dasharray":"5,5"},
@@ -1245,39 +1303,39 @@
           {id:'dot',name:'圆点'},
           {id:'comet',name:'彗星'},
         ],
-        nodeAnimateOptions :[
-            {
-              id: 'upDown',
-              name: '上下跳动'
-            },
-            {
-              id: 'leftRight',
-              name: '左右跳动'
-            },
-            {
-              id: 'heart',
-              name: '心跳'
-            },
-            {
-              id: 'success',
-              name: '成功'
-            },
-            {
-              id: 'warning',
-              name: '警告'
-            },
-            {
-              id: 'error',
-              name: '错误'
-            },
-            {
-              id: 'show',
-              name: '炫耀'
-            },
-          ],
+        nodeAnimateOptions:[
+          {
+            id:'upDown',
+            name:'上下跳动'
+          },
+          {
+            id:'leftRight',
+            name:'左右跳动'
+          },
+          {
+            id:'heart',
+            name:'心跳'
+          },
+          {
+            id:'success',
+            name:'成功'
+          },
+          {
+            id:'warning',
+            name:'警告'
+          },
+          {
+            id:'error',
+            name:'错误'
+          },
+          {
+            id:'show',
+            name:'炫耀'
+          },
+        ],
       }
     },
-    mixins: [rz],
+    mixins:[rz],
     components:{
       promqlInput
     },
@@ -1351,10 +1409,10 @@
       }
     },
     methods:{
-      queryMetrics() {
-        this.metricOptions = [];
+      queryMetrics(){
+        this.metricOptions=[];
         this.$get('prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status == 'success'){
+          if(response.status=='success'){
             let metrics=response.data.sort();
             let metricMap=new Map();
             metrics.forEach((item)=>{
@@ -1380,7 +1438,7 @@
                 label:key,
                 value:key,
               };
-              if(metricMap.get(key) && metricMap.get(key).length>1){
+              if(metricMap.get(key)&&metricMap.get(key).length>1){
                 option.children=metricMap.get(key);
               }
               this.metricOptions.push(option);
@@ -1455,6 +1513,30 @@
         }
         this.onChange();
       },
+      bkTypeChange(val){
+
+        if(!this.selection.pen.gradientToColor&&val){
+          this.selection.pen.gradientToColor='#bae7ff'
+        }
+        if(!this.selection.pen.gradientFromColor&&val){
+          this.selection.pen.gradientFromColor='#c6ebb4'
+          this.selection.pen.fillStyle='#c6ebb4'
+        }
+        this.onChange()
+      },
+      colorPickerClick(ref){
+        this.$refs[ref].showPicker=true;
+      },
+      colorPickerClickTable(ref,row){
+        row.showColor=row.color.fill;
+        row.showType='fill';
+        console.log(row);
+        console.log(this.$refs[ref]);
+        this.$nextTick(()=>{
+          this.$refs[ref][0].showPicker=true;
+        })
+
+      },
       colorChange(val,name){//改变颜色
         if(name==='arrowColor'){
           this.selection.pen.fromArrowColor=this.colorRGBtoHex(val);
@@ -1464,10 +1546,35 @@
         }else{
           this.selection.pen[name]=this.colorRGBtoHex(val);
         }
+        if(name=='fillStyle'){
+          this.selection.pen.gradientFromColor=this.selection.pen.fillStyle;
+        }
         this.selection.pen.data[name]=this.colorRGBtoHex(val);
-
-
         this.onChange();
+      },
+      colorChangeTable(item,val){//改变颜色
+        if(!item.showType){return};
+        item.color[item.showType]=this.colorRGBtoHex(val);
+      },
+      changeShowPicker(item,type){
+        this.$refs['colorPickerBac'  + item.level][0].showPicker=true;
+        item.showType=type;
+        item.showColor=item.color[type];
+      },
+      colorOut(obj,e){
+
+        let flag=false;
+        e.path.forEach((item)=>{
+          if(item.className==='el-color-dropdown el-color-picker__panel' || item.className==='color-tab'){
+            flag=true
+          }
+        })
+        console.log(obj,flag);
+        if(flag){
+          return
+        }
+        obj.showType='';
+        obj.showColor=undefined;
       },
       changeTopologyOpt(val,key,isColor){
         //
@@ -1475,7 +1582,7 @@
         // getTopology(this.index).render();
         if(isColor){
           this.topologyData.data[key]=this.colorRGBtoHex(val);
-        } else{
+        }else{
           this.topologyData.data[key]=val;
         }
         Object.keys(this.topologyData.data).forEach((key1)=>{
@@ -1487,8 +1594,8 @@
       colorRGBtoHex(color){//获取颜色16进制数
         if(!color){
           return ""
-        }
-        ;
+        };
+        if(color.length<=7){return color}
         let rgb=color.split(',');
         let r=parseInt(rgb[0].split('(')[1]);
         let g=parseInt(rgb[1]);
@@ -1516,7 +1623,7 @@
         let delObj=this.selection.pen?this.selection.pen.id:this.selection.pens
         this.$emit('del',delObj);
       },
-      getMetricOptions() {
+      getMetricOptions(){
         return this.metricOptions;
       },
       addExpression(){
@@ -1526,13 +1633,13 @@
       expressionChange(item){
 
       },
-      removeExpression(index) {
-        if (this.selection.pen.data.expressArr.length > 1) {
-          this.selection.pen.data.expressArr.splice(index, 1);
-          this.selection.pen.data.legends.splice(index, 1);
-          this.$nextTick(() => {
-            this.expressions.forEach((ex, index) => {
-              if (ex) {
+      removeExpression(index){
+        if(this.selection.pen.data.expressArr.length>1){
+          this.selection.pen.data.expressArr.splice(index,1);
+          this.selection.pen.data.legends.splice(index,1);
+          this.$nextTick(()=>{
+            this.expressions.forEach((ex,index)=>{
+              if(ex){
                 this.$refs[`promql-${index}`][0].metricChange(ex);
               }
             });
@@ -1542,12 +1649,15 @@
       valueMappingAdd(){
         this.selection.pen.data.valueMapping.push({
           color:{
-            border:'#000',
-            bac:'#fff',
-            text:'#000',
+            line:'#000000',
+            fill:'#ffffff',
+            text:'#000000',
           },
-          animation:'upDown',
+          showColor:undefined,
+          animateType:this.selection.pen.type?1:'upDown',
           value:'',
+          level:this.selection.pen.data.valueMapping.length,
+          showType:'fill',//bac text border
         });
       },
       valueMappingValueChange(index,row){
@@ -1557,15 +1667,11 @@
         console.log(index,row)
       },
       inputFocus(e){
-        // console.log(e);
-        // console.log(e.path[2]);
-        // e.path[2].classList.add('el-input-number-show-button');
+        console.log(e.path[2].children[0],e.path[2].children[1]);
+        e.path[2].children[0].setAttribute("tabindex","0");
+        e.path[2].children[1].setAttribute("tabindex","1");
       },
       inputBlur(e){
-        // console.log(e);
-      },
-      colorPickerClick(ref){
-        this.$refs[ref].showPicker=true;
       },
     }
   }
@@ -1584,11 +1690,13 @@
     font-size: 14px;
     text-align: center;
   }
-  .props-box /deep/ .el-tabs--card>.el-tabs__header{
+
+  .props-box /deep/ .el-tabs--card > .el-tabs__header {
     background: #EEEEEE;
     border: none;
   }
-  .props-box /deep/  .el-tabs--card>.el-tabs__header .el-tabs__item.is-active{
+
+  .props-box /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
     background: #FFFFFF;
     font-family: Roboto-Bold;
     font-size: 14px;
@@ -1597,7 +1705,8 @@
     border-bottom-color: #FFF;
     border-top: 3px solid #FA901C;
   }
-  .props-box /deep/ .el-tabs--card>.el-tabs__header .el-tabs__item{
+
+  .props-box /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item {
     box-sizing: content-box;
   }
 </style>
@@ -1606,20 +1715,26 @@
     display: inline-block !important;
     margin-right: 5px;
   }
+  .no-style-class.el-color-picker__panel{
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+  }
 </style>
 <style lang="scss" scoped>
-  .project-title{
+  .project-title {
     background: #eeeeee;
     height: 36px;
     line-height: 36px;
-    border-radius:10px 0 0 0;
+    border-radius: 10px 0 0 0;
     padding-left: 10px;
   }
-  .project-content{
+
+  .project-content {
     margin: 10px;
     height: calc(100% - 50px);
     overflow-y: auto;
-    .project-content-title{
+
+    .project-content-title {
       background: #F6F6F6;
       padding-left: 10px;
       font-size: 14px;
@@ -1630,72 +1745,87 @@
       line-height: 31px;
       margin-bottom: 5px;
     }
-    .project-content-box{
+
+    .project-content-box {
       display: flex;
       flex-wrap: wrap;
       margin-bottom: 15px;
     }
-    .half.project-content-item{
+
+    .half.project-content-item {
       width: calc(50% - 15px);
       height: 64px;
     }
-    .project-content-item{
+
+    .project-content-item {
       padding-left: 10px;
       display: inline-block;
       position: relative;
       width: 100%;
-      label{
+
+      label {
         font-family: PingFangSC-Regular;
         font-size: 14px;
         color: #666666;
         letter-spacing: 0;
         font-weight: 400;
       }
-      .h32{
+
+      .h32 {
         height: 32px;
       }
     }
   }
-  .project-content.node-content{
+
+  .project-content.node-content {
     overflow-y: unset;
     height: auto;
-    /deep/ .el-select-dropdown__wrap{
+
+    /deep/ .el-select-dropdown__wrap {
       max-height: 190px;
     }
   }
-  .pens-data{
-    /deep/ .el-form-item{
+
+  .pens-data {
+    /deep/ .el-form-item {
       margin-bottom: 10px;
     }
-    .half-form-item{
+
+    .half-form-item {
       width: calc(50% - 20px);
       display: inline-block;
       padding: 0 8px;
     }
-    .full-form-item{
+
+    .full-form-item {
       width: calc(100% - 10px);
       display: inline-block;
       padding: 0 8px;
     }
-    .form-row-title{
+
+    .form-row-title {
       height: 32px;
       line-height: 32px;
       background: #F6F6F6;
       padding: 0 10px;
-      /deep/ .el-form-item__content{
+
+      /deep/ .el-form-item__content {
         height: 100%;
         line-height: 32px;
-        > div{
+
+        > div {
           width: 100%;
         }
       }
     }
-      /deep/ .el-form-item__content{
-      > div{
+
+    /deep/ .el-form-item__content {
+      > div {
         width: 100%;
       }
     }
-    /deep/.el-form--label-top .el-form-item__label{
+
+    /deep/ .el-form-item__label {
       line-height: 0;
       padding: 0;
     }
@@ -1707,44 +1837,50 @@
       margin-bottom: 10px;
       margin-left: 10px;
     }
-    .right-box-form .element-item.form-row-item{
+
+    .right-box-form .element-item.form-row-item {
       width: calc(100% - 120px);
       padding: 20px 20px 20px 0;
     }
+
     .form-row-item .nz-icon-minus-position {
       position: absolute;
       top: 50%;
       right: -55px;
       -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
-      background: rgba(236,127,102,0.1);
+      background: rgba(236, 127, 102, 0.1);
       border-radius: 4px;
       padding: 0 5px;
-      .nz-icon-minus{
+
+      .nz-icon-minus {
         color: #EC7F66;
       }
     }
-    .tooltip-box{
+
+    .tooltip-box {
       padding-left: 10px;
       width: calc(100% - 10px);
     }
   }
 
-  .props-box{
+  .props-box {
     /deep/ .el-tabs.el-tabs--card {
       height: 100%;
 
       .el-tabs__content {
         height: calc(100% - 55px) !important;
         overflow-y: auto;
-        padding: 0 10px ;
+        padding: 0 10px;
       }
-  }
-    /deep/ .el-collapse{
+    }
+
+    /deep/ .el-collapse {
       background: #f6f6f6;
       border: none;
       font-size: 14px;
     }
+
     /deep/ .el-collapse-item__header {
       padding: 0 10px;
       background-color: #F9F9F9;
@@ -1767,16 +1903,42 @@
     }
 
 
-    /*/deep/ .el-input-number__decrease, /deep/ .el-input-number__increase{*/
-      /*visibility: hidden;*/
-    /*}*/
-    /*/deep/ .el-input-number-show-button{*/
-      /*/deep/ .el-input-number__decrease,/deep/ .el-input-number__increase{*/
-        /*visibility: visible;*/
-      /*}*/
-    /*}*/
+    /deep/ .el-input-number__decrease, /deep/ .el-input-number__increase {
+      visibility: hidden;
+      outline: none;
+    }
+
+    /deep/ .el-input-number:focus-within {
+      /deep/ .el-input-number__decrease, /deep/ .el-input-number__increase {
+        visibility: visible;
+        outline: none;
+      }
+    }
   }
 
+  .thresholds-box{
+    background: #FFFFFF;
+    border-top: 1px solid #E7EAED;
+    border-left: 1px solid #E7EAED;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+    .thresholds-title{
+      font-size: 12px;
+      color: #333333;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+    .thresholds-cell{
+      border-bottom: 1px solid #E7EAED;
+      border-right: 1px solid #E7EAED;
+      padding: 5px 5px;
+      height: 42px;
+      line-height: 32px;
+    }
+  }
 
   .mb10 {
     margin-bottom: 10px;
@@ -1793,6 +1955,7 @@
   .pl0 {
     padding-left: 0;
   }
+
   .special-select .el-select.el-select--small {
     width: 100%;
   }
@@ -1823,6 +1986,7 @@
     width: 100%;
     height: calc(100% - 20px);
     padding-bottom: 20px;
+
     .iconfont {
       cursor: pointer;
     }
@@ -1846,8 +2010,17 @@
 
     .props-pen-item {
       width: 50%;
-      .p10{
-       position: relative;
+
+      .p10 {
+        position: relative;
+      }
+
+      .gradient-to {
+        /deep/ .el-select.el-select--small {
+          vertical-align: top;
+          width: calc(100% - 42px);
+          margin-left: 5px;
+        }
       }
     }
 
@@ -1886,18 +2059,62 @@
       width: auto;
     }
   }
-  .color-content{
+
+  .color-content {
     height: 0;
     width: 0;
     overflow: hidden;
     position: absolute;
-    top: 32px;
+    top: 15px;
     left: 66px;
   }
-  .color{
+  .thresholds-cell .color-content{
+    top: 32px;
+    left: 137px;
+  }
+  .color-tab{
+    position: absolute;
+    top: 43px;
+    left: 0;
+    height: 28px;
+    border-radius: 5px 5px 0 0;
+    width: 312px;
+    border: 1px solid #EBEEF5;
+    border-bottom: none;
+    background-color: #FFF;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    z-index: 1;
+  }
+  .color-tab div{
+    text-align: center;
+    flex: 1;
+    color: #909399;
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    background: #E4E7ED;
+    cursor: pointer;
+    border-top: 2px solid transparent;
+  }
+  /*.color-tab div:first-child{*/
+    /*border-right-color: #DCDFE6;*/
+  /*}*/
+  .color-tab div:hover{
+    color: #409EFF;
+  }
+  .color-tab .color-active{
+    background-color: #FFF;
+    font-size: 14px;
+    color: #FA901C;
+    font-weight: 700;
+    border-color:  #FA901C;;
+  }
+
+  .color {
     position: relative;
   }
-  .color-show{
+
+  .color-show {
     border: 1px solid #E7EAED;
     border-radius: 5px;
     display: flex;
@@ -1905,26 +2122,30 @@
     width: calc(100% - 32px);
     height: 30px;
   }
-  .color-show .color-text{
+
+  .color-show .color-text {
     font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
     font-weight: 400;
   }
-  .color-show-left{
+
+  .color-show-left {
     width: 18px;
     height: 18px;
     border: 1px solid #E7EAED;
     border-radius: 5px;
     margin: 0 5px;
   }
-  .color-arrows{
+
+  .color-arrows {
     color: #C0C4CC;
     position: absolute;
     right: 42px;
   }
-  .color-arrows .nz-icon{
+
+  .color-arrows .nz-icon {
     font-size: 12px;
   }
 </style>

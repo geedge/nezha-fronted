@@ -18,25 +18,25 @@ export const Tools=[
   {
     group:'基本形状',
     children:[
-      {
-        name:'rectangleImg',
-        icon:'icon-rect',
-        data:{
-          text:'rect',
-          rect:{
-            width:100,
-            height:100
-          },
-          paddingLeft:10,
-          paddingRight:10,
-          paddingTop:10,
-          paddingBottom:10,
-          name:'rectangleImg',
-          icon: '\ue680',
-          iconFamily: 'nz-icon',
-          iconColor: ''
-        }
-      },
+      // {
+      //   name:'rectangleImg',
+      //   icon:'icon-rect',
+      //   data:{
+      //     text:'rect',
+      //     rect:{
+      //       width:100,
+      //       height:100
+      //     },
+      //     paddingLeft:10,
+      //     paddingRight:10,
+      //     paddingTop:10,
+      //     paddingBottom:10,
+      //     name:'rectangleImg',
+      //     icon: '\ue680',
+      //     iconFamily: 'nz-icon',
+      //     iconColor: ''
+      //   }
+      // },
       {
         name: 'rectangle',
         icon: 'icon-cube',
@@ -165,45 +165,11 @@ export const Tools=[
           name:'pentagram'
         }
       },
-      {
-        name:'image',
-        icon:'icon-image',
-        data:{
-          text:'Nezha',
-          rect:{
-            width:100,
-            height:100
-          },
-          name:'image',
-          image:'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3488940205,2956353665&fm=26&gp=0.jpg'
-        }
-      },
     ]
   },
   {
-    group: '自定义图片',
-    children: [
-      {
-        name: 'rectangle',
-        icon: 'icon-image',
-        data: {
-          text: 'Nezha',
-          rect: {
-            width: 100,
-            height: 100
-          },
-          name: 'rectangle',
-          image: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3488940205,2956353665&fm=26&gp=0.jpg',
-          imageRatio:true,
-          "imageAlign":"center",
-          iconRect:{
-            "width":80,
-            "height":80,
-          },
-          "fullIconRect":{"width":80,"height":90,"center":{"x":972,"y":456},"ex":1012,"ey":496}
-        }
-      },
-    ],
+    group: '自定义组件',
+    children: [],
   },
 ];
 

@@ -1,10 +1,10 @@
 <template>
   <div style="width: 400px;height: 400px;">
     <span class="temp-dom"></span>
-    <line-chart-block v-if="true"
-                      :key="'inner' + 0"
+    <line-chart-block v-if="chartData.type !== 'table'"
+                      :key="'inner' + chartData.id"
                       :from="'project'"
-                      :ref="'editChart'+0"
+                      :ref="'editChart' + 0"
                       :temp-dom="tempDom"
                       :panel-id="-1"
                       :is-lock="true"
@@ -13,6 +13,16 @@
                       :chart-data="chartData">
 
     </line-chart-block>
+    <!--<chart-table  v-if="chartData.type === 'table'"-->
+                  <!--:ref="'editChart'+0"-->
+                  <!--:key="'inner' + 0"-->
+                  <!--:from="'project'"-->
+                  <!--:ref="'editChart' + 0"-->
+                  <!--:is-lock="true"-->
+                  <!--:panel-id="-1"-->
+                  <!--:chart-data="chartData"-->
+                  <!--:chart-index="0"></chart-table>-->
+    <>
   </div>
 </template>
 
@@ -88,10 +98,12 @@
           valueMapping:{"mapping":[{"color":{"bac":"#fff","text":"#000"},"text":"","value":""}],"type":"text"},
         };
         chartData.span=12;
+        this.chartData=chartData;
+        console.log(chartData);
         setTimeout(()=>{
           this.getChartData(chartData,0);
         });
-        this.chartData=chartData
+
       },
       // 获取一个图表具体数据,图表信息，图表位置index
       getChartData(chartInfo, pos, filterType) {
@@ -130,21 +142,9 @@
             }
 
             let step = bus.getStep(startTime, endTime);
-            this.$nextTick(() => {
-              // const axiosArr = chartItem.elements.map((ele) => {
-              //   const filterItem = ele;
-              //   let query = encodeURIComponent(filterItem.expression);
-              //   if((chartInfo.type==='line'||chartInfo.type==='bar'||chartInfo.type==='stackArea'||chartInfo.type==='table')&&chartInfo.param){//如果是这三个 默认给connected
-              //     chartInfo.param.nullType=chartInfo.param.nullType||'connected';
-              //     query+='&nullType='+chartInfo.param.nullType;
-              //   }
-              //   if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
-              //     return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
-              //   }
-              //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(startTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
-              // });
-              // 一个图表的所有element单独获取数据
-              axios.all(chartInfo.res).then((res) => {
+            setTimeout(()=>{
+              this.$nextTick(() => {
+                let res=chartItem.res;
                 console.log(res);
                 if (res.length > 0) {
                   let series = [];
@@ -174,6 +174,7 @@
                           }
                         } else {
                           response.data.result.forEach((queryItem, resIndex) => {
+                            console.log(queryItem, resIndex);
                             let seriesItem = {
                               theData: {
                                 name: '',
@@ -310,7 +311,7 @@
                       }
                     }
                   });
-
+                  console.log(this.$refs['editChart' + chartItem.id],chartItem.id);
                   if (this.$refs['editChart' + chartItem.id]) {
                     let chartData = {
                       chartItem: chartItem,
@@ -339,6 +340,8 @@
                         this.$refs['editChart' + chartItem.id].setData(chartItem, series,
                           this.filter.panelId, this.filter, legend, filterType, errorMsg);
                       } else {
+                        console.log(123123123123123123,chartItem, series,
+                          this.filter.panelId, this.filter, legend, '', errorMsg);
                         this.$refs['editChart' + chartItem.id].setData(chartItem, series,
                           this.filter.panelId, this.filter, legend, '', errorMsg);
                       }
@@ -382,13 +385,8 @@
                     }
                   }
                 }
-              }).catch((error) => {
-                if (error) {
-                  this.$message.error(error.toString());
-                  console.error(error)
-                }
               });
-            });
+            },100)
           }
       },
     },

@@ -9,10 +9,12 @@
         <!--工具栏-->
         <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start">
-            <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i class="nz-icon nz-icon-arrow-down"></i></span>
+            <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
+              class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick">
               <div style="height: 450px">
-                <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto" class="project-topology-add-node">
+                <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
+                         class="project-topology-add-node">
                 <!--<div class="drag-header">——</div>-->
                 <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index">
                   <el-collapse-item :title="item.group" :name="item.group">
@@ -35,15 +37,15 @@
                 </el-collapse>
               </el-card>
                 <el-upload
-                class="avatar-uploader"
-                action=" "
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-                :auto-upload="true"
-                list-type="picture-card"
-                style="width: 284px;height: 30px"
-              >
+                  class="avatar-uploader"
+                  action=" "
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                  :auto-upload="true"
+                  list-type="picture-card"
+                  style="width: 284px;height: 30px"
+                >
                   <i class="el-icon-plus"></i>
                   <span>
                      Upload custom picture
@@ -53,11 +55,12 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <div class="flex middle special-select mb10" style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px;background: #fff">
+          <div class="flex middle special-select mb10"
+               style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px;background: #fff">
             <div class="full pr10">
               <el-select v-model="lineName" placeholder="请选择" size="small"
-              :popper-append-to-body="false"
-              @change="changeTopologyOpt(lineName,'lineName')">
+                         :popper-append-to-body="false"
+                         @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
                 <div class="icon-item">
                   <svg>
@@ -175,13 +178,13 @@
       </div>
     </div>
     <!--<div class="left-bottom" v-if="editTopologyFlag">-->
-      <!--<div class="title">小提示</div>-->
-      <!--<ul class="group">-->
-        <!--<li>编辑时：</li>-->
-        <!--<li>1.Ctrl + 鼠标移动：移动整个画布</li>-->
-        <!--<li>2.Ctrl + 鼠标滚轮：缩放</li>-->
-        <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
-      <!--</ul>-->
+    <!--<div class="title">小提示</div>-->
+    <!--<ul class="group">-->
+    <!--<li>编辑时：</li>-->
+    <!--<li>1.Ctrl + 鼠标移动：移动整个画布</li>-->
+    <!--<li>2.Ctrl + 鼠标滚轮：缩放</li>-->
+    <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
+    <!--</ul>-->
     <!--</div>-->
     <!--悬浮network部分-->
     <div class="network-info">
@@ -425,40 +428,43 @@
         this.getTopologyData().then((data)=>{
           this.openTopologyData(data).then(()=>{
             //获取对应的值 给节点 连线添加对应动画
-            console.log(data);
             this.lineName=data.lineName?data.lineName:this.lineName;
             this.chartGetData=[];
             let axiosArr=[];
+            let promiseArr=[];
+            let self=this;
+            let pensPromise=(pen, arr,index)=>{
+              return new Promise(function(resolve, reject) {
+                Promise.all(arr).then((res)=>{
+                  self.chartGetData[index].res=self.computeData(res,pen.data.aggregation,pen);
+                  self.setAnimation(pen,self.chartGetData[index].res);
+                  resolve()
+                });
+              });
+            };
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
-            data.pens&&data.pens.forEach(item=>{
-              console.log(item.id);
+            data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
                 let query=encodeURIComponent(ele);
+                if(!query){
+                  return new Promise(resolve=>{
+                    resolve({data:"",status:'no query'});
+                  })
+                }
                 query+='&nullType='+'connected';
                 return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
               });
               axiosArr.push({item,arr});
+              promiseArr.push(pensPromise(item,arr,index))
             });
-
-            axios.all(axiosArr).then(all=>{
-              all.forEach((obj,index)=>{
-                this.chartGetData[index].res=obj.arr;
-                if(obj.item.type===0){// 判断valueMapping 给相应的状态
-                  // obj.item.animateType='warning';
-                  if(obj.item.animateType){
-                    onChangeAnimate(obj.item,obj.item.animateType)
-                  }
-                }else if(obj.item.type===1){// 判断valueMapping 给相应的状态
-                  // onChangeAnimateLine(obj.item,'beads')
-                }
-              })
-            }).then(()=>{
+            Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
             });
+
 
             this.getNodesArr();
           })
@@ -469,40 +475,43 @@
         this.getTopologyData().then((data)=>{
           this.openTopologyData(data).then(()=>{
             //获取对应的值 给节点 连线添加对应动画
-            console.log(data);
             this.lineName=data.lineName?data.lineName:this.lineName;
             this.chartGetData=[];
             let axiosArr=[];
+            let promiseArr=[];
+            let self=this;
+            let pensPromise=(pen, arr,index)=>{
+              return new Promise(function(resolve, reject) {
+                Promise.all(arr).then((res)=>{
+                  self.chartGetData[index].res=self.computeData(res,pen.data.aggregation,pen);
+                  self.setAnimation(pen,self.chartGetData[index].res);
+                  resolve()
+                });
+              });
+            };
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
-            data.pens&&data.pens.forEach(item=>{
-              console.log(item.id);
+            data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
                 let query=encodeURIComponent(ele);
+                if(!query){
+                  return new Promise(resolve=>{
+                    resolve({data:"",status:'no query'});
+                  })
+                }
                 query+='&nullType='+'connected';
                 return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
               });
               axiosArr.push({item,arr});
+              promiseArr.push(pensPromise(item,arr,index))
             });
-
-            axios.all(axiosArr).then(all=>{
-              all.forEach((obj,index)=>{
-                this.chartGetData[index].res=obj.arr;
-                if(obj.item.type===0){// 判断valueMapping 给相应的状态
-                  // obj.item.animateType='warning';
-                  if(obj.item.animateType){
-                    onChangeAnimate(obj.item,obj.item.animateType)
-                  }
-                }else if(obj.item.type===1){// 判断valueMapping 给相应的状态
-                  // onChangeAnimateLine(obj.item,'beads')
-                }
-              })
-            }).then(()=>{
+            Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
             });
+
 
             this.getNodesArr();
           })
@@ -527,12 +536,165 @@
       getTopologyData(){
         return new Promise(resolve=>{
           let data=localStorage.getItem('data');
-          data=data?JSON.parse(data):{bkColor:'#FFFFFF',gridSize:10,gridColor:'#ededed',lineWidth:1,ruleColor:"#4e4e4e"};
+          data=data?JSON.parse(data):{
+            bkColor:'#FFFFFF',
+            gridSize:10,
+            gridColor:'#ededed',
+            lineWidth:1,
+            ruleColor:"#4e4e4e"
+          };
           this.saveData={...data};
           resolve(data);
         });
       },
+      //赋值动画
+      setAnimation(pen,res){// 根据所有res的状态 赋值动画
+        let maxLevel=0;
+        if(res.length>0){
+          res.forEach((response,innerPos)=>{
+            if(response.status!=='success'){
+             return
+            }
+            if (response.data.result) {
+              response.data.result.forEach((queryItem, resIndex) => {
+                queryItem.showValue=9;
+                pen.data.valueMapping.forEach((item,index)=>{
+                  if(item.value==='base'){return}
+                  if( queryItem.showValue >item.value){
+                    queryItem.level=item.level;
+                    if(maxLevel<item.level){
+                      maxLevel=item.level
+                    }
+                  }
+                })
+              })
+            }
+          })
+        }
+        
+        console.log(maxLevel)
+        
+        if(maxLevel!==0){
+          if(pen.type===0){// 判断valueMapping 给相应的状态
+            let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
+            onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
+            pen.font.color=selLevel.color.text;
+          }else if(pen.type===1){// 判断valueMapping 给相应的状态
+            let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
 
+            pen.animateColor=selLevel.color.fill;
+            pen.strokeStyle=selLevel.color.line;
+            pen.animateType=selLevel.animateType;
+            onChangeAnimateLine(pen,pen.animateType);
+            pen.font.color=selLevel.color.text;
+          }
+        } else {
+          if(pen.type===0&&pen.animatePlay){// 判断valueMapping 给相应的状态
+            onChangeAnimate(pen,pen.animateType);
+          }else if(pen.type===1&&pen.animatePlay){// 判断valueMapping 给相应的状态
+            onChangeAnimateLine(pen,pen.animateType);
+          }
+        }
+      },
+      computeData(res,type,pen){//处理别名 以及 根据type显示对应的值
+        if(res.length>0){
+          res.forEach((response,innerPos)=>{
+            if(response.status!=='success'){
+              return
+            }
+
+            if (response.data.result) {
+              response.data.result.forEach((queryItem, resIndex) => {
+                // 图表中每条线的名字,后半部分
+                let host = '';//up,
+                if (queryItem.metric.__name__) {
+                  host = `${queryItem.metric.__name__}{`;//up,
+                }
+                const tagsArr = Object.keys(queryItem.metric);//["__name__","asset","idc","instance","job","module","project"]
+                // 设置时间-数据格式对
+                let tempArr = [];
+                let dpsArr = [];
+                tempArr = queryItem.values;
+                dpsArr = Object.entries(queryItem.values);//[ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+                dpsArr = dpsArr.map(item => {
+                  return [item[0], [item[1][0], Number(item[1][1])]]
+                });
+                // 判断是否有数据, && tagsArr.length > 0
+                if (dpsArr.length) {
+                  tagsArr.forEach((tag, i) => {
+                    if (tag !== '__name__') {
+                      host += `${tag}="${queryItem.metric[tag]}",`;
+                    }
+                  });
+                  if (host.endsWith(',')) {
+                    host = host.substr(0, host.length - 1);
+                  }
+                  if (queryItem.metric.__name__) {
+                    host += "}";
+                  }
+                  if (!host || host === '') {
+                    host = pen.data.expressArr[innerPos];
+                  }
+                  //处理legend别名
+                  let alias = this.dealLegendAlias(host, pen.data.legends[innerPos]);
+                  if (!alias || alias === '') {
+                    alias = host;
+                  }
+                  queryItem.legend={name: host+"-"+pen.data.legends[innerPos]+"-" + resIndex, alias: alias};
+                  queryItem.showValue=this.getMetricTypeValue(queryItem,type);
+                  // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
+                }
+              });
+            }
+
+          })
+        }
+        return res
+      },
+      dealLegendAlias:function(legend,expression){
+        if(/\{\{.+\}\}/.test(expression)){
+          let labelValue=expression.replace(/(\{\{.+?\}\})/g,function(i){
+            let label=i.substr(i.indexOf('{{')+2,i.indexOf('}}')-i.indexOf('{{')-2);
+            let reg=new RegExp(label+'=".+?"');
+            let value=null;
+            if(reg.test(legend)){
+              let find=legend.match(reg)[0];
+              value=find.substr(find.indexOf('"')+1,find.lastIndexOf('"')-find.indexOf('"')-1);
+            }
+            return value?value:label;
+          });
+          return labelValue
+        }else{
+          return expression;
+        }
+      },
+      getMetricTypeValue(queryItem,type){
+        let copy='';
+        copy=JSON.parse(JSON.stringify(queryItem.values));
+        switch (type) {
+          case 'min':
+            let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1];
+            return min;
+          case 'max':
+            let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1];
+            return max;
+          case 'avg':
+            copy = copy.map(t=>parseFloat(t[1]));
+            let sum = eval(copy.join('+'));
+            let avg = sum / copy.length;
+            return avg;
+          case 'last':
+            let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1];
+            return last;
+          case 'first':
+            let first =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[copy.length][1];
+            return first;
+          case 'total':
+            copy = copy.map(t=>parseFloat(t[1]));
+            let total = eval(copy.join('+'));
+            return total;
+        }
+      },
       //获取module
       getModule(){
         this.projectInfo.loading=true;
@@ -658,13 +820,14 @@
       },
 
       onMessage(event,data){
-        console.log('onMessage',event,data);
-        console.log(getTopology(this.topologyIndex))
+        // console.log('onMessage',event,data);
+        // console.log(getTopology(this.topologyIndex))
         if(getTopology(this.topologyIndex)){
           this.cachesIndex=getTopology(this.topologyIndex).caches.index;
           if(this.$refs.topTool){
             this.$refs.topTool.redoFlag=false
-          };
+          }
+          ;
         }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
           if(data.type===0&& !data.data){
@@ -679,7 +842,17 @@
               lineWidth:this.nodeDefaultWidth(data.name),
               iconToolState:true,
               //chart 配置项
-              valueMapping:[],
+              valueMapping:[{
+                color:{
+                  line:'#000000',
+                  fill:'#ffffff',
+                  text:'#000000',
+                },
+                value:'base',
+                animateType:'base',
+                level:0,
+                base:true,
+              }],
               expressArr:[],
               legends:[],
               tooltipShow:true,
@@ -703,7 +876,17 @@
               toArrowColor:data.toArrowColor,
               lineWidth:1,
               //chart 配置项
-              valueMapping:[],
+              valueMapping:[{
+                color:{
+                  border:'#000000',
+                  bac:'#ffffff',
+                  text:'#000000',
+                },
+                value:'base',
+                animateType:'base',
+                level:0,
+                base:true,
+              }],
               expressArr:[],
               legends:[],
               tooltipShow:true,
@@ -721,11 +904,6 @@
             data.lineWidth=data.data.lineWidth;
           }
         }
-
-
-        // if(event==='addNode'&&data.name==='rectangleImg'){
-        //   data.lineWidth=0;
-        // }
         switch(event){
           case 'moveInNode':
           case 'moveInLine':
@@ -734,7 +912,6 @@
               this.timer3=null
             }
             this.chartData={...data.data,...this.chartGetData.find(item=>item.id===data.id)};
-            console.log(this.chartData);
             this.tooltipPosition.show=true;
             break;
           case 'moveOutNode':
@@ -1102,6 +1279,7 @@
               item.fillStyle=item.data.fillStyle;
               item.strokeStyle=item.data.strokeStyle;
               item.animatePlay=item.data.animatePlay;
+              item.font.color="#000000";
             }else if(item.type===1){
               item.animateColor=item.data.animateColor;
               item.strokeStyle=item.data.strokeStyle;
@@ -1109,6 +1287,7 @@
               item.fromArrowColor=item.data.fromArrowColor;
               item.toArrowColor=item.data.toArrowColor;
               item.animatePlay=item.data.animatePlay;
+              item.font.color="#000000";
             }
           })
           let domRect=document.getElementById('topology-canvas').getBoundingClientRect();
@@ -1229,23 +1408,26 @@
   }
 </script>
 <style lang="scss">
-  .el-dropdown-menu{
-    .project-topology-add-node{
+  .el-dropdown-menu {
+    .project-topology-add-node {
       .el-collapse-item__header {
         padding: 0 10px;
         background-color: #ffffff;
         height: 32px;
       }
-      .el-collapse-item__header.is-active{
+
+      .el-collapse-item__header.is-active {
         background: #F6F6F6;
         ont-family: Roboto-Bold;
         font-size: 14px;
         color: #FA901C;
         font-weight: 700;
-        el-collapse-item__arrow{
+
+        el-collapse-item__arrow {
           color: #666;
         }
       }
+
       .el-collapse-item__wrap {
         padding: 0 10px;
         background-color: #ffffff;
@@ -1267,12 +1449,13 @@
         position: absolute;
         z-index: 2;
       }
+
       .buttons {
         padding: 12px;
         display: inline-block;
         position: relative;
         vertical-align: middle;
-        width:26px;
+        width: 26px;
 
         .delIcon {
           position: absolute;
@@ -1328,20 +1511,24 @@
           height: 100%;
         }
       }
+
       .buttons:hover {
         .delIcon {
           /*display: inline-block;*/
         }
       }
     }
-    .avatar-uploader{
+
+    .avatar-uploader {
       line-height: 30px;
-      .el-icon-plus{
+
+      .el-icon-plus {
         font-size: 12px;
         color: #FA901C;
         margin: 0 8px 0 15px;
       }
-      .el-upload--picture-card{
+
+      .el-upload--picture-card {
         width: 100%;
         height: 100%;
         border: none;
@@ -1350,14 +1537,17 @@
         line-height: 30px;
         text-align: left;
       }
-      .el-upload--picture-card:hover, .el-upload:focus{
+
+      .el-upload--picture-card:hover, .el-upload:focus {
         color: #666;
       }
     }
-    .avatar-uploader:active el-upload--picture-card{
+
+    .avatar-uploader:active el-upload--picture-card {
       color: #DB8B8B;
     }
-    .avatar-uploader:active .el-upload--picture-card:hover,.avatar-uploader:active .el-upload:focus{
+
+    .avatar-uploader:active .el-upload--picture-card:hover, .avatar-uploader:active .el-upload:focus {
       color: #DB8B8B;
     }
   }
@@ -1508,11 +1698,12 @@
   }
 </style>
 <style lang="scss" scoped>
-  .project-topology-tool{
+  .project-topology-tool {
     display: inline-flex;
     height: 30px;
   }
-  .el-dropdown-title{
+
+  .el-dropdown-title {
     background: #FFFFFF;
     border: 1px solid #DEDEDE;
     border-radius: 2px;
@@ -1520,10 +1711,12 @@
     height: 28px;
     display: inline-block;
     line-height: 28px;
-    .icon-cube{
+
+    .icon-cube {
       margin-left: 15px;
     }
   }
+
   .project-box {
     width: 100%;
     height: 100%;
@@ -1585,7 +1778,8 @@
       border-radius: 10px;
     }
   }
-  .special-select svg{
+
+  .special-select svg {
     width: 75px;
     height: 30px;
   }
@@ -1593,12 +1787,15 @@
   .special-select .el-select.el-select--small {
     width: 100%;
   }
-  .special-select /deep/ .el-select-dropdown{
-    width: 75px!important;
-    .el-select-dropdown__item{
+
+  .special-select /deep/ .el-select-dropdown {
+    width: 75px !important;
+
+    .el-select-dropdown__item {
       padding: 0 0 0 10px;
     }
   }
+
   .special-select /deep/ .el-input.el-input--prefix.el-input--suffix, .line-width /deep/ .el-input.el-input--prefix.el-input--suffix {
     border: 1px solid #DCDFE6;
     height: 28px;
