@@ -70,7 +70,7 @@
             </el-input>
           </div>
 
-          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" ssh"panel"></pick-time>
+          <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" id="panel"></pick-time>
           <export-excel
             id="panel"
             export-file-name="chart"
