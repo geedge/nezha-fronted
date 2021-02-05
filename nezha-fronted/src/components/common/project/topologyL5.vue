@@ -3,9 +3,9 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box" v-loading="topologyLoading">
+  <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
     <!--project主要信息-->
-    <div class="facade-top" v-if="!editTopologyFlag">
+    <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
       <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow&&!fromPrev">
         <div class="facade-top-title">
           Project information
@@ -202,7 +202,7 @@
       <!--所有节点上的小图标-->
       <div v-for="(item,index) in nodesArr"
            :style="{position: 'absolute',top:item.rect.y - 48+'px',left:item.rect.center.x - 24 +'px'}"
-           v-if="!editTopologyFlag"
+           v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
            class="network-pop"
       >
 
@@ -255,7 +255,7 @@
       </div>
       <!--chart-->
       <div v-if="popDataShow.total">
-        <topoTooltip :chartDataParent="chartData" :filterTime="filterTime" :isChart="true"/>
+        <topoTooltip :chartDataParent="chartDataInfo" :filterTime="filterTime" :isChart="true"/>
       </div>
     </div>
     <!--endpoint-->
@@ -346,6 +346,7 @@
     name:'topologyL5',
     data(){
       return {
+        chartDataInfo:{},
         topoPrevData:{},//预览数据
         imgInit:false,//判断图片是否加载完成
         toolGroup:'基本形状',
@@ -956,11 +957,11 @@
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
         setTimeout(()=>{
-          this.popDataShowUpdate(tool.id)
+          this.popDataShowUpdate(tool.id,false,node)
         },100)
       },
 
-      popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
+      popDataShowUpdate(key,flag,node){//key 显示对应的弹窗 flag是否不显示工具栏
         this.popDataShow={
           endpoint:false,
           asset:false,
@@ -970,6 +971,9 @@
           alert:false,
           main:false,
         };
+        if(key==='total'){
+          this.chartDataInfo={...node.data,...this.chartGetData.find(item=>item.id===node.id)};
+        }
         this.$nextTick(()=>{
           this.popDataShow[key]=true;
         });

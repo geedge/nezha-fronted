@@ -5,7 +5,7 @@
 <template>
   <div class="project-box" v-loading="topologyLoading">
     <!--project主要信息-->
-    <div class="facade-top" v-if="!editTopologyFlag">
+    <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
       <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow&&!fromPrev">
         <div class="facade-top-title">
           Project information
@@ -202,14 +202,14 @@
       <!--所有节点上的小图标-->
       <div v-for="(item,index) in nodesArr"
            :style="{position: 'absolute',top:item.rect.y - 48+'px',left:item.rect.center.x - 24 +'px'}"
-           v-if="!editTopologyFlag"
+           v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
            class="network-pop"
       >
 
         <i
           :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.error&&!item.data.show,'model-error-active':item.data.error&&item.data.show}"
           :ref="'modelTopId'+index"
-          @click="showNodeTools(index)"
+          @click="showNodeTools(index,item)"
         >
           <i class="nz-icon nz-icon-model"></i>
         </i>
@@ -250,11 +250,12 @@
       <div v-if="popDataShow.main">
         <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
       </div>
-      <div v-if="popDataShow.total">
-        <total-chart :moduleId="moduleId" :projectId="projectInfo.id" :nodesArray="totalArray"></total-chart>
-      </div>
       <div v-if="popDataShow.info">
         <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
+      </div>
+      <!--chart-->
+      <div v-if="popDataShow.total">
+        <topoTooltip :chartDataParent="chartDataInfo" :filterTime="filterTime" :isChart="true"/>
       </div>
     </div>
     <!--endpoint-->
@@ -282,14 +283,14 @@
       :before-close="previewBeforeClose"
     >
       <div style="width: calc(80vw - 40px);height: 80vh">
-        <topologyL5
+        <topologyPrev
           v-if="previewShow"
           :obj="obj"
           :topoPrevDataS="topoPrevData"
           :fromOverView="true"
           :fromPrev="true"
           :topologyIndexF="1">
-        </topologyL5>
+        </topologyPrev>
       </div>
     </el-dialog>
   </div>
@@ -331,7 +332,7 @@
   import topoTooltip from "./L5/topoTooltip";
   import {getMetricTypeValue} from '../js/tools'
   import bus from "../../../libs/bus";
-  import topologyL5 from './topologyL5'
+  import topologyPrev from './topologyPrev'
   import axios from 'axios';
 
   const canvasOptions={
@@ -345,6 +346,7 @@
     name:'topologyL5',
     data(){
       return {
+        chartDataInfo:{},
         topoPrevData:{},//预览数据
         imgInit:false,//判断图片是否加载完成
         toolGroup:'基本形状',
@@ -457,7 +459,7 @@
       endpointTable,
       ExpressionInfo,
       topoTooltip,
-      topologyL5,
+      topologyPrev,
     },
     computed:{},
     props:{
@@ -944,7 +946,8 @@
       },
 
       //显示module的工具
-      showNodeTools(index){
+      showNodeTools(index,pen){
+        console.log(pen);
         this.nodesArr.forEach((item,i)=>{
           item.data.show=i===index;
         })
@@ -954,11 +957,11 @@
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
         setTimeout(()=>{
-          this.popDataShowUpdate(tool.id)
+          this.popDataShowUpdate(tool.id,false,node)
         },100)
       },
 
-      popDataShowUpdate(key,flag){//key 显示对应的弹窗 flag是否不显示工具栏
+      popDataShowUpdate(key,flag,node){//key 显示对应的弹窗 flag是否不显示工具栏
         this.popDataShow={
           endpoint:false,
           asset:false,
@@ -968,6 +971,9 @@
           alert:false,
           main:false,
         };
+        if(key==='total'){
+          this.chartDataInfo={...node.data,...this.chartGetData.find(item=>item.id===node.id)};
+        }
         this.$nextTick(()=>{
           this.popDataShow[key]=true;
         });
@@ -1005,7 +1011,7 @@
       },
 
       onMessage(event,data,e){
-        // console.log('onMessage',event,data);
+        console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
         if(getTopology(this.topologyIndex)){
           this.cachesIndex=getTopology(this.topologyIndex).caches.index;
@@ -1256,8 +1262,10 @@
             case 'line':
             case 'space':
             case 'scale':
+            case 'translate':
               this.moduleId='';
               this.showNodeTools('');
+              this.popDataShowUpdate('',false)
               break;
           }
           switch(event){
@@ -1883,7 +1891,7 @@
     position: absolute;
     top: 1px;
     left: 2px;
-    transform: scale(0.9);
+    transform: scale(0.95);
     z-index: 0;
   }
 

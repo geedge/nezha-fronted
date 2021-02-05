@@ -1664,6 +1664,7 @@
     font-size: 18px;
     margin: 0;
     position: absolute;
+    z-index: 1;
   }
 
   .el-carousel__item:nth-child(2n) {
