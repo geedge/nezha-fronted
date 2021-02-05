@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <!--iconToolState-->
-          <el-form-item :label="'icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">
+          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">
             <el-switch
               v-model="selection.pen.data.iconToolState"
               :active-value="true"
@@ -91,7 +91,7 @@
 
           <div class="tooltip-box">
             <!--title-->
-            <el-form-item :label="'Title'" class="full-form-item" prop="type">
+            <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
               <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
             </el-form-item>
             <!--chart aggregation-->
@@ -140,16 +140,16 @@
           </div>
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{'Thresholds'}} <span
+            {{$t('dashboard.panel.chartForm.thresholds')}} <span
             style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >2:Critical）</span>
           </el-row>
           <div style="width: 100%;margin-top: 10px">
             <div class="thresholds-box">
               <el-row class="thresholds-title">
-                <el-col class="thresholds-cell" :span="4">Level</el-col>
-                <el-col class="thresholds-cell" :span="4">Color</el-col>
-                <el-col class="thresholds-cell" :span="4">Value</el-col>
-                <el-col class="thresholds-cell" :span="8">Animation</el-col>
+                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}</el-col>
+                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.color')}}</el-col>
+                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.value')}}</el-col>
+                <el-col class="thresholds-cell" :span="8">{{$t('project.topology.animation')}}</el-col>
                 <el-col class="thresholds-cell" :span="4"></el-col>
               </el-row>
 
@@ -181,9 +181,9 @@
                       <div
                         class="color-tab"
                         v-show="item.showColor">
-                        <div :class="{'color-active':item.showType=='fill'}" @click="changeShowPicker(item ,'fill')">Fill</div>
-                        <div :class="{'color-active':item.showType=='line'}" @click="changeShowPicker(item , 'line')">Line</div>
-                        <div :class="{'color-active':item.showType=='text'}" @click="changeShowPicker(item , 'text')">Text</div>
+                        <div :class="{'color-active':item.showType=='fill'}" @click="changeShowPicker(item ,'fill')">{{$t('project.topology.fill')}}</div>
+                        <div :class="{'color-active':item.showType=='line'}" @click="changeShowPicker(item , 'line')">{{$t('project.topology.lines')}}</div>
+                        <div :class="{'color-active':item.showType=='text'}" @click="changeShowPicker(item , 'text')">{{$t('project.topology.text')}}</div>
                       </div>
                     </div>
                   </span>
@@ -204,7 +204,6 @@
                   <!--线-->
                   <el-select
                     v-model="item.animateType"
-                    placeholder="请选择"
                     size="small"
                     v-if="selection.pen&&selection.pen.type&&item.level!==0">
                     <el-option
@@ -217,7 +216,6 @@
                   <!--点-->
                   <el-select
                     v-model="item.animateType"
-                    placeholder="请选择"
                     size="small"
                     v-if="selection.pen&&!selection.pen.type&&item.level!==0">
                     <el-option
@@ -244,7 +242,7 @@
 
           <!--link-->
           <el-row class="form-row-title">
-            {{'Link'}}
+            {{$t('project.topology.link')}}
           </el-row>
           <el-form-item :label="'URL'" class="full-form-item" prop="type">
             <el-input v-model="selection.pen.data.url" class="input" size="small"></el-input>
@@ -256,7 +254,7 @@
       <el-tab-pane :label="$t('project.topology.style')" name="4">
         <el-collapse v-model="activeNames">
           <!--位置大小-->
-          <el-collapse-item title="位置和大小" name="3" v-if="selection.pen&&!selection.pen.type">
+          <el-collapse-item :label="$t('project.topology.positionAndSize')" name="3" v-if="selection.pen&&!selection.pen.type">
             <div class="flex flex-warp">
 
               <div class="props-pen-item">
@@ -297,7 +295,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>宽（px）</div>
+                <div>{{$t('project.topology.width')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -316,7 +314,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>高（px）</div>
+                <div>{{$t('project.topology.height')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -335,7 +333,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div title="百分比%对应的小数值">圆角（0 - 1）</div>
+                <div>{{$t('project.topology.circularBead')}}（0 - 1）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -356,7 +354,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>旋转（°）</div>
+                <div>{{$t('project.topology.rotate')}}（°）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -373,7 +371,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>内边距 上（px）</div>
+                <div>{{$t('project.topology.pt')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -392,7 +390,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>内边距 下（px）</div>
+                <div>{{$t('project.topology.pb')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -411,7 +409,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>内边距 左（px）</div>
+                <div>{{$t('project.topology.pl')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -430,7 +428,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>内边距 右（px）</div>
+                <div>{{$t('project.topology.pr')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -451,10 +449,10 @@
             </div>
           </el-collapse-item>
           <!--样式-->
-          <el-collapse-item title="样式" name="4" v-if="selection.pen">
+          <el-collapse-item :label="$t('project.topology.style')" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>背景颜色</div>
+                <div>{{$t('project.topology.bac')}}</div>
                 <div class="p10 pl0">
                   <div class="color-show" @click="colorPickerClick('fillStyle')">
                     <div class="color-show-left" :style="{background:selection.pen.fillStyle}"></div>
@@ -476,7 +474,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
-                <div>Gradient</div>
+                <div>{{$t('project.topology.gradient')}}</div>
                 <div class="p10 pl0 gradient-to">
                   <el-color-picker
                     v-model="selection.pen.gradientToColor"
@@ -485,7 +483,7 @@
                     size="small"
                   >
                   </el-color-picker>
-                  <el-select v-model="selection.pen.bkType" placeholder="请选择" size="small"
+                  <el-select v-model="selection.pen.bkType" size="small"
                              :popper-append-to-body="false" @change="bkTypeChange">
                     <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index"
                                :label="item.name">
@@ -515,9 +513,9 @@
               </div>
 
               <div class="props-pen-item special-select">
-                <div>线条样式</div>
+                <div>{{$t('project.topology.lineDash')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.dash" placeholder="请选择" size="small" :popper-append-to-body="false"
+                  <el-select v-model="selection.pen.dash" size="small" :popper-append-to-body="false"
                              @change="onChange">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -545,9 +543,9 @@
               </div>
 
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
-                <div>连线类型</div>
+                <div>{{$t('project.topology.lineType')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.name" placeholder="请选择" size="small" :popper-append-to-body="false"
+                  <el-select v-model="selection.pen.name" size="small" :popper-append-to-body="false"
                              @change="onClickName">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -575,9 +573,9 @@
               </div>
 
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
-                <div>起点箭头</div>
+                <div>{{$t('project.topology.fromArrow')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.fromArrow" placeholder="请选择" size="small"
+                  <el-select v-model="selection.pen.fromArrow" size="small"
                              :popper-append-to-body="false" @change="onClickFromArrow">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -624,9 +622,9 @@
               </div>
 
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
-                <div>终点箭头</div>
+                <div>{{$t('project.topology.toArrow')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.toArrow" placeholder="请选择" size="small"
+                  <el-select v-model="selection.pen.toArrow" size="small"
                              :popper-append-to-body="false" @change="onClickToArrow">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -673,7 +671,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>线条宽度（px）</div>
+                <div>{{$t('project.topology.lineWidth')}}（px）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -692,7 +690,7 @@
               </div>
 
               <div class="props-pen-item">
-                <div>线条颜色</div>
+                <div>{{$t('project.topology.lineColor')}}</div>
                 <div class="p10 pl0">
                   <div class="color-show" @click="colorPickerClick('strokeStyle')">
                     <div class="color-show-left" :style="{background:selection.pen.strokeStyle}"></div>
@@ -714,7 +712,7 @@
                 </div>
               </div>
               <div class="props-pen-item" v-if="selection.pen.type">
-                <div>箭头颜色</div>
+                <div>{{$t('project.topology.arrowColor')}}</div>
                 <div class="p10 pl0">
                   <div class="color-show" @click="colorPickerClick('arrowColor')">
                     <div class="color-show-left" :style="{background:selection.pen.arrowColor}"></div>
@@ -739,7 +737,7 @@
           </el-collapse-item>
         </el-collapse>
         <div class="project-content node-content">
-          <div class="project-content-title">Animation
+          <div class="project-content-title">{{$t('project.topology.animation')}}
             <span class="float-right" style="margin-right: 10px">
               <el-switch
                 v-model="selection.pen.animatePlay"
@@ -753,7 +751,7 @@
           <div class="project-content-box" style="width: 100%">
             <!--节点动画-->
             <div class="project-content-item" v-if="!selection.pen.type">
-              <label>Type：</label>
+              <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
                 <el-select
                   v-model="selection.pen.animateType"
@@ -767,9 +765,9 @@
             </div>
             <!--连线-->
             <div class="project-content-item half" v-if="selection.pen.type">
-              <label>Type：</label>
+              <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
-                <el-select v-model="selection.pen.animateType" placeholder="请选择" size="small"
+                <el-select v-model="selection.pen.animateType" size="small"
                            :popper-append-to-body="false" @change="onAnimate">
                   <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
@@ -777,7 +775,7 @@
               </div>
             </div>
             <div class="project-content-item half" v-if="selection.pen.type">
-              <label>Type：</label>
+              <label>{{$t('project.topology.animationColor')}}</label>
               <div class="full pr10">
                 <div class="color-show" @click="colorPickerClick('animateColor')">
                   <div class="color-show-left" :style="{background:selection.pen.animateColor}"></div>
@@ -811,24 +809,24 @@
         Project
       </div>
       <div class="project-content">
-        <div class="project-content-title">Title</div>
+        <div class="project-content-title">{{$t('project.topology.title')}}</div>
 
         <div class="project-content-box" style="width: 100%">
 
           <div class="project-content-item">
-            <label>Name：</label>
+            <label>{{$t('project.topology.name')}}</label>
             <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.name" placeholder="请输入名称"
+              <el-input class="input" size="small" v-model="topologyData.data.name" :placeholder="$t('el.select.placeholder')"
                         @change="changeTopologyOpt"></el-input>
             </div>
           </div>
         </div>
 
-        <div class="project-content-title">Appearance</div>
+        <div class="project-content-title">{{$t('project.topology.name')}}</div>
 
         <div class="project-content-box" style="width: 100%">
           <div class="project-content-item half">
-            <label>Backgroud：</label>
+            <label>{{$t('project.topology.bac')}}</label>
             <div class="full pr10 h32">
               <div class="color-show" @click="colorPickerClick('bkColor')">
                 <div class="color-show-left" :style="{background:topologyData.data.bkColor}"></div>
@@ -850,15 +848,15 @@
           </div>
 
           <div class="project-content-item half">
-            <label>Image：</label>
+            <label>{{$t('project.topology.bacImage')}}</label>
             <div class="full pr10 h32">
               <!--暂时是input 输入网址-->
-              <el-input class="input" size="small" v-model="topologyData.data.bkImage" placeholder="背景图片网址"></el-input>
+              <el-input class="input" size="small" v-model="topologyData.data.bkImage"></el-input>
             </div>
           </div>
 
           <div class="project-content-item half">
-            <label>默认线宽：</label>
+            <label>{{$t('project.topology.defaultLineWidth')}}</label>
             <div class="full pr10 h32">
               <el-input-number
                 @focus="inputFocus"
@@ -877,7 +875,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>背景网格：</label>
+            <label>{{$t('project.topology.grids')}}</label>
             <div class="full pr10 h32">
               <el-switch
                 v-model="topologyData.data.grid"
@@ -890,7 +888,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>网格大小：</label>
+            <label>{{$t('project.topology.gridSize')}}</label>
             <div class="full pr10 h32">
               <el-input-number
                 @focus="inputFocus"
@@ -908,7 +906,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>网格颜色：</label>
+            <label>{{$t('project.topology.gridColor')}}</label>
             <div class="full pr10 h32">
               <div class="color-show" @click="colorPickerClick('gridColor')">
                 <div class="color-show-left" :style="{background:topologyData.data.gridColor}"></div>
@@ -932,7 +930,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>标尺：</label>
+            <label>{{$t('project.topology.rule')}}</label>
             <div class="full pr10 h32">
               <el-switch
                 v-model="topologyData.data.rule"
@@ -945,7 +943,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>标尺颜色：</label>
+            <label>{{$t('project.topology.ruleColor')}}</label>
             <div class="full pr10 h32">
               <div class="color-show" @click="colorPickerClick('ruleColor')">
                 <div class="color-show-left" :style="{background:topologyData.data.ruleColor}"></div>
@@ -967,9 +965,9 @@
           </div>
 
           <div class="project-content-item half special-select">
-            <label>默认开始箭头：</label>
+            <label>{{$t('project.topology.defaultStartArrow')}}</label>
             <div class="full pr10 h32">
-              <el-select v-model="topologyData.data.fromArrow" placeholder="请选择" size="small"
+              <el-select v-model="topologyData.data.fromArrow" size="small"
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
                 <div slot="prefix">
@@ -1017,9 +1015,9 @@
           </div>
 
           <div class="project-content-item half special-select">
-            <label>默认结束箭头：</label>
+            <label>{{$t('project.topology.defaultEndArrow')}}</label>
             <div class="full pr10 h32">
-              <el-select v-model="topologyData.data.toArrow" placeholder="请选择" size="small"
+              <el-select v-model="topologyData.data.toArrow" size="small"
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt('toArrow')">
                 <div slot="prefix">
@@ -1073,7 +1071,7 @@
         <div class="project-content-box" style="width: 100%">
 
           <div class="project-content-item half">
-            <label>Project Info：</label>
+            <label>Project Info</label>
             <div class="full pr10 h32">
               <el-switch
                 v-model="topologyData.data.projectInfo"
@@ -1086,7 +1084,7 @@
           </div>
 
           <div class="project-content-item half">
-            <label>Alert Info：</label>
+            <label>Alert Info</label>
             <div class="full pr10 h32">
               <el-switch
                 v-model="topologyData.data.alertInfo"
@@ -1100,14 +1098,14 @@
 
         </div>
 
-        <div class="project-content-title">Link</div>
+        <div class="project-content-title">{{$t('project.topology.link')}}</div>
 
         <div class="project-content-box" style="width: 100%">
 
           <div class="project-content-item">
             <label>Url</label>
             <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.url" placeholder="请输入名称"
+              <el-input class="input" size="small" v-model="topologyData.data.url" :placeholder="$t('el.select.placeholder')"
                         @change="changeTopologyOpt"></el-input>
             </div>
           </div>
