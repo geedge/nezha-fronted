@@ -1,8 +1,8 @@
 <template>
-  <div class="tooltip-box" style="display: flex;" v-if="chartData.tooltipShow">
+  <div class="tooltip-box" style="display: flex;" v-if="isChart||chartData.tooltipShow">
     <span class="temp-dom"></span>
-    <div class="tooltip-box-chart" style="" v-if="chartData.displayChart&&chartData.tooltipShow">
-      <line-chart-block v-if="chartData.type !== 'table'"
+    <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow)">
+      <line-chart-block v-if="isChart || chartData.type !== 'table'"
                         :key="'inner' + chartData.id"
                         :from="'project'"
                         :ref="'editChart' + 0"
@@ -24,7 +24,7 @@
                   <!--:panel-id="-1"-->
                   <!--:chart-data="chartData"-->
                   <!--:chart-index="0"></chart-table>-->
-    <div class="tooltip-box-info">
+    <div class="tooltip-box-info" v-if="!isChart">
       <expression-info :chart-data="chartData" :filterTime="filterTime"/>
     </div>
   </div>
@@ -47,6 +47,10 @@
         type:Object,
       },
       filterTime:{},
+      isChart:{
+        type:Boolean,
+        default:false,
+      }
     },
     watch:{
       chartDataParent:{

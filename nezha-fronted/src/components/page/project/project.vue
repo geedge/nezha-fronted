@@ -182,7 +182,7 @@
     <template v-else-if="pageType == 'project'">
       <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
       <!--<facade :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>-->
-      <topologyL5 :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>
+      <topologyL5 :obj="currentProject" targetTab.sync="panel" ref="facade" :topologyIndexF="topologyIndexF" v-if="reloadFacade" @changeTopologyIndexF="changeTopologyIndexF"/>
     </template>
 
     <transition name="el-zoom-in-bottom">
@@ -218,7 +218,6 @@
   import loading from "../../common/loading";
   import panelTab from '../../common/bottomBox/tabs/panelTab'
   import bus from '../../../libs/bus'
-  import facade from '@/components/common/project/projectFacade'
   import topologyL5 from '@/components/common/project/topologyL5'
   import deleteButton from "../../common/deleteButton";
 
@@ -228,7 +227,6 @@
       'export-excel':exportXLSX,
       'loading':loading,
       'panel-tab':panelTab,
-      facade,
       topologyL5,
       'delete-button':deleteButton,
     },
@@ -392,6 +390,7 @@
         },
         scrollbarWrap: null,
         delFlag:false,
+        topologyIndexF:0,
       }
     },
     methods:{
@@ -777,6 +776,10 @@
           }
         }
         return '';
+      },
+      changeTopologyIndexF(){
+        console.log(132123132123123);
+        this.topologyIndexF=0;
       },
     },
     created(){

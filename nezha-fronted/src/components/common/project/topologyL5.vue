@@ -209,7 +209,7 @@
         <i
           :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.error&&!item.data.show,'model-error-active':item.data.error&&item.data.show}"
           :ref="'modelTopId'+index"
-          @click="showNodeTools(index)"
+          @click="showNodeTools(index,item)"
         >
           <i class="nz-icon nz-icon-model"></i>
         </i>
@@ -250,11 +250,12 @@
       <div v-if="popDataShow.main">
         <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
       </div>
-      <div v-if="popDataShow.total">
-        <total-chart :moduleId="moduleId" :projectId="projectInfo.id" :nodesArray="totalArray"></total-chart>
-      </div>
       <div v-if="popDataShow.info">
         <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
+      </div>
+      <!--chart-->
+      <div v-if="popDataShow.total">
+        <topoTooltip :chartDataParent="chartData" :filterTime="filterTime" :isChart="true"/>
       </div>
     </div>
     <!--endpoint-->
@@ -278,17 +279,18 @@
     <!--preview-->
     <el-dialog
       :visible.sync="previewShow"
-      width=""
+      :width="'80%'"
+      :before-close="previewBeforeClose"
     >
-      <div style="width: calc(50vw - 40px);height: 50vh">
-        <topologyL5
+      <div style="width: calc(80vw - 40px);height: 80vh">
+        <topologyPrev
           v-if="previewShow"
           :obj="obj"
           :topoPrevDataS="topoPrevData"
           :fromOverView="true"
           :fromPrev="true"
           :topologyIndexF="1">
-        </topologyL5>
+        </topologyPrev>
       </div>
     </el-dialog>
   </div>
@@ -330,7 +332,7 @@
   import topoTooltip from "./L5/topoTooltip";
   import {getMetricTypeValue} from '../js/tools'
   import bus from "../../../libs/bus";
-  import topologyL5 from './topologyL5'
+  import topologyPrev from './topologyPrev'
   import axios from 'axios';
 
   const canvasOptions={
@@ -456,7 +458,7 @@
       endpointTable,
       ExpressionInfo,
       topoTooltip,
-      topologyL5,
+      topologyPrev,
     },
     computed:{},
     props:{
@@ -484,9 +486,9 @@
     watch:{
       topologyIndexF:{
         immediate:true,
-        deep:true,
         handler(n){
-          this.topologyIndex=n
+          this.topologyIndex=n;
+          console.log(n,this.fromPrev);
         }
       },
       obj:{
@@ -562,7 +564,6 @@
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
-            console.log(data);
             data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
@@ -631,7 +632,6 @@
             let endTime=this.filterTime[1];
             let startTime=this.filterTime[0];
             let step=bus.getStep(startTime,endTime);
-            console.log(data);
             data.pens&&data.pens.forEach((item,index)=>{
               this.chartGetData.push({id:item.id,res:[]});
               let arr=item.data.expressArr.map((ele)=>{
@@ -650,6 +650,30 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
+              if(this.fromOverView){
+                let flag=false;
+
+                let position={
+                  x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+                  y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
+                }
+
+                getTopology(this.topologyIndex).centerView(50);
+                getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                  if(flag){
+                    return
+                  }
+                  if(item.rect.x>position.x || item.rect.y>position.y){
+                    getTopology(this.topologyIndex).fitView(50);
+                    flag=true
+                  }
+                });
+                // if(this.fromPrev){
+                //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+                // }
+                // getTopology(this.topologyIndex).fitView();
+                this.getNodesArr();
+              }
             });
           })
         });
@@ -697,7 +721,6 @@
                 }
                 clearInterval(timer);
                 data.pens.forEach((item=>{
-                  console.log(item,this.iconArray.find(item1=>item1.id==item.imageId))
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
                   }
@@ -743,8 +766,6 @@
           })
         }
         
-        console.log(maxLevel)
-        
         if(maxLevel!==0){
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
@@ -765,7 +786,6 @@
           if(pen.type===0&&pen.animatePlay){// 判断valueMapping 给相应的状态
             onChangeAnimate(pen,pen.animateType);
           }else if(pen.type===1&&pen.animatePlay){// 判断valueMapping 给相应的状态
-            console.log(123123123);
             onChangeAnimateLine(pen,pen.animateType);
           }
         }
@@ -925,7 +945,8 @@
       },
 
       //显示module的工具
-      showNodeTools(index){
+      showNodeTools(index,pen){
+        console.log(pen);
         this.nodesArr.forEach((item,i)=>{
           item.data.show=i===index;
         })
@@ -1198,6 +1219,7 @@
               }
               break;
             case 'resize':
+              console.log(this.topologyIndexF);
               let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
               this.toolShow.attrCord=[domRect.width-350,0];
               this.toolShow.height=domRect.height;
@@ -1236,8 +1258,10 @@
             case 'line':
             case 'space':
             case 'scale':
+            case 'translate':
               this.moduleId='';
               this.showNodeTools('');
+              this.popDataShowUpdate('',false)
               break;
           }
           switch(event){
@@ -1397,7 +1421,6 @@
               })
               item.image=res2[index];
             });
-            console.log(this.iconArray);
             this.imgInit=true;
           })
 
@@ -1594,6 +1617,11 @@
           default:
             return 1;
         }
+      },
+      previewBeforeClose(done){
+        console.log(123123123123);
+        this.$emit('changeTopologyIndexF');
+        done();
       }
     },
     destroyed(){
@@ -1859,7 +1887,7 @@
     position: absolute;
     top: 1px;
     left: 2px;
-    transform: scale(0.9);
+    transform: scale(0.95);
     z-index: 0;
   }
 
