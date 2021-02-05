@@ -1,7 +1,7 @@
 <template>
   <div class="tooltip-box" style="display: flex;" v-if="isChart||chartData.tooltipShow">
     <span class="temp-dom"></span>
-    <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow)">
+    <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressArr.length)">
       <line-chart-block v-if="isChart || chartData.type !== 'table'"
                         :key="'inner' + chartData.id"
                         :from="'project'"
@@ -56,6 +56,7 @@
       chartDataParent:{
         immediate: true,
         handler(n){
+          console.log(n);
           this.process(n)
         },
 

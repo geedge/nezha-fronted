@@ -181,7 +181,7 @@
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
                 <pick-time v-show="!editTopologyFlag" :showTimePicker="false" class="float-right pickTime"
-                           :refresh-data-func="refreshTopology" v-model="searchTime" :use-chart-unit="false"
+                           :refresh-data-func="reload" v-model="searchTime" :use-chart-unit="false"
                            ref="pickTime"></pick-time>
       </span>
     </div>
@@ -207,7 +207,7 @@
       >
 
         <i
-          :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.error&&!item.data.show,'model-error-active':item.data.error&&item.data.show}"
+          :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.state.error&&!item.data.show,'model-error-active':item.data.state.error&&item.data.show}"
           :ref="'modelTopId'+index"
           @click="showNodeTools(index,item)"
         >
@@ -217,7 +217,7 @@
         <div v-for="item1 in popData">
           <transition name="scaleTool">
             <i v-if="item.data.show"
-               :class="{'nz-icon':true,'nz-icon-hexagonBorder':true}"
+               :class="{'nz-icon':true,'nz-icon-hexagonBorder':true,'error-model-stat':item.data.state[item1.id],'selpop':selpopIs(item,item1),'no-selPop':!selpopIs(item,item1),}"
                :style="{top:item1.top,left:item1.left}"
                :title="item1.title"
                @click="nodeTools(item,item1)"
@@ -613,6 +613,7 @@
       },
 
       reload(){
+        this.topologyLoading=true;
         this.getTopologyData().then((data)=>{
           this.openTopologyData(data).then(()=>{
             //获取对应的值 给节点 连线添加对应动画
@@ -645,6 +646,7 @@
                 query+='&nullType='+'connected';
                 return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
               });
+              console.log(arr);
               axiosArr.push({item,arr});
               promiseArr.push(pensPromise(item,arr,index))
             });
@@ -725,6 +727,24 @@
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
                   }
+                 if(item.type===0){
+                   this.$get('/module/stat',{id:item.data.moduleId}).then(res=>{
+                     item.data.state=res.data;
+                     item.data.state.asset=false;
+                     item.data.state.endpoint=false;
+                     item.data.state.alert=false;
+                     if(item.data.state.assetStat.down>0){
+                       item.data.state.asset=true;
+                     }
+                     if(  item.data.state.endpointStat.down>0){
+                       item.data.state.endpoint=true;
+                     }
+                     if(item.data.state.alertStat.P1> 0 || item.data.state.alertStat.P3>0 || item.data.state.alertStat.P2>0){
+                       item.data.state.alert=true;
+                     }
+                     item.data.state.error= item.data.state.asset && item.data.state.endpoint && item.data.state.alert;
+                   });
+                 }
                 }));
                 if(!data.data){
                   this.projectInfoShow=true;
@@ -956,6 +976,9 @@
       //具体内容点击
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
+        if(tool.id==11){
+
+        }
         setTimeout(()=>{
           this.popDataShowUpdate(tool.id,false,node)
         },100)
@@ -1536,6 +1559,14 @@
               delete  item.img;
               delete  item.lastImage;
             }
+            item.data.expressArr=item.data.expressArr.filter((expression,i)=>{
+              if(!expression){
+                item.data.legends.splice(i,1);
+                return false
+              } else {
+                return true
+              }
+            })
           });
           this.$put('/project/topo',{topo:JSON.stringify(topologyData),projectId:this.projectInfo.id}).then(res=>{
             this.prevent_opt.save=false;
@@ -1626,7 +1657,32 @@
         console.log(123123123123);
         this.$emit('changeTopologyIndexF');
         done();
-      }
+      },
+      selpopIs(pen,state){//判断是否有图表
+        console.log(pen,state)
+        let flag=true;
+        if(state.id==='other'){
+          flag=false;
+        }
+        if(state.id==='total'&&pen.data.expressArr.length===0){
+          flag=false;
+        }
+        return flag
+      },
+      modelPopError(pen,state){
+        console.log(pen,state)
+        return false;
+        if(item.id==='asset'&&this.activeModelItem.assetError){
+          return true;
+        }
+        if(item.id==='alert'&&this.activeModelItem.alertError){
+          return true;
+        }
+        if(item.id==='endpoint'&&this.activeModelItem.endpointError){
+          return true;
+        }
+        return false;
+      },
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();
@@ -1911,7 +1967,7 @@
   }
 
   .network-pop .no-selPop {
-    color: #999;
+    color: #999 !important;
   }
 
   .network-pop .no-selPop .nz-icon-liubianxing {
