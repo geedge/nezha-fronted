@@ -190,7 +190,7 @@
                   <span v-else>base</span>
                 </el-col>
                 <el-col class="thresholds-cell" :span="4" style="display: flex">
-                  <span> > </span>
+                  <span v-if="item.level!==0"> > </span>
                   <el-input-number
                     v-if="item.level!==0"
                     v-model="item.value"
@@ -1379,9 +1379,15 @@
     created(){
       let dataOption=getTopology(this.index).data;
       console.log(dataOption);
+      if(!dataOption.data){
+        dataOption.data={}
+      }
       Object.keys(this.topologyData.data).forEach((key)=>{
-        console.log()
-        this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
+       if(key === 'projectInfo' || key === 'alertInfo'){
+         this.topologyData.data[key]=(JSON.stringify(dataOption.data[key])?dataOption.data[key]:this.topologyData.data[key]);
+       } else {
+         this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
+       }
       });
     },
     mounted(){
@@ -1587,7 +1593,11 @@
           this.topologyData.data[key]=val;
         }
         Object.keys(this.topologyData.data).forEach((key1)=>{
-          getTopology(this.index).data[key1]=this.topologyData.data[key1];
+          if(key1 === 'projectInfo' || key1 === 'alertInfo'){
+            getTopology(this.index).data.data[key1]=this.topologyData.data[key1];
+          } else {
+            getTopology(this.index).data[key1]=this.topologyData.data[key1];
+          }
         });
         // console.log(dataOption[key]);
         getTopology(this.index).render();

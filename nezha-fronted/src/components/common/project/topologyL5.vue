@@ -4,8 +4,66 @@
 </style>
 <template>
   <div class="project-box" v-loading="topologyLoading">
-    <div class="project-title" v-if="showTopTools&&!fromOverView">
-      <div v-show="editTopologyFlag" class="edit-topologyLine">
+    <!--project主要信息-->
+    <div class="facade-top" v-if="!editTopologyFlag">
+      <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow&&!fromPrev">
+        <div class="facade-top-title">
+          Project information
+        </div>
+        <div>
+          <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
+          <span><span class="label">Name :</span>{{projectInfo.name}}</span>
+        </div>
+        <div>
+          <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
+        </div>
+        <!--<div>-->
+        <!--<span>-->
+        <!--<span class="label">Alert state :</span>-->
+        <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
+        <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
+        <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
+        <!--</span>-->
+        <!--</div>-->
+        <div>
+          <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
+        </div>
+      </div>
+      <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow&&!fromPrev" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
+        <div class="facade-top-title">
+          <span class="label" style="padding-left: 0;">Alert :</span>
+          {{projectInfo.total}}
+        </div>
+        <div class="facade-top-right-content">
+          <div>
+            <div class="content-P1-title">
+              {{returnSeverityLabel('P1')}}
+            </div>
+            <div>
+              {{projectInfo.alertStat[0] || 0}}
+            </div>
+          </div>
+          <div>
+            <div class="content-P2-title">
+              {{returnSeverityLabel('P2')}}
+            </div>
+            <div>
+              {{projectInfo.alertStat[1] || 0}}
+            </div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <div class="content-P3-title">
+              {{returnSeverityLabel('P3')}}
+            </div>
+            <div>
+              {{projectInfo.alertStat[2] || 0}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
+      <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
         <!--工具栏-->
         <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start">
@@ -101,17 +159,18 @@
         </span>
         <span class="float-right">
           <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
-                  v-has="'project_topo_save'" :disabled="prevent_opt.save"
-                  :class="{'nz-btn-disabled':prevent_opt.save}">
+                  style="margin-right: 20px"
+          >
              {{$t('project.topology.preview')}}
            </button>
            <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
                    v-has="'project_topo_save'" :disabled="prevent_opt.save"
-                   :class="{'nz-btn-disabled':prevent_opt.save}">
+                   :class="{'nz-btn-disabled':prevent_opt.save}"
+                   style="margin-right: 20px">
              {{$t('project.topology.save')}}
            </button>
-           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
-             {{$t('project.topology.cancel')}}
+           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" style="margin-right: 20px">
+             {{$t('project.topology.exit')}}
            </button>
          </span>
       </div>
@@ -216,6 +275,22 @@
                   @close="popDataShowUpdate('',true)">alert
       </alertTable>
     </transition>
+    <!--preview-->
+    <el-dialog
+      :visible.sync="previewShow"
+      width=""
+    >
+      <div style="width: calc(50vw - 40px);height: 50vh">
+        <topologyL5
+          v-if="previewShow"
+          :obj="obj"
+          :topoPrevDataS="topoPrevData"
+          :fromOverView="true"
+          :fromPrev="true"
+          :topologyIndexF="1">
+        </topologyL5>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -255,6 +330,7 @@
   import topoTooltip from "./L5/topoTooltip";
   import {getMetricTypeValue} from '../js/tools'
   import bus from "../../../libs/bus";
+  import topologyL5 from './topologyL5'
   import axios from 'axios';
 
   const canvasOptions={
@@ -265,8 +341,10 @@
   };
   let canvas;
   export default {
+    name:'topologyL5',
     data(){
       return {
+        topoPrevData:{},//预览数据
         imgInit:false,//判断图片是否加载完成
         toolGroup:'基本形状',
         editFlag:true,
@@ -351,6 +429,18 @@
         ],
         lineName:'curve',
         cachesIndex:0,
+        projectInfo:{
+          title:'',
+          id:'',
+          remark:'',
+          alertStat:[1,2,3],
+          moduleMum:6,
+          loading:true,
+          total:0,
+        },
+        projectInfoShow:false,
+        projectAlertShow:false,
+        previewShow:false,
       };
     },
     components:{
@@ -366,6 +456,7 @@
       endpointTable,
       ExpressionInfo,
       topoTooltip,
+      topologyL5,
     },
     computed:{},
     props:{
@@ -381,7 +472,14 @@
       fromOverView:{
         type:Boolean,
         default:false,
-      }
+      },
+      fromPrev:{
+        type:Boolean,
+        default:false,
+      },
+      topoPrevDataS:{
+
+      },
     },
     watch:{
       topologyIndexF:{
@@ -398,6 +496,11 @@
           if(n){
             this.editTopologyFlag=false;
             this.topologyLoading=true;
+            this.projectInfoShow=false;
+            this.projectAlertShow=false;
+           if(n.id){
+             this.getProjectData(n);
+           }
             if(!this.timer){
               this.timer=setTimeout(()=>{
                 this.topologyLoading=true;
@@ -485,6 +588,7 @@
                   x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
                   y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
                 }
+
                 getTopology(this.topologyIndex).centerView(50);
                 getTopology(this.topologyIndex).data.pens.forEach(item=>{
                   if(flag){
@@ -495,6 +599,9 @@
                     flag=true
                   }
                 });
+                // if(this.fromPrev){
+                //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+                // }
                 // getTopology(this.topologyIndex).fitView();
                 this.getNodesArr();
               }
@@ -566,6 +673,9 @@
       //获取topology数据
       getTopologyData(){
         return new Promise(resolve=>{
+          if(this.fromPrev){
+            resolve(this.topoPrevDataS)
+          }
           this.$get('/project/topo',{projectId:this.obj.id}).then(res=>{
             let data=res.data.topo;
             if(!res.data.topo || !data.pens){
@@ -576,6 +686,8 @@
                 lineWidth:1,
                 ruleColor:"#4e4e4e"
               };
+              this.projectInfoShow=true;
+              this.projectAlertShow=true;
               this.saveData={...data};
               resolve(data);
             }else{
@@ -589,7 +701,17 @@
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
                   }
-                }))
+                }));
+                if(!data.data){
+                  this.projectInfoShow=true;
+                  this.projectAlertShow=true;
+                } else if(!JSON.stringify(data.data.projectInfo)){
+                  this.projectInfoShow=true;
+                  this.projectAlertShow=true;
+                } else{
+                  this.projectInfoShow=data.data.projectInfo;
+                  this.projectAlertShow=data.data.alertInfo;
+                }
                 this.saveData={...data};
                 resolve(data);
               },100)
@@ -719,6 +841,25 @@
         }else{
           return expression;
         }
+      },
+      //获取project Info
+      getProjectData(n){
+        //获取projectInfo
+        this.projectInfo.loading=true;
+        this.$get('project/info', {id:n.id}).then(response => {
+          if (response.code === 200) {
+            this.projectInfo.loading=false;
+            this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length};
+            this.projectInfo.total=this.projectInfo.alertStat[0]+this.projectInfo.alertStat[1]+this.projectInfo.alertStat[2];
+            if(!this.projectInfo.total){
+              this.projectInfo.total=0
+            }
+          }
+        });
+      },
+      // Severity Label
+      returnSeverityLabel(key){
+        return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
       },
       //获取module
       getModule(){
@@ -1416,7 +1557,8 @@
       },
       //预览
       previewTopology(){
-
+        this.topoPrevData=getTopology(this.topologyIndex).data;
+        this.previewShow=true;
       },
       /*tools 方法*/
 
@@ -1753,6 +1895,117 @@
     right: 0;
     top: 50px;
   }
+
+  .facade-top{
+    min-height: 138px;
+    display: flex;
+    margin: 12px 0;
+    height: calc(16% - 40px);
+    font-size: 12px;
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    z-index: 10;
+  }
+  .facade-top > div{
+    height: calc(100% - 40px);
+    width: 18%;
+    min-width: 315px;
+    background: #FFFFFF;
+    margin-right: 9px;
+    padding: 20px;
+    border: 1px solid #FFFFFF;
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 9px -1px rgba(205,205,205,0.77);
+  }
+  .facade-top-title{
+    font-size: 16px;
+    color: #333333;
+    font-weight: bold;
+    padding: 5px 0;
+  }
+  .facade-top-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .special.label{
+    margin-left: 30px;
+  }
+  .facade-top .facade-top-right{
+    width: auto;
+    min-width: 100px;
+  }
+  .facade-top-right-content{
+    display: flex;
+    justify-content: space-around;
+    justify-items: center;
+    flex-direction: column;
+    height: calc(100% - 30px);
+    align-items:flex-start;
+  }
+  .facade-top-right-content > div{
+    min-width: 84px;
+    height: 22px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 5px;
+    line-height: 22px;
+  }
+  .facade-top-right-content > div > div:last-child{
+    text-align: center;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+    height: calc(100% - 2px);
+    padding: 0 8px;
+    min-width: 40px;
+  }
+  .content-P1-title{
+    background: #F2866E;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P1-title + div{
+    border: 1px solid #F4907A;
+    font-size: 12px;
+    color: #F4907A;
+  }
+
+  .content-P2-title{
+    background: #F89984;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P2-title + div{
+    border: 1px solid #F9A28F;
+    font-size: 12px;
+    color: #F9A28F;
+  }
+
+  .content-P3-title{
+    background: #F7BA78;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P3-title + div{
+    border: 1px solid #F7BA78;
+    font-size: 12px;
+    color: #F7BA78;
+  }
+
+
+  .right-content-P1{
+    border: 1px solid ;
+  }
+  .align--center{
+    text-align: center;
+  }
+
+
 </style>
 <style lang="scss" scoped>
   .project-topology-tool {
@@ -1776,12 +2029,15 @@
 
   .project-box {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 20px);
+    margin-top: 10px;
     position: relative;
-
+    border: 1px solid #eeeeee;
+    border-radius: 2px;
     .project-title {
-      height: 50px;
-      padding-top: 15px;
+      height: 34px;
+      padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .drag-header {

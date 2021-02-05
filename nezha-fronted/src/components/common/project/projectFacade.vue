@@ -132,22 +132,12 @@
 		  getProjectData(n){
 		    //获取projectInfo
         this.projectInfo.loading=true;
-        this.$refs['visNetwork'].topologyLoading=true;
         this.$get('project/info', {id:n.id}).then(response => {
           if (response.code === 200) {
             this.projectInfo.loading=false;
             this.projectInfo={...this.projectInfo,...response.data.basic,moduleMum:response.data.module.length};
-            this.allModuleInfo=response.data;
           }
         });
-
-        //获取所有asset
-        this.alertData.loading=true;
-        setTimeout(()=>{
-          this.$nextTick(()=>{
-            this.alertData.loading=false;
-          })
-        },300)
       },
       focusInput() {
         let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
