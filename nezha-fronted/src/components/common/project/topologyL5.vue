@@ -116,7 +116,7 @@
           <div class="flex middle special-select mb10"
                style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px;background: #fff">
             <div class="full pr10">
-              <el-select v-model="lineName" placeholder="请选择" size="small"
+              <el-select v-model="lineName" :placeholder="$t('el.select.placeholder')" size="small"
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
@@ -976,8 +976,9 @@
       //具体内容点击
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
-        if(tool.id==11){
-
+        if(tool.id==='total'&&!node.data.expressArr.length){
+          this.popDataShowUpdate('',false,node);
+          return
         }
         setTimeout(()=>{
           this.popDataShowUpdate(tool.id,false,node)

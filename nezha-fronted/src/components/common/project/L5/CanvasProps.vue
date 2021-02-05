@@ -8,11 +8,11 @@
     <!--</button>-->
     <!--所有属性-->
     <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
-      <el-tab-pane label="数据" name="1">
+      <el-tab-pane :label="$t('project.topology.data')" name="1">
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
           <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type" class="half-form-item">
-            <el-select v-model="selection.pen.data.moduleId" placeholder="" popper-class="asset-dropdown" size="small"
+            <el-select v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')" popper-class="asset-dropdown" size="small"
                        @change="moduleIdChange" :popper-append-to-body="false">
               <el-option
                 v-for="item in modules"
@@ -96,7 +96,7 @@
             </el-form-item>
             <!--chart aggregation-->
             <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small"
+              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                          size="mini"
                          v-model="selection.pen.data.aggregation" value-key="chartType">
                 <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
@@ -111,7 +111,7 @@
                            :props="{ expandTrigger: 'hover',emitPath:false }"
                            :show-all-levels="false"
                            filterable
-                           placeholder=""
+                           :placeholder="$t('el.select.placeholder')"
                            popper-class="dc-dropdown"
                            size="mini"
                            v-model="selection.pen.data.unit"
@@ -129,7 +129,7 @@
             </el-form-item>
             <!--chart type-->
             <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small"
+              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                          size="mini"
                          v-model="selection.pen.data.type" value-key="chartType">
                 <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
@@ -253,7 +253,7 @@
 
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="属性" name="4">
+      <el-tab-pane :label="$t('project.topology.style')" name="4">
         <el-collapse v-model="activeNames">
           <!--位置大小-->
           <el-collapse-item title="位置和大小" name="3" v-if="selection.pen&&!selection.pen.type">

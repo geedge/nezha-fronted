@@ -980,6 +980,8 @@ const cn = {
       imgFormat:'上传图片只能是 JPG/png 格式!',
       imgSize:'上传图片大小不能超过 2MB!',
       imgMeasure:'上传的图片宽高必须都大于100!',
+      data:"数据",
+      style:'样式',
     },
   },
   date:{

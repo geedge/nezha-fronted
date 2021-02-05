@@ -986,6 +986,8 @@ const en = {
       imgFormat:'Upload picture can only be JPG/ PNG format!',
       imgSize:'Upload image size should not exceed 2MB!',
       imgMeasure:'The width and height of uploaded pictures must be greater than 100!',
+      data:"Data",
+      style:'Style',
     },
   },
   date:{
