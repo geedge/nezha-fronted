@@ -157,6 +157,19 @@
                           @on-edit-chart-block="editData"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
         ></chart-alert-list>
+
+        <chart-pie  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'pie'" :temp-dom="tempDom"
+                            @on-refresh-data="refreshChart"
+                            @on-search-data="searchData"
+                            @on-remove-chart-block="removeChart"
+                            @on-duplicate-chart-block="duplicateChart"
+                            @on-drag-chart="editChartForDrag"
+                            @on-edit-chart-block="editData"
+                            :chart-data="item"
+                            :is-lock="panelLock"
+                            :panel-id="filter.panelId"
+                            @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                            :chart-index="index"></chart-pie>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -176,6 +189,7 @@
   import chartDataFormat from "./chartDataFormat";
   import chartAlertList from './chart-alert-list'
   import textChart from './text-chart'
+  import chartPie from './chart-pie'
   // import visNetwork from './visNetwork'
   export default {
     name: 'chartList',
@@ -196,7 +210,8 @@
       chartUrl,
       chartSingleStat,
       draggable,
-      textChart
+      textChart,
+      chartPie,
       // visNetwork,
     },
     data() {
@@ -681,7 +696,7 @@
                 this.$refs['editChart'+chartItem.id][0].setData(chartItem, tableData,
                   panelId, filter,'',errorMsg);
               }
-            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
+            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4||chartItem.type ==='pie') {
               if (filterType === 'showFullScreen') {//全屏查询
                 this.$refs['editChart'+chartItem.id][0].setData(chartItem, series,
                   panelId, filter, legend, filterType,errorMsg);
@@ -817,6 +832,28 @@
                     threshold: null,
                   };*/
                   let errorMsg = "";
+                  let pieSeries;
+                  if(chartInfo.type ==='pie'){
+                    pieSeries={
+                      type: 'pie',
+                      radius: ['20%', '100%'],
+                      center: ['50%', '50%'],
+                      roseType: 'radius',
+                      minAngle:10,
+                      itemStyle: {
+                        borderRadius: 5
+                      },
+                      label: {
+                        show: false
+                      },
+                      emphasis: {
+                        label: {
+                          show: false
+                        }
+                      },
+                      data:[]
+                    }
+                  }
                   res.forEach((response, innerPos) => {
                     if (response.status === 'success') {
                       errorMsg = "";
@@ -939,8 +976,12 @@
                                 });
                                 return [dpsItem[0] * 1000, dpsItem[1]];
                               });
-                              series.push(seriesItem.theData);
-                              seriesItem = null;
+                              if(chartInfo.type === 'pie'){
+                                pieSeries.data.push({value:bus.getSingleStatRlt(chartInfo.param.statistics,seriesItem.theData.data),name:host+"-"+chartItem.elements[innerPos].id+"-" + resIndex})
+                              }else{
+                                series.push(seriesItem.theData);
+                                seriesItem = null;
+                              }
                             } else if (chartItem.elements && chartItem.elements[innerPos]) {
                               // 无数据提示
                               /*
@@ -971,6 +1012,9 @@
                   });
 
                   if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
+                    if(chartInfo.type === 'pie'){
+                      series.push(pieSeries)
+                    }
                     let chartData = {
                       chartItem: chartItem,
                       series: series,
@@ -991,7 +1035,7 @@
                         this.$refs['editChart' + chartItem.id][0].setData(chartItem, tableData,
                           this.filter.panelId, this.filter, '', errorMsg);
                       }
-                    } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
+                    } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4||chartItem.type == 'pie') {
                       if (series.length && chartItem.type === 4) {//曲线汇总
                         //series.push(sumData);//后续需要
                       }
@@ -1023,7 +1067,7 @@
                         this.$refs['editChart' + chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                           this.filter);
                       }
-                    } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4) {
+                    } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4||chartItem.type === 'pie') {
                       if (filterType === 'showFullScreen') {//table的全屏查询
                         this.$refs['editChart' + chartItem.id][0].setData(chartItem, [], this.filter.panelId,
                           this.filter, filterType);

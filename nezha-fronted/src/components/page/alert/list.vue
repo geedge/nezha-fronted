@@ -34,7 +34,7 @@
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <alertMessageTable
-        projectAlertId="alert-msg-table"
+        id="alert-msg-table"
         ref="alertMessageTable"
         :tableData="tableData"
         :loading="tools.loading"

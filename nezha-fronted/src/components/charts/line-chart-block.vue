@@ -189,6 +189,7 @@
   import timePicker from '../common/timePicker';
   import chartConfig from "../page/dashboard/overview/chartConfig";
   import {getChart, setChart,lineChartMove,getMousePoint} from "../common/js/common";
+  import {getMetricTypeValue} from "../common/js/tools";
 
   export default {
     name: 'lineChartBlock',
@@ -578,20 +579,6 @@
           //chartId='screenShowArea';
         }
         var chartWidth = ele.clientWidth;
-        var title = {
-          show:false,
-          text: chartInfo.title || null,
-          textAlign: 'left',
-          useHTML: true,
-          textStyle: {
-            //display: 'inline-block',//无此属性
-            width: '60%',
-            fontStyle:'normal',
-            fontWeight:'bold',
-            color: "#333",
-
-          }
-        };
 
         let stackIconBorderColor = (chartInfo.type==='stackArea'?'#53a3cb':'#7e7e7e');
         let stackIconChooseBorderColor = (chartInfo.type==='stackArea'?'#7e7e7e':'#53a3cb');
@@ -1739,94 +1726,17 @@
         let options=where =='local'?this.legendOptions:this.screenLegendOptions;
         let keys=options.filter(item=>{return item.value == 'on'}).map(item=>{return item.option});
         let $self=this;
-        keys.forEach(item=>{
-          switch (item) {
-            case 'min':
-              $self.legendMinValue(legend,dataArr);
-              break;
-            case 'max':
-              $self.legendMaxValue(legend,dataArr);
-              break;
-            case 'avg':
-              $self.legendAvgValue(legend,dataArr);
-              break;
-            case 'last':
-              $self.legendLastValue(legend,dataArr);
-              break;
-            case 'total':
-              $self.legendTotalValue(legend,dataArr);
-              break;
-          }
-        })
-      },
-      legendMinValue:function(legend,dataArr){
-        return new Promise(resolve => {
-          legend.forEach(item=>{
-            let data=dataArr.find(t=>t.name == item.name)
-            if(data&&data.data){
-              let copy=JSON.parse(JSON.stringify(data.data));
-              let min =copy.sort((x,y)=>{return parseFloat(x[1]) - parseFloat(y[1])})[0][1]
-              item['min']=parseFloat(min)
-            }
+        keys.forEach(key=>{
+          return new Promise(resolve => {
+            legend.forEach(item=>{
+              let data=dataArr.find(t=>t.name == item.name)
+              if(data&&data.data){
+                let value=getMetricTypeValue(data.data,key)
+                item[key] = parseFloat(value)
+              }
+            })
+            resolve();
           })
-
-          resolve();
-        })
-      },
-      legendMaxValue:function(legend,dataArr){
-        return new Promise(resolve => {
-          legend.forEach(item=>{
-            let data=dataArr.find(t=>t.name == item.name)
-            if(data&&data.data){
-              let copy=JSON.parse(JSON.stringify(data.data));
-              let max =copy.sort((x,y)=>{return parseFloat(y[1]) - parseFloat(x[1])})[0][1]
-              item['max']=parseFloat(max)
-            }
-          })
-          resolve();
-        })
-      },
-      legendAvgValue:function(legend,dataArr){
-        return new Promise(resolve => {
-          legend.forEach(item=>{
-            let data=dataArr.find(t=>t.name == item.name)
-            if(data&&data.data){
-              let copy=JSON.parse(JSON.stringify(data.data));
-              copy = copy.map(t=>parseFloat(t[1]))
-              let sum = eval(copy.join('+'));
-              let avg = sum / copy.length;
-
-              item['avg'] = avg;
-            }
-          })
-          resolve();
-        })
-      },
-      legendLastValue:function(legend,dataArr){
-        return new Promise(resolve => {
-          legend.forEach(item=>{
-            let data=dataArr.find(t=>t.name == item.name)
-            if(data&&data.data){
-              let copy=JSON.parse(JSON.stringify(data.data));
-              let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1]
-              item['last']=parseFloat(last)
-            }
-          })
-          resolve();
-        })
-      },
-      legendTotalValue:function(legend,dataArr){
-        return new Promise(resolve => {
-          legend.forEach(item=>{
-            let data=dataArr.find(t=>t.name == item.name)
-            if(data&&data.data){
-              let copy=JSON.parse(JSON.stringify(data.data));
-              copy = copy.map(t=>parseFloat(t[1]))
-              let sum = eval(copy.join('+'));
-              item['total'] = sum;
-            }
-          })
-          resolve();
         })
       },
       formatLegendData:function(data){

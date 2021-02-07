@@ -42,6 +42,7 @@
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <alertMessageTable
+            :id="'tableContainer'+chartIndex"
             :tableData="storedTableData"
             :loading="loadingTable"
             :tableHeight="tableHeight"
@@ -66,6 +67,7 @@
 <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <alertMessageTable
+            :id="'tableContainer'+chartIndex"
             :tableData="storedScreanTableData"
             :loading="loadingTable"
             :tableHeight="'95%'"

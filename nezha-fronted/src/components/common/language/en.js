@@ -173,6 +173,9 @@ const en = {
           singleStat:{
             label:"SingleStat"
           },
+          pie:{
+            label:"Pie"
+          },
           alertList:{
             label:"Alert list"
           },

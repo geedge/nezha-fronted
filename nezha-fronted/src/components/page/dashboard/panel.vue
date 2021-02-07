@@ -334,25 +334,25 @@
                 if(chartList[i].id === data.id){
                   chartList.splice(i,1);
                 }
-                if(data.next != -1){
-                  if(chartList[i].id === data.next){
-                    nextChart = chartList[i]
-                  }
-                }
-                if(data.prev != 0){
-                  if(chartList[i].id === data.prev){
-                    prevChart = chartList[i]
-                  }
-                }
+                // if(data.next != -1){
+                //   if(chartList[i].id === data.next){
+                //     nextChart = chartList[i]
+                //   }
+                // }
+                // if(data.prev != 0){
+                //   if(chartList[i].id === data.prev){
+                //     prevChart = chartList[i]
+                //   }
+                // }
               }
               this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop);
-              if(nextChart&&prevChart){ //删除图表为中间位置
-                prevChart.next = nextChart.id;
-                nextChart.prev = prevChart.id;
-              }else{
-                if(!nextChart) prevChart.next = -1;
-                if(!prevChart) nextChart.prev = 0;
-              }
+              // if(nextChart&&prevChart){ //删除图表为中间位置
+              //   prevChart.next = nextChart.id;
+              //   nextChart.prev = prevChart.id;
+              // }else{
+              //   if(!nextChart) prevChart.next = -1;
+              //   if(!prevChart) nextChart.prev = 0;
+              // }
               // this.getTableData(); //删除相关图表后，刷新面板数据
             } else {
               this.$message.error(response.msg);

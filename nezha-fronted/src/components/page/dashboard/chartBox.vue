@@ -259,6 +259,14 @@
             <el-input size="mini" type="input" v-model="editChart.param.threshold" id="chart-box-threshold"></el-input>
           </el-form-item>
 
+          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie' ">
+              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="editChart.param.statistics" id="chart-box-panelname">
+                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
+                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                </el-option>
+              </el-select>
+          </el-form-item>
+
           <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
             <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last" id="chart-box-last"></el-switch>
           </el-form-item>
@@ -315,7 +323,6 @@
                         ></promql-input>
               -->
               <el-row>
-                <template v-if="editChart.type != 'singleStat'">
                   <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
                     {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                     <el-popover placement="top" trigger="hover" width="211">
@@ -326,19 +333,6 @@
                   <el-col style="width: calc(100% - 120px);">
                     <el-input size="small" type="text" v-model="legends[index-1]" ></el-input>
                   </el-col>
-                </template>
-                <template v-else>
-                  <el-col class="required-marker" style="width: 120px; padding-right: 20px; text-align: right; color: #666">
-                    <label >{{$t('dashboard.panel.chartForm.statistics')}}</label>&nbsp;
-                  </el-col>
-                  <el-col style="width: calc(100% - 120px);">
-                    <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="editChart.param.statistics" id="chart-box-panelname">
-                      <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
-                        <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                </template>
               </el-row>
               <span class="nz-icon-minus-medium nz-icon-minus-position">
             <i class="nz-icon nz-icon-minus" @click="removeExpression(index - 1)"></i>
@@ -562,6 +556,9 @@
           ],
           'param.threshold':[
             {validator:nzNumber,trigger: 'blur'}
+          ],
+          "param.statistics":[
+            {required: true,  message: this.$t('validate.required'),  trigger: 'change'}
           ]
         },
         chartTypeList: [
@@ -580,6 +577,10 @@
           {
             id:'singleStat',
             name:this.$t("dashboard.panel.chartForm.typeVal.singleStat.label")
+          },
+          {
+            id:'pie',
+            name:this.$t("dashboard.panel.chartForm.typeVal.pie.label")
           },
           {
             id:"table",
@@ -941,7 +942,7 @@
               },
               sync: this.editChart.sync
             };
-            if(this.editChart.type === 'singleStat'){
+            if(this.editChart.type === 'singleStat'||this.editChart.type == 'pie'){
               // params.param.statistics=this.statistics;
             } else {
               delete params.param.statistics;
@@ -1041,7 +1042,7 @@
             this.$refs.alertParamBox.saveParam();
             return ;
           }
-          if(this.editChart.type == 'singleStat'){
+          if(this.editChart.type == 'singleStat'||this.editChart.type == 'pie'){
             // this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
             delete this.editChart.param.statistics;
@@ -1435,15 +1436,15 @@
                 height: this.editChart.height,
                 type: this.editChart.type,
                 unit:this.editChart.unit,
-                param:{
-
-                },
+                param:this.editChart.param,
                 sync: this.editChart.sync
               };
-              if(this.editChart.type === 'singleStat'){
+              if(this.editChart.type === 'singleStat'||this.editChart.type === 'table'){
                 // params.param.statistics=this.statistics;
                 params.param.valueMapping=this.editChart.param.valueMapping;
-              } else {
+              }
+              console.log(this.editChart)
+              if(this.editChart.type != 'singleStat' && this.editChart.type != 'pie'){
                 delete params.param.statistics;
               }
               if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='table'){

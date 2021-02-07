@@ -160,6 +160,9 @@ const cn = {
           singleStat:{
             label:"SingleStat"
           },
+          pie:{
+            label:"饼图"
+          },
           alertList:{
             label:"告警列表"
           },

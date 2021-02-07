@@ -25,7 +25,7 @@
       </div>
     </div>
     <alertMessageTable
-      :projectAlertId="from+'-sub-alert-table'"
+      :id="from+'-sub-alert-table'"
       ref="alertMessageTable"
       :tableData="tableData"
       :loading="loading"

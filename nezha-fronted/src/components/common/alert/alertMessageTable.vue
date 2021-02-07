@@ -6,7 +6,7 @@
     <!-- 自定义table列 -->
     <transition name="el-zoom-in-top">
       <element-set
-        :id="projectAlertId+'-element-set'"
+        :id="id+'-element-set'"
         v-if="tools.showCustomTableTitle"
         @close="tools.showCustomTableTitle = false"
         :custom-table-title.sync="tools.customTableTitle"
@@ -29,7 +29,7 @@
       @selection-change="selectChange"
       style="width: 100%;height: 100%"
       @sort-change="tableDataSort"
-      :id="projectAlertId"
+      :id="id+'-table'"
     >
       <el-table-column
         :resizable="false"
@@ -243,7 +243,8 @@
         type:Boolean,
         default:true,
       },
-      from: {type: String}
+      from: {type: String},
+      id:String,
     },
     data() {
       vm = this;

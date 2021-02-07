@@ -3,8 +3,6 @@
     }
     .nz-preview-picker{
     }
-    .v-modal{
-    }
     .hidden{
       visibility: hidden;
     }
@@ -76,9 +74,9 @@
         </div>
       </div>
 
-      <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo'">
+      <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo' ||chart.type =='pie'">
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
-          <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px;"></div>
+          <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
 
           <template v-if="!hasLegendOptions">
@@ -267,12 +265,14 @@
         this.searchTime = bus.getTimezontDateRange();
         this.chart = JSON.parse(JSON.stringify(chartInfo));
 
+        console.log('chart',this.chart,chartInfo)
+
         let chartType= chartInfo.type;
         let chartContainerId = 'chartEchartPreview';
         if(chartType==='table'){
           this.tableShow = false;
           chartContainerId = 'chartTablePreview';
-        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4) {
+        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4||chartType == 'pie') {
           this.isGreyScreen=[];
           this.showLegend = false;
           chartContainerId = 'chartEchartPreview';
@@ -346,7 +346,7 @@
         let chartType= this.chart.type;
         if(chartType==='table'){
 
-        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || chartType == "endpointInfo") {
+        }else if (chartType === 'line' || chartType === 'bar' || chartType === 'stackArea' || chartType === 4 || chartType == "endpointInfo"||chartType == 'pie') {
           if(this.echartModalStore){
             this.echartModalStore.clear();
           }
@@ -381,7 +381,7 @@
           this.$nextTick(() => {
             if (chartItem.type === 'table') {//表格
               this.setTableData([]);
-            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type === "endpointInfo") {
+            } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.type === "endpointInfo"||chartItem == 'pie') {
               this.setData(chartItem, [], []);
             }else if(chartItem.type ==='singleStat'){
               this.serieSingleStat = "";
@@ -415,12 +415,28 @@
                 let singleStatRlt = '';
                 const legend = [];
                 const tableData = [];
-                const sumData = {
-                  name: 'sum',
-                  data: [],
-                  visible: true,
-                  threshold: null,
-                };
+                let pieSeries;
+                if(chartItem.type ==='pie'){
+                  pieSeries={
+                    type: 'pie',
+                    radius: ['20%', '100%'],
+                    center: ['50%', '50%'],
+                    roseType: 'radius',
+                    minAngle:10,
+                    itemStyle: {
+                      borderRadius: 5
+                    },
+                    label: {
+                      show: false
+                    },
+                    emphasis: {
+                      label: {
+                        show: false
+                      }
+                    },
+                    data:[]
+                  }
+                }
                 res.forEach((response, innerPos) => {
                   if (response.status === 'success') {
                     this.isError = false;
@@ -513,8 +529,12 @@
                               });
                               return [dpsItem[0] * 1000, dpsItem[1]];
                             });
-                            series.push(seriesItem.theData);
-
+                            if(chartItem.type === 'pie'){
+                              console.log(chartItem.param.statistics,seriesItem.theData.data)
+                              pieSeries.data.push({value:bus.getSingleStatRlt(chartItem.param.statistics,seriesItem.theData.data),name:host + resInnerPos})
+                            }else{
+                              series.push(seriesItem.theData);
+                            }
                           } else if (chartItem.elements && chartItem.elements[innerPos]) {
                             // 无数据提示
                             /*
@@ -581,6 +601,14 @@
                       this.serieSingleStat =singleStatRlt;
                     }
                     this.$refs.loadingPreview.endLoading();
+                  }else if(chartItem.type == 'pie'){
+                    series.push(pieSeries)
+                    if(series[0].data.length<1){
+                      this.noData=true;
+                    }else{
+                      this.noData=false;
+                    }
+                    this.setData(chartItem,series,legend)
                   }
                 //}
               } else {
@@ -588,7 +616,7 @@
                 //if(this.$refs.editChart[index]) {
                   if (type === 'table') {
                       this.setTableData([]);
-                  } else if (type === 'line' || type === 'bar' || type === 'stackArea' || type === 4) {
+                  } else if (type === 'line' || type === 'bar' || type === 'stackArea' || type === 4||chartItem.type == 'pie') {
                       this.setData(chartItem, []);
                   }else if(chartItem.type ==='singleStat'){
                     this.serieSingleStat = "";
@@ -738,7 +766,7 @@
           this.chartType = 'line';
         }
         this.echartModalStore = echarts.init(ele);
-
+        console.log('height',ele.clientWidth,ele.clientHeight)
         var chartWidth = ele.clientWidth;
         var title = {
           show:false,
@@ -1040,6 +1068,71 @@
           }
         });
       },
+      initPie:function(chartInfo, dataArg, legend){
+        let option={
+          title: {
+            show: false,
+          },
+          legend:{
+            show:false,
+          },
+          grid: {
+            left:'center',
+            top:'middle',
+          },
+          tooltip:{
+            trigger:'item',
+            backgroundColor:'rgba(221,228,237,1)',
+            borderColor :'rgba(255,255,255,0)',
+            textStyle:{
+              color:'#000'
+            },
+            textStyle:{
+              color:'#000'
+            },
+            axisPointer:{
+              snap:false,
+              animation:false,
+            },
+            extraCssText:'z-index:1000;',
+          },
+          series:null,
+        }
+        option.series = dataArg;
+        option.color = this.bgColorList;
+        option.tooltip.formatter=this.pieFormatterFunc;
+        let self=this;
+        let  dom = document.getElementById('screenShowArea')
+        this.echartModalStore = echarts.init(dom)
+        console.log('dom',dom.clientWidth,dom.clientHeight)
+        this.showLegend = true;
+        if(legend){
+          this.screenLegendList = [];
+          legend.forEach((item, i) => {
+            let _legend = {
+              name:item.name,
+              alias:item.alias,
+              color:item.color,
+              showText:this.formatLegend(dom.clientWidth,item.alias?item.alias:item.name)
+            };
+            this.screenLegendList.push(_legend);
+            this.isGreyScreen.push(false);
+          });
+        }
+        this.$nextTick(() => {
+          let divHeight = this.$refs.screenLegendArea.offsetHeight;
+          this.echartModalStore.resize({height:(chartInfo.height-this.chartSpaceHeight-divHeight-this.titleHeight)});
+          this.echartModalStore.clear();
+          if(dataArg[0].data.length<1){
+            this.echartModalStore.setOption(chartConfig.getOption('noData'))
+          }else{
+            console.log(option)
+            this.echartModalStore.setOption(option);//创建图表
+          }
+
+          this.$refs.loadingPreview.endLoading();
+        });
+      },
       mouseEnterFullChart(){
         if (this.echartModalStore) {
           this.echartModalStore.setOption({
@@ -1076,6 +1169,10 @@
           if(this.hasLegendOptions){
             let sortedOptionKeys=['min','max','avg','last','total']
             this.screenLegendOptions=sortedOptionKeys.map(item=>{ return {option:item,sort:'',value:chartItem.param.legendValue[item]}})
+          }
+          if(chartItem.type == 'pie'){
+            this.initPie(chartItem,seriesItem,legend)
+            return;
           }
           this.initChart(chartItem, seriesItem, this.$refs.screenShowArea,legend);
       },
@@ -1444,6 +1541,23 @@
           legend.sort((x,y)=>y[option.option] - x[option.option])
           option.sort = 'asc'
         }
+      },
+      pieFormatterFunc:function(params, ticket, callback){
+        return `
+                <div>
+                    <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">
+                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;">${this.legend[params.dataIndex].alias}</div>
+                        <div style="display:flex;justify-content: space-between;">
+                            <div>value</div>
+                            <div>${params.value}</div>
+                        </div>
+                        <div style="display:flex;justify-content: space-between;">
+                            <div>percent</div>
+                            <div>${params.percent}%</div>
+                        </div>
+                    </div>
+                </div>
+               `
       }
     },
     beforeDestroy() {
