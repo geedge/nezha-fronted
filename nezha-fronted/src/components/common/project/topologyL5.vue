@@ -6,7 +6,7 @@
   <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
     <!--project主要信息-->
     <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
-      <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow&&!fromPrev">
+      <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
         <div class="facade-top-title">
           Project information
         </div>
@@ -29,7 +29,7 @@
           <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
         </div>
       </div>
-      <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow&&!fromPrev" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
+      <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
         <div class="facade-top-title">
           <span class="label" style="padding-left: 0;">Alert :</span>
           {{projectInfo.total}}
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
+    <div class="project-title" v-if="showTopTools&&!fromOverView&&!fromPrev" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
         <!--工具栏-->
         <span class="project-topology-tool">
@@ -207,13 +207,13 @@
       >
 
         <i
-          :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.state.error&&!item.data.show,'model-error-active':item.data.state.error&&item.data.show}"
+          :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.state&&item.data.state.error&&!item.data.show,'model-error-active':item.data.state&&item.data.state.error&&item.data.show}"
           :ref="'modelTopId'+index"
           @click="showNodeTools(index,item)"
         >
           <i class="nz-icon nz-icon-model"></i>
         </i>
-        <!--'selpop':selpopIs(item),'no-selPop':!selpopIs(item),'error-model-stat':modelPopError(item)  @click="popClick(item.id)"-->
+        <!--'selpop':selpopIs(item),'no-selPop':!selpopIs(item),'error-model-stat':modelPopError(item)  @click="popClick(item.id)" -->
         <div v-for="item1 in popData">
           <transition name="scaleTool">
             <i v-if="item.data.show"
@@ -287,7 +287,7 @@
           v-if="previewShow"
           :obj="obj"
           :topoPrevDataS="topoPrevData"
-          :fromOverView="true"
+          :fromOverView="false"
           :fromPrev="true"
           :topologyIndexF="1">
         </topologyPrev>
@@ -297,7 +297,7 @@
 </template>
 
 <script>
-  import {Topology,Node,Line,registerNode} from '@topology/core';
+  import {Topology,Node,Line,Rect,registerNode} from '@topology/core';
   import * as FileSaver from 'file-saver';
   import {
     Tools,
@@ -346,6 +346,7 @@
     name:'topologyL5',
     data(){
       return {
+        objChange:false,//project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
         chartDataInfo:{},
         topoPrevData:{},//预览数据
         imgInit:false,//判断图片是否加载完成
@@ -402,7 +403,7 @@
             title:this.$t('project.topology.endpoint')
           },
           {top:'-40px',left:'19px',className:'nz-icon-asset',id:'asset',title:this.$t('project.topology.asset')},
-          {top:'-4px',left:'40px',className:'nz-icon-chart',id:'total',title:this.$t('project.topology.total')},
+          {top:'-4px',left:'40px',className:'',id:'other',title:''},
           {top:'30px',left:'19px',className:'',id:'other',title:''},
           {top:'30px',left:'-21px',className:'nz-icon-info-normal',id:'info',title:this.$t('project.topology.info')},
           {top:'-4px',left:'-40px',className:'nz-icon-gaojing',id:'alert',title:this.$t('project.topology.alert')},
@@ -496,28 +497,56 @@
         deep:true,
         immediate:true,
         handler(n){
-          if(n){
-            this.editTopologyFlag=false;
-            this.topologyLoading=true;
-            this.projectInfoShow=false;
-            this.projectAlertShow=false;
-           if(n.id){
-             this.getProjectData(n);
-           }
-            if(!this.timer){
-              this.timer=setTimeout(()=>{
-                this.topologyLoading=true;
-                this.init();
-                this.timer=null
-              },300)
+          if(n.id){
+            if( !this.objChange){
+              this.editTopologyFlag=false;
+              this.topologyLoading=true;
+              this.projectInfoShow=false;
+              this.projectAlertShow=false;
+              if(n.id){
+                this.getProjectData(n);
+              }
+              this.topologyLoading=true;
+              this.init();
+              this.timer=null
+              this.objChange=true;
             }else{
-              clearTimeout(this.timer);
-              this.timer=setTimeout(()=>{
-                this.topologyLoading=true;
-                this.init();
-                this.timer=null
-              },300)
+              if(!this.timer){
+                this.timer=setInterval(()=>{
+                  if(this.objChange){return}
+                  this.editTopologyFlag=false;
+                  this.topologyLoading=true;
+                  this.projectInfoShow=false;
+                  this.projectAlertShow=false;
+                  if(n.id){
+                    this.getProjectData(n);
+                  }
+                  clearTimeout(this.timer);
+                  this.timer=null;
+                  this.objChange=true;
+                  this.topologyLoading=true;
+                  this.init();
+                },100)
+              }else{
+                clearTimeout(this.timer);
+                this.timer=setInterval(()=>{
+                  if(this.objChange){return}
+                  this.editTopologyFlag=false;
+                  this.topologyLoading=true;
+                  this.projectInfoShow=false;
+                  this.projectAlertShow=false;
+                  if(n.id){
+                    this.getProjectData(n);
+                  }
+                  clearTimeout(this.timer);
+                  this.timer=null;
+                  this.objChange=true;
+                  this.topologyLoading=true;
+                  this.init();
+                },100)
+              }
             }
+
           }
         }
       }
@@ -583,6 +612,7 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
+              this.objChange=false;
               if(this.fromOverView){
                 let flag=false;
 
@@ -601,6 +631,18 @@
                     flag=true
                   }
                 });
+                getTopology(this.topologyIndex).centerView(50);
+                setTimeout(()=>{
+                  getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                    console.log(item.animatePlay,123123123123123123123)
+                   if(item.animatePlay){
+                     item.stopAnimate();
+                     setTimeout(()=>{
+                       item.startAnimate()
+                     })
+                   }
+                  },100);
+                })
                 // if(this.fromPrev){
                 //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
                 // }
@@ -646,7 +688,6 @@
                 query+='&nullType='+'connected';
                 return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
               });
-              console.log(arr);
               axiosArr.push({item,arr});
               promiseArr.push(pensPromise(item,arr,index))
             });
@@ -671,6 +712,17 @@
                     flag=true
                   }
                 });
+                setTimeout(()=>{
+                  getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                    console.log(item.animatePlay,123123123123123123123)
+                    if(item.animatePlay){
+                      item.stopAnimate();
+                      setTimeout(()=>{
+                        item.startAnimate()
+                      })
+                    }
+                  },100);
+                })
                 // if(this.fromPrev){
                 //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
                 // }
@@ -705,7 +757,9 @@
           }
           this.$get('/project/topo',{projectId:this.obj.id}).then(res=>{
             let data=res.data.topo;
+            console.log(data,'topo')
             if(!res.data.topo || !data.pens){
+              console.log(123123123123);
               data={
                 bkColor:'#FFFFFF',
                 gridSize:10,
@@ -723,29 +777,19 @@
                   return
                 }
                 clearInterval(timer);
+                let promiseArr=[];
+                let self=this;
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
                   }
                  if(item.type===0){
-                   this.$get('/module/stat',{id:item.data.moduleId}).then(res=>{
-                     item.data.state=res.data;
-                     item.data.state.asset=false;
-                     item.data.state.endpoint=false;
-                     item.data.state.alert=false;
-                     if(item.data.state.assetStat.down>0){
-                       item.data.state.asset=true;
-                     }
-                     if(  item.data.state.endpointStat.down>0){
-                       item.data.state.endpoint=true;
-                     }
-                     if(item.data.state.alertStat.P1> 0 || item.data.state.alertStat.P3>0 || item.data.state.alertStat.P2>0){
-                       item.data.state.alert=true;
-                     }
-                     item.data.state.error= item.data.state.asset && item.data.state.endpoint && item.data.state.alert;
-                   });
+                   promiseArr.push(this.$get('/module/stat',{id:item.data.moduleId}));
+                 }else{
+                   promiseArr.push({type:1})
                  }
                 }));
+
                 if(!data.data){
                   this.projectInfoShow=true;
                   this.projectAlertShow=true;
@@ -756,8 +800,32 @@
                   this.projectInfoShow=data.data.projectInfo;
                   this.projectAlertShow=data.data.alertInfo;
                 }
-                this.saveData={...data};
-                resolve(data);
+
+                Promise.all(promiseArr).then(res=>{
+                  console.log(res);
+                  res.forEach((response,index)=>{
+                    let item=data.pens[index];
+                      if(item.type===0){
+                        item.data.state=response.data;
+                        item.data.state.asset=false;
+                        item.data.state.endpoint=false;
+                        item.data.state.alert=false;
+                        if(item.data.state.assetStat.down>0){
+                          item.data.state.asset=true;
+                        }
+                        if(item.data.state.endpointStat.down>0){
+                          item.data.state.endpoint=true;
+                        }
+                        if(item.data.state.alertStat.P1> 0 || item.data.state.alertStat.P3>0 || item.data.state.alertStat.P2>0){
+                          item.data.state.alert=true;
+                        }
+                        item.data.state.error= item.data.state.asset || item.data.state.endpoint || item.data.state.alert;
+                        console.log(item.data);
+                      }
+                  });
+                  self.saveData={...data};
+                  resolve(data);
+                });
               },100)
             }
           })
@@ -916,6 +984,7 @@
       },
 
       getNodesArr(){
+        if(!getTopology(this.topologyIndex))  return;
         this.nodesArr=getTopology(this.topologyIndex).data.pens.filter(item=>{
           if(!item.data){
             item.data={
@@ -976,7 +1045,7 @@
       //具体内容点击
       nodeTools(node,tool){
         this.moduleId=node.data.moduleId;
-        if(tool.id==='total'&&!node.data.expressArr.length){
+        if(tool.id==='total'){
           this.popDataShowUpdate('',false,node);
           return
         }
@@ -1045,6 +1114,9 @@
           ;
         }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
+          // if(data.type===0){
+          //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
+          // }
           if(data.type===0&& !data.data.moduleId){
             data.data={
               ...data.data,
@@ -1052,7 +1124,7 @@
               moduleName:'',
               show:false,
               error:false,
-              animatePlay:data.animatePlay,
+              animatePlay:false,
               fillStyle:data.fillStyle,
               strokeStyle:data.strokeStyle,
               lineWidth:this.nodeDefaultWidth(data.name),
@@ -1084,7 +1156,7 @@
             //连线是否自动计算锚点
             // data.manualCps=true;
             data.data={
-              animatePlay:data.animatePlay,
+              animatePlay:false,
               strokeStyle:data.strokeStyle,
               animateColor:data.animateColor,
               arrowColor:data.arrowColor,
@@ -1114,7 +1186,9 @@
               title:'',
               moduleName:'',
               url:'',
-            }
+            };
+            data.animateColor='#FA901C'
+            console.log(data);
           }
           if(data.type===0||data.type===1){
             data.lineWidth=data.data.lineWidth;
@@ -1251,7 +1325,9 @@
               let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
               this.toolShow.attrCord=[domRect.width-350,0];
               this.toolShow.height=domRect.height;
-              getTopology(this.topologyIndex).canvasPos=domRect;
+              if(getTopology(this.topologyIndex)){
+                getTopology(this.topologyIndex).canvasPos=domRect;
+              }
               break;
             case 'scale':
               if(this.$refs.topTool){
@@ -1289,7 +1365,10 @@
             case 'translate':
               this.moduleId='';
               this.showNodeTools('');
-              this.popDataShowUpdate('',false)
+              this.popDataShowUpdate('',false);
+              if(!this.editTopologyFlag){
+                getTopology(this.topologyIndex)
+              }
               break;
           }
           switch(event){
@@ -1501,7 +1580,7 @@
             if(item.type===0){
               item.fillStyle=item.data.fillStyle;
               item.strokeStyle=item.data.strokeStyle;
-              item.animatePlay=item.data.animatePlay;
+              item.animatePlay=false;
               item.font.color="#000000";
             }else if(item.type===1){
               item.animateColor=item.data.animateColor;
@@ -1509,7 +1588,7 @@
               item.arrowColor=item.data.arrowColor;
               item.fromArrowColor=item.data.fromArrowColor;
               item.toArrowColor=item.data.toArrowColor;
-              item.animatePlay=item.data.animatePlay;
+              item.animatePlay=false;
               item.font.color="#000000";
             }
           })
@@ -1553,6 +1632,7 @@
         if(flag){
           this.editTopologyFlag=false;
           topologyData.pens.forEach(item=>{
+            item.animatePlay=item.data.animatePlay;
             if(item.type===0&&JSON.stringify(item.data.imageId)){
               item.image="";
               item.animateFrames=[];
@@ -1616,7 +1696,11 @@
       },
       //预览
       previewTopology(){
-        this.topoPrevData=getTopology(this.topologyIndex).data;
+        let data=JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data));
+        data.pens.forEach((item)=>{
+          item.animatePlay=item.data.animatePlay;
+        });
+        this.topoPrevData=data;
         this.previewShow=true;
       },
       /*tools 方法*/

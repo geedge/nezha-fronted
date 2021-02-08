@@ -714,19 +714,19 @@
               <div class="props-pen-item" v-if="selection.pen.type">
                 <div>{{$t('project.topology.arrowColor')}}</div>
                 <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('arrowColor')">
-                    <div class="color-show-left" :style="{background:selection.pen.arrowColor}"></div>
-                    <span class="color-text"> {{selection.pen.arrowColor}}</span>
+                  <div class="color-show" @click="colorPickerClick('toArrowColor')">
+                    <div class="color-show-left" :style="{background:selection.pen.toArrowColor}"></div>
+                    <span class="color-text"> {{selection.pen.toArrowColor}}</span>
                     <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['arrowColor']&&!$refs['arrowColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['arrowColor']&&$refs['arrowColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['toArrowColor']&&!$refs['toArrowColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['toArrowColor']&&$refs['toArrowColor'].showPicker"></i>
                 </span>
                   </div>
                   <div class="color-content" ref="color-content">
                     <el-color-picker
-                      v-model="selection.pen.arrowColor"
-                      ref="arrowColor"
-                      @active-change="(val)=>colorChange(val,'arrowColor')"
+                      v-model="selection.pen.toArrowColor"
+                      ref="toArrowColor"
+                      @active-change="(val)=>colorChange(val,'toArrowColor')"
                     >
                     </el-color-picker>
                   </div>
@@ -740,7 +740,7 @@
           <div class="project-content-title">{{$t('project.topology.animation')}}
             <span class="float-right" style="margin-right: 10px">
               <el-switch
-                v-model="selection.pen.animatePlay"
+                v-model="selection.pen.data.animatePlay"
                 :active-value="true"
                 :inactive-value="false"
                 active-color="#ee9d3f"
@@ -897,6 +897,7 @@
                 controls-position="right"
                 size="small"
                 name="x"
+                :min="0"
                 class="input"
                 v-model.number="topologyData.data.gridSize"
                 :readonly="readonly"
@@ -1354,7 +1355,6 @@
       selection:{
         handler(n){
           if(n){
-            this.drowdown=0;
           }
         },
         deep:true,
@@ -1543,7 +1543,7 @@
 
       },
       colorChange(val,name){//改变颜色
-        if(name==='arrowColor'){
+        if(name==='toArrowColor'){
           this.selection.pen.fromArrowColor=this.colorRGBtoHex(val);
           this.selection.pen.toArrowColor=this.colorRGBtoHex(val);
           this.selection.pen.data['fromArrowColor']=this.colorRGBtoHex(val);
@@ -1623,10 +1623,10 @@
         this.onChange();
       },
       onAnimate(val){
-        this.selection.pen.animateStart=this.selection.pen.animateStart?Date.now():0;
-        this.selection.pen.data.animatePlay=this.selection.pen.animatePlay;
+        // this.selection.pen.animateStart=this.selection.pen.animateStart?Date.now():0;
+        // this.selection.pen.data.animatePlay=this.selection.pen.animatePlay;
         this.onChange();
-        this.$emit('animate');
+        // this.$emit('animate');
       },
       delTopologyPen(){
         let delObj=this.selection.pen?this.selection.pen.id:this.selection.pens
