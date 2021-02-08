@@ -40,7 +40,7 @@
             </ul>
           </el-dropdown>
         </div>
-        <div :id="'pie-chart-local-'+chartIndex" ref="pieChartLocal" ></div>
+        <div :id="'pie-chart-local-'+chartIndex" ref="pieChartLocal" style="display: flex;justify-content: center"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
         <div class='legend-container' ref="legendArea" v-show="firstShow">
           <div v-for="(item, index) in legend" :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" :key="'legend_' + item.name+'_'+index">
@@ -374,7 +374,6 @@ export default {
       },
       initChart:function(type){
         this.option.series = this.pieData;
-
         if(type == 'local'){
           this.initLocal();
         }else{

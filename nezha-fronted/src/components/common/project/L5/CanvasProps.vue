@@ -822,7 +822,10 @@
           </div>
         </div>
 
-        <div class="project-content-title">{{$t('project.topology.name')}}</div>
+        <div class="project-content-title">
+          Appearance
+          <!--{{$t('project.topology.name')}}-->
+        </div>
 
         <div class="project-content-box" style="width: 100%">
           <div class="project-content-item half">

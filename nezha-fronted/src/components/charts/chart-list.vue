@@ -838,6 +838,8 @@
                       type: 'pie',
                       radius: ['20%', '100%'],
                       center: ['50%', '50%'],
+                      top:"20%",
+                      bottom:"20%",
                       roseType: 'radius',
                       minAngle:10,
                       itemStyle: {
