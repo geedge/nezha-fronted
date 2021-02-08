@@ -1350,12 +1350,12 @@
           }*/
         }else if(chartType === 'alertList'){
           this.setIsAlertList();
-        }else if(chartType === 'singleStat'){
+        }else if(chartType === 'singleStat' || chartType==='pie') {
           this.setIsSingleStat();
           this.resetElements();
           this.statistics='',
           this.editChart.param={
-            statistics:'',
+            statistics:'last',
             valueMapping:{
               type:'value',
               mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]
