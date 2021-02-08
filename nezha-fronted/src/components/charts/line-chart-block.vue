@@ -729,8 +729,9 @@
                 if(i===0){
                   let value=item.data[0];
                   let t_date = new Date(value);
-                  str += bus.timeFormate(t_date)
-                  str +=`<br/>`;
+                  str +=`<div style="margin-bottom: 5px">`;
+                  str += bus.timeFormate(t_date);
+                  str +=`</div>`;
                 }
                 let val =item.data[1]?parseFloat(Number(item.data[1]).toFixed(2)):'';
                 if(val===0){
@@ -965,8 +966,9 @@
                         if(i===0){
                           let value=item.data[0];
                           let t_date = new Date(value);
-                          str += bus.timeFormate(t_date)
-                          str +=`<br/>`;
+                          str +=`<div style="margin-bottom: 5px">`;
+                          str += bus.timeFormate(t_date);
+                          str +=`</div>`;
                         }
                         let val = parseFloat(Number(item.data[1]).toFixed(2));
                         if(val===0){
@@ -1132,8 +1134,9 @@
                         if(i===0){
                           let value=item.data[0];
                           let t_date = new Date(value);
-                          str += bus.timeFormate(t_date)
-                          str +=`<br/>`;
+                          str +=`<div style="margin-bottom: 5px">`;
+                          str += bus.timeFormate(t_date);
+                          str +=`</div>`;
                         }
                         let val = parseFloat(Number(item.data[1]).toFixed(2));
                         if(val===0){

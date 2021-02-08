@@ -836,14 +836,16 @@
                   if(chartInfo.type ==='pie'){
                     pieSeries={
                       type: 'pie',
-                      radius: ['20%', '100%'],
+                      radius: '100%',
                       center: ['50%', '50%'],
                       top:"20%",
                       bottom:"20%",
-                      roseType: 'radius',
+                      // roseType: 'radius',
                       minAngle:10,
                       itemStyle: {
-                        borderRadius: 5
+                        borderRadius: 5,
+                        borderColor: '#fff',
+                        borderWidth: 1
                       },
                       label: {
                         show: false
