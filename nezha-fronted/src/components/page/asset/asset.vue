@@ -434,10 +434,8 @@
         handler(n) {
           if (n.length === 0 && this.pageObj.pageNo > 1) {
             this.pageNo(this.pageObj.pageNo-1);
-          }else if(n.length === 0 && this.pageObj.pageNo === 1){
-            this.afterTableListChange();
           }
-
+          
           if(!this.delFlag){ // 不是删除时回到顶部
             this.$refs.assetTable.bodyWrapper.scrollTop = 0
           }else{
