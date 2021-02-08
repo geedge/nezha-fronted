@@ -2,10 +2,10 @@
   <div class="tooltip-box" style="display: flex;" v-if="isChart||chartData.tooltipShow">
     <span class="temp-dom"></span>
     <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressArr.length)">
-      <line-chart-block v-if="isChart || chartData.type !== 'table'"
+      <line-chart-block v-show="isChart || chartData.type !== 'table'"
                         :key="'inner' + chartData.id"
                         :from="'project'"
-                        :ref="'editChart' + 0"
+                        :ref="chartData.type !== 'table'?'editChart' + chartData.type:'editChart'"
                         :temp-dom="tempDom"
                         :panel-id="-1"
                         :is-lock="true"
@@ -13,17 +13,15 @@
                         :chartTitleShow="false"
                         :chart-data="chartData">
       </line-chart-block>
+      <chart-table  v-show="isChart || chartData.type === 'table'"
+                    :key="'inner' + 1"
+                    :from="'project'"
+                    ref="editCharttable"
+                    :is-lock="true"
+                    :panel-id="-1"
+                    :chart-data="chartData"
+                    :chart-index="0"></chart-table>
     </div>
-
-    <!--<chart-table  v-if="chartData.type === 'table'"-->
-                  <!--:ref="'editChart'+0"-->
-                  <!--:key="'inner' + 0"-->
-                  <!--:from="'project'"-->
-                  <!--:ref="'editChart' + 0"-->
-                  <!--:is-lock="true"-->
-                  <!--:panel-id="-1"-->
-                  <!--:chart-data="chartData"-->
-                  <!--:chart-index="0"></chart-table>-->
     <div class="tooltip-box-info" v-if="!isChart">
       <expression-info :chart-data="chartData" :filterTime="filterTime"/>
     </div>
@@ -33,6 +31,7 @@
 <script>
   import chart from '../../../page/dashboard/overview/chart';
   import lineChartBlock from '../../../charts/line-chart-block';
+  import chartTable from '../../../charts/chart-table';
   import bus from "../../../../libs/bus";
   import axios from 'axios';
   import ExpressionInfo from "../popData/expressionInfo";
@@ -41,6 +40,7 @@
     components:{
       ExpressionInfo,
       lineChartBlock,
+      chartTable,
     },
     props:{
       chartDataParent:{
@@ -56,7 +56,6 @@
       chartDataParent:{
         immediate: true,
         handler(n){
-          console.log(n);
           this.process(n)
         },
 
@@ -65,7 +64,7 @@
     data(){
 		  return{
         tempDom: {height: 400, width: ""},
-        chartDataTemp:{"id":8832,"prev":null,"next":null,"panelId":0,"title":"123","span":12,"height":400,"createAt":"2021-01-27 07:36:19","type":"line","unit":2,"weight":0,"pid":null,"buildIn":null,"seq":null,"param":{"last":0,"legendValue":{"total":"off","min":"off","avg":"off","last":"off","max":"off"},"threshold":"","valueMapping":{"mapping":[{"color":{"bac":"#fff","text":"#000"},"text":"","value":""}],"type":"text"},"url":"","nullType":"connected"},"elements":[{"id":14926,"chartId":null,"expression":"cache_evictions_total","type":"expert","legend":"","buildIn":null,"seq":null},{"id":14927,"chartId":null,"expression":"appDevice","type":"expert","legend":"","buildIn":null,"seq":null}],"sync":null,"asset":null,"isLoaded":true,"from":"__vue_devtool_undefined__","draggable":true,"resizable":true,"editable":true},
+        chartDataTemp:{"id":8832,"prev":null,"next":null,"panelId":0,"title":"123","span":12,"height":400,"createAt":"2021-01-27 07:36:19","unit":2,"weight":0,"pid":null,"buildIn":null,"seq":null,"param":{"last":0,"legendValue":{"total":"off","min":"off","avg":"off","last":"off","max":"off"},"threshold":"","url":"","nullType":"connected"},"sync":null,"asset":null,"isLoaded":true,"from":"__vue_devtool_undefined__","draggable":true,"resizable":true,"editable":true},
         chartData:{},
         filter:{
           end_time:bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss'),
@@ -120,8 +119,8 @@
           const len = chartItem.elements.length;
           if (len === 0) {
             this.$nextTick(() => {
-              if (this.$refs['editChart' + chartItem.id]) {
-                this.$refs['editChart' + chartItem.id].setData(chartItem, [], this.filter.panelId, this.filter, []);
+              if (this.$refs['editChart' + chartItem.type]) {
+                this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId, this.filter, []);
               }
             });
           } else {
@@ -151,7 +150,6 @@
             setTimeout(()=>{
               this.$nextTick(() => {
                 let res=chartItem.res;
-                console.log(res);
                 if (res.length > 0) {
                   let series = [];
                   let singleStatRlt = '';
@@ -168,18 +166,8 @@
                     if (response.status === 'success') {
                       errorMsg = "";
                       if (response.data.result) {
-                        // 循环处理每个elements下获取的数据列
-                        if (chartItem.type === 'singleStat') {
-                          if (response.data.result.length === 1) {
-                            let statistics = chartItem.param.statistics;
-                            if (response.data.result[0].values) {
-                              singleStatRlt = bus.getSingleStatRlt(statistics, response.data.result[0].values);
-                            }
-                          } else if (response.data.result.length > 1) {
-                            singleStatRlt = this.$t("dashboard.panel.singleStatErrorTip");
-                          }
-                        } else {
-                          response.data.result.forEach((queryItem, resIndex) => {
+                        // 循环处理每个elements下获取的数据
+                        response.data.result.forEach((queryItem, resIndex) => {
                             let seriesItem = {
                               theData: {
                                 name: '',
@@ -198,11 +186,6 @@
                               metric_name: '',
                             };
 
-                            if (chartInfo.type === 'stackArea') {
-                              seriesItem.theData.type = 'line';
-                              seriesItem.theData.stack = chartInfo.title;
-                              seriesItem.theData.areaStyle = {"opacity": 0.3};
-                            }
                             if((chartInfo.type === 'line'||chartInfo.type === 'stackArea'||chartInfo.type === 'bar')&& chartInfo.param && chartInfo.param.threshold){
                               seriesItem.theData.markLine={
                                 silent: true,
@@ -238,7 +221,7 @@
                               return [item[0], [item[1][0], Number(item[1][1])]]
                             });
                             // 判断是否有数据, && tagsArr.length > 0
-                            if (dpsArr.length > 0 && this.$refs['editChart' + chartItem.id]) {
+                            if (dpsArr.length > 0 && this.$refs['editChart' + chartItem.type]) {
                               tagsArr.forEach((tag, i) => {
                                 if (tag !== '__name__') {
                                   host += `${tag}="${queryItem.metric[tag]}",`;
@@ -254,7 +237,7 @@
                                 host = chartItem.elements[innerPos].expression;
                               }
                               //处理legend别名
-                              let alias = this.$refs['editChart' + chartItem.id].dealLegendAlias(host, chartItem.elements[innerPos].legend);
+                              let alias = this.$refs['editChart' + chartItem.type].dealLegendAlias(host, chartItem.elements[innerPos].legend);
                               if (!alias || alias === '') {
                                 alias = host;
                               }
@@ -288,20 +271,8 @@
                               });
                               series.push(seriesItem.theData);
                               seriesItem = null;
-                            } else if (chartItem.elements && chartItem.elements[innerPos]) {
-                              // 无数据提示
-                              /*
-                              const currentInfo = chartItem.elements[innerPos];
-                              const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                              this.$message.warning({
-                                duration: 15,
-                                content: errorMsg,
-                                closable: true,
-                              });
-                              */
                             }
                           });
-                        }
                       }
                     } else {
                       if (response.msg) {
@@ -316,7 +287,7 @@
                       }
                     }
                   });
-                  if (this.$refs['editChart' + chartItem.id]) {
+                  if (this.$refs['editChart' + chartItem.type]) {
                     let chartData = {
                       chartItem: chartItem,
                       series: series,
@@ -329,61 +300,23 @@
                       errorMsg: errorMsg,
                     }
                     if (chartItem.type === 'table') {//表格
-                      if (filterType === 'showFullScreen') {//全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, tableData,
-                          this.filter.panelId, this.filter, filterType, errorMsg);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, tableData,
-                          this.filter.panelId, this.filter, '', errorMsg);
-                      }
+                      this.$refs['editChart' + chartItem.type].setData(chartItem, tableData,this.filter.panelId, this.filter, filterType, errorMsg);
                     } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
                       if (series.length && chartItem.type === 4) {//曲线汇总
                         //series.push(sumData);//后续需要
                       }
-                      if (filterType === 'showFullScreen') {//全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, series,
-                          this.filter.panelId, this.filter, legend, filterType, errorMsg);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, series,
-                          this.filter.panelId, this.filter, legend, '', errorMsg);
-                      }
-                    } else if (chartItem.type === 'singleStat') {
-                      if (filterType === 'showFullScreen') {//全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, singleStatRlt,
-                          this.filter.panelId, this.filter, filterType, errorMsg);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, singleStatRlt,
-                          this.filter.panelId, this.filter, '', errorMsg);
-                      }
+                      this.$refs['editChart' + chartItem.type].setData(chartItem, series,this.filter.panelId, this.filter, legend, '', errorMsg);
                     }
                   }
                 } else {
                   const type = chartItem.type;
-                  if (this.$refs['editChart' + chartItem.id] ) {
+                  if (this.$refs['editChart' + chartItem.type] ) {
                     if (type === 'table') {
-                      if (filterType === 'showFullScreen') {//table的全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, [], this.filter.panelId,
-                          this.filter, filterType);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, [], this.filter.panelId,
-                          this.filter);
-                      }
+                      this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                        this.filter, filterType);
                     } else if (type === 'line' || type === 'bar' || type === 'stackArea' || chartItem.type === 4) {
-                      if (filterType === 'showFullScreen') {//table的全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, [], this.filter.panelId,
-                          this.filter, filterType);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, [], this.filter.panelId,
-                          this.filter);
-                      }
-                    } else if (chartItem.type === 'singleStat') {
-                      if (filterType === 'showFullScreen') {//全屏查询
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, '',
-                          this.filter.panelId, this.filter, filterType);
-                      } else {
-                        this.$refs['editChart' + chartItem.id].setData(chartItem, '',
-                          this.filter.panelId, this.filter);
-                      }
+                      this.$refs['editChart' + chartItem.type].setData(chartItem, [], this.filter.panelId,
+                        this.filter, filterType);
                     }
                   }
                 }

@@ -1022,6 +1022,10 @@ const cn = {
       fromArrow:"起点箭头",
       toArrow:"终点箭头",
       arrowColor:"箭头颜色",
+      fontSize:'字体大小',
+      fontColor:'字体颜色',
+      align:'对齐',
+      opacity:'透明度',
     },
   },
   date:{

@@ -5,63 +5,6 @@
 <template>
   <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
     <!--project主要信息-->
-    <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
-      <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
-        <div class="facade-top-title">
-          Project information
-        </div>
-        <div>
-          <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
-          <span><span class="label">Name :</span>{{projectInfo.name}}</span>
-        </div>
-        <div>
-          <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
-        </div>
-        <!--<div>-->
-        <!--<span>-->
-        <!--<span class="label">Alert state :</span>-->
-        <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
-        <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
-        <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
-        <!--</span>-->
-        <!--</div>-->
-        <div>
-          <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
-        </div>
-      </div>
-      <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
-        <div class="facade-top-title">
-          <span class="label" style="padding-left: 0;">Alert :</span>
-          {{projectInfo.total}}
-        </div>
-        <div class="facade-top-right-content">
-          <div>
-            <div class="content-P1-title">
-              {{returnSeverityLabel('P1')}}
-            </div>
-            <div>
-              {{projectInfo.alertStat[0] || 0}}
-            </div>
-          </div>
-          <div>
-            <div class="content-P2-title">
-              {{returnSeverityLabel('P2')}}
-            </div>
-            <div>
-              {{projectInfo.alertStat[1] || 0}}
-            </div>
-          </div>
-          <div style="margin-bottom: 20px;">
-            <div class="content-P3-title">
-              {{returnSeverityLabel('P3')}}
-            </div>
-            <div>
-              {{projectInfo.alertStat[2] || 0}}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="project-title" v-if="showTopTools&&!fromOverView&&!fromPrev" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
         <!--工具栏-->
@@ -131,6 +74,7 @@
                   </svg>
                 </div>
               </div>
+                <el-option :disabled="true" :value="false">默认连线类型</el-option>
                 <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
                   <div class="icon-item">
                     <svg>
@@ -174,7 +118,69 @@
            </button>
          </span>
       </div>
-      <span class="edit-topologyLine float-right" style="padding-top: 5px" v-show="!editTopologyFlag">
+      <div style="width: 100%;display: flex;justify-content: space-between">
+        <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
+          <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
+            <div class="facade-top-title">
+              Project information
+            </div>
+            <div>
+              <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
+              <span><span class="label">Name :</span>{{projectInfo.name}}</span>
+            </div>
+            <div>
+              <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
+            </div>
+            <!--<div>-->
+            <!--<span>-->
+            <!--<span class="label">Alert state :</span>-->
+            <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
+            <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
+            <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <div>
+              <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
+            </div>
+          </div>
+          <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
+            <div class="facade-top-title">
+              <span class="label" style="padding-left: 0;">Alert :</span>
+              {{projectInfo.total}}
+            </div>
+            <div class="facade-top-right-content">
+              <div>
+                <div class="content-P1-title">
+                  {{returnSeverityLabel('P1')}}
+                </div>
+                <div>
+                  {{projectInfo.alertStat[0] || 0}}
+                </div>
+              </div>
+              <div>
+                <div class="content-P2-title">
+                  {{returnSeverityLabel('P2')}}
+                </div>
+                <div>
+                  {{projectInfo.alertStat[1] || 0}}
+                </div>
+              </div>
+              <div style="margin-bottom: 20px;">
+                <div class="content-P3-title">
+                  {{returnSeverityLabel('P3')}}
+                </div>
+                <div>
+                  {{projectInfo.alertStat[2] || 0}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div :style="{flex:1,'padding-right': '15px','text-align':topologyInfo.type,'font-size':topologyInfo.fontSize,'color':topologyInfo.fontColor,opacity:topologyInfo.opacity}">{{topologyInfo.name}}</div>
+        <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag">
+
+
+
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button"
         >
@@ -184,6 +190,7 @@
                            :refresh-data-func="reload" v-model="searchTime" :use-chart-unit="false"
                            ref="pickTime"></pick-time>
       </span>
+      </div>
     </div>
     <div class="page">
       <!--画布部分-->
@@ -364,6 +371,13 @@
           bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
           bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
         ],
+        topologyInfo:{
+          fontSize:14,
+          align:'left',
+          fontColor:"#000000",
+          opacity:1,
+          name:'',
+        },
         saveData:{},
         dataLength:0,
         editTopologyFlag:false,
@@ -445,6 +459,7 @@
         projectInfoShow:false,
         projectAlertShow:false,
         previewShow:false,
+        penId:undefined,
       };
     },
     components:{
@@ -634,7 +649,6 @@
                 getTopology(this.topologyIndex).centerView(50);
                 setTimeout(()=>{
                   getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                    console.log(item.animatePlay,123123123123123123123)
                    if(item.animatePlay){
                      item.stopAnimate();
                      setTimeout(()=>{
@@ -694,6 +708,7 @@
             Promise.all(promiseArr).then((res)=>{
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
+              this.objChange=false;
               if(this.fromOverView){
                 let flag=false;
 
@@ -712,9 +727,9 @@
                     flag=true
                   }
                 });
+                getTopology(this.topologyIndex).centerView(50);
                 setTimeout(()=>{
                   getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                    console.log(item.animatePlay,123123123123123123123)
                     if(item.animatePlay){
                       item.stopAnimate();
                       setTimeout(()=>{
@@ -757,9 +772,7 @@
           }
           this.$get('/project/topo',{projectId:this.obj.id}).then(res=>{
             let data=res.data.topo;
-            console.log(data,'topo')
             if(!res.data.topo || !data.pens){
-              console.log(123123123123);
               data={
                 bkColor:'#FFFFFF',
                 gridSize:10,
@@ -770,8 +783,16 @@
               this.projectInfoShow=true;
               this.projectAlertShow=true;
               this.saveData={...data};
+              this.topologyInfo.name=this.obj.name;
               resolve(data);
             }else{
+              this.topologyInfo={
+                fontSize:data.data.fontSize,
+                align:data.data.align,
+                fontColor:data.data.fontColor,
+                opacity:data.data.opacity,
+                name:data.name
+              }
               let timer=setInterval(()=>{
                 if(!this.imgInit){
                   return
@@ -802,7 +823,6 @@
                 }
 
                 Promise.all(promiseArr).then(res=>{
-                  console.log(res);
                   res.forEach((response,index)=>{
                     let item=data.pens[index];
                       if(item.type===0){
@@ -820,7 +840,6 @@
                           item.data.state.alert=true;
                         }
                         item.data.state.error= item.data.state.asset || item.data.state.endpoint || item.data.state.alert;
-                        console.log(item.data);
                       }
                   });
                   self.saveData={...data};
@@ -854,7 +873,6 @@
             }
           })
         }
-        
         if(maxLevel!==0){
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
@@ -1036,7 +1054,6 @@
 
       //显示module的工具
       showNodeTools(index,pen){
-        console.log(pen);
         this.nodesArr.forEach((item,i)=>{
           item.data.show=i===index;
         })
@@ -1104,7 +1121,7 @@
       },
 
       onMessage(event,data,e){
-        console.log('onMessage',event,data);
+        // console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
         if(getTopology(this.topologyIndex)){
           this.cachesIndex=getTopology(this.topologyIndex).caches.index;
@@ -1141,8 +1158,8 @@
                 level:0,
                 base:true,
               }],
-              expressArr:[],
-              legends:[],
+              expressArr:[""],
+              legends:[""],
               tooltipShow:true,
               panelName:'topologyName',
               unit:2,
@@ -1175,8 +1192,8 @@
                 level:0,
                 base:true,
               }],
-              expressArr:[],
-              legends:[],
+              expressArr:[""],
+              legends:[""],
               tooltipShow:true,
               panelName:'topologyName',
               unit:2,
@@ -1188,7 +1205,6 @@
               url:'',
             };
             data.animateColor='#FA901C'
-            console.log(data);
           }
           if(data.type===0||data.type===1){
             data.lineWidth=data.data.lineWidth;
@@ -1247,7 +1263,10 @@
               };
               this.$nextTick(()=>{
                 if(this.$refs.CanvasProps){
-                  this.$refs.CanvasProps.tab='1';
+                  if(this.penId!==data.id){
+                    this.$refs.CanvasProps.tab='1';
+                  }
+                  this.penId=data.id;
                 }
               });
               break;
@@ -1268,7 +1287,10 @@
               }
               this.$nextTick(()=>{
                 if(this.$refs.CanvasProps){
-                  this.$refs.CanvasProps.tab='1';
+                  if(this.penId!==data.id){
+                    this.$refs.CanvasProps.tab='1';
+                  }
+                  this.penId=data.id;
                 }
               });
               break;
@@ -1284,6 +1306,7 @@
               };
               break;
             case 'space':
+              this.penId=undefined;
               this.props={
                 node:null,
                 line:null,
@@ -1321,7 +1344,6 @@
               }
               break;
             case 'resize':
-              console.log(this.topologyIndexF);
               let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
               this.toolShow.attrCord=[domRect.width-350,0];
               this.toolShow.height=domRect.height;
@@ -1577,6 +1599,7 @@
           getTopology(this.topologyIndex).lock(0);
           getTopology(this.topologyIndex).data.pens.forEach((item)=>{//停止动画 以及赋值默认data
             item.stopAnimate();
+            item.animateType=item.data.animateType;
             if(item.type===0){
               item.fillStyle=item.data.fillStyle;
               item.strokeStyle=item.data.strokeStyle;
@@ -1631,8 +1654,12 @@
         });
         if(flag){
           this.editTopologyFlag=false;
+          topologyData.rule=false;
+          topologyData.grid=false;
+          topologyData.gridSize=10;
           topologyData.pens.forEach(item=>{
             item.animatePlay=item.data.animatePlay;
+            item.data.animateType=item.animateType;
             if(item.type===0&&JSON.stringify(item.data.imageId)){
               item.image="";
               item.animateFrames=[];
@@ -1700,7 +1727,9 @@
         data.pens.forEach((item)=>{
           item.animatePlay=item.data.animatePlay;
         });
-        this.topoPrevData=data;
+        this.topoPrevData=JSON.parse(JSON.stringify(data));
+        this.topoPrevData.rule=false;
+        this.topoPrevData.grid=false;
         this.previewShow=true;
       },
       /*tools 方法*/
@@ -1739,12 +1768,10 @@
         }
       },
       previewBeforeClose(done){
-        console.log(123123123123);
         this.$emit('changeTopologyIndexF');
         done();
       },
       selpopIs(pen,state){//判断是否有图表
-        console.log(pen,state)
         let flag=true;
         if(state.id==='other'){
           flag=false;
@@ -1755,7 +1782,6 @@
         return flag
       },
       modelPopError(pen,state){
-        console.log(pen,state)
         return false;
         if(item.id==='asset'&&this.activeModelItem.assetError){
           return true;
@@ -2072,16 +2098,13 @@
   .facade-top{
     min-height: 138px;
     display: flex;
-    margin: 12px 0;
+    margin: 4px 0;
     height: calc(16% - 40px);
     font-size: 12px;
-    position: absolute;
-    top: 5px;
-    left: 15px;
     z-index: 10;
+    padding-left: 15px;
   }
   .facade-top > div{
-    height: calc(100% - 40px);
     width: 18%;
     min-width: 315px;
     background: #FFFFFF;
@@ -2275,7 +2298,7 @@
   }
 
   .special-select /deep/ .el-select-dropdown {
-    width: 75px !important;
+    width: 130px !important;
 
     .el-select-dropdown__item {
       padding: 0 0 0 10px;

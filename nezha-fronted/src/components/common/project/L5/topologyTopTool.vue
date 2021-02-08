@@ -1,7 +1,7 @@
 <template>
   <div class="tool-top" id="tool-top">
-    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-revoke" /> </div>
-    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-revoke1" /> </div>
+    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="'撤销'"/> </div>
+    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="'重做'"/> </div>
     <!--<div class="top-tool-item" @click="centerView"> 居中</div>-->
     <!--<div class="top-tool-item" @click="fitView"> 自适应</div>-->
     <!--<div :class="['top-tool-item',toolShow.node?'tool-item-active':'']" @click="toolShowChange('node')"> 节点工具 </div>-->
@@ -19,6 +19,7 @@
             popper-class="scale-number-popover"
            >
             <div class="scale-num-pop" style=" width: 91px;min-width: 91px">
+              <div>缩放级别</div>
               <div @click="scale(50)" :class="['scale-num-pop',scaleNum==50?'is-active':'']">50</div>
               <div @click="scale(100)" :class="['scale-num-pop',scaleNum==100?'is-active':'']">100</div>
               <div @click="scale(200)" :class="['scale-num-pop',scaleNum==200?'is-active':'']">200</div>
@@ -27,6 +28,26 @@
           </el-popover>
           <span class="scale-number-add scale-number-symbol" @click="changeScale(25)">+</span>
         </span>
+    </div>
+    <div  class="top-tool-item top-tool-item-switch">
+      <label>{{$t('project.topology.grids')}}</label>
+      <el-switch
+        v-model="option.grid"
+        :active-value="true"
+        :inactive-value="false"
+        active-color="#ee9d3f"
+        @change="changeOption('grid')">
+      </el-switch>
+    </div>
+    <div class="top-tool-item top-tool-item-switch">
+      <label>{{$t('project.topology.rule')}}</label>
+      <el-switch
+        v-model="option.rule"
+        :active-value="true"
+        :inactive-value="false"
+        active-color="#ee9d3f"
+        @change="changeOption('rule')">
+      </el-switch>
     </div>
     <!--<div class="top-tool-item" @click="clear"> 清空画布 </div>-->
 
@@ -46,6 +67,8 @@
           fromArrow:'',
           toArrow:'triangleSolid',
           scale:100,
+          grid:false,
+          rule:false,
         },
         scaleNum:100,
         penLineType:[
@@ -88,7 +111,7 @@
         if(key==='scale'){
           this.scaleNum=(JSON.stringify(dataOption[key])?dataOption[key]*100:this.scaleNum)
         }else{
-          this.option[key]=(dataOption[key]?dataOption[key]:this.option[key]);
+          this.option[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.option[key]);
         }
       })
     },
@@ -96,6 +119,7 @@
       // todo 1清空后的 处理属性工具的默认值 2工具栏的移动 以及节点工具和属性工具的移动 3 结束箭头类型的方向
       changeOption(key){
         getTopology(this.index).data[key]=this.option[key];
+        getTopology(this.index).render();
       },
       undo(){//撤销
         getTopology(this.index).undo();
@@ -133,12 +157,14 @@
       clear(){
         let data={...getTopology(this.index).data};
         data.pens=[];
-        getTopology(this.index).open(data);
+        getTopology(this.index).open({});
       },
       toolShowChange(attr){
         this.$emit('toolShowChange',attr);
-      }
+      },
+      changeOpt(key,val){
 
+      }
     }
   }
 </script>
@@ -241,6 +267,12 @@
     /deep/ .el-input-number__increase{
         margin-right: 5px;
       }
+  }
+  .top-tool-item-switch{
+    padding: 5px 11px;
+    label{
+      vertical-align: middle;
+    }
   }
   .top-tool-item-disabled{
     color: #CECECE;

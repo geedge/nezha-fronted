@@ -312,6 +312,7 @@ export function myCubeAnchors(node) {//立方体锚点
 
 
 export function onChangeAnimate(node,animateType,fillStyle,strokeStyle) {
+  node.animateType=animateType;
   if (node.animateType === 'custom') {
     return;
   }

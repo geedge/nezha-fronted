@@ -1028,6 +1028,10 @@ const en = {
       fromArrow:"From arrow",
       toArrow:"To arrow",
       arrowColor:"Arrow color",
+      fontSize:'Font Size',
+      fontColor:'Font Color',
+      align:'Align',
+      opacity:'Opacity',
     },
   },
   date:{

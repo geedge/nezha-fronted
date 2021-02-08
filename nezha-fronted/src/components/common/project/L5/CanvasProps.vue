@@ -820,6 +820,78 @@
                         @change="changeTopologyOpt"></el-input>
             </div>
           </div>
+
+          <div class="project-content-item half">
+            <label>{{$t('project.topology.fontSize')}}</label>
+            <div class="full pr10 h32">
+              <el-input-number
+                @focus="inputFocus"
+                @blur="inputBlur"
+                :precision="2"
+                controls-position="right"
+                size="small"
+                name="fontSize"
+                class="input"
+                v-model.number="topologyData.data.fontSize"
+                :readonly="readonly"
+                required
+                :min="10"
+                @change="changeTopologyOpt(topologyData.data.fontSize,'fontSize')"></el-input-number>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>{{$t('project.topology.fontColor')}}</label>
+            <div class="full pr10 h32">
+              <div class="color-show" @click="colorPickerClick('fontColor')">
+                <div class="color-show-left" :style="{background:topologyData.data.fontColor}"></div>
+                <span class="color-text"> {{topologyData.data.fontColor}}</span>
+                <span class="color-arrows">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fontColor']&&!$refs['fontColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fontColor']&&$refs['fontColor'].showPicker"></i>
+                </span>
+              </div>
+              <div class="color-content" ref="color-content">
+                <el-color-picker
+                  v-model="topologyData.data.fontColor"
+                  ref="fontColor"
+                  @active-change="(val)=>changeTopologyOpt(val,'fontColor',true)"
+                >
+                </el-color-picker>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>{{$t('project.topology.align')}}</label>
+            <div class="full pr10 h32">
+              <el-radio-group v-model="topologyData.data.align" size="small" @change="changeTopologyOpt">
+                <el-radio-button label="left">left</el-radio-button>
+                <el-radio-button label="bottom">center</el-radio-button>
+                <el-radio-button label="right">right</el-radio-button>
+              </el-radio-group>
+            </div>
+          </div>
+
+          <div class="project-content-item half">
+            <label>{{$t('project.topology.opacity')}}</label>
+            <div class="full pr10 h32">
+              <el-input-number
+                @focus="inputFocus"
+                @blur="inputBlur"
+                :precision="2"
+                controls-position="right"
+                size="small"
+                name="fontSize"
+                class="input"
+                v-model.number="topologyData.data.opacity"
+                :readonly="readonly"
+                required
+                :step="0.2"
+                :min="0"
+                @change="changeTopologyOpt(topologyData.data.opacity,'opacity')"></el-input-number>
+            </div>
+          </div>
         </div>
 
         <div class="project-content-title">
@@ -858,82 +930,7 @@
             </div>
           </div>
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.defaultLineWidth')}}</label>
-            <div class="full pr10 h32">
-              <el-input-number
-                @focus="inputFocus"
-                @blur="inputBlur"
-                :precision="2"
-                controls-position="right"
-                size="small"
-                name="x"
-                class="input"
-                v-model.number="topologyData.data.lineWidth"
-                required
-                :min="1"
-                @change="changeTopologyOpt(topologyData.data.lineWidth,'lineWidth')">
-              </el-input-number>
-            </div>
-          </div>
-
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.grids')}}</label>
-            <div class="full pr10 h32">
-              <el-switch
-                v-model="topologyData.data.grid"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-                @change="changeTopologyOpt(topologyData.data.grid,'grid')">
-              </el-switch>
-            </div>
-          </div>
-
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.gridSize')}}</label>
-            <div class="full pr10 h32">
-              <el-input-number
-                @focus="inputFocus"
-                @blur="inputBlur"
-                :precision="2"
-                controls-position="right"
-                size="small"
-                name="x"
-                :min="0"
-                class="input"
-                v-model.number="topologyData.data.gridSize"
-                :readonly="readonly"
-                required
-                @change="changeTopologyOpt(topologyData.data.gridSize,'gridSize')"></el-input-number>
-            </div>
-          </div>
-
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.gridColor')}}</label>
-            <div class="full pr10 h32">
-              <div class="color-show" @click="colorPickerClick('gridColor')">
-                <div class="color-show-left" :style="{background:topologyData.data.gridColor}"></div>
-                <span class="color-text"> {{topologyData.data.gridColor}}</span>
-                <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['gridColor']&&!$refs['gridColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['gridColor']&&$refs['gridColor'].showPicker"></i>
-                </span>
-              </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  v-model="topologyData.data.gridColor"
-                  ref="gridColor"
-                  @active-change="(val)=>changeTopologyOpt(val,'gridColor',true)"
-                >
-                </el-color-picker>
-              </div>
-
-
-            </div>
-          </div>
-
-          <div class="project-content-item half">
+         <!-- <div class="project-content-item half">
             <label>{{$t('project.topology.rule')}}</label>
             <div class="full pr10 h32">
               <el-switch
@@ -943,28 +940,6 @@
                 active-color="#ee9d3f"
                 @change="changeTopologyOpt(topologyData.data.rule,'rule')">
               </el-switch>
-            </div>
-          </div>
-
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.ruleColor')}}</label>
-            <div class="full pr10 h32">
-              <div class="color-show" @click="colorPickerClick('ruleColor')">
-                <div class="color-show-left" :style="{background:topologyData.data.ruleColor}"></div>
-                <span class="color-text"> {{topologyData.data.ruleColor}}</span>
-                <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['ruleColor']&&!$refs['ruleColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['ruleColor']&&$refs['ruleColor'].showPicker"></i>
-                </span>
-              </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  v-model="topologyData.data.ruleColor"
-                  ref="ruleColor"
-                  @active-change="(val)=>changeTopologyOpt(val,'ruleColor',true)"
-                >
-                </el-color-picker>
-              </div>
             </div>
           </div>
 
@@ -1066,7 +1041,7 @@
                 </el-option>
               </el-select>
             </div>
-          </div>
+          </div>-->
 
         </div>
 
@@ -1212,6 +1187,10 @@
             projectInfo:true,
             alertInfo:true,
             url:'',
+            fontSize:14,
+            align:'left',
+            fontColor:"#000000",
+            opacity:1,
           }
         },
         pen:{
@@ -1379,12 +1358,11 @@
     },
     created(){
       let dataOption=getTopology(this.index).data;
-      console.log(dataOption);
       if(!dataOption.data){
         dataOption.data={}
       }
       Object.keys(this.topologyData.data).forEach((key)=>{
-       if(key === 'projectInfo' || key === 'alertInfo'){
+        if(key === 'projectInfo' || key === 'alertInfo' || key==='fontSize' || key === 'align' || key === 'fontColor' || key === 'opacity'){
          this.topologyData.data[key]=(JSON.stringify(dataOption.data[key])?dataOption.data[key]:this.topologyData.data[key]);
        } else {
          this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
@@ -1397,9 +1375,8 @@
       // this.topologyData.data.rule= !!dataOption.rule;
       // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
       // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
-      console.log(this.topologyData);
     },
-    updated(){
+    updated(n,o){
       if(!this.selection.pen){//没选中node line返回
         return;
       }
@@ -1455,7 +1432,6 @@
         })
       },
       tabClick(n){
-        console.log(n);
         if(this.selection.pen&&this.tab=='1'){
 
         }
@@ -1473,7 +1449,6 @@
         this.onChange()
       },
       onChange(value){
-        console.log(value,this.selection.pen.lineWidth)
         if(value==='lineWidth'){
           this.selection.pen.lineWidth=this.selection.pen.data.lineWidth;
         }
@@ -1538,8 +1513,6 @@
       colorPickerClickTable(ref,row){
         row.showColor=row.color.fill;
         row.showType='fill';
-        console.log(row);
-        console.log(this.$refs[ref]);
         this.$nextTick(()=>{
           this.$refs[ref][0].showPicker=true;
         })
@@ -1577,7 +1550,6 @@
             flag=true
           }
         })
-        console.log(obj,flag);
         if(flag){
           return
         }
@@ -1594,13 +1566,12 @@
           this.topologyData.data[key]=val;
         }
         Object.keys(this.topologyData.data).forEach((key1)=>{
-          if(key1 === 'projectInfo' || key1 === 'alertInfo'){
+          if(key1 === 'projectInfo' || key1 === 'alertInfo' || key1==='fontSize' || key1 === 'align' || key1 === 'fontColor' || key1 === 'opacity'){
             getTopology(this.index).data.data[key1]=this.topologyData.data[key1];
           } else {
             getTopology(this.index).data[key1]=this.topologyData.data[key1];
           }
         });
-        // console.log(dataOption[key]);
         getTopology(this.index).render();
       },
       colorRGBtoHex(color){//获取颜色16进制数
@@ -1673,7 +1644,7 @@
         });
       },
       valueMappingValueChange(index,row){
-        console.log(index,row)
+
       },
       valueMappingDel(index,row){
         this.selection.pen.data.valueMapping.splice(index,1);
@@ -1682,7 +1653,6 @@
         });
       },
       inputFocus(e){
-        console.log(e.path[2].children[0],e.path[2].children[1]);
         e.path[2].children[0].setAttribute("tabindex","0");
         e.path[2].children[1].setAttribute("tabindex","1");
       },
@@ -1772,6 +1742,9 @@
     .half.project-content-item {
       width: calc(50% - 15px);
       height: 64px;
+      label{
+        width: auto;
+      }
     }
 
     .project-content-item {
