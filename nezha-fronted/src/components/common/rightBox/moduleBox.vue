@@ -240,7 +240,7 @@
           <el-input placeholder="" v-model="editModule.path" size="small" id="module-box-input-path"></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param" v-if="editModule.type.toLowerCase() == 'http'">
+        <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param label-position" v-if="editModule.type.toLowerCase() == 'http'">
 
           <div style="text-align: right;margin-bottom: 5px">
             <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
