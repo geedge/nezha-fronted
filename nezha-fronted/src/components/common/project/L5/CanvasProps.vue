@@ -148,9 +148,9 @@
               <el-row class="thresholds-title">
                 <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}</el-col>
                 <el-col class="thresholds-cell" :span="4">{{$t('project.topology.color')}}</el-col>
-                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.value')}}</el-col>
+                <el-col class="thresholds-cell" :span="6">{{$t('project.topology.value')}}</el-col>
                 <el-col class="thresholds-cell" :span="8">{{$t('project.topology.animation')}}</el-col>
-                <el-col class="thresholds-cell" :span="4"></el-col>
+                <el-col class="thresholds-cell" :span="2"></el-col>
               </el-row>
 
               <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
@@ -189,8 +189,8 @@
                   </span>
                   <span v-else>base</span>
                 </el-col>
-                <el-col class="thresholds-cell" :span="4" style="display: flex">
-                  <span v-if="item.level!==0"> > </span>
+                <el-col class="thresholds-cell" :span="6" style="display: flex">
+                  <span v-if="item.level!==0" style="display: inline-block;width: 30%;text-align: center"> > </span>
                   <el-input-number
                     v-if="item.level!==0"
                     v-model="item.value"
@@ -228,7 +228,7 @@
                   <!--默认-->
                   <span v-if="item.level===0">base</span>
                 </el-col>
-                <el-col class="thresholds-cell" :span="4" style="text-align: center">
+                <el-col class="thresholds-cell" :span="2" style="text-align: center">
                   <i v-if="item.level!==0" @click="valueMappingDel(index, item)"
                      class="nz-icon nz-icon-minus">
                   </i>

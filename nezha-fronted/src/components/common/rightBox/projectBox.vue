@@ -13,7 +13,7 @@
     <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") + "  ID：" + editProject.id : $t("overall.createProject")}}</div>
     <!-- end--标题-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editProject" label-position="right" label-width="120px" :rules="rules" ref="projectForm">
+      <el-form class="right-box-form right-box-form-left" :model="editProject" label-position = "top" label-width="120px" :rules="rules" ref="projectForm">
         <el-form-item :label='$t("project.project.projectName")' prop="name">
           <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name" id="project-box-input-name"></el-input>
         </el-form-item>

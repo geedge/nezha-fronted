@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form :model="editMenu" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="130px" ref="menuForm" size="small">
+      <el-form :model="editMenu" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="130px" ref="menuForm" size="small">
         <el-form-item :label="$t('config.menus.parent')" prop="parentId">
           <tree-select :multiple="false" :options="menus" label="id" noChildrenText="" noOptionsText="" placeholder="" v-model="editMenu.parentId" id="menu-box-input-parent"></tree-select>
         </el-form-item>

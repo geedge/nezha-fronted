@@ -17,13 +17,13 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form :disabled="detail" :model="editRole" :rules="rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="roleForm">
+      <el-form :disabled="detail" :model="editRole" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" ref="roleForm">
         <!--name-->
         <el-form-item :label="$t('config.roles.name')" prop="name">
           <el-input  maxlength="64" placeholder="" id="role-box-input-name"
                     show-word-limit size="small" type="text" v-model="editRole.name"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.roles.remark')">
+        <el-form-item :label="$t('config.roles.description')">
           <el-input :rows="2" size='mini' type="textarea" v-model="editRole.remark" id="role-box-input-remark"/>
         </el-form-item>
 

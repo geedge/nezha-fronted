@@ -15,12 +15,12 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editAlertRule" label-position="right" label-width="120px" :rules="rules" ref="alertRuleForm">
+      <el-form class="right-box-form right-box-form-left" :model="editAlertRule" label-position = "top" label-width="120px" :rules="rules" ref="alertRuleForm">
         <!--alertName-->
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small" id="alert-box-input-name"></el-input>
         </el-form-item>
-        <div style="width: calc(100% - 70px);margin-left: 70px">
+        <div style="width: calc(100% - 15px);margin-left: 15px">
           <promql-input
             ref="promql"
             :expression-list.sync="expressions"
@@ -31,13 +31,13 @@
           ></promql-input>
         </div>
         <!--operator-->
-        <el-form-item :label="$t('alert.config.operator')" prop="operator" style="width: 400px;display: inline-block;">
+        <el-form-item :label="$t('alert.config.operator')" prop="operator" style="display: inline-block;">
           <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator">
             <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <!--threshold-->
-        <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="width: 415px;display: inline-block;">
+        <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
           <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
           </el-input>
         </el-form-item>
@@ -305,13 +305,13 @@
     justify-content: left;
     justify-items: center;
     align-items: center;
-    width: calc(100% - 220px);
+    width: calc(100% - 46px);
     padding: 10px 15px;
     background: #F6F6F6;
     color: #999999;
     margin-top: -13px;
     margin-bottom: 18px;
-    margin-left: 190px;
+    margin-left: 15px;
     font-size: 14px;
   }
   .rule-severity-remark .nz-icon-info-normal{

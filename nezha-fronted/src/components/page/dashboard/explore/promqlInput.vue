@@ -22,7 +22,7 @@
           <!--right-box里的样式-->
           <template v-if="styleType == 2">
             <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1" style="width: 100%;">
-              <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+              <el-col :style="{'width':plugins.indexOf('metric-selector') > -1 ? '120px':'100%', 'padding-right': '20px', 'text-align':plugins.indexOf('metric-selector') > -1 ? 'right':'left', 'color': '#666','font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold'}">
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
                   <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
@@ -30,7 +30,7 @@
                 </el-dropdown>
                 <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
               </el-col>
-              <el-col style="width: calc(100% - 120px); height: 100%;">
+              <el-col :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 120px)':'100%',height: '100%',}">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                   <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                   <el-input v-model="expressionList[index]" @change="metricChange"></el-input>

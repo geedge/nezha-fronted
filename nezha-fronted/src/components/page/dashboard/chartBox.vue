@@ -166,7 +166,7 @@
 
       <!-- begin--表单-->
       <div class="right-box-form-box" ref="scrollbar">
-        <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position="right" label-width="120px" ref="chartForm">
+        <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" ref="chartForm">
           <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
             <!--<el-autocomplete
               :fetch-suggestions="panelSuggestion"
@@ -289,7 +289,7 @@
           <div class="right-box-sub-title" v-if="isAlert">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
           <div style="width: 100%" v-if="!isUrl"></div>
 
-          <el-row class="element-item" style="width: calc(100% - 108px);margin-left: 108px" v-if="isAlert">
+          <el-row class="element-item" v-if="isAlert">
             <alert-chart-param @on-enter-complate="getAlertParam" ref="alertParamBox"></alert-chart-param>
           </el-row>
           <div id="chart-box-expression-box" style="margin-bottom: 20px">
@@ -400,7 +400,7 @@
         </template>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'" id="chart-box-valueMapping-type2">
           <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
-            <div class="half-form-item-other" style="display: inline-block;margin-left: 70px">
+            <div class="half-form-item-other" style="display: inline-block;margin-left: 15px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
                 <el-input size="mini" type="input" v-model="mapping.from"></el-input>
               </el-form-item>
@@ -452,7 +452,7 @@
           </div>
           <div style="margin-bottom: 20px; width: 100%" ></div>
           <div style="display: flex;">
-            <span style="margin-left: 150px;"></span>
+            <span style="margin-left: 75px;"></span>
             <template v-for="item in sortedOptionKeys">
               <div style="flex: 1">
                 <span style="margin-right: 10px;color:rgb(102, 102, 102)">{{item.label}}</span>

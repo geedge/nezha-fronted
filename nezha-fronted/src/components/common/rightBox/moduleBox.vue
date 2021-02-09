@@ -15,13 +15,13 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box" ref="scrollbar">
-      <el-form class="right-box-form right-box-form-left" :model="editModule" label-position="right" label-width="120px" :rules="rules" ref="moduleForm">
+      <el-form class="right-box-form right-box-form-left" :model="editModule" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
         <el-form-item :label='$t("project.project.project")' prop="project">
           <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small" id="module-box-input-project">
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="180px" style="width: calc(100% - 8px);margin-left: 8px;">
+        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="125px" style="width: calc(100% - 8px);margin-left: 8px;">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
 
@@ -43,7 +43,7 @@
             <el-col :span="6">
               <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="walk">
                 <select-walk ref="selectWalk" :walkData="walkData" :expandedWalk="expandedWalkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="editModule.walk">
                   <template v-slot:trigger>
@@ -72,7 +72,7 @@
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.version')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="version">
                 <el-radio-group v-model.number="editModule.version" size="small" id="module-box-input-version">
                   <el-radio-button :label="2"></el-radio-button>
@@ -86,7 +86,7 @@
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.maxRepetitions')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="max_repetitions">
                 <el-input v-model.number="editModule.max_repetitions" size="small" id="module-box-input-max_repetitions"></el-input>
               </el-form-item>
@@ -97,7 +97,7 @@
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.retries')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="retries">
                 <el-input v-model.number="editModule.retries" size="small" id="module-box-input-retries"></el-input>
               </el-form-item>
@@ -108,7 +108,7 @@
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.timeout')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="timeout">
                 <el-input v-model.number="editModule.timeout" size="small" id="module-box-input-timeout">
                   <template slot="append">second</template>
@@ -128,7 +128,7 @@
             <el-col :span="6">
               <div class="sub-label sub-label-required">{{$t('project.module.community')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="community">
                 <el-input v-model.trim="editModule.community" maxlength="64" show-word-limit size="small" id="module-box-input-community"></el-input>
               </el-form-item>
@@ -141,7 +141,7 @@
               <el-col :span="6">
                 <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="username">
                   <el-input v-model.trim="editModule.username" maxlength="64" show-word-limit size="small" id="module-box-input-username"></el-input>
                 </el-form-item>
@@ -152,7 +152,7 @@
               <el-col :span="6">
                 <div class="sub-label">{{$t('project.module.securityLevel')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="security_level">
                   <el-radio-group size="small" v-model="editModule.security_level" id="module-box-input-security_level">
                     <el-radio-button label="noAuthNoPriv"></el-radio-button>
@@ -167,7 +167,7 @@
               <el-col :span="6">
                 <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="password">
                   <el-input v-model.trim="editModule.password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-password"></el-input>
                 </el-form-item>
@@ -178,7 +178,7 @@
               <el-col :span="6">
                 <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="auth_protocol">
                   <el-radio-group v-model="editModule.auth_protocol" size="small" id="module-box-input-auth_protocol">
                     <el-radio-button label="MD5"></el-radio-button>
@@ -192,7 +192,7 @@
               <el-col :span="6">
                 <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="priv_protocol">
                   <el-radio-group v-model="editModule.priv_protocol" size="small" id="module-box-input-priv_protocol">
                     <el-radio-button label="DES"></el-radio-button>
@@ -206,7 +206,7 @@
               <el-col :span="6">
                 <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
               </el-col>
-              <el-col :span="18">
+              <el-col :span="24">
                 <el-form-item prop="priv_password">
                   <el-input v-model.trim="editModule.priv_password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-priv_password"></el-input>
                 </el-form-item>
@@ -218,7 +218,7 @@
             <el-col :span="6">
               <div class="sub-label">{{$t('project.module.contextName')}}</div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="24">
               <el-form-item prop="context_name">
                 <el-input v-model.trim="editModule.context_name" maxlength="64" show-word-limit size="small" id="module-box-input-context_name"></el-input>
               </el-form-item>
@@ -226,7 +226,7 @@
           </el-row>
         </span>
 
-        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'100px':'0'}">
+        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'15px':'0'}">
           {{$t('project.module.tip.defaultEndpointSet')}}
           <div></div>
           {{$t('project.module.tip.relation')}}
@@ -736,13 +736,15 @@
     padding-right: 15px;
     font-size: 14px;
     color: #666;
-    text-align: right;
-    line-height: 30px
+    text-align: left;
+    line-height: 30px;
+    padding-left: 15px;
+    font-weight: bold;
   }
-  .sub-label-required::before {
+  .sub-label-required::after {
     content: '*';
     color: #F56C6C;
-    margin-right: 4px;
+    margin-left: 4px;
   }
   .module-box-type {
     margin: 25px 0 10px -15px;

@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form :model="editUser" :rules="editUser.userId ? rules2 : rules" class="right-box-form right-box-form-left" label-position="right" label-width="120px" ref="accountForm">
+      <el-form :model="editUser" :rules="editUser.userId ? rules2 : rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" ref="accountForm">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
           <el-input autocomplete="new-password" type="text" placeholder="" id="account-input-username"
@@ -29,7 +29,7 @@
                     maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
         </el-form-item>
         <!--passwordChange-->
-        <el-form-item :label="$t('config.account.confirmPwd')" class="passwordChange" label-width="160px" prop="passwordChange">
+        <el-form-item :label="$t('config.account.confirmPwd')" label-width="200px" prop="passwordChange">
           <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.passwordChange" id="account-input-passwordChange"
                     maxlength="16" show-word-limit size="small"></el-input>
         </el-form-item>
@@ -338,9 +338,5 @@
   .form-item-title{
     position: absolute;
     left: -120px;
-  }
-  .passwordChange{
-    margin-left: 30px !important;
-    width: calc(100% - 30px) !important;
   }
 </style>

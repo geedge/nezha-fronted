@@ -15,7 +15,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" label-width="120px" label-position="right" :model="editCabinet" ref="cabinetForm" :rules="rules">
+      <el-form class="right-box-form right-box-form-left" label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
         <el-form-item :label="$t('overall.name')" prop="name">
           <el-input size='mini' v-model="editCabinet.name" id="cabinet-box-input-name"/>
         </el-form-item>

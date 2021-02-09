@@ -15,7 +15,7 @@
 
       <!-- begin--表单-->
       <div class="right-box-form-box">
-        <el-form class="right-box-form right-box-form-left" label-width="120px" :model="editDc" label-position="right" :rules="rules" ref="dcForm">
+        <el-form class="right-box-form right-box-form-left" label-width="120px" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
           </el-form-item>

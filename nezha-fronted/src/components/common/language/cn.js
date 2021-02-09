@@ -599,6 +599,7 @@ const cn = {
       menu:"菜单",
       createRole:"新增角色",
       editRole:"编辑角色",
+      remark:'描述'
     },
     menus:{
       menus:'菜单',

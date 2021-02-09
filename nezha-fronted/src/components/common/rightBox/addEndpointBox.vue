@@ -10,7 +10,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box" style="overflow: hidden">
-      <el-form class="right-box-form right-box-form-left" label-position="right" ref="addEndpoint" :model="endpoint" :rules="rules">
+      <el-form class="right-box-form right-box-form-left" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
           <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small" id="add-endpoint-project">
@@ -1105,11 +1105,11 @@
     float: left;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
-    width: 260px;
+    width: 320px;
   }
   .endpoints-box {
-    margin: 0 0 0 280px;
-    width: 540px;
+    margin: 0 0 0 340px;
+    width: 445px;
   }
   .endpoints-box.endpoints-box-snmp {
     width: 380px;
@@ -1260,7 +1260,7 @@
   }
   .line-100 {
     margin-bottom: 3px;
-    width: 600px;
+    width: 320px;
   }
   .endpoint-sub-table-head {
     line-height: 28px;

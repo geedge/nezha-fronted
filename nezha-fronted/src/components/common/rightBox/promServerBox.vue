@@ -17,7 +17,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editPromServer" label-position="right" label-width="120px" :rules="rules" ref="promServerForm">
+      <el-form class="right-box-form right-box-form-left" :model="editPromServer" label-position = "top" label-width="120px" :rules="rules" ref="promServerForm">
         <!--DC-->
         <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
           <div class="right-box-form-content">

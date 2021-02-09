@@ -1067,7 +1067,7 @@ li{
   z-index: 410;
   box-shadow: 0 0 15px #ccc;
   background-color: white;
-  padding: 0 0 0 30px;
+  padding: 0 0 0 15px;
   height: calc(100% - 50px);
 }
 
@@ -1168,7 +1168,7 @@ li{
   height: 36px;
   text-align: left;
   display: inline-block;
-  padding-top: 20px;
+  padding-top: 10px;
   font-size: 14px;
   font-weight: bold;
   color: $box-title-color;
@@ -1303,6 +1303,7 @@ li{
   height: calc(100% - 132px);
   width: 100%;
   overflow: auto;
+  margin-top: 15px;
 }
 
 .el-scrollbar__wrap {
@@ -1382,11 +1383,11 @@ li{
 }
 .right-box-form>.el-form-item.half-form-item{
   display: inline-block;
-  width: 350px;
+  width: 395px;
 }
 .right-box-form>.el-form-item.half-form-item:nth-child(odd){
   display: inline-block;
-  width: 350px;
+  width: 395px;
   margin-left: 0;
 }
 .right-box-form .one-third-form-item-left{
@@ -1406,14 +1407,14 @@ li{
 }
 .right-box-form>.el-form-item {
   margin-bottom: 18px;
-  width: calc(100% - 70px);
-  margin-left: 70px;
+  width: calc(100% - 15px);
+  margin-left: 15px;
 }
 .right-box-form .el-select {
   width: 100%;
 }
 .right-box-form .select-warp .el-select {
-  width: calc(100% - 120px);
+  width: calc(100% - 0px);
 }
 .right-box-form .el-form-item .el-form-item__label {
   padding: 0;
@@ -1434,6 +1435,27 @@ li{
   font-size: 14px;
   color: $box-label-color;
   line-height: 34px;
+  font-weight: bold;
+}
+.right-box-form-left.right-box-form /deep/ .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:before{
+  display: none;
+}
+.right-box-form-left.right-box-form /deep/ .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label:after{
+  content: "*";
+  color: #f56c6c;
+  margin-left: 4px;
+}
+
+.right-box-form-left.right-box-form /deep/ .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:before{
+  display: none;
+}
+.right-box-form-left.right-box-form /deep/ .el-form-item.required-marker:not(.is-no-asterisk) .el-form-item__label:after{
+  content: "*";
+  color: #f56c6c;
+  margin-left: 4px;
+}
+.right-box-form-left.right-box-form .el-form-item.label-warp .el-form-item__label {//el-form label需要换行的行高
+  line-height: 17px;
 }
 .right-child-box-title, .asset-sub-title, .label-center, .metric-title-label {
   font-size: 14px;
@@ -2153,26 +2175,37 @@ li{
       font-size: 13px;
       color: #0275b8;
     }
-    >div:not(:last-of-type) {
-      width: calc(50% - 25px);
+    .tag-edit-tag{
+      width: 100px;
       padding: 0 10px;
     }
-    >div:last-of-type {
+    .tag-edit-value{
+      width: calc(100% - 149px);
+      padding: 0 10px;
+    }
+    .tag-edit-action {
       width: 50px;
     }
   }
   .tag-edit-box-body {
     display: flex;
     box-sizing: border-box;
+    /deep/ .el-autocomplete{
+      width: 100%;
+    }
     .tag-edit {
       padding: 0 10px;
     }
-    >div:not(:last-of-type) {
-      width: calc(50% - 25px);
+    .tag-edit-tag{
+      width: 100px;
       padding: 0 10px;
     }
-    >div:last-of-type {
-      width: 50px;
+    .tag-edit-value{
+      width: calc(100% - 149px);
+      padding: 0 10px;
+    }
+    .tag-edit-action {
+      width: 34px;
     }
   }
 }
@@ -2263,11 +2296,11 @@ li{
 }
 .right-box-form>.el-form-item.half-form-item-other{
   display: inline-block;
-  width: 350px;
+  width: 345px;
 }
 .right-box-form>.el-form-item.half-form-item-other-two{
   display: inline-block;
-  width: 380px;
+  width: 455px;
   margin-left: 0;
 }
 .right-box .right-box-form-add,.right-box  .right-box-form-minus-box{

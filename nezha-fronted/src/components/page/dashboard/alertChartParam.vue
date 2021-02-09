@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="parameters" ref="alertChartParam" size="small" label-position="left" label-width="80px" class="alert-chart-param-form">
+    <el-form :model="parameters" ref="alertChartParam" size="small" label-position="top" label-width="200px" class="alert-chart-param-form">
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.select')" >
         <el-cascader
           id="alert-param-select"

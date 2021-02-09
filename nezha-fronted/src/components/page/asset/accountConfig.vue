@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="120px" :model="account" :rules="rules" ref="accountForm" style="margin-top: 20px;margin-left: 66px">
+  <el-form label-width="120px"  :model="account" :rules="rules" ref="accountForm" style="margin-top: 20px;margin-left: 15px"  label-position = "top">
     <template v-if="account.protocol == 'SSH'">
       <el-form-item :label="$t('asset.account')" prop="params.username">
         <el-input autocomplete="new-password" size="small" v-model="account.params.username" id="ssh-account-username"/>

@@ -15,7 +15,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form  right-box-form-left" :model="editMib" label-position="right" label-width="120px" :rules="rules" ref="mibForm">
+      <el-form class="right-box-form  right-box-form-left" :model="editMib" label-position = "top" label-width="120px" :rules="rules" ref="mibForm">
         <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
           <el-cascader
             id="mib-input-selected-models"

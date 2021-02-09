@@ -15,7 +15,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editModel" label-position="right" label-width="120px"  :rules="rules" ref="modelForm">
+      <el-form class="right-box-form right-box-form-left" :model="editModel" label-position = "top" label-width="120px"  :rules="rules" ref="modelForm">
         <!--model名称-->
         <el-form-item :label='$t("overall.name")' prop="name">
           <el-input placeholder="" maxlength="64" show-word-limit v-model.trim="editModel.name" size="small" id="model-box-input-name"></el-input>

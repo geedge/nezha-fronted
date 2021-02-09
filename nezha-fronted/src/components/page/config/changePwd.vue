@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog class="nz-dialog" :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
-      <el-form :model="user" label-position="right" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
+      <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
         <el-form-item :label="$t('config.account.account')" prop="username" v-show="curUser != sysUser">
           <el-input type="text" autocomplete="false" v-model="user.username" disabled id="change-pwd-username"></el-input>
         </el-form-item>

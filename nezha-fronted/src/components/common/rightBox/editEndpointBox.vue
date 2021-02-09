@@ -15,7 +15,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position="right" label-width="120px" :rules="rules" ref="endpointForm">
+      <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="endpointForm">
         <!--project-->
         <el-form-item :label="$t('project.project.project')" prop="project.id">
           <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small" id="edit-endpoint-input-project">

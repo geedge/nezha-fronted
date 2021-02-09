@@ -601,7 +601,8 @@ const en = {
       permission:"Permission",
       menu:"Menu",
       createRole:"Create role",
-      editRole:"Edit role"
+      editRole:"Edit role",
+      remark:'Remark',
     },
     menus:{
       menus:'Menus',

@@ -12,7 +12,7 @@
     <div class="right-box-title">{{editAsset.id ? ($t("asset.editAsset") + "  ID：" + editAsset.id) : $t("asset.createAsset")}}</div>
 
     <div class="right-box-form-box">
-      <el-form ref="assetEditForm" :model="editAsset" label-width="120px" class="right-box-form right-box-form-left" :rules="rules">
+      <el-form ref="assetEditForm" :model="editAsset" label-width="120px" class="right-box-form right-box-form-left" :rules="rules" label-position = "top">
         <el-form-item :label="$t('asset.sn')" prop="sn">
           <el-input size="small" v-model="editAsset.sn"/>
         </el-form-item>
@@ -91,15 +91,12 @@
           </button>
         </div></div>
         <div class="right-box-line"></div>
-        <el-form-item>
-          <template slot="label">
-            <span></span>
-          </template>
+        <el-form-item :label-width="'0px'">
           <div class="tag-edit-box">
             <div class="tag-edit-box-head">
-              <div>Tag</div>
-              <div>Value</div>
-              <div>Action</div>
+              <div class="tag-edit-tag">Tag</div>
+              <div class="tag-edit-value">Value</div>
+              <div class="tag-edit-action">Action</div>
             </div>
             <div style="height: calc(100% - 32px); overflow: auto" id="asset-box-tags">
               <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
@@ -109,7 +106,7 @@
                 <el-form-item class="tag-edit tag-edit-value" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.value'">
                   <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
-                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
+                <div class="param-box-row-symbol tag-edit-action" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
               </div>
             </div>
           </div>
@@ -130,7 +127,7 @@
           </el-popover>
         </div>
         <div class="right-box-line"></div>
-        <div class="nz-tab" style="padding-left: 70px;">
+        <div class="nz-tab" style="padding-left: 15px;">
           <div class="nz-tab-item-box" v-for="(account, index) in editAsset.accounts" :key="index" @click="changeProtocolType(account.protocol)" :id="`account-login-type-${index}`">
             <div class="nz-tab-item" :class="{'nz-tab-item-active': accountType == account.protocol}" style="position: relative;">
               <span>{{account.protocol}}</span>
@@ -144,7 +141,7 @@
         <account-config-box v-for="(account,index) in editAsset.accounts" :account="account" v-show="account.protocol == accountType" :key="index" ref="accountConfigBox" @setValidateResult="setAccountValidResult" @protocol-type-change="protocolTypeChange"></account-config-box>
 
         <template v-if="accountType == 'SSH' && !editAsset.id">
-          <el-form-item :label="$t('asset.exporter')" class="exporter-label" style="margin-left: 66px">
+          <el-form-item :label="$t('asset.exporter')" class="exporter-label" style="margin-left: 15px">
             <el-switch class="exporter-switch" v-model="editAsset.exporter" active-color="#ee9d3f" active-value="1" inactive-value="0" :show="!exporterDisableSwitch" id="account-box-input-exporter"></el-switch>
           </el-form-item>
         </template>
