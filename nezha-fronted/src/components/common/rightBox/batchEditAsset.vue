@@ -172,38 +172,34 @@
           </div>
         </div>
         <div class="right-box-line"></div>
-        <el-form-item>
-          <template slot="label">
-            <span></span>
-          </template>
-          <div class="tag-edit-box">
-            <div class="tag-edit-box-head">
-              <div>Tag</div>
-              <div>Value</div>
-              <div>Action</div>
-            </div>
-            <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;" id="batch-edit-tags-box">
-              <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
-                <el-form-item class="tag-edit tag-edit-tag"
-                              :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
-                              :prop="'tags.' + index + '.tag'">
-                  <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey"
-                                   @blur="loadValues(item)" @select="loadValues"
-                                   popper-class="no-style-class"></el-autocomplete>
-                </el-form-item>
-                <el-form-item class="tag-edit tag-edit-value"
-                              :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
-                              :prop="'tags.' + index + '.value'">
-                  <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue"
-                                   popper-class="no-style-class"></el-autocomplete>
-                </el-form-item>
-                <div class="param-box-row-symbol" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i
-                  class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
-              </div>
+        <el-form-item :label-width="'0px'">
+        <div class="tag-edit-box">
+          <div class="tag-edit-box-head">
+            <div class="tag-edit-tag">Tag</div>
+            <div class="tag-edit-value">Value</div>
+            <div class="tag-edit-action">Action</div>
+          </div>
+          <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;" id="batch-edit-tags-box">
+            <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
+              <el-form-item class="tag-edit tag-edit-tag" :label-width="'0px'"
+                            :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
+                            :prop="'tags.' + index + '.tag'">
+                <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey"
+                                 @blur="loadValues(item)" @select="loadValues"
+                                 popper-class="no-style-class"></el-autocomplete>
+              </el-form-item>
+              <el-form-item class="tag-edit tag-edit-value" :label-width="'0px'"
+                            :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
+                            :prop="'tags.' + index + '.value'">
+                <el-autocomplete placeholder="value" size="mini" v-model="item.value" :fetch-suggestions="filterValue"
+                                 popper-class="no-style-class"></el-autocomplete>
+              </el-form-item>
+              <div class="param-box-row-symbol tag-edit-action" :id="'asset-tag-remove-'+index" @click.stop="removeTag(index)"><i
+                class="nz-icon nz-icon-shanchu1" style="color: #666666"></i></div>
             </div>
           </div>
+        </div>
         </el-form-item>
-
         <!--<div class="right-box-sub-title">{{$t('asset.location')}}</div>-->
         <!--<div class="right-box-line"></div>-->
         <!------------------------------------------IDC---------------------------------------------->
@@ -632,7 +628,6 @@
       },
       save(){
         if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
         if(this.locationInfo){
           if(this.locationInfo.idc){
             this.editAsset.idcId=this.locationInfo.idc.id;
@@ -664,6 +659,7 @@
             this.assetSelList.forEach((item)=>{
               this.editAsset.assetIds.push(item.id);
             });
+            this.prevent_opt.save=true;
             this.$put('/asset/batch',this.editAsset).then(res=>{
               this.prevent_opt.save=false;
               if(res.code===200){
@@ -674,6 +670,7 @@
               }
             });
           }else{
+            console.log(213123123123);
             this.prevent_opt.save=false;
             return false;
           }

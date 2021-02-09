@@ -24,7 +24,7 @@
           </el-select>
         </el-form-item>
         <!--asset和endpoint-->
-        <div class="right-box-form-row right-child-boxes" style="height: calc(100% - 135px);">
+        <div class="right-box-form-row right-child-boxes" style="height: calc(100% - 190px);">
           <div class="right-child-box assets-box">
             <!--begin--标题-->
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
@@ -1256,7 +1256,7 @@
   .endpoint-sub-table {
     padding-top: 13px;
     height: calc(100% - 83px);
-    width: 260px;
+    width: 320px;
   }
   .line-100 {
     margin-bottom: 3px;

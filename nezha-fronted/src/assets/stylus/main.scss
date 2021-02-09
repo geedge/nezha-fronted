@@ -1388,7 +1388,7 @@ li{
 .right-box-form>.el-form-item.half-form-item:nth-child(odd){
   display: inline-block;
   width: 395px;
-  margin-left: 0;
+  margin-left: 10px;
 }
 .right-box-form .one-third-form-item-left{
   display: inline-block;
@@ -2176,11 +2176,11 @@ li{
       color: #0275b8;
     }
     .tag-edit-tag{
-      width: 100px;
+      width: 180px;
       padding: 0 10px;
     }
     .tag-edit-value{
-      width: calc(100% - 149px);
+      width: calc(100% - 235px);
       padding: 0 10px;
     }
     .tag-edit-action {
@@ -2197,11 +2197,11 @@ li{
       padding: 0 10px;
     }
     .tag-edit-tag{
-      width: 100px;
+      width: 180px;
       padding: 0 10px;
     }
     .tag-edit-value{
-      width: calc(100% - 149px);
+      width: calc(100% - 235px);
       padding: 0 10px;
     }
     .tag-edit-action {

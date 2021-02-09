@@ -265,85 +265,16 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.style')" name="4">
         <el-collapse v-model="activeNames">
-          <!--位置大小-->
-          <el-collapse-item :label="$t('project.topology.positionAndSize')" name="3" v-if="selection.pen&&!selection.pen.type">
+          <!--&lt;!&ndash;位置大小&ndash;&gt;-->
+          <!--<el-collapse-item :label="$t('project.topology.positionAndSize')" name="3" v-if="selection.pen&&!selection.pen.type">-->
+            <!--<div class="flex flex-warp">-->
+
+
+            <!--</div>-->
+          <!--</el-collapse-item>-->
+          <!--样式-->
+          <el-collapse-item :label="'Style'" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
-
-              <div class="props-pen-item">
-                <div>X（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.rect.x"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                  ></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>Y（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.rect.y"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.width')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.rect.width"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.height')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.rect.height"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
               <div class="props-pen-item">
                 <div>{{$t('project.topology.circularBead')}}（0 - 1）</div>
                 <div class="p10 pl0">
@@ -382,87 +313,6 @@
                 </div>
               </div>
 
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.pt')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.paddingTop"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.pb')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.paddingBottom"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.pl')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.paddingLeft"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-              <div class="props-pen-item">
-                <div>{{$t('project.topology.pr')}}（px）</div>
-                <div class="p10 pl0">
-                  <el-input-number
-                    @focus="inputFocus"
-                    @blur="inputBlur"
-                    :precision="2"
-                    controls-position="right"
-                    size="small"
-                    name="x"
-                    class="input"
-                    v-model.number="selection.pen.paddingRight"
-                    :readonly="readonly"
-                    required
-                    @change="onChange()"
-                    :min="0"></el-input-number>
-                </div>
-              </div>
-
-            </div>
-          </el-collapse-item>
-          <!--样式-->
-          <el-collapse-item :label="$t('project.topology.style')" name="4" v-if="selection.pen">
-            <div class="flex flex-warp">
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.bac')}}</div>
                 <div class="p10 pl0">

@@ -1,6 +1,6 @@
 <style scoped>
   .el-row {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   .el-row:last-child  {
     margin-bottom: 0;
@@ -241,8 +241,8 @@
               <template slot-scope="{ item }">
                 <div class="name">{{ item }}</div>
               </template>
+              <template slot="append">px</template>
             </el-autocomplete>
-            <span class="nz-input-append">px</span>
           </el-form-item>
 
           <el-form-item :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url" v-if="isUrl">

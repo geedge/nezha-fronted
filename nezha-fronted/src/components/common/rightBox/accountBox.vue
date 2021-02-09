@@ -64,10 +64,10 @@
         <div class="right-box-line"></div>
         <div id="account-input-box">
           <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
-            <el-select class='form-item-title' placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId">
+            <el-select placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId" style="display: inline-block;width: 100px;margin-left: 15px">
               <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
             </el-select>
-            <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 37px);"></el-input>
+            <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 157px);"></el-input>
             <span @click="removeNotification(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
           </el-form-item>
         </div>

@@ -21,7 +21,7 @@
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="125px" style="width: calc(100% - 8px);margin-left: 8px;">
+        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="125px">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
 
