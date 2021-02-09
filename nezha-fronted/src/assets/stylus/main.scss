@@ -2372,3 +2372,6 @@ li{
 /deep/ .el-input__inner{
   border-radius: 2px;
 }
+/deep/ .el-input-number .el-input__inner{
+  text-align: left;
+}
