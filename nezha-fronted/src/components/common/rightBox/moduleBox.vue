@@ -268,7 +268,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param">
+        <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param label-position">
 
           <div style="text-align: right;margin-bottom: 5px">
             <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
