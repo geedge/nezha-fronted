@@ -5,7 +5,7 @@
 <template>
   <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
     <!--project主要信息-->
-    <div class="project-title" v-if="showTopTools&&!fromOverView&&!fromPrev" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
+    <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
         <!--工具栏-->
         <span class="project-topology-tool">
@@ -118,8 +118,8 @@
            </button>
          </span>
       </div>
-      <div style="width: 100%;display: flex;justify-content: space-between">
-        <div class="facade-top" v-if="!editTopologyFlag&&!fromOverView">
+      <div style="width: 100%;display: flex;justify-content: space-between" v-if="!editTopologyFlag&&!fromOverView">
+        <div class="facade-top">
           <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
             <div class="facade-top-title">
               Project information
@@ -176,8 +176,8 @@
             </div>
           </div>
         </div>
-        <div :style="{flex:1,'padding-right': '15px','text-align':topologyInfo.type,'font-size':topologyInfo.fontSize,'color':topologyInfo.fontColor,opacity:topologyInfo.opacity}">{{topologyInfo.name}}</div>
-        <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag">
+        <div  :style="{flex:1,'padding-right': '15px','text-align':topologyInfo.align,'font-size':topologyInfo.fontSize,'color':topologyInfo.fontColor,opacity:topologyInfo.opacity}">{{topologyInfo.name}}</div>
+        <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
 
 
 
@@ -200,6 +200,7 @@
         <CanvasProps :selection.sync="props"
                      @change="onUpdateProps"
                      @animate="animateCanvas"
+                     @changeProjectTitle="changeProjectTitle"
                      :index="topologyIndex"
                      @del="delPen"
                      :modules="modules"
@@ -328,7 +329,6 @@
   import CanvasContextMenu from './L5//CanvasContextMenu';
   import topologyTopTool from './L5//topologyTopTool';
   import VueDraggableResizable from 'vue-draggable-resizable';//api https://github.com/mauricius/vue-draggable-resizable
-  import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
   import popDataMain from './popData/Main'
   import popDataInfo from './popData/Info'
   import TotalChart from "./popData/totalChart";
@@ -1158,6 +1158,7 @@
                 level:0,
                 base:true,
               }],
+              valueMappingSort:'asc',
               expressArr:[""],
               legends:[""],
               tooltipShow:true,
@@ -1183,8 +1184,8 @@
               //chart 配置项
               valueMapping:[{
                 color:{
-                  border:'#000000',
-                  bac:'#ffffff',
+                  line:'#000000',
+                  fill:'#ffffff',
                   text:'#000000',
                 },
                 value:'base',
@@ -1192,6 +1193,7 @@
                 level:0,
                 base:true,
               }],
+              valueMappingSort:'asc',/*desc*/
               expressArr:[""],
               legends:[""],
               tooltipShow:true,
@@ -1731,6 +1733,18 @@
         this.topoPrevData.rule=false;
         this.topoPrevData.grid=false;
         this.previewShow=true;
+      },
+
+      //联动 project
+      changeProjectTitle(){
+        let data=getTopology(this.topologyIndex).data;
+        this.topologyInfo={
+          fontSize:data.data.fontSize,
+          align:data.data.align,
+          fontColor:data.data.fontColor,
+          opacity:data.data.opacity,
+          name:data.name
+        }
       },
       /*tools 方法*/
 

@@ -146,7 +146,12 @@
           <div style="width: 100%;margin-top: 10px">
             <div class="thresholds-box">
               <el-row class="thresholds-title">
-                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}</el-col>
+                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}
+                  <span @click="changeValueMappingSort">
+                    <i  :class="['nz-icon','nz-icon-arrow-up1',selection.pen.data.valueMappingSort==='desc'?'is-arrow-active':'']"></i>
+                    <i  :class="['nz-icon','nz-icon-arrow-down2',selection.pen.data.valueMappingSort==='desc'?'':'is-arrow-active']"></i>
+                  </span>
+                </el-col>
                 <el-col class="thresholds-cell" :span="4">{{$t('project.topology.color')}}</el-col>
                 <el-col class="thresholds-cell" :span="6">{{$t('project.topology.value')}}</el-col>
                 <el-col class="thresholds-cell" :span="8">{{$t('project.topology.animation')}}</el-col>
@@ -154,7 +159,14 @@
               </el-row>
 
               <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
-                <el-col class="thresholds-cell" :span="4"> {{item.level}}</el-col>
+                <el-col class="thresholds-cell" :span="4">
+                  <span v-if="selection.pen.data.valueMappingSort==='desc'">
+                     {{index===0?selection.pen.data.valueMapping.length-1:(item.level-1)}}
+                  </span>
+                  <span v-else>
+                    {{item.level}}
+                  </span>
+                </el-col>
                 <el-col class="thresholds-cell" :span="4">
                    <span v-if="item.level!==0">
                     <div style="display: inline-block">
@@ -190,14 +202,14 @@
                   <span v-else>base</span>
                 </el-col>
                 <el-col class="thresholds-cell" :span="6" style="display: flex">
-                  <span v-if="item.level!==0" style="display: inline-block;width: 30%;text-align: center"> > </span>
-                  <el-input-number
+                  <el-input
                     v-if="item.level!==0"
-                    v-model="item.value"
+                    v-model.number="item.value"
                     @change="valueMappingValueChange(item)"
-                    :controls="false"
                     size="small"
-                  />
+                  >
+                    <template slot="prepend"> > </template>
+                  </el-input>
                   <span v-else>base</span>
                 </el-col>
                 <el-col class="thresholds-cell" :span="8">
@@ -867,7 +879,7 @@
             <div class="full pr10 h32">
               <el-radio-group v-model="topologyData.data.align" size="small" @change="changeTopologyOpt">
                 <el-radio-button label="left">left</el-radio-button>
-                <el-radio-button label="bottom">center</el-radio-button>
+                <el-radio-button label="center">center</el-radio-button>
                 <el-radio-button label="right">right</el-radio-button>
               </el-radio-group>
             </div>
@@ -1175,11 +1187,6 @@
             name:'',
             bkColor:'#FFFFFF',
             bkImage:'',
-            grid:false,
-            gridSize:'',
-            gridColor:undefined,
-            rule:false,
-            ruleColor:undefined,
             lineName:'curve',
             lineWidth:1,
             fromArrow:'',
@@ -1573,6 +1580,7 @@
           }
         });
         getTopology(this.index).render();
+        this.$emit('changeProjectTitle')
       },
       colorRGBtoHex(color){//获取颜色16进制数
         if(!color){
@@ -1630,21 +1638,61 @@
         }
       },
       valueMappingAdd(){
-        this.selection.pen.data.valueMapping.push({
-          color:{
-            line:'#000000',
-            fill:'#ffffff',
-            text:'#000000',
-          },
-          showColor:undefined,
-          animateType:this.selection.pen.type?1:'upDown',
-          value:0,
-          level:this.selection.pen.data.valueMapping.length,
-          showType:'fill',//bac text border
-        });
+        if(this.selection.pen.data.valueMappingSort==='desc'){
+          this.selection.pen.data.valueMapping.push({
+            color:{
+              line:'#000000',
+              fill:'#ffffff',
+              text:'#000000',
+            },
+            showColor:undefined,
+            animateType:this.selection.pen.type?1:'upDown',
+            value:0,
+            level:1,
+            showType:'fill',//bac text border
+          });
+          this.selection.pen.data.valueMapping.forEach((item,index)=>{
+            if(index===0){
+              return
+            }
+            item.level=this.selection.pen.data.valueMapping.length-index;
+          })
+        }else{
+          this.selection.pen.data.valueMapping.push({
+            color:{
+              line:'#000000',
+              fill:'#ffffff',
+              text:'#000000',
+            },
+            showColor:undefined,
+            animateType:this.selection.pen.type?1:'upDown',
+            value:0,
+            level:this.selection.pen.data.valueMapping.length,
+            showType:'fill',//bac text border
+          });
+        }
       },
       valueMappingValueChange(index,row){
 
+      },
+      changeValueMappingSort(){
+        if(this.selection.pen.data.valueMappingSort==='desc'){
+          this.selection.pen.data.valueMappingSort='asc';
+          let arr=JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping));
+          let a=arr.splice(0,1);
+          arr.reverse();
+          arr.unshift(a[0]);
+          this.selection.pen.data.valueMapping=arr;
+        } else{
+          this.selection.pen.data.valueMappingSort='desc';
+          let arr=JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping));
+          let a=arr.splice(0,1);
+          arr.reverse();
+          arr.unshift(a[0]);
+          console.log(arr);
+          this.selection.pen.data.valueMapping=arr;
+          console.log('aaa')
+        }
       },
       valueMappingDel(index,row){
         this.selection.pen.data.valueMapping.splice(index,1);
@@ -1927,6 +1975,15 @@
       padding: 5px 5px;
       height: 42px;
       line-height: 32px;
+      /deep/  .el-input-group__prepend{
+        padding: 0 10px;
+      }
+      .is-arrow-active{
+        color: #FA901C;
+      }
+      .nz-icon.nz-icon-arrow-up1{
+        margin-right: -15px;
+      }
     }
   }
   .value-mapping-add{
