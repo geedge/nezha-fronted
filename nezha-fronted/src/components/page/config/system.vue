@@ -23,11 +23,15 @@
             <!--<el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
               <el-input v-model="basic.node_exporter_target_path"></el-input>
             </el-form-item>-->
-            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval">
-              <el-input v-model.number="basic.scrape_interval" id="system-baisc-scrape_interval"></el-input><span class="nz-input-append">{{$t('config.system.basic.second')}}</span>
+            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval" class="append">
+              <el-input v-model.number="basic.scrape_interval" id="system-baisc-scrape_interval">
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention">
-              <el-input v-model.number="basic.storage_local_retention" id="system-baisc-storage_local_retention"></el-input><span class="nz-input-append">{{$t('config.system.basic.day')}}</span>
+            <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention" style="width:458px;">
+              <el-input v-model.number="basic.storage_local_retention" id="system-baisc-storage_local_retention">
+                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
+              </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
               <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-baisc-query_max_series"></el-input-number>
@@ -1078,7 +1082,7 @@
   .system-config-form .el-input__inner{
     height: 28px;
     line-height: 28px;
-    width: 512px;
+    /*width: 512px;*/
   }
   .system-tabs .el-tabs--border-card{
     webkit-box-shadow: unset !important;

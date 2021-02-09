@@ -912,7 +912,7 @@ const cn = {
       maxRepetitions: "最大迭代次数",
       retries: "重试次数",
       timeout: "连接超时时间",
-      community: "共享",
+      community: "团体",
       securityLevel: "安全等级",
       authProtocol: "认证协议",
       privProtocol: "隐私协议",
