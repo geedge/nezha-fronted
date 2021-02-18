@@ -16,19 +16,23 @@
         <div class="window-control-btn" @click="closeSubList" :id="from+'-bottom-close'"><i class="nz-icon nz-icon-close"></i></div>
       </div>
 
-        <!------TAB区------>
-        <!--机柜-->
+    <!------TAB区------>
+      <!--机柜-->
       <cabinet-tab :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.dc && targetTab == 'cabinet'" v-show="subResizeShow"></cabinet-tab>
-        <!--告警信息-->
+      <!--告警信息-->
       <alert-message-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="((from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'alertMessage')" v-show="subResizeShow"></alert-message-tab>
-        <!--asset页的endpoint列表-->
+      <!--asset页的endpoint列表-->
       <endpoint-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.asset && targetTab == $CONSTANTS.fromRoute.endpoint" v-show="subResizeShow"></endpoint-tab>
-        <!--endpoint-query-->
+      <!--endpoint-query-->
       <endpoint-query-tab :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery" v-if="(from == $CONSTANTS.fromRoute.endpoint && targetTab == 'endpointQuery')" v-show="subResizeShow"></endpoint-query-tab>
 
-        <!-- model-panel/asset-detail/project-overview的panel-->
+      <!-- model-panel/asset-detail/project-overview的panel-->
       <panel-tab :from="from" :obj="obj" ref="panelTab" v-if="(from == $CONSTANTS.fromRoute.model || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.project || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'panel'" v-show="subResizeShow"
                  @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
+
+      <!--terminal-log的记录和回放-->
+      <terminal-log-record-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'record'"></terminal-log-record-tab>
+      <terminal-log-replay-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogReplayTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'replay'"></terminal-log-replay-tab>
 
     </div>
   </div>
@@ -40,6 +44,8 @@
   import endpointQueryTab from "./tabs/endpointQueryTab";
   import endpointTab from "./tabs/endpointTab";
   import panelTab from "./tabs/panelTab";
+  import terminalLogRecordTab from "./tabs/terminalLogRecordTab";
+  import terminalLogReplayTab from "./tabs/terminalLogReplayTab";
 
   export default {
     name: "bottomBox",
@@ -49,6 +55,8 @@
       'endpoint-query-tab': endpointQueryTab,
       'endpoint-tab': endpointTab,
       'panel-tab': panelTab,
+      terminalLogRecordTab,
+      terminalLogReplayTab
     },
     props: {
       isFullScreen: false, //是否全屏

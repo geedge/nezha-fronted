@@ -669,6 +669,13 @@ const en = {
     terminallog: {
       terminallog: 'Terminal log',
       status: 'Status',//"状态"
+      statusItem: {
+        connecting: "Connecting",
+        connectionFailed: "Connection failed",
+        over: "Over",
+        kickedOut: "Kicked out",
+        unknownError: "Unknown error"
+      },
       option: 'Operation',//"操作",
       host: 'Host',
       cmd: 'CMD',
@@ -693,7 +700,18 @@ const en = {
       path: 'Path',
       file: 'File',
       success: 'Success',
-      fail: 'Fail'
+      fail: 'Fail',
+      startTime: "Start time",
+      duration: "Duration",
+      remote: "Remote",
+      replay: "Replay",
+      log: "Log",
+      record: {
+        record: "Record",
+        history: "History record",
+        dangerTip: "This CMD may be dangerous",
+        legendTip: "Legend description",
+      }
     },
     operationlog: {
       operationlog: 'Operation log',

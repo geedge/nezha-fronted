@@ -96,14 +96,6 @@
                 <span>-</span>
               </template>
             </template>
-            <span v-else-if="item.prop == 'lang'">
-                {{scope.row[item.prop] == 'en' ? 'English' : ''}}
-                {{scope.row[item.prop] == 'zh' ? '中文' : ''}}
-                {{scope.row[item.prop] == 'ru' ? 'русский' : ''}}
-            </span>
-            <span v-else-if="item.prop == 'receiver'">
-                <template v-for="rec in scope.row[item.prop]">{{rec.name}}&nbsp;&nbsp;</template>
-            </span>
             <span v-else-if="item.prop == 'status'">
                 <el-switch
                   v-model="scope.row.status"

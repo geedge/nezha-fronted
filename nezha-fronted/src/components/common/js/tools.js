@@ -284,7 +284,17 @@ export function stringTimeParseToUnix(stringTime){
   let time=new Date(stringTime).getTime();
   return time/1000;
 }
-
+export function calcDurationByStringTime(startTime, endTime) {
+  let durationSecond = stringTimeParseToUnix(endTime)-stringTimeParseToUnix(startTime);
+  let result = `${durationSecond%60}s`;
+  if (durationSecond > 60) {
+    result = `${(Math.floor(durationSecond/60))%60}m ${result}`;
+  }
+  if (durationSecond > 60*60) {
+    result = `${Math.floor(durationSecond/(60*60))}h ${result}`;
+  }
+  return result;
+}
 export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
   let date=new Date(unixTime * 1000);
   var o = {
@@ -592,13 +602,8 @@ export const tableSet = {
         }
       case 'temrminallog':
         switch(prop){
-          case 'id': return 'id';
-          case 'host': return 'host';
-          case 'port': return 'port';
           case 'protocol': return 'protocol';
-          case 'user': return 'user';
-          case 'cmd': return 'cmd';
-          case 'time': return 'time';
+          case 'startTime': return 'startTime';
           default : return prop;
         }
       case 'alertRules':

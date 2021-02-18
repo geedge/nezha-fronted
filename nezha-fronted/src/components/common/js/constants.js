@@ -149,6 +149,18 @@ export const setting = {
     ]
 };
 
+export const terminalLog = {
+  status: {
+    0: i18n.t('config.terminallog.statusItem.connecting'),
+    1: i18n.t('config.terminallog.statusItem.connectionFailed'),
+    2: i18n.t('config.terminallog.statusItem.over'),
+    3: i18n.t('config.terminallog.statusItem.kickedOut'),
+    4: i18n.t('config.terminallog.statusItem.unknownError'),
+  },
+  dangerCmd: ['chmod', 'chown', 'kill', 'rm', 'su', 'sudo'],
+  infoCmd: ['exit']
+};
+
 //公共组件的跳转来源
 export const fromRoute = {
   panel: "panel",
@@ -160,5 +172,6 @@ export const fromRoute = {
   dc: "dc",
   endpoint: "endpoint",
   project: "project",
-  endpointQuery: "endpointQuery"
+  endpointQuery: "endpointQuery",
+  terminalLog: "terminal"
 };

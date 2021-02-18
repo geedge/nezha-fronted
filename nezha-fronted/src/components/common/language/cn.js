@@ -631,6 +631,13 @@ const cn = {
     terminallog: {
       terminallog: "终端日志",
       status: "状态",
+      statusItem: {
+        connecting: "连接中",
+        connectionFailed: "连接失败",
+        over: "已结束",
+        kickedOut: "被踢出",
+        unknownError: "未知错误"
+      },
       option: "操作",
       host: "主机",
       cmd: "命令",
@@ -655,7 +662,18 @@ const cn = {
       path: "路径",
       file: "文件",
       success: "成功",
-      fail: "失败"
+      fail: "失败",
+      startTime: "开始时间",
+      duration: "持续",
+      remote: "远程连接",
+      replay: "回放",
+      log: "日志",
+      record: {
+        record: "记录",
+        history: "历史记录",
+        dangerTip: "这条命令可能是危险的",
+        legendTip: "图例说明",
+      }
     },
     dc: {
       dc: "数据中心",
