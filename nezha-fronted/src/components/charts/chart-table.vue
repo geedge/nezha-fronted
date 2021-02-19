@@ -393,6 +393,8 @@
         }
         this.data = chartItem;
         this.unit = chartDataFormat.getUnit(this.data.unit);
+        let statistics = chartItem.param.statistics;
+        seriesItem = this.getStatisticsResult(statistics,seriesItem)
         seriesItem && (seriesItem = seriesItem.map(item=>{
           if(chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type){
             let type=chartItem.param.valueMapping.type;
@@ -449,6 +451,91 @@
           }
           this.endLoading();
         }
+      },
+      getStatisticsResult(statistics,seriesItem){
+        let copy=JSON.parse(JSON.stringify(seriesItem));
+        let last,result;
+        last=copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0];
+        switch (statistics) {
+          case 'null':
+            return copy.map(item=>{
+              return {
+                element:item.element,
+                time:bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+                value:item.data[1]
+              }
+            })
+          case 'min':
+            result= copy.sort((x,y)=>{return parseFloat(x.data[1]) - parseFloat(y.data[1])})[0];
+            result = [{
+              element:result.element,
+              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:result.data[1],
+            }]
+            break;
+          case 'max':
+            result= copy.sort((x,y)=>{return parseFloat(y.data[1]) - parseFloat(x.data[1])})[0];
+            result = [{
+              element:result.element,
+              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:result.data[1],
+            }]
+            break;
+          case 'average':
+            copy = copy.map(t=>parseFloat(t.data[1]));
+            let sum = eval(copy.join('+'));
+            let avg = sum / copy.length;
+            result=[{
+              element:last.element,
+              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:avg
+            }]
+            break;
+          case 'total':
+            copy = copy.map(t=>parseFloat(t.data[1]));
+            let total = eval(copy.join('+'));
+            result=[{
+              element:last.element,
+              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:total
+            }]
+            break;
+          case 'first':
+            result=copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[copy.length-1]
+            result = [{
+              element:result.element,
+              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:result.data[1],
+            }]
+            break;
+          case 'last':
+            result=last;
+            result = [{
+              element:result.element,
+              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:result.data[1],
+            }]
+            break;
+          case 'range':
+            let sort = copy.sort((x,y)=>{return parseFloat(y.data[1]) - parseFloat(x.data[1])})
+            let max = sort[0]
+            let min = sort[sort.length-1]
+            result=[{
+              element:last.element,
+              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:max.data[1] - min.data[1]
+            }]
+            break;
+          case 'different':
+            let first = copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[copy.length-1];
+            result = [{
+              element:last.element,
+              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value:last.data[1] - first.data[1]
+            }]
+            break;
+        }
+        return result;
       },
       // 数据排序
       tableDataSort(item) {

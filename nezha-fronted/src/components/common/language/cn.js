@@ -179,6 +179,7 @@ const cn = {
           last:'Last',
           range:'Range',
           different:'Different',
+          null:'Null'
         },
         width: "宽",
         high: "高",

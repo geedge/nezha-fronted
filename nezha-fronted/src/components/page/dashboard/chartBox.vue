@@ -1,6 +1,6 @@
 <style scoped>
   .el-row {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
   }
   .el-row:last-child  {
     margin-bottom: 0;
@@ -43,8 +43,8 @@
     width: 100%;
   }
   .right-box-form .element-item.form-row-item{
-    width: calc(100% - 120px);
-    padding: 20px 20px 20px 0;
+    width: calc(100% - 60px);
+    padding: 5px 20px 0px 0;
   }
   /*metric样式--end*/
   .label-center{
@@ -64,7 +64,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 100;
   }
   /deep/ .el-color-picker{
     position: absolute;
@@ -259,17 +259,17 @@
             <el-input size="mini" type="input" v-model="editChart.param.threshold" id="chart-box-threshold"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie' ">
-              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="small" v-model="editChart.param.statistics" id="chart-box-panelname">
+          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' ">
+              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.param.statistics" id="chart-box-panelname">
                 <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
+          <!--<el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
             <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last" id="chart-box-last"></el-switch>
-          </el-form-item>
+          </el-form-item>-->
 
           <!--<el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">-->
           <!--<el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>-->
@@ -323,7 +323,7 @@
                         ></promql-input>
               -->
               <el-row>
-                  <el-col style="width: 120px; padding-right: 20px; text-align: right; color: #666">
+                  <el-col style="width: 120px; padding-right: 20px; text-align: left; padding-left:10px; color: #666">
                     {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                     <el-popover placement="top" trigger="hover" width="211">
                       <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
@@ -452,7 +452,7 @@
           </div>
           <div style="margin-bottom: 20px; width: 100%" ></div>
           <div style="display: flex;">
-            <span style="margin-left: 75px;"></span>
+            <span style="margin-left: 15px;"></span>
             <template v-for="item in sortedOptionKeys">
               <div style="flex: 1">
                 <span style="margin-right: 10px;color:rgb(102, 102, 102)">{{item.label}}</span>
@@ -506,6 +506,7 @@
   import {nzNumber} from "../../common/js/validate";
   import richTextEditor from "../../charts/richTextEditor";
   import selectPanel from "../../common/popBox/selectPanel";
+  import i18n from "../../common/i18n";
 
   var rz = {
     methods: {
@@ -1042,7 +1043,7 @@
             this.$refs.alertParamBox.saveParam();
             return ;
           }
-          if(this.editChart.type == 'singleStat'||this.editChart.type == 'pie'){
+          if(this.editChart.type == 'singleStat'||this.editChart.type == 'pie'||this.editChart.type == 'table'){
             // this.$set(this.editChart.param, "statistics", this.statistics);
           } else {
             delete this.editChart.param.statistics;
@@ -1351,9 +1352,11 @@
         }else if(chartType === 'alertList'){
           this.setIsAlertList();
         }else if(chartType === 'singleStat' || chartType==='pie') {
-          this.setIsSingleStat();
-          this.resetElements();
-          this.statistics='',
+
+          if(chartType == 'singleStat'){
+            this.setIsSingleStat();
+            this.resetElements();
+          }
           this.editChart.param={
             statistics:'last',
             valueMapping:{
@@ -1369,7 +1372,7 @@
           }else if(chartType == 'table'){
             this.$set(this.editChart.param,'last',0)
             this.editChart.param={
-              statistics:'',
+              statistics:'last',
               nullType:'connected',
               valueMapping:{
                 type:'value',
@@ -1377,6 +1380,9 @@
               }
             }
             this.showPicker=[{bac:false,text:false}];
+            this.statisticsList = JSON.parse(JSON.stringify(this.statisticsList));
+            this.statisticsList.push({value: "null", label: i18n.t("dashboard.panel.chartForm.statisticsVal.null")},);
+
           }
           /*if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1443,8 +1449,7 @@
                 // params.param.statistics=this.statistics;
                 params.param.valueMapping=this.editChart.param.valueMapping;
               }
-              console.log(this.editChart)
-              if(this.editChart.type != 'singleStat' && this.editChart.type != 'pie'){
+              if(this.editChart.type != 'singleStat' && this.editChart.type != 'pie'&& this.editChart.type != 'table'){
                 delete params.param.statistics;
               }
               if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='table'){
@@ -1455,7 +1460,6 @@
                 }
                 params.param.nullType=this.editChart.param.nullType;
                 params.param.legendValue=this.editChart.param.legendValue;
-                params.param.last=this.editChart.param.last;
               } else {
                 delete params.param.threshold;
                 delete params.param.nullType;

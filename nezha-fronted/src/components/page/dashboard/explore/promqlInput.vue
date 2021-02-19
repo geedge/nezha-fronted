@@ -22,7 +22,7 @@
           <!--right-box里的样式-->
           <template v-if="styleType == 2">
             <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1" style="width: 100%;">
-              <el-col :style="{'width':plugins.indexOf('metric-selector') > -1 ? '120px':'100%', 'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ', 'text-align':left, 'color': '#666','font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold'}">
+              <el-col :style="{'width':plugins.indexOf('metric-selector') > -1 ? '120px':'100%', 'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ', 'text-align':'left', 'color': '#666','font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold'}">
                 <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                   <el-dropdown-menu style="display: none"></el-dropdown-menu>
                   <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>

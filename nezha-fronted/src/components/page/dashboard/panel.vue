@@ -100,7 +100,7 @@
     <div class="table-list" id="tableList">
       <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
-          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"></chart-list>
+          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"  :class="{'show-top':showTopBtn}"></chart-list>
         </div>
       </div>
     </div>
@@ -840,12 +840,15 @@
   .table-list {
     margin-top: 0px;
     overflow-y: auto;
-    height: calc(100% - 92px);
+    height: calc(100% - 50px);
   }
 
   .box-content {
     position: relative;
     min-height: 100%;
+    .show-top:last-child{
+        margin-bottom: 50px;
+    }
   }
 
   /* end-chart list*/

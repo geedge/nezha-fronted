@@ -192,6 +192,7 @@ const en = {
           last:'Last',
           range:'Range',
           different:'Different',
+          null:'Null'
         },
         width:'Width', //"宽"
         high:'High', //"高"
@@ -423,7 +424,7 @@ const en = {
     assets: 'Assets',//'资产'
     editAsset: 'Edit asset',//'编辑资产'
     createAsset: 'New asset',//'编辑资产'
-    batchEditAsset:'Batch edit asset',
+    batchEditAsset:'Bulk edit',
     selectAsset:'Selected assets',
     host: "Host",
     state: 'State',//'状态'

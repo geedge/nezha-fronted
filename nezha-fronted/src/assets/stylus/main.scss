@@ -1378,7 +1378,7 @@ li{
 }
 
 .right-box-form {
-  width: calc(100% - 30px);
+  width: calc(100% - 15px);
 }
 .right-box-add-endpoint .right-box-form {
   height: 100%;
@@ -1394,17 +1394,16 @@ li{
 }
 .right-box-form .one-third-form-item-left{
   display: inline-block;
-  width: 220px;
+  width: 170px;
 }
 .right-box-form .one-third-form-item-right{
-  margin-left: 10px;
   display: inline-block;
-  width: 110px;
+  width: 170px;
   .el-form-item__label{
     width: 20px !important;
   }
   .el-form-item__content{
-    margin-left: 20px !important;
+    //margin-left: 20px !important;
   }
 }
 .right-box-form>.el-form-item {
@@ -2282,7 +2281,7 @@ li{
   padding: 20px 20px 20px 0;
   border: 1px dashed #dfe7f2;
   width: calc(100% - 120px);
-  margin-left: 70px;
+  margin-left: 15px;
   position: relative;
 }
 .right-box-form .form-row-item .nz-icon-minus{

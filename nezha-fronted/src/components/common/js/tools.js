@@ -14,7 +14,7 @@ export const clickoutside = {
     try{
       oldValue= JSON.parse(JSON.stringify(binding.value.obj));
     }catch (e) {
-    
+
     }
     function documentHandler(e) {
       if (el.contains(e.target)) {
@@ -59,7 +59,7 @@ export const clickoutside = {
         }
       }
     }
-    
+
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.__vueClickOutside__ = documentHandler;
     document.addEventListener('mousedown', documentHandler);
@@ -80,9 +80,9 @@ function isEqual (o1, o2) {
     if (Object.keys(obj1).length !== Object.keys(obj2).length) {
       return false;
     }
-    
+
     for (var attr of Object.keys(obj1)) {
-      
+
       var t1 = obj1[attr] instanceof Object;
       var t2 = obj2[attr] instanceof Object;
       if (t1 && t2) {
@@ -142,25 +142,25 @@ export const bottomBoxWindow = {
     let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
     let resizeModalDom = document.querySelector(".resize-modal"); //副列表遮罩
     let resizeBarDom = document.querySelector(".sub-list-resize"); //拖动条
-    
+
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //点击时俩dom的初始高度：
     let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
-    
+
     mainModalDom.style.display = "block";
     resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
     resizeBarDom.style.display = "none";
     let resizeModalEndHeight;
     //点击时鼠标的Y轴位置
     let mouseInitialY = e.clientY;
-    
+
     document.onmousemove = (e) => {
       window.resizing = true;
       e.preventDefault();
       //得到鼠标拖动的距离
       let mouseMoveY = e.clientY-mouseInitialY;
       resizeModalEndHeight = subInitialHeight-mouseMoveY;
-      
+
       // 主、副列表高度限制
       if(resizeModalEndHeight > contentRightHeight-minHeight){
         resizeModalEndHeight = contentRightHeight-minHeight;
@@ -178,7 +178,7 @@ export const bottomBoxWindow = {
       resizeModalDom.style.display = "none";
       mainModalDom.style.display = "none";
       resizeBarDom.style.display = "";
-      
+
       //当主副列表可视区域小于一定值时，不展示内容
       if(contentRightHeight-resizeModalEndHeight <= contentHideHeight){
         if (vm.bottomBox.mainResizeShow) {
@@ -198,7 +198,7 @@ export const bottomBoxWindow = {
           vm.bottomBox.subResizeShow = true;
         }
       }
-      
+
       document.onmousemove = null;
       document.onmouseup = null;
     }
@@ -209,7 +209,7 @@ export const bottomBoxWindow = {
     let contentRightHeight = contentRightDom.offsetHeight;//可视高度
     //主列表
     document.querySelector(".main-list-with-sub").style.height = vm.bottomBox.mainListHeight ? vm.bottomBox.mainListHeight + 'px' : 'calc(50% - 4px)';
-    
+
     //副列表
     document.querySelector(".sub-list").style.height = vm.bottomBox.mainListHeight ? contentRightHeight-vm.bottomBox.mainListHeight-9 + 'px' : 'calc(50% - 4px)';
     setTimeout(() => {
@@ -256,7 +256,7 @@ export const bottomBoxWindow = {
         paginationTop.classList.add("display-none");
         paginationBottom.appendChild(paginationTop.removeChild(document.querySelector(".pagination")));
       }, 210);
-      
+
       // 主列表恢复全屏
       vm.bottomBox.mainResizeShow = vm.bottomBox.subResizeShow = true;
       document.querySelector('.main-list').style.height = "";
@@ -317,11 +317,11 @@ export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
 //chart-resize工具
 export const chartResizeTool = {
   minHeight: 200, //图表最小高度
-  chartPaddingTop: 10, //图表padding-top
-  chartBlankHeight: 12, //图表空白占位高度(padding-top + border)
+  chartPaddingTop: 2, //图表padding-top
+  chartBlankHeight:4, //图表空白占位高度(padding-top + border)
   chartTableBlankHeight: 6, //表格型图表额外空白占位高度
-  chartBlankWidth: 10, //图表空白占位宽度
-  containerBlankWidth: 15, //容器空白占位宽度（#listContainer的padding）
+  chartBlankWidth: 2, //图表空白占位宽度
+  containerBlankWidth: 5, //容器空白占位宽度（#listContainer的padding）
   titleHeight: 28, //标题dom高度
   stepHeight: 50, //单元高度
   timeouter:null,
@@ -352,27 +352,28 @@ export const chartResizeTool = {
     let titleHeight = this.titleHeight;
     let stepWidth = this.stepWidth(document.getElementById('listContainer').offsetWidth);
     let stepHeight = this.stepHeight;
-    
+
     let mouseOriginalX = event.clientX; //鼠标初始坐标
     let mouseOriginalY = event.clientY;
     let originalWidth = stepWidth*data.span; //图表、阴影初始宽高
     let shadowNewWidth = originalWidth;
     let originalHeight = data.height;
     let shadowNewHeight = originalHeight;
-    
+
     //1.激活背景阴影
     shadow.classList.add("resize-shadow-active");
     //2.鼠标移动时调整resize-box的宽高，同时监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
     document.addEventListener("mousemove", moveListener);
     //3.鼠标松开，将resize-box宽高改为resize-shadow宽高，结束
     document.addEventListener("mouseup", mouseupListener);
-    
-    
+
+
     function moveListener(e) {
       let mouseX = e.clientX;
       let mouseY = e.clientY;
       //调整resize-box的宽高
       box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
+      console.log(originalHeight,mouseY,mouseOriginalY,(mouseY-mouseOriginalY),chartBlankHeight,(originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight))
       box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
@@ -387,14 +388,14 @@ export const chartResizeTool = {
       data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更
       if (data.height != originalData.height || data.span != originalData.span) {
-        
+
         originalData.height = data.height;
         originalData.span = data.span;
         vm.$put("panel/" + vm.panelIdInner + "/charts/modify", originalData);
       }
       //关闭背景阴影
       shadow.classList.remove("resize-shadow-active");
-      
+
       document.removeEventListener("mousemove", moveListener);
       document.removeEventListener("mouseup", mouseupListener);
     }
@@ -428,7 +429,7 @@ export const chartResizeTool = {
       if (heightChange) {
         shadowNewHeight = shadow.offsetHeight+chartBlankHeight;
       }
-      
+
       if (widthChange || heightChange) {
         clearTimeout($self.timeouter)
         $self.timeouter=setTimeout(()=>{
@@ -442,7 +443,7 @@ export const chartResizeTool = {
         outerBox.style.height = `${shadow.offsetHeight+chartPaddingTop}px`;
         outerBox.style.width = `${parseFloat(shadow.style.width.split("px")[0])+chartBlankWidth}px`;
       }
-      
+
     }
   }
 };
@@ -519,7 +520,7 @@ export const tableSet = {
           case 'principal': return 'su.username';
           default : return prop;
         }
-      
+
       case 'alertMessage':
         switch(prop){
           case 'id': return'am.id';
@@ -530,7 +531,7 @@ export const tableSet = {
           case 'endAt': return'am.end_at';
           default : return prop;
         }
-      
+
       case 'project':
         switch(prop){
           case 'id': return'e.id';
@@ -543,7 +544,7 @@ export const tableSet = {
           // case 'path': return'e.path';
           default : return prop;
         }
-      
+
       case 'dc':
         switch(prop){
           case 'id': return'i.id';
@@ -551,7 +552,7 @@ export const tableSet = {
           case 'area': return'sa.name';
           default : return prop;
         }
-      
+
       case 'endpointTab':
         switch(prop){
           case 'id': return'e.id';
@@ -712,7 +713,7 @@ export function  getMetricTypeValue(queryItem,type){
       let last =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0][1];
       return last;
     case 'first':
-      let first =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[copy.length][1];
+      let first =copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[copy.length-1][1];
       return first;
     case 'total':
       copy = copy.map(t=>parseFloat(t[1]));
@@ -727,6 +728,6 @@ export function blankPromise() {
 
 export function clickLegend(echart,legendName,index){
   if(echart){
-  
+
   }
 }

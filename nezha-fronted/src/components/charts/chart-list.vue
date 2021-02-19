@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 0px 10px 10px 0;
+    padding: 0px 2px 2px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -9,8 +9,8 @@
     text-align: center
   }
   .list-width{
-    width: calc(100% - 14px);
-    padding: 5px 15px 5px 0px;
+    width: calc(100% - 2px);
+    padding: 5px 5px 5px 0px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
     min-height: calc(100vh - 150px);
@@ -813,9 +813,9 @@
                   chartInfo.param.nullType=chartInfo.param.nullType||'connected';
                   query+='&nullType='+chartInfo.param.nullType;
                 }
-                if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
-                  return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
-                }
+                // if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
+                //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
+                // }
                 return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(startTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               });
               // 一个图表的所有element单独获取数据
@@ -969,14 +969,15 @@
                                   sumData.data[dpsIndex] = [dpsItem[0] * 1000, dpsItem[1]];
                                 }
                                 */
-                                let t_date = new Date(dpsItem[0] * 1000);
-                                let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
+                                // let t_date = new Date(dpsItem[0] * 1000);
+                                // let timeTmp = bus.timeFormate(t_date, 'yyyy-MM-dd hh:mm:ss');
                                 tableData.push({//表格数据
                                   // label: host.slice(host.indexOf('{') + 1,host.indexOf('}')),//label
                                   // metric: queryItem.metric.__name__?queryItem.metric.__name__:'',//metric列
                                   element: {element: host, alias: alias},
-                                  time: timeTmp,//采集时间
-                                  value: dpsItem[1],//数值
+                                  // time: timeTmp,//采集时间
+                                  // value: dpsItem[1],//数值
+                                  data:[dpsItem[0] * 1000, dpsItem[1]]
                                 });
                                 return [dpsItem[0] * 1000, dpsItem[1]];
                               });
