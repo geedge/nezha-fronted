@@ -382,7 +382,8 @@ export const chartResizeTool = {
     function mouseupListener(e) {
       //将resize-box的宽高设为resize-shadow的宽高
       box.style.width = `${shadow.offsetWidth}px`;
-      box.style.height = `${Math.round(shadow.offsetHeight/10)*10}px`;
+      box.style.height = `${Math.round((shadow.offsetHeight )/chartPaddingTop)*chartPaddingTop}px`;
+      console.log('box height:',box.style.height)
       data.height = Math.round((box.offsetHeight+chartPaddingTop)/stepHeight)*stepHeight;
       data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更
@@ -420,10 +421,10 @@ export const chartResizeTool = {
       }
       if (height > stepHeight/2) { //放大shadow高
         heightChange = true;
-        shadow.style.height = `${Math.round(shadow.offsetHeight/10)*10+stepHeight}px`;
+        shadow.style.height = `${Math.round(shadow.offsetHeight/chartPaddingTop)*chartPaddingTop+stepHeight}px`;
       } else if (height <= 0-(stepHeight/2)) { //缩小shadow高
         heightChange = true;
-        shadow.style.height = `${Math.round(shadow.offsetHeight/10)*10-stepHeight}px`;
+        shadow.style.height = `${Math.round(shadow.offsetHeight/chartPaddingTop)*chartPaddingTop-stepHeight}px`;
       }
       if (heightChange) {
         shadowNewHeight = shadow.offsetHeight+chartBlankHeight;
