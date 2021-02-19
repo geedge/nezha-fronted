@@ -453,9 +453,10 @@
         }
       },
       getStatisticsResult(statistics,seriesItem){
+        if(!seriesItem||!seriesItem.length>0) return [];
         let copy=JSON.parse(JSON.stringify(seriesItem));
         let last,result;
-        last=copy.sort((x,y)=>{return parseFloat(y[0]) - parseFloat(x[0])})[0];
+        last=copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[0];
         switch (statistics) {
           case 'null':
             return copy.map(item=>{
@@ -509,6 +510,7 @@
             }]
             break;
           case 'last':
+            console.log(last)
             result=last;
             result = [{
               element:result.element,
