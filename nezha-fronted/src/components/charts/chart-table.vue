@@ -399,13 +399,13 @@
           if(chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type){
             let type=chartItem.param.valueMapping.type;
             let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
-            let value = item.value;
+            let value = Number(item.value);
 
             let mapping;
             if(type == 'value'){
-              mapping=mappings.find(t=>{return t.value == value})
+              mapping=mappings.find(t=>{return Number(t.value) == value})
             }else{
-              mapping=mappings.find(t=>{return t.from <= value&& t.to >= value});
+              mapping=mappings.find(t=>{return Number(t.from) <= value&& Number(t.to) >= value});
             }
             this.mapping=mapping;
             item.mapping=mapping;

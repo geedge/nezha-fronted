@@ -1247,6 +1247,9 @@
           this.editChart.param.url = data.param.url;
           this.setIsUrl();
           //this.elements = [1];
+        }else if(this.editChart.type==='table'){
+          this.statisticsList=JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
+          this.statisticsList.push({value: "null", label: i18n.t("dashboard.panel.chartForm.statisticsVal.null")},);
         }else if(this.editChart.type==='alertList'){
           this.editChart.param = data.param;
           this.setIsAlertList();
@@ -1380,7 +1383,7 @@
               }
             }
             this.showPicker=[{bac:false,text:false}];
-            this.statisticsList = JSON.parse(JSON.stringify(this.statisticsList));
+            this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList));
             this.statisticsList.push({value: "null", label: i18n.t("dashboard.panel.chartForm.statisticsVal.null")},);
 
           }

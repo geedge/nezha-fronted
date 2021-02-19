@@ -373,7 +373,6 @@ export const chartResizeTool = {
       let mouseY = e.clientY;
       //调整resize-box的宽高
       box.style.width = `${originalWidth+(mouseX-mouseOriginalX)-chartBlankWidth}px`;
-      console.log(originalHeight,mouseY,mouseOriginalY,(mouseY-mouseOriginalY),chartBlankHeight,(originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight))
       box.style.height = `${originalHeight+(mouseY-mouseOriginalY)-chartBlankHeight}px`;
       //监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
       let remainderWidth = (box.offsetWidth+chartBlankWidth-shadowNewWidth)%stepWidth; //宽的余数
