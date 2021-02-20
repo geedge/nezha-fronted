@@ -641,7 +641,6 @@ const cn = {
       },
       option: "操作",
       host: "主机",
-      cmd: "命令",
       port: "端口",
       userId: "用户ID",
       protocol: "协议",
@@ -668,12 +667,20 @@ const cn = {
       duration: "持续",
       remote: "远程连接",
       replay: "回放",
+      source: "源IP",
       log: "日志",
+      cmd: {
+        cmd: "命令",
+        history: "历史命令",
+        dangerTip: "可能是危险命令",
+        legendTip: "图例说明"
+      },
       record: {
-        record: "记录",
-        history: "历史记录",
-        dangerTip: "这条命令可能是危险的",
-        legendTip: "图例说明",
+        record: "回放",
+        pause: "暂停",
+        play: "播放",
+        replay: "重播",
+        skipTip: "跳过无操作时间"
       }
     },
     dc: {

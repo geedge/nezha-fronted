@@ -1,154 +1,295 @@
 <template>
-  <div style="height: 100%;">
+  <div class="replay-tab" ref="replayTab">
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">ID：{{obj.id}}</div><div
-        @click="changeTab('replay')" class="sub-list-tab">{{$t("config.terminallog.replay")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.record.record")}}</div>
+        class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.record.record")}}</div><div
+        @click="changeTab('cmd')" class="sub-list-tab">{{$t("config.terminallog.cmd.cmd")}}</div>
       </div>
     </div>
-    <div class="record-container">
-      <div class="record-container--record">
-        <div class="record--title">{{$t('config.terminallog.record.history')}}</div>
-        <div class="record--list">
-          <template v-for="(record, index) in records">
-            <template v-for="item in record.list">
-              <div class="detail--time"><span>{{calcTime(item.time)}}</span></div>
-              <div class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
-            </template>
-          </template>
+    <div class="replay-container">
+      <div class="replay-operate">
+        <div>
+          <button :title="$t('config.terminallog.record.pause')" @click="pause" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-pause" v-show="isPlaying"><i class="nz-icon nz-icon-suspend"></i></button>
+          <button :title="$t('config.terminallog.record.play')" @click="play" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-play" v-show="isFinish || !isPlaying"><i class="nz-icon nz-icon-play"></i></button>
+          <button :title="$t('config.terminallog.record.replay')" @click="restart" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-restart"><i class="nz-icon nz-icon-replay"></i></button>
+          <button @click="speedChange" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-speed-change"><i class="nz-icon nz-icon-fast-forward"></i>&nbsp;{{speedTable[speedOffset].name}}</button>
+          <el-checkbox class="operate-skip" id="terminal-replay-skip" v-model="needSkip">{{$t("config.terminallog.record.skipTip")}}</el-checkbox>
+          <el-tag class="time-box" color="#23bf9a" effect="dark" size="medium">{{parseCurrentTime}}&nbsp;s</el-tag>
         </div>
-        <div class="record--more" v-if="hasNext">
-          <span @click="loadMore" class="nz-btn nz-btn-size-small nz-btn-style-light"><i class="nz-icon nz-icon-arrow-down"></i></span>
+        <div @click="jumpProgress" class="terminal-replay-progress">
+          <el-progress :percentage="progress" :show-text="false" class="terminal-replay-progress-bar" ref="terminalProgress"></el-progress>
+          <div @mousedown="startDragging" class="progress-controller" id="progressController" ref="progressController"></div>
         </div>
       </div>
-
-      <div class="record-container--record record-container--record__tip">
-        <div class="record--title">{{$t('config.terminallog.record.legendTip')}}</div>
-        <div class="record--list">
-          <div class="detail--time"><span>yyyy-MM-dd HH:mm:ss</span></div>
-          <div class="detail--cmd"><span class="detail--cmd__red">{{$t("config.terminallog.record.dangerTip")}}</span></div>
-        </div>
+      <div class="record-console" ref="recordConsole">
+        <div :id="obj.uuid" class="record-terminal"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Terminal from '../../js/Xterm';
+  import bus from "../../../../libs/bus";
+
   export default {
-    name: "terminalLogRecordTab",
+    name: "terminalLogReplayTab",
     components: {
+      Terminal
     },
     props: {
       obj: Object, //关联的实体对象
     },
-    computed: {
-      calcTime() {
-        return function(time) {
-          if (this.obj.startTime) {
-            let startTime = new Date(this.obj.startTime).getTime();
-            if (startTime) {
-              let thisTime = startTime+time;
-              return this.dateFormat(thisTime);
-            }
-          }
-          return "-";
-        }
-      },
-      matchBgColor() {
-        return function(cmd) {
-          let className = "";
-          let dangerCmd = this.$CONSTANTS.terminalLog.dangerCmd;
-          let infoCmd = this.$CONSTANTS.terminalLog.infoCmd;
-          let cmdSplit = cmd.split(" ");
-          if (this.intersection(infoCmd, cmdSplit).length > 0) {
-            className = "detail--cmd__green";
-          }
-          if (this.intersection(dangerCmd, cmdSplit).length > 0) {
-            className = "detail--cmd__red";
-          }
-          return className;
-        }
-      },
-      hasNext() {
-        if (this.records.length > 0) {
-          return this.records[this.records.length-1].hasNext;
-        }
-        return false;
-      }
-    },
     data() {
       return {
         filter: {
-          uuid: this.obj.uuid,
-          cmd: "",
-          time: "",
-          size: 200
+          size: 1,
+          uuid: ""
         },
-        records: [ // 加载更多时有多个record，否则只有一个
+        terminal: null,
 
+        recordData: [],
+        isNeedStop: false, // 是否需要停止
+        playedCount: 0, // 当前已经播放完的数量
+        isPlaying: true, // 是否正在播放
+        isFinish: false, //是否已结束
+        isDragging: false, //是否正在拖动进度条
+        draggingOriginalX: 0, //开始拖拽时鼠标的x
+        draggingOriginalProgress: 0, //开始拖拽时的进度
+        recordTick: 50, // 输出间隔时间ms，默认50
+        playerTimer: null, // 定时器
+        playerCurrentTime: 0, // 当前时间进度
+        speedTable: [ // 快进倍速选项
+          {speed: 1, name: '×1'},
+          {speed: 2, name: '×2'},
+          {speed: 4, name: '×4'},
+          {speed: 8, name: '×8'},
+          {speed: 16, name: '×16'}
         ],
-        /*record: { // cmd记录，含hasNext、time(最后一条时间)、total和list
-          total: 4,
-          hasNext: true,
-          time: 9889,
-          list: [
-            {
-              id: 1,
-              uuid: 1,
-              time: 1024,
-              cmd: "ls -ef|grep java"
-            },
-            {
-              id: 2,
-              uuid: 2,
-              time: 3824,
-              cmd: "su root ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|ls -ef|grep java|afaewrafaser aolewr | awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|awk fajpoerja;welkrjfa;wle|"
-            },
-            {
-              id: 3,
-              uuid: 3,
-              time: 7740,
-              cmd: "rm -rf /"
-            },
-            {
-              id: 4,
-              uuid: 4,
-              time: 9889,
-              cmd: "exit"
-            },
-          ]
-        }*/
+        speedOffset: 0, // 快进倍数index
+        progress: 0, // 进度条进度
+        needSkip: true, // 是否跳过无操作时间，为true时表示需要，即不跳过无操作时间
+        timeUsed: 0,
       }
     },
     methods: {
-      initData(filter) {
-        this.$get("/terminal/cmd", filter).then(res => {
-          if (res.code === 200) {
-            this.records.push(res.data);
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      },
-      loadMore() {
-        let filter = Object.assign({}, this.filter);
-        filter.time = this.records[this.records.length-1].time;
-        this.initData(filter);
-      },
       // 切换tab
       changeTab(tab) {
         this.$emit('changeTab', tab);
       },
-      intersection(a, b) {
-        let s = new Set(b);
-        return a.filter(x => s.has(x));
+
+      getRecordData() {
+        return new Promise(resolve => {
+          this.$get("/terminal/record", this.filter).then(res => {
+            if (res.code === 200) {
+              this.recordData = res.data.list;
+              this.timeUsed = res.data.endTime;
+            }
+            resolve();
+          });
+        });
       },
+
+      consoleResize() {
+        this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth/11), parseInt(this.$refs.recordConsole.offsetHeight/18));
+        this.$nextTick(() => {
+          this.terminal && this.terminal.fit();
+        });
+      },
+
+      initAndPlay() {
+        this.$nextTick(() => {
+          // terminal初始化
+          if (this.terminal) {
+            this.terminal.reset(parseInt(this.$refs.recordConsole.offsetWidth/11), parseInt(this.$refs.recordConsole.offsetHeight/18));
+          } else {
+            this.terminal = new Terminal({
+              rows: parseInt(this.$refs.recordConsole.offsetHeight/18),
+              cols: parseInt(this.$refs.recordConsole.offsetWidth/11)
+            });
+            this.terminal.open(document.getElementById(this.obj.uuid));
+          }
+
+          if (this.recordData.length > 0) {
+            this.isNeedStop = false;
+            this.isPlaying = true;
+            this.isFinished = false;
+            this.playedCount = 0;
+            this.doPlay();
+          } else {
+            let req = this.getRecordData();
+            req.then(() => {
+              if (this.recordData.length > 0) {
+                // 请求得到数据后，开始播放
+                this.isNeedStop = false;
+                this.isPlaying = true;
+                this.isFinished = false;
+                this.playedCount = 0;
+                this.doPlay();
+              }
+            });
+          }
+        });
+      },
+
+      /*原理：利用setTimeout和数据的时间偏移量来模拟实现视频播放效果*/
+      doPlay() {
+        if (this.isNeedStop) {
+          this.isPlaying = false;
+          return;
+        }
+
+        if (this.recordData.length <= this.playedCount) {
+          this.playerTimer = setTimeout(this.doPlay, this.recordTick);
+          return;
+        }
+
+        this.playerCurrentTime += this.recordTick * this.speedTable[this.speedOffset].speed;
+
+        let recordTick = this.recordTick;
+
+        let playData;
+        for (let i = this.playedCount; i < this.recordData.length; i++) {
+          if (this.isNeedStop) {
+            break;
+          }
+          playData = this.recordData[i];
+          if (playData.t < this.playerCurrentTime) {
+            this.terminal.write(playData.c);
+
+            if ((this.playedCount + 1) === this.recordData.length) {
+              //播放完成
+              this.progress = 100;
+              this.isFinished = true;
+              this.isPlaying = false;
+              return;
+            } else {
+              this.playedCount++;
+            }
+
+          } else {
+            break;
+          }
+        }
+        if (this.isNeedStop) {
+          return;
+        }
+
+        if (this.needSkip) {
+          if (playData.t - this.playerCurrentTime > 800) {
+            this.playerCurrentTime = playData.t; // - this.record_tick * this.speed_table[this.speed_offset].speed;
+            recordTick = 800;
+          }
+        }
+        // 同步进度条
+        this.progress = parseInt(this.playerCurrentTime * 100 / this.timeUsed);
+
+        if (this.playedCount >= this.recordData.length) {
+          this.progress = 100;
+          //播放完成
+          this.isFinished = true;
+          this.isPlaying = false;
+        } else {
+          if (!this.isNeedStop)
+            this.playerTimer = setTimeout(this.doPlay, recordTick);
+        }
+
+      },
+      play() {
+        if (this.isPlaying) {
+          return;
+        }
+
+        if (this.isFinished) {
+          this.restart();
+          return;
+        }
+
+        this.isNeedStop = false;
+        this.isPlaying = true;
+        this.playerTimer = setTimeout(this.doPlay, this.recordTick);
+      },
+
+      speedChange() {
+        let length = this.speedTable.length;
+        this.speedOffset += 1;
+        if (this.speedOffset === length) {
+          this.speedOffset = 0;
+        }
+      },
+
+      pause() {
+        if (this.playerTimer) {
+          clearTimeout(this.playerTimer);
+        }
+        this.isNeedStop = true;
+        this.isPlaying = false;
+      },
+
+      restart() {
+        if (this.playerTimer) {
+          clearTimeout(this.playerTimer);
+        }
+        this.playerCurrentTime = 0;
+        this.initAndPlay();
+      },
+      jumpProgress(e) {
+        e.preventDefault();
+        if (this.playerTimer) {
+          clearTimeout(this.playerTimer);
+        }
+        this.progress = parseInt(e.offsetX*100/500);
+        this.playerCurrentTime = parseInt(this.timeUsed * this.progress / 100);
+        this.initAndPlay();
+      },
+      startDragging(e) {
+        e.preventDefault();
+        if (this.playerTimer) {
+          clearTimeout(this.playerTimer);
+        }
+        let vm = this;
+
+        this.pause();
+        this.draggingOriginalX = e.clientX;
+        this.draggingOriginalProgress = this.progress;
+        this.isDragging = true;
+        document.addEventListener("mousemove", dragging);
+        document.addEventListener("mouseup", endDragging);
+
+        function endDragging(e) {
+          e.preventDefault();
+
+          vm.isDragging = false;
+          document.removeEventListener("mousemove", dragging);
+          document.removeEventListener("mouseup", endDragging);
+          vm.initAndPlay();
+        }
+        function dragging(e) {
+          e.preventDefault();
+
+          if (vm.isDragging) {
+            let nowX = e.clientX;
+            let diff = nowX - vm.draggingOriginalX; // x变化量
+
+            let diffProgress = parseInt(diff*100/500);
+            if ((diffProgress + vm.draggingOriginalProgress) > 100) {
+              vm.progress = 100;
+            } else if ((diffProgress + vm.draggingOriginalProgress) < 0) {
+              vm.progress = 0;
+            } else {
+              vm.progress = diffProgress + vm.draggingOriginalProgress;
+            }
+            vm.playerCurrentTime = parseInt(vm.timeUsed * vm.progress / 100);
+          }
+        }
+      },
+
       dateFormat(time) {
         if (!time) {
           return '-';
         }
-        let date = new Date(time);
+        let date = new Date(time * 1000);
         let year = date.getFullYear();
         let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
         let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
@@ -167,86 +308,99 @@
       },
     },
     watch: {
+      // 入口，监听terminal session的变化，开始功能
       obj: {
         immediate: true,
         deep: true,
         handler(n) {
+          if (n.uuid) {
+            this.recordData = [];
+            this.filter.uuid = n.uuid;
+            this.playerCurrentTime = 0;
+            if (this.playerTimer) {
+              clearTimeout(this.playerTimer);
+            }
+            setTimeout(() => {this.initAndPlay();}, 200);
+          }
         }
       },
+      progress(n) {
+        let progressController = document.getElementById("progressController");
+        progressController.style.left = `${n}%`;
+      }
     },
-    mounted() {
-      this.initData(this.filter);
+    computed: {
+      parseCurrentTime() {
+        let currentTime = parseInt(this.playerCurrentTime/1000);
+        let totalTime = parseInt(this.timeUsed/1000);
+        if (currentTime > totalTime) {
+          currentTime = totalTime;
+        }
+        return `${currentTime} / ${totalTime}`;
+      }
     },
+    created() {
+      window.addEventListener('resize', bus.debounce(this.consoleResize, 1000));
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', bus.debounce);
+    }
   }
 </script>
 
 <style lang="scss">
-.record-container {
-  height: calc(100% - 50px);
-  overflow: auto;
+.replay-tab {
+  height: 100%;
 }
-.record-container--record {
-  background-color: white;
-  width: calc(50% - 14px);
-  padding: 16px 15px 14px 15px;
-  border: 1px solid #d8dce1;
-  box-sizing: border-box;
-  min-height: 100px;
+.replay-container {
+  height: calc(100% - 40px);
+}
+.record-console {
+  padding: 10px 4px 10px 10px;
+  background-color: black;
+  height: calc(100% - 80px);
+}
+.terminal-replay-progress {
+  height: 20px;
+  padding: 3px 0;
+  position: relative;
+  width: 500px;
+}
+.terminal-replay-progress-bar {
+  top: 50%;
+  transform: translateY(-50%);
 
-  .record--title {
-    color: #333;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-
-  .record--list {
-    display: grid;
-    gap: 6px 12px;
-    grid-template-columns: 150px auto;
-    font-size: 12px;
-    color: #333;
-    padding-left: 16px;
-
-    .detail--time {
-      line-height: 18px;
-      grid-column: 1/span 1;
-      display: flex;
-      align-items: flex-start;
-
-      span {
-        background-color: #ECECEC;
-        border-radius: 3px;
-        padding: 2px 5px;
-      }
-    }
-
-    .detail--cmd {
-      line-height: 18px;
-      grid-column: 2/span 1;
-      display: flex;
-
-      span {
-        border-radius: 3px;
-        padding: 2px 5px;
-      }
-    }
-
-    .detail--cmd__green {
-      background-color: #B4FDB1;
-    }
-    .detail--cmd__red {
-      background-color: #FFD2C2;
-    }
-  }
-
-  .record--more {
-    text-align: center;
-
+  .el-progress-bar__inner {
+    transition: unset;
+    user-select: none;
   }
 }
-.record-container--record.record-container--record__tip {
-  margin-top: 10px;
-  min-height: unset;
+.replay-operate {
+  .nz-btn {
+    margin-right: 8px;
+
+    .nz-icon {
+      font-size: 14px;
+    }
+  }
+}
+.operate-skip {
+  margin: 0 12px !important;
+}
+.time-box {
+  border: none;
+  border-radius: 16px;
+}
+.progress-controller {
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background-color: #409eef;
+  top: 50%;
+  transform: translate(-7px, -50%);
+}
+.progress-controller:hover {
+  background-color: #207ecf;
 }
 </style>

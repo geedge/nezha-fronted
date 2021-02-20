@@ -679,7 +679,6 @@ const en = {
       },
       option: 'Operation',//"操作",
       host: 'Host',
-      cmd: 'CMD',
       port: 'Port',
       userId: 'UserID',
       protocol: 'Protocol',
@@ -705,13 +704,20 @@ const en = {
       startTime: "Start time",
       duration: "Duration",
       remote: "Remote",
-      replay: "Replay",
       log: "Log",
+      source: "Source IP",
+      cmd: {
+        cmd: "Command",
+        history: "History command",
+        dangerTip: "This command may be dangerous",
+        legendTip: "Legend description",
+      },
       record: {
         record: "Record",
-        history: "History record",
-        dangerTip: "This CMD may be dangerous",
-        legendTip: "Legend description",
+        pause: "Pause",
+        play: "Play",
+        replay: "Replay",
+        skipTip: "Skip no operation time"
       }
     },
     operationlog: {

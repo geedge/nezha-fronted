@@ -31,8 +31,8 @@
                  @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
 
       <!--terminal-log的记录和回放-->
+      <terminal-log-cmd-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogCMDTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'cmd'"></terminal-log-cmd-tab>
       <terminal-log-record-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'record'"></terminal-log-record-tab>
-      <terminal-log-replay-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogReplayTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'replay'"></terminal-log-replay-tab>
 
     </div>
   </div>
@@ -45,7 +45,7 @@
   import endpointTab from "./tabs/endpointTab";
   import panelTab from "./tabs/panelTab";
   import terminalLogRecordTab from "./tabs/terminalLogRecordTab";
-  import terminalLogReplayTab from "./tabs/terminalLogReplayTab";
+  import terminalLogCMDTab from "./tabs/terminalLogCMDTab";
 
   export default {
     name: "bottomBox",
@@ -56,7 +56,7 @@
       'endpoint-tab': endpointTab,
       'panel-tab': panelTab,
       terminalLogRecordTab,
-      terminalLogReplayTab
+      'terminal-log-cmd-tab': terminalLogCMDTab
     },
     props: {
       isFullScreen: false, //是否全屏
@@ -95,6 +95,10 @@
       afterResize() {
         if (this.from == this.$CONSTANTS.fromRoute.endpoint && this.targetTab == 'endpointQuery') {
           this.$refs.endpointQuery.tableReload();
+        } else if (this.from == this.$CONSTANTS.fromRoute.terminalLog && this.targetTab == 'record') {
+          setTimeout(() => {
+            this.$refs.reminalLogRecordTab.consoleResize();
+          }, 600);
         }
       }
     },

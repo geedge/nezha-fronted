@@ -383,7 +383,6 @@ export const chartResizeTool = {
       //将resize-box的宽高设为resize-shadow的宽高
       box.style.width = `${shadow.offsetWidth}px`;
       box.style.height = `${Math.round((shadow.offsetHeight )/chartPaddingTop)*chartPaddingTop}px`;
-      console.log('box height:',box.style.height)
       data.height = Math.round((box.offsetHeight+chartPaddingTop)/stepHeight)*stepHeight;
       data.span = Math.round((box.offsetWidth+chartBlankWidth)/stepWidth);
       //请求后台，保存变更

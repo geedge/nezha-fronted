@@ -58,9 +58,9 @@
               <span>{{getDuration(scope.row)}}</span>
             </template>
             <template v-else-if="item.prop == 'option'">
-              <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.replay')" @click="showReplay(scope.row)" class="content-right-option"><i class="el-icon-video-play"></i></span>
+              <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.record.record')" @click="showRecord(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-replay2"></i></span>
               &nbsp;
-              <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showRecord(scope.row)" class="content-right-option"><i class="el-icon-tickets"></i></span>
+              <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showHistoryCMD(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-terminal-log"></i></span>
 
             </template>
             <span v-else>{{scope.row[item.prop]}}</span>
@@ -160,6 +160,11 @@
             show: true,
           },
           {
+            label: this.$t('config.terminallog.source'),
+            prop: 'remoteAddr',
+            show: true,
+          },
+          {
             label: this.$t('config.terminallog.remote'),
             prop: 'remote',
             show: true,
@@ -233,43 +238,6 @@
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
 
-        testData: {
-          code: 200,
-          data: {
-            pageNo: 1,
-            pageSize: 20,
-            total: 2,
-            pages: 1,
-            list: [
-              {
-                id: 1,
-                uuid: "abcdde",
-                host: "192.168.40.42",
-                port: 22,
-                protocol: "SSH",
-                authType: 1,
-                username: "admin",
-                loginUser: "root",
-                startTime: "2021-02-01 14:20:08",
-                endTime: "2021-02-01 14:30:08",
-                status: 3,
-                killUserName: "leader",
-              }, {
-                id: 2,
-                uuid: "zpppoe",
-                host: "192.168.40.42",
-                port: 22,
-                protocol: "SSH",
-                authType: 1,
-                username: "admin",
-                loginUser: "root",
-                startTime: "2021-02-01 14:41:08",
-                endTime: "2021-02-01 14:51:08",
-                status: 2,
-              },
-            ]
-          },
-        }
       }
     },
     computed: {
@@ -292,11 +260,16 @@
         }
       },
     },
+    watch: {
+      'bottomBox.showSubList': function (n) {
+        let vm = this;
+        this.$bottomBoxWindow.showSubListWatch(vm, n);
+      },
+    },
     methods: {
       getTableData() {
         this.$get('terminal/session', this.searchLabel).then(response => {
           this.tools.loading = false;
-          //response = this.testData;
           if (response.code === 200) {
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
@@ -310,32 +283,13 @@
         })
       },
 
-      /*getTableData: function () {
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('terminal/log', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          response = this.testData;
-          if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.terminalLogTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
-          }
-        })
-      },*/
-      showReplay(record) {
-        this.bottomBox.targetTab = 'replay';
+      showRecord(record) {
+        this.bottomBox.targetTab = 'record';
         this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
         this.bottomBox.showSubList = true;
       },
-      showRecord(record) {
-        this.bottomBox.targetTab = 'record';
+      showHistoryCMD(record) {
+        this.bottomBox.targetTab = 'cmd';
         this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
         this.bottomBox.showSubList = true;
       },
