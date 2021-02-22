@@ -181,18 +181,23 @@
 
 
 
-        <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right pickTime"
+        <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
-                <pick-time v-show="!editTopologyFlag" :showTimePicker="false" class="float-right pickTime"
-                           :refresh-data-func="reload" v-model="searchTime" :use-chart-unit="false"
-                           ref="pickTime"></pick-time>
+          <pick-time
+            v-show="!editTopologyFlag"
+            class="float-right pickTime"
+            :refresh-data-func="dateChange"
+            v-model="searchTime"
+            :use-chart-unit="false"
+            ref="pickTime">
+          </pick-time>
       </span>
       </div>
     </div>
-    <div class="page">
+    <div :class="['page',fromOverView?'overview-page':'']">
       <!--画布部分-->
       <div :id="'topology-canvas' + topologyIndexF" class="full" :ref="'topology-canvas'+ topologyIndexF"></div>
       <!--设置属性-->
@@ -209,7 +214,7 @@
       </div>
       <!--所有节点上的小图标-->
       <div v-for="(item,index) in nodesArr"
-           :style="{position: 'absolute',top:item.rect.y - 48+'px',left:item.rect.center.x - 24 +'px'}"
+           :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
            v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
            class="network-pop"
       >
@@ -347,6 +352,7 @@
     translateKey:'None',
     disableEmptyLine:true,
     autoExpandDistance:0,
+    minScale:0.01,
   };
   let canvas;
   export default {
@@ -381,7 +387,7 @@
         saveData:{},
         dataLength:0,
         editTopologyFlag:false,
-        searchTime:{},
+        searchTime: bus.getTimezontDateRange(),
         activeNames:[],
         topologyIndex:0,
         iconArray:[],
@@ -460,6 +466,7 @@
         projectAlertShow:false,
         previewShow:false,
         penId:undefined,
+        penToolTipScale:1,
       };
     },
     components:{
@@ -505,7 +512,6 @@
         immediate:true,
         handler(n){
           this.topologyIndex=n;
-          console.log(n,this.fromPrev);
         }
       },
       obj:{
@@ -580,9 +586,11 @@
       }
     },
     created(){
-      this.addNodeInit();
     },
     mounted(){
+      if(!this.fromOverView){//从overview来的 加载相应图片 优化首页加载速度
+        this.addNodeInit();
+      }
       document.getElementById('topology-canvas'+this.topologyIndexF).addEventListener('mousemove',this.canvasMove);
       window.addEventListener('resize',this.winResize)
     },
@@ -628,41 +636,39 @@
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
               this.objChange=false;
-              if(this.fromOverView){
-                let flag=false;
+              let flag=false;
 
-                let position={
-                  x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
-                  y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-                }
-
-                getTopology(this.topologyIndex).centerView(50);
-                getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                  if(flag){
-                    return
-                  }
-                  if(item.rect.x>position.x || item.rect.y>position.y){
-                    getTopology(this.topologyIndex).fitView(50);
-                    flag=true
-                  }
-                });
-                getTopology(this.topologyIndex).centerView(50);
-                setTimeout(()=>{
-                  getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                   if(item.animatePlay){
-                     item.stopAnimate();
-                     setTimeout(()=>{
-                       item.startAnimate()
-                     })
-                   }
-                  },100);
-                })
-                // if(this.fromPrev){
-                //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-                // }
-                // getTopology(this.topologyIndex).fitView();
-                this.getNodesArr();
+              let position={
+                x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+                y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
               }
+              getTopology(this.topologyIndex).centerView(20);
+              getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                if(flag){
+                  return
+                }
+                if(item.rect.ex>position.x || item.rect.ey>position.y){
+                  getTopology(this.topologyIndex).fitView(20);
+                  flag=true
+                }
+              });
+              getTopology(this.topologyIndex).centerView(20);
+              this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
+              setTimeout(()=>{
+                getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                  if(item.animatePlay){
+                    item.stopAnimate();
+                    setTimeout(()=>{
+                      item.startAnimate()
+                    })
+                  }
+                },100);
+              })
+              // if(this.fromPrev){
+              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+              // }
+              // getTopology(this.topologyIndex).fitView();
+              this.getNodesArr();
             });
           })
         });
@@ -709,51 +715,81 @@
               getTopology(this.topologyIndex).open(data);
               getTopology(this.topologyIndex).lock(1);
               this.objChange=false;
-              if(this.fromOverView){
-                let flag=false;
+              let flag=false;
 
-                let position={
-                  x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
-                  y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-                }
-
-                getTopology(this.topologyIndex).centerView(50);
-                getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                  if(flag){
-                    return
-                  }
-                  if(item.rect.x>position.x || item.rect.y>position.y){
-                    getTopology(this.topologyIndex).fitView(50);
-                    flag=true
-                  }
-                });
-                getTopology(this.topologyIndex).centerView(50);
-                setTimeout(()=>{
-                  getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                    if(item.animatePlay){
-                      item.stopAnimate();
-                      setTimeout(()=>{
-                        item.startAnimate()
-                      })
-                    }
-                  },100);
-                })
-                // if(this.fromPrev){
-                //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-                // }
-                // getTopology(this.topologyIndex).fitView();
-                this.getNodesArr();
+              let position={
+                x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+                y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
               }
+              getTopology(this.topologyIndex).centerView(20);
+              getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                if(flag){
+                  return
+                }
+                if(item.rect.ex>position.x || item.rect.ey>position.y){
+                  getTopology(this.topologyIndex).fitView(20);
+                  flag=true
+                }
+              });
+              getTopology(this.topologyIndex).centerView(20);
+              this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
+              setTimeout(()=>{
+                getTopology(this.topologyIndex).data.pens.forEach(item=>{
+                  if(item.animatePlay){
+                    item.stopAnimate();
+                    setTimeout(()=>{
+                      item.startAnimate()
+                    })
+                  }
+                },100);
+              })
+              // if(this.fromPrev){
+              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+              // }
+              // getTopology(this.topologyIndex).fitView();
+              this.getNodesArr();
             });
           })
         });
       },
+      dateChange() {
+        let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
+        this.setSearchTime(nowTimeType.type,nowTimeType.value);
+        this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
+        this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
+       this.reload();
+      },
+      setSearchTime(type,val){//设置searchTime
+        if(type==='minute'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "m");
+        }else if(type==='hour'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "h");
+        }else if(type==='date'){
+          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
+          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
+          this.$set(this.searchTime, 0, startTime);
+          this.$set(this.searchTime, 1, endTime);
+          this.$set(this.searchTime, 2, val + "d");
+        }
+        this.$refs.pickTime.$refs.timePicker.searchTime=this.searchTime;
+      },
+      //打开topology数据
       openTopologyData(data){
         return new Promise(resolve=>{
-          let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
-          canvas.open(data);
+         if(!getTopology(this.topologyIndex)){
+           let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
+           canvas.open(data);
+           setTopology(this.topologyIndex,canvas);
+         }
           this.topologyLoading=false;
-          setTopology(this.topologyIndex,canvas);
           if(!getTopology(this.topologyIndex).data.name){
             getTopology(this.topologyIndex).data.name=this.obj.name;
           }
@@ -792,6 +828,10 @@
                 fontColor:data.data.fontColor,
                 opacity:data.data.opacity,
                 name:data.name
+              };
+              if(this.fromOverView){//优化从首页来的加载速度
+                let arr=data.pens.filter(item=>!item.type);
+                this.addNodeInit(arr);
               }
               let timer=setInterval(()=>{
                 if(!this.imgInit){
@@ -1489,7 +1529,7 @@
       },
       /*topology 方法*/
       end(v){
-        console.log(v);
+
       },
       /*tools 方法*/
       upload(){
@@ -1528,19 +1568,51 @@
         })
       },
 
-      addNodeInit(){
-        this.$get('/project/topo/icon').then(res=>{
+      addNodeInit(imgidList){
+        if(!this.fromOverView){
+          this.$get('/project/topo/icon').then(res=>{
+            this.imgageLoading=true;
+            this.tools[1].children=[];
+            let promiseArr=[];
+            res.data.list.forEach((item,index)=>{
+              item.imageName=item.name;
+              delete item.name;
+              promiseArr.push( this.dealImg(`/project/topo/icon/${item.id}`));
+            });
+            Promise.all(promiseArr).then(res2=>{
+              this.iconArray=[...res.data.list];
+              this.iconArray.forEach((item,index)=>{
+                this.tools[1].children.push({
+                  ...imageTemp,
+                  data:{
+                    ...imageTemp.data,
+                    text:item.imageName,
+                    image:res2[index],
+                    imageId:item.id,
+                  }
+                })
+                item.image=res2[index];
+              });
+              this.imgInit=true;
+            })
+          })
+        }else{
           this.imgageLoading=true;
           this.tools[1].children=[];
           let promiseArr=[];
-          res.data.list.forEach((item,index)=>{
-            item.imageName=item.name;
-            delete item.name;
-            promiseArr.push( this.dealImg(`/project/topo/icon/${item.id}`));
+          imgidList.forEach((item,index)=>{
+           if(item.data.imageId){
+             promiseArr.push( this.dealImg(`/project/topo/icon/${item.data.imageId}`));
+           }
           });
           Promise.all(promiseArr).then(res2=>{
-            this.iconArray=[...res.data.list];
+            this.iconArray=imgidList.map(item=>{
+              return {
+                id:item.data.imageId
+              }
+            });
             this.iconArray.forEach((item,index)=>{
+              if(!item.id){return};
               this.tools[1].children.push({
                 ...imageTemp,
                 data:{
@@ -1554,9 +1626,7 @@
             });
             this.imgInit=true;
           })
-
-
-        })
+        }
       },
 
       dealImg(url){
@@ -1754,6 +1824,7 @@
         this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos=domRect;
         getTopology(this.topologyIndex).centerView();
+        this.getNodesArr();
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
         if(this.tooltipPosition.show){
@@ -2244,6 +2315,9 @@
     position: relative;
     border: 1px solid #eeeeee;
     border-radius: 2px;
+    .pickTime{
+      margin-top: -13px;
+    }
     .project-title {
       height: 34px;
       padding-top: 8px;
@@ -2265,7 +2339,7 @@
 
   .page {
     display: flex;
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
     width: 100%;
     position: relative;
 
@@ -2301,7 +2375,9 @@
       border-radius: 0px;
     }
   }
-
+  .overview-page{
+    height: 100%;
+  }
   .special-select svg {
     width: 75px;
     height: 30px;
