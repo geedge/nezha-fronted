@@ -502,6 +502,33 @@ export function onChangeAnimate(node,animateType,fillStyle,strokeStyle) {
         state: Node.cloneState(state)
       });
       break;
+    case 'fade':
+      state.strokeStyle = strokeStyle?strokeStyle: '#fa541c';
+      state.globalAlpha = 0.3;
+      node.animateFrames.push({
+        duration: 300,
+        linear: true,
+        state: Node.cloneState(state)
+      });
+      state.globalAlpha = 0.5;
+      node.animateFrames.push({
+        duration: 300,
+        linear: true,
+        state: Node.cloneState(state)
+      });
+      state.globalAlpha = 0.8;
+      node.animateFrames.push({
+        duration: 300,
+        linear: true,
+        state: Node.cloneState(state)
+      });
+      state.globalAlpha = 1;
+      node.animateFrames.push({
+        duration: 300,
+        linear: true,
+        state: Node.cloneState(state)
+      });
+      break;
   }
   node.animatePlay=true;
 }

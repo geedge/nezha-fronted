@@ -1137,40 +1137,36 @@
           {d:'M5 14 l85 0',fill:'#ffffff',stroke:"#000000",'stroke-width':"1",cx:"10",cy:"14",r:"5",name:'circle'},
         ],
         lineAnimateOptions:[
-          {id:1,name:'水流'},
-          {id:'beads',name:'水珠流动'},
-          {id:'dot',name:'圆点'},
-          {id:'comet',name:'彗星'},
+          {id:1,name:this.$t("project.topology.flow")},
+          {id:'beads',name:this.$t("project.topology.beads")},
+          {id:'dot',name:this.$t("project.topology.dot")},
+          {id:'comet',name:this.$t("project.topology.comet")},
         ],
         nodeAnimateOptions:[
           {
             id:'upDown',
-            name:'上下跳动'
+            name:this.$t("project.topology.bounce")
           },
           {
             id:'leftRight',
-            name:'左右跳动'
+            name:this.$t("project.topology.shakeX")
           },
           {
             id:'heart',
-            name:'心跳'
-          },
-          {
-            id:'success',
-            name:'成功'
+            name:this.$t("project.topology.heartBeat")
           },
           {
             id:'warning',
-            name:'警告'
-          },
-          {
-            id:'error',
-            name:'错误'
+            name:this.$t("project.topology.flash")
           },
           {
             id:'show',
-            name:'炫耀'
+            name:this.$t("project.topology.swing")
           },
+          {
+            id:'fade',
+            name:this.$t("project.topology.fade")
+          }
         ],
       }
     },
