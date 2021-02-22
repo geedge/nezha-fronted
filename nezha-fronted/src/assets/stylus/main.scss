@@ -1438,6 +1438,9 @@ li{
   line-height: 34px;
   font-weight: bold;
 }
+.right-box-form-left.right-box-form .el-form-item.label-position{
+  position: relative;
+}
 .right-box-form-left.right-box-form .el-form-item.label-position .el-form-item__label{
   position: absolute;
   display: inline-block;
