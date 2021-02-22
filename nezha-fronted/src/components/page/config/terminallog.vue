@@ -51,6 +51,9 @@
             <template v-else-if="item.prop == 'status'">
               <span>{{getStatusText(scope.row.status)}}</span>
             </template>
+            <template v-else-if="item.prop == 'uuid'">
+              <span>{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
+            </template>
             <template v-else-if="item.prop == 'remote'">
               <span>{{getRemoteText(scope.row)}}</span>
             </template>
@@ -58,9 +61,16 @@
               <span>{{getDuration(scope.row)}}</span>
             </template>
             <template v-else-if="item.prop == 'option'">
-              <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.record.record')" @click="showRecord(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-replay2"></i></span>
-              &nbsp;
-              <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showHistoryCMD(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-terminal-log"></i></span>
+              <template v-if="scope.row.status == 0">
+                <span :id="'terminalLog-shutdown-'+scope.row.id" @click="shutdown(scope.row)" class="content-right-option" title="Kill"><i class="nz-icon nz-icon-ZD"></i></span>
+                &nbsp;
+                <span :id="'terminalLog-monitor-'+scope.row.id" :title="$t('config.terminallog.monitoring')" @click="monitor(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-JC"></i></span>
+              </template>
+              <template v-else>
+                <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.record.record')" @click="showRecord(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-replay2"></i></span>
+                &nbsp;
+                <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showHistoryCMD(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-terminal-log"></i></span>
+              </template>
 
             </template>
             <span v-else>{{scope.row[item.prop]}}</span>
@@ -292,6 +302,19 @@
         this.bottomBox.targetTab = 'cmd';
         this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
         this.bottomBox.showSubList = true;
+      },
+      shutdown(record) {
+        this.$put("/terminal/kill", {uuid: record.uuid}).then(res => {
+          if (res.code === 200) {
+            this.$message.success(this.$t("config.terminallog.success"));
+            this.getTableData();
+          } else {
+            this.$message.error(this.$t("config.terminallog.killErrorTip"));
+          }
+        });
+      },
+      monitor(record) {
+        
       },
       // 全屏
       fullScreen() {

@@ -706,6 +706,8 @@ const en = {
       remote: "Remote",
       log: "Log",
       source: "Source IP",
+      killErrorTip: "Killing failed",
+      monitor: "monitoring",
       cmd: {
         cmd: "Command",
         history: "History command",

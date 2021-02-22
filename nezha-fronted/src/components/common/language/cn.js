@@ -669,6 +669,8 @@ const cn = {
       replay: "回放",
       source: "源IP",
       log: "日志",
+      killErrorTip: "踢出失败",
+      monitor: "监控",
       cmd: {
         cmd: "命令",
         history: "历史命令",
