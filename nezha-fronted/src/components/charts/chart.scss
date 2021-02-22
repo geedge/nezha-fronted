@@ -24,14 +24,14 @@
   color:lightgray;
 }
 .legend-container{
-  width: calc(100% - 30px);
+  width: calc(100% - 15px);
   overflow: auto;
   max-height:80px;
   min-height:25px;
   font-size:12px;
   text-align:left;
   left: 10px;
-  bottom: 0px;
+  bottom: 0;
   line-height: 18px;
   position: absolute;
   padding-bottom:3px;

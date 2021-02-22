@@ -81,7 +81,7 @@ import chartDataFormat from './chartDataFormat'
 import loading from "../common/loading";
 import timePicker from '../common/timePicker'
 import * as echarts from 'echarts'
-import {getChart, setChart} from "../common/js/common";
+import {getChart, setChart, lineChartMove,getMousePoint} from "../common/js/common";
 import chart from '../page/dashboard/overview/chart'
 import chartConfig from "../page/dashboard/overview/chartConfig";
 import {randomcolor} from "../common/js/radomcolor/randomcolor";
@@ -168,9 +168,6 @@ export default {
           trigger:'item',
           backgroundColor:'rgba(221,228,237,1)',
           borderColor :'rgba(255,255,255,0)',
-          textStyle:{
-            color:'#000'
-          },
           textStyle:{
             color:'#000'
           },
@@ -410,6 +407,72 @@ export default {
               getChart(self.chartIndex).resize({height:(self.chartData.height-divHeight-self.$chartResizeTool.titleHeight-self.$chartResizeTool.chartBlankHeight)});
             }
             self.$set(self.option.tooltip,'formatter',self.formatterFunc)
+            self.$set(self.option.tooltip,'position', function(point,params,dom,rect,size){
+              dom.style.transform = "translateZ(0)";
+              var windowWidth=window.innerWidth;//窗口宽度
+              var windowHeight=window.innerHeight;//窗口高度
+              var windowMouse=getMousePoint();
+              //提示框位置
+              var x=0;
+              var y=0;
+              //当前鼠标位置
+              var pointX = point[0];
+              var pointY = point[1];
+              //外层div大小
+              var viewWidth = size.viewSize[0];
+              var viewHeight = size.viewSize[1];
+              //提示框大小
+              var boxWidth = size.contentSize[0];
+              var boxHeight = size.contentSize[1];
+              if (!self.screenModal) { // 本地显示
+                let chartDom = document.getElementById(self.chartData.title+"_"+self.chartData.id);
+                if(chartDom){
+                  let parTop = document.getElementById(self.chartData.title+"_"+self.chartData.id).offsetTop;
+                  let parleft = document.getElementById(self.chartData.title+"_"+self.chartData.id).offsetLeft;
+
+                  let parent = document.getElementById('tableList');
+                  let parClientHeight = parent.clientHeight;//可视高度
+                  let parClientWidth = parent.clientWidth;//可视宽度
+                  let parScrollTop = parent.scrollTop;
+                  if((parClientWidth-pointX-parleft-20)>=boxWidth){//说明鼠标在左边放不下提示框
+                    x=pointX+10;
+                  }else{
+                    x = pointX - boxWidth;
+                  }
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
+                  }else {
+                    y = pointY - boxHeight - 10;
+                  }
+                  return [x,y];
+                }else {//preview page
+
+                  if(windowMouse.x<(windowWidth/2)){//说明鼠标在左边放不下提示框
+                    x=pointX + 15;
+                  }else{
+                    x = pointX - boxWidth - 15;
+                  }
+                  if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                    y = pointY + 15;
+                  }else {
+                    y = pointY - boxHeight - 10;
+                  }
+                  return [x,y];
+                }
+              }else {
+                if(pointX<(viewWidth/2)){//说明鼠标在左边放不下提示框
+                  x=pointX+10;
+                }else{
+                  x = pointX - boxWidth;
+                }
+                if(windowMouse.y + 50 +boxHeight<windowHeight){//说明鼠标上面放不下提示框
+                  y = pointY + 15;
+                }else {
+                  y = pointY - boxHeight - 10;
+                }
+                return [x,y];
+              }
+            },)
             if(self.pieData[0].data.length>0){
               getChart(self.chartIndex).clear();
               getChart(self.chartIndex).setOption(self.option);//创建图表
