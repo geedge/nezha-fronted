@@ -103,6 +103,7 @@
           threshold:'',
           url:'',
           valueMapping:{"mapping":[{"color":{"bac":"#fff","text":"#000"},"text":"","value":""}],"type":"text"},
+          statistics:chartData.aggregation
         };
         chartData.span=12;
         this.chartData=chartData;
@@ -266,6 +267,7 @@
                                   element: {element: host, alias: alias},
                                   time: timeTmp,//采集时间
                                   value: dpsItem[1],//数值
+                                  data:[dpsItem[0] * 1000, dpsItem[1]]
                                 });
                                 return [dpsItem[0] * 1000, dpsItem[1]];
                               });
@@ -300,7 +302,7 @@
                       errorMsg: errorMsg,
                     }
                     if (chartItem.type === 'table') {//表格
-                      this.$refs['editChart' + chartItem.type].setData(chartItem, tableData,this.filter.panelId, this.filter, filterType, errorMsg);
+                      this.$refs['editChart' + chartItem.type].setData(chartItem, tableData,this.filter.panelId, this.filter, '', errorMsg);
                     } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4) {
                       if (series.length && chartItem.type === 4) {//曲线汇总
                         //series.push(sumData);//后续需要
