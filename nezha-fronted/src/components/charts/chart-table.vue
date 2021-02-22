@@ -510,7 +510,6 @@
             }]
             break;
           case 'last':
-            console.log(last)
             result=last;
             result = [{
               element:result.element,

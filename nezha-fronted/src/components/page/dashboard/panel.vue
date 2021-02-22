@@ -846,9 +846,6 @@
   .box-content {
     position: relative;
     min-height: 100%;
-    .show-top:last-child{
-        margin-bottom: 50px;
-    }
   }
 
   /* end-chart list*/
@@ -1050,4 +1047,8 @@
     }
   }
 </style>
-
+<style>
+  .box-content .show-top .chartBox:last-child{
+    margin-bottom: 50px !important;
+  }
+</style>
