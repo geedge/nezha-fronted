@@ -78,12 +78,12 @@
     overflow: hidden;
     position: absolute;
     top: -280px;
-    left: 140px;
+    left: 280px;
   }
   .color-tab{
     position: absolute;
     top: -268px;
-    left: -14px;
+    left: 144px;
     height: 28px;
     border-radius: 5px 5px 0 0;
     width: 312px;
