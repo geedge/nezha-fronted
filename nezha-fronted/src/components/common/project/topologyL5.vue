@@ -270,10 +270,6 @@
       <div v-if="popDataShow.info">
         <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
       </div>
-      <!--chart-->
-      <div v-if="popDataShow.total">
-        <topoTooltip :chartDataParent="chartDataInfo" :filterTime="filterTime" :isChart="true"/>
-      </div>
     </div>
     <!--endpoint-->
     <transition name="right-box">
@@ -340,7 +336,6 @@
   import VueDraggableResizable from 'vue-draggable-resizable';//api https://github.com/mauricius/vue-draggable-resizable
   import popDataMain from './popData/Main'
   import popDataInfo from './popData/Info'
-  import TotalChart from "./popData/totalChart";
   import alertTable from "./popData/alertTable";
   import assetTable from "./popData/assetTable";
   import endpointTable from "./popData/endpointTable";
@@ -481,7 +476,6 @@
       VueDraggableResizable,
       popDataMain,
       popDataInfo,
-      TotalChart,
       alertTable,
       assetTable,
       endpointTable,
@@ -602,81 +596,7 @@
     methods:{
       init(){
         canvasOptions.on=this.onMessage;
-        this.getTopologyData().then((data)=>{
-          this.openTopologyData(data).then(()=>{
-            //获取对应的值 给节点 连线添加对应动画
-            this.lineName=data.lineName?data.lineName:this.lineName;
-            this.chartGetData=[];
-            let axiosArr=[];
-            let promiseArr=[];
-            let self=this;
-            let pensPromise=(pen, arr,index)=>{
-              return new Promise(function(resolve, reject) {
-                Promise.all(arr).then((res)=>{
-                  self.chartGetData[index].res=self.computeData(res,pen.data.aggregation,pen);
-                  self.setAnimation(pen,self.chartGetData[index].res);
-                  resolve()
-                });
-              });
-            };
-            let endTime=this.filterTime[1];
-            let startTime=this.filterTime[0];
-            let step=bus.getStep(startTime,endTime);
-            data.pens&&data.pens.forEach((item,index)=>{
-              this.chartGetData.push({id:item.id,res:[]});
-              let arr=item.data.expressArr.map((ele)=>{
-                let query=encodeURIComponent(ele);
-                if(!query){
-                  return new Promise(resolve=>{
-                    resolve({data:"",status:'no query'});
-                  })
-                }
-                query+='&nullType='+'connected';
-                return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
-              });
-              axiosArr.push({item,arr});
-              promiseArr.push(pensPromise(item,arr,index))
-            });
-            Promise.all(promiseArr).then((res)=>{
-              getTopology(this.topologyIndex).open(data);
-              getTopology(this.topologyIndex).lock(1);
-              this.objChange=false;
-              let flag=false;
-
-              let position={
-                x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
-                y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-              }
-              getTopology(this.topologyIndex).centerView(20);
-              getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                if(flag){
-                  return
-                }
-                if(item.rect.ex>position.x || item.rect.ey>position.y){
-                  getTopology(this.topologyIndex).fitView(20);
-                  flag=true
-                }
-              });
-              getTopology(this.topologyIndex).centerView(20);
-              this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
-              setTimeout(()=>{
-                getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                  if(item.animatePlay){
-                    item.stopAnimate();
-                    setTimeout(()=>{
-                      item.startAnimate()
-                    })
-                  }
-                },100);
-              })
-              // if(this.fromPrev){
-              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-              // }
-              // getTopology(this.topologyIndex).fitView();
-              this.getNodesArr();
-            });
-          })
-        });
+        this.reload();
       },
 
       reload(){
@@ -721,12 +641,10 @@
               getTopology(this.topologyIndex).lock(1);
               this.objChange=false;
               let flag=false;
-
               let position={
                 x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
                 y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
               }
-              getTopology(this.topologyIndex).centerView(20);
               getTopology(this.topologyIndex).data.pens.forEach(item=>{
                 if(flag){
                   return
@@ -757,6 +675,7 @@
           })
         });
       },
+
       dateChange() {
         let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
         this.setSearchTime(nowTimeType.type,nowTimeType.value);
@@ -847,7 +766,7 @@
                 let self=this;
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
-                    item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
+                    item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image;
                   }
                  if(item.type===0){
                    promiseArr.push(this.$get('/module/stat',{id:item.data.moduleId}));
@@ -1638,6 +1557,8 @@
           imgidList.forEach((item,index)=>{
            if(item.data.imageId){
              promiseArr.push( this.dealImg(`/project/topo/icon/${item.data.imageId}`));
+           }else{
+             promiseArr.push('');
            }
           });
           Promise.all(promiseArr).then(res2=>{
@@ -1647,17 +1568,9 @@
               }
             });
             this.iconArray.forEach((item,index)=>{
-              if(!item.id){return};
-              this.tools[1].children.push({
-                ...imageTemp,
-                data:{
-                  ...imageTemp.data,
-                  text:item.imageName,
-                  image:res2[index],
-                  imageId:item.id,
-                }
-              })
-              item.image=res2[index];
+              if(item.id){
+                item.image=res2[index];
+              }
             });
             this.imgInit=true;
           })
@@ -1862,9 +1775,23 @@
         // this.toolShow.attrCord=[domRect.width-350,0];
         // this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos=domRect;
-        getTopology(this.topologyIndex).centerView();
+        let flag=false;
+
+        let position={
+          x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+          y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
+        }
+        getTopology(this.topologyIndex).data.pens.forEach(item=>{
+          if(flag){
+            return
+          }
+          if(item.rect.ex>position.x || item.rect.ey>position.y){
+            getTopology(this.topologyIndex).fitView(20);
+            flag=true
+          }
+        });
+        getTopology(this.topologyIndex).centerView(20);
         this.getNodesArr();
-        console.log(213213123123);
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
         if(this.tooltipPosition.show){

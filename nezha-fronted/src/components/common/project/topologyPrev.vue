@@ -63,7 +63,7 @@
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
-                <div class="icon-item">
+                <div class="icon-item" style="width: 100%;padding: 0">
                   <svg>
                     <g fill="none" stroke="black" stroke-width="1">
                       <path
@@ -74,14 +74,15 @@
                   </svg>
                 </div>
               </div>
-                <el-option :disabled="true" :value="false">默认连线类型</el-option>
+                <el-option :disabled="true" :value="false">{{$t('project.topology.defaultLineType')}}</el-option>
                 <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
-                  <div class="icon-item">
+                  <div class="icon-item" style="position: relative;width: 100%;padding: 0">
                     <svg>
                     <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
                     <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                     </g>
                     </svg>
+                    <span style="position: absolute;left:60px;top: 0;">{{item.name}}</span>
                   </div>
                 </el-option>
               </el-select>
@@ -97,6 +98,7 @@
             ref="topTool"
             @toolShowChange="toolShowChange"
             :cachesIndex="cachesIndex"
+            :redoIndexChange="redoIndexChange"
             :toolShow="toolShow">
           </topology-top-tool>
 
@@ -245,7 +247,9 @@
       <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px'}"
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
-           @mouseout="tooltipOut">
+           @mouseout="tooltipOut"
+           ref="topoTooltip"
+      >
         <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
       </div>
     </div>
@@ -265,10 +269,6 @@
       </div>
       <div v-if="popDataShow.info">
         <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
-      </div>
-      <!--chart-->
-      <div v-if="popDataShow.total">
-        <topoTooltip :chartDataParent="chartDataInfo" :filterTime="filterTime" :isChart="true"/>
       </div>
     </div>
     <!--endpoint-->
@@ -336,7 +336,6 @@
   import VueDraggableResizable from 'vue-draggable-resizable';//api https://github.com/mauricius/vue-draggable-resizable
   import popDataMain from './popData/Main'
   import popDataInfo from './popData/Info'
-  import TotalChart from "./popData/totalChart";
   import alertTable from "./popData/alertTable";
   import assetTable from "./popData/assetTable";
   import endpointTable from "./popData/endpointTable";
@@ -385,6 +384,7 @@
           name:'',
         },
         saveData:{},
+        redoIndex:0,
         dataLength:0,
         editTopologyFlag:false,
         searchTime: bus.getTimezontDateRange(),
@@ -446,9 +446,9 @@
         chartData:{},
         chartGetData:[],
         penLineType:[
-          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:'curve'},
-          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:'polyline'},
-          {d:'M5 14 l40 0',"stroke-dasharray":"",name:'line'},
+          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:this.$t('project.topology.curve')},
+          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:this.$t('project.topology.polyline')},
+          {d:'M5 14 l40 0',"stroke-dasharray":"",name:this.$t('project.topology.line')},
           // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
         ],
         lineName:'curve',
@@ -476,7 +476,6 @@
       VueDraggableResizable,
       popDataMain,
       popDataInfo,
-      TotalChart,
       alertTable,
       assetTable,
       endpointTable,
@@ -597,81 +596,7 @@
     methods:{
       init(){
         canvasOptions.on=this.onMessage;
-        this.getTopologyData().then((data)=>{
-          this.openTopologyData(data).then(()=>{
-            //获取对应的值 给节点 连线添加对应动画
-            this.lineName=data.lineName?data.lineName:this.lineName;
-            this.chartGetData=[];
-            let axiosArr=[];
-            let promiseArr=[];
-            let self=this;
-            let pensPromise=(pen, arr,index)=>{
-              return new Promise(function(resolve, reject) {
-                Promise.all(arr).then((res)=>{
-                  self.chartGetData[index].res=self.computeData(res,pen.data.aggregation,pen);
-                  self.setAnimation(pen,self.chartGetData[index].res);
-                  resolve()
-                });
-              });
-            };
-            let endTime=this.filterTime[1];
-            let startTime=this.filterTime[0];
-            let step=bus.getStep(startTime,endTime);
-            data.pens&&data.pens.forEach((item,index)=>{
-              this.chartGetData.push({id:item.id,res:[]});
-              let arr=item.data.expressArr.map((ele)=>{
-                let query=encodeURIComponent(ele);
-                if(!query){
-                  return new Promise(resolve=>{
-                    resolve({data:"",status:'no query'});
-                  })
-                }
-                query+='&nullType='+'connected';
-                return this.$get('/prom/api/v1/query_range?query='+query+"&start="+this.$stringTimeParseToUnix(startTime)+"&end="+this.$stringTimeParseToUnix(endTime)+'&step='+step);
-              });
-              axiosArr.push({item,arr});
-              promiseArr.push(pensPromise(item,arr,index))
-            });
-            Promise.all(promiseArr).then((res)=>{
-              getTopology(this.topologyIndex).open(data);
-              getTopology(this.topologyIndex).lock(1);
-              this.objChange=false;
-              let flag=false;
-
-              let position={
-                x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
-                y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-              }
-              getTopology(this.topologyIndex).centerView(20);
-              getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                if(flag){
-                  return
-                }
-                if(item.rect.ex>position.x || item.rect.ey>position.y){
-                  getTopology(this.topologyIndex).fitView(20);
-                  flag=true
-                }
-              });
-              getTopology(this.topologyIndex).centerView(20);
-              this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
-              setTimeout(()=>{
-                getTopology(this.topologyIndex).data.pens.forEach(item=>{
-                  if(item.animatePlay){
-                    item.stopAnimate();
-                    setTimeout(()=>{
-                      item.startAnimate()
-                    })
-                  }
-                },100);
-              })
-              // if(this.fromPrev){
-              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-              // }
-              // getTopology(this.topologyIndex).fitView();
-              this.getNodesArr();
-            });
-          })
-        });
+        this.reload();
       },
 
       reload(){
@@ -716,12 +641,10 @@
               getTopology(this.topologyIndex).lock(1);
               this.objChange=false;
               let flag=false;
-
               let position={
                 x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
                 y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
               }
-              getTopology(this.topologyIndex).centerView(20);
               getTopology(this.topologyIndex).data.pens.forEach(item=>{
                 if(flag){
                   return
@@ -752,6 +675,7 @@
           })
         });
       },
+
       dateChange() {
         let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
         this.setSearchTime(nowTimeType.type,nowTimeType.value);
@@ -842,7 +766,7 @@
                 let self=this;
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
-                    item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image
+                    item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image;
                   }
                   if(item.type===0){
                     promiseArr.push(this.$get('/module/stat',{id:item.data.moduleId}));
@@ -1161,15 +1085,8 @@
       },
 
       onMessage(event,data,e){
-        // console.log('onMessage',event,data);
+        // console.log('onMessage',event);
         // console.log(getTopology(this.topologyIndex))
-        if(getTopology(this.topologyIndex)){
-          this.cachesIndex=getTopology(this.topologyIndex).caches.index;
-          if(this.$refs.topTool){
-            this.$refs.topTool.redoFlag=false
-          }
-          ;
-        }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
           // if(data.type===0){
           //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
@@ -1213,13 +1130,14 @@
           }else if(data.type==1&& !data.data){
             //连线是否自动计算锚点
             // data.manualCps=true;
+            data.animateColor='#FA901C';
             data.data={
               animatePlay:false,
               strokeStyle:data.strokeStyle,
               animateColor:data.animateColor,
-              arrowColor:data.arrowColor,
-              fromArrowColor:data.fromArrowColor,
-              toArrowColor:data.toArrowColor,
+              arrowColor:"#00000",
+              fromArrowColor:"#00000",
+              toArrowColor:"#00000",
               lineWidth:1,
               //chart 配置项
               valueMapping:[{
@@ -1246,12 +1164,12 @@
               moduleName:'',
               url:'',
             };
-            data.animateColor='#FA901C'
           }
           if(data.type===0||data.type===1){
             data.lineWidth=data.data.lineWidth;
           }
         }
+
         switch(event){
           case 'moveInNode':
           case 'moveInLine':
@@ -1263,7 +1181,26 @@
             this.tooltipPosition.show=false;
             setTimeout(()=>{
               this.tooltipPosition.show=true;
-            },50);
+              let ePosition=window.ePosition;
+              let boxWidth=document.getElementsByClassName('page')[0].offsetWidth;
+              let boxHeight=document.getElementsByClassName('page')[0].offsetHeight;
+              this.tooltipPosition.left=ePosition.layerX+20;
+              this.tooltipPosition.top=ePosition.layerY;
+              this.$nextTick(()=>{
+                if(this.$refs['topoTooltip']){
+                  if((boxWidth/2)>ePosition.layerX){
+                    this.tooltipPosition.left=ePosition.layerX+20;
+                  }else {
+                    this.tooltipPosition.left=ePosition.layerX - 20 - this.$refs['topoTooltip'].offsetWidth;
+                  }
+                  if(boxHeight>(ePosition.layerY+this.$refs['topoTooltip'].offsetHeight)){
+                    this.tooltipPosition.top=ePosition.layerY;
+                  }else {
+                    this.tooltipPosition.top=ePosition.layerY - this.$refs['topoTooltip'].offsetHeight;
+                  }
+                }
+              })
+            },100);
             break;
           case 'moveOutNode':
           case 'moveOutLine':
@@ -1273,18 +1210,35 @@
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },150)
+              },50)
             }else{
               clearTimeout(this.timer3);
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },150)
+              },50)
             }
             break;
         }
         // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
         setTimeout(()=>{
+          // setTimeout(()=>{
+          //   if(getTopology(this.topologyIndex)){
+          //     this.cachesIndex=getTopology(this.topologyIndex).caches.index;
+          //     console.log(this.cachesIndex)
+          //   }
+          //   if(getTopology(this.topologyIndex)&&this.$refs.topTool&&this.$refs.topTool.redoFlag){
+          //     console.log( this.cachesIndex, this.redoIndex);
+          //     if(event==='redo'){
+          //       this.redoIndex++;
+          //     }else{
+          //       this.redoIndex--;
+          //     }
+          //     if(this.$refs.topTool&&(this.redoIndex!==this.cachesIndex)){
+          //       this.$refs.topTool.redoFlag=false
+          //     };
+          //   }
+          // },50);
           switch(event){
             case 'node':
             case 'addNode':
@@ -1603,6 +1557,8 @@
           imgidList.forEach((item,index)=>{
             if(item.data.imageId){
               promiseArr.push( this.dealImg(`/project/topo/icon/${item.data.imageId}`));
+            }else{
+              promiseArr.push('');
             }
           });
           Promise.all(promiseArr).then(res2=>{
@@ -1612,17 +1568,9 @@
               }
             });
             this.iconArray.forEach((item,index)=>{
-              if(!item.id){return};
-              this.tools[1].children.push({
-                ...imageTemp,
-                data:{
-                  ...imageTemp.data,
-                  text:item.imageName,
-                  image:res2[index],
-                  imageId:item.id,
-                }
-              })
-              item.image=res2[index];
+              if(item.id){
+                item.image=res2[index];
+              }
             });
             this.imgInit=true;
           })
@@ -1681,8 +1629,8 @@
               item.animateColor=item.data.animateColor;
               item.strokeStyle=item.data.strokeStyle;
               item.arrowColor=item.data.arrowColor;
-              item.fromArrowColor=item.data.fromArrowColor;
-              item.toArrowColor=item.data.toArrowColor;
+              item.fromArrowColor=item.data.arrowColor;
+              item.toArrowColor=item.data.arrowColor;
               item.animatePlay=false;
               item.font.color="#000000";
             }
@@ -1691,6 +1639,10 @@
           this.toolShow.attrCord=[domRect.width-350,0];
           this.toolShow.height=domRect.height;
           getTopology(this.topologyIndex).canvasPos=domRect;
+          getTopology(this.topologyIndex).caches={
+            index:0,
+            list:[JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
+          }
         })
       },
 
@@ -1819,19 +1771,33 @@
       /*tools 方法*/
 
       winResize(){
-        let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
-        this.toolShow.attrCord=[domRect.width-350,0];
-        this.toolShow.height=domRect.height;
+        let domRect=document.getElementById('topology-canvas'+this.topologyIndex).getBoundingClientRect();
+        // this.toolShow.attrCord=[domRect.width-350,0];
+        // this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos=domRect;
-        getTopology(this.topologyIndex).centerView();
+        let flag=false;
+
+        let position={
+          x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+          y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
+        }
+        getTopology(this.topologyIndex).data.pens.forEach(item=>{
+          if(flag){
+            return
+          }
+          if(item.rect.ex>position.x || item.rect.ey>position.y){
+            getTopology(this.topologyIndex).fitView(20);
+            flag=true
+          }
+        });
+        getTopology(this.topologyIndex).centerView(20);
         this.getNodesArr();
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
         if(this.tooltipPosition.show){
           return
         }
-        this.tooltipPosition.top=e.offsetY;
-        this.tooltipPosition.left=e.offsetX+20;
+        window.ePosition=e
       },
       tooltipOver(){
         clearTimeout(this.timer3);
@@ -1841,7 +1807,7 @@
         this.timer3=setTimeout(()=>{
           this.tooltipPosition.show=false;
           this.timer3=null
-        },150)
+        },50)
       },
       nodeDefaultWidth(nodeName){
         switch(nodeName){
@@ -1879,6 +1845,9 @@
         }
         return false;
       },
+      redoIndexChange(index){
+        this.redoIndex=index
+      }
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();
