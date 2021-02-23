@@ -30,15 +30,16 @@
             id="alert-box-input-promql"
           ></promql-input>
         </div>
-        <!--operator-->
-        <el-form-item :label="$t('alert.config.operator')" prop="operator" style="display: inline-block;">
-          <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator">
-            <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--&lt;!&ndash;operator&ndash;&gt;-->
+        <!--<el-form-item :label="$t('alert.config.operator')" prop="operator" style="display: inline-block;">-->
+
+        <!--</el-form-item>-->
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
           <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
+            <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator" slot="prepend" class="input-with-select">
+              <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
           </el-input>
         </el-form-item>
         <!--unit-->
@@ -297,6 +298,19 @@
 <style>
   .unit-popper-class{
     z-index: 2052 !important;
+  }
+  .input-with-select{
+    width: 70px !important;
+  }
+  .input-with-select #alert-box-input-operator{
+    padding: 0;
+    text-align: center;
+    border-top:1px solid #d0d4dC;
+    border-bottom:1px solid #d0d4dC;
+    border-radius: 4px 0 0 4px;
+  }
+  .input-with-select #alert-box-input-operator + .el-input__suffix{
+    display: none;
   }
 </style>
 <style scoped>
