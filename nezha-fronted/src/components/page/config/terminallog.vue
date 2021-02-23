@@ -217,32 +217,19 @@
         searchMsg: { //给搜索框子组件传递的信息
           zheze_none: true,
           searchLabelList: [
-          //   {
-          //   id: 10,
-          //   name: this.$t('config.terminallog.protocol'),
-          //   type: 'selectType',
-          //   label: 'protocol',
-          //   disabled: false
-          // },
             {
-            id: 11,
-            name: this.$t('config.terminallog.host'),
-            type: 'input',
-            label: 'host',
-            disabled: false
-          },{
-            id: 12,
-            name: this.$t('config.terminallog.user'),
-            type: 'input',
-            label: 'user',
-            disabled: false
-          },{
-            id: 14,
-            name: this.$t('config.terminallog.userId'),
-            type: 'input',
-            label: 'userId',
-            disabled: false
-          }
+              id: 11,
+              name: this.$t('config.terminallog.host'),
+              type: 'input',
+              label: 'host',
+              disabled: false
+            },{
+              id: 12,
+              name: this.$t('config.terminallog.user'),
+              type: 'input',
+              label: 'username',
+              disabled: false
+            }
           ],
         },
         searchLabel: {}, //搜索参数
