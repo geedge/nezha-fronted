@@ -245,7 +245,9 @@
       <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px'}"
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
-           @mouseout="tooltipOut">
+           @mouseout="tooltipOut"
+           ref="topoTooltip"
+      >
         <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
       </div>
     </div>
@@ -1263,7 +1265,27 @@
             this.tooltipPosition.show=false;
             setTimeout(()=>{
               this.tooltipPosition.show=true;
-            },50);
+              let ePosition=window.ePosition;
+              let boxWidth=document.getElementsByClassName('page')[0].offsetWidth;
+              let boxHeight=document.getElementsByClassName('page')[0].offsetHeight;
+              this.tooltipPosition.left=ePosition.layerX+20;
+              this.tooltipPosition.top=ePosition.layerY;
+              this.$nextTick(()=>{
+                if(this.$refs['topoTooltip']){
+                  // console.log(boxWidth,ePosition.layerX,this.$refs['topoTooltip'].offsetWidth,boxHeight,ePosition.layerY,);
+                  if((boxWidth/2)>ePosition.layerX){
+                    this.tooltipPosition.left=ePosition.layerX+20;
+                  }else {
+                    this.tooltipPosition.left=ePosition.layerX - 20 - this.$refs['topoTooltip'].offsetWidth;
+                  }
+                  if(boxHeight>(ePosition.layerY+this.$refs['topoTooltip'].offsetHeight)){
+                    this.tooltipPosition.top=ePosition.layerY;
+                  }else {
+                    this.tooltipPosition.top=ePosition.layerY - this.$refs['topoTooltip'].offsetHeight;
+                  }
+                }
+              })
+            },100);
             break;
           case 'moveOutNode':
           case 'moveOutLine':
@@ -1273,13 +1295,13 @@
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },150)
+              },50)
             }else{
               clearTimeout(this.timer3);
               this.timer3=setTimeout(()=>{
                 this.tooltipPosition.show=false;
                 this.timer3=null
-              },150)
+              },50)
             }
             break;
         }
@@ -1830,8 +1852,7 @@
         if(this.tooltipPosition.show){
           return
         }
-        this.tooltipPosition.top=e.offsetY;
-        this.tooltipPosition.left=e.offsetX+20;
+        window.ePosition=e
       },
       tooltipOver(){
         clearTimeout(this.timer3);
@@ -1841,7 +1862,7 @@
         this.timer3=setTimeout(()=>{
           this.tooltipPosition.show=false;
           this.timer3=null
-        },150)
+        },50)
       },
       nodeDefaultWidth(nodeName){
         switch(nodeName){

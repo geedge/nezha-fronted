@@ -1683,7 +1683,10 @@ li{
   color: $global-text-color-active;
   background-color: $dropdown-hover-background-color !important;
 }
-
+.el-select-dropdown__item.is-disabled:hover{
+  background-color: #FFF;
+  color: #C0C4CC;
+}
 .el-button--text,
 .el-button--text:focus,
 .el-button--text:hover,
