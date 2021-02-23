@@ -983,7 +983,6 @@ const en = {
       description: 'Description'//'描述'
     },
     topology:{
-      line:'Line',
       module:'Module element',
       add:'Add',
       selTwoNode:'Please select two module',
@@ -1013,7 +1012,6 @@ const en = {
       alert:'Alert Message',
       lineType:'Line type',
       straight:'straight',
-      curve:'curve',
       upload:'upload',
       requiredName:'The name of the required',
       imgFormat:'Upload picture can only be JPG/ PNG format!',
@@ -1034,7 +1032,8 @@ const en = {
       name:'Name',
       bac:"Background",
       bacImage:'Background image',
-      defaultLineWidth:'Default lineWidth',
+      defaultLineWidth:'Default line width',
+      defaultLineType:'Default line type',
       lineWidth:'Line width',
       grids:'Grids',
       gridSize:'Grid Size',
@@ -1053,6 +1052,7 @@ const en = {
       gradient:'Gradient',
       lineStyle:'Line dash',
       lineColor:'Line color',
+      lineDash:'lineDash',
       fromArrow:"From arrow",
       toArrow:"To arrow",
       arrowColor:"Arrow color",
@@ -1070,6 +1070,9 @@ const en = {
       beads:'beads',
       dot:'dot',
       comet:'comet',
+      curve:'curve',
+      polyline:'polyline',
+      line:'line',
     },
   },
   date:{

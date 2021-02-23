@@ -13,7 +13,7 @@
           <!--module-->
           <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type" class="half-form-item">
             <el-select v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')" popper-class="asset-dropdown" size="small"
-                       @change="moduleIdChange" :popper-append-to-body="false">
+                       @change="moduleIdChange" >
               <el-option
                 v-for="item in modules"
                 :key="item.id"
@@ -273,7 +273,7 @@
             <!--</div>-->
           <!--</el-collapse-item>-->
           <!--样式-->
-          <el-collapse-item :label="'Style'" name="4" v-if="selection.pen">
+          <el-collapse-item :title="'Style'" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
               <div class="props-pen-item">
                 <div>{{$t('project.topology.circularBead')}}（0 - 1）</div>
@@ -346,7 +346,7 @@
                   >
                   </el-color-picker>
                   <el-select v-model="selection.pen.bkType" size="small"
-                             :popper-append-to-body="false" @change="bkTypeChange">
+                              @change="bkTypeChange">
                     <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index"
                                :label="item.name">
                     </el-option>
@@ -377,7 +377,7 @@
               <div class="props-pen-item special-select">
                 <div>{{$t('project.topology.lineDash')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.dash" size="small" :popper-append-to-body="false"
+                  <el-select v-model="selection.pen.dash" size="small"
                              @change="onChange">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -407,7 +407,7 @@
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
                 <div>{{$t('project.topology.lineType')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.name" size="small" :popper-append-to-body="false"
+                  <el-select v-model="selection.pen.name" size="small"
                              @change="onClickName">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -438,7 +438,7 @@
                 <div>{{$t('project.topology.fromArrow')}}</div>
                 <div class="p10 pl0">
                   <el-select v-model="selection.pen.fromArrow" size="small"
-                             :popper-append-to-body="false" @change="onClickFromArrow">
+                              @change="onClickFromArrow">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
@@ -487,7 +487,7 @@
                 <div>{{$t('project.topology.toArrow')}}</div>
                 <div class="p10 pl0">
                   <el-select v-model="selection.pen.toArrow" size="small"
-                             :popper-append-to-body="false" @change="onClickToArrow">
+                              @change="onClickToArrow">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
@@ -618,7 +618,7 @@
                 <el-select
                   v-model="selection.pen.animateType"
                   size="small"
-                  :popper-append-to-body="false"
+
                 >
                   <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
@@ -630,7 +630,7 @@
               <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
                 <el-select v-model="selection.pen.animateType" size="small"
-                           :popper-append-to-body="false" @change="onAnimate">
+                            @change="onAnimate">
                   <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
                 </el-select>
@@ -809,7 +809,7 @@
             <label>{{$t('project.topology.defaultStartArrow')}}</label>
             <div class="full pr10 h32">
               <el-select v-model="topologyData.data.fromArrow" size="small"
-                         :popper-append-to-body="false"
+
                          @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
                 <div slot="prefix">
                   <div class="icon-item">
@@ -859,7 +859,7 @@
             <label>{{$t('project.topology.defaultEndArrow')}}</label>
             <div class="full pr10 h32">
               <el-select v-model="topologyData.data.toArrow" size="small"
-                         :popper-append-to-body="false"
+
                          @change="changeTopologyOpt('toArrow')">
                 <div slot="prefix">
                   <div class="icon-item">
@@ -1120,7 +1120,7 @@
           {d:'M5 14 a100,50 0 0,1 85,0',"stroke-dasharray":"",name:'curve'},
           {d:'M5 8 l40 0 l0 12 l40 0',"stroke-dasharray":"",name:'polyline'},
           {d:'M5 14 l85 0',"stroke-dasharray":"",name:'line'},
-          {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+          // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
         ],
         penLineFromTOArrow:[
           {d:'M5 14 l85 0',"points":"",fill:'',stroke:"",'stroke-width':"",name:''},
@@ -1377,6 +1377,7 @@
           this.selection.pen.toArrowColor=this.colorRGBtoHex(val);
           this.selection.pen.data['fromArrowColor']=this.colorRGBtoHex(val);
           this.selection.pen.data['toArrowColor']=this.colorRGBtoHex(val);
+          this.selection.pen.data['arrowColor']=this.colorRGBtoHex(val);
         }else{
           this.selection.pen[name]=this.colorRGBtoHex(val);
         }
@@ -1599,6 +1600,15 @@
   .no-style-class.el-color-picker__panel{
     border-radius: 0 0 5px 5px;
     border-top: none;
+  }
+  .icon-item {
+    width: 75%;
+    height: 100%;
+    padding-left: 25%;
+  }
+  .icon-item svg {
+    width: 180px;
+    height: 100%;
   }
 </style>
 <style lang="scss" scoped>

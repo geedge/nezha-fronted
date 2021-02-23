@@ -978,7 +978,6 @@ const cn = {
       description: "描述"
     },
     topology:{
-      line:'线',
       module:'模块',
       add:'添加',
       selTwoNode:'请选择两个模块',
@@ -1008,7 +1007,6 @@ const cn = {
       alert:'告警信息',
       lineType:'线型',
       straight:'直线',
-      curve:'曲线',
       upload:'上传文件',
       requiredName:'名称不能为空',
       imgFormat:'上传图片只能是 JPG/png 格式!',
@@ -1030,6 +1028,7 @@ const cn = {
       bac:'背景',
       bacImage:'背景图片',
       defaultLineWidth:'默认线宽',
+      defaultLineType:'默认连线类型',
       lineWidth:'线条宽度',
       grids:'网格',
       gridSize:'网格大小',
@@ -1048,6 +1047,7 @@ const cn = {
       gradient:'渐变',
       lineStyle:'线条样式',
       lineColor:'线条颜色',
+      lineDash:'线条虚实',
       fromArrow:"起点箭头",
       toArrow:"终点箭头",
       arrowColor:"箭头颜色",
@@ -1065,6 +1065,9 @@ const cn = {
       beads:'水珠流动',
       dot:'圆点',
       comet:'彗星',
+      curve:'曲线',
+      polyline:'折线',
+      line:'直线',
     },
   },
   date:{

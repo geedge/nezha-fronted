@@ -63,7 +63,7 @@
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
-                <div class="icon-item">
+                <div class="icon-item" style="width: 100%;padding: 0">
                   <svg>
                     <g fill="none" stroke="black" stroke-width="1">
                       <path
@@ -74,14 +74,15 @@
                   </svg>
                 </div>
               </div>
-                <el-option :disabled="true" :value="false">默认连线类型</el-option>
+                <el-option :disabled="true" :value="false">{{$t('project.topology.defaultLineType')}}</el-option>
                 <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
-                  <div class="icon-item">
+                  <div class="icon-item" style="position: relative;width: 100%;padding: 0">
                     <svg>
                     <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
                     <path :d="item.d" :stroke-dasharray="item['stroke-dasharray']"></path>
                     </g>
                     </svg>
+                    <span style="position: absolute;left:60px;top: 0;">{{item.name}}</span>
                   </div>
                 </el-option>
               </el-select>
@@ -97,6 +98,7 @@
             ref="topTool"
             @toolShowChange="toolShowChange"
             :cachesIndex="cachesIndex"
+            :redoIndexChange="redoIndexChange"
             :toolShow="toolShow">
           </topology-top-tool>
 
@@ -387,6 +389,7 @@
           name:'',
         },
         saveData:{},
+        redoIndex:0,
         dataLength:0,
         editTopologyFlag:false,
         searchTime: bus.getTimezontDateRange(),
@@ -448,9 +451,9 @@
         chartData:{},
         chartGetData:[],
         penLineType:[
-          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:'curve'},
-          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:'polyline'},
-          {d:'M5 14 l40 0',"stroke-dasharray":"",name:'line'},
+          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:this.$t('project.topology.curve')},
+          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:this.$t('project.topology.polyline')},
+          {d:'M5 14 l40 0',"stroke-dasharray":"",name:this.$t('project.topology.line')},
           // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
         ],
         lineName:'curve',
@@ -1163,15 +1166,8 @@
       },
 
       onMessage(event,data,e){
-        // console.log('onMessage',event,data);
+        console.log('onMessage',event);
         // console.log(getTopology(this.topologyIndex))
-        if(getTopology(this.topologyIndex)){
-          this.cachesIndex=getTopology(this.topologyIndex).caches.index;
-          if(this.$refs.topTool){
-            this.$refs.topTool.redoFlag=false
-          }
-          ;
-        }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
           // if(data.type===0){
           //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
@@ -1215,13 +1211,14 @@
           }else if(data.type==1&& !data.data){
             //连线是否自动计算锚点
             // data.manualCps=true;
+            data.animateColor='#FA901C';
             data.data={
               animatePlay:false,
               strokeStyle:data.strokeStyle,
               animateColor:data.animateColor,
-              arrowColor:data.arrowColor,
-              fromArrowColor:data.fromArrowColor,
-              toArrowColor:data.toArrowColor,
+              arrowColor:"#00000",
+              fromArrowColor:"#00000",
+              toArrowColor:"#00000",
               lineWidth:1,
               //chart 配置项
               valueMapping:[{
@@ -1248,12 +1245,12 @@
               moduleName:'',
               url:'',
             };
-            data.animateColor='#FA901C'
           }
           if(data.type===0||data.type===1){
             data.lineWidth=data.data.lineWidth;
           }
         }
+
         switch(event){
           case 'moveInNode':
           case 'moveInLine':
@@ -1307,6 +1304,26 @@
         }
         // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
         setTimeout(()=>{
+          // setTimeout(()=>{
+          //   if(getTopology(this.topologyIndex)){
+          //     this.cachesIndex=getTopology(this.topologyIndex).caches.index;
+          //     console.log(this.cachesIndex)
+          //   }
+          //   if(getTopology(this.topologyIndex)&&this.$refs.topTool&&this.$refs.topTool.redoFlag){
+          //     console.log( this.cachesIndex, this.redoIndex);
+          //     if(event==='redo'){
+          //       this.redoIndex++;
+          //     }else{
+          //       this.redoIndex--;
+          //     }
+          //     if(this.$refs.topTool&&(this.redoIndex!==this.cachesIndex)){
+          //       this.$refs.topTool.redoFlag=false
+          //     };
+          //   }
+          // },50);
+
+          console.log(getTopology(this.topologyIndex).caches);
+
           switch(event){
             case 'node':
             case 'addNode':
@@ -1703,8 +1720,8 @@
               item.animateColor=item.data.animateColor;
               item.strokeStyle=item.data.strokeStyle;
               item.arrowColor=item.data.arrowColor;
-              item.fromArrowColor=item.data.fromArrowColor;
-              item.toArrowColor=item.data.toArrowColor;
+              item.fromArrowColor=item.data.arrowColor;
+              item.toArrowColor=item.data.arrowColor;
               item.animatePlay=false;
               item.font.color="#000000";
             }
@@ -1713,6 +1730,11 @@
           this.toolShow.attrCord=[domRect.width-350,0];
           this.toolShow.height=domRect.height;
           getTopology(this.topologyIndex).canvasPos=domRect;
+          getTopology(this.topologyIndex).caches={
+            index:0,
+            list:[JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
+          }
+          console.log(getTopology(this.topologyIndex));
         })
       },
 
@@ -1900,6 +1922,10 @@
         }
         return false;
       },
+      redoIndexChange(index){
+        console.log(index);
+        this.redoIndex=index
+      }
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();

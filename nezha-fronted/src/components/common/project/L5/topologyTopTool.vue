@@ -1,8 +1,8 @@
 <template>
   <div class="tool-top" id="tool-top">
-    <div id="undo" :class="['top-tool-item',cachesIndex>0?'':'top-tool-item-disabled']"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="'撤销'"/> </div>
-    <div id="redo" :class="['top-tool-item',redoFlag?'':'top-tool-item-disabled']" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="'重做'"/> </div>
-    <!--<div class="top-tool-item" @click="centerView"> 居中</div>-->
+    <div id="undo" :class="['top-tool-item',]"  @click="undo"> <i class="nz-icon nz-icon-revoke" :title="'撤销'"/> </div>
+    <div id="redo" :class="['top-tool-item',]" @click="redo"> <i class="nz-icon nz-icon-revoke1"  :title="'重做'"/> </div>
+    <!--<div class="top-tool-item" @click="centerView"> 居中</div> redoFlag?'':'top-tool-item-disabled' cachesIndex>0?'':'top-tool-item-disabled'-->
     <!--<div class="top-tool-item" @click="fitView"> 自适应</div>-->
     <!--<div :class="['top-tool-item',toolShow.node?'tool-item-active':'']" @click="toolShowChange('node')"> 节点工具 </div>-->
     <!--<div :class="['top-tool-item',toolShow.attr?'tool-item-active':'']" @click="toolShowChange('attr')"> 属性工具 </div>-->
@@ -123,11 +123,18 @@
       },
       undo(){//撤销
         getTopology(this.index).undo();
-        setTimeout(()=>{
-          this.redoFlag=true;
-        },200)
+        console.log(getTopology(this.index).caches.index);
+        // if(!this.redoFlag){
+        //   this.$emit('redoIndexChange',getTopology(this.index).caches.index)
+        // }
+        // let a = getTopology(this.index).undo();
+        // console.log(a);
+        // setTimeout(()=>{
+        //   this.redoFlag=true;
+        // },200)
       },
       redo(){//重做
+        console.log(getTopology(this.index))
         getTopology(this.index).redo();
       },
       centerView(){//居中显示
