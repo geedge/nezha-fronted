@@ -187,6 +187,7 @@
                           @active-change="(val)=>colorChangeTable(item,val)"
                           popper-class="no-style-class"
                           v-model="item.showColor"
+                          :predefine="predefineColors"
                         >
                         </el-color-picker>
                       </div>
@@ -1168,6 +1169,7 @@
             name:this.$t("project.topology.fade")
           }
         ],
+        predefineColors:['#FF0000','#FF5300','#FFC900','#00B536','#00CAFF','#0092FF','#B600D9','#FF666C','#FF9348','#FFDD33','#00D063','#00deff','#62B9FF','#D55BE9']
       }
     },
     mixins:[rz],

@@ -1166,7 +1166,7 @@
       },
 
       onMessage(event,data,e){
-        console.log('onMessage',event);
+        // console.log('onMessage',event);
         // console.log(getTopology(this.topologyIndex))
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
           // if(data.type===0){
@@ -1269,7 +1269,6 @@
               this.tooltipPosition.top=ePosition.layerY;
               this.$nextTick(()=>{
                 if(this.$refs['topoTooltip']){
-                  // console.log(boxWidth,ePosition.layerX,this.$refs['topoTooltip'].offsetWidth,boxHeight,ePosition.layerY,);
                   if((boxWidth/2)>ePosition.layerX){
                     this.tooltipPosition.left=ePosition.layerX+20;
                   }else {
@@ -1321,9 +1320,6 @@
           //     };
           //   }
           // },50);
-
-          console.log(getTopology(this.topologyIndex).caches);
-
           switch(event){
             case 'node':
             case 'addNode':
@@ -1734,7 +1730,6 @@
             index:0,
             list:[JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
           }
-          console.log(getTopology(this.topologyIndex));
         })
       },
 
@@ -1863,12 +1858,13 @@
       /*tools 方法*/
 
       winResize(){
-        let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
-        this.toolShow.attrCord=[domRect.width-350,0];
-        this.toolShow.height=domRect.height;
+        let domRect=document.getElementById('topology-canvas'+this.topologyIndex).getBoundingClientRect();
+        // this.toolShow.attrCord=[domRect.width-350,0];
+        // this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos=domRect;
         getTopology(this.topologyIndex).centerView();
         this.getNodesArr();
+        console.log(213213123123);
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
         if(this.tooltipPosition.show){
@@ -1923,7 +1919,6 @@
         return false;
       },
       redoIndexChange(index){
-        console.log(index);
         this.redoIndex=index
       }
     },
