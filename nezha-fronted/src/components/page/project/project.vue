@@ -778,7 +778,6 @@
         return '';
       },
       changeTopologyIndexF(){
-        console.log(132123132123123);
         this.topologyIndexF=0;
       },
     },

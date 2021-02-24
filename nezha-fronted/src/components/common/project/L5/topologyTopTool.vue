@@ -123,7 +123,6 @@
       },
       undo(){//撤销
         getTopology(this.index).undo();
-        console.log(getTopology(this.index).caches.index);
         // if(!this.redoFlag){
         //   this.$emit('redoIndexChange',getTopology(this.index).caches.index)
         // }
@@ -134,7 +133,6 @@
         // },200)
       },
       redo(){//重做
-        console.log(getTopology(this.index))
         getTopology(this.index).redo();
       },
       centerView(){//居中显示

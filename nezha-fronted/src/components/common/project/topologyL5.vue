@@ -384,6 +384,7 @@
           name:'',
         },
         saveData:{},
+        oldTopologyData:'',
         redoIndex:0,
         dataLength:0,
         editTopologyFlag:false,
@@ -670,6 +671,7 @@
               //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
               // }
               // getTopology(this.topologyIndex).fitView();
+              this.oldTopologyData=JSON.stringify(getTopology(this.topologyIndex).data)
               this.getNodesArr();
             });
           })
@@ -1771,27 +1773,32 @@
       /*tools 方法*/
 
       winResize(){
-        let domRect=document.getElementById('topology-canvas'+this.topologyIndex).getBoundingClientRect();
-        // this.toolShow.attrCord=[domRect.width-350,0];
-        // this.toolShow.height=domRect.height;
-        getTopology(this.topologyIndex).canvasPos=domRect;
-        let flag=false;
+        setTimeout(()=>{
+          let domRect=document.getElementById('topology-canvas'+this.topologyIndex).getBoundingClientRect();
+          // this.toolShow.attrCord=[domRect.width-350,0];
+          // this.toolShow.height=domRect.height;
+          getTopology(this.topologyIndex).canvasPos=domRect;
+          if(this.fromOverView){
+            getTopology(this.topologyIndex).open(this.oldTopologyData);
+          }
+          let flag=false;
 
-        let position={
-          x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
-          y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-        }
-        getTopology(this.topologyIndex).data.pens.forEach(item=>{
-          if(flag){
-            return
+          let position={
+            x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
+            y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
           }
-          if(item.rect.ex>position.x || item.rect.ey>position.y){
-            getTopology(this.topologyIndex).fitView(20);
-            flag=true
-          }
-        });
-        getTopology(this.topologyIndex).centerView(20);
-        this.getNodesArr();
+          getTopology(this.topologyIndex).data.pens.forEach(item=>{
+            if(flag){
+              return
+            }
+            if(item.rect.ex>position.x || item.rect.ey>position.y){
+              getTopology(this.topologyIndex).fitView(20);
+              flag=true
+            }
+          });
+          getTopology(this.topologyIndex).centerView(20);
+          this.getNodesArr();
+        },100)
       },
       canvasMove(e){// 画布上的移动 确定tooltip的位置
         if(this.tooltipPosition.show){

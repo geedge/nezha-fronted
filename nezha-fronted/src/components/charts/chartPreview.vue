@@ -264,9 +264,6 @@
         this.isError = false;
         this.searchTime = bus.getTimezontDateRange();
         this.chart = JSON.parse(JSON.stringify(chartInfo));
-
-        console.log('chart',this.chart,chartInfo)
-
         let chartType= chartInfo.type;
         let chartContainerId = 'chartEchartPreview';
         if(chartType==='table'){

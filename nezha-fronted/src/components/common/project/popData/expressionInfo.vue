@@ -29,7 +29,6 @@
               this.expressionInfoData=this.expressionInfoData.concat(item.data.result);
             }
           });
-          console.log(this.expressionInfoData);
         }
       }
     },
@@ -45,7 +44,6 @@
             this.expressionInfoData=this.expressionInfoData.concat(item.data.result);
           }
         });
-        console.log(this.expressionInfoData);
       }
     },
     methods:{

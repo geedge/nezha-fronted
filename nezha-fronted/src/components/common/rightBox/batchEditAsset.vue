@@ -670,7 +670,6 @@
               }
             });
           }else{
-            console.log(213123123123);
             this.prevent_opt.save=false;
             return false;
           }

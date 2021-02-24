@@ -30,10 +30,6 @@
             id="alert-box-input-promql"
           ></promql-input>
         </div>
-        <!--&lt;!&ndash;operator&ndash;&gt;-->
-        <!--<el-form-item :label="$t('alert.config.operator')" prop="operator" style="display: inline-block;">-->
-
-        <!--</el-form-item>-->
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
           <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">

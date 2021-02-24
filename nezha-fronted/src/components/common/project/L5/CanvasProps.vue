@@ -1538,9 +1538,7 @@
           let a=arr.splice(0,1);
           arr.reverse();
           arr.unshift(a[0]);
-          console.log(arr);
           this.selection.pen.data.valueMapping=arr;
-          console.log('aaa')
         }
       },
       valueMappingDel(index,row){
