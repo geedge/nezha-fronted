@@ -208,6 +208,7 @@
                      @change="onUpdateProps"
                      @animate="animateCanvas"
                      @changeProjectTitle="changeProjectTitle"
+                     @notModuleIDArrChange="notModuleIDArrChange"
                      :index="topologyIndex"
                      @del="delPen"
                      :modules="modules"
@@ -242,6 +243,21 @@
             </i>
           </transition>
         </div>
+      </div>
+      <!--提示未添加module id的块-->
+      <div v-for="(item,index) in notModuleIDArr"
+           :style="{
+           position: 'absolute',
+           top:item.rect.y- 10 +'px',
+           left:item.rect.x - 10+'px',
+           transform:'scale('+(fromOverView?penToolTipScale:1)+')',
+         }"
+           v-if="editTopologyFlag&&!fromPrev"
+      >
+        <div class="module-rect-top" :style="{top:0,left:0,width:item.rect.width+15+'px',height:0}"></div>
+        <div class="module-rect-right" :style="{top:0,left:item.rect.width+15+'px',width:0,height:item.rect.height+15+'px'}"></div>
+        <div class="module-rect-bottom" :style="{top:item.rect.height+15 +'px',left:0,width:item.rect.width+15+'px',height:0}"></div>
+        <div class="module-rect-left" :style="{top:0,left:0,width:0,height:item.rect.height+15+'px'}"></div>
       </div>
       <!--节点连线相关的 tooltip-->
       <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px'}"
@@ -415,6 +431,7 @@
         timer2:null,//处理平移画布显示iconState的定时器
         timer3:null,//处理tooltip的显示定时器
         nodesArr:[],
+        notModuleIDArr:[],
         popData:[
           {
             top:'-40px',
@@ -655,7 +672,9 @@
                   flag=true
                 }
               });
-              getTopology(this.topologyIndex).centerView(20);
+             if(this.fromOverView){
+               getTopology(this.topologyIndex).centerView(20);
+             }
               this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
               setTimeout(()=>{
                 getTopology(this.topologyIndex).data.pens.forEach(item=>{
@@ -766,6 +785,15 @@
                 clearInterval(timer);
                 let promiseArr=[];
                 let self=this;
+                for(let i=0;i<data.pens.length;i++){
+                  let line=data.pens[i]
+                  if(line.type===1){
+                   if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
+                     data.pens.splice(i, 1);
+                     i--;
+                   }
+                  }
+                }
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image;
@@ -1087,8 +1115,16 @@
       },
 
       onMessage(event,data,e){
-        // console.log('onMessage',event);
+        console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
+        // this.notModuleIDArr=[];
+        if(data){
+          this.notModuleIDArr.forEach(item=>{
+            if(item.id===data.id){
+              item.rect=data.rect
+            }
+          })
+        }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
           // if(data.type===0){
           //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
@@ -1669,15 +1705,34 @@
         dataOption[key]=this.lineName;
         getTopology(this.topologyIndex).render();
       },
+      notModuleIDArrChange(id){
+        console.log(id);
+        this.notModuleIDArr=this.notModuleIDArr.filter(item=>item.id!==id);
+      },
       //保存
       saveTopology(){
         let topologyData=getTopology(this.topologyIndex).pureData();
         let flag=true;
+        let arr=[];
+        this.notModuleIDArr=[];
         topologyData.pens.forEach(item=>{
-          if(item.type===0&&((flag&& !item.data)||(flag&&item.data&& !item.data.moduleId))){
+          if(item.type===0&&((!item.data)||(item.data&& !item.data.moduleId))){
+            arr.push(item);
+            this.props={
+              node:null,
+              line:null,
+              multi:false,
+              nodes:null,
+              locked:false,
+              pen:null,
+              pens:null,
+            };
             flag=false;
           }
         });
+        if(!flag){
+          this.notModuleIDArr=arr;
+        }
         if(flag){
           this.editTopologyFlag=false;
           topologyData.rule=false;
@@ -1796,7 +1851,9 @@
               flag=true
             }
           });
-          getTopology(this.topologyIndex).centerView(20);
+          if(this.fromOverView){
+            getTopology(this.topologyIndex).centerView(20);
+          }
           this.getNodesArr();
         },100)
       },
@@ -2091,7 +2148,27 @@
     }
   }
 
-  .network-pop .nz-icon-hexagonBorder {
+  .moduleIdRect{
+    /*border: 4px dashed #FA901C;*/
+  }
+  .module-rect-top{
+    border-top: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-right{
+    border-right: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-bottom{
+    border-bottom: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-left{
+     border-left: 4px dashed #ff8c0a;
+     position: absolute;
+  }
+
+  .network-pop .nz-icon-hexagonBorder{
     position: absolute;
     font-size: 48px;
     color: #84d5c2;

@@ -1296,7 +1296,8 @@
         if(!this.selection.pen.data.title){
           this.selection.pen.data.title=this.selection.pen.data.moduleName
           this.selection.pen.text=this.selection.pen.data.title;
-          this.onChange()
+          this.onChange();
+          this.$emit('notModuleIDArrChange',this.selection.pen.id);
         }
       },
       changeTitle(val){
