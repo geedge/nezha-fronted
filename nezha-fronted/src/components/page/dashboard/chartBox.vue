@@ -490,7 +490,7 @@
       </button>
     </div>
     <!--preview -->
-    <chart-preview :panelId="panelId" ref="chartsPreview" ></chart-preview>
+    <chart-preview :panelId="panelId" ref="chartsPreview" :fromEndpoint="fromEndpoint"></chart-preview>
   </div>
   </div>
 </template>
@@ -522,7 +522,11 @@
       panelData: Array,
       showPanel: Object,
       chart: Object,
-      from: {type: String}
+      from: {type: String},
+      fromEndpoint:{
+        type:Boolean,
+        default:false,
+      }
     },
     mixins: [rz],
     data() {

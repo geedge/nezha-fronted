@@ -39,6 +39,7 @@
                :visible.sync="screenModal"
                :width="dailogWidth"
                :modal-append-to-body='false'
+               :modal="!fromEndpoint"
                @close="handleClose"
                @opened="initDialog">
       <el-popover
@@ -194,6 +195,7 @@
     },
     props: {
       panelId:Number,
+      fromEndpoint:Boolean,
     },
     data() {
       return {
