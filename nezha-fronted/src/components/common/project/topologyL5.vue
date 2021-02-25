@@ -1126,9 +1126,6 @@
           })
         }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
-          // if(data.type===0){
-          //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
-          // }
           if(data.type===0&& !data.data.moduleId){
             data.data={
               ...data.data,
@@ -1281,7 +1278,7 @@
             case 'node':
             case 'addNode':
               this.modulesDiff(data);
-              if(data.data.expressArr.length===0){
+              if(data.data.expressArr.length===0&&event!=='node'){
                 data.data.expressArr.push('');
                 data.data.legends.push('');
               }

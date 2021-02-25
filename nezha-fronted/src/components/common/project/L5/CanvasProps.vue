@@ -1169,7 +1169,14 @@
             name:this.$t("project.topology.fade")
           }
         ],
-        predefineColors:['#FF0000','#FF5300','#FFC900','#00B536','#00CAFF','#0092FF','#B600D9','#FF666C','#FF9348','#FFDD33','#00D063','#00deff','#62B9FF','#D55BE9']
+        predefineColors:[
+          '#19730E','#37872D','#73BF69',
+          '#CC9D00','#E0B400','#FADE2A',
+          '#AD0317','#C4162A','#F2495C',
+          '#1250B0','#1F60C4','#5794F2',
+          '#E55400','#FA6400','#FF9830',
+          '#7C2EA3','#8F3BB8','#B877D9',
+          ]
       }
     },
     mixins:[rz],
@@ -1610,6 +1617,17 @@
   .icon-item svg {
     width: 180px;
     height: 100%;
+  }
+  /deep/ .el-color-predefine__color-selector:nth-child(9n+1){
+    margin-left: 0;
+  }
+  /deep/ .el-color-predefine__color-selector:nth-child(10n+1){
+    margin-left: 8px;
+  }
+  /deep/ .el-color-predefine__color-selector {
+    margin: 0 0 8px 8px;
+    width: 24px;
+    height: 24px;
   }
 </style>
 <style lang="scss" scoped>
