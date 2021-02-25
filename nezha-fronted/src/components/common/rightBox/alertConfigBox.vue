@@ -33,7 +33,7 @@
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
           <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
-            <el-select popper-class="config-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator" slot="prepend" class="input-with-select">
+            <el-select popper-class="config-dropdown threshold-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator" slot="prepend" class="input-with-select">
               <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-input>

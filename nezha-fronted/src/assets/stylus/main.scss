@@ -1620,10 +1620,13 @@ li{
   margin-bottom: 0 !important;
 }
 .config-dropdown { /* 若宽度不合适，自行增加新类覆盖宽度 */
-  width: 75px;
+  width: 490px;
 }
 .asset-dropdown {
   width: 370px;
+}
+.threshold-dropdown{
+  width: 75px;
 }
 .asset-dropdown .el-select-dropdown__item {
   position: relative;
