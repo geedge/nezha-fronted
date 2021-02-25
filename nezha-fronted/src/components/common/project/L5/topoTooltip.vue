@@ -1,5 +1,5 @@
 <template>
-  <div class="tooltip-box" style="display: flex;" v-if="isChart||chartData.tooltipShow">
+  <div class="tooltip-box" style="display: flex;" v-if="(isChart||chartData.tooltipShow)&&chartData.expressArr.length">
     <span class="temp-dom"></span>
     <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressArr.length)">
       <line-chart-block v-show="isChart || chartData.type !== 'table'"

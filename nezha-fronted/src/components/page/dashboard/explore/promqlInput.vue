@@ -1,5 +1,5 @@
 <template>
-    <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'auto'}">
+    <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'auto','margin-bottom':required?'0':'18px'}">
       <div class="query-row">
         <div class="query-input">
           <!--explore页面的样式-->
@@ -14,7 +14,7 @@
             <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
               <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
               <!--<editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>?-->
-              <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]" :id="inputId"></el-input>
+              <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]" :id="inputId" @input="metricKeyDown"></el-input>
               <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
               <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
             </div>
@@ -28,12 +28,12 @@
                   <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                   <el-cascader-panel v-if="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue" style="text-align: left;" slot="dropdown" ref="metricSelector" :props="{emitPath:false}" :options="metricOptions"  @change="metricChange"></el-cascader-panel>
                 </el-dropdown>
-                <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}</label>
+                <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}<sup v-if="required" style="color: #f56c6c">*</sup></label>
               </el-col>
               <el-col :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 120px)':'100%',height: '100%',}">
                 <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                   <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
-                  <el-input v-model="expressionList[index]" @change="metricChange"></el-input>
+                  <el-input v-model="expressionList[index]" @change="metricChange" @input="metricKeyDown"></el-input>
                   <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                   <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
                 </div>
@@ -72,6 +72,9 @@
         projectRightBox:{type:Boolean,default:false},
         metricOptionsParent:{type:Array},
         inputId:String,
+        required:{
+          type:Boolean,default:false
+        }
         //metricOptions: {type: Array},
         //metricStore: {type: Array}
       },
@@ -139,6 +142,11 @@
           //this.$refs.editor.setContent(value)
           this.dropDownVisible=false;
           this.$emit('change',value)
+        },
+        metricKeyDown(val){
+          if(this.required){
+            this.metricChange(val);
+          }
         },
         expressionChange:function(){
           this.$emit('change')

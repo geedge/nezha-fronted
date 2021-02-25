@@ -184,7 +184,7 @@
 
 
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" v-has="'project_topo_save'"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
@@ -485,6 +485,7 @@
         previewShow:false,
         penId:undefined,
         penToolTipScale:1,
+        oldScale:1,
       };
     },
     components:{
@@ -662,7 +663,8 @@
               let position={
                 x:this.$refs['topology-canvas'+this.topologyIndexF].offsetWidth,
                 y:this.$refs['topology-canvas'+this.topologyIndexF].offsetHeight,
-              }
+              };
+              this.oldScale=getTopology(this.topologyIndex).data.scale;
               getTopology(this.topologyIndex).data.pens.forEach(item=>{
                 if(flag){
                   return
@@ -672,10 +674,8 @@
                   flag=true
                 }
               });
-              if(this.fromOverView){
-                getTopology(this.topologyIndex).centerView(20);
-              }
-              this.penToolTipScale= getTopology(this.topologyIndex).data.scale;
+              getTopology(this.topologyIndex).centerView(20);
+              this.penToolTipScale = getTopology(this.topologyIndex).data.scale;
               setTimeout(()=>{
                 getTopology(this.topologyIndex).data.pens.forEach(item=>{
                   if(item.animatePlay){
@@ -1757,6 +1757,9 @@
               }
             })
           });
+          if(this.penToolTipScale==getTopology(this.topologyIndex).data.scale){
+            getTopology(this.topologyIndex).data.scale=this.oldScale;
+          }
           this.$put('/project/topo',{topo:JSON.stringify(topologyData),projectId:this.projectInfo.id}).then(res=>{
             this.prevent_opt.save=false;
             if(res.code===200){
@@ -1851,9 +1854,7 @@
               flag=true
             }
           });
-          if(this.fromOverView){
-            getTopology(this.topologyIndex).centerView(20);
-          }
+          getTopology(this.topologyIndex).centerView(20);
           this.getNodesArr();
         },100)
       },

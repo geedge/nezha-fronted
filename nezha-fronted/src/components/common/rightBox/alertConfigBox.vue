@@ -20,16 +20,18 @@
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small" id="alert-box-input-name"></el-input>
         </el-form-item>
-        <div style="width: calc(100% - 15px);margin-left: 15px">
+        <el-form-item style="width: calc(100% - 15px);margin-left: 15px" :label-width="'0'" prop="expr">
           <promql-input
             ref="promql"
             :expression-list.sync="expressions"
             :index="0"
             :styleType="2"
+            :required="true"
+            @change="metricChange"
             :plugins="['metric-input']"
             id="alert-box-input-promql"
           ></promql-input>
-        </div>
+        </el-form-item>
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
           <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
@@ -142,7 +144,7 @@
             {required:true,message:this.$t('validate.required'),trigger:'blur'}
           ],
           expr:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
+            {required:true,message:this.$t('validate.required'),trigger:'change'}
           ],
           last:[
             {required:true,message:this.$t('validate.required'),trigger:'blur'},
@@ -266,6 +268,9 @@
           }
         })
       },
+      metricChange(val){
+        this.editAlertRule.expr=val;
+      }
     },
     mounted() {
       this.getUserList();
