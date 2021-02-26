@@ -873,6 +873,7 @@
             pen.font.color=selLevel.color.text;
             pen.fillStyle=selLevel.color.fill;
             pen.strokeStyle=selLevel.color.line;
+            pen.bkType=0;
             onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
           }else if(pen.type===1){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
@@ -1126,9 +1127,6 @@
           })
         }
         if(!Array.isArray(data)&&data){//判断不是数组 提前个data配置好节点属性
-          // if(data.type===0){
-          //   data.textRect=new Rect(data.rect.ex-10,data.rect.ey-10,data.rect.width,data.rect.height);
-          // }
           if(data.type===0&& !data.data.moduleId){
             data.data={
               ...data.data,
@@ -1139,6 +1137,8 @@
               animatePlay:false,
               fillStyle:data.fillStyle,
               strokeStyle:data.strokeStyle,
+              gradientColor:"#bae7ff",
+              gradientType:0,
               lineWidth:this.nodeDefaultWidth(data.name),
               iconToolState:true,
               //chart 配置项
@@ -1281,7 +1281,7 @@
             case 'node':
             case 'addNode':
               this.modulesDiff(data);
-              if(data.data.expressArr.length===0){
+              if(data.data.expressArr.length===0&&event!=='node'){
                 data.data.expressArr.push('');
                 data.data.legends.push('');
               }
@@ -1663,6 +1663,20 @@
               item.strokeStyle=item.data.strokeStyle;
               item.animatePlay=false;
               item.font.color="#000000";
+              item.gradientType=item.data.gradientType?item.data.gradientType:0;
+              if(!item.data.gradientColor){
+                item.data.gradientType=0;
+                item.data.gradientColor="#bae7ff";
+              }
+              if(item.data.gradientType===0){
+                item.bkType=0;
+              }
+              if(item.data.gradientType===1 ||item.data.gradientType===3){
+                item.bkType=1;
+              }
+              if(item.data.gradientType===2 ||item.data.gradientType===4){
+                item.bkType=2;
+              }
             }else if(item.type===1){
               item.animateColor=item.data.animateColor;
               item.strokeStyle=item.data.strokeStyle;

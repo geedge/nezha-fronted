@@ -339,19 +339,29 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.gradient')}}</div>
                 <div class="p10 pl0 gradient-to">
-                  <el-color-picker
-                    v-model="selection.pen.gradientToColor"
-                    ref="gradientToColor"
-                    @active-change="(val)=>colorChange(val,'gradientToColor')"
-                    size="small"
-                  >
-                  </el-color-picker>
-                  <el-select v-model="selection.pen.bkType" size="small"
-                              @change="bkTypeChange">
+                  <el-select v-model="selection.pen.gradientType" size="small"
+                             @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select">
                     <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index"
                                :label="item.name">
                     </el-option>
+                    <!--el-input__inner-->
                   </el-select>
+                  <div class="color-show" style="display:inline-block;width: calc(100% - 72px);margin-left: -5px;border-radius: 0 5px 5px 0" @click="colorPickerClick('gradientColor')">
+                    <div class="color-show-left" :style="{background:selection.pen.data.gradientColor,display:'inline-block','margin-top':'5px'}"></div>
+                    <span class="color-text" style="vertical-align: text-bottom"> {{selection.pen.data.gradientColor}}</span>
+                    <span class="color-arrows" style="top: 13px; right: 20px">
+                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['gradientColor']&&!$refs['gradientColor'].showPicker"></i>
+                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['gradientColor']&&$refs['gradientColor'].showPicker"></i>
+                </span>
+                  </div>
+                  <div class="color-content" ref="color-content">
+                    <el-color-picker
+                      v-model="selection.pen.data.gradientColor"
+                      ref="gradientColor"
+                      @active-change="(val)=>colorChange(val,'gradientColor')"
+                    >
+                    </el-color-picker>
+                  </div>
                 </div>
               </div>
 
@@ -1103,12 +1113,20 @@
             name:'X'
           },
           {
+            id:2,
+            name:'↑'
+          },
+          {
+            id:4,
+            name:'↓'
+          },
+          {
             id:1,
             name:'→'
           },
           {
-            id:2,
-            name:'↑'
+            id:3,
+            name:'←'
           }
         ],
         penDash:[
@@ -1360,13 +1378,28 @@
         this.onChange();
       },
       bkTypeChange(val){
-
-        if(!this.selection.pen.gradientToColor&&val){
-          this.selection.pen.gradientToColor='#bae7ff'
+        // console.log(val);
+        this.selection.pen.data.gradientType=val;
+        this.$forceUpdate()
+        console.log(this.selection.pen.gradientType,this.selection.pen.data.gradientType);
+        if(val===0){
+          this.selection.pen.bkType=0;
         }
-        if(!this.selection.pen.gradientFromColor&&val){
-          this.selection.pen.gradientFromColor='#c6ebb4'
-          this.selection.pen.fillStyle='#c6ebb4'
+
+        if(val===1 || val===3){
+          this.selection.pen.bkType=1;
+        }
+        if(val===2 || val===4){
+          this.selection.pen.bkType=2;
+        }
+
+        if(val===1 || val===2){
+          this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
+          this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
+        }
+        if(val===3 || val===4){
+          this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
+          this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
         }
         this.onChange()
       },
@@ -1391,8 +1424,20 @@
         }else{
           this.selection.pen[name]=this.colorRGBtoHex(val);
         }
+        if(name==='gradientColor'){
+          this.selection.pen.data['gradientColor']=this.colorRGBtoHex(val);
+        }
+
         if(name=='fillStyle'){
-          this.selection.pen.gradientFromColor=this.selection.pen.fillStyle;
+          let bktype= this.selection.pen.data.gradientType;
+          if(bktype===1 || bktype===2){
+            this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
+            this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
+          }
+          if(bktype===3 || bktype===4){
+            this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
+            this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
+          }
         }
         this.selection.pen.data[name]=this.colorRGBtoHex(val);
         this.onChange();
@@ -1628,6 +1673,9 @@
     margin: 0 0 8px 8px;
     width: 24px;
     height: 24px;
+  }
+  .color-before-select .el-input__inner{
+    background: rgb(245, 247, 250);
   }
 </style>
 <style lang="scss" scoped>
@@ -2047,7 +2095,7 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
-    width: calc(100% - 32px);
+    width: 100%;
     height: 30px;
   }
 
@@ -2070,7 +2118,7 @@
   .color-arrows {
     color: #C0C4CC;
     position: absolute;
-    right: 42px;
+    right: 12px;
   }
 
   .color-arrows .nz-icon {

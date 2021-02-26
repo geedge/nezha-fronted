@@ -254,7 +254,8 @@ export function myTextRect(node) {
 /*自定义图片组件*/
 
 /*自定义立方体*/
-export function myCubec(ctx, node) {//立方体
+export function myCubec(ctx, node) {
+  //立方体
   // ctx.rect(node.rect.x,node.rect.y,node.rect.width,node.rect.height);
   let x=node.rect.x+10,y=node.rect.y+10,w=node.rect.width-20,h=node.rect.height-20;
   
