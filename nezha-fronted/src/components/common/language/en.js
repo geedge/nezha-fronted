@@ -812,8 +812,11 @@ const en = {
         dn:'Bind DN',
         pwd:'Password',
         ou:'User OU',
+        ouTip: 'Use the "|" symbol to separate OU',
         filter:'User filter',
-        map:'LDAP field mapping',
+        filterTip: 'The possible options are: (cn or uid or sAMAccountName=%(user)s)',
+        map:'Attribute mapping',
+        mapTip: 'Attribute mapping represents how to map NEZHA user attributes to jumpserver users; username,email are the attributes of jumpserver',
         active:'LDAP authentication'
       },
       link: {

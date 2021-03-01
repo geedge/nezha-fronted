@@ -130,14 +130,18 @@
             <el-form-item :label="$t('config.system.ldap.pwd')" prop="ldap_password">
               <el-input v-model="ldap.ldap_password" type="password" id="system-ldap-ldap_password"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.ou')" prop="ldap_ou">
+            <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
               <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>
+              <div class="el-form-item__tip">{{$t("config.system.ldap.ouTip")}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.filter')" prop="ldap_user_filter">
+            <el-form-item :label="$t('config.system.ldap.filter')" class="has-tip" prop="ldap_user_filter">
               <el-input v-model="ldap.ldap_user_filter" id="system-ldap-ldap_user_filter"></el-input>
+              <div class="el-form-item__tip">{{$t("config.system.ldap.filterTip")}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.map')" prop="ldap_mapping">
+            <el-form-item :label="$t('config.system.ldap.map')" class="has-tip--two-row" prop="ldap_mapping">
               <el-input v-model="ldap.ldap_mapping" id="system-ldap-ldap_mapping"></el-input>
+              <!--借用错误提示的样式-->
+              <div class="el-form-item__tip el-form-item__tip--two-row">{{$t("config.system.ldap.mapTip")}}</div>
             </el-form-item>
             <el-form-item>
               <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
@@ -1117,6 +1121,24 @@
   }
   .linkBox .el-form--inline{
     padding: 0;
+  }
+  .el-form-item__tip {
+    color: #aaa !important;
+    position: absolute;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .el-form-item__tip + .el-form-item__error {
+    margin-top: 16px;
+  }
+  .el-form-item__tip.el-form-item__tip--two-row + .el-form-item__error {
+    margin-top: 28px;
+  }
+  .el-form-item.has-tip {
+    margin-bottom: 34px;
+  }
+  .el-form-item.has-tip--two-row {
+    margin-bottom: 46px;
   }
 
 </style>

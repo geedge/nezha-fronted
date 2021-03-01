@@ -809,8 +809,11 @@ const cn = {
         dn: "Bind DN",
         pwd: "密码",
         ou: "用户OU",
+        ouTip: '使用符号 "|" 分隔OU',
         filter: "用户过滤器",
-        map: "LDAP属性映射",
+        filterTip: '可能的选项是(cn或uid或sAMAccountName=%(user)s)',
+        map: "属性映射",
+        mapTip: '属性映射代表怎样将NEZHA用户属性映射到jumpserver用户上;username,email是jumpserver的属性',
         active: "启用LDAP认证"
       },
       link: {
