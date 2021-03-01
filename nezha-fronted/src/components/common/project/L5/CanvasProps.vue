@@ -1415,6 +1415,7 @@
 
       },
       colorChange(val,name){//改变颜色
+        let bktype= this.selection.pen.data.gradientType;
         if(name==='toArrowColor'){
           this.selection.pen.fromArrowColor=this.colorRGBtoHex(val);
           this.selection.pen.toArrowColor=this.colorRGBtoHex(val);
@@ -1426,10 +1427,17 @@
         }
         if(name==='gradientColor'){
           this.selection.pen.data['gradientColor']=this.colorRGBtoHex(val);
+          if(bktype===1 || bktype===2){
+            this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
+            this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
+          }
+          if(bktype===3 || bktype===4){
+            this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
+            this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
+          }
         }
 
-        if(name=='fillStyle'){
-          let bktype= this.selection.pen.data.gradientType;
+        if(name==='fillStyle'){
           if(bktype===1 || bktype===2){
             this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
             this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
