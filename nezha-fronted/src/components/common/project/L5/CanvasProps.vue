@@ -1663,16 +1663,13 @@
     width: 180px;
     height: 100%;
   }
-  /deep/ .el-color-predefine__color-selector:nth-child(9n+1){
-    margin-left: 0;
-  }
-  /deep/ .el-color-predefine__color-selector:nth-child(10n+1){
+  .el-color-predefine__color-selector:nth-child(10n+1){
     margin-left: 8px;
   }
-  /deep/ .el-color-predefine__color-selector {
+  .el-color-predefine__color-selector {
     margin: 0 0 8px 8px;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
   .color-before-select .el-input__inner{
     background: rgb(245, 247, 250);
