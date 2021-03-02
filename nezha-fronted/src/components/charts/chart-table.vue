@@ -454,6 +454,7 @@
       },
       getStatisticsResult(statistics,seriesItem){
         if(!seriesItem||!seriesItem.length>0) return [];
+        if (!statistics) return seriesItem;
         let copy=JSON.parse(JSON.stringify(seriesItem));
         let last,result;
         last=copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[0];
