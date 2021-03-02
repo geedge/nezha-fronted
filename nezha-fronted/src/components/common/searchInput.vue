@@ -1324,13 +1324,13 @@
         display: flex;
         position: relative;
         line-height: 25px;
-      border-radius: 4px;
+      border-radius: 2px;
       border: 1px solid #D8D8D8;
       /*box-shadow: inset 0 0 5px 0 rgba(184,184,184,0.80);*/
     }
     .new-search .nz-btn {
       box-shadow: 0 0 1px 1px #d8d8d8;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 2px 2px 0;
     }
     .new-search .search-input-all{
         width: 231px !important;
@@ -1559,10 +1559,12 @@
         float: left;
         padding-left: 5px !important;
         box-sizing: border-box;
+        outline: none;
     }
     .select_input input:focus {
         border:none;
         box-shadow:none;
+        outline: none;
     }
     .select_input .select_info_list{
         position: fixed;
