@@ -1388,9 +1388,11 @@
 
         if(val===1 || val===3){
           this.selection.pen.bkType=1;
+          this.selection.pen.gradientAngle=0;
         }
         if(val===2 || val===4){
-          this.selection.pen.bkType=2;
+          this.selection.pen.bkType=1;
+          this.selection.pen.gradientAngle=90;
         }
 
         if(val===1 || val===2){

@@ -1695,7 +1695,6 @@
           })
         }else{
           this.imgageLoading=true;
-          this.tools[1].children=[];
           let promiseArr=[];
           imgidList.forEach((item,index)=>{
            if(item.data.imageId){
@@ -1775,12 +1774,8 @@
               }
               if(item.data.gradientType===0){
                 item.bkType=0;
-              }
-              if(item.data.gradientType===1 ||item.data.gradientType===3){
+              }else{
                 item.bkType=1;
-              }
-              if(item.data.gradientType===2 ||item.data.gradientType===4){
-                item.bkType=2;
               }
             }else if(item.type===1){
               item.animateColor=item.data.animateColor;
