@@ -265,7 +265,12 @@
     },
     methods: {
       getTableData() {
-        this.$get('terminal/session', this.searchLabel).then(response => {
+        let params={
+          ...this.searchLabel,
+          pageNo:this.pageObj.pageNo,
+          pageSize:this.pageObj.pageSize,
+        }
+        this.$get('terminal/session', params).then(response => {
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
