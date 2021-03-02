@@ -37,21 +37,12 @@
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
-                <el-upload
-                  class="avatar-uploader"
-                  action=" "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                  :auto-upload="true"
-                  list-type="picture-card"
-                  style="width: 284px;height: 30px"
-                >
+                <div class="upload-pic-box" @click="uploadPicChange">
                   <i class="el-icon-plus"></i>
                   <span>
                      Upload custom picture
                   </span>
-                </el-upload>
+                </div>
               </div>
             </el-dropdown-menu>
           </el-dropdown>
@@ -322,6 +313,69 @@
         </topologyPrev>
       </div>
     </el-dialog>
+    <!--Custom picture-->
+    <el-dialog
+      title="Custom picture"
+      :visible.sync="uploadPicShow"
+      width="auto"
+      @close="uploadPicShow = false"
+      destroy-on-close>
+      <el-row class="upload-pic-row">
+        <el-col :span="4" class="upload-pic-label">Name</el-col>
+        <el-col :span="20">
+          <el-input v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
+        </el-col>
+      </el-row>
+      <el-row class="upload-pic-row">
+        <el-col :span="4" class="upload-pic-label">Folder</el-col>
+        <el-col :span="20">
+          <el-autocomplete
+            class="inline-input"
+            v-model="uploadPic.unit"
+            :fetch-suggestions="querySearch"
+            size="small"
+          ></el-autocomplete>
+        </el-col>
+      </el-row>
+
+      <el-row class="upload-pic-row">
+        <el-col :span="4" class="upload-pic-label"> </el-col>
+        <el-col :span="20">
+          <div class="upload-body">
+            <el-upload
+              drag
+              class="upload-demo"
+              action=" "
+              :show-file-list="true"
+              :on-change="beforeAvatarUpload"
+              :auto-upload="false"
+              accept=".jpg,.png"
+              :limit="1"
+              :id="'upload-pic-show'">
+              <!--<div slot="tip" class="el-upload__tip" >{{$t('overall.importTipImg')}}</div>-->
+              <i class="nz-icon nz-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+            </el-upload>
+          </div>
+        </el-col>
+      </el-row>
+      <div class="upload-pic-row" style="text-align: center">
+            <span>
+               <button @click="uploadPicShow=false" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="margin-right: 20px">
+             {{$t('project.topology.exit')}}
+           </button>
+
+              <button @click="imgUpload" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+                      v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                      :class="{'nz-btn-disabled':prevent_opt.save}"
+                      style="margin-right: 20px">
+             {{$t('project.topology.save')}}
+           </button>
+            </span>
+      </div>
+
+    </el-dialog>
+
   </div>
 </template>
 
@@ -486,6 +540,12 @@
         penId:undefined,
         penToolTipScale:1,
         oldScale:1,
+        uploadPicShow:false,
+        uploadPic:{
+          name:'',
+          unit:''
+        },
+        unitArr:[],
       };
     },
     components:{
@@ -1116,7 +1176,7 @@
       },
 
       onMessage(event,data,e){
-        console.log('onMessage',event,data);
+        // console.log('onMessage',event,data);
         // console.log(getTopology(this.topologyIndex))
         // this.notModuleIDArr=[];
         if(data){
@@ -1260,23 +1320,6 @@
         }
         // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
         setTimeout(()=>{
-          // setTimeout(()=>{
-          //   if(getTopology(this.topologyIndex)){
-          //     this.cachesIndex=getTopology(this.topologyIndex).caches.index;
-          //     console.log(this.cachesIndex)
-          //   }
-          //   if(getTopology(this.topologyIndex)&&this.$refs.topTool&&this.$refs.topTool.redoFlag){
-          //     console.log( this.cachesIndex, this.redoIndex);
-          //     if(event==='redo'){
-          //       this.redoIndex++;
-          //     }else{
-          //       this.redoIndex--;
-          //     }
-          //     if(this.$refs.topTool&&(this.redoIndex!==this.cachesIndex)){
-          //       this.$refs.topTool.redoFlag=false
-          //     };
-          //   }
-          // },50);
           switch(event){
             case 'node':
             case 'addNode':
@@ -1479,9 +1522,9 @@
       handleAvatarSuccess(){
 
       },
-      beforeAvatarUpload(file){
-        let this_=this
-        let isJPG=(file.type==='image/jpeg'||file.type==='image/png');
+      beforeAvatarUpload(file,fileList){
+        let this_=this;
+        let isJPG=(file.raw.type==='image/jpeg'||file.raw.type==='image/png');
 
         const isLt2M=file.size/1024/1024<2;
 
@@ -1502,13 +1545,12 @@
             let valid=img.width>width&&img.height>height;
             valid?resolve():reject();
           }
-          img.src=_URL.createObjectURL(file);
+          img.src=_URL.createObjectURL(file.raw);
         }).then(()=>{
           if(isJPG){
-            this.file=file;
-            this.upload();
+            this.file=file.raw;
           }
-          return file;
+          return file.raw;
         },()=>{
           this.$message.error(this_.$t('project.topology.imgMeasure'));
           return Promise.reject();
@@ -1524,24 +1566,66 @@
 
       },
       /*tools 方法*/
+
+      imgUpload(){
+        let this_=this;
+        if(!this.uploadPic.unit){
+          this.$message({
+            message: this_.$t("project.topology.unitError"),
+            type: 'error'
+          });
+          return
+        }
+        if(!this.file) {
+          this.$message({
+            message: this_.$t("project.topology.imgError"),
+            type: 'error'
+          });
+          return
+        }
+        this.upload();
+      },
       upload(){
         let form=new FormData();
         form.append("file",this.file);
-        let fileName=this.file.name;
-        form.append("name",fileName.substring(0,fileName.lastIndexOf(".")));
+        if(this.uploadPic.name){
+          form.append("name",this.uploadPic.name)
+        }else{
+          form.append("name",this.file.name.substring(0,this.file.name.lastIndexOf(".")))
+        }
+        form.append("unit",this.uploadPic.unit);
         this.$post('/project/topo/icon',form,{'Content-Type':'multipart/form-data'}).then(res=>{
           if(res.code==200){
             this.$message({duration:2000,type:'success',message:this.$t("tip.saveSuccess")});
+            this.uploadPicShow=false;
             this.dealImg(`/project/topo/icon/${res.data.id}`).then((data)=>{
-              this.tools[1].children.push({
-                ...imageTemp,
-                data:{
-                  ...imageTemp.data,
-                  text:res.data.imageName,
-                  image:data,
-                  imageId:res.data.id,
-                }
-              })
+              let group= this.tools.find(tool=>tool.group===this.uploadPic.unit);
+              if(group){
+                group.children.push({
+                  ...imageTemp,
+                  data:{
+                    ...imageTemp.data,
+                    text:res.data.imageName,
+                    image:data,
+                    imageId:res.data.id,
+                    unit:this.uploadPic.unit
+                  }
+                })
+              } else{
+                this.tools.push({
+                  group:this.uploadPic.unit,
+                  children:[{
+                    ...imageTemp,
+                    data:{
+                      ...imageTemp.data,
+                      text:res.data.imageName,
+                      image:data,
+                      imageId:res.data.id,
+                      unit:this.uploadPic.unit
+                    }
+                  }],
+                })
+              }
             })
           }else{
             this.$message.error(res.msg);
@@ -1564,27 +1648,48 @@
         if(!this.fromOverView){
           this.$get('/project/topo/icon').then(res=>{
             this.imgageLoading=true;
-            this.tools[1].children=[];
+            // this.tools[1].children=[];
+            let imgArr=[];
             let promiseArr=[];
             res.data.list.forEach((item,index)=>{
               item.imageName=item.name;
               delete item.name;
               promiseArr.push( this.dealImg(`/project/topo/icon/${item.id}`));
+              imgArr.push({...item});
             });
-            Promise.all(promiseArr).then(res2=>{
+            Promise.all(promiseArr).then((res2)=>{
               this.iconArray=[...res.data.list];
               this.iconArray.forEach((item,index)=>{
-                this.tools[1].children.push({
-                  ...imageTemp,
-                  data:{
-                    ...imageTemp.data,
-                    text:item.imageName,
-                    image:res2[index],
-                    imageId:item.id,
-                  }
-                })
                 item.image=res2[index];
+                let group= this.tools.find(tool=>tool.group===item.unit);
+                if(group){
+                  group.children.push({
+                    ...imageTemp,
+                    data:{
+                      ...imageTemp.data,
+                      text:item.imageName,
+                      image:res2[index],
+                      imageId:item.id,
+                      unit:item.unit
+                    }
+                  })
+                } else{
+                  this.tools.push({
+                    group:item.unit,
+                    children:[{
+                      ...imageTemp,
+                      data:{
+                        ...imageTemp.data,
+                        text:item.imageName,
+                        image:res2[index],
+                        imageId:item.id,
+                        unit:item.unit
+                      }
+                    }],
+                  })
+                }
               });
+
               this.imgInit=true;
             })
           })
@@ -1802,7 +1907,7 @@
         }else{
           this.$message({
             showClose:true,
-            message:'请个所有节点绑定module',
+            message:this.$t("project.topology.selMod"),
             type:'warning'
           })
         }
@@ -1926,6 +2031,31 @@
       },
       redoIndexChange(index){
         this.redoIndex=index
+      },
+      querySearch(queryString, cb) {
+        let restaurants = this.unitArr;
+        let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      uploadPicChange(){
+        this.unitArr=[];
+        this.tools.forEach((item,index)=>{
+          if(index>0){
+            this.unitArr.push({
+              value:item.group
+            })
+          }
+        });
+        this.uploadPic.name='';
+        this.uploadPic.unit='';
+        this.file=null
+        this.uploadPicShow=true;
       }
     },
     destroyed(){
@@ -2482,5 +2612,39 @@
   .special-select /deep/ .el-input__prefix > div {
     width: 100%;
     height: 100%;
+  }
+
+  .upload-pic-row{
+    width: 420px;
+    margin-bottom: 10px;
+    .upload-pic-label{
+      text-align: right;
+      font-size: 14px;
+      color: #666666;
+      letter-spacing: 0;
+      font-weight: 400;
+      height: 30px;
+      line-height: 30px;
+      padding-right: 8px;
+    }
+    /deep/ .el-upload--text{
+      width: 100%;
+      .el-upload-dragger{
+        width: 100%;
+      }
+    }
+  }
+  .upload-pic-box{
+    width: 284px;
+    height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #666666;
+    font-weight: 400;
+    line-height: 30px;
+    cursor: pointer;
+    .el-icon-plus{
+      color: #FA901C;
+    }
   }
 </style>

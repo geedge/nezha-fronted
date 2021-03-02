@@ -16,7 +16,7 @@ export function canvasRegister(){
 
 export const Tools=[
   {
-    group:'基本形状',
+    group:'General',
     children:[
       // {
       //   name:'rectangleImg',
@@ -166,10 +166,6 @@ export const Tools=[
         }
       },
     ]
-  },
-  {
-    group: '自定义组件',
-    children: [],
   },
 ];
 
