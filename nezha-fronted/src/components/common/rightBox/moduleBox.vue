@@ -341,6 +341,9 @@
           project: [
             {required: true, message: this.$t('validate.required'), trigger: 'change'}
           ],
+          walk: [
+            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
+          ],
           port: [
             {validator:port, trigger: 'blur'},
           ],
