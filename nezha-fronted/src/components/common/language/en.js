@@ -708,7 +708,7 @@ const en = {
       log: "Log",
       source: "Source IP",
       killErrorTip: "Killing failed",
-      monitor: "monitoring",
+      monitor:{monitor: "monitoring",},
       cmd: {
         cmd: "Command",
         history: "History command",
