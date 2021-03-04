@@ -352,7 +352,7 @@
                     <!--el-input__inner-->
                   </el-select>
                   <div class="color-show" style="display:inline-block;width: calc(100% - 72px);margin-left: -5px;border-radius: 0 5px 5px 0" @click="colorPickerClick('gradientColor')">
-                    <div class="color-show-left" :style="{background:selection.pen.data.gradientColor,display:'inline-block','margin-top':'5px'}"></div>
+                    <div class="color-show-left" :style="{background:selection.pen.data.gradientColor,display:'inline-block','margin-top':'5px','margin-left':'12px'}"></div>
                     <span class="color-text" style="vertical-align: text-bottom"> {{selection.pen.data.gradientColor}}</span>
                     <span class="color-arrows" style="top: 13px; right: 20px">
                   <i class="nz-icon nz-icon-arrow-down" v-if="$refs['gradientColor']&&!$refs['gradientColor'].showPicker"></i>
@@ -1700,12 +1700,14 @@
     background: rgb(245, 247, 250);
   }
   .color-before-select  .el-input__prefix{
-    background: #fff;
     left: 1px;
-    color: #333;
+    /*color: #333;*/
     width: 30px;
     height: 29px;
     top: 1px;
+  }
+  .color-before-select  .el-select-dropdown__item{
+    text-align: center;
   }
 </style>
 <style lang="scss" scoped>

@@ -375,7 +375,10 @@
       </div>
 
     </el-dialog>
-
+    <div class="right-bottom-zoom">
+      <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+      <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+    </div>
   </div>
 </template>
 
@@ -1474,18 +1477,19 @@
             case 'space':
             case 'scale':
             case 'translate':
-              if(!this.timer2){
-                this.timer2=setTimeout(()=>{
                   this.getNodesArr();
-                  this.timer2=null
-                },300)
-              }else{
-                clearTimeout(this.timer2);
-                this.timer2=setTimeout(()=>{
-                  this.getNodesArr();
-                  this.timer2=null
-                },300)
-              }
+              // if(!this.timer2){
+              //   this.timer2=setTimeout(()=>{
+              //     this.getNodesArr();
+              //     this.timer2=null
+              //   },300)
+              // }else{
+              //   clearTimeout(this.timer2);
+              //   this.timer2=setTimeout(()=>{
+              //     this.getNodesArr();
+              //     this.timer2=null
+              //   },300)
+              // }
               break;
           }
         },0);
@@ -2051,7 +2055,10 @@
         this.uploadPic.unit='';
         this.file=null;
         this.uploadPicShow=true;
-      }
+      },
+      zoomMap(num){
+        getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale+num);
+      },
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();
