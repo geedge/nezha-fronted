@@ -320,39 +320,48 @@
       mouseEnterChart(){
         this.caretShow=true;
         if (getChart(this.chartIndex)) {
-          getChart(this.chartIndex).setOption({
-            toolbox: {
-              show:true,
-            }
-          })
+          setTimeout(() => {
+            getChart(this.chartIndex).setOption({
+              toolbox: {
+                show:true,
+              }
+            })
+          }, 300);
+
         }
       },
       mouseLeaveChart(){
         this.caretShow=false;
         if (getChart(this.chartIndex)) {
-          getChart(this.chartIndex).setOption({
-            toolbox: {
-              show:false,
-            }
-          })
+          setTimeout(() => {
+            getChart(this.chartIndex).setOption({
+              toolbox: {
+                show: false,
+              }
+            })
+          }, 300);
         }
       },
       mouseEnterFullChart(){
         if (this.echartModalStore) {
-          this.echartModalStore.setOption({
-            toolbox: {
-              show:true,
-            }
-          })
+          setTimeout(() => {
+            this.echartModalStore.setOption({
+              toolbox: {
+                show:true,
+              }
+            })
+          }, 300);
         }
       },
       mouseLeaveFullChart(){
         if (this.echartModalStore) {
-          this.echartModalStore.setOption({
-            toolbox: {
-              show:false,
-            }
-          })
+          setTimeout(() => {
+            this.echartModalStore.setOption({
+              toolbox: {
+                show: false,
+              }
+            })
+          }, 300);
         }
       },
       clickLegend(legendName, index){
@@ -1432,6 +1441,7 @@
               const filterItem = ele;
               let query = encodeURIComponent(filterItem.expression);
               if(this.chartInfo.type==='line'||this.chartInfo.type==='bar'||this.chartInfo.type==='stackArea'){//如果是这三个 默认给connected
+                !this.chartInfo.param && (this.chartInfo.param = {});
                 this.chartInfo.param.nullType=this.chartInfo.param.nullType||'connected';
                 query+='&nullType='+this.chartInfo.param.nullType;
               }

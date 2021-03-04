@@ -851,6 +851,14 @@ li{
 .nz-table + .to-top-is-hover{
   display: none;
 }
+revogr-header .data-header-cell .resizable:hover {
+  background-color: #ccc !important;
+  width: 6px;
+}
+revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
+  border-right: 1px solid #eee;
+}
+
 .nz-table + .to-top-is-hover:hover{
   display: block;
 }
@@ -923,6 +931,33 @@ li{
   border-radius: 4px;
 }
 .nz-table td.warning .cell>span {
+  background-color: $warning-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.data-cell {
+  font-size: 12px;
+}
+.data-cell .danger {
+  background-color: $danger-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.data-cell .success {
+  background-color: $success-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.data-cell .suspended {
+  background-color: $suspended-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.data-cell .warning {
   background-color: $warning-color;
   color: white;
   padding:2px 5px;
