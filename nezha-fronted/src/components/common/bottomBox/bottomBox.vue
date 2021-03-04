@@ -34,6 +34,8 @@
       <terminal-log-cmd-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogCMDTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'cmd'"></terminal-log-cmd-tab>
       <terminal-log-record-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'record'"></terminal-log-record-tab>
 
+      <terminal-log-monitor-tab @exit="closeSubList" :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'monitor'"></terminal-log-monitor-tab>
+
     </div>
   </div>
 </template>
@@ -45,6 +47,7 @@
   import endpointTab from "./tabs/endpointTab";
   import panelTab from "./tabs/panelTab";
   import terminalLogRecordTab from "./tabs/terminalLogRecordTab";
+  import terminalLogMonitorTab from "./tabs/terminalLogMonitorTab";
   import terminalLogCMDTab from "./tabs/terminalLogCMDTab";
 
   export default {
@@ -56,7 +59,8 @@
       'endpoint-tab': endpointTab,
       'panel-tab': panelTab,
       terminalLogRecordTab,
-      'terminal-log-cmd-tab': terminalLogCMDTab
+      'terminal-log-cmd-tab': terminalLogCMDTab,
+      terminalLogMonitorTab
     },
     props: {
       isFullScreen: false, //是否全屏

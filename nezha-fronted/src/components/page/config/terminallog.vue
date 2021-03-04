@@ -64,7 +64,7 @@
               <template v-if="scope.row.status == 0">
                 <span :id="'terminalLog-shutdown-'+scope.row.id" @click="shutdown(scope.row)" class="content-right-option" title="Kill"><i class="nz-icon nz-icon-ZD"></i></span>
                 &nbsp;
-                <span :id="'terminalLog-monitor-'+scope.row.id" :title="$t('config.terminallog.monitoring')" @click="monitor(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-JC"></i></span>
+                <span :id="'terminalLog-monitor-'+scope.row.id" :title="$t('config.terminallog.monitor.monitor')" @click="monitor(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-JC"></i></span>
               </template>
               <template v-else>
                 <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.record.record')" @click="showRecord(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-replay2"></i></span>
@@ -92,7 +92,7 @@
 
     <!-- 底部上滑框 -->
     <transition name="el-zoom-in-bottom">
-      <bottom-box :detail="bottomBox.terminalLog" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.terminalLog" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" @closeSubList="bottomBox.showSubList = false" @exitFullScreen="exitFullScreen"
+      <bottom-box :detail="bottomBox.terminalLog" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.terminalLog" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" @closeSubList="closeSubList" @exitFullScreen="exitFullScreen"
                   @fullScreen="fullScreen" @listResize="listResize" from="terminal" v-if="bottomBox.showSubList" ></bottom-box>
     </transition>
   </div>
@@ -295,18 +295,22 @@
         this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
         this.bottomBox.showSubList = true;
       },
+      monitor(record) {
+        this.bottomBox.targetTab = 'monitor';
+        this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
+        this.bottomBox.showSubList = true;
+        console.log(record);
+      },
       shutdown(record) {
         this.$put("/terminal/kill", {uuid: record.uuid}).then(res => {
           if (res.code === 200) {
             this.$message.success(this.$t("config.terminallog.success"));
+            this.bottomBox.showSubList = false;
             this.getTableData();
           } else {
             this.$message.error(this.$t("config.terminallog.killErrorTip"));
           }
         });
-      },
-      monitor(record) {
-        
       },
       // 全屏
       fullScreen() {
@@ -364,6 +368,12 @@
           this.$set(this.searchLabel, 'orderBy', orderBy);
         }
         this.getTableData();
+      },
+      closeSubList(){
+        this.bottomBox.showSubList = false;
+        if( this.bottomBox.targetTab == 'monitor'){
+          this.getTableData();
+        }
       },
       // 数据排序
       tableDataSort(item){

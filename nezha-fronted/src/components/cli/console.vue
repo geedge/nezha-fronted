@@ -276,7 +276,8 @@ export default {
       //关闭
       this.terminalSocket.onclose = () =>{
         //报错sorry的，还没来得及看信息就关闭
-        this.$emit("closeConsole",this.terminal.name);//应该调用父窗口
+        // this.$emit("closeConsole",this.terminal.name);//
+        this.term.setOption('disableStdin',true);
       };
 
 
