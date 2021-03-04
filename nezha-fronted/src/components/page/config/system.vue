@@ -71,31 +71,33 @@
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_smtp_account">
               <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPwd')" prop="email_smtp_password">
+            <el-form-item :label="$t('config.system.email.smtpPwd')" class="has-tip" prop="email_smtp_password">
               <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
-              <div><span>{{$t('config.system.email.pwdTip')}}</span></div>
+              <div class="el-form-item__tip">{{$t("config.system.email.pwdTip")}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.sendAccount')" prop="email_send_account">
+            <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">
               <el-input v-model="email.email_send_account" :disabled="email.email_enable == 'off'" id="system-email-email_send_account"></el-input>
-              <div><span>{{$t('config.system.email.sendAccountTip')}}</span></div>
+              <div class="el-form-item__tip">{{$t("config.system.email.sendAccountTip")}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.testAccount')" prop="email_test_reciver">
+            <el-form-item :label="$t('config.system.email.testAccount')" class="has-tip" prop="email_test_reciver">
               <el-input v-model="email.email_test_reciver" :disabled="email.email_enable == 'off'" id="system-email-email_test_reciver"></el-input>
-              <div><span>{{$t('config.system.email.testAccountTip')}}</span></div>
+              <div class="el-form-item__tip">{{$t("config.system.email.testAccountTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.useSSL')" prop="email_ssl_flag">
               <el-row :gutter="10">
                 <el-col :span="5"><el-checkbox v-model="email.email_ssl_flag" true-label="on" false-label="off" :disabled="email.email_enable == 'off'" id="system-email-email_ssl_flag"></el-checkbox></el-col>
-                <el-col :span="15"><div><span>{{$t('config.system.email.sslTip')}}</span></div></el-col>
+                <el-col :span="15"></el-col>
               </el-row>
+              <div class="el-form-item__tip" style="margin-top: 0;">{{$t("config.system.email.sslTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.useTLS')" prop="email_tls_flag">
               <el-row :gutter="10">
                 <el-col :span="5"><el-checkbox v-model="email.email_tls_flag" true-label='on' false-label='off' :disabled="email.email_enable == 'off'" id="system-email-email_tls_flag"></el-checkbox></el-col>
-                <el-col :span="16"><span>{{$t('config.system.email.tlsTip')}}</span></el-col>
+                <el-col :span="16"></el-col>
               </el-row>
+              <div class="el-form-item__tip" style="margin-top: 0;">{{$t("config.system.email.tlsTip")}}</div>
             </el-form-item>
-            <el-form-item>
+            <el-form-item style="padding-top: 20px;">
               <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
               <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
               <button id="system-email-save" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
@@ -1123,22 +1125,23 @@
     padding: 0;
   }
   .el-form-item__tip {
-    color: #aaa !important;
+    color: #999 !important;
     position: absolute;
     font-size: 12px;
+    margin-top: 5px;
     line-height: 12px;
   }
   .el-form-item__tip + .el-form-item__error {
-    margin-top: 16px;
+    margin-top: 20px;
   }
   .el-form-item__tip.el-form-item__tip--two-row + .el-form-item__error {
-    margin-top: 28px;
+    margin-top: 34px;
   }
   .el-form-item.has-tip {
     margin-bottom: 34px;
   }
   .el-form-item.has-tip--two-row {
-    margin-bottom: 46px;
+    margin-bottom: 54px;
   }
 
 </style>

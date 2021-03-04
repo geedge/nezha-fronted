@@ -817,7 +817,7 @@ const en = {
         filter:'User filter',
         filterTip: 'The possible options are: (cn or uid or sAMAccountName=%(user)s)',
         map:'Attribute mapping',
-        mapTip: 'Attribute mapping represents how to map NEZHA user attributes to jumpserver users; username,email are the attributes of jumpserver',
+        mapTip: 'Attribute mapping represents how to map LDAP user attributes to NEZHA users; username,email are the attributes of NEZHA',
         active:'LDAP authentication'
       },
       link: {
