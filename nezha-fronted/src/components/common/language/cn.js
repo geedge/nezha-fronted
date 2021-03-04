@@ -671,7 +671,7 @@ const cn = {
       source: "源IP",
       log: "日志",
       killErrorTip: "踢出失败",
-      monitor: "监控",
+      monitor:{monitor: "监控",},
       cmd: {
         cmd: "命令",
         history: "历史命令",
@@ -684,7 +684,7 @@ const cn = {
         play: "播放",
         replay: "重播",
         skipTip: "跳过无操作时间"
-      }
+      },
     },
     dc: {
       dc: "数据中心",

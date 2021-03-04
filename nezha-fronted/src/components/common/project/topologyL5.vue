@@ -2049,7 +2049,7 @@
         });
         this.uploadPic.name='';
         this.uploadPic.unit='';
-        this.file=null
+        this.file=null;
         this.uploadPicShow=true;
       }
     },

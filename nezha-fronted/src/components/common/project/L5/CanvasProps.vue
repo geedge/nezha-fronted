@@ -341,8 +341,13 @@
                 <div class="p10 pl0 gradient-to">
                   <el-select v-model="selection.pen.gradientType" size="small"
                              @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select">
-                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index"
-                               :label="item.name">
+                    <div slot="prefix">
+                      <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id===selection.pen.gradientType).label,bkTypeOption.find(item1=>item1.id===selection.pen.gradientType).fontSize]"></i>
+                    </div>
+
+
+                    <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index">
+                      <i :class="['nz-icon',item.label,item.fontSize]" ></i>
                     </el-option>
                     <!--el-input__inner-->
                   </el-select>
@@ -1110,23 +1115,33 @@
         bkTypeOption:[
           {
             id:0,
-            name:'X'
+            name:'X',
+            label:'nz-icon-close',
+            fontSize:'font12 v-sub',
           },
           {
             id:2,
-            name:'↑'
+            name:'↑',
+            label:'nz-icon-arrow-up1',
+            fontSize:'font20',
           },
           {
             id:4,
-            name:'↓'
+            name:'↓',
+            label:'nz-icon-arrow-down2',
+            fontSize:'font20',
           },
           {
             id:1,
-            name:'→'
+            name:'→',
+            label:'nz-icon-arrow-right1',
+            fontSize:'font12 v-sub',
           },
           {
             id:3,
-            name:'←'
+            name:'←',
+            label:'nz-icon-arrow-left1',
+            fontSize:'font12 v-sub',
           }
         ],
         penDash:[
@@ -1684,6 +1699,14 @@
   .color-before-select .el-input__inner{
     background: rgb(245, 247, 250);
   }
+  .color-before-select  .el-input__prefix{
+    background: #fff;
+    left: 1px;
+    color: #333;
+    width: 30px;
+    height: 29px;
+    top: 1px;
+  }
 </style>
 <style lang="scss" scoped>
   .project-title {
@@ -2130,5 +2153,14 @@
 
   .color-arrows .nz-icon {
     font-size: 12px;
+  }
+  .v-sub{
+    vertical-align: sub;
+  }
+  .font12{
+    font-size: 12px;
+  }
+  .font20{
+    font-size: 20px;
   }
 </style>
