@@ -12,14 +12,14 @@
     color: #fff;
   }
   .calendar-dropdown-title {
-    line-height:24px;
+    line-height:28px;
     padding-left:5px;
     margin-left:0px;
     margin-top: 0px !important;
     text-align:left;
     border-radius:2px;
     min-width:80px;
-    height:24px;
+    height:28px;
     border:solid 1px  #d8dce1;
     white-space: nowrap;
     overflow: hidden;

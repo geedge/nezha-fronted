@@ -217,7 +217,7 @@ li{
 }
 .nz-btn.nz-btn-size-normal:not(.nz-btn-size-alien) {
   font-size: 12px;
-  height: 24px;
+  height: 28px;
   padding: 0 8px;
 }
 .nz-btn.nz-btn-size-small {
@@ -672,7 +672,7 @@ li{
 .top-tool-right {
   display: flex;
   align-content: center;
-  height: 26px;
+  height: 30px;
   margin-right: 76px;
 }
 .top-tool-main-right {
@@ -719,7 +719,7 @@ li{
 /* begin--二级顶部工具栏*/
 .sub-top-tools {
   display: flex;
-  height: 30px;
+  height: 32px;
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid #DCDFE6;
@@ -827,7 +827,7 @@ li{
 }
 .window-control-btn>i {
   color: #909399;
-  font-size: 17px;
+  font-size: 19px;
 }
 .window-control-btn>i:hover {
   color: $global-text-color-active;
@@ -1879,8 +1879,8 @@ revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
   background-color: $content-right-background-color;
 }
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
-  height: 25px;
-  line-height: 25px !important;
+  height: 30px;
+  line-height: 30px !important;
 }
 
 .el-textarea:not(.not-fixed-height) textarea {

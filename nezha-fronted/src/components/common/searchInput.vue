@@ -1337,10 +1337,10 @@
         min-width: 231px;
         background-color: $content-right-background-color;
         color: rgba(0,0,0,.55);
-        height: 24px;
-        line-height: 24px;
-        border-bottom-left-radius: 5px;
-        border-top-left-radius: 5px;
+        height: 28px;
+        line-height: 28px;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
         display: flex;
         position: relative;
     }
@@ -1357,7 +1357,7 @@
         line-height: 16px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
-        margin-top: 4px;
+        margin-top: 6px;
         position: relative;
     }
     .search-input-all .input-center-box{
