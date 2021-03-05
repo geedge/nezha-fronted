@@ -175,7 +175,7 @@
 
 
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" v-has="'project_topo_save'"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button" v-has="'project_topo_save'"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>

@@ -50,7 +50,7 @@
           <div class="flex middle special-select mb10"
                style="width: 75px;height: 28px;display: inline-block;margin: 0 40px 0 20px;background: #fff">
             <div class="full pr10">
-              <el-select v-model="lineName" :placeholder="$t('el.select.placeholder')" size="small"
+              <el-select v-model="lineName" size="small"
                          :popper-append-to-body="false"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
@@ -58,7 +58,7 @@
                   <svg>
                     <g fill="none" stroke="black" stroke-width="1">
                       <path
-                        :d="penLineType.find((item,i)=>item.name==lineName).d"
+                        :d="penLineType.find((item,i)=>item.id==lineName).d"
                       >
                       </path>
                     </g>
@@ -66,7 +66,7 @@
                 </div>
               </div>
                 <el-option :disabled="true" :value="false">{{$t('project.topology.defaultLineType')}}</el-option>
-                <el-option v-for="(item,index) in penLineType" :value="item.name" :key="index">
+                <el-option v-for="(item,index) in penLineType" :value="item.id" :key="index">
                   <div class="icon-item" style="position: relative;width: 100%;padding: 0">
                     <svg>
                     <g fill="none" :stroke="(lineName==item.name)?'#ee9d3f':'black'" stroke-width="1">
@@ -375,7 +375,10 @@
       </div>
 
     </el-dialog>
-
+    <div class="right-bottom-zoom" v-if="!fromOverView&&!editTopologyFlag&&!fromPrev">
+      <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+      <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+    </div>
   </div>
 </template>
 
@@ -518,9 +521,9 @@
         chartData:{},
         chartGetData:[],
         penLineType:[
-          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:this.$t('project.topology.curve')},
-          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:this.$t('project.topology.polyline')},
-          {d:'M5 14 l40 0',"stroke-dasharray":"",name:this.$t('project.topology.line')},
+          {d:'M5 19 a50,100 0 0,1 40,0',"stroke-dasharray":"",name:this.$t('project.topology.curve'),id:'curve'},
+          {d:'M5 8 l20 0 l0 12 l20 0',"stroke-dasharray":"",name:this.$t('project.topology.polyline'),id:'polyline'},
+          {d:'M5 14 l40 0',"stroke-dasharray":"",name:this.$t('project.topology.line'),id:'line'},
           // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
         ],
         lineName:'curve',
@@ -1474,18 +1477,19 @@
             case 'space':
             case 'scale':
             case 'translate':
-              if(!this.timer2){
-                this.timer2=setTimeout(()=>{
-                  this.getNodesArr();
-                  this.timer2=null
-                },300)
-              }else{
-                clearTimeout(this.timer2);
-                this.timer2=setTimeout(()=>{
-                  this.getNodesArr();
-                  this.timer2=null
-                },300)
-              }
+              this.getNodesArr();
+              // if(!this.timer2){
+              //   this.timer2=setTimeout(()=>{
+              //     this.getNodesArr();
+              //     this.timer2=null
+              //   },300)
+              // }else{
+              //   clearTimeout(this.timer2);
+              //   this.timer2=setTimeout(()=>{
+              //     this.getNodesArr();
+              //     this.timer2=null
+              //   },300)
+              // }
               break;
           }
         },0);
@@ -1695,7 +1699,6 @@
           })
         }else{
           this.imgageLoading=true;
-          this.tools[1].children=[];
           let promiseArr=[];
           imgidList.forEach((item,index)=>{
             if(item.data.imageId){
@@ -1775,12 +1778,8 @@
               }
               if(item.data.gradientType===0){
                 item.bkType=0;
-              }
-              if(item.data.gradientType===1 ||item.data.gradientType===3){
+              }else{
                 item.bkType=1;
-              }
-              if(item.data.gradientType===2 ||item.data.gradientType===4){
-                item.bkType=2;
               }
             }else if(item.type===1){
               item.animateColor=item.data.animateColor;
@@ -2054,9 +2053,12 @@
         });
         this.uploadPic.name='';
         this.uploadPic.unit='';
-        this.file=null
+        this.file=null;
         this.uploadPicShow=true;
-      }
+      },
+      zoomMap(num){
+        getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale+num);
+      },
     },
     destroyed(){
       getTopology(this.topologyIndex).destroy();
