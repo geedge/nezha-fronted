@@ -851,13 +851,6 @@ li{
 .nz-table + .to-top-is-hover{
   display: none;
 }
-revogr-header .data-header-cell .resizable:hover {
-  background-color: #ccc !important;
-  width: 6px;
-}
-revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
-  border-right: 1px solid #eee;
-}
 
 .nz-table + .to-top-is-hover:hover{
   display: block;
@@ -936,33 +929,7 @@ revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
   padding:2px 5px;
   border-radius: 4px;
 }
-.data-cell {
-  font-size: 12px;
-}
-.data-cell .danger {
-  background-color: $danger-color;
-  color: white;
-  padding:2px 5px;
-  border-radius: 4px;
-}
-.data-cell .success {
-  background-color: $success-color;
-  color: white;
-  padding:2px 5px;
-  border-radius: 4px;
-}
-.data-cell .suspended {
-  background-color: $suspended-color;
-  color: white;
-  padding:2px 5px;
-  border-radius: 4px;
-}
-.data-cell .warning {
-  background-color: $warning-color;
-  color: white;
-  padding:2px 5px;
-  border-radius: 4px;
-}
+
 .nz-table th {
   padding: 0;
 }
@@ -1912,6 +1879,44 @@ revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
   background-color: rgba(255, 99, 71, .85);
 }
 
+.el-message-box__wrapper {
+  .el-message-box__status.el-icon-warning {
+    color: #ef775e !important;
+  }
+  .el-message-box__headerbtn:focus .el-message-box__close, .el-message-box__headerbtn:hover .el-message-box__close {
+    color: $global-text-color-active;
+  }
+  .el-message-box__container {
+    display: flex;
+    min-height: 60px;
+    align-items: center;
+  }
+
+  .el-message-box__btns {
+    .el-button:not(.el-button--primary):focus{
+      color: #606266;
+    }
+    .el-button:not(.el-button--primary):hover {
+      color: #606266;
+      opacity: .8;
+      border-color: #DCDFE6;
+      background-color: white;
+    }
+
+    .el-button--primary {
+      box-shadow: none;
+      background-color: $global-text-color-active;
+    }
+    .el-button--primary:focus{
+      background-color: $global-text-color-active;
+    }
+    .el-button--primary:hover {
+      background-color: $global-text-color-active;
+      opacity: .8;
+    }
+  }
+}
+
 /*滚动条相关, 11px/8px/5px, 默认8px*/
 .ps__rail-y:hover > .ps__thumb-y,
 .ps__rail-y:focus > .ps__thumb-y,
@@ -2423,3 +2428,4 @@ revo-grid[theme=compact] revogr-viewport revogr-header .data-header-cell {
 /deep/ .el-input-number .el-input__inner{
   text-align: left;
 }
+

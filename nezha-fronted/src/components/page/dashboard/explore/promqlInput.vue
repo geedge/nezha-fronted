@@ -193,7 +193,6 @@
 <style scoped lang="scss">
   .promqlInput{
     position: relative;
-    height: 36px;
     width: 100%;
     display: flex;
     margin-bottom: 18px;
@@ -223,8 +222,8 @@
     /*border-radius: 3px;*/
     /*background-color: #dde4ed;*/
     width: 34px;
-    height: 34px !important;
-    line-height: 34px;
+    height: 29px !important;
+    line-height: 30px;
     text-align: center;
   }
   .query-options .option:focus,.query-options .option:hover{
@@ -239,7 +238,7 @@
     height: 100%;
   }
   .metric-btn{
-    height: 36px !important;
+    height: 29px !important;
     width: 105px;
     margin-left: 1px;
   }
@@ -269,6 +268,6 @@
     z-index: 2100;
   }
   .input-box .el-input__inner{
-    height: 36px;
+    height: 30px;
   }
 </style>

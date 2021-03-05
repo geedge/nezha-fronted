@@ -5,15 +5,13 @@
   .account .account-role-item{
     background-color: #409eff;
     border: 1px solid #409eff;
-    height: 20px;
-    font-size: 12px;
-    line-height: 20px;
-    border-radius: 4px;
     display: inline-block;
-    box-sizing: content-box;
-    padding:3px;
-    margin-right: 3px;
+    height: 20px;
+    line-height: 18px;
+    padding: 0 5px;
     color: white;
+    border-radius: 4px;
+    box-sizing: border-box;
   }
 </style>
 <template>
@@ -89,7 +87,7 @@
             <template v-if="item.prop == 'roles'">
               <template v-if="scope.row[item.prop]">
                 <template  v-for="role in scope.row[item.prop]">
-                  <div class="account-role-item" v-if="role"><span>{{role.i18n?$t(role.i18n):role.name}}</span></div>
+                  <span class="account-role-item" v-if="role">{{role.i18n?$t(role.i18n):role.name}}</span>
                 </template>
               </template>
               <template v-else>

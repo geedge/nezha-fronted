@@ -802,6 +802,9 @@
     border-top: none;
     border-bottom: none;
   }
+  .mib-browser-table-title {
+    margin-bottom: 10px;
+  }
   .mib-browser-table-title, .mib-browser-tree-title {
     height: 30px;
     line-height: 30px;

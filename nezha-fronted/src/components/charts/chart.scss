@@ -278,7 +278,7 @@
     position: relative;
     background-color: white;
     .chartTitle:hover {
-      background-color:#d8dce1;
+      background-color:#efefef;
     }
     //.chartTitle:not(.drag-disabled) {
     //  cursor: move;
@@ -299,7 +299,7 @@
         font-size: 12px;
       }
       .chart-title-text {
-        font-size: 16px;
+        font-size: 14px;
         line-height: 26px;
         color: #52545c;
         display:flex;
@@ -494,12 +494,12 @@
     position: relative;
     background-color: white;
     .chartTitle:hover {
-      background-color:#d8dce1;
+      background-color:#efefef;
     }
     .chartTitle {
       text-align: center;
       width: 100%;
-      line-height: 30px;
+      line-height: 20px;
       height: 28px;
       padding: 1px 3px 0 3px;
       box-sizing: border-box;
@@ -513,7 +513,7 @@
         font-size: 12px;
       }
       .chart-title {
-        font-size: 16px;
+        font-size: 14px;
         line-height: 26px;
         color: #52545c;
         display:flex;

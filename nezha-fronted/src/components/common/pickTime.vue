@@ -2,7 +2,7 @@
   <div class="interval-refresh ">
     <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange" :default-pick="defaultPick" :show-empty="showEmpty" v-model="this.searchTime"></time-picker>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
-      <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" v-show="useRefresh" style="vertical-align: middle;">
+      <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" style="height: 24px;line-height: 24px;vertical-align: middle;" v-show="useRefresh">
         <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc" :id="id+'-refresh'">
           <i style="font-size: 14px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
           <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
@@ -14,7 +14,7 @@
             </li>
           </ul>
           <button type="button" style="border-radius: 0 4px 4px 0;padding:0px;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <span class="nz-btn nz-btn-text">{{interval.value != -1 ? interval.label : ''}}</span><i style="font-size: 14px" class="nz-icon nz-icon-arrow-down"></i>
+            <span class="nz-btn nz-btn-text" style="padding-left: 10px;" v-if="interval.value && interval.value != -1">{{interval.label}}</span><i class="nz-icon nz-icon-arrow-down" style="font-size: 14px"></i>
           </button>
         </el-popover>
       </div>

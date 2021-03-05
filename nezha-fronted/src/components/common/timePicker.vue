@@ -67,6 +67,11 @@
   .panel-time-picker-popper .el-picker-panel__footer button:nth-child(1){
     display:none;
   }
+
+  .dropdown--suffix {
+    padding: 0 8px;
+    color: #aaa;
+  }
 </style>
 <template>
   <div class="calendar top-tools" id="panel-calender">
@@ -108,7 +113,9 @@
         <div  class="el-dropdown-link" slot="reference">
           <i class="nz-icon nz-icon-time" style="width:20px;"></i>
           <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
-          <i class="nz-icon nz-icon-arrow-down"  style="padding-left:0px !important;width:20px;"></i>
+          <span class="dropdown--suffix">
+            <i class="el-icon-arrow-down"></i>
+          </span>
         </div>
       </el-popover>
       <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">

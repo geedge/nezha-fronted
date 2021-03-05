@@ -945,10 +945,11 @@
     }
 </script>
 
-<style scoped>
-  .system{
+<style lang="scss" scoped>
+  .system {
     height: 100%;
     position: relative;
+    margin-top: 10px;
   }
   .system-config-form{
     width: 61.8% !important;
@@ -1077,7 +1078,48 @@
     cursor: pointer;
   }
 </style>
-<style>
+<style lang="scss">
+  .system {
+    .el-tabs__nav-scroll {
+      background-color: #eee;
+    }
+    .el-form-item:last-of-type {
+      padding-top: 36px !important;
+
+      .el-form-item__content {
+        margin-left: 0 !important;
+        width: 692px;
+        text-align: center;
+      }
+      .nz-btn {
+        margin: 0 10px;
+      }
+    }
+    .el-tabs__content {
+      padding-top: 25px;
+    }
+    .el-tabs__item {
+      outline: none;
+      box-sizing: border-box;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+      color: $global-text-color-active;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+      border-top: 4px solid $global-text-color-active;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
+      color: $global-text-color-active;
+      opacity: .8;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item {
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+      border-top: 4px solid transparent;
+    }
+  }
   .system-config-form .el-form-item__content{
     width: 512px;
   }
@@ -1089,6 +1131,10 @@
     height: 28px;
     line-height: 28px;
     /*width: 512px;*/
+  }
+  .system-tabs {
+    box-shadow: unset !important;
+    border-color: #eee !important;
   }
   .system-tabs .el-tabs--border-card{
     webkit-box-shadow: unset !important;

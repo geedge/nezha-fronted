@@ -54,6 +54,9 @@
     width: 100px;
     margin: 0 20px 0 0;
   }
+  .chart-unit .el-input__suffix-inner {
+    color: #aaa;
+  }
   .unit-pop-class .el-cascader-panel{
     height: 200px;
     background-color: #FFF;

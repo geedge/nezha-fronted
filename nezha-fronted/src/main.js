@@ -134,7 +134,7 @@ Vue.mixin({
         if(title&&title.label){
           item.label=title.label;
         }
-      })
+      });
     },
     hasButton(code) {
       return hasButton(this.$store.getters.buttonList, code);
@@ -183,6 +183,9 @@ Vue.mixin({
         }
       }
       return 0;
+    },
+    translation(key) {
+      return i18n.t(key);
     },
   },
   computed: {

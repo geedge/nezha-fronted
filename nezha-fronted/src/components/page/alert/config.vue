@@ -384,6 +384,7 @@
             });
             this.tableData = response.data.list;
             this.pageObj.total = response.data.total;
+            console.info(this.$refs.alertRuleTable)
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {
                 this.scrollbarWrap = this.$refs.alertRuleTable.bodyWrapper;

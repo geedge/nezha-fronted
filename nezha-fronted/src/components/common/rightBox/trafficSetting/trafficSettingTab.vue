@@ -1,24 +1,24 @@
 <template>
     <div class="asset-config-tab">
-      <el-form-item :label="$t('asset.asset')" size="small" class="right-box-form-content" ref="assetConfigForm" label-width="90px">
-        <!--<el-select class="right-box-row-with-btn" clearable @clear="clearAssetInput"  v-model="assetSetting.assetId" @change="assetChanged" popper-class="no-style-class" :class="{'input-error':assetValidate}">
-          <el-option v-for="(item,index) in assetList" :label="item.host" :disabled="item.isOccupy" :value="item.id" :key="item.host+'-'+item.id"></el-option>
-        </el-select>-->
-        <el-autocomplete
-          id="traffic-setting-asset"
-          clearable
-          :class="{'input-error':hostInvalid || hostRepeat}"
-          class="asset-input right-box-row-with-btn"
-          v-model="assetSetting.host"
-          popper-class="no-style-class"
-          :fetch-suggestions="queryAssetHosts"
-          :debounce="1000"
-          :trigger-on-focus="false"
-          :highlight-first-item="true"
-          @input="hostInputChange"
-          @blur="validateHostEmpty"
-        ></el-autocomplete><el-popover
-        @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="click">
+      <div class="asset-item">
+        <span class="asset-item--label">{{$t("asset.asset")}}</span>
+        <div class="asset-item--input">
+          <el-autocomplete
+             :class="{'input-error':hostInvalid || hostRepeat}"
+             :debounce="1000"
+             :fetch-suggestions="queryAssetHosts"
+             :highlight-first-item="true"
+             :trigger-on-focus="false"
+             @blur="validateHostEmpty"
+             @input="hostInputChange"
+             class="asset-input right-box-row-with-btn"
+             clearable
+             id="traffic-setting-asset"
+             popper-class="no-style-class"
+             size="small"
+             v-model="assetSetting.host"
+           ></el-autocomplete>
+          <el-popover @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="click">
           <div class="mib-browser-ad-search">
             <el-row class="mib-browser-ad-search-item" style="font-weight: bold">{{$t('config.dc.traffic.snmpSetting')}}</el-row>
             <el-row class="mib-browser-ad-search-item">
@@ -113,20 +113,14 @@
             <i class="el-icon-more"></i>
           </button>
         </el-popover>
-        <span @click="delSelf" class="right-box-form-minus-box" id="traffic-setting-delself"
-              style="vertical-align: middle;right: 0;
-                      position: absolute;
-                      line-height: 21px;
-                      height: 21px;
-                      top: 50%;
-                      transform: translateY(-50%);"
-        ><i class="nz-icon nz-icon-minus"></i></span>
-        <div>
-          <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
-          <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
-          <span style="color:#F56C6C;font-size: 12px;" v-if="hostEmpty">{{$t('validate.required')}}</span>
         </div>
-      </el-form-item>
+        <span @click="delSelf" class="asset-item--btn right-box-form-minus-box" id="traffic-setting-delself"><i class="nz-icon nz-icon-minus"></i></span>
+      </div>
+      <div>
+        <span style="color:#F56C6C;font-size: 12px;" v-if="hostRepeat">{{$t('validate.repeat')}}</span>
+        <span style="color:#F56C6C;font-size: 12px;" v-if="hostInvalid">{{$t('validate.host')}}</span>
+        <span style="color:#F56C6C;font-size: 12px;" v-if="hostEmpty">{{$t('validate.required')}}</span>
+      </div>
       <div class="endpoints-box-endpoints" style="border: 1px solid #E7EAED;border-radius: 2px;padding-bottom: 10px">
         <el-table :data="assetSetting.configs"
                   tooltip-effect="light"
@@ -145,31 +139,16 @@
             show-overflow-tooltip
             v-for="(item, index) in tableLabels"
             :width="item.width"
-            align="center"
             :key="`col-${index}`"
             style="max-height: 200px"
             >
             <template slot="header">
-              <span v-if="item.required == true"><span style="color: red;">*</span>{{item.label}}</span>
+              <span v-if="item.required == true"><span style="color: red;">*</span><span style="padding-left: 6px;">{{item.label}}</span></span>
               <span v-else>{{item.label}}</span>
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop == 'tags'">
                 <div class="tab-tags" @click="showEditTagsBox(true,scope.$index,scope.row,$event)" id="traffic-setting-show-tags">
-                  <!--<el-scrollbar style="height: 100%;">
-                    <el-tag
-                      v-for="(value, key, index) in scope.row[item.prop]"
-                      class="tab-tags"
-                      size="mini"
-                      :key="key"
-                      style="display: block;margin-bottom:5px;" >
-                      &lt;!&ndash;                  <div class="tab-tags-item">&ndash;&gt;
-                      &lt;!&ndash;                    <div class="tag-item-key">{{key}}：</div><div class="tag-item-value">{{value}}</div>&ndash;&gt;
-
-                      &lt;!&ndash;                  </div>&ndash;&gt;
-                      {{key}}：{{value}}
-                    </el-tag>
-                  </el-scrollbar>-->
                   <el-tooltip placement="top" effect="light" popper-class="tags-pop transparent-pop">
                     <div slot="content">
                       <template v-if="scope.row[item.prop]">
@@ -190,9 +169,6 @@
               <template v-if="item.prop == 'ifindex'">
                 <span v-if="scope.row.edit==false">{{scope.row[item.prop]}}</span>
                 <template v-else>
-<!--                  <el-select v-model="scope.row[item.prop]" :disabled="assetSetting.host == null" size="mini" popper-class="no-style-class" @change="ifIndexChange(scope.row[item.prop],scope.row)" :class="{'input-error':isError(item.errRows,scope.$index),'transparent-pop':assetSetting.host == null}">-->
-<!--                    <el-option v-for="(item,index) in ifIndexList" :label="item.label" :value="item.value" :key="item.value" :disabled="item.isOccupy"></el-option>-->
-<!--                  </el-select>-->
                   <el-autocomplete
                     v-model="scope.row[item.prop]"
                     :class="{'input-error':isError(item.errRows,scope.$index)||ifIndexError,'transparent-pop':assetSetting.host == ''}"
@@ -207,10 +183,6 @@
                 </template>
               </template>
               <template v-if="item.prop == 'ifdescr'">
-                <!--<span v-if="scope.row.edit==false">{{scope.row[item.prop]}}</span>
-                <template v-else>
-                  <el-input v-model="scope.row[item.prop]" size="small" clearable></el-input>
-                </template>-->
                 <span>{{scope.row[item.prop]}}</span>
               </template>
               <template v-if="item.prop == 'direction'">
@@ -221,8 +193,8 @@
                 <template v-else>
                   <el-checkbox-group :disabled="assetSetting.host == null" v-model="scope.row[item.prop]" class="direction-checkbox" :class="{'input-error':isError(item.errRows,scope.$index),'transparent-pop':assetSetting.host == null}">
                     <div class="input__inner">
-                      <el-checkbox label="rx">RX</el-checkbox>
-                      <el-checkbox label="tx" >TX</el-checkbox>
+                      <el-checkbox label="rx">&nbsp;RX</el-checkbox>
+                      <el-checkbox label="tx" >&nbsp;TX</el-checkbox>
                     </div>
                   </el-checkbox-group>
                 </template>
@@ -231,7 +203,7 @@
           </el-table-column>
           <el-table-column label="" :width="40" :show-overflow-tooltip="false">
             <template slot-scope="scope">
-              <span @click.stop="delTabRow(scope.$index,scope.row)" :disabled="assetSetting.host == null" class=".right-box-form-delete" size="mini"><i class="nz-icon nz-icon-minus"></i></span>
+              <span :disabled="assetSetting.host == null" @click.stop="delTabRow(scope.$index,scope.row)" class="right-box-form-delete" size="mini"><i class="nz-icon nz-icon-minus"></i></span>
             </template>
           </el-table-column>
         </el-table>
@@ -281,14 +253,14 @@
           {
             label:'ifDescr',
             prop:'ifdescr',
-            width:100,
+            width:150,
             required:false,
             errRows:[],
           },
           {
             label:this.$t('config.dc.traffic.direction'),
             prop:'direction',
-            width:100,
+            width:200,
             required:true,
             errRows:[],
           },
@@ -612,18 +584,52 @@
   }
 </script>
 
-<style scoped>
-  .asset-config-tab{
-    width: calc(100% - 160px);
+<style lang="scss" scoped>
+  .asset-config-tab {
     min-height: 100px;
     max-height: 400px;
-    border: 1px solid lightgrey;
-    border-radius: 5px;
-    padding:18px 50px 25px 40px;
-    margin: 0;
-    margin-bottom: 10px;
-    margin-left: 70px;
+    border: 1px solid #E4E7ED;;
+    border-radius: 2px;
     position: relative;
+    margin-left: 15px;
+    margin-top: 18px;
+    padding: 18px 18px 26px 40px;
+
+    .asset-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+
+      .asset-item--label {
+        color: #666;
+        padding-right: 20px;
+        line-height: 32px;
+      }
+
+      .asset-item--input {
+        display: flex;
+        width: 100%;
+        padding-right: 10px;
+
+        .right-box-row-with-btn {
+          width: 100%;
+        }
+      }
+
+      .asset-item--btn {
+        height: 28px;
+        box-sizing: border-box;
+        line-height: 21px;
+      }
+    }
+
+    .endpoints-box-endpoints {
+      width: calc(100% - 39px);
+
+      table.el-table__body {
+        font-size: 16px;
+      }
+    }
   }
   .asset-config-tab .add-btn{
     text-align: center;
@@ -635,17 +641,24 @@
     top: 1px;
     left: -1px;
   }
-  .asset-config-tab .right-box-row-with-btn{
-    width: calc(100% - 69px);
-  }
   /deep/ .el-table tr:last-child td{
     border-bottom: none;
   }
   /deep/ .el-table .traffic-set-table-title{
-    color: #0275b8;
+    color: $global-text-color-active;
   }
+
 </style>
 <style lang="scss">
+
+  .asset-config-tab .right-box-form-minus-box {
+    background-color: #FEF3F0 !important;
+  }
+
+  .asset-config-tab .right-box-form-minus-box .nz-icon {
+    color: #EF9A87 !important;
+  }
+
   .tab-tags{
     width: 100%;
     height: 22px;
@@ -684,15 +697,16 @@
   }
   .taffic-setting-tab .el-table__row:hover{
     .input__inner{
-      border-color: #F0F0F0;
+      border-color: #c0c4cc;
     }
   }
   .input__inner{
-    border: 1px solid;
-    border-color: white;
-    border-radius: 4px;
-    padding-left: 4px;
-    background-color: white;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 15px;
+    border-radius: 2px;
+    border: 1px solid #DCDFE6;
   }
   .input-error .el-input__inner,.input-error .el-input__inner:hover,.input-error .el-input__inner:focus,
   .input-error .input__inner,.input-error .input__inner:hover,.input-error .input__inner:focus {

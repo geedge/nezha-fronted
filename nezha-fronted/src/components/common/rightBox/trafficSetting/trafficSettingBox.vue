@@ -5,12 +5,12 @@
     <div class="right-box-title">{{$t('config.dc.traffic.title')}}</div>
     <!-- end--标题-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form" :model="traffic" label-width="100px" label-position="left" ref="trafficForm">
+      <el-form :model="traffic" class="right-box-form" label-position="top" label-width="100px" ref="trafficForm">
         <el-form-item :label="$t('config.dc.dc')" size="small">
           <el-input :disabled="true" v-model="dc.name" id="traffic-setting-name"></el-input>
         </el-form-item>
         <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
-        <button type="button" @click="addAssetSetting" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="margin:5px 1px 5px 70px" id="traffic-setting-add">{{$t('config.dc.traffic.add')}}</button>
+        <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="traffic-setting-add" style="margin:15px 1px 15px 15px" type="button">{{$t('config.dc.traffic.add')}}</button>
       </el-form>
     </div>
 
