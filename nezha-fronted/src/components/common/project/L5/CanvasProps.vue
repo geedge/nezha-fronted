@@ -342,7 +342,7 @@
                   <el-select v-model="selection.pen.gradientType" size="small"
                              @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select">
                     <div slot="prefix">
-                      <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id===selection.pen.gradientType).label,bkTypeOption.find(item1=>item1.id===selection.pen.gradientType).fontSize]"></i>
+                      <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
                     </div>
 
 
