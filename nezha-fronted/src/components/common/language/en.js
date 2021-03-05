@@ -398,6 +398,7 @@ const en = {
   },
   tip: {
     confirmDelete: "Are you sure you want to delete?", //Are you sure you want to delete?
+    killTerm:'Are you sure you want to kill terminal?',
     confirmBatchDelete:'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?',//Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     yes: 'Yes', //"是"
@@ -691,6 +692,9 @@ const en = {
       selectFile: 'Select file',
       SSH: 'SSH',
       TELNET: 'TELNET',
+      password:'Password',
+      key:'Key',
+      endTime:'EndTime',
       id: 'ID',
       time: 'Time',
       width: 'Width',

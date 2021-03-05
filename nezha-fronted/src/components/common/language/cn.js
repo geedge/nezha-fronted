@@ -395,6 +395,7 @@ const cn = {
   },
   tip: {
     confirmDelete: "确认删除吗？",
+    killTerm:'确认关闭 terminal 吗？',
     confirmBatchDelete:'确定删除这{0}条数据吗？',
     assetConfirmDelete: "关联的Endpoint和告警将会被删除，确认删除吗？",
     yes: "是",
@@ -653,6 +654,9 @@ const cn = {
       selectFile: "选择文件",
       SSH: "SSH",
       TELNET: "TELNET",
+      password:'密码',
+      key:'密钥',
+      endTime:'结束时间',
       id: "ID",
       time: "时间",
       width: "窗口宽度",

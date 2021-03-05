@@ -58,7 +58,13 @@
               <span>{{getRemoteText(scope.row)}}</span>
             </template>
             <template v-else-if="item.prop == 'duration'">
-              <span>{{getDuration(scope.row)}}</span>
+              <el-tooltip placement="right" effect="light" :disabled="!scope.row.status">
+                <div slot="content">
+                 {{$t('config.terminallog.endTime')}}<br/>
+                  {{scope.row.endTime}}
+                </div>
+                <span>{{getDuration(scope.row)}}</span>
+              </el-tooltip>
             </template>
             <template v-else-if="item.prop == 'option'">
               <template v-if="scope.row.status == 0">
@@ -72,6 +78,10 @@
                 <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showHistoryCMD(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-terminal-log"></i></span>
               </template>
 
+            </template>
+            <template v-else-if="item.prop == 'authType'">
+              <span v-if="scope.row.authType==1">{{$t('config.terminallog.password')}}</span>
+              <span v-else-if="scope.row.authType==2">{{$t('config.terminallog.key')}}</span>
             </template>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>
@@ -100,7 +110,7 @@
 <script>
   import bus from "../../../libs/bus";
   import {terminalLog} from "../../common/js/constants";
-  import {calcDurationByStringTime} from "../../common/js/tools";
+  import {calcDurationByStringTimeB} from "../../common/js/tools";
 
   export default {
     name: "terminallog",
@@ -234,7 +244,7 @@
         },
         searchLabel: {}, //搜索参数
         scrollbarWrap: null,
-
+        nowTime:'',
       }
     },
     computed: {
@@ -251,9 +261,9 @@
       getDuration() {
         return function(record) {
           if (record.endTime) {
-            return calcDurationByStringTime(record.startTime, record.endTime);
+            return calcDurationByStringTimeB(record.startTime, record.endTime);
           }
-          return "";
+          return calcDurationByStringTimeB(record.startTime, this.nowTime);
         }
       },
     },
@@ -274,6 +284,7 @@
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
+            this.nowTime=response.time;
             this.pageObj.total = response.data.total;
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {
@@ -302,14 +313,20 @@
         console.log(record);
       },
       shutdown(record) {
-        this.$put("/terminal/kill", {uuid: record.uuid}).then(res => {
-          if (res.code === 200) {
-            this.$message.success(this.$t("config.terminallog.success"));
-            this.bottomBox.showSubList = false;
-            this.getTableData();
-          } else {
-            this.$message.error(this.$t("config.terminallog.killErrorTip"));
-          }
+        this.$confirm(this.$t("tip.killTerm"),{
+          confirmButtonText:this.$t("tip.yes"),
+          cancelButtonText:this.$t("tip.no"),
+          type:'warning'
+        }).then(()=>{
+          this.$put("/terminal/kill", {uuid: record.uuid}).then(res => {
+            if (res.code === 200) {
+              this.$message.success(this.$t("config.terminallog.success"));
+              this.bottomBox.showSubList = false;
+              this.getTableData();
+            } else {
+              this.$message.error(this.$t("config.terminallog.killErrorTip"));
+            }
+          });
         });
       },
       // 全屏

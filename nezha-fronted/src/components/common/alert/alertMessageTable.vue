@@ -82,7 +82,15 @@
             <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
           </span>
           <span v-else-if="item.prop == 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <span v-else-if="item.prop == 'endAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+          <template v-else-if="item.prop == 'duration'">
+            <el-tooltip placement="right" effect="light" :disabled="!scope.row.endAt">
+              <div slot="content">
+                {{$t('config.terminallog.endTime')}}<br/>
+                {{scope.row.endAt}}
+              </div>
+              <span>{{getDuration(scope.row)}}</span>
+            </el-tooltip>
+          </template>
           <template v-else-if="item.prop == 'labels'" class="labels">
             <span v-for="(item,i) in labelsSort(scope.row.labels)">
               <span
@@ -223,6 +231,7 @@
   import chartDataFormat from "../../charts/chartDataFormat";
   import alertRuleInfo from '../../common/alert/alertRuleInfo'
   import alertLabel from '../../common/alert/alertLabel'
+  import {calcDurationByStringTimeB} from "../../common/js/tools";
   export default {
     name:"alertMessageTable",
     components: {
@@ -245,6 +254,7 @@
       },
       from: {type: String},
       id:String,
+      nowTime:{},
     },
     data() {
       vm = this;
@@ -336,12 +346,18 @@
             prop: 'startAt',
             show: true,
             width: 150
-          }, {
+          }, /*{
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
             width: 150
-          }, {
+          },*/
+          {
+            label:  this.$t('config.terminallog.duration'),
+            prop: 'duration',
+            show: true,
+            width: 150
+          },{
             label: this.$t('overall.value'),
             prop: 'current',
             show: true,
@@ -385,7 +401,15 @@
           }
           return key + "：" + value;
         }
-      }
+      },
+      getDuration() {
+        return function(record) {
+          if (record.endTime) {
+            return calcDurationByStringTimeB(record.startAt, record.endAt);
+          }
+          return calcDurationByStringTimeB(record.startAt, this.nowTime);
+        }
+      },
     },
     methods: {
       labelsSort:function(obj){

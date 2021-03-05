@@ -7,13 +7,6 @@
       </div>
     </div>
     <div class="replay-container">
-      <div class="replay-operate">
-        <div>
-          <button :title="$t('config.terminallog.record.pause')" @click="shutdown"
-                  class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-kill" v-show="isPlaying"><i
-            class="nz-icon nz-icon-ZD"></i></button>
-        </div>
-      </div>
       <div class="record-console" ref="recordConsole">
         <div :id="obj.uuid" class="record-terminal"></div>
       </div>
@@ -121,7 +114,6 @@
         });
         //返回
         this.terminalSocket.onmessage=function(evt){
-          console.log(evt,'evt')
           let backContent=evt.data;
           /*
           if(that.inputSecret){//当前为密码输入状态

@@ -44,6 +44,7 @@
         :from="$CONSTANTS.fromRoute.message"
         @deleteMessage="deleteMessage"
         @select-change="(selection)=>{this.batchDeleteObjs=selection}"
+        :now-time="nowTime"
       ></alertMessageTable>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -291,6 +292,7 @@
         tableData: [],
         requestIndex:0,
         viewAssetState: false,
+        nowTime:'',
       }
     },
     computed: {
@@ -353,6 +355,7 @@
         this.$get('alert/message', this.searchLabel).then(response => {
           this.tools.loading = false;
           if (response.code == 200) {
+            this.nowTime=response.time;
             this.tableData = response.data.list;
             let axiosAll=[]
             this.$nextTick(() => {

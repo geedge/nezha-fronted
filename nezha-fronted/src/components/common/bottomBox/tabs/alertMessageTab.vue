@@ -36,6 +36,7 @@
       @select-change="(selection)=>{this.batchDeleteObjs=selection}"
       :showTopBtn="false"
       :from="`${from}_alerts`"
+      :nowTime="nowTime"
     ></alertMessageTable>
     <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
     <!--导出-->
@@ -251,6 +252,7 @@
         dropCol: [],
         tableData: [],
         defaultPick:12,
+        nowTime:'',
       }
     },
     computed: {
@@ -526,6 +528,7 @@
         setTimeout(() => {
           this.$get('alert/message', this.searchLabel).then(response => {
             if (response.code == 200) {
+              this.nowTime=response.time;
               this.tableData = response.data.list;
               let axiosAll=[]
               this.$nextTick(() => {
