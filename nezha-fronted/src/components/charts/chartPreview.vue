@@ -596,7 +596,7 @@
                         if(this.mapping&&!this.mapping.color){
                           this.mapping.color={bac:'#fff',text:'#000'}
                         }
-                        this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
+                        this.serieSingleStat = mapping?mapping.text.replace('{{value}}', singleStatTmp).replace('{{name}}', chartItem.elements[0].legend):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
                       }else{
                         this.serieSingleStat = chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(singleStatTmp,null,2);
                       }
@@ -1198,7 +1198,7 @@
             }
             this.mapping=mapping;
             item.mapping=mapping;
-            item.value = mapping?mapping.text.replace('{{value}}', item.value):this.unit.compute(value,null,2);
+            item.value = mapping?mapping.text.replace('{{value}}', item.value).replace('{{name}}', item.element.alias):this.unit.compute(value,null,2);
           }
           return item;
         })

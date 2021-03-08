@@ -189,7 +189,7 @@ const cn = {
         unit: "单位",
         legend: "图例",
         legendTip: "使用名称或表达式控制时间序列的名称。例如{{hostname}将替换为标签主机名的标签值。",
-        valueMappingTip: '使用{{value}}可以显示原值\n'+
+        valueMappingTip: '使用{{name}}和{{value}}显示原名和原值\n'+
           '例如：total alive: {{value}}\n'+
           '结果为：total alive: 100',
         option: "操作",
