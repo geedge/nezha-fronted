@@ -9,7 +9,8 @@
     name: "deleteButton",
     props:{
       filterFunction:Function,
-      deleteObjs: Object,
+      //deleteObjs: Object,
+      deleteObjs: Array,
       api:String,
       clickFunction:Function,
       id:String

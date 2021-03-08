@@ -862,5 +862,6 @@
 <style scoped>
   .plTableBox.nz-table /deep/  .el-table{
     display: block !important;
+    border-top: 1px solid #d8d8d8;
   }
 </style>
