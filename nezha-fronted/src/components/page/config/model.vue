@@ -308,6 +308,7 @@
         })
       },
       pageNo(val) {
+        console.info(val)
         this.pageObj.pageNo = val;
         this.getTableData();
       },
@@ -373,9 +374,6 @@
       tableData: {
         deep: true,
         handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
-          }
           if(!this.delFlag){ // 不是删除时回到顶部
             this.$refs.modelTable.bodyWrapper.scrollTop = 0
           }else{
@@ -387,7 +385,7 @@
     beforeDestroy() {
       if(this.scrollbarWrap){
         this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+      }
     }
   }
 </script>
