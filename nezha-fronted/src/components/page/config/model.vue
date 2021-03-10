@@ -288,7 +288,6 @@
           this.$message.error(this.$t("tip.noAccess"));
           return;
         }
-        this.tableData = [];
         this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
         this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
         this.$set(this.searchLabel, "stat", 1);
@@ -374,6 +373,9 @@
       tableData: {
         deep: true,
         handler(n) {
+          if (n.length === 0 && this.pageObj.pageNo > 1) {
+            this.pageNo(this.pageObj.pageNo-1);
+          }
           if(!this.delFlag){ // 不是删除时回到顶部
             this.$refs.modelTable.bodyWrapper.scrollTop = 0
           }else{
