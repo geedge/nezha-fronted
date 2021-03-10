@@ -2,7 +2,7 @@
   <div class="interval-refresh ">
     <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange" :default-pick="defaultPick" :show-empty="showEmpty" v-model="this.searchTime"></time-picker>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
-      <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" style="height: 24px;line-height: 24px;vertical-align: middle;" v-show="useRefresh">
+      <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" style="height: 28px;line-height: 28px;vertical-align: middle;" v-show="useRefresh">
         <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc" :id="id+'-refresh'">
           <i style="font-size: 14px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
           <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
