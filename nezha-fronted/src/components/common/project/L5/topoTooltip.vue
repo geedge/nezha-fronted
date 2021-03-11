@@ -343,10 +343,13 @@
     padding: 10px;
     max-height: 400px;
     min-height: 200px;
+    height: 100%;
     .tooltip-box-chart{
       border: 1px solid #E7EAED;
       width: 400px;
-      height: 400px;
+      max-height: 400px;
+      min-height: 200px;
+      height: 100%;
       margin-right: 10px;
     }
     .tooltip-box-info{

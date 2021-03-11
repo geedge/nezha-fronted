@@ -251,7 +251,7 @@
         <div class="module-rect-left" :style="{top:0,left:0,width:0,height:item.rect.height+15+'px'}"></div>
       </div>
       <!--节点连线相关的 tooltip-->
-      <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px'}"
+      <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px','z-index':10,height:tooltipPosition.height+'px'}"
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
            @mouseout="tooltipOut"
@@ -517,6 +517,7 @@
           top:0,
           left:0,
           show:false,
+          height:400
         },
         chartData:{},
         chartGetData:[],
@@ -2515,6 +2516,7 @@
     position: relative;
     border: 1px solid #eeeeee;
     border-radius: 2px;
+    overflow: hidden;
     .pickTime{
       margin-top: -13px;
     }
