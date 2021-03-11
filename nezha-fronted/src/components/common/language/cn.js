@@ -395,6 +395,7 @@ const cn = {
   },
   tip: {
     confirmDelete: "确认删除吗？",
+    confirmOvertime: "确定要使这个超时?", //Are you sure you want to delete?
     killTerm:'确认关闭 terminal 吗？',
     confirmBatchDelete:'确定删除这{0}条数据吗？',
     assetConfirmDelete: "关联的Endpoint和告警将会被删除，确认删除吗？",
@@ -913,6 +914,14 @@ const cn = {
         alertNumTrend: "告警数量趋势",
         affectEntity: "影响"
       }
+    },
+    silence:{
+      silence:"告警静默",
+      create:'创建告警静默',
+      edit:'修改告警静默',
+      time:'时间',
+      matcher:'Matcher',
+      reason:'原因',
     },
     P1Rule:'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule:'P2: 急需处理，但不影响业务的告警',

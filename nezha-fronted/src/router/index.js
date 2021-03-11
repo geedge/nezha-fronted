@@ -88,6 +88,10 @@ export default new Router({
         {
           path: '/alertConfig',
           component: resolve => require(['../components/page/alert/config.vue'], resolve),
+        },
+        {
+          path: '/alertSilence',
+          component: resolve => require(['../components/page/alert/silence.vue'], resolve),
         }
       ]
     },

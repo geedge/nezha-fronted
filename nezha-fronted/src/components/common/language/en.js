@@ -398,6 +398,7 @@ const en = {
   },
   tip: {
     confirmDelete: "Are you sure you want to delete?", //Are you sure you want to delete?
+    confirmOvertime: "Are you sure you want this to time out?",
     killTerm:'Are you sure you want to kill terminal?',
     confirmBatchDelete:'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?',//Related endpoints and alerts will be removed, are you sure you want to delete this asset?
@@ -918,6 +919,14 @@ const en = {
         alertNumTrend: "Alert num trend",
         affectEntity: "Affect entity"
       }
+    },
+    silence:{
+      silence:"Alert silence",
+      create:'New alert silence',
+      edit:'Edit alert silence',
+      time:'Time',
+      matcher:'Matcher',
+      reason:'Reason',
     },
     P1Rule:'P1: Critical, alarm that can cause business paralysis',
     P2Rule:'P2: Major, alarm that do not affect the business',
