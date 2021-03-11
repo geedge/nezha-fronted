@@ -304,7 +304,7 @@ export function calcDurationByStringTimeB(startTime, endTime) {
   }else if(durationSecond > 60) {
     result = `${(Math.floor(durationSecond/60))%60}m ${result}`;
   }
-  
+
   return result;
 }
 export function unixTimeParseToString(unixTime,fmt='yyyy-MM-dd hh:mm:ss'){
@@ -742,3 +742,26 @@ export function clickLegend(echart,legendName,index){
 
   }
 }
+
+export function showTableTooltip(content, show = true, e) {
+  //console.info(content, e)
+  if (show) {
+    let dom = document.querySelector(".table-tooltip");
+    dom.innerHTML = content;
+    dom.setAttribute("style",  `visibility: visible; top: ${e.clientY-e.offsetY+e.target.offsetHeight*0.5-dom.offsetHeight*0.5}px; left: ${e.clientX-e.offsetX+e.target.offsetWidth}px`);
+  }
+}
+export function hideTableTooltip() {
+  let dom = document.querySelector(".table-tooltip");
+  dom.setAttribute("style", "visibility: hidden;");
+  dom.innerHTML = "";
+}
+
+/*function getTdDom(dom) {
+  let tagName = dom.tagName;
+  if (tagName.toLowerCase() === 'td') {
+    return dom;
+  } else {
+    return getTdDom(dom.parentElement);
+  }
+}*/

@@ -7,6 +7,7 @@
     <left-menu ></left-menu>
     <menus v-if="isMenuPage"></menus>
     <web-ssh ref="webSsh" ></web-ssh>
+    <span class="el-popover table-tooltip"></span>
   </div>
 
 </template>

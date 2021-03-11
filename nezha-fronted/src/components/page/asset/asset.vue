@@ -47,7 +47,6 @@
         border
         v-loading="tools.loading"
         ref="assetTable"
-        :cell-class-name="messageStyle"
         @sort-change="tableDataSort"
         @row-dblclick="detail"
         @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
@@ -65,6 +64,7 @@
           :key="`col_${index}`"
           :label="item.label"
           :fixed="item.fixed"
+          :width="item.width"
           :class-name="item.prop == 'option' ? 'content-right-options' : ''"
           :sortable="$tableSet.sortableShow(item.prop,'asset')"
           :prop="$tableSet.propTitle(item.prop,'asset')"
@@ -72,7 +72,10 @@
         >
           <template slot-scope="scope" slot="header">
             <span v-if="item.type == 'tag'" class="tag-header" :title="item.label"><span class="tag-value">{{item.label}}</span><span class="tag-mark">&nbsp;[Tag]</span></span>
-            <span v-else><span>{{item.label}}</span></span>
+            <span v-else>
+              <span>{{item.label}}</span>
+              <div class="col-resize-area"></div>
+            </span>
           </template>
           <template slot-scope="scope" :column="item">
             <div v-if="item.prop=='ID'">
@@ -90,8 +93,9 @@
               <span v-if="scope.row.state==2">{{ $t('asset.notInStock')}}</span>
               <span v-if="scope.row.state==3">{{ $t('asset.suspended')}}</span>
             </div>
-          <div v-if="item.prop == 'pingStatus'">
-            <el-popover
+          <div @mouseenter="showTableTooltip(formatPingTime(scope.row.pingLastUpdate), true, $event)" @mouseleave="hideTableTooltip" v-if="item.prop == 'pingStatus'">
+            <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
+            <!--<el-popover
               placement="right"
               width="200"
               trigger="hover"
@@ -99,24 +103,38 @@
               <div slot="reference" style="width: 100%">
                 <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
               </div>
-            </el-popover>
+            </el-popover>-->
           </div>
           <template v-if="item.prop=='Module'">
-            <el-tooltip placement="right" effect="light">
+            <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(`${$t('asset.down')} / ${$t('asset.suspended')} / ${$t('asset.total')}`, true, $event)" @mouseleave="hideTableTooltip">
+              <span @click="showEndpoint(scope.row)" class="link" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
+            </div>
+            <!--<el-tooltip placement="right" effect="light">
               <div slot="content">
                 {{$t('asset.down')}} / {{$t('asset.suspended')}} / {{$t('asset.total')}}
               </div>
-              <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
-            </el-tooltip>
+              <span :class="messageStyle(item, scope.row)">
+                <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
+              </span>
+            </el-tooltip>-->
           </template>
           <template v-if="item.prop=='Alert'">
-            <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+            <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(scope.row.alertNum+' '+$t('overall.active'), scope.row.alertNum >= 99, $event)" @mouseleave="hideTableTooltip">
               <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
                 {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
                   <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
                 {{' ' + $t('overall.active')}}
               </span>
-            </el-tooltip>
+            </div>
+            <!--<el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
+              <span :class="messageStyle(item, scope.row)">
+                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
+                  {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
+                    <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
+                  {{' ' + $t('overall.active')}}
+                </span>
+              </span>
+            </el-tooltip>-->
           </template>
           <div v-if="item.prop=='dataCenter'">
             <span  >{{scope.row.idc.name}}</span>
@@ -203,6 +221,8 @@
   import exportXLSX from "../../common/exportXLSX";
   import endpointStatusPop from "./endpointStatusPop";
   import deleteButton from "../../common/deleteButton";
+  import {showTableTooltip, hideTableTooltip} from "../../common/js/tools";
+
   export default {
     name: "asset",
     components:{
@@ -318,58 +338,66 @@
             prop: 'ID',
             show: false,
             allowed:true,
-            // width: 110
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.assetType"),
             prop: 'assetType',
             show: true,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.device"),
             prop: 'SN',
             show: true,
-            width: 130
           },  {
             label: this.$t("asset.tableTitle.assetState"),
             prop: 'state',
             show: true,
+            width: 110
           }, {
             label:this.$t('asset.tableTitle.assetPing'),
             prop:'pingStatus',
             show:true,
+            width: 110
           },{
             label: this.$t("asset.tableTitle.modules"),
             prop: 'Module',
             show: true,
-            width: 105
+            width: 120
           }, {
             label: this.$t("asset.tableTitle.alerts"),
             prop: 'Alert',
             show: true,
-            width: 100
+            width: 120
           }, {
             label: this.$t("asset.tableTitle.dataCenter"),
             prop: 'dataCenter',
             show: true,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.cabinet"),
             prop: 'cabinet',
             show: true,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.model"),
             prop: 'model',
             show: true,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.vendor"),
             prop: 'vendor',
             show: true,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.procurementDate"),
             prop: 'purchaseDate',
             show: false,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.principal"),
             prop: 'principal',
             show: false,
+            width: 110
           }, {
             label: this.$t("asset.tableTitle.principalTel"),
             prop: 'tel',
@@ -379,7 +407,6 @@
             label: this.$t('config.account.option'),
             prop: 'option',
             show: true,
-            width: 150,
             fixed:'right'
           }],
         tableData: [],
@@ -435,7 +462,7 @@
           if (n.length === 0 && this.pageObj.pageNo > 1) {
             this.pageNo(this.pageObj.pageNo-1);
           }
-          
+
           if(!this.delFlag){ // 不是删除时回到顶部
             this.$refs.assetTable.bodyWrapper.scrollTop = 0
           }else{
@@ -447,6 +474,7 @@
       }
     },
     methods: {
+      showTableTooltip, hideTableTooltip,
       fullScreen() {
         let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
@@ -529,8 +557,26 @@
           });
         });
       },
-      messageStyle(e) {
-        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
+      messageStyle(title, row) {
+        if (title.label == 'Alerts' || title.label == this.$t("asset.tableTitle.alerts")) {
+          if (row.alertNum > 0) {
+            return 'danger';
+          } else {
+            return 'success';
+          }
+        }
+        if(title.label == 'Module' || title.label == this.$t("asset.tableTitle.modules")){
+          if (row.state == 3) {
+            return 'suspended';
+          } else {
+            if (row.endpointDownNum > 0) {
+              return 'danger';
+            } else {
+              return 'success';
+            }
+          }
+        }
+        /*if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
           if (e.row.alertNum > 0) {
             return 'danger';
           } else {
@@ -547,7 +593,7 @@
               return 'success';
             }
           }
-        }
+        }*/
         return '';
       },
       edit(asset) {
@@ -861,7 +907,7 @@
       bus.$off('alert-message-change');
       if(this.scrollbarWrap){
         this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+      }
     }
   }
 </script>

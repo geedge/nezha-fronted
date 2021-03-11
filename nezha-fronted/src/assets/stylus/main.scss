@@ -6,6 +6,7 @@ body {
   min-width: 1024px;
   margin: 0px !important;
   padding:0px !important;
+  cursor: default !important;
 }
 html {
   height: 100%;
@@ -929,7 +930,38 @@ li{
   padding:2px 5px;
   border-radius: 4px;
 }
-
+.nz-table .danger>span {
+  background-color: $danger-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.nz-table .success>span {
+  background-color: $success-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.nz-table .suspended>span {
+  background-color: $suspended-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.nz-table .warning>span {
+  background-color: $warning-color;
+  color: white;
+  padding:2px 5px;
+  border-radius: 4px;
+}
+.col-resize-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+}
 .nz-table th {
   padding: 0;
 }
@@ -2427,5 +2459,10 @@ li{
 }
 /deep/ .el-input-number .el-input__inner{
   text-align: left;
+}
+
+.table-tooltip {
+  position: fixed !important;
+  visibility: hidden;
 }
 
