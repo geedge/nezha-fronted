@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
         if (store.getters.menuList.length === 0) {
           let configUrl = "static/config.json?Timestamp=" + new Date().getTime();
           Vue.http.get(configUrl).then(res => {
-            post(res.body.baseUrl + "/sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
+            post(res.body.baseUrl + "sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
               store.commit("setMenuList", sortByOrderNum(res.data.menus));
               store.commit("setButtonList", res.data.buttons);
               store.commit("setRoleList", res.data.roles);
