@@ -71,9 +71,14 @@
                 </el-col>
               </template>
             </el-row>
-            <span class="nz-icon-minus-medium nz-icon-minus-position">
-            <i class="nz-icon nz-icon-minus" @click="removeExpression(index)"></i>
-          </span>
+            <div class="nz-icon-minus-position">
+              <span class="nz-icon-minus-medium">
+                <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
+              </span>
+              <span class="nz-icon-copy">
+                <i @click="copyExpression(index)" class="nz-icon nz-icon-override"></i>
+              </span>
+            </div>
           </el-row>
 
           <!--tooltip-->
@@ -1564,6 +1569,17 @@
           });
         }
       },
+      copyExpression(index) {
+        this.selection.pen.data.expressArr.push(this.selection.pen.data.expressArr[index]);
+        this.selection.pen.data.legends.push(this.selection.pen.data.legends[index]);
+        this.$nextTick(() => {
+          this.expressions.forEach((ex, index) => {
+            if (ex) {
+              this.$refs[`promql-${index}`][0].metricChange(ex);
+            }
+          });
+        });
+      },
       valueMappingAdd(){
         if(this.selection.pen.data.valueMappingSort==='desc'){
           this.selection.pen.data.valueMapping.push({
@@ -1835,8 +1851,12 @@
       width: calc(100% - 120px);
       padding: 20px 20px 20px 0;
     }
-
-    .form-row-item .nz-icon-minus-position {
+    .form-row-item .nz-icon-minus-position .nz-icon-minus-medium {
+      background: rgba(236, 127, 102, 0.1);
+      padding: 2px 6px;
+      color: #EC7F66;
+    }
+    /*.form-row-item .nz-icon-minus-position {
       position: absolute;
       top: 50%;
       right: -55px;
@@ -1849,7 +1869,7 @@
       .nz-icon-minus {
         color: #EC7F66;
       }
-    }
+    }*/
 
     .tooltip-box {
       padding-left: 10px;

@@ -2373,15 +2373,26 @@ li{
 }
 .right-box-form  .nz-icon-minus-medium{
   padding: 2px 6px;
-  background: rgba(236,127,102,.1);
+  background-color: rgba(236,127,102,.1);
   border-radius: 2px;
   cursor: pointer;
 }
-.right-box-form .form-row-item .nz-icon-minus-position{
+.nz-icon-copy {
+  padding: 2px 6px;
+  color: $global-text-color-active;
+  background-color: #FDF5E9;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.nz-icon-minus-position{
+  display: inline-flex;
+  flex-direction: column;
   position: absolute;
+  right: -40px;
   top: 50%;
-  right: -55px;
-  transform: translate(-50%,-50%);
+  transform: translateY(-50%);
+  height: 70px;
+  justify-content: space-around;
 }
 .right-box-form>.el-form-item.half-form-item-other{
   display: inline-block;
