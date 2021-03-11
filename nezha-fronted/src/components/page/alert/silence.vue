@@ -502,7 +502,7 @@
     }
   }
   .nz-silence-tag{
-    min-width: 120px;
+    min-width: 80px;
     margin-right: 5px;
     border-radius: 4px;
     display: inline-flex;

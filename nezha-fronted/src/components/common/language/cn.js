@@ -395,7 +395,7 @@ const cn = {
   },
   tip: {
     confirmDelete: "确认删除吗？",
-    confirmOvertime: "确定要使这个超时?", //Are you sure you want to delete?
+    confirmOvertime: "确定关闭吗?", //Are you sure you want to delete?
     killTerm:'确认关闭 terminal 吗？',
     confirmBatchDelete:'确定删除这{0}条数据吗？',
     assetConfirmDelete: "关联的Endpoint和告警将会被删除，确认删除吗？",
@@ -922,6 +922,8 @@ const cn = {
       time:'时间',
       matcher:'Matcher',
       reason:'原因',
+      selectTime:'请选择时间',
+      selectMather:'必填项'
     },
     P1Rule:'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule:'P2: 急需处理，但不影响业务的告警',

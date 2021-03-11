@@ -59,7 +59,7 @@
           </div>
 
           <div class="matcher-type">
-            <el-select class="matcher-type-title" v-model="editAlertSilence.type" :popper-append-to-body="false" size="small" @change="typeChange">
+            <el-select class="matcher-type-title matcher-type-header" v-model="editAlertSilence.type" :popper-append-to-body="false" size="small" @change="typeChange">
               <el-option
                 v-for="item in typeList"
                 :key="item.type"
@@ -169,10 +169,10 @@
         },
         rules:{
           time: [
-            { required: true, message: '请选择时间', trigger: 'change' },
+            { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
           ],
           matcher:[
-            { required: true, message: '请选择Mather', trigger: 'change' },
+            { required: true, message: this.$t('alert.silence.selectMather'), trigger: 'change' },
           ]
         },
         rangeTime:'',
@@ -469,11 +469,12 @@
     }
   }
   .matcher{
-    /deep/ .el-input--prefix .el-input__inner{
-    }
     /deep/ .el-input__prefix{
       left: 0;
-
+    }
+    /deep/ .el-form-item__error{
+      left: 126px;
+      padding-top: 10px;
     }
     .matcher-type{
       display: flex;
@@ -497,6 +498,7 @@
         letter-spacing: 0;
         font-weight: 400;
         text-align: center;
+        border: none;
       }
       .matcher-type-content{
         flex: 1;
