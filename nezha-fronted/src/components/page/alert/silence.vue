@@ -64,26 +64,26 @@
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
             <span :id="'alert-edit-'+scope.row.id" :title="$t('overall.edit')" @click.stop="edit(scope.row)"
-                  class="content-right-option" v-has="'alert_silence_modify'" v-if="scope.row.buildIn != 1"><i
-              class="nz-icon nz-icon-edit"></i>
+                  class="content-right-option" v-has="'alert_silence_modify'" v-if="scope.row.state!==3">
+              <i class="nz-icon nz-icon-edit"></i>
             </span>
             <span
               :id="'alert-del-'+scope.row.id"
               :title="$t('overall.delete')"
               @click="overtime(scope.row)"
               class="content-right-option"
-              v-if="scope.row.state===1"
+              v-if="scope.row.state!==3"
               v-has="'alert_silence_delete'">
               <i  class="nz-icon nz-icon-chaoshi"></i>
             </span>
             <span
-              :id="'alert-del-'+scope.row.id"
-              :title="$t('overall.delete')"
-              @click="del(scope.row)"
+              :id="'alert-copy-'+scope.row.id"
+              :title="$t('overall.copy')"
+              @click="copyRow(scope.row,'alertSilence')"
               class="content-right-option"
-              v-if="scope.row.state===2"
-              v-has="'alert_silence_delete'">
-              <i  class="nz-icon nz-icon-delete"></i>
+              v-if="scope.row.state===3"
+              v-has="'alertsilence_save'">
+              <i  class="nz-icon nz-icon-override"></i>
             </span>
           </div>
           <template v-else-if="item.prop == 'duration'">
@@ -108,8 +108,8 @@
             </div>
           </template>
           <template v-else-if="item.prop == 'state'">
-            <span v-if="scope.row.state===1" class="silence-active">active</span>
-            <span v-if="scope.row.state===2" class="silence-pending">pending</span>
+            <span v-if="scope.row.state===1" class="silence-pending">pending</span>
+            <span v-if="scope.row.state===2" class="silence-active">active</span>
             <span v-if="scope.row.state===3" class="silence-expired">expired</span>
           </template>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
@@ -511,9 +511,10 @@
   }
   .nz-silence-tag-box{
     width: 100%;
+    height: 100%;
     .nz-silence-tag{
-      float: left;
-      margin-top: 5px;
+      /*float: left;*/
+      /*margin-top: 5px;*/
     }
   }
   .nz-silence-tag{
@@ -572,11 +573,11 @@
     padding: 0 5px;
   }
   .silence-expired{
-    background: #FFE3DC;
+    background: #9e9c98;
     border-radius: 4px;
     font-family: PingFangSC-Regular;
     font-size: 14px;
-    color: #EC7F66;
+    color: #ffffff;
     line-height: 14px;
     font-weight: 400;
     padding: 0 5px;

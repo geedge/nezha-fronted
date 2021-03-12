@@ -298,7 +298,10 @@ export function calcDurationByStringTime(startTime, endTime) {
 export function calcDurationByStringTimeB(startTime, endTime) {
   let durationSecond = stringTimeParseToUnix(endTime)-stringTimeParseToUnix(startTime);
   let result = `${durationSecond%60}s`;
-  if (durationSecond > 60*60) {
+  if(durationSecond > 60*60 *24){
+    result = `${(Math.floor(durationSecond/3600))%24}h`
+    result = `${Math.floor(durationSecond/(60*60*24))}d ${result}`;
+  } else if (durationSecond > 60*60) {
     result = `${(Math.floor(durationSecond/60))%60}m`
     result = `${Math.floor(durationSecond/(60*60))}h ${result}`;
   }else if(durationSecond > 60) {
@@ -464,6 +467,17 @@ export const tableSet = {
   //是否需要排序
   sortableShow(prop,from){
     switch(prop){
+      case 'state':
+        if( from === 'operationlog' ||from === 'alertSilence'){
+          return false
+        }
+      case 'id':
+      case 'startAt':
+        if( from === 'alertSilence' ){
+          return false
+        }
+      case 'state':
+      case 'id':
       case 'alertRule':
       case 'severity':
       case 'startAt':
@@ -502,18 +516,6 @@ export const tableSet = {
       case 'idc':
       case 'alertNum':
         return'custom';
-      case 'state':
-        if( from === 'operationlog' ){
-          return false
-        }else{
-          return'custom'
-        }
-      case 'id':
-        if( from === 'alertSilence' ){
-          return false
-        }else{
-          return'custom'
-        }
       default : return false;
     }
   },

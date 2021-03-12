@@ -33,15 +33,34 @@
             </el-radio-group>
           </div>
           <div class="datepicker">
-            <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
-                            format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="editAlertSilence.time"
-                            type="datetimerange"
-                            popper-class="panel-time-picker-popper"
-                            :range-separator="$t('dashboard.panel.to')"
-                            :start-placeholder="$t('dashboard.panel.startTime')"
-                            :end-placeholder="$t('dashboard.panel.endTime')" align="right"
-            >
-            </el-date-picker>
+            <div class="datepicker-box">
+              <span class="datepicker-title">start time</span>
+              <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+                              format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
+                              :picker-options="optionsStartAt"
+                              type="datetime"
+                              :clearable="false"
+                              popper-class="panel-time-picker-popper"
+                              :placeholder="$t('dashboard.panel.startTime')"
+                              align="right"
+              >
+              </el-date-picker>
+            </div>
+            <div style="width: 50px;text-align: center">{{$t('dashboard.panel.to')}}</div>
+            <div class="datepicker-box">
+              <span class="datepicker-title">end time</span>
+              <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+                              format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
+                              :picker-options="optionsEndAt"
+                              type="datetime"
+                              :clearable="false"
+                              popper-class="panel-time-picker-popper"
+                              :placeholder="$t('dashboard.panel.startTime')"
+                              align="right"
+              >
+              </el-date-picker>
+            </div>
+            <!--( :range-separator="")-->
           </div>
         </el-form-item>
 
@@ -140,11 +159,11 @@
           if(obj.linkId==-1){
             obj.linkId=null;
           }
+          console.log(obj);
           this.editAlertSilence=Object.assign(this.editAlertSilence,obj);
-          console.log(this.editAlertSilence);
-          this.editAlertSilence.time=[];
-          this.editAlertSilence.time.push(this.editAlertSilence.startAt);
-          this.editAlertSilence.time.push(this.editAlertSilence.endAt);
+          this.startAtTamp=new Date(this.editAlertSilence.startAt).getTime();
+          this.endAtTamp=new Date(this.editAlertSilence.endAt).getTime();
+          this.editAlertSilence.time=this.startAtTamp;
           this.rangeTimeCallback();
           this.typeChange(this.editAlertSilence.type,obj.linkId);
           if(obj.linkId || obj.ruleId){
@@ -154,6 +173,16 @@
       }
     },
     data(){
+      let that=this;
+      let validate = (rule, value, callback) => {
+        if(!this.editAlertSilence.startAt){
+          callback(new Error('请选择开始时间!'));
+        }else if(!this.editAlertSilence.endAt){
+          callback(new Error('请选择结束时间!'));
+        } else{
+          callback();
+        }
+      };
       return {
         editAlertSilence:{
           id:'',
@@ -169,7 +198,9 @@
         },
         rules:{
           time: [
-            { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
+            // { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
+            { required: true, trigger: 'change'},
+            { validator: validate, trigger: 'change' }
           ],
           matcher:[
             { required: true, message: this.$t('alert.silence.selectMather'), trigger: 'change' },
@@ -192,6 +223,19 @@
         projectData:null,
         moduleData:null,
         endpointData:null,
+        startAtTamp:'',
+        endAtTamp:'',
+        optionsEndAt:{
+          disabledDate(date,val){
+            console.log( that.startAtTamp,val);
+            return date.getTime() <= that.startAtTamp - 24*60*60*1000;
+          },
+        },
+        optionsStartAt:{
+          disabledDate(date){
+            return date.getTime() >= that.endAtTamp - 60*60*1000 ;
+          },
+        }
       }
     },
     mounted(){
@@ -214,9 +258,12 @@
         this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId ;
         console.log(this.editAlertSilence);
         this.$refs.alertSilenceForm.validate((valid)=>{
-          this.editAlertSilence.startAt=this.editAlertSilence.time[0];
-          this.editAlertSilence.state=1;
-          this.editAlertSilence.endAt=this.editAlertSilence.time[1];
+          if(this.endAtTamp < this.startAtTamp){
+            this.$message({
+              message: '结束时间必须大于开始时间',
+              type: 'error'
+            });
+          }
           let params={...this.editAlertSilence};
           delete  params.time;
           delete  params.matcher;
@@ -279,16 +326,19 @@
           }
         })
       },
-      dateChange(val){
-        if(val){
-          this.editAlertSilence.time[0]=bus.timeFormate(val[0],'yyyy-MM-dd hh:mm:ss');
-          this.editAlertSilence.time[1]=bus.timeFormate(val[1],'yyyy-MM-dd hh:mm:ss');
+      dateChange(val,type){
+        console.log(val)
+        if(type==='startAt'){
+          this.startAtTamp=new Date(val).getTime();
+        } else if(type==='endAt'){
+          this.endAtTamp=new Date(val).getTime();
         }
+        this.$forceUpdate
         this.rangeTimeCallback()
       },
       rangeTimeCallback(){
         if(this.editAlertSilence.time){
-          let num=new Date(this.editAlertSilence.time[1]).getTime() - new Date(this.editAlertSilence.time[0]).getTime();
+          let num=new Date(this.editAlertSilence.endAt).getTime() - new Date(this.editAlertSilence.startAt).getTime();
           this.rangeTime=num/(60*60*1000);//以小时为单位
         }else{
           this.rangeTime=null;
@@ -296,7 +346,11 @@
       },
       rangeTimeChange(val){
         let arr=[bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss'),bus.timeFormate(bus.getOffsetTimezoneData(val*1),'yyyy-MM-dd hh:mm:ss')]
-        this.$set(this.editAlertSilence,'time',arr)
+        this.$set(this.editAlertSilence,'startAt',arr[0]);
+        this.$set(this.editAlertSilence,'endAt',arr[1]);
+        this.startAtTamp=new Date(this.editAlertSilence.startAt).getTime();
+        this.endAtTamp=new Date(this.editAlertSilence.endAt).getTime();
+        this.$forceUpdate
       },
       matcherChange(val){
         this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId;
@@ -310,16 +364,16 @@
           this.editAlertSilence.name=val.name;
         }
         if(this.editAlertSilence.type==='asset'){
-          this.editAlertSilence.name=val.idc.name+'/'+val.sn
+          this.editAlertSilence.name=val.sn
         }
         if(this.editAlertSilence.type==='project'){
           this.editAlertSilence.name=val.name;
         }
         if(this.editAlertSilence.type==='module'){
-          this.editAlertSilence.name=val.project.name +'/'+val.name;
+          this.editAlertSilence.name=val.name;
         }
         if(this.editAlertSilence.type==='endpoint'){
-          this.editAlertSilence.name=val.project.name +'/'+val.module.name+'/'+val.name;
+          this.editAlertSilence.name=val.name;
         }
 
 
@@ -442,10 +496,6 @@
         }
 
       },
-      returnOnj(obj){
-        console.log(obj);
-        return {...obj,name:''}
-      }
     }
   }
 </script>
@@ -466,6 +516,22 @@
 
     .datepicker {
       margin-top: 20px;
+      display: flex;
+      .datepicker-box{
+        flex: 1;
+        position: relative;
+        /deep/ .el-date-editor.el-input, /deep/ .el-date-editor.el-input__inner{
+          width: 100%;
+        }
+        /deep/ .el-input__inner{
+          text-align: center;
+        }
+        .datepicker-title{
+          position: absolute;
+          left: 15px;
+          z-index: 1;
+        }
+      }
     }
   }
   .matcher{

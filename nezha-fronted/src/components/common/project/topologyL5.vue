@@ -1362,10 +1362,6 @@
                 pen:data,
                 pens:null,
               };
-              if(data.data.expressArr.length===0){
-                data.data.expressArr.push('');
-                data.data.legends.push('');
-              }
               this.$nextTick(()=>{
                 if(this.$refs.CanvasProps){
                   if(this.penId!==data.id){

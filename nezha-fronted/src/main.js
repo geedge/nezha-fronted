@@ -187,6 +187,32 @@ Vue.mixin({
     translation(key) {
       return i18n.t(key);
     },
+    copyRow(row,rightBoxValKey,idKey= 'id',show = false,format,callback){
+      /*
+      row 表格当前行
+      rightBoxValKey 右侧弹窗绑定的 data
+      idKey 当前数据的唯一标识
+      show 打开对应的弹窗 函数
+      format 是否需要对当前行进行处理
+      callBack 回调
+      */
+      let rowCopy={...row};
+      if(format){
+        rowCopy=format(rowCopy)
+      }
+      delete rowCopy[idKey];
+      this[rightBoxValKey]=rowCopy;
+      if(typeof show==='function'){
+        show()
+      }else if(typeof show==='string'){
+        this[show]=true
+      }  else {
+        this['rightBox']['show']=true;
+      }
+      if(callback){
+        callback()
+      }
+    },
   },
   computed: {
     getMenuList() {
