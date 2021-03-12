@@ -464,7 +464,6 @@ export const tableSet = {
   //是否需要排序
   sortableShow(prop,from){
     switch(prop){
-      case 'id':
       case 'alertRule':
       case 'severity':
       case 'startAt':
@@ -504,7 +503,13 @@ export const tableSet = {
       case 'alertNum':
         return'custom';
       case 'state':
-        if( from === 'operationlog'){
+        if( from === 'operationlog' ){
+          return false
+        }else{
+          return'custom'
+        }
+      case 'id':
+        if( from === 'alertSilence' ){
           return false
         }else{
           return'custom'

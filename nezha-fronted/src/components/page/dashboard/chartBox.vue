@@ -323,20 +323,25 @@
                         ></promql-input>
               -->
               <el-row>
-                  <el-col style="width: 120px; padding-right: 20px; text-align: left; padding-left:10px; color: #666">
-                    {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                    <el-popover placement="top" trigger="hover" width="211">
-                      <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
-                      <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
-                    </el-popover>
-                  </el-col>
-                  <el-col style="width: calc(100% - 120px);">
-                    <el-input size="small" type="text" v-model="legends[index-1]" ></el-input>
-                  </el-col>
+                <el-col style="width: 120px; padding-right: 20px; text-align: left; padding-left:10px; color: #666">
+                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <el-popover placement="top" trigger="hover" width="211">
+                    <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                    <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                  </el-popover>
+                </el-col>
+                <el-col style="width: calc(100% - 120px);">
+                  <el-input size="small" type="text" v-model="legends[index-1]" ></el-input>
+                </el-col>
               </el-row>
-              <span class="nz-icon-minus-medium nz-icon-minus-position">
-            <i class="nz-icon nz-icon-minus" @click="removeExpression(index - 1)"></i>
-          </span>
+              <div class="nz-icon-minus-position">
+                <span class="nz-icon-minus-medium">
+                  <i @click="removeExpression(index - 1)" class="nz-icon nz-icon-minus"></i>
+                </span>
+                <span class="nz-icon-copy" v-if="!isSingleStat">
+                  <i @click="copyExpression(index - 1)" class="nz-icon nz-icon-override"></i>
+                </span>
+              </div>
             </el-row>
           </div>
         <!--value mapping start-->
@@ -738,6 +743,20 @@
             });
           });
         }
+      },
+      copyExpression(index) {
+        this.expressions.push(this.expressions[index]);
+        this.legends.push(this.legends[index]);
+        this.promqlKeys.push(getUUID());
+        this.elementIds.push("");
+        this.promqlCount++;
+        this.$nextTick(() => {
+          this.expressions.forEach((ex, index) => {
+            if (ex) {
+              this.$refs[`promql-${index}`][0].metricChange(ex);
+            }
+          });
+        });
       },
       save() {
         this.$refs['chartForm'].validate((valid) => {

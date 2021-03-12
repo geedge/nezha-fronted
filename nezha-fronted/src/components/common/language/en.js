@@ -928,7 +928,13 @@ const en = {
       matcher:'Matcher',
       reason:'Reason',
       selectTime:'Please select time',
-      selectMather:'Required'
+      selectMather:'Required',
+      datacenter:'datacenter',
+      project:'project',
+      module:'module',
+      endpoint:'endpoint',
+      asset:'asset',
+      
     },
     P1Rule:'P1: Critical, alarm that can cause business paralysis',
     P2Rule:'P2: Major, alarm that do not affect the business',

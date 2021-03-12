@@ -923,7 +923,12 @@ const cn = {
       matcher:'Matcher',
       reason:'原因',
       selectTime:'请选择时间',
-      selectMather:'必填项'
+      selectMather:'必填项',
+      datacenter:'数据中心',
+      project:'项目',
+      module:'模块',
+      endpoint:'endpoint',
+      asset:'资产',
     },
     P1Rule:'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule:'P2: 急需处理，但不影响业务的告警',

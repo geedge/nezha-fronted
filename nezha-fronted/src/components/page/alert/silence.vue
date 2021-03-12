@@ -453,7 +453,7 @@
           cancelButtonText:this.$t("tip.no"),
           type:'warning'
         }).then(()=>{
-          this.$delete("/alert/silence?ids="+row.id).then(response=>{
+          this.$delete("alert/silence?ids="+row.id).then(response=>{
             this.prevent_opt.save=false;
             if(response.code===200){
               this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
@@ -477,7 +477,7 @@
           cancelButtonText:this.$t("tip.no"),
           type:'warning'
         }).then(()=>{
-          this.$delete("/alert/silence?ids="+row.id).then(response=>{
+          this.$delete("alert/silence?ids="+row.id).then(response=>{
             this.prevent_opt.save=false;
             if(response.code===200){
               this.$message({type:'success',message:this.$t("tip.deleteSuccess")});

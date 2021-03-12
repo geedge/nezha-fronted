@@ -232,7 +232,7 @@
                 }
               });
             }else{
-              this.$post('/alert/silence',params).then(response=>{
+              this.$post('alert/silence',params).then(response=>{
                 this.prevent_opt.save=false;
                 if(response.code===200){
                   this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
@@ -273,7 +273,7 @@
         });
       },
       getRuleList(){
-        this.$get('/alert/rule',{pageNo:1,pageSize:-1}).then(response=>{
+        this.$get('alert/rule',{pageNo:1,pageSize:-1}).then(response=>{
           if(response.code==200){
             this.ruleList=response.data.list;
           }
@@ -333,7 +333,7 @@
         this.editAlertSilence.linkId=linkId?linkId:'';
         this.editAlertSilence.name='';
         if(val==='datacenter'){
-          this.$get('/idc',{pageNo:1,pageSize:-1}).then(response=>{
+          this.$get('idc',{pageNo:1,pageSize:-1}).then(response=>{
             if(response.code==200){
               firstArr=response.data.list;
               if(linkId){
@@ -347,7 +347,7 @@
         }
 
         if(val==='asset'){
-          this.$get('/asset?pageNo=1&pageSize=-1').then(res=>{
+          this.$get('asset?pageNo=1&pageSize=-1').then(res=>{
             if(res.code==200){
               let arr=[];
               res.data.list.forEach(asset=>{
@@ -372,7 +372,7 @@
         }
 
         if(val==='project'){
-          this.$get('/project',{pageNo:1,pageSize:-1}).then(response=>{
+          this.$get('project',{pageNo:1,pageSize:-1}).then(response=>{
             if(response.code==200){
               firstArr=response.data.list;
               if(linkId){
@@ -387,7 +387,7 @@
 
 
         if(val==='module'){
-          this.$get('/module?pageNo=1&pageSize=-1').then(res=>{
+          this.$get('module?pageNo=1&pageSize=-1').then(res=>{
             if(res.code==200){
               let arr=[];
               res.data.list.forEach(module=>{
@@ -411,7 +411,7 @@
         }
 
         if(val==='endpoint'){
-          this.$get('/endpoint?pageNo=1&pageSize=-1').then(res=>{
+          this.$get('endpoint?pageNo=1&pageSize=-1').then(res=>{
            if(res.code=200){
              let arr=[];
              res.data.list.forEach(item=>{
