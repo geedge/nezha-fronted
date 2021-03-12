@@ -26,9 +26,10 @@
                 :expression-list="expressions"
                 :index="index-1"
                 :styleType="1"
-                :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
+                :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
                 @change="expressionChange"
                 @addExpression="addExpression"
+                @copyExpression="copyExpression"
                 @removeExpression="removeExpression"
               ></promql-input>
 <!--
@@ -543,12 +544,17 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
           }
         }
       },
-      addExpression: function (index) {
+      addExpression(index) {
         this.expressions.splice(index + 1, 0, '');
         this.promqlKeys.splice(index + 1, 0, getUUID());
         this.promqlCount++;
       },
-      removeExpression: function (index) {
+      copyExpression(index) {
+        this.expressions.push(this.expressions[index]);
+        this.promqlKeys.push(getUUID());
+        this.promqlCount++;
+      },
+      removeExpression(index) {
         if (this.promqlCount > 1) {
           this.expressions.splice(index, 1);
           this.promqlKeys.splice(index, 1);

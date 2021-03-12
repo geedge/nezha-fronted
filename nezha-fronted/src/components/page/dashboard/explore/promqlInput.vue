@@ -45,6 +45,7 @@
       <div v-if="styleType == 1" style="margin-left: 10px">
         <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i></div>
+          <div @click="copyExpression" class="option nz-btn nz-btn-size-normal nz-btn-style-light" v-if="plugins.indexOf('copy') > -1"><i class="nz-icon nz-icon-override"></i></div>
           <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression" v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
         </div>
       </div>
@@ -103,6 +104,9 @@
         },
         addExpression:function(){
           this.$emit('addExpression',this.index);
+        },
+        copyExpression() {
+          this.$emit('copyExpression',this.index);
         },
         removeExpression:function(){
           this.$emit('removeExpression',this.index);
