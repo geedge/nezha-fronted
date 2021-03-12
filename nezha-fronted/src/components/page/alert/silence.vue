@@ -5,7 +5,7 @@
       <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
         <div class="top-tool-search margin-r-20">
           <search-input :searchMsg="searchMsg" @search="search"
-                        :bottomBox.inTransform="bottomBox.inTransform"></search-input>
+                        :bottomBox.inTransform="bottomBox.inTransform" :single="true"></search-input>
         </div>
         <button :title="$t('overall.exportExcelLower')" @click="addSilence" type="button" v-has="'alertsilence_save'"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
@@ -57,8 +57,8 @@
         :label="item.label"
         :show-overflow-tooltip="item.prop!=='matchers'"
         :sort-orders="['ascending', 'descending']"
-        :sortable="$tableSet.sortableShow(item.prop,'alertRules')"
-        :prop="$tableSet.propTitle(item.prop,'alertRules')"
+        :sortable="$tableSet.sortableShow(item.prop,'alertSilence')"
+        :prop="$tableSet.propTitle(item.prop,'alertSilence')"
         :width="item.width"
       >
         <template slot-scope="scope" :column="item">
@@ -207,15 +207,33 @@
           searchLabelList:[
             {
               id:11,
-              name:this.$t('config.terminallog.host'),
+              name:this.$t('alert.silence.datacenter'),
               type:'input',
-              label:'host',
+              label:'datacenter',
               disabled:false
             },{
               id:12,
-              name:this.$t('config.terminallog.user'),
+              name:this.$t('alert.silence.project'),
               type:'input',
-              label:'username',
+              label:'project',
+              disabled:false
+            },{
+              id:13,
+              name:this.$t('alert.silence.module'),
+              type:'input',
+              label:'module',
+              disabled:false
+            },{
+              id:14,
+              name:this.$t('alert.silence.endpoint'),
+              type:'input',
+              label:'endpoint',
+              disabled:false
+            },{
+              id:15,
+              name:this.$t('alert.silence.asset'),
+              type:'input',
+              label:'asset ',
               disabled:false
             }
           ],
@@ -331,7 +349,7 @@
         this.$set(this.searchLabel,"pageNo",this.pageObj.pageNo);
         this.$set(this.searchLabel,"pageSize",this.pageObj.pageSize);
         this.tools.loading=true;
-        this.$get('/alert/silence',this.searchLabel).then(response=>{
+        this.$get('alert/silence',this.searchLabel).then(response=>{
           this.tools.loading=false;
           if(response.code==200){
             this.tableData=response.data.list;
@@ -365,17 +383,14 @@
         this.pageObj.pageNo=1;
         for(let item in searchObj){
           if(searchObj[item]){
-            if(item=="alertMessageState"){
-              this.$set(this.searchLabel,"state",searchObj[item]);
-            }else{
-              this.$set(this.searchLabel,item,searchObj[item]);
-            }
+            this.$set(this.searchLabel,'type',item);
+            this.$set(this.searchLabel,'query',searchObj[item]);
           }
         }
         if(orderBy){
           this.$set(this.searchLabel,'orderBy',orderBy);
         }
-        this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop=0;
+        this.$refs.alertSilenceTable.bodyWrapper.scrollTop=0;
         this.getAlertSilence();
       },
       // 数据排序
@@ -422,7 +437,7 @@
       },
       edit(row){
         console.log(123123123123);
-        this.$get('/alert/silence/'+row.id).then(res=>{
+        this.$get('alert/silence/'+row.id).then(res=>{
           this.alertSilence={...res.data};
           this.rightBox.show=true;
         })
