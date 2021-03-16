@@ -112,6 +112,9 @@
             <span v-if="scope.row.state===2" class="silence-active">active</span>
             <span v-if="scope.row.state===3" class="silence-expired">expired</span>
           </template>
+          <template v-else-if="item.prop == 'utime'">
+           {{utcTimeToTimezoneStr(scope.row[item.prop])}}
+          </template>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
           <template v-else>-</template>
         </template>
@@ -354,7 +357,7 @@
           if(response.code==200){
             this.tableData=response.data.list;
             this.pageObj.total=response.data.total;
-            this.nowTime=response.time;
+            this.nowTime=this.utcTimeToTimezoneStr(response.time);
             console.info(this.$refs.alertSilenceTable)
             if(!this.scrollbarWrap){
               this.$nextTick(()=>{
