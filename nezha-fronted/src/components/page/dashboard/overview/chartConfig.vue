@@ -513,11 +513,14 @@
     };
     function createTempTimes(){
       let times=[];
+      let tzo=(new Date().getTimezoneOffset()/60)*(-1);//系统时区
+      let time=bus.UTCTimeToConfigTimezone(new Date().getTime()-tzo*60*60*1000);
+      console.log(time);
       for(let i=0;i<10;i++){
-        let time=new Date();
-        time.setMinutes(new Date().getMinutes()-(10-i)*5);
+        time=time-5*60*1000;
         times.push(bus.timeFormate(time,'hh:mm'))
       }
+      times.reverse();
       return times;
     }
     const chartTypes={
@@ -542,6 +545,5 @@
       getBgColorList:function(){
         return Object.assign([],bgColorList)
       },
-
     }
 </script>
