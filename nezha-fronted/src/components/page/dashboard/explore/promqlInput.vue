@@ -105,12 +105,12 @@
         <span class="temp-form-box-title">Variable</span>
         <el-form-item v-for="(item,index) in tempBox.vars"  :prop="item" :key="index">
           <el-row>
-            <el-col :span="5" class="temp-form-box-col">
+            <el-col :span="6" class="temp-form-box-col">
               <el-input v-model="tempBox.vars[index]" :id="'tempBox'+index"  size="small" :disabled="true"></el-input>
             </el-col>
             <el-col :span="17" v-if="format(item).key">
               <!--<el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>-->
-              <el-select v-model="tempBox[item]" size="small" style="width: 100%">
+              <el-select v-model="tempBox[item]" size="small" style="width: 100%" :popper-class="'nz-temp-box'">
                 <el-option v-for="(item1,index) in format(item).arr" :key="index" :label="item1[format(item).value]" :value="item1[format(item).value]">
                 </el-option>
               </el-select>
@@ -374,11 +374,6 @@
       format(str){
         let arr=str.split('.')
         let keyword=arr[0].toLowerCase();
-        if(arr.length!==1&&arr.length!==2){
-          return {
-            key:false
-          }
-        }
         switch(keyword){
           case 'asset':
           case 'module':
@@ -388,7 +383,7 @@
             return {
               arr:this[keyword+'Option'],
               key:keyword,
-              value:arr[1]?arr[1]:((keyword=='module'||keyword=='project'||keyword=='datacenter')?'name':'host')
+              value:((keyword=='module'||keyword=='project'||keyword=='datacenter')?'name':'host')
             };
           default:
             return {

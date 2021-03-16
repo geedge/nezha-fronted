@@ -298,13 +298,13 @@ export function calcDurationByStringTime(startTime, endTime) {
 export function calcDurationByStringTimeB(startTime, endTime) {
   let durationSecond = stringTimeParseToUnix(endTime)-stringTimeParseToUnix(startTime);
   let result = `${durationSecond%60}s`;
-  if(durationSecond > 60*60 *24){
+  if(durationSecond >= 60*60 *24){
     result = `${(Math.floor(durationSecond/3600))%24}h`
     result = `${Math.floor(durationSecond/(60*60*24))}d ${result}`;
-  } else if (durationSecond > 60*60) {
+  } else if (durationSecond >= 60*60) {
     result = `${(Math.floor(durationSecond/60))%60}m`
     result = `${Math.floor(durationSecond/(60*60))}h ${result}`;
-  }else if(durationSecond > 60) {
+  }else if(durationSecond >= 60) {
     result = `${(Math.floor(durationSecond/60))%60}m ${result}`;
   }
 
