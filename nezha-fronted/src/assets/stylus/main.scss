@@ -2476,4 +2476,7 @@ li{
   position: fixed !important;
   visibility: hidden;
 }
+/deep/ .el-tooltip{
+  outline: none;
+}
 

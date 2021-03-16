@@ -263,6 +263,7 @@
               message: '结束时间必须大于开始时间',
               type: 'error'
             });
+            return;
           }
           let params={...this.editAlertSilence};
           delete  params.time;
@@ -329,8 +330,10 @@
       dateChange(val,type){
         console.log(val)
         if(type==='startAt'){
+          this.editAlertSilence.startAt=bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss');
           this.startAtTamp=new Date(val).getTime();
         } else if(type==='endAt'){
+          this.editAlertSilence.endAt=bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss');
           this.endAtTamp=new Date(val).getTime();
         }
         this.$forceUpdate
