@@ -539,6 +539,10 @@
       getOption:function(type){
         return JSON.parse(JSON.stringify(chartTypes[type].option));
       },
+      getOptionNoData:function(type){
+        chartTypes[type].option.xAxis.data= createTempTimes();
+        return JSON.parse(JSON.stringify(chartTypes[type].option));
+      },
       setMap:function(map){
         mapOptions.geo.map=map
       },

@@ -925,7 +925,7 @@
                 self.noData=false;
               }else{
                 self.noData=true;
-                option=chartConfig.getOption('noData')
+                option=chartConfig.getOptionNoData('noData')
                 getChart(self.chartIndex).clear();
                 getChart(self.chartIndex).setOption(option);//创建图表
               }
@@ -1088,7 +1088,7 @@
                 self.noData=false;
               }else{
                 self.noData=true;
-                option=chartConfig.getOption('noData')
+                option=chartConfig.getOptionNoData('noData')
                 self.echartModalStore.setOption(option);//显示全屏界面
               }
               self.echartModalStore.on('finished', function () {
