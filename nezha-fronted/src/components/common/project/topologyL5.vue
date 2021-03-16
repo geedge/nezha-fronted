@@ -1762,6 +1762,10 @@
           getTopology(this.topologyIndex).lock(0);
           getTopology(this.topologyIndex).data.pens.forEach((item)=>{//停止动画 以及赋值默认data
             item.stopAnimate();
+            if(!item.data.expressArr.length) {
+              item.data.expressArr=[''];
+              item.data.legends=[''];
+            }
             item.animateType=item.data.animateType;
             if(item.type===0){
               item.fillStyle=item.data.fillStyle;

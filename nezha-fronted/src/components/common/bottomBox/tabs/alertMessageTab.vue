@@ -528,7 +528,7 @@
         setTimeout(() => {
           this.$get('alert/message', this.searchLabel).then(response => {
             if (response.code == 200) {
-              this.nowTime=response.time;
+              this.nowTime=this.utcTimeToTimezoneStr(response.time);
               this.tableData = response.data.list;
               let axiosAll=[]
               this.$nextTick(() => {

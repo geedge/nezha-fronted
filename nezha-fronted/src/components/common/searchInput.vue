@@ -140,6 +140,17 @@
                               <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                             </ul>
                           </div>
+                          <!--exprTemp ganem-->
+                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectTemp'&&val.id==13">
+                            <el-scrollbar v-if="gnameList.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                            </ul>
+                          </div>
                         </div>
                         <el-date-picker
                                 v-model="timeFrame"
@@ -204,6 +215,7 @@
                 projectSelect: [],
                 moduleSelect: [],
                 modelSelect: [],
+                gnameList:[],
                 schemaTypeSelect:[], //日志检索Protocol下拉菜单
                 TypeSelect:[],//Protocol二层下拉菜单
                 secondShow:'',//二层显示控制
@@ -509,6 +521,19 @@
                 }
               });
             },
+          getGnameList(){
+            this.$get('/expression/tmpl/gname').then(res=>{
+              if(res.code===200){
+                this.gnameList = res.data.list.map((item,index)=>{
+                  return {
+                    value:item,
+                    name:item,
+                    id:index,
+                  }
+                })
+              }
+            })
+          },
             //点击确认选择下拉内容
             tr_selectInfo(selectLabel,value,label,e){
                 this.stop_click(e);
@@ -1291,6 +1316,9 @@
               }
               if (this.$route.path == '/asset') {
                 this.getModelData();
+              }
+              if (this.$route.path == '/exprTemp') {
+                this.getGnameList();
               }
             }, 1000);
             JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {

@@ -1,0 +1,233 @@
+<template>
+  <div class="right-box right-box-alert-config" v-clickoutside="{obj:editExprTemp,func:clickOutside}">
+    <!-- begin--顶部按钮-->
+    <div class="right-box-top-btns right-box-form-delete">
+      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="alert-box-del" type="button"
+              v-has="'alert_silence_delete'" v-if="editExprTemp.id">
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
+    </div>
+    <!-- end--顶部按钮-->
+
+    <!-- begin--标题-->
+    <div class="right-box-title">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
+      $t("config.exprTemp.create")}}
+    </div>
+    <!-- end--标题-->
+
+    <!-- begin--表单-->
+    <div class="right-box-form-box">
+      <el-form class="right-box-form right-box-form-left" :model="editExprTemp" label-position="top"
+               label-width="120px" :rules="rules" ref="ExprTempForm">
+        <el-form-item prop="name" :label="$t('config.exprTemp.name')">
+          <el-input v-model="editExprTemp.name" size="small" :placeholder="$t('overall.placeHolder')"></el-input>
+        </el-form-item>
+        <el-form-item prop="gname" :label="$t('config.exprTemp.gname')">
+          <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
+          <el-autocomplete
+            class="inline-input"
+            v-model="editExprTemp.gname"
+            :fetch-suggestions="querySearch"
+            :placeholder="$t('overall.placeHolder')"
+            size="small"
+            style="width: 100%;"
+          ></el-autocomplete>
+        </el-form-item>
+        <el-form-item prop="expression" :label="$t('config.exprTemp.expression')">
+          <!--<el-input v-model="editExprTemp.expression" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
+          <promql-input
+            :expression-list="editExprTemp.expression"
+            :id="'promqlKeys0'"
+            :index="0"
+            :key="'promqlKeys0'"
+            :plugins="['metric-selector', 'metric-input', 'remove']"
+            :showRemove="false"
+            :styleType="2"
+            :show-temp="false"
+            @change="expressionChange"
+          ></promql-input>
+        </el-form-item>
+        <el-form-item prop="remark" :label="$t('config.exprTemp.remark')">
+          <el-input
+            type="textarea"
+            :placeholder="$t('alert.description')"
+            v-model="editExprTemp.remark"
+            size="small"
+            maxlength="512"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+      </el-form>
+
+    </div>
+    <!-- end--表单-->
+
+    <!--底部按钮-->
+    <div class="right-box-bottom-btns">
+      <button v-cancel="{obj:editExprTemp,func:esc}" id="alert-box-esc"
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+        <span>{{$t('overall.cancel')}}</span>
+      </button>
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save"
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save">
+        <span>{{$t('overall.save')}}</span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+  import bus from '../../../libs/bus';
+  import promqlInput from "../../page/dashboard/explore/promqlInput";
+  export default {
+    name:"exprTempBox",
+    components:{
+      'promql-input': promqlInput,
+    },
+    props:{
+      exprTemp:Object
+    },
+    watch:{
+      exprTemp:{
+        deep:true,
+        immediate:true,
+        handler(n,o){
+          let obj={...n};
+          obj.expression=[obj.expression]
+          this.editExprTemp=Object.assign(this.editExprTemp,obj);
+        }
+      }
+    },
+    data(){
+      return {
+        editExprTemp:{
+          id:'',
+          name:'',
+          gname:'',
+          "expression": "",
+          "remark": "",
+        },
+        gnameList:[],
+        rules:{
+          name:[
+            { required: true,message: this.$t('validate.required'), trigger: 'change'},
+          ],
+          gname:[
+            { required: true,message: this.$t('validate.required'), trigger: 'change'},
+          ],
+          // remark:[
+          //   { required: true,message: this.$t('validate.required'), trigger: 'change'},
+          // ]
+        },
+      }
+    },
+    mounted(){
+      this.getGnameList()
+    },
+    methods:{
+      clickOutside(){
+        this.esc(false);
+      },
+      esc(refresh){
+        this.prevent_opt.save=false;
+        this.$emit("close",refresh);
+      },
+      save(){
+        if(this.prevent_opt.save){
+          return
+        }
+        ;
+        this.prevent_opt.save=true;
+        this.$refs.ExprTempForm.validate((valid)=>{
+          let params={...this.editExprTemp};
+          params.expression=params.expression[0];
+          if(!params.expression[0]) {
+            this.prevent_opt.save=false;
+            this.$message.error(this.$t('expressionError'));
+            return
+          }
+          if(valid){
+            if(this.editExprTemp.id){
+              this.$put('expression/tmpl',params).then(response=>{
+                this.prevent_opt.save=false;
+                if(response.code===200){
+                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
+                  this.esc(true);
+                }else{
+                  this.$message.error(response.msg);
+                }
+              });
+            }else{
+              this.$post('expression/tmpl',params).then(response=>{
+                this.prevent_opt.save=false;
+                if(response.code===200){
+                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
+                  this.esc(true);
+                }else{
+                  this.$message.error(response.msg);
+                }
+              });
+            }
+          }else{
+            this.prevent_opt.save=false;
+            return false;
+          }
+        })
+      },
+      del(){
+        if(this.prevent_opt.save){
+          return
+        }
+        ;
+        this.prevent_opt.save=true;
+        this.$confirm(this.$t("tip.confirmDelete"),{
+          confirmButtonText:this.$t("tip.yes"),
+          cancelButtonText:this.$t("tip.no"),
+          type:'warning'
+        }).then(()=>{
+          this.$delete("/alert/silence?ids="+this.editExprTemp.id).then(response=>{
+            this.prevent_opt.save=false;
+            if(response.code===200){
+              this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
+              this.esc(true);
+            }else{
+              this.$message.error(response.msg);
+            }
+          })
+        }).catch(()=>{
+          this.prevent_opt.save=false;
+        });
+      },
+      getGnameList(){
+        this.$get('/expression/tmpl/gname').then(res=>{
+          if(res.code===200){
+            this.gnameList=res.data.list.map(item=>{
+              return {
+                value:item
+              }
+            })
+          }
+        })
+      },
+      querySearch(queryString, cb) {
+        var restaurants = this.gnameList;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      expressionChange(val){
+        this.editExprTemp.expression[0]=val;
+      },
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+
+</style>

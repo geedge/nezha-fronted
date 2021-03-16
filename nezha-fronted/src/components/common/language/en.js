@@ -860,6 +860,23 @@ const en = {
         yes:'Yes',
         no:'No',
       }
+    },
+    exprTemp:{
+      exprTemp:'Expression template',
+      exprTempInfo:'Expression template Info',
+      exprTempRender:'expression template render',
+      exprTempDown:"expression template download",
+      exprTempImport:"expression template import",
+      exprTempExport:"expression template export",
+      exprTempImportCancel:"expression template import rollback",
+      name:'Name',
+      gname:'Group',
+      expression:'Expression',
+      remark:'Reason',
+      errorStr:'Please fill in the {errorStr} value',
+      edit:'Edit expression template',
+      create:'New expression template',
+      expressionError:'Please fill in the "expression" value',
     }
   },
   alert: {

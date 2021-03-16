@@ -284,7 +284,7 @@
           this.tools.loading = false;
           if (response.code === 200) {
             this.tableData = response.data.list;
-            this.nowTime=response.time;
+            this.nowTime=this.utcTimeToTimezoneStr(response.time);
             this.pageObj.total = response.data.total;
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {

@@ -4,7 +4,7 @@ import MessageBox from "element-ui/packages/message-box/src/main";
 import vuex from 'vuex'
 import i18n from "../i18n";
 /*弹窗点击外部后关闭*/
-const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box','nz-dashboard-dropdown', "el-autocomplete-suggestion"]; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
+const exceptClassName = ["config-dropdown", "nz-pop", "el-picker", "chart-box-dropdown", 'metric-dropdown', 'el-cascader__dropdown', "asset-dropdown", "no-style-class", 'el-message-box','nz-dashboard-dropdown', "el-autocomplete-suggestion",'nz-temp-box']; //clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -515,6 +515,7 @@ export const tableSet = {
       case 'threshold':
       case 'idc':
       case 'alertNum':
+      case 'gname':
         return'custom';
       default : return false;
     }
@@ -631,6 +632,13 @@ export const tableSet = {
           case 'alertName': return'ar.alert_name';
           case 'threshold': return'ar.threshold';
           case 'severity': return'ar.severity';
+          default : return prop;
+        }
+      case 'exprTemp':
+        switch(prop){
+          case 'id': return'id';
+          case 'name': return'name';
+          case 'gname': return'gname';
           default : return prop;
         }
       default: break;

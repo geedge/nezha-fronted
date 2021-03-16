@@ -857,6 +857,23 @@ const cn = {
         yes: "是",
         no: "否"
       }
+    },
+    exprTemp:{
+      exprTemp:'expression模板',
+      exprTempInfo:'Expression 模板详情',
+      exprTempRender:'expression模板渲染',
+      exprTempDown:"expression模板下载",
+      exprTempImport:"expression模板导入",
+      exprTempExport:"expression模板导出",
+      exprTempImportCancel:"expression模板导入撤销",
+      name:'名称',
+      gname:'组名',
+      expression:'表达式',
+      remark:'备注',
+      errorStr:'请填写 {errorStr} 的值',
+      edit:'修改表达式模板',
+      create:'创建表达式模板',
+      expressionError:'请填写表达式',
     }
   },
   alert: {

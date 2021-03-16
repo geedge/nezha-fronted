@@ -92,6 +92,10 @@ export default new Router({
         {
           path: '/alertSilence',
           component: resolve => require(['../components/page/alert/silence.vue'], resolve),
+        },
+        {
+          path: '/exprtemp',
+          component: resolve => require(['../components/page/config/exprTemp.vue'], resolve),
         }
       ]
     },

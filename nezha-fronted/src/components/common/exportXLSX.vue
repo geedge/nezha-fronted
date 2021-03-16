@@ -156,6 +156,8 @@
           url = "/alert/rule/cancelImport";
         } else if(this.importUrl.indexOf("panel") > -1){
           url = "/panel/cancelImport";
+        }else if(this.importUrl.indexOf("tmpl") > -1){
+          url = "/expression/tmpl/cancelImport";
         }
         this.$delete(url + '?seq='+this.importResult.seq).then(response=>{
           if(response.code ==  200 ){
@@ -223,6 +225,8 @@
           url = "/panel/template";
         }else if(this.importUrl.indexOf('endpoint') > -1){
           url = '/endpoint/template'
+        }else if(this.importUrl.indexOf("tmpl") > -1){
+          url = "/expression/tmpl/template";
         }
 
         let param={language:language}

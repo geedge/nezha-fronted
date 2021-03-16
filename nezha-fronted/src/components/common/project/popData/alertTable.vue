@@ -345,7 +345,7 @@
         this.$get('alert/message', {...this.searchLabel}).then(response => {
           this.loading=false;
           if (response.code == 200) {
-            this.nowTime=response.time;
+            this.nowTime=this.utcTimeToTimezoneStr(response.time);
             this.tableData = response.data.list;
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels);
