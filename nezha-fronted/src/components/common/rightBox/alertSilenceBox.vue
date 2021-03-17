@@ -159,7 +159,6 @@
           if(obj.linkId==-1){
             obj.linkId=null;
           }
-          console.log(obj);
           this.editAlertSilence=Object.assign(this.editAlertSilence,obj);
           this.startAtTamp=new Date(this.editAlertSilence.startAt).getTime();
           this.endAtTamp=new Date(this.editAlertSilence.endAt).getTime();
@@ -227,7 +226,6 @@
         endAtTamp:'',
         optionsEndAt:{
           disabledDate(date,val){
-            console.log( that.startAtTamp,val);
             return date.getTime() <= that.startAtTamp - 24*60*60*1000;
           },
         },
@@ -256,7 +254,6 @@
         ;
         this.prevent_opt.save=true;
         this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId ;
-        console.log(this.editAlertSilence);
         this.$refs.alertSilenceForm.validate((valid)=>{
           if(this.endAtTamp < this.startAtTamp){
             this.$message({
@@ -328,7 +325,6 @@
         })
       },
       dateChange(val,type){
-        console.log(val)
         if(type==='startAt'){
           this.editAlertSilence.startAt=bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss');
           this.startAtTamp=new Date(val).getTime();
@@ -357,12 +353,10 @@
       },
       matcherChange(val){
         this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId;
-        console.log(this.editAlertSilence,"this.editAlertSilence")
       },
       silenceChange(val){
         this.editAlertSilence.linkId=val.id;
         this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId;
-        console.log(val);
         if(this.editAlertSilence.type==='datacenter'){
           this.editAlertSilence.name=val.name;
         }

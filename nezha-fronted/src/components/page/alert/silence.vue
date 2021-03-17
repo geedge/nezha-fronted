@@ -327,7 +327,6 @@
       this.tools.customTableTitle=localStorage.getItem("nz-tableTitle-"+localStorage.getItem("nz-username")+"-"+this.$route.path)
         ?JSON.parse(localStorage.getItem("nz-tableTitle-"+localStorage.getItem("nz-username")+"-"+this.$route.path))
         :this.tableTitle;
-      console.log(this.tools.customTableTitle,this.tableTitle);
       this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
       this.initEvent();
       this.getAlertSilence();
@@ -410,7 +409,6 @@
       },
       openDelMessageBox:function(){
         if(this.batchDeleteObjs.length<1) return;
-        console.log(this.batchDeleteObjs);
       },
       showExportDialog(){
         this.importBox.show=true;
@@ -439,7 +437,6 @@
         this.rightBox.show=true;
       },
       edit(row){
-        console.log(123123123123);
         this.$get('alert/silence/'+row.id).then(res=>{
           this.alertSilence={...res.data};
           this.rightBox.show=true;

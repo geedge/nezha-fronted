@@ -326,8 +326,6 @@ export default {
         legend && legend.forEach((t,i)=>{t.color = this.bgColorList[i]});
 
         this.$set(this.option,'color',this.bgColorList)
-
-        console.log('legend',legend)
         this.pieData = seriesItem;
         if(area==='showFullScreen'){//全屏按时间查询
           this.data = chartItem;
@@ -522,7 +520,6 @@ export default {
             self.echartScreen.resize({height: (sumHeight - divHeight - 58)});//图表的高度
             setTimeout(function () {
               if(self.pieData[0].data.length>0){
-                console.log('option',self.option)
                 self.echartScreen.setOption(self.option);//显示全屏界面
                 self.noData=false;
               }else{

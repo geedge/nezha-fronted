@@ -104,7 +104,6 @@
         };
         //登录后，你输入的内容从后台服务返回
         this.terminal.on("data",function(data){
-          console.log(data,'data')
           /*
           let code = data.charCodeAt(0);
           if(code==13){

@@ -116,31 +116,9 @@
     position: relative;
   }
   .color-show{
-    border: 1px solid #E7EAED;
-    border-radius: 4px;
-    top: -2px;
-    align-items: center;
-    width: 28px;
-    height: 28px;
-    box-sizing: border-box;
     display: inline-block;
-    vertical-align: middle;
     position: relative;
-  }
-  .color-show-left{
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: center;
-    line-height: 28px;
-  }
-  .color-arrows{
-    color: #fff;
-    font-weight: bold;
-  }
-  .color-arrows .nz-icon{
-    font-size: 12px;
+    top: 1px;
   }
 
 </style>
@@ -370,33 +348,8 @@
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other  half-form-item-other-two">
               <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text"></el-input>
               <!--颜色选择器 start-->
-              <div @click="colorPickerClick(index)" class="color-show" v-clickoutside="(e)=>{colorOut(index,e)}">
-                <div :style="{background:mapping.color.bac}" class="color-show-left">
-                     <span :style="{color:mapping.color.text}" class="color-arrows">
-                  <!--<i class="nz-icon nz-icon-arrow-down" v-show="!showPicker[index].bac && !showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
-                       <!--<i class="nz-icon nz-icon-arrow-up" v-show="showPicker[index].bac ||  showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
-                    T
-                </span>
-                </div>
-              </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  :ref="'colorPickerBac'+index"
-                  @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
-                  popper-class="no-style-class"
-                  v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
-                >
-                </el-color-picker>
-                <!--<el-color-picker-->
-                <!--v-model="mapping.color.text"-->
-                <!--:ref="'colorPickerText'+index"-->
-                <!--@active-change="(val)=>colorChange(mapping,'text',val)"-->
-                <!--&gt;-->
-                <!--</el-color-picker>-->
-              </div>
-              <div class="color-tab" v-show="showPicker[index].bac ||  showPicker[index].text">
-                <div :class="{'color-active':showPicker[index].text}" @click="changeShowPicker(index ,'text')">Text</div>
-                <div :class="{'color-active':showPicker[index].bac}" @click="changeShowPicker(index , 'bac')">Background</div>
+              <div class="color-show">
+                <nezhaColor :value-arr="[{name:'bac',value:showPicker[index].bac,key:'bac'},{name:'text',value:showPicker[index].text,key:'text'}]" @colorChange="(val,key)=>{colorChange(mapping,key,val)}" :single="false" :color-val="mapping.color"/>
               </div>
               <!--颜色选择器 end-->
               <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
@@ -416,34 +369,10 @@
             <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" class="half-form-item-other-two range" prop="span">
               <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text" ></el-input>
               <!--颜色选择器 start-->
-              <div @click="colorPickerClick(index)" class="color-show" v-clickoutside="(e)=>{colorOut(index,e)}">
-                <div :style="{background:mapping.color.bac}" class="color-show-left">
-                     <span :style="{color:mapping.color.text}" class="color-arrows">
-                  <!--<i class="nz-icon nz-icon-arrow-down" v-show="!showPicker[index].bac && !showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
-                       <!--<i class="nz-icon nz-icon-arrow-up" v-show="showPicker[index].bac ||  showPicker[index].text" :style="{color:mapping.color.text}"></i>-->
-                    T
-                </span>
-                </div>
+              <div class="color-show">
+                <nezhaColor :value-arr="[{name:'bac',value:showPicker[index].bac,key:'bac'},{name:'text',value:showPicker[index].text,key:'text'}]" @colorChange="(val,key)=>{colorChange(mapping,key,val)}" :single="false" :color-val="mapping.color"/>
               </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  :ref="'colorPickerBac'+index"
-                  popper-class="no-style-class"
-                  @active-change="(val)=>colorChange(mapping,showPicker[index].bac,val)"
-                  v-model="showPicker[index].bac?mapping.color.bac:mapping.color.text"
-                >
-                </el-color-picker>
-                <!--<el-color-picker-->
-                <!--v-model="mapping.color.text"-->
-                <!--:ref="'colorPickerText'+index"-->
-                <!--@active-change="(val)=>colorChange(mapping,'text',val)"-->
-                <!--&gt;-->
-                <!--</el-color-picker>-->
-              </div>
-              <div class="color-tab" v-show="showPicker[index].bac ||  showPicker[index].text">
-                <div :class="{'color-active':showPicker[index].text}" @click="changeShowPicker(index ,'text')">Text</div>
-                <div :class="{'color-active':showPicker[index].bac}" @click="changeShowPicker(index , 'bac')">Background</div>
-              </div>
+
               <!--颜色选择器 end-->
               <span @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus"  style="color: #EC7F66"></i></span>
             </el-form-item>
@@ -511,6 +440,7 @@
   import {nzNumber} from "../../common/js/validate";
   import richTextEditor from "../../charts/richTextEditor";
   import selectPanel from "../../common/popBox/selectPanel";
+  import nezhaColor from '../../common/nezhaColor'
   import i18n from "../../common/i18n";
 
   var rz = {
@@ -656,6 +586,7 @@
       'promql-input': promqlInput,
       'rich-text-editor':richTextEditor,
       selectPanel,
+      nezhaColor,
     },
     mounted() {
       this.$nextTick(() => {
@@ -1607,12 +1538,8 @@
         this.showPicker[index][atr]=true;
         // atr=atr.toLowerCase().replace(/( |^)[a-z]/g,(L)=>L.toUpperCase());
       },
-      colorChange(mapping,flag,val){
-        if(flag){
-          mapping.color['bac']=this.colorRGBtoHex(val)
-        }else{
-          mapping.color['text']=this.colorRGBtoHex(val)
-        }
+      colorChange(mapping,key,val){
+        mapping.color[key]=val
       },
       colorRGBtoHex(color) {
         let rgb = color.split(',');

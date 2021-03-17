@@ -96,6 +96,7 @@
       :width="'auto'"
       :custom-class="'nz-temp-box'"
       :destroy-on-close="true"
+      @closed="tempBoxClose"
       center>
       <el-form v-model="tempBox" class="temp-form-box" ref="tempFormBox" v-if="tempBoxShow">
         <span class="temp-form-box-title">Expression</span>
@@ -189,7 +190,6 @@
     created(){
       this.queryMetrics();
       this.getAllOptins();
-      console.log(123123123);
     },
     methods:{
       closeDropdown(){
@@ -234,7 +234,6 @@
               }
               //this.metricStore.push({label:item,value:item,insertText:item})
             });
-            console.log(metricMap);
             for(let key of metricMap.keys()){
               let option={
                 label:key,
@@ -259,7 +258,6 @@
         cb(result)
       },
       metricChange:function(value){
-        console.log(value);
         if(!value) return;
         this.expressionList[this.index]=value;
         //this.$refs.editor.setContent(value)
@@ -294,7 +292,6 @@
         })
       },
       lazyLoad(node,data){
-        console.log(node,data);
         if(data.temp){
           if(!data.child){
             this.tempBoxShowLoading=true;
@@ -314,11 +311,9 @@
             this.dropDownVisible=false
             this.$get('/expression/tmpl/'+data.id).then(res=>{
               if(res.code===200){
-                console.log(res);
                 res.data.vars.forEach(item=>{
                   res.data[item]='';
                 });
-                console.log(res.data);
                 this.tempBox={
                   ...this.tempBox,
                   ...res.data,
@@ -333,7 +328,6 @@
       },
       tempBoxShowChange(flag){
         this.tempBoxShow=flag;
-        console.log(this.tempBox);
         if(flag){
           this.cascaderValue="";
           let params={};
@@ -359,7 +353,6 @@
           }
 
           this.$post('/expression/tmpl/render',params).then(res=>{
-            console.log(res);
             if(res.code===200){
               this.tempBoxShow=false;
               this.expressionList[this.index]=res.data.expression;
@@ -419,7 +412,10 @@
         });
 
 
-      }
+      },
+      tempBoxClose(){
+        this.cascaderValue="";
+      },
 
 
 

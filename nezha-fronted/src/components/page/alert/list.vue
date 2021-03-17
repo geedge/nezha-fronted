@@ -523,7 +523,6 @@
         return num>9?num:'0'+num;
       },
       exportExcel:function(params){
-        console.log('exporter')
         for (let item in params) {
           if (params[item]) {
             if (item == "alertMessageState") {

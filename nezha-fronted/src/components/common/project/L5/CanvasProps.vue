@@ -74,7 +74,7 @@
             <div class="nz-icon-minus-position">
               <span class="nz-icon-minus-medium">
                 <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
-              </span>
+          </span>
               <span class="nz-icon-copy">
                 <i @click="copyExpression(index)" class="nz-icon nz-icon-override"></i>
               </span>
@@ -175,34 +175,7 @@
                 <el-col class="thresholds-cell" :span="4">
                    <span v-if="item.level!==0">
                     <div style="display: inline-block">
-                      <div @click="colorPickerClickTable('colorPickerBac'+item.level,item)"
-                           class="color-show"
-                           v-clickoutside="(e)=>{colorOut(item,e)}"
-                           style="width: 32px"
-                      >
-                        <div :style="{background:item.color.fill,border:'2px solid '+item.color.line,'line-height':'18px'}" class="color-show-left">
-                          <span :style="{color:item.color.text}" style="line-height: 18px;margin-left: 6px">
-                              T
-                          </span>
-                        </div>
-                      </div>
-                      <div class="color-content" ref="color-content">
-                        <el-color-picker
-                          :ref="'colorPickerBac'+item.level"
-                          @active-change="(val)=>colorChangeTable(item,val)"
-                          popper-class="no-style-class"
-                          v-model="item.showColor"
-                          :predefine="predefineColors"
-                        >
-                        </el-color-picker>
-                      </div>
-                      <div
-                        class="color-tab"
-                        v-show="item.showColor">
-                        <div :class="{'color-active':item.showType=='fill'}" @click="changeShowPicker(item ,'fill')">{{$t('project.topology.fill')}}</div>
-                        <div :class="{'color-active':item.showType=='line'}" @click="changeShowPicker(item , 'line')">{{$t('project.topology.lines')}}</div>
-                        <div :class="{'color-active':item.showType=='text'}" @click="changeShowPicker(item , 'text')">{{$t('project.topology.text')}}</div>
-                      </div>
+                      <nezhaColor :value-arr="[{name:'fill',value:item.color.fill,key:'bac'},{name:'line',value:item.color.line,key:'line'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChangeTable(item,val,key)}" :single="false" :color-val="item.color" :presetColors="predefineColors"/>
                     </div>
                   </span>
                   <span v-else>base</span>
@@ -273,10 +246,10 @@
         <el-collapse v-model="activeNames">
           <!--&lt;!&ndash;位置大小&ndash;&gt;-->
           <!--<el-collapse-item :label="$t('project.topology.positionAndSize')" name="3" v-if="selection.pen&&!selection.pen.type">-->
-            <!--<div class="flex flex-warp">-->
+          <!--<div class="flex flex-warp">-->
 
 
-            <!--</div>-->
+          <!--</div>-->
           <!--</el-collapse-item>-->
           <!--样式-->
           <el-collapse-item :title="'Style'" name="4" v-if="selection.pen">
@@ -322,22 +295,7 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.bac')}}</div>
                 <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('fillStyle')">
-                    <div class="color-show-left" :style="{background:selection.pen.fillStyle}"></div>
-                    <span class="color-text"> {{selection.pen.fillStyle}}</span>
-                    <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fillStyle']&&!$refs['fillStyle'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fillStyle']&&$refs['fillStyle'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.fillStyle"
-                      ref="fillStyle"
-                      @active-change="(val)=>colorChange(val,'fillStyle')"
-                    >
-                    </el-color-picker>
-                  </div>
+                  <nezhaColor :value-arr="[{name:'fillStyle',value:selection.pen.fillStyle}]" @colorChange="colorChange"/>
                 </div>
               </div>
 
@@ -345,7 +303,7 @@
                 <div>{{$t('project.topology.gradient')}}</div>
                 <div class="p10 pl0 gradient-to">
                   <el-select v-model="selection.pen.gradientType" size="small"
-                             @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select">
+                             @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select" popper-class="color-before-select">
                     <div slot="prefix">
                       <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
                     </div>
@@ -356,21 +314,8 @@
                     </el-option>
                     <!--el-input__inner-->
                   </el-select>
-                  <div class="color-show" style="display:inline-block;width: calc(100% - 72px);margin-left: -5px;border-radius: 0 5px 5px 0" @click="colorPickerClick('gradientColor')">
-                    <div class="color-show-left" :style="{background:selection.pen.data.gradientColor,display:'inline-block','margin-top':'5px','margin-left':'12px'}"></div>
-                    <span class="color-text" style="vertical-align: text-bottom"> {{selection.pen.data.gradientColor}}</span>
-                    <span class="color-arrows" style="top: 13px; right: 20px">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['gradientColor']&&!$refs['gradientColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['gradientColor']&&$refs['gradientColor'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.data.gradientColor"
-                      ref="gradientColor"
-                      @active-change="(val)=>colorChange(val,'gradientColor')"
-                    >
-                    </el-color-picker>
+                  <div class="gradient-to-color">
+                    <nezhaColor :value-arr="[{name:'gradientColor',value:selection.pen.data.gradientColor}]" @colorChange="colorChange"/>
                   </div>
                 </div>
               </div>
@@ -459,7 +404,7 @@
                 <div>{{$t('project.topology.fromArrow')}}</div>
                 <div class="p10 pl0">
                   <el-select v-model="selection.pen.fromArrow" size="small"
-                              @change="onClickFromArrow">
+                             @change="onClickFromArrow">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
@@ -508,7 +453,7 @@
                 <div>{{$t('project.topology.toArrow')}}</div>
                 <div class="p10 pl0">
                   <el-select v-model="selection.pen.toArrow" size="small"
-                              @change="onClickToArrow">
+                             @change="onClickToArrow">
                     <div slot="prefix">
                       <div class="icon-item">
                         <svg>
@@ -575,44 +520,13 @@
               <div class="props-pen-item">
                 <div>{{$t('project.topology.lineColor')}}</div>
                 <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('strokeStyle')">
-                    <div class="color-show-left" :style="{background:selection.pen.strokeStyle}"></div>
-                    <span class="color-text"> {{selection.pen.strokeStyle}}</span>
-                    <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down"
-                     v-if="$refs['strokeStyle']&&!$refs['strokeStyle'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['strokeStyle']&&$refs['strokeStyle'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.strokeStyle"
-                      ref="strokeStyle"
-                      @active-change="(val)=>colorChange(val,'strokeStyle')"
-                    >
-                    </el-color-picker>
-                  </div>
+                  <nezhaColor :value-arr="[{name:'strokeStyle',value:selection.pen.strokeStyle}]" @colorChange="colorChange"/>
                 </div>
               </div>
               <div class="props-pen-item" v-if="selection.pen.type">
                 <div>{{$t('project.topology.arrowColor')}}</div>
                 <div class="p10 pl0">
-                  <div class="color-show" @click="colorPickerClick('toArrowColor')">
-                    <div class="color-show-left" :style="{background:selection.pen.toArrowColor}"></div>
-                    <span class="color-text"> {{selection.pen.toArrowColor}}</span>
-                    <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['toArrowColor']&&!$refs['toArrowColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['toArrowColor']&&$refs['toArrowColor'].showPicker"></i>
-                </span>
-                  </div>
-                  <div class="color-content" ref="color-content">
-                    <el-color-picker
-                      v-model="selection.pen.toArrowColor"
-                      ref="toArrowColor"
-                      @active-change="(val)=>colorChange(val,'toArrowColor')"
-                    >
-                    </el-color-picker>
-                  </div>
+                  <nezhaColor :value-arr="[{name:'toArrowColor',value:selection.pen.toArrowColor}]" @colorChange="colorChange"/>
                 </div>
               </div>
 
@@ -651,7 +565,7 @@
               <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
                 <el-select v-model="selection.pen.animateType" size="small"
-                            @change="onAnimate">
+                           @change="onAnimate">
                   <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
                 </el-select>
@@ -660,24 +574,7 @@
             <div class="project-content-item half" v-if="selection.pen.type">
               <label>{{$t('project.topology.animationColor')}}</label>
               <div class="full pr10">
-                <div class="color-show" @click="colorPickerClick('animateColor')">
-                  <div class="color-show-left" :style="{background:selection.pen.animateColor}"></div>
-                  <span class="color-text"> {{selection.pen.animateColor}}</span>
-                  <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down"
-                     v-if="$refs['animateColor']&&!$refs['animateColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up"
-                     v-if="$refs['animateColor']&&$refs['animateColor'].showPicker"></i>
-                </span>
-                </div>
-                <div class="color-content" ref="color-content">
-                  <el-color-picker
-                    v-model="selection.pen.animateColor"
-                    ref="animateColor"
-                    @active-change="(val)=>colorChange(val,'animateColor')"
-                  >
-                  </el-color-picker>
-                </div>
+                <nezhaColor :value-arr="[{name:'animateColor',value:selection.pen.animateColor}]" @colorChange="colorChange"/>
               </div>
             </div>
 
@@ -726,22 +623,9 @@
           <div class="project-content-item half">
             <label>{{$t('project.topology.fontColor')}}</label>
             <div class="full pr10 h32">
-              <div class="color-show" @click="colorPickerClick('fontColor')">
-                <div class="color-show-left" :style="{background:topologyData.data.fontColor}"></div>
-                <span class="color-text"> {{topologyData.data.fontColor}}</span>
-                <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['fontColor']&&!$refs['fontColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['fontColor']&&$refs['fontColor'].showPicker"></i>
-                </span>
-              </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  v-model="topologyData.data.fontColor"
-                  ref="fontColor"
-                  @active-change="(val)=>changeTopologyOpt(val,'fontColor',true)"
-                >
-                </el-color-picker>
-              </div>
+              <nezhaColor :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{
+                changeTopologyOpt(val,key,true)
+                }"/>
             </div>
           </div>
 
@@ -786,22 +670,9 @@
           <div class="project-content-item half">
             <label>{{$t('project.topology.bac')}}</label>
             <div class="full pr10 h32">
-              <div class="color-show" @click="colorPickerClick('bkColor')">
-                <div class="color-show-left" :style="{background:topologyData.data.bkColor}"></div>
-                <span class="color-text"> {{topologyData.data.bkColor}}</span>
-                <span class="color-arrows">
-                  <i class="nz-icon nz-icon-arrow-down" v-if="$refs['bkColor']&&!$refs['bkColor'].showPicker"></i>
-                  <i class="nz-icon nz-icon-arrow-up" v-if="$refs['bkColor']&&$refs['bkColor'].showPicker"></i>
-                </span>
-              </div>
-              <div class="color-content" ref="color-content">
-                <el-color-picker
-                  v-model="topologyData.data.bkColor"
-                  ref="bkColor"
-                  @active-change="(val)=>changeTopologyOpt(val,'bkColor',true)"
-                >
-                </el-color-picker>
-              </div>
+              <nezhaColor :value-arr="[{name:'bkColor',value:topologyData.data.bkColor}]" @colorChange="(val,key)=>{
+                changeTopologyOpt(val,key,true)
+                }"/>
             </div>
           </div>
 
@@ -813,118 +684,118 @@
             </div>
           </div>
 
-         <!-- <div class="project-content-item half">
-            <label>{{$t('project.topology.rule')}}</label>
-            <div class="full pr10 h32">
-              <el-switch
-                v-model="topologyData.data.rule"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-                @change="changeTopologyOpt(topologyData.data.rule,'rule')">
-              </el-switch>
-            </div>
-          </div>
+          <!-- <div class="project-content-item half">
+             <label>{{$t('project.topology.rule')}}</label>
+             <div class="full pr10 h32">
+               <el-switch
+                 v-model="topologyData.data.rule"
+                 :active-value="true"
+                 :inactive-value="false"
+                 active-color="#ee9d3f"
+                 @change="changeTopologyOpt(topologyData.data.rule,'rule')">
+               </el-switch>
+             </div>
+           </div>
 
-          <div class="project-content-item half special-select">
-            <label>{{$t('project.topology.defaultStartArrow')}}</label>
-            <div class="full pr10 h32">
-              <el-select v-model="topologyData.data.fromArrow" size="small"
+           <div class="project-content-item half special-select">
+             <label>{{$t('project.topology.defaultStartArrow')}}</label>
+             <div class="full pr10 h32">
+               <el-select v-model="topologyData.data.fromArrow" size="small"
 
-                         @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
-                <div slot="prefix">
-                  <div class="icon-item">
-                    <svg>
-                      <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
-                         :key="index" v-if="topologyData.data.fromArrow==item.name">
-                        <path :d="item.d"></path>
-                        <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
-                                 :strokeWidth="item['stroke-width']"></polygon>
-                        <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
-                                :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
-                      </g>
-                    </svg>
-                  </div>
-                </div>
-                <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
-                  <div class="icon-item">
-                    <svg>
-                      <g fill="none" :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':'black'"
-                         stroke-width="1">
-                        <path :d="item.d"></path>
-                        <polygon
-                          v-if="item.points"
-                          :points="item.points"
-                          :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                          :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
-                          :strokeWidth="item['stroke-width']"
-                        ></polygon>
-                        <circle
-                          v-if="item.cx"
-                          :cx="item.cx"
-                          :cy="item.cy"
-                          :r="item.r"
-                          :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                          :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
-                          :strokeWidth="item['stroke-width']"
-                        ></circle>
-                      </g>
-                    </svg>
-                  </div>
-                </el-option>
-              </el-select>
-            </div>
-          </div>
+                          @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
+                 <div slot="prefix">
+                   <div class="icon-item">
+                     <svg>
+                       <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                          :key="index" v-if="topologyData.data.fromArrow==item.name">
+                         <path :d="item.d"></path>
+                         <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
+                                  :strokeWidth="item['stroke-width']"></polygon>
+                         <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
+                                 :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
+                       </g>
+                     </svg>
+                   </div>
+                 </div>
+                 <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
+                   <div class="icon-item">
+                     <svg>
+                       <g fill="none" :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':'black'"
+                          stroke-width="1">
+                         <path :d="item.d"></path>
+                         <polygon
+                           v-if="item.points"
+                           :points="item.points"
+                           :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                           :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
+                           :strokeWidth="item['stroke-width']"
+                         ></polygon>
+                         <circle
+                           v-if="item.cx"
+                           :cx="item.cx"
+                           :cy="item.cy"
+                           :r="item.r"
+                           :fill="(topologyData.data.fromArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                           :stroke="(topologyData.data.fromArrow==item.name)?'#ee9d3f':item.stroke"
+                           :strokeWidth="item['stroke-width']"
+                         ></circle>
+                       </g>
+                     </svg>
+                   </div>
+                 </el-option>
+               </el-select>
+             </div>
+           </div>
 
-          <div class="project-content-item half special-select">
-            <label>{{$t('project.topology.defaultEndArrow')}}</label>
-            <div class="full pr10 h32">
-              <el-select v-model="topologyData.data.toArrow" size="small"
+           <div class="project-content-item half special-select">
+             <label>{{$t('project.topology.defaultEndArrow')}}</label>
+             <div class="full pr10 h32">
+               <el-select v-model="topologyData.data.toArrow" size="small"
 
-                         @change="changeTopologyOpt('toArrow')">
-                <div slot="prefix">
-                  <div class="icon-item">
-                    <svg>
-                      <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
-                         :key="index" v-if="topologyData.data.toArrow==item.name">
-                        <path :d="item.d"></path>
-                        <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
-                                 :strokeWidth="item['stroke-width']"></polygon>
-                        <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
-                                :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
-                      </g>
-                    </svg>
-                  </div>
-                </div>
-                <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
-                  <div class="icon-item">
-                    <svg>
-                      <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'"
-                         stroke-width="1">
-                        <path :d="item.d"></path>
-                        <polygon
-                          v-if="item.points"
-                          :points="item.points"
-                          :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                          :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
-                          :strokeWidth="item['stroke-width']"
-                        ></polygon>
-                        <circle
-                          v-if="item.cx"
-                          :cx="item.cx"
-                          :cy="item.cy"
-                          :r="item.r"
-                          :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
-                          :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
-                          :strokeWidth="item['stroke-width']"
-                        ></circle>
-                      </g>
-                    </svg>
-                  </div>
-                </el-option>
-              </el-select>
-            </div>
-          </div>-->
+                          @change="changeTopologyOpt('toArrow')">
+                 <div slot="prefix">
+                   <div class="icon-item">
+                     <svg>
+                       <g fill="none" stroke="black" stroke-width="1" v-for="(item,index) in penLineFromTOArrow"
+                          :key="index" v-if="topologyData.data.toArrow==item.name">
+                         <path :d="item.d"></path>
+                         <polygon v-if="item.points" :points="item.points" :fill="item.fill" :stroke="item.stroke"
+                                  :strokeWidth="item['stroke-width']"></polygon>
+                         <circle v-if="item.cx" :cx="item.cx" :cy="item.cy" :r="item.r" :fill="item.fill"
+                                 :stroke="item.stroke" :strokeWidth="item['stroke-width']"></circle>
+                       </g>
+                     </svg>
+                   </div>
+                 </div>
+                 <el-option v-for="(item,index) in penLineFromTOArrow" :value="item.name" :key="index">
+                   <div class="icon-item">
+                     <svg>
+                       <g fill="none" :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':'black'"
+                          stroke-width="1">
+                         <path :d="item.d"></path>
+                         <polygon
+                           v-if="item.points"
+                           :points="item.points"
+                           :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                           :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
+                           :strokeWidth="item['stroke-width']"
+                         ></polygon>
+                         <circle
+                           v-if="item.cx"
+                           :cx="item.cx"
+                           :cy="item.cy"
+                           :r="item.r"
+                           :fill="(topologyData.data.toArrow==item.name)?(item.fill=='#ffffff'?item.fill:'#ee9d3f'):item.fill"
+                           :stroke="(topologyData.data.toArrow==item.name)?'#ee9d3f':item.stroke"
+                           :strokeWidth="item['stroke-width']"
+                         ></circle>
+                       </g>
+                     </svg>
+                   </div>
+                 </el-option>
+               </el-select>
+             </div>
+           </div>-->
 
         </div>
 
@@ -987,7 +858,7 @@
   import chartDataFormat from '../../../charts/chartDataFormat';
   import promqlInput from "../../../page/dashboard/explore/promqlInput";
   import {getUUID,resetZIndex} from "../../../common/js/common";
-
+  import nezhaColor from '../../nezhaColor'
   var rz={
     methods:{
       rz(e){
@@ -1214,12 +1085,13 @@
           '#1250B0','#1F60C4','#5794F2',
           '#E55400','#FA6400','#FF9830',
           '#7C2EA3','#8F3BB8','#B877D9',
-          ]
+        ]
       }
     },
     mixins:[rz],
     components:{
-      promqlInput
+      promqlInput,
+      nezhaColor
     },
     computed:{},
     props:{
@@ -1263,10 +1135,10 @@
       }
       Object.keys(this.topologyData.data).forEach((key)=>{
         if(key === 'projectInfo' || key === 'alertInfo' || key==='fontSize' || key === 'align' || key === 'fontColor' || key === 'opacity'){
-         this.topologyData.data[key]=(JSON.stringify(dataOption.data[key])?dataOption.data[key]:this.topologyData.data[key]);
-       } else {
-         this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
-       }
+          this.topologyData.data[key]=(JSON.stringify(dataOption.data[key])?dataOption.data[key]:this.topologyData.data[key]);
+        } else {
+          this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
+        }
       });
     },
     mounted(){
@@ -1401,7 +1273,6 @@
         // console.log(val);
         this.selection.pen.data.gradientType=val;
         this.$forceUpdate()
-        console.log(this.selection.pen.gradientType,this.selection.pen.data.gradientType);
         if(val===0){
           this.selection.pen.bkType=0;
         }
@@ -1472,9 +1343,8 @@
         this.selection.pen.data[name]=this.colorRGBtoHex(val);
         this.onChange();
       },
-      colorChangeTable(item,val){//改变颜色
-        if(!item.showType){return};
-        item.color[item.showType]=this.colorRGBtoHex(val);
+      colorChangeTable(item,val,key){//改变颜色
+        item.color[key]=this.colorRGBtoHex(val);
       },
       changeShowPicker(item,type){
         this.$refs['colorPickerBac'  + item.level][0].showPicker=true;
@@ -1799,7 +1669,6 @@
     /deep/ .el-form-item {
       margin-bottom: 10px;
     }
-
     .half-form-item {
       width: calc(50% - 20px);
       display: inline-block;
@@ -2050,6 +1919,10 @@
           margin-left: 5px;
         }
       }
+      .gradient-to-color{
+        display: inline-block;
+        width: calc(100% - 70px);
+      }
     }
 
     .icon-item {
@@ -2125,7 +1998,7 @@
     border-top: 2px solid transparent;
   }
   /*.color-tab div:first-child{*/
-    /*border-right-color: #DCDFE6;*/
+  /*border-right-color: #DCDFE6;*/
   /*}*/
   .color-tab div:hover{
     color: #409EFF;

@@ -769,7 +769,6 @@
           this.chartType = 'line';
         }
         this.echartModalStore = echarts.init(ele);
-        console.log('height',ele.clientWidth,ele.clientHeight)
         var chartWidth = ele.clientWidth;
         var title = {
           show:false,
@@ -1107,7 +1106,6 @@
         let self=this;
         let  dom = document.getElementById('screenShowArea')
         this.echartModalStore = echarts.init(dom)
-        console.log('dom',dom.clientWidth,dom.clientHeight)
         this.showLegend = true;
         if(legend){
           this.screenLegendList = [];
@@ -1129,7 +1127,6 @@
           if(dataArg[0].data.length<1){
             this.echartModalStore.setOption(chartConfig.getOption('noData'))
           }else{
-            console.log(option)
             this.echartModalStore.setOption(option);//创建图表
           }
 

@@ -347,7 +347,6 @@
         return JSON.parse(JSON.stringify(this.blankPromServer));
       },
       pageNo(val) {
-        console.log('page',val)
         this.pageObj.pageNo = val;
         this.getTableData();
       },

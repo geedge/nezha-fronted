@@ -310,7 +310,6 @@
         this.bottomBox.targetTab = 'monitor';
         this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
         this.bottomBox.showSubList = true;
-        console.log(record);
       },
       shutdown(record) {
         this.$confirm(this.$t("tip.killTerm"),{

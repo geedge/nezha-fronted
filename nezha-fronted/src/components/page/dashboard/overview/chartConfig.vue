@@ -515,7 +515,6 @@
       let times=[];
       let tzo=(new Date().getTimezoneOffset()/60)*(-1);//系统时区
       let time=bus.UTCTimeToConfigTimezone(new Date().getTime()-tzo*60*60*1000);
-      console.log(time);
       for(let i=0;i<10;i++){
         time=time-5*60*1000;
         times.push(bus.timeFormate(time,'hh:mm'))

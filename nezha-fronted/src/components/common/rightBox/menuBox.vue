@@ -220,7 +220,6 @@
       },
       inputValid:function(val){
         return val.replace(/[,]/g,'')
-        console.log(val)
       },
     },
     mounted() {

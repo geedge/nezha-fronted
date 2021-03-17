@@ -1824,7 +1824,6 @@
         getTopology(this.topologyIndex).render();
       },
       notModuleIDArrChange(id){
-        console.log(id);
         this.notModuleIDArr=this.notModuleIDArr.filter(item=>item.id!==id);
       },
       //保存

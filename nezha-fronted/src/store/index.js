@@ -121,7 +121,6 @@ const store = new Vuex.Store({
       state.overViewProject=data;
     },
     setDcDataRefresh(state){
-      console.log(123)
       state.dcDataRefresh=true;
       setTimeout(()=>{
         state.dcDataRefresh=false;
