@@ -14,8 +14,9 @@
                                  :options="metricOptions" @change="metricChange">
 
                 <template slot-scope="{ node, data }">
-                  <div :class="['nz-cascade',data.temp?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">{{
-                    data.label }}
+                  <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
+                    <i class="nz-icon nz-icon-moban"></i>
+                    {{data.label}}
                   </div>
                 </template>
 
@@ -48,8 +49,9 @@
                                    :props="{emitPath:false}" :options="metricOptions" @change="metricChange">
 
                   <template slot-scope="{ node, data }">
-                    <div :class="['nz-cascade',data.temp?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">{{
-                      data.label }}
+                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
+                      <i class="nz-icon nz-icon-moban"></i>
+                      {{data.label}}
                     </div>
                   </template>
 
@@ -103,7 +105,7 @@
         <el-form-item prop="expression">
           <el-input v-model="tempBox.expression" size="small" disabled></el-input>
         </el-form-item>
-        <span class="temp-form-box-title">Variable</span>
+        <span class="temp-form-box-title" v-if="tempBox.vars.length">Variable</span>
         <el-form-item v-for="(item,index) in tempBox.vars"  :prop="item" :key="index">
           <el-row>
             <el-col :span="6" class="temp-form-box-col">
@@ -111,10 +113,24 @@
             </el-col>
             <el-col :span="17" v-if="format(item).key">
               <!--<el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>-->
-              <el-select v-model="tempBox[item]" size="small" style="width: 100%" :popper-class="'nz-temp-box'">
-                <el-option v-for="(item1,index) in format(item).arr" :key="index" :label="item1[format(item).value]" :value="item1[format(item).value]">
-                </el-option>
-              </el-select>
+              <!--<el-select v-model="tempBox[item]" size="small" style="width: 100%" :popper-class="'nz-temp-box'">-->
+                <!--<el-option v-for="(item1,index) in format(item).arr" :key="index" :label="item1[format(item).value]" :value="item1[format(item).value]">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+              <select-alert-silence :filter-silence="filterSilence" :silence-data="format(item).arr" :panel-lock="false" :placement="'bottom-start'" :typeContentLoading="typeContentLoading"
+                                    @selectSilence="(val)=>{silenceChange(val,item)}" ref="selectPanel" style="width: 300px;">
+                <template v-slot:header>
+                  <div class="panel-select-header">
+                    <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterSilence" id="panel-list-search"></el-input>
+                  </div>
+                </template>
+
+                <template v-slot:trigger>
+                  <el-input class="panel-name" placeholder="" readonly="readonly" v-model="tempBox[item]" size="small">
+                    <span slot="suffix" class="el-input__icon el-icon-circle-close el-input__clear" @click.stop="clearValue(item)"></span>
+                  </el-input>
+                </template>
+              </select-alert-silence>
             </el-col>
             <el-col :span="17" v-else>
               <el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>
@@ -138,11 +154,12 @@
 
 <script>
   import editor from './editor'
-
+  import selectAlertSilence from '../../../common/alert/selectAlertSilence'
   export default {
     name:"promqlInput",
     components:{
-      'editor':editor
+      'editor':editor,
+      selectAlertSilence
     },
     props:{
       index:{type:Number},
@@ -160,7 +177,8 @@
       showTemp:{
         type:Boolean,
         default:true
-      }
+      },
+      typeContentLoading:false,
       //metricOptions: {type: Array},
       //metricStore: {type: Array}
     },
@@ -185,11 +203,11 @@
         endpointOption:[],
         datacenterOption:[],
         projectOption:[],
+        filterSilence:'',
       }
     },
     created(){
       this.queryMetrics();
-      this.getAllOptins();
     },
     methods:{
       closeDropdown(){
@@ -313,11 +331,16 @@
               if(res.code===200){
                 res.data.vars.forEach(item=>{
                   res.data[item]='';
+                  let arr=item.split('.')
+                  let keyword=arr[0].toLowerCase();
+                  this.getAllOptins(keyword,keyword+'Option');
+
                 });
                 this.tempBox={
                   ...this.tempBox,
                   ...res.data,
                 };
+
                 setTimeout(()=>{
                   this.tempBoxShow=true;
                 },100)
@@ -349,6 +372,13 @@
               message:  this.$t('config.exprTemp.errorStr',{errorStr:errorStr}),
               type: 'error'
             });
+            return
+          }
+
+          if(this.tempBox.vars.length==0){
+            this.tempBoxShow=false;
+            this.expressionList[this.index]= params.expression;
+            this.$emit('change', params.expression);
             return
           }
 
@@ -384,34 +414,95 @@
             }
         }
       },
-      getAllOptins(){
-        this.$get('idc',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.datacenterOption=response.data.list;
-          }
-        });
-        this.$get('asset',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.assetOption=response.data.list;
-          }
-        });
-        this.$get('project',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.projectOption=response.data.list;
-          }
-        });
-        this.$get('module',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.moduleOption=response.data.list;
-          }
-        });
-        this.$get('endpoint',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.endpointOption=response.data.list;
-          }
-        });
+      getAllOptins(key,arr){
 
 
+
+        switch(key){
+          case 'asset':
+            this.$get('asset',{pageNo:1,pageSize:-1}).then(response=>{
+              if(response.code==200){
+                let arr=[];
+                response.data.list.forEach(asset=>{
+                  asset.name=asset.sn;
+                  let idcF=arr.find(idc=>idc.id===asset.idc.id);
+                  if(idcF){
+                    idcF.children.push(asset);
+                  } else{
+                    let idc={...asset.idc};
+                    idc.children=[asset];
+                    arr.push(idc);
+                  }
+                });
+                this.assetOption=arr;
+              }
+            });
+            break;
+          case 'module':
+            this.$get('module',{pageNo:1,pageSize:-1}).then(response=>{
+              if(response.code==200){
+                let arr=[];
+                response.data.list.forEach(module=>{
+                  let projectF=arr.find(project=>project.id===module.project.id)
+                  if(projectF){
+                    projectF.children.push(module);
+                  } else{
+                    let project={...module.project};
+                    project.children=[module];
+                    arr.push(project);
+                  }
+                });
+                this.moduleOption=arr;
+              }
+            });
+            break;
+          case 'endpoint':
+            this.$get('endpoint',{pageNo:1,pageSize:-1}).then(response=>{
+              if(response.code==200){
+                let arr=[];
+                response.data.list.forEach(item=>{
+                  item.name=item.host;
+                  let projectF = arr.find(project=>item.project.id===project.id);
+                  if(projectF){
+                    let moduleF = projectF.children.find(module=>module.id===item.module.id);
+                    if(moduleF){
+                      moduleF.children.push(item)
+                    } else{
+                      projectF.children.push({...item.module,children:[item]});
+                    }
+                  } else {
+                    let project={...item.project};
+                    project.children=[{...item.module,children:[item]}]
+                    arr.push(project);
+                  }
+                });
+                this.endpointOption=arr;
+              }
+            });
+            break;
+          case 'datacenter':
+            this.$get('idc',{pageNo:1,pageSize:-1}).then(response=>{
+              if(response.code==200){
+                this.datacenterOption=response.data.list;
+              }
+            });
+            break;
+          case 'project':
+            this.$get('project',{pageNo:1,pageSize:-1}).then(response=>{
+              if(response.code==200){
+                this.projectOption=response.data.list;
+              }
+            });
+            break;
+          default:
+            break;
+        }
+      },
+      silenceChange(val,key){
+        this.tempBox[key]=val.name;
+      },
+      clearValue(key){
+        this.tempBox[key]='';
       },
       tempBoxClose(){
         this.cascaderValue="";
@@ -532,9 +623,13 @@
   .nz-cascade {
     padding: 0 20px 0 30px;
   }
+  .nz-cascade .nz-icon-moban {
+    display: none;
+  }
 
-  .nz-cascade-temp {
-    background: #F8F9FB;
+  .nz-cascade-temp .nz-icon-moban{
+    display: inline-block;
+    /*background: #F8F9FB;*/
   }
   .temp-form-box{
     width: 480px;

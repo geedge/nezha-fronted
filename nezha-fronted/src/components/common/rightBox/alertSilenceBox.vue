@@ -66,7 +66,7 @@
         <el-form-item :label='$t("alert.silence.matcher")' prop="matcher" class="matcher">
           <div class="matcher-type">
             <div class="matcher-type-title">Alert rule</div>
-            <el-select v-model="editAlertSilence.ruleId" filterable @change="matcherChange" :popper-append-to-body="false" size="small" class="matcher-type-content">
+            <el-select v-model="editAlertSilence.ruleId" filterable @change="matcherChange" :popper-append-to-body="false" size="small" class="matcher-type-content" clearable>
               <el-option
                 v-for="item in ruleList"
                 :key="item.id"
@@ -96,6 +96,7 @@
 
                 <template v-slot:trigger>
                   <el-input class="panel-name" placeholder="" readonly="readonly" v-model="editAlertSilence.name" size="small">
+                    <span slot="suffix" class="el-input__icon el-icon-circle-close el-input__clear" @click.stop="clearValue"></span>
                   </el-input>
                 </template>
               </select-alert-silence>
@@ -255,6 +256,17 @@
           delete  params.time;
           delete  params.matcher;
           if(valid){
+            params={
+              id:params.id,
+              endAt:params.endAt,
+              startAt:params.startAt,
+              linkId:params.linkId,
+              linkName:params.linkName,
+              reason:params.reason,
+              ruleId:params.ruleId,
+              name:params.name,
+              type:params.type,
+            }
             if(this.editAlertSilence.id){
               this.$put('/alert/silence',params).then(response=>{
                 this.prevent_opt.save=false;
@@ -364,6 +376,10 @@
 
 
 
+      },
+      clearValue(){
+        this.editAlertSilence.name='';
+        this.editAlertSilence.linkId='';
       },
       typeChange(val,linkId){
         let firstArr=[]

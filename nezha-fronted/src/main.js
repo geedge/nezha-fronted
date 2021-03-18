@@ -197,6 +197,9 @@ Vue.mixin({
       callBack 回调
       */
       let rowCopy={...row};
+      if(rowCopy.name){
+        rowCopy.name = 'Copy from ' + rowCopy.name;
+      }
       if(format){
         rowCopy=format(rowCopy)
       }
