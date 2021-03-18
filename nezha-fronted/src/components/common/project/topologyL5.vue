@@ -93,6 +93,8 @@
             :toolShow="toolShow">
           </topology-top-tool>
 
+
+
         </span>
         <span class="float-right">
           <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
@@ -679,10 +681,6 @@
     methods:{
       init(){
         canvasOptions.on=this.onMessage;
-        if(getTopology(this.topologyIndex)){
-          getTopology(this.topologyIndex).open({});
-          getTopology(this.topologyIndex).render()
-        }
         this.reload();
       },
 
@@ -942,18 +940,21 @@
         if(maxLevel!==0){
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
-            pen.font.color=selLevel.color.text;
+          if(selLevel){
+            pen.fontColor=selLevel.color.text;
             pen.fillStyle=selLevel.color.fill;
             pen.strokeStyle=selLevel.color.line;
             pen.bkType=0;
+          }
             onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
           }else if(pen.type===1){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
-
-            pen.animateColor=selLevel.color.fill;
-            pen.strokeStyle=selLevel.color.line;
-            pen.animateType=selLevel.animateType;
-            pen.font.color=selLevel.color.text;
+            if(selLevel){
+              pen.animateColor=selLevel.color.fill;
+              pen.strokeStyle=selLevel.color.line;
+              pen.animateType=selLevel.animateType;
+              pen.fontColor=selLevel.color.text;
+            }
             onChangeAnimateLine(pen,pen.animateType);
           }
         } else {

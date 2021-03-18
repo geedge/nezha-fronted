@@ -46,7 +46,6 @@
               >
               </el-date-picker>
             </div>
-            <div style="width: 50px;text-align: center">{{$t('dashboard.panel.to')}}</div>
             <div class="datepicker-box">
               <span class="datepicker-title">end time</span>
               <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
@@ -224,16 +223,6 @@
         endpointData:null,
         startAtTamp:'',
         endAtTamp:'',
-        optionsEndAt:{
-          disabledDate(date,val){
-            return date.getTime() <= that.startAtTamp - 24*60*60*1000;
-          },
-        },
-        optionsStartAt:{
-          disabledDate(date){
-            return date.getTime() >= that.endAtTamp - 60*60*1000 ;
-          },
-        }
       }
     },
     mounted(){
@@ -404,7 +393,7 @@
               res.data.list.forEach(asset=>{
                 asset.name=asset.sn;
                 if(linkId===asset.id){
-                  this.editAlertSilence.name=asset.idc.name +'/'+asset.name;
+                  this.editAlertSilence.name=asset.name;
                 }
                 let idcF=arr.find(idc=>idc.id===asset.idc.id);
                 if(idcF){
@@ -443,7 +432,7 @@
               let arr=[];
               res.data.list.forEach(module=>{
                 if(linkId===module.id){
-                  this.editAlertSilence.name=module.project.name +'/'+module.name;
+                  this.editAlertSilence.name=module.name;
                 }
                 let projectF=arr.find(project=>project.id===module.project.id)
                 if(projectF){
@@ -468,7 +457,7 @@
              res.data.list.forEach(item=>{
                item.name=item.host;
                if(linkId===item.id){
-                 this.editAlertSilence.name=item.project.name +'/'+item.module.name+'/'+item.name;
+                 this.editAlertSilence.name=item.name;
                }
                let projectF = arr.find(project=>item.project.id===project.id);
                if(projectF){
@@ -514,7 +503,9 @@
     .datepicker {
       margin-top: 20px;
       display: flex;
+      justify-content: space-between;
       .datepicker-box{
+        width: 48%;
         flex: 1;
         position: relative;
         /deep/ .el-date-editor.el-input, /deep/ .el-date-editor.el-input__inner{

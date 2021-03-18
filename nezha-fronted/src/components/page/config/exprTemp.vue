@@ -228,19 +228,19 @@
             show:true,
             width:80
           },{
-            label:'Name',
+            label:this.$t('config.exprTemp.name'),
             prop:'name',
             show:true,
           },{
-            label:'Group',
+            label:this.$t('config.exprTemp.gname'),
             prop:'gname',
             show:true,
           },{
-            label:'Expression',
+            label:this.$t('config.exprTemp.expression'),
             prop:'expression',
             show:true,
           },{
-            label:'Remark',
+            label:this.$t('config.exprTemp.remark'),
             prop:'remark',
             show:true,
           },{
