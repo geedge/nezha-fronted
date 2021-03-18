@@ -122,15 +122,17 @@
         <el-menu-item index="101-1">
           <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')" id="header-to-chinese">中文</div>
         </el-menu-item>
-        <el-menu-item class="nz-menu-line" @click.stop index="6-2">
-          <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
-        </el-menu-item>
-        <el-menu-item index="101-3">
-          <div @click="showPwdDialog" id="header-to-changepwd">{{$t('overall.changePwd')}}</div>
-        </el-menu-item>
-        <el-menu-item index="101-4">
-          <div @click="logout" id="header-to-logout">{{$t('overall.signOut')}}</div>
-        </el-menu-item>
+        <template v-if="username">
+          <el-menu-item class="nz-menu-line" @click.stop index="6-2" >
+            <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
+          </el-menu-item>
+          <el-menu-item index="101-3">
+            <div @click="showPwdDialog" id="header-to-changepwd">{{$t('overall.changePwd')}}</div>
+          </el-menu-item>
+          <el-menu-item index="101-4">
+            <div @click="logout" id="header-to-logout">{{$t('overall.signOut')}}</div>
+          </el-menu-item>
+        </template>
       </el-submenu>
     </el-menu>
 
@@ -511,11 +513,13 @@
     },
     mounted() {
       this.$i18n.locale = this.language;
-      this.initEvent();
-      this.getAssetData();
-      this.getUserData();
-      this.getProjectList();
-      this.getLinkData();
+      if (sessionStorage.getItem('nz-token')) {
+        this.initEvent();
+        this.getAssetData();
+        this.getUserData();
+        this.getProjectList();
+        this.getLinkData();
+      }
       // 刷新后有高亮
       /*let activePath = this.$route.path.slice(1);
       this.activeIndex = activePath;*/
