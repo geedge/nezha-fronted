@@ -49,7 +49,7 @@
                 <div>
                   <!--For security reasons you need to authenticate for the installation by creating the file-->{{$t('setup.welcome.creatFile')}} '/opt/nezha/nz-web/tmp/nezha.auth'.<br/><!--This can be done by executing the following command-->{{$t('setup.welcome.createFileTip')}}:
                 </div>
-                <pre>echo -n {{validateCode}} /opt/nezha/nz-web/tmp/nezha.auth</pre>
+                <pre>echo -n {{validateCode}} > /opt/nezha/nz-web/tmp/nezha.auth</pre>
                 <div><!--Click the 'Next' button when you've finished.-->{{$t('setup.welcome.next')}}</div>
               </div>
             </div>
@@ -167,8 +167,8 @@
         return{
           validateCode:"",
           language:"en",
-          step:3,
-          activeStep:3,
+          step:0,
+          activeStep:0,
           database:{
             host:"",
             port:3306,
