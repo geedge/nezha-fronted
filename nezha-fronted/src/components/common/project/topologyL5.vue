@@ -679,6 +679,10 @@
     methods:{
       init(){
         canvasOptions.on=this.onMessage;
+        if(getTopology(this.topologyIndex)){
+          getTopology(this.topologyIndex).open({});
+          getTopology(this.topologyIndex).render()
+        }
         this.reload();
       },
 
@@ -797,6 +801,8 @@
            let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
            canvas.open(data);
            setTopology(this.topologyIndex,canvas);
+         }else{
+           getTopology(this.topologyIndex).open(data);
          }
           this.topologyLoading=false;
           if(!getTopology(this.topologyIndex).data.name){
@@ -879,7 +885,9 @@
                   this.projectInfoShow=data.data.projectInfo;
                   this.projectAlertShow=data.data.alertInfo;
                 }
-
+                if(!data.bkImage){
+                  data.bkImage=undefined;
+                }
                 Promise.all(promiseArr).then(res=>{
                   res.forEach((response,index)=>{
                     let item=data.pens[index];
@@ -2058,6 +2066,9 @@
       },
       zoomMap(num){
         getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale+num);
+      },
+      penToBottom(){
+        getTopology(this.topologyIndex).bottom()
       },
     },
     destroyed(){

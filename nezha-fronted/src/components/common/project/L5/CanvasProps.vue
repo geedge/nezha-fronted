@@ -680,7 +680,7 @@
             <label>{{$t('project.topology.bacImage')}}</label>
             <div class="full pr10 h32">
               <!--暂时是input 输入网址-->
-              <el-input class="input" size="small" v-model="topologyData.data.bkImage"></el-input>
+              <el-input class="input" size="small" v-model="topologyData.data.bkImage" @change="changeTopologyOpt"></el-input>
             </div>
           </div>
 
