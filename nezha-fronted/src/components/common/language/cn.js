@@ -58,6 +58,8 @@ const cn = {
     createModel: "创建型号",
     createModule: "创建模块",
     createMib: "创建MIB",
+    createAssetType:'创建设备类型',
+    createAssetState:'创建设备状态',
     exportExcel: "导出",
     importExcel: "导入",
     importExcelLower: "导入",
@@ -907,6 +909,21 @@ const cn = {
         yes: "是",
         no: "否"
       }
+    },
+    assetType: {
+      assetType: "资产类型",
+      parent: "父级",
+      pname: "父级",
+      editAssetType: "编辑资产类型",
+      createAssetType: "新增资产类型"
+    },
+    assetState: {
+      assetState: "资产状态",
+      monitor: "监控",
+      alert: "告警",
+      assetTotal: "资产总数",
+      createAssetState: "新增资产状态",
+      editAssetState: "编辑资产状态",
     },
     exprTemp:{
       exprTemp:'expression模板',

@@ -61,6 +61,8 @@ const en = {
     createModel:'Create model',
     createModule: 'Create module',
     createMib:'Create MIB',
+    createAssetType:'Create asset type',
+    createAssetState:'Create asset state',
     exportExcel:'Export',
     importExcel:'Import',
     importExcelLower:'import',
@@ -911,6 +913,21 @@ const en = {
         no:'No',
       }
     },
+    assetType: {
+      assetType: "Asset Type",
+      parent: "Parent",
+      pname: "Parent name",
+      editAssetType: "Edit asset type",
+      createAssetType: "Create asset type",
+    },
+    assetState: {
+      assetState: "Asset State",
+      monitor: "Monitor",
+      alert: "Alert",
+      assetTotal: "Total assets",
+      createAssetState: "Create asset state",
+      editAssetState: "Edit asset state",
+    },
     exprTemp:{
       exprTemp:'Expression template',
       exprTempInfo:'Expression template Info',
@@ -1001,7 +1018,7 @@ const en = {
       module:'module',
       endpoint:'endpoint',
       asset:'asset',
-      
+
     },
     P1Rule:'P1: Critical, alarm that can cause business paralysis',
     P2Rule:'P2: Major, alarm that do not affect the business',
@@ -1393,7 +1410,21 @@ const en = {
         rule: "Add rule",
         asset: "Add asset",
       }
-    }
+    },
+    assetType: {
+      view: "View",
+      toAdd: "Add asset type",
+      toEdit: "Edit asset type",
+      delete: "Delete asset type",
+      save: "Save asset type",
+    },
+    assetState: {
+      view: "View",
+      toAdd: "Add asset state",
+      toEdit: "Edit asset state",
+      delete: "Delete asset state",
+      save: "Save asset state",
+    },
   },
   ...enLocale
 }

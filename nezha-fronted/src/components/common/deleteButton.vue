@@ -54,7 +54,7 @@
 
 <style scoped>
   .delete-button{
-    margin-left: 16px;
+    margin-left: 20px;
     opacity: 0.7;
     border-radius: 2px;
   }

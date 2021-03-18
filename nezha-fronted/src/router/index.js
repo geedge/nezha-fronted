@@ -58,6 +58,14 @@ export default new Router({
           component: resolve => require(['../components/page/config/promServer.vue'], resolve),
         },
         {
+          path: '/assetType',
+          component: resolve => require(['../components/page/config/assetType.vue'], resolve),
+        },
+        {
+          path: '/assetState',
+          component: resolve => require(['../components/page/config/assetState.vue'], resolve),
+        },
+        {
           path: '/dc',
           component: resolve => require(['../components/page/config/dc.vue'], resolve),
         },

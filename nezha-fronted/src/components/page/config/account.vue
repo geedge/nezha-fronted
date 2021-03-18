@@ -94,7 +94,7 @@
                 <span>-</span>
               </template>
             </template>
-            <span v-else-if="item.prop == 'status'">
+            <template v-else-if="item.prop == 'status'">
                 <el-switch
                   v-model="scope.row.status"
                   active-value="1"
@@ -103,10 +103,8 @@
                   :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_toAdd') || (scope.row.username==='admin' && scope.row.userId==1)"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
-            </span>
-            <template v-else-if="item.prop == 'tags'">
-              <span>{{filterTags(item, scope)}}</span>
             </template>
+            <span v-else-if="item.prop == 'tags'">{{filterTags(item, scope)}}</span>
             <span v-else-if="item.prop == 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
             <span v-else>{{scope.row[item.prop]}}</span>
           </template>

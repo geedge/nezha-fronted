@@ -1361,8 +1361,8 @@
       border-radius: 0 2px 2px 0;
     }
     .new-search .search-input-all{
-        width: 231px !important;
-        min-width: 231px;
+        width: 226px !important;
+        min-width: 226px;
         background-color: $content-right-background-color;
         color: rgba(0,0,0,.55);
         height: 28px;
