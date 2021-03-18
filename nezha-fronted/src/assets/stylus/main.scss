@@ -1732,11 +1732,12 @@ li{
 .el-button--text:hover,
 .el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path,
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected,
-.el-select-dropdown__item.selected,
-.el-date-table td.today span {
+.el-select-dropdown__item.selected{
   color: $global-text-color-active !important;
 }
-
+.el-date-table td.today span {
+  color: #232f3e;
+}
 .el-date-table td.end-date span, .el-date-table td.start-date span {
   background-color: $global-text-color-active !important;
 }
