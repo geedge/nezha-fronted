@@ -8,7 +8,7 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
 
-const loginWhiteList = ['/login']; // 免登陆白名单
+const loginWhiteList = ['/login','/setup']; // 免登陆白名单
 const permissionWhiteList = ['/menu', ...loginWhiteList]; // 权限白名单
 
 router.beforeEach((to, from, next) => {

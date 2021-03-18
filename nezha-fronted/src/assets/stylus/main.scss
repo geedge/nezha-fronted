@@ -444,6 +444,16 @@ li{
 .el-textarea__inner {
   padding: 5px 60px 5px 15px;
 }
+.el-radio__input .el-radio__inner:hover {
+  border-color: $btn-normal-background-color-active-new;
+}
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: $btn-normal-background-color-active-new;
+  background: $btn-normal-background-color-active-new;
+}
+.el-radio__input.is-checked+.el-radio__label{
+  color: $btn-normal-background-color-active-new;;
+}
 .nz-input-append {
   position: absolute;
   right: 8px;

@@ -99,6 +99,56 @@ const en = {
     SyncSave:'Save&Sync'
   },
   pageSize: '/page',
+  setup:{
+    step0:"Welcome",
+    step1:"Database",
+    step2:"Redis",
+    step3:"System",
+    host:"Host",
+    port:"Port",
+    language:"Language",
+    welcome:{
+      header:"Welcome to Nezha setup wizard!",
+      guid:"What will the wizard do for you?",
+      guid_1:"Create a basic configuration",
+      guid_2:"Tries to find problems within your Database and Redis setup",
+      toContinue:"To continue",
+      creatFile:"For security reasons you need to authenticate for the installation by creating the file",
+      createFileTip:"This can be done by executing the following command",
+      next:"Click the 'Next' button when you've finished."
+    },
+    database:{
+      configTitle:'Configure DB connection',
+      configTip:"Please create database manually,and set the configuration parameters for connection to this database,Press 'Next' button when done",
+    },
+    redis:{
+      configTitle:'Configure Redis connection',
+      configTip:"Please set the configuration parameters for connection to this redis,Press 'Next' button when done",
+    },
+    system:{
+      configTitle:'System configuration',
+      configTip:"Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port"
+    },
+    name:"Database name",
+    username:"Username",
+    password:"Password",
+    alertPath:'Alert API',
+    alertPrefix:'Alert prefix',
+    haMode:'HA mode',
+    haVip:'Virtual IP',
+    next:"Next",
+    back:"Back",
+    finish:"Finish",
+    invalidDb:"There may be some errors in the configuration of the database",
+    invalidRedis:"There may be some errors in the configuration of the Redis",
+    invalidPassword:"Redis's password may be wrong",
+    requirePassword:"The password may be required by the Redis",
+    wait:"The configuration has been saved, please wait patiently for it to take effect",
+    reloadTimeout:'It took too much time to restart the server, there may be some problems when you install',
+    hadConfig:"Someone has started to configure the system",
+    invalidCode:"The authentication is invalid ,please follow the description in {page} 'To continue'",
+    welcomePage:"Welcome page"
+  },
   webshell:{
     shellTitle:'Local Shell',
     upload:'Upload',
