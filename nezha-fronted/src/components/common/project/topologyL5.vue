@@ -424,7 +424,7 @@
   const canvasOptions={
     rotateCursor:'/img/rotate.cur',
     translateKey:'None',
-    disableEmptyLine:true,
+    disableEmptyLine:false,
     autoExpandDistance:0,
     minScale:0.01,
   };
@@ -853,15 +853,15 @@
                 clearInterval(timer);
                 let promiseArr=[];
                 let self=this;
-                for(let i=0;i<data.pens.length;i++){
-                  let line=data.pens[i]
-                  if(line.type===1){
-                   if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
-                     data.pens.splice(i, 1);
-                     i--;
-                   }
-                  }
-                }
+                // for(let i=0;i<data.pens.length;i++){
+                //   let line=data.pens[i]
+                //   if(line.type===1){
+                //    if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
+                //      data.pens.splice(i, 1);
+                //      i--;
+                //    }
+                //   }
+                // }
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image;
@@ -1769,8 +1769,10 @@
         this.editTopologyFlag=true;
         setTimeout(()=>{
           getTopology(this.topologyIndex).lock(0);
-          getTopology(this.topologyIndex).data.pens.forEach((item)=>{//停止动画 以及赋值默认data
-            item.stopAnimate();
+          getTopology(this.topologyIndex).data.pens.forEach((item,index)=>{//停止动画 以及赋值默认data
+            if(item.animatePlay){
+              item.stopAnimate();
+            }
             if(!item.data.expressArr.length) {
               item.data.expressArr=[''];
               item.data.legends=[''];
@@ -1780,7 +1782,7 @@
               item.fillStyle=item.data.fillStyle;
               item.strokeStyle=item.data.strokeStyle;
               item.animatePlay=false;
-              item.font.color="#000000";
+              item.fontColor="#000000";
               item.gradientType=item.data.gradientType?item.data.gradientType:0;
               if(!item.data.gradientColor){
                 item.data.gradientType=0;
@@ -1798,7 +1800,7 @@
               item.fromArrowColor=item.data.arrowColor;
               item.toArrowColor=item.data.arrowColor;
               item.animatePlay=false;
-              item.font.color="#000000";
+              item.fontColor="#000000";
             }
           })
           let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
@@ -2073,8 +2075,10 @@
       },
     },
     destroyed(){
-      getTopology(this.topologyIndex).destroy();
-      setTopology(this.topologyIndex,null);
+      if(getTopology(this.topologyIndex)){
+        getTopology(this.topologyIndex).destroy();
+        setTopology(this.topologyIndex,null);
+      }
       if(document.getElementById('topology-canvas'+this.topologyIndexF)){
        document.getElementById('topology-canvas'+this.topologyIndexF).removeEventListener('mousemove',this.canvasMove);
       }

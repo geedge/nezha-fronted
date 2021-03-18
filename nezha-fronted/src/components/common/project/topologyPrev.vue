@@ -93,6 +93,8 @@
             :toolShow="toolShow">
           </topology-top-tool>
 
+
+
         </span>
         <span class="float-right">
           <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
@@ -175,7 +177,7 @@
 
 
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px" type="button" v-has="'project_topo_save'"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button" v-has="'project_topo_save'"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
@@ -251,7 +253,7 @@
         <div class="module-rect-left" :style="{top:0,left:0,width:0,height:item.rect.height+15+'px'}"></div>
       </div>
       <!--节点连线相关的 tooltip-->
-      <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px'}"
+      <div :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px','z-index':10,height:tooltipPosition.height+'px'}"
            v-if="tooltipPosition.show&&!editTopologyFlag"
            @mouseover="tooltipOver"
            @mouseout="tooltipOut"
@@ -422,7 +424,7 @@
   const canvasOptions={
     rotateCursor:'/img/rotate.cur',
     translateKey:'None',
-    disableEmptyLine:true,
+    disableEmptyLine:false,
     autoExpandDistance:0,
     minScale:0.01,
   };
@@ -517,6 +519,7 @@
           top:0,
           left:0,
           show:false,
+          height:400
         },
         chartData:{},
         chartGetData:[],
@@ -796,6 +799,8 @@
             let canvas=new Topology('topology-canvas'+this.topologyIndexF,canvasOptions);
             canvas.open(data);
             setTopology(this.topologyIndex,canvas);
+          }else{
+            getTopology(this.topologyIndex).open(data);
           }
           this.topologyLoading=false;
           if(!getTopology(this.topologyIndex).data.name){
@@ -848,15 +853,15 @@
                 clearInterval(timer);
                 let promiseArr=[];
                 let self=this;
-                for(let i=0;i<data.pens.length;i++){
-                  let line=data.pens[i]
-                  if(line.type===1){
-                    if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
-                      data.pens.splice(i, 1);
-                      i--;
-                    }
-                  }
-                }
+                // for(let i=0;i<data.pens.length;i++){
+                //   let line=data.pens[i]
+                //   if(line.type===1){
+                //    if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
+                //      data.pens.splice(i, 1);
+                //      i--;
+                //    }
+                //   }
+                // }
                 data.pens.forEach((item=>{
                   if(item.type===0&&item.data.imageId){
                     item.image=this.iconArray.find(item1=>item1.id==item.data.imageId).image;
@@ -878,7 +883,9 @@
                   this.projectInfoShow=data.data.projectInfo;
                   this.projectAlertShow=data.data.alertInfo;
                 }
-
+                if(!data.bkImage){
+                  data.bkImage=undefined;
+                }
                 Promise.all(promiseArr).then(res=>{
                   res.forEach((response,index)=>{
                     let item=data.pens[index];
@@ -933,18 +940,21 @@
         if(maxLevel!==0){
           if(pen.type===0){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
-            pen.font.color=selLevel.color.text;
-            pen.fillStyle=selLevel.color.fill;
-            pen.strokeStyle=selLevel.color.line;
-            pen.bkType=0;
+            if(selLevel){
+              pen.fontColor=selLevel.color.text;
+              pen.fillStyle=selLevel.color.fill;
+              pen.strokeStyle=selLevel.color.line;
+              pen.bkType=0;
+            }
             onChangeAnimate(pen,selLevel.animateType,selLevel.color.fill,selLevel.color.line);
           }else if(pen.type===1){// 判断valueMapping 给相应的状态
             let selLevel=pen.data.valueMapping.find(item=>item.level===maxLevel);
-
-            pen.animateColor=selLevel.color.fill;
-            pen.strokeStyle=selLevel.color.line;
-            pen.animateType=selLevel.animateType;
-            pen.font.color=selLevel.color.text;
+            if(selLevel){
+              pen.animateColor=selLevel.color.fill;
+              pen.strokeStyle=selLevel.color.line;
+              pen.animateType=selLevel.animateType;
+              pen.fontColor=selLevel.color.text;
+            }
             onChangeAnimateLine(pen,pen.animateType);
           }
         } else {
@@ -1361,10 +1371,6 @@
                 pen:data,
                 pens:null,
               };
-              if(data.data.expressArr.length===0){
-                data.data.expressArr.push('');
-                data.data.legends.push('');
-              }
               this.$nextTick(()=>{
                 if(this.$refs.CanvasProps){
                   if(this.penId!==data.id){
@@ -1763,14 +1769,20 @@
         this.editTopologyFlag=true;
         setTimeout(()=>{
           getTopology(this.topologyIndex).lock(0);
-          getTopology(this.topologyIndex).data.pens.forEach((item)=>{//停止动画 以及赋值默认data
-            item.stopAnimate();
+          getTopology(this.topologyIndex).data.pens.forEach((item,index)=>{//停止动画 以及赋值默认data
+            if(item.animatePlay){
+              item.stopAnimate();
+            }
+            if(!item.data.expressArr.length) {
+              item.data.expressArr=[''];
+              item.data.legends=[''];
+            }
             item.animateType=item.data.animateType;
             if(item.type===0){
               item.fillStyle=item.data.fillStyle;
               item.strokeStyle=item.data.strokeStyle;
               item.animatePlay=false;
-              item.font.color="#000000";
+              item.fontColor="#000000";
               item.gradientType=item.data.gradientType?item.data.gradientType:0;
               if(!item.data.gradientColor){
                 item.data.gradientType=0;
@@ -1788,7 +1800,7 @@
               item.fromArrowColor=item.data.arrowColor;
               item.toArrowColor=item.data.arrowColor;
               item.animatePlay=false;
-              item.font.color="#000000";
+              item.fontColor="#000000";
             }
           })
           let domRect=document.getElementById('topology-canvas'+this.topologyIndexF).getBoundingClientRect();
@@ -2058,10 +2070,15 @@
       zoomMap(num){
         getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale+num);
       },
+      penToBottom(){
+        getTopology(this.topologyIndex).bottom()
+      },
     },
     destroyed(){
-      getTopology(this.topologyIndex).destroy();
-      setTopology(this.topologyIndex,null);
+      if(getTopology(this.topologyIndex)){
+        getTopology(this.topologyIndex).destroy();
+        setTopology(this.topologyIndex,null);
+      }
       if(document.getElementById('topology-canvas'+this.topologyIndexF)){
         document.getElementById('topology-canvas'+this.topologyIndexF).removeEventListener('mousemove',this.canvasMove);
       }
@@ -2514,6 +2531,7 @@
     position: relative;
     border: 1px solid #eeeeee;
     border-radius: 2px;
+    overflow: hidden;
     .pickTime{
       margin-top: -13px;
     }

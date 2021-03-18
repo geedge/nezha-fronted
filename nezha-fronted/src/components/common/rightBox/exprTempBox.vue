@@ -144,7 +144,7 @@
           params.expression=params.expression[0];
           if(!params.expression[0]) {
             this.prevent_opt.save=false;
-            this.$message.error(this.$t('expressionError'));
+            this.$message.error(this.$t('config.exprTemp.expressionError'));
             return
           }
           if(valid){
@@ -229,5 +229,7 @@
 </script>
 
 <style scoped lang="scss">
-
+/deep/ .metric-selector-title{
+  margin-left: 0 !important;
+}
 </style>

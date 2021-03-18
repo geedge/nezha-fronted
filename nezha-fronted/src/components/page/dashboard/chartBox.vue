@@ -46,6 +46,17 @@
     width: calc(100% - 60px);
     padding: 5px 20px 0px 0;
   }
+  .legend-title{
+    width: 110px;
+    padding-right: 10px;
+    text-align: left;
+    padding-left:10px;
+    margin-left: 10px;
+    height: 32px;
+    line-height: 32px;
+    background: #E7EAED;
+    color: #606266;
+  }
   /*metric样式--end*/
   .label-center{
     vertical-align: middle;
@@ -301,7 +312,7 @@
                         ></promql-input>
               -->
               <el-row>
-                <el-col style="width: 120px; padding-right: 20px; text-align: left; padding-left:10px; color: #666">
+                <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover placement="top" trigger="hover" width="211">
                     <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>

@@ -441,6 +441,9 @@ li{
 .el-textarea .el-input__count { /*防止字数限制提示信息遮挡内容和滚动条*/
   right: 20px;
 }
+.no-resize .el-textarea__inner {
+  padding: 5px 20px 5px 15px;
+}
 .el-textarea__inner {
   padding: 5px 60px 5px 15px;
 }

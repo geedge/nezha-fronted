@@ -28,7 +28,8 @@
             <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
             <!--<editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>?-->
             <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]" :id="inputId"
-                      @input="metricKeyDown"></el-input>
+                      @input="metricKeyDown" type="textarea"
+                      :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"></el-input>
             <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
             <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
           </div>
@@ -38,7 +39,7 @@
           <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1"
                   style="width: 100%;">
             <el-col
-              :style="{'width':plugins.indexOf('metric-selector') > -1 ? '120px':'100%', 'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ', 'text-align':'left', 'color': '#666','font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold'}">
+              :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']">
               <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
                 <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">Metric&nbsp;<i
@@ -62,10 +63,12 @@
                                                                                        style="color: #f56c6c">*</sup></label>
             </el-col>
             <el-col
+              :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
               :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 120px)':'100%',height: '100%',}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
-                <el-input v-model="expressionList[index]" @change="metricChange" @input="metricKeyDown"></el-input>
+                <el-input v-model="expressionList[index]" @change="metricChange" @input="metricKeyDown"   type="textarea"
+                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"></el-input>
                 <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                 <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
               </div>
@@ -619,9 +622,38 @@
   /deep/ .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
     padding: 0;
   }
-
+  .metric-selector-title{
+  /*'width':plugins.indexOf('metric-selector') > -1 ? '110px':'100%',*/
+  /*'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ',*/
+  /*'text-align':'left', 'color': '#666',*/
+  /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
+    width:110px;
+    margin-left: 10px;
+    height: 33px;
+    text-align: left;
+    padding: 0 0 0 10px;
+    font-weight: 400;
+    line-height: 33px;
+    background: #E7EAED;
+    font-family: ArialMT;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+  }
+  .metric-selector-input-box{
+    width: calc(100% - 120px);
+  }
+  .metric-null-input-box{
+    width: 100%;
+  }
+  .metric-null-title{
+    width:100%;
+    font-weight: bold;
+    letter-spacing: 0;
+  }
   .nz-cascade {
-    padding: 0 20px 0 30px;
+    padding: 0 10px 0 18px;
+    position: relative;
   }
   .nz-cascade .nz-icon-moban {
     display: none;
@@ -629,6 +661,9 @@
 
   .nz-cascade-temp .nz-icon-moban{
     display: inline-block;
+    position: absolute;
+    left: 2px;
+
     /*background: #F8F9FB;*/
   }
   .temp-form-box{
