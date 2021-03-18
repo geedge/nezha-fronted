@@ -200,7 +200,7 @@
           <!--linkAdd-->
           <div class="linkContent linkAddBox">
             <span class="linkTitleHandle"></span>
-            <el-form :inline="true"  :model="notificationTemp"  label-width="180px" size="small" ref="notificationTempForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form">
+            <el-form :inline="true"  :model="notificationTemp"  :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" label-width="160px" ref="notificationTempForm" size="small">
               <el-form-item  prop="name">
                 <el-input v-model="notificationTemp.name"  class="linkName" id="system-notification-name"/>
               </el-form-item>
@@ -1084,11 +1084,9 @@
       background-color: #eee;
     }
     .el-form-item:last-of-type {
-      padding-top: 36px !important;
 
       .el-form-item__content {
         margin-left: 0 !important;
-        width: 692px;
         text-align: center;
       }
       .nz-btn {
