@@ -42,6 +42,14 @@
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value" ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item :label="$t('config.system.basic.mapConfig')" >
+              <div class="system-map">
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lat')}}</span><span><el-input width="20px" v-model="basic.map_config.latitude"></el-input></span></div>
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lng')}}</span><span><el-input width="20px" v-model="basic.map_config.longitude"></el-input></span></div>
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.zoom')}}</span><span><el-input width="20px" v-model="basic.map_config.zoom"></el-input></span></div>
+                <div class="system-map-item" style="margin-right: unset !important;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-shuidi" style="color:rgb(238, 157, 63)"></i></div>
+              </div>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
               <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
               </el-switch>
@@ -54,6 +62,9 @@
               <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
+          <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.setup.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="true">
+            <div id="map" style="height: 100%; width: 100%"></div>
+          </el-dialog>
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
@@ -359,7 +370,11 @@
     import {uSize} from '../../common/js/validate'
     import bus from '../../../libs/bus';
     import draggable from 'vuedraggable'
-
+    // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
+    import 'leaflet/dist/leaflet.css'
+    import * as L from 'leaflet'
+    import icon from 'leaflet/dist/images/marker-icon.png';
+    import iconShadow from 'leaflet/dist/images/marker-shadow.png';
     export default {
         name: "system",
         components:{draggable},
@@ -378,7 +393,11 @@
               default_cabinet_usize:'',
               query_max_series:'',
               unsaved_change:'on',
+              map_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
             },
+            mapConfigVisible:false,
+            map:null,
+            marker:null,
             basicCopy:null,
             basicRules:{
               system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
@@ -538,6 +557,59 @@
           }
         },
         methods:{
+          initMap:function(){
+            if(this.map){
+              this.map.remove();
+              this.map=null;
+            }
+            let DefaultIcon = L.icon({
+              iconUrl: icon,
+              iconSize: [26, 40],
+              iconAnchor: [13, 40],
+              shadowUrl: iconShadow
+            });
+            L.Marker.prototype.options.icon = DefaultIcon;
+            let map = L.map("map",{
+              minZoom:this.basic.map_config.minZoom,
+              maxZoom:this.basic.map_config.maxZoom,
+              attributionControl:false,
+              zoomControl:false,
+              maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
+            }).setView([this.basic.map_config.latitude,this.basic.map_config.longitude],this.basic.map_config.zoom);
+
+            L.tileLayer(
+              "/static/Tiles/{z}/{x}/{y}.png",
+              {noWrap:true}
+            ).addTo(map);
+
+            let attribution=L.control.attribution({position:'bottomright',prefix:''})
+            attribution.addAttribution(' © OpenStreetMap contributors')
+            attribution.addTo(map)
+
+            L.control.zoom({
+              position:'bottomright',
+              zoomInText:`<i class="nz-icon nz-icon-enlarge"></i>`,
+              zoomOutText:`<i class="nz-icon nz-icon-narrow"></i>`,
+              zoomInTitle:'',
+              zoomOutTitle:'',
+            }).addTo(map)
+
+            let marker = L.marker([this.basic.map_config.latitude,this.basic.map_config.longitude]).addTo(map);
+            map.on("click", function(e) {
+              var lat = e.latlng.lat;
+              var lng = e.latlng.lng;
+              marker.setLatLng([lat,lng]);
+            });
+            this.map = map;
+            this.marker = marker;
+          },
+          mapClose:function(){
+            this.mapConfigVisible=false
+            let latlng = this.marker.getLatLng();
+            this.basic.map_config.latitude = latlng.lat;
+            this.basic.map_config.longitude = latlng.lng;
+            this.basic.map_config.zoom = this.map.getZoom();
+          },
           selectTab:function(tab){
             this.querySetInfo(tab.name)
           },
@@ -937,10 +1009,19 @@
           //openUrl 跳转页面
           openUrl(item){
             // window.open(item.url)
+          },
+          queryDefaultMapConfig:function(){
+            this.$get("/sysConfig?paramKey=map_center_config").then(response=>{
+              if(response.code == 200){
+                console.log(response.data)
+                this.basic.map_config = JSON.parse(response.data.paramKey.map_center_config);
+              }
+            })
           }
         },
         mounted() {
           this.querySetInfo('basic');
+          this.queryDefaultMapConfig();
         }
     }
 </script>
@@ -954,6 +1035,20 @@
   .system-config-form{
     width: 61.8% !important;
     position: relative;
+  }
+  .system .system-map{
+    width: 100%;
+    margin-bottom:18px
+  }
+  .system-map .system-map-item{
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .system-map .system-map-item .label{
+    margin-right: 10px;
+  }
+  .system-map .el-input{
+    width: 95px !important;
   }
   .linkBox{
     max-height: 800px;
@@ -1120,6 +1215,13 @@
   }
   .system-config-form .el-form-item__content{
     width: 512px;
+  }
+  .system .map-config-dialog .el-dialog{
+    height: 45%;
+  }
+  .map-config-dialog .el-dialog__body{
+    height: calc(100% - 48px) !important;
+
   }
   .system-config-form .el-input{
     width:512px;

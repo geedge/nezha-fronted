@@ -134,7 +134,7 @@ const en = {
     name:"Database name",
     username:"Username",
     password:"Password",
-    alertPath:'Alert API',
+    alertPath:'Site URL',
     alertPrefix:'Alert prefix',
     haMode:'HA mode',
     haVip:'Virtual IP',
@@ -840,7 +840,12 @@ const en = {
         second:'second',
         day:'day',
         maxSeries:'Query max series',
-        unsaved:'Unsaved tip'
+        unsaved:'Unsaved tip',
+        mapConfig:"Map attribute",
+        mapTitle:"Configurate map",
+        lat:"latitude",
+        lng:"longitude",
+        zoom:"zoom"
       },
       email:{
         email:'Email',

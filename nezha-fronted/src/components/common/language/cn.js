@@ -128,7 +128,7 @@ const cn = {
     name:"数据库名称",
     username:"用户名",
     password:"密码",
-    alertPath:'Alert API',
+    alertPath:'网站URL',
     alertPrefix:'Alert prefix',
     haMode:'HA mode',
     haVip:'Virtual IP',
@@ -837,7 +837,12 @@ const cn = {
         second:'秒',
         day:'天',
         maxSeries:'Query max series',
-        unsaved:'未保存提示'
+        unsaved:'未保存提示',
+        mapConfig:"地图属性",
+        mapTitle:"配置地图",
+        lat:"纬度",
+        lng:"经度",
+        zoom:"缩放"
       },
       email: {
         email: "邮件",
