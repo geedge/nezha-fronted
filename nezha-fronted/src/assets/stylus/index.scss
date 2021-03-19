@@ -11,8 +11,8 @@ $btn-normal-background-color: linear-gradient(180deg, #F5B93E 0%, #EE9D3F 100%);
 $btn-normal-background-color-hover: #EE9D3F ; //橙色按钮hover背景颜色
 $btn-normal-txt-color: #fff; //橙色按钮字体颜色
 $btn-normal-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //橙色按钮边框阴影
-$btn-light-background-color: linear-gradient(180deg, #FFFFFF 0%, #E0E0E0 100%); //灰色按钮背景颜色
-$btn-light-background-color-hover: linear-gradient(180deg, #F0F0F0 0%, #D8D8D8 99%); //灰色按钮hover背景颜色
+$btn-light-background-color: linear-gradient(rgb(247, 248, 250) 0%, rgb(231, 234, 240) 100%); //灰色按钮背景颜色
+$btn-light-background-color-hover: linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%); //灰色按钮hover背景颜色
 $btn-light-txt-color: #666; //灰色按钮字体颜色
 $btn-light-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //灰色按钮边框阴影
 

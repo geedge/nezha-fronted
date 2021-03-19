@@ -8,7 +8,6 @@
         <div class="select-panel-tree">
           <el-tree
             :data="silenceData"
-            :expand-on-click-node="false"
             :filter-node-method="filterNode"
             :props="{label: 'name', children: 'children'}"
             @node-click="selectSilence"

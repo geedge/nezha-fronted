@@ -44,11 +44,11 @@
   }
   .right-box-form .element-item.form-row-item{
     width: calc(100% - 60px);
-    padding: 5px 20px 0px 0;
+    padding: 10px 10px 5px 0;
   }
   .legend-title{
-    width: 110px;
-    padding-right: 10px;
+    width: 100px;
+    margin-right: 10px;
     text-align: left;
     padding-left:10px;
     margin-left: 10px;

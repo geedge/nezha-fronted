@@ -20,7 +20,7 @@
         <el-form-item :label='$t("alert.config.name")' prop="alertName">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small" id="alert-box-input-name"></el-input>
         </el-form-item>
-        <el-form-item style="width: calc(100% - 15px);margin-left: 15px" :label-width="'0'" prop="expr">
+        <el-form-item style="width: calc(100% - 15px);margin-left: 15px" :label='$t("alert.config.expr")' prop="expr">
           <promql-input
             ref="promql"
             :expression-list.sync="expressions"
@@ -28,7 +28,7 @@
             :styleType="2"
             :required="true"
             @change="metricChange"
-            :plugins="['metric-input']"
+            :plugins="['metric-selector','metric-input']"
             id="alert-box-input-promql"
           ></promql-input>
         </el-form-item>
@@ -331,5 +331,8 @@
   }
   .rule-severity-remark .nz-icon-info-normal{
     margin-right: 10px;
+  }
+  /deep/ .metric-selector-title{
+    margin-left: 0 !important;
   }
 </style>

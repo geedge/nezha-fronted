@@ -1598,8 +1598,8 @@
 </style>
 <style lang="scss" scoped>
   .legend-title{
-    width: 110px;
-    padding-right: 10px;
+    width: 100px;
+    margin-right: 10px;
     text-align: left;
     padding-left:10px;
     margin-left: 10px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'50px':'auto','margin-bottom':required?'0':'18px'}">
+  <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'auto':'auto','margin-bottom':required?'0':'18px'}">
     <div class="query-row">
       <div class="query-input">
         <!--explore页面的样式-->
@@ -59,8 +59,6 @@
 
                 </el-cascader-panel>
               </el-dropdown>
-              <label style="line-height: 30px;" v-else>{{$t("alert.config.expr")}}<sup v-if="required"
-                                                                                       style="color: #f56c6c">*</sup></label>
             </el-col>
             <el-col
               :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
@@ -207,6 +205,7 @@
         datacenterOption:[],
         projectOption:[],
         filterSilence:'',
+        tempBoxId:{},
       }
     },
     created(){
@@ -362,7 +361,7 @@
           let returnFlag=false
           let errorStr=""
           this.tempBox.vars.forEach((item)=>{
-            params.varsVal[item]=this.tempBox[item];
+            params.varsVal[item]=this.tempBoxId[item]?this.tempBoxId[item]:this.tempBox[item];
             if(!this.tempBox[item]){
               errorStr+=item + ","
               returnFlag=true;
@@ -503,6 +502,7 @@
       },
       silenceChange(val,key){
         this.tempBox[key]=val.name;
+        this.tempBoxId[key]=val.id;
       },
       clearValue(key){
         this.tempBox[key]='';
@@ -574,7 +574,7 @@
   }
 
   .query-options .option:focus, .query-options .option:hover {
-    background-color: #CCD7E4;
+    background-color:   rgb(247, 248, 250);
   }
 
   .query-input .metric-btn {
@@ -594,7 +594,7 @@
   }
 
   .metric-btn:hover, .metric-btn:focus {
-    background-color: #CCD7E4;
+    background-image:  linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%);
     color: #606266;
   }
 
@@ -627,8 +627,9 @@
   /*'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ',*/
   /*'text-align':'left', 'color': '#666',*/
   /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
-    width:110px;
+    width:100px;
     margin-left: 10px;
+    margin-right: 10px;
     height: 33px;
     text-align: left;
     padding: 0 0 0 10px;
@@ -652,7 +653,7 @@
     letter-spacing: 0;
   }
   .nz-cascade {
-    padding: 0 10px 0 18px;
+    padding: 0 10px 0 25px;
     position: relative;
   }
   .nz-cascade .nz-icon-moban {
@@ -662,7 +663,7 @@
   .nz-cascade-temp .nz-icon-moban{
     display: inline-block;
     position: absolute;
-    left: 2px;
+    left: 5px;
 
     /*background: #F8F9FB;*/
   }
