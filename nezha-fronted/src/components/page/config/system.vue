@@ -1034,9 +1034,10 @@
   }
   .system .system-map{
     width: 100%;
+    display: flex;
   }
   .system-map .system-map-item{
-    display: inline-block;
+    /*display: inline-block;*/
     margin-right: 10px;
   }
   .system-map .system-map-item .label{
