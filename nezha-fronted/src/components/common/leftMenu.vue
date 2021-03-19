@@ -5,7 +5,7 @@
       <div class="sidebar-info" style="height: 90%; overflow: auto;">
         <template v-if="parentMenu == '/project'">
           <el-collapse v-model="projectChoose" accordion class="left-menu-bg" ref="projectLeft" style="padding-top: 0;">
-            <el-collapse-item :key="item.id" :name="item.id + ''" v-for="(item, index) in projectList">
+            <el-collapse-item v-for="(item) in projectList" :key="item.id" :name="item.id + ''">
               <template slot="title">
                 <div :class="{'sidebar-info-item-active': item.id == currentProject.id}" :id="'project-module-'+item.id" @click="detailProject(item)" class="sidebar-info-item-project sidebar-info-item">
                   <div class="sidebar-info-item-txt">
@@ -23,7 +23,7 @@
                   <span><i class="nz-icon nz-icon-create-square"></i>&nbsp;{{$t("overall.addProject")}}</span>
                 </div>
                 <template v-else>
-                  <div :class="{'sidebar-info-item-active': module.id == currentModule.id}" :id="'project-module-'+module.id" @click="changeModule(item, module)" class="sidebar-info-sub-item" v-for="module in getProjectModule(item.id)">
+                  <div v-for="(module, index) in getProjectModule(item.id)" :id="'project-module-'+module.id" :key="index" :class="{'sidebar-info-item-active': module.id == currentModule.id}" class="sidebar-info-sub-item" @click="changeModule(item, module)">
                     <div :id="`module-${module.id}`" class="item-tip">
                       <div :class="itemTip(module.id, module.name, ready)" class="item-tip-hide item-tip-key el-popover">{{module.name}}</div>
                       <span class="too-long-split" style="width: 120px;">{{module.name}}</span>
@@ -110,7 +110,7 @@
 
         </template>
         <template v-else>
-          <div :class="{'sidebar-info-item-active': menu.route == route}" @click="jumpTo(menu.route)" class="sidebar-info-item" v-for="menu in parentMenu.children">
+          <div v-for="(menu, index) in parentMenu.children" :key="index" :class="{'sidebar-info-item-active': menu.route == route}" class="sidebar-info-item" @click="jumpTo(menu.route)">
             {{$t(menu.i18n)}}
           </div>
         </template>
@@ -130,539 +130,536 @@
 </template>
 
 <script>
-    import bus from "../../libs/bus";
+import bus from '../../libs/bus'
 
-    export default {
-      name: "leftMenu",
-      props: {
-        resizeFunc: Function,
-      },
-      data() {
-        return{
-          isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
-          parentMenu: {},
-          //active: "/overview",
+export default {
+  name: 'leftMenu',
+  props: {
+    resizeFunc: Function
+  },
+  data () {
+    return {
+      isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
+      parentMenu: {},
+      // active: "/overview",
 
-          //project相关
-          projectList: [],
-          moduleList: [],
-          showProjectPanel: true,
-          currentProjectTitle: '',
-          currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
-          module: {}, //编辑的module
-          blankModule: {name: '', project: {}, port: 9100, path: '', param: '',labels:'', type: 'http', paramObj: [],labelModule:[], snmpParam: '', walk: [], version: 2, max_repetitions: 25, retries: 3, timeout: 10, community: 'public', username: '', security_level: 'noAuthNoPriv', password: '', auth_protocol: 'MD5', priv_protocol: 'DES', priv_password: '', context_name: ''}, //空白module
-          currentModule: {id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: '',labels:'',labelModule:[]}, //用来回显的module
-          ready: false,
-          rightBox: {module: {show: false}},
+      // project相关
+      projectList: [],
+      moduleList: [],
+      showProjectPanel: true,
+      currentProjectTitle: '',
+      currentProject: { id: '', name: '', remark: '' }, // endpoint弹框、module列表用来回显project
+      module: {}, // 编辑的module
+      blankModule: { name: '', project: {}, port: 9100, path: '', param: '', labels: '', type: 'http', paramObj: [], labelModule: [], snmpParam: '', walk: [], version: 2, max_repetitions: 25, retries: 3, timeout: 10, community: 'public', username: '', security_level: 'noAuthNoPriv', password: '', auth_protocol: 'MD5', priv_protocol: 'DES', priv_password: '', context_name: '' }, // 空白module
+      currentModule: { id: '', type: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], snmpParam: '', labels: '', labelModule: [] }, // 用来回显的module
+      ready: false,
+      rightBox: { module: { show: false } },
 
-          //asset相关
-          activeType: 'dataCenter',
-          activeTag:'',
-          dcData: [],
-          dcCheckList: [],
-          assetTypeData: [],
-          assetTypeCheckList: [],
-          vendorData: [],
-          vendorCheckList: [],
-          pingData: [],
-          pingCheckList: [],
-          tagData:[],
-          tagCheckList:[],
-          tagCheckMap:{},
-          lastCheckSize:0,
-          assetPingSwitch:true,
-          isRouterAlive: true,
-          projectChoose:[],
-        }
-      },
-      computed: {
-        route() {
-          return this.$route.path;
-        },
-        itemTip() {
-          return function(id, content, ready) {
-            let className = "item-tip-show";
-            this.$nextTick(() => {
-              if (ready) {
-                let cellDom = document.querySelector(`#module-${id}`);
-                let spanDom = document.querySelector(`#module-${id}>span`);
-                if (cellDom.offsetWidth - 16 <= spanDom.offsetWidth) {
-                  document.querySelector(`#module-${id}>.el-popover`).classList.add(className);
-                } else {
-                  document.querySelector(`#module-${id}>.el-popover`).classList.remove(className);
-                }
-              }
-            });
-            return "";
-          }
-        },
-        checkedTagCount(){
-          return this.tagCheckList.length;
-        },
-        currentProjectChange() {
-          return this.$store.state.currentProject;
-        }
-      },
-      watch: {
-        route: {
-          deep: true,
-          immediate: true,
-          handler(n) {
-            this.parentMenu = this.getParentMenu(n);
-          }
-        },
-        currentProjectChange: {
-          immediate: true,
-          handler(n, o) {
-            if (n && n.id != this.currentProject.id) {
-              this.currentProject = n;
-              if (this.currentProject && this.currentProject.id && this.showProjectPanel) {
-                this.detailProject(this.currentProject);
-                // this.projectChoose=[];
-              }
-              this.changeCurrentModule('');
+      // asset相关
+      activeType: 'dataCenter',
+      activeTag: '',
+      dcData: [],
+      dcCheckList: [],
+      assetTypeData: [],
+      assetTypeCheckList: [],
+      vendorData: [],
+      vendorCheckList: [],
+      pingData: [],
+      pingCheckList: [],
+      tagData: [],
+      tagCheckList: [],
+      tagCheckMap: {},
+      lastCheckSize: 0,
+      assetPingSwitch: true,
+      isRouterAlive: true,
+      projectChoose: []
+    }
+  },
+  computed: {
+    route () {
+      return this.$route.path
+    },
+    itemTip () {
+      return function (id, content, ready) {
+        const className = 'item-tip-show'
+        this.$nextTick(() => {
+          if (ready) {
+            const cellDom = document.querySelector(`#module-${id}`)
+            const spanDom = document.querySelector(`#module-${id}>span`)
+            if (cellDom.offsetWidth - 16 <= spanDom.offsetWidth) {
+              document.querySelector(`#module-${id}>.el-popover`).classList.add(className)
+            } else {
+              document.querySelector(`#module-${id}>.el-popover`).classList.remove(className)
             }
-          },
-        },
-        currentProject: {
-          immediate: true,
-          deep: true,
-          handler(n, o) {
-            bus.$emit("current-project-change", n); //告知project.vue
-          },
-        },
-        dcCheckList: {
-          deep: true,
-          immediate:true,
-          handler(n) {
-            bus.$emit("asset-filter-change", "idcIds", n.join(","));
           }
+        })
+        return ''
+      }
+    },
+    checkedTagCount () {
+      return this.tagCheckList.length
+    },
+    currentProjectChange () {
+      return this.$store.state.currentProject
+    }
+  },
+  watch: {
+    route: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.parentMenu = this.getParentMenu(n)
+      }
+    },
+    currentProjectChange: {
+      immediate: true,
+      handler (n, o) {
+        if (n && n.id != this.currentProject.id) {
+          this.currentProject = n
+          if (this.currentProject && this.currentProject.id && this.showProjectPanel) {
+            this.detailProject(this.currentProject)
+            // this.projectChoose=[];
+          }
+          this.changeCurrentModule('')
         }
-      },
-      created() {
-        this.initEvent(); //注册监听事件
-      },
-      mounted() {
-        Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
-          setTimeout(() => {
-            this.ready = true;
-          }, 300);
-        });
-      },
-      methods: {
-        toggleStat() {
-          this.isShrink = !this.isShrink;
-          localStorage.setItem('nz-left-menu-shrink', this.isShrink);
-          if (this.resizeFunc) {
-            this.resizeFunc();
-          }
-        },
-        //根据route获取父菜单，
-        getParentMenu(route) {
-          let parentMenu = "";
-          let end = false;
-          if (route != '/project'){
-            this.changeCurrentModule('');
-          }
-          if (route != '/project' && route != '/asset') {
-            this.$store.getters.menuList.forEach(menu => {
-              if (!end) {
-                if (menu.children) {
-                  menu.children.forEach(subMenu => {
-                    if (subMenu.route == route) {
-                      parentMenu = menu;
-                      end = true;
-                    }
-                  });
+      }
+    },
+    currentProject: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        bus.$emit('current-project-change', n) // 告知project.vue
+      }
+    },
+    dcCheckList: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        bus.$emit('asset-filter-change', 'idcIds', n.join(','))
+      }
+    }
+  },
+  created () {
+    this.initEvent() // 注册监听事件
+  },
+  mounted () {
+    Promise.all([this.getProjectList(), this.getModuleList(), this.getLeftMenuList()]).then(response => {
+      setTimeout(() => {
+        this.ready = true
+      }, 300)
+    })
+  },
+  methods: {
+    toggleStat () {
+      this.isShrink = !this.isShrink
+      localStorage.setItem('nz-left-menu-shrink', this.isShrink)
+      if (this.resizeFunc) {
+        this.resizeFunc()
+      }
+    },
+    // 根据route获取父菜单，
+    getParentMenu (route) {
+      let parentMenu = ''
+      let end = false
+      if (route != '/project') {
+        this.changeCurrentModule('')
+      }
+      if (route != '/project' && route != '/asset') {
+        this.$store.getters.menuList.forEach(menu => {
+          if (!end) {
+            if (menu.children) {
+              menu.children.forEach(subMenu => {
+                if (subMenu.route == route) {
+                  parentMenu = menu
+                  end = true
                 }
-              }
-            });
-          } else {
-            parentMenu = route;
+              })
+            }
           }
-          return parentMenu;
-        },
-        getProjectList() {
-          return new Promise(resolve => {
-            this.$get('project', {pageSize: -1}).then(response=>{
-              if(response.code == 200){
-                this.projectList = response.data.list;
-              }
-              resolve(this.projectList);
-            });
-          });
-        },
-        getProjectModule(projectId) {
-          let moduleList = JSON.parse(JSON.stringify(this.moduleList));
-          return moduleList.filter((item,index) => {
-            return item.project.id == projectId;
-          })
-        },
-        getModuleList() {
-          return new Promise(resolve => {
-            this.$get('module', { pageSize: -1, pageNo: 1}).then(response => {
-              if (response.code === 200) {
-                this.moduleList = response.data.list;
-                for (let i = 0; i < this.moduleList.length; i++) {
-                  try {
-                    let param=this.moduleList[i].param|| '{}';
-                    let tempObj = JSON.parse(param);
-                    let labels=this.moduleList[i].labels|| '{}';
-                    let tempObj1=JSON.parse(labels);
-                    this.$set(this.moduleList[i], 'paramObj', []);
-                    this.$set(this.moduleList[i], 'labelModule', []);
-                    for (let k in tempObj) {
-                      this.moduleList[i].paramObj.push({key: k, value: tempObj[k]});
-                    }
-                    for (let k in tempObj1) {
-                      this.moduleList[i].labelModule.push({key: k, value: tempObj1[k]});
-                    }
-                  } catch (err) {}
+        })
+      } else {
+        parentMenu = route
+      }
+      return parentMenu
+    },
+    getProjectList () {
+      return new Promise(resolve => {
+        this.$get('project', { pageSize: -1 }).then(response => {
+          if (response.code == 200) {
+            this.projectList = response.data.list
+          }
+          resolve(this.projectList)
+        })
+      })
+    },
+    getProjectModule (projectId) {
+      const moduleList = JSON.parse(JSON.stringify(this.moduleList))
+      return moduleList.filter((item, index) => {
+        return item.project.id == projectId
+      })
+    },
+    getModuleList () {
+      return new Promise(resolve => {
+        this.$get('module', { pageSize: -1, pageNo: 1 }).then(response => {
+          if (response.code === 200) {
+            this.moduleList = response.data.list
+            for (let i = 0; i < this.moduleList.length; i++) {
+              try {
+                const param = this.moduleList[i].param || '{}'
+                const tempObj = JSON.parse(param)
+                const labels = this.moduleList[i].labels || '{}'
+                const tempObj1 = JSON.parse(labels)
+                this.$set(this.moduleList[i], 'paramObj', [])
+                this.$set(this.moduleList[i], 'labelModule', [])
+                for (const k in tempObj) {
+                  this.moduleList[i].paramObj.push({ key: k, value: tempObj[k] })
                 }
-              }
-              resolve(this.moduleList);
-            });
-          });
-        },
-        //左侧module列表选中切换，与project.vue同步
-        changeModule(project, module) {
-          this.showProjectPanel = false;
-          this.changeCurrentProject(project);
-          this.changeCurrentModule(module);
-          bus.$emit("project-page-type", "endpoint");  //告知project.vue
-        },
-        addModule(obj) {
-          this.module = this.newModule(obj);
-          this.rightBox.module.show = true;
-          this.$nextTick(() => {
-            this.$refs.moduleBox.initWalk();
-          });
-        },
-        newModule(obj) {
-          let module=JSON.parse(JSON.stringify(this.blankModule));
-          module.project = this.$store.state.currentProject;
-          if(obj){
-            module.project=obj;
+                for (const k in tempObj1) {
+                  this.moduleList[i].labelModule.push({ key: k, value: tempObj1[k] })
+                }
+              } catch (err) {}
+            }
           }
-          return module
-        },
-        //弹出module编辑页
-        editModule(module) {
-          this.module = JSON.parse(JSON.stringify(module));
-          if (!this.module.paramObj) {
-            this.$set(this.module, 'paramObj', []);
-          }
-          if (!this.module.labelModule) {
-            this.$set(this.module, 'labelModule', []);
-          }
-          if (this.module.snmpParam) {
-            this.initSnmpParam(this.module);
-          }
-          this.rightBox.module.show = true;
-          this.$nextTick(() => {
-            this.$refs.moduleBox.initWalk();
-          });
-        },
-        closeModuleRightBox(refresh) {
-          this.rightBox.module.show = false;
-          if (refresh) {
-            this.getModuleList();
-          }
-        },
-        initSnmpParam(module) {
-          this.$set(module, 'walk', []);
-          this.$set(module, 'version', '');
-          this.$set(module, 'max_repetitions', '');
-          this.$set(module, 'retries', '');
-          this.$set(module, 'timeout', '');
-          this.$set(module, 'community', '');
-          this.$set(module, 'username', '');
-          this.$set(module, 'security_level', '');
-          this.$set(module, 'password', '');
-          this.$set(module, 'auth_protocol', '');
-          this.$set(module, 'priv_protocol', '');
-          this.$set(module, 'priv_password', '');
-          this.$set(module, 'context_name', '');
-        },
-        changeCurrentProject(project) {
+          resolve(this.moduleList)
+        })
+      })
+    },
+    // 左侧module列表选中切换，与project.vue同步
+    changeModule (project, module) {
+      this.showProjectPanel = false
+      this.changeCurrentProject(project)
+      this.changeCurrentModule(module)
+      bus.$emit('project-page-type', 'endpoint') // 告知project.vue
+    },
+    addModule (obj) {
+      this.module = this.newModule(obj)
+      this.rightBox.module.show = true
+      this.$nextTick(() => {
+        this.$refs.moduleBox.initWalk()
+      })
+    },
+    newModule (obj) {
+      const module = JSON.parse(JSON.stringify(this.blankModule))
+      module.project = this.$store.state.currentProject
+      if (obj) {
+        module.project = obj
+      }
+      return module
+    },
+    // 弹出module编辑页
+    editModule (module) {
+      this.module = JSON.parse(JSON.stringify(module))
+      if (!this.module.paramObj) {
+        this.$set(this.module, 'paramObj', [])
+      }
+      if (!this.module.labelModule) {
+        this.$set(this.module, 'labelModule', [])
+      }
+      if (this.module.snmpParam) {
+        this.initSnmpParam(this.module)
+      }
+      this.rightBox.module.show = true
+      this.$nextTick(() => {
+        this.$refs.moduleBox.initWalk()
+      })
+    },
+    closeModuleRightBox (refresh) {
+      this.rightBox.module.show = false
+      if (refresh) {
+        this.getModuleList()
+      }
+    },
+    initSnmpParam (module) {
+      this.$set(module, 'walk', [])
+      this.$set(module, 'version', '')
+      this.$set(module, 'max_repetitions', '')
+      this.$set(module, 'retries', '')
+      this.$set(module, 'timeout', '')
+      this.$set(module, 'community', '')
+      this.$set(module, 'username', '')
+      this.$set(module, 'security_level', '')
+      this.$set(module, 'password', '')
+      this.$set(module, 'auth_protocol', '')
+      this.$set(module, 'priv_protocol', '')
+      this.$set(module, 'priv_password', '')
+      this.$set(module, 'context_name', '')
+    },
+    changeCurrentProject (project) {
+      // localStorage.setItem("nz-current-project", project.id);
+      this.$store.commit('currentProjectChange', project)
+      this.currentProject = project
+    },
+    changeCurrentModule (module) {
+      bus.$emit('current-module-change', module) // 告知project.vue
+      this.currentModule = module
+    },
+    // 与header.vue同步
+    detailProject (project) {
+      this.showProjectPanel = true
+      this.changeCurrentProject(project)
+      bus.$emit('project-page-type', 'project') // 告知project.vue
+      this.changeCurrentModule({ id: '' })
+    },
 
-          // localStorage.setItem("nz-current-project", project.id);
-          this.$store.commit("currentProjectChange", project);
-          this.currentProject = project;
-        },
-        changeCurrentModule(module) {
-          bus.$emit("current-module-change", module);  //告知project.vue
-          this.currentModule = module;
-        },
-        //与header.vue同步
-        detailProject(project) {
-          this.showProjectPanel = true;
-          this.changeCurrentProject(project);
-          bus.$emit("project-page-type", "project");  //告知project.vue
-          this.changeCurrentModule({id: ""});
-        },
-
-        initEvent() {
-          /*bus.$on("parent-menu-change", parentMenu => {
+    initEvent () {
+      /* bus.$on("parent-menu-change", parentMenu => {
             this.parentMenu = parentMenu;
           });
           bus.$on("menu-change", menu => {
             this.active = menu;
-          });*/
-          bus.$on("header-dc-change", dcId => {
-            this.dcCheckList = [dcId];
-            // bus.$emit("asset-filter-change", "idcIds", dcId);
-          });
-          bus.$on("clear-asset-filter", dcId => {
-            this.dcCheckList = [];
-            this.assetTypeCheckList = [];
-            this.vendorCheckList = [];
-            this.pingCheckList = [];
-          });
-          bus.$on("project-list-change", () => {
-            this.getProjectList();
-          });
-          bus.$on("module-list-change", menu => {
-            this.getModuleList();
-          });
-          bus.$on('asset-list-change',()=>{
-            let dcData=JSON.parse(JSON.stringify(this.dcData))
-            let assetTypeData=JSON.parse(JSON.stringify(this.assetTypeData))
-            let vendorData=JSON.parse(JSON.stringify(this.vendorData))
-            let pingData=JSON.parse(JSON.stringify(this.pingData))
-            let tagData=JSON.parse(JSON.stringify(this.tagData))
+          }); */
+      bus.$on('header-dc-change', dcId => {
+        this.dcCheckList = [dcId]
+        // bus.$emit("asset-filter-change", "idcIds", dcId);
+      })
+      bus.$on('clear-asset-filter', dcId => {
+        this.dcCheckList = []
+        this.assetTypeCheckList = []
+        this.vendorCheckList = []
+        this.pingCheckList = []
+      })
+      bus.$on('project-list-change', () => {
+        this.getProjectList()
+      })
+      bus.$on('module-list-change', menu => {
+        this.getModuleList()
+      })
+      bus.$on('asset-list-change', () => {
+        const dcData = JSON.parse(JSON.stringify(this.dcData))
+        const assetTypeData = JSON.parse(JSON.stringify(this.assetTypeData))
+        const vendorData = JSON.parse(JSON.stringify(this.vendorData))
+        const pingData = JSON.parse(JSON.stringify(this.pingData))
+        const tagData = JSON.parse(JSON.stringify(this.tagData))
 
-            this.getLeftMenuList().then(()=>{
-              let result=[];
-              let dcDiff=this.compareAssetLeftMenu(dcData,this.dcData,"idcIds")
-              if(dcDiff.length>0){
-                let temp =this.dcCheckList.filter(item=>{
-                  return !dcDiff.find((t,i)=>{return item == t.id})
-                })
-                result.push({key:"idcIds",value:temp.join(',')})
+        this.getLeftMenuList().then(() => {
+          const result = []
+          const dcDiff = this.compareAssetLeftMenu(dcData, this.dcData, 'idcIds')
+          if (dcDiff.length > 0) {
+            const temp = this.dcCheckList.filter(item => {
+              return !dcDiff.find((t, i) => { return item == t.id })
+            })
+            result.push({ key: 'idcIds', value: temp.join(',') })
 
-                this.dcCheckList=temp;
-              }
+            this.dcCheckList = temp
+          }
 
-              let typeDiff=this.compareAssetLeftMenu(assetTypeData,this.assetTypeData,'typeIds')
-              if(typeDiff.length>0){
-                this.assetTypeCheckList=this.assetTypeCheckList.filter(item=>{
-                  return !typeDiff.find(t=>{return item == t.id})
-                })
-                result.push({key:'typeIds',value:this.assetTypeCheckList.join(',')})
-              }
+          const typeDiff = this.compareAssetLeftMenu(assetTypeData, this.assetTypeData, 'typeIds')
+          if (typeDiff.length > 0) {
+            this.assetTypeCheckList = this.assetTypeCheckList.filter(item => {
+              return !typeDiff.find(t => { return item == t.id })
+            })
+            result.push({ key: 'typeIds', value: this.assetTypeCheckList.join(',') })
+          }
 
-              let vendorDiff=this.compareAssetLeftMenu(vendorData,this.vendorData,'vendorIds')
-              if(vendorDiff.length>0){
-                this.vendorCheckList=this.vendorCheckList.filter(item=>{
-                  return !vendorDiff.find(t=>{return item == t.id})
-                })
-                result.push({key:'vendorIds',value:this.vendorCheckList.join(',')})
-              }
+          const vendorDiff = this.compareAssetLeftMenu(vendorData, this.vendorData, 'vendorIds')
+          if (vendorDiff.length > 0) {
+            this.vendorCheckList = this.vendorCheckList.filter(item => {
+              return !vendorDiff.find(t => { return item == t.id })
+            })
+            result.push({ key: 'vendorIds', value: this.vendorCheckList.join(',') })
+          }
 
-              let pingDiff=this.compareAssetLeftMenu(pingData,this.pingData,'pingStates')
-              if(pingDiff.length>0){
-                this.pingCheckList=this.pingCheckList.filter(item=>{
-                  return !pingDiff.find(t=>{return item == t.value})
-                })
-                result.push({key:'pingStates',value:this.pingCheckList.join(',')})
-              }
+          const pingDiff = this.compareAssetLeftMenu(pingData, this.pingData, 'pingStates')
+          if (pingDiff.length > 0) {
+            this.pingCheckList = this.pingCheckList.filter(item => {
+              return !pingDiff.find(t => { return item == t.value })
+            })
+            result.push({ key: 'pingStates', value: this.pingCheckList.join(',') })
+          }
 
-              let tagDiff=this.compareAssetLeftMenu(tagData,this.tagData,"tags")
-              if(tagDiff.length>0){
-                let $self=this;
-                tagDiff.forEach(item=>{
-                  let key=item.key;
-                  let values=item.values;
+          const tagDiff = this.compareAssetLeftMenu(tagData, this.tagData, 'tags')
+          if (tagDiff.length > 0) {
+            const $self = this
+            tagDiff.forEach(item => {
+              const key = item.key
+              const values = item.values
 
-                  let checkedVals=$self.tagCheckMap[key];
-                  if(checkedVals&&checkedVals.length>0){
-                    $self.tagCheckList=$self.tagCheckList.filter(t=>{return !values.find(r=>{return key+"-"+r.value == t})})
-                    $self.lastCheckSize = $self.lastCheckSize - values.length;
-                    checkedVals=checkedVals.filter(t=>{return !values.find(r=>{return r.value == t;})})
-                    if(checkedVals.length>0){
-                      $self.tagCheckMap[key]=checkedVals;
-                    }else{
-                      delete $self.tagCheckMap[key]
-                    }
-
-                  }
-                })
-                if(Object.keys($self.tagCheckMap).length > 0){
-                  result.push({key:'tags',value:JSON.stringify($self.tagCheckMap)})
-          }     else{
-                  result.push({key:'tags',value:''})
+              let checkedVals = $self.tagCheckMap[key]
+              if (checkedVals && checkedVals.length > 0) {
+                $self.tagCheckList = $self.tagCheckList.filter(t => { return !values.find(r => { return key + '-' + r.value == t }) })
+                $self.lastCheckSize = $self.lastCheckSize - values.length
+                checkedVals = checkedVals.filter(t => { return !values.find(r => { return r.value == t }) })
+                if (checkedVals.length > 0) {
+                  $self.tagCheckMap[key] = checkedVals
+                } else {
+                  delete $self.tagCheckMap[key]
                 }
               }
-              bus.$emit("asset-filter-change", "multiParam", result);
-            });
-          })
-          bus.$on('asset-property-change',()=>{
-            this.getLeftMenuList();
-          })
-
-          bus.$on('asset-ping-switch-change',(isOpen)=>{
-            this.assetPingSwitch = isOpen
-          })
-        },
-        // 获取asset左侧菜单数据
-        getLeftMenuList(){
-          return new Promise(resolve => {
-            this.$get('asset/filter').then(response => {
-              if (response.code === 200) {
-                //dc
-                this.dcData = response.data.dc;
-                // AssetType
-                this.assetTypeData = response.data.assetType;
-                // vendor
-                this.vendorData = response.data.vendor;
-                // ping
-                this.pingData=[{label:'up',value:1,total:0},{label:'down',value:0,total:0}]
-
-                this.pingData.map(item=>{
-                  if(response.data.ping){
-                    let data=response.data.ping.find(t=>t.name == item.label);
-                    if(data){
-                      item.total = data.total;
-                      item.value = data.status
-                    }
-                  }
-                  return item;
-                })
-
-                this.tagData = response.data.tag
-
-              }
-              resolve();
-            });
-          });
-        },
-        compareAssetLeftMenu:function(src,dist,key){
-          let result=src.filter(item=>{
-             if(key == 'pingStates'){
-               return !dist.find(t=>{return t.name == item.name})
-             }
-             if(key == 'tags'){
-               let tag=dist.find(t=>{
-                 return t.key == item.key
-               })
-               if(tag){
-                 let srcValues=item.values;
-                 let distValues=tag.values
-
-                 let vals=srcValues.filter(t=>{
-                   return distValues.find(r=>{
-                     return r.value == t.value;
-                   })
-                 })
-
-                 return !vals || vals.length < 1;
-               }else{
-                 return true;
-               }
-             }
-             return !dist.find(t=>{return item.id == t.id;})
-          })
-
-          return result
-        },
-        //asset左侧菜单4个事件
-        changeCheckBox() {
-          this.assetClick = true;
-        },
-        changeAssetTypeCheckBox() {
-          if(this.assetTypeCheckList && this.assetTypeCheckList.length > 0){
-            let assetTypeIds = this.assetTypeCheckList.join(',');
-            bus.$emit("asset-filter-change", "typeIds", assetTypeIds);
-          }else{
-            bus.$emit("asset-filter-change", "typeIds", "");
-          }
-        },
-        changeVendorCheckBox() {
-          if(this.vendorCheckList && this.vendorCheckList.length > 0){
-            let vendorIds = this.vendorCheckList.join(',');
-            bus.$emit("asset-filter-change", "vendorIds", vendorIds);
-          }else{
-            bus.$emit("asset-filter-change", "vendorIds", "");
-          }
-        },
-        changePingCheckBox() {
-          if(this.pingCheckList && this.pingCheckList.length > 0){
-            let pingStates = this.pingCheckList.join(',');
-            bus.$emit("asset-filter-change", "pingStates", pingStates);
-          }else{
-            bus.$emit("asset-filter-change", "pingStates", "");
-          }
-        },
-        changeTagCheckBox(tag,value){
-          let checked=this.tagCheckMap[tag.key];
-          if(!checked){
-            checked=[];
-          }
-          if(this.lastCheckSize < this.tagCheckList.length){
-            checked.push(value)
-          }else{
-            let index=checked.findIndex(item=>{
-              return item == value
             })
-            checked.splice(index,1)
+            if (Object.keys($self.tagCheckMap).length > 0) {
+              result.push({ key: 'tags', value: JSON.stringify($self.tagCheckMap) })
+            } else {
+              result.push({ key: 'tags', value: '' })
+            }
           }
+          bus.$emit('asset-filter-change', 'multiParam', result)
+        })
+      })
+      bus.$on('asset-property-change', () => {
+        this.getLeftMenuList()
+      })
 
-          if(checked.length>0){
-            this.tagCheckMap[tag.key] = checked;
-          }else{
-            if(this.tagCheckMap[tag.key]){
-              delete this.tagCheckMap[tag.key]
-            }
+      bus.$on('asset-ping-switch-change', (isOpen) => {
+        this.assetPingSwitch = isOpen
+      })
+    },
+    // 获取asset左侧菜单数据
+    getLeftMenuList () {
+      return new Promise(resolve => {
+        this.$get('asset/filter').then(response => {
+          if (response.code === 200) {
+            // dc
+            this.dcData = response.data.dc
+            // AssetType
+            this.assetTypeData = response.data.assetType
+            // vendor
+            this.vendorData = response.data.vendor
+            // ping
+            this.pingData = [{ label: 'up', value: 1, total: 0 }, { label: 'down', value: 0, total: 0 }]
+
+            this.pingData.map(item => {
+              if (response.data.ping) {
+                const data = response.data.ping.find(t => t.name == item.label)
+                if (data) {
+                  item.total = data.total
+                  item.value = data.status
+                }
+              }
+              return item
+            })
+
+            this.tagData = response.data.tag
           }
-          this.lastCheckSize = this.tagCheckList.length;
-          if(Object.keys(this.tagCheckMap).length > 0){
-            bus.$emit("asset-filter-change", "tags", JSON.stringify(this.tagCheckMap));
-          }else{
-            bus.$emit("asset-filter-change", "tags", '');
-          }
-        },
-        indOf(a, b) {
-          let c = [];
-          for (let i = 0; i < a.length; i++) {
-            c.push(a[i]);
-          }
-          if (c.indexOf(b) > -1) {
-            return true;
-          } else {
-            return false;
-          }
-        },
-        jumpTo(route) {
-          if(route == this.route){
-            this.reload();
-          }
-          this.$router.push({
-            path: route,
-            query: {
-              t: +new Date()
-            }
-          });
-        },
-        reload () {
-          this.isRouterAlive = false
-          this.$nextTick(() => (this.isRouterAlive = true))
+          resolve()
+        })
+      })
+    },
+    compareAssetLeftMenu: function (src, dist, key) {
+      const result = src.filter(item => {
+        if (key == 'pingStates') {
+          return !dist.find(t => { return t.name == item.name })
         }
-      },
-      beforeDestroy(){
-        /*bus.$off("parent-menu-change");
-          bus.$off("menu-change");*/
-        bus.$off("header-dc-change");
-        bus.$off("clear-asset-filter");
-        bus.$off("project-list-change");
-        bus.$off("module-list-change");
-        bus.$off('asset-list-change');
+        if (key == 'tags') {
+          const tag = dist.find(t => {
+            return t.key == item.key
+          })
+          if (tag) {
+            const srcValues = item.values
+            const distValues = tag.values
 
-        bus.$off('asset-property-change')
+            const vals = srcValues.filter(t => {
+              return distValues.find(r => {
+                return r.value == t.value
+              })
+            })
 
-        bus.$off('asset-ping-switch-change')
+            return !vals || vals.length < 1
+          } else {
+            return true
+          }
+        }
+        return !dist.find(t => { return item.id == t.id })
+      })
+
+      return result
+    },
+    // asset左侧菜单4个事件
+    changeCheckBox () {
+      this.assetClick = true
+    },
+    changeAssetTypeCheckBox () {
+      if (this.assetTypeCheckList && this.assetTypeCheckList.length > 0) {
+        const assetTypeIds = this.assetTypeCheckList.join(',')
+        bus.$emit('asset-filter-change', 'typeIds', assetTypeIds)
+      } else {
+        bus.$emit('asset-filter-change', 'typeIds', '')
       }
+    },
+    changeVendorCheckBox () {
+      if (this.vendorCheckList && this.vendorCheckList.length > 0) {
+        const vendorIds = this.vendorCheckList.join(',')
+        bus.$emit('asset-filter-change', 'vendorIds', vendorIds)
+      } else {
+        bus.$emit('asset-filter-change', 'vendorIds', '')
+      }
+    },
+    changePingCheckBox () {
+      if (this.pingCheckList && this.pingCheckList.length > 0) {
+        const pingStates = this.pingCheckList.join(',')
+        bus.$emit('asset-filter-change', 'pingStates', pingStates)
+      } else {
+        bus.$emit('asset-filter-change', 'pingStates', '')
+      }
+    },
+    changeTagCheckBox (tag, value) {
+      let checked = this.tagCheckMap[tag.key]
+      if (!checked) {
+        checked = []
+      }
+      if (this.lastCheckSize < this.tagCheckList.length) {
+        checked.push(value)
+      } else {
+        const index = checked.findIndex(item => {
+          return item == value
+        })
+        checked.splice(index, 1)
+      }
+
+      if (checked.length > 0) {
+        this.tagCheckMap[tag.key] = checked
+      } else {
+        if (this.tagCheckMap[tag.key]) {
+          delete this.tagCheckMap[tag.key]
+        }
+      }
+      this.lastCheckSize = this.tagCheckList.length
+      if (Object.keys(this.tagCheckMap).length > 0) {
+        bus.$emit('asset-filter-change', 'tags', JSON.stringify(this.tagCheckMap))
+      } else {
+        bus.$emit('asset-filter-change', 'tags', '')
+      }
+    },
+    indOf (a, b) {
+      const c = []
+      for (let i = 0; i < a.length; i++) {
+        c.push(a[i])
+      }
+      if (c.indexOf(b) > -1) {
+        return true
+      } else {
+        return false
+      }
+    },
+    jumpTo (route) {
+      if (route == this.route) {
+        this.reload()
+      }
+      this.$router.push({
+        path: route,
+        query: {
+          t: +new Date()
+        }
+      })
+    },
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(() => (this.isRouterAlive = true))
     }
+  },
+  beforeDestroy () {
+    /* bus.$off("parent-menu-change");
+          bus.$off("menu-change"); */
+    bus.$off('header-dc-change')
+    bus.$off('clear-asset-filter')
+    bus.$off('project-list-change')
+    bus.$off('module-list-change')
+    bus.$off('asset-list-change')
+
+    bus.$off('asset-property-change')
+
+    bus.$off('asset-ping-switch-change')
+  }
+}
 </script>
 
 <style scoped lang="scss">

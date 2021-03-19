@@ -286,352 +286,351 @@
   </el-form>
 </template>
 <script>
-import bus from '../../../libs/bus';
-import {resetZIndex} from "../../common/js/common";
+import bus from '../../../libs/bus'
+import { resetZIndex } from '../../common/js/common'
 export default {
   name: 'chartTag',
   props: {
     // 序号
     pointer: {
       type: Number,
-      default: 0,
+      default: 0
     },
     // metric列表
     metricList: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
-    metricAllData:Map,
-    metricCascaderList:Array,
-    //metricCascaderListTmp:Array,//3级级联列表：project/module/metric，metric是在本页面动态获得，并设置本页面的metric对应的label级value（metricLabelValInfo列表，所以不可重复使用？？）
-    //metricLabelValInfo:Map,//用于存放所有的metric，label，val
+    metricAllData: Map,
+    metricCascaderList: Array,
+    // metricCascaderListTmp:Array,//3级级联列表：project/module/metric，metric是在本页面动态获得，并设置本页面的metric对应的label级value（metricLabelValInfo列表，所以不可重复使用？？）
+    // metricLabelValInfo:Map,//用于存放所有的metric，label，val
     countTotal: {
       type: Number,
-      default: 1,
+      default: 1
     },
-    hasLegend:{
-      type:Boolean,
-      default:true
+    hasLegend: {
+      type: Boolean,
+      default: true
     },
-    isSingleStat:{
-      type:Boolean,
-      default:false
+    isSingleStat: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
-    //multipleSelect
+    // multipleSelect
   },
-  data() {
+  data () {
     return {
       tableShow: 1, // 1.normal; 2.expert
       // 指标信息
       elementInfo: {
-        metric: '',//当前选中的metric名称
-        type:'normal',
+        metric: '', // 当前选中的metric名称
+        type: 'normal',
         // name: '',
         tagList: [], // 标签列表
-        selectedTagList:[],//已选中的标签列表
-        expression:'',
-        legend:'',
-        statistics:'last'
+        selectedTagList: [], // 已选中的标签列表
+        expression: '',
+        legend: '',
+        statistics: 'last'
       },
-      //isSingleStat:false,
-      statisticsList:[
+      // isSingleStat:false,
+      statisticsList: [
         {
-          id:"min",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.min")
+          id: 'min',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.min')
         },
         {
-          id:"max",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.max")
+          id: 'max',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.max')
         },
         {
-          id:"average",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.average")
+          id: 'average',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.average')
         },
         {
-          id:"total",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.total")
+          id: 'total',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.total')
         },
         {
-          id:"first",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.first")
+          id: 'first',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.first')
         },
         {
-          id:"last",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.last")
+          id: 'last',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.last')
         },
         {
-          id:"range",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.range")
+          id: 'range',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.range')
         },
         {
-          id:"different",
-          name:this.$t("dashboard.panel.chartForm.statisticsVal.different")
-        },
+          id: 'different',
+          name: this.$t('dashboard.panel.chartForm.statisticsVal.different')
+        }
       ],
-      labelValueCascaderOptions:[],//label及value改为级联后，显示用的待选label及value
-      labelValueCascaderVal:[],//label及value改为级联后，选择的label及value
-      //metricCascaderList:[],
-      metricLabelValInfo:new Map(),//用于存放所有的metric，label，val
+      labelValueCascaderOptions: [], // label及value改为级联后，显示用的待选label及value
+      labelValueCascaderVal: [], // label及value改为级联后，选择的label及value
+      // metricCascaderList:[],
+      metricLabelValInfo: new Map(), // 用于存放所有的metric，label，val
       metricLoading: false,
       keydataList: [], // tag标签键列表
       target: null, // 获取到的数据
       tagSet: null, // 根据你metric获取的tags信息
       setDataFlag: false, // true时为获取数据,编辑状态
       vendorCount: '',
-      labelSort:['project','module','endpoint','datacenter','asset'],
-      cascaderProps:{
+      labelSort: ['project', 'module', 'endpoint', 'datacenter', 'asset'],
+      cascaderProps: {
         expandTrigger: 'click',
         lazy: true,
-        that:this,
+        that: this,
         lazyLoad (node, resolve) {
           /*
           1 第一次加载界面：node:{"root":true,"level":0,"loading":true}
           2 点击的一级节点，则直接从list中获得，如果点击的为二级节点，先看对应list里是否有，没有再从接口获得
           */
-          let nodeLevel = node.level;
-          let _this = this.that;
-          if(nodeLevel===1){
+          const nodeLevel = node.level
+          const _this = this.that
+          if (nodeLevel === 1) {
             setTimeout(() => {
-              resolve([]);
-            }, 100);
-          }else if(nodeLevel===2){
+              resolve([])
+            }, 100)
+          } else if (nodeLevel === 2) {
             setTimeout(() => {
-              let project = node.parent.data.label;
-              let module = node.data.label;
-              let metricArr = [];
-              let metricArrTmp = [];
+              const project = node.parent.data.label
+              const module = node.data.label
+              const metricArr = []
+              const metricArrTmp = []
 
-              let metricLabelValMap = new Map();
-              let projectItem = _this.metricAllData.get(project);
-              if(projectItem){
-                let moduleItem = projectItem.find(item => item.name === module);
-                if(moduleItem){
-                  metricLabelValMap = moduleItem.metricMap;
+              let metricLabelValMap = new Map()
+              const projectItem = _this.metricAllData.get(project)
+              if (projectItem) {
+                const moduleItem = projectItem.find(item => item.name === module)
+                if (moduleItem) {
+                  metricLabelValMap = moduleItem.metricMap
                 }
               }
-              if(metricLabelValMap.size>0){
-                _this.metricLabelValInfo = metricLabelValMap;
-                metricLabelValMap.forEach((item,index)=>{
+              if (metricLabelValMap.size > 0) {
+                _this.metricLabelValInfo = metricLabelValMap
+                metricLabelValMap.forEach((item, index) => {
                   const childOption = {
                     value: index,
                     label: index,
-                    leaf:true,
-                  };
-                  metricArr.push(childOption);
-                });
-                resolve(metricArr);
-              }else {
-                _this.metricCascaderList.map((item, index) => {
-                  if(item.label===project){//选择的project
-                    item.children.map((innerItem, innerIndex) => {
-                      if (innerItem.value === module){
-                        if (innerItem.children.length === 0) {//不重复加载
+                    leaf: true
+                  }
+                  metricArr.push(childOption)
+                })
+                resolve(metricArr)
+              } else {
+                _this.metricCascaderList.forEach((item, index) => {
+                  if (item.label === project) { // 选择的project
+                    item.children.forEach((innerItem, innerIndex) => {
+                      if (innerItem.value === module) {
+                        if (innerItem.children.length === 0) { // 不重复加载
                           // 当二级分类的的child为空时才请求一次数据
-                          let match = '{project="'+project+'",module="'+module+'"}';
-                          _this.$get('/prom/api/v1/series?match[]='+match).then(res => {
+                          const match = '{project="' + project + '",module="' + module + '"}'
+                          _this.$get('/prom/api/v1/series?match[]=' + match).then(res => {
                             if (res.status === 'success') {
                               res.data.forEach((tag, i) => {
-                                let metricName = tag.__name__;
-                                if(metricArrTmp.indexOf(metricName)===-1){
+                                const metricName = tag.__name__
+                                if (metricArrTmp.indexOf(metricName) === -1) {
                                   const childOption = {
-                                    value: metricName,//+"_par",
+                                    value: metricName, // +"_par",
                                     label: metricName,
-                                    leaf:nodeLevel>=2,
-                                  };
-                                  metricArrTmp.push(metricName);
-                                  metricArr.push(childOption);
+                                    leaf: nodeLevel >= 2
+                                  }
+                                  metricArrTmp.push(metricName)
+                                  metricArr.push(childOption)
                                 }
-                                const tagsArr = Object.keys(tag);//["__name__","asset","idc","instance","job","module","project"]
-                                let labelValList = [];
+                                const tagsArr = Object.keys(tag)// ["__name__","asset","idc","instance","job","module","project"]
+                                const labelValList = []
 
                                 tagsArr.forEach((tagName) => {
                                   if (tagName !== '__name__') {
                                     const tagObj = {
                                       name: tagName,
-                                      list:[],
-                                      value:[]//最终选择的值
-                                    };
-                                    let tagValue = tag[tagName];
-                                    const tagItem = labelValList.find(item => item.name === tagName);
-                                    if(tagItem){//metric对应的label已添加
-                                      if(tagItem.list.indexOf(tagValue)===-1){//label对于value是否添加，没有添加，则添加
-                                        tagItem.list .push(tagValue);
+                                      list: [],
+                                      value: []// 最终选择的值
+                                    }
+                                    const tagValue = tag[tagName]
+                                    const tagItem = labelValList.find(item => item.name === tagName)
+                                    if (tagItem) { // metric对应的label已添加
+                                      if (tagItem.list.indexOf(tagValue) === -1) { // label对于value是否添加，没有添加，则添加
+                                        tagItem.list.push(tagValue)
                                       }
-                                    }else {//metric对于的label未添加
-                                      tagObj.list.push(tagValue);
-                                      labelValList.push(tagObj);
+                                    } else { // metric对于的label未添加
+                                      tagObj.list.push(tagValue)
+                                      labelValList.push(tagObj)
                                     }
                                   }
-                                });
-                                if(_this.metricLabelValInfo.has(metricName)){
-                                  let existMetricLabelList =  _this.metricLabelValInfo.get(metricName);
-                                  labelValList.forEach((labelItem,index)=>{
-                                    const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name);
-                                    if(existTagItem){//label已添加
-                                      labelItem.list.forEach((valueItem,valIndex)=>{
-                                        if(existTagItem.list.indexOf(valueItem)===-1){//value未添加
-                                          existTagItem.list.push(valueItem);
+                                })
+                                if (_this.metricLabelValInfo.has(metricName)) {
+                                  const existMetricLabelList = _this.metricLabelValInfo.get(metricName)
+                                  labelValList.forEach((labelItem, index) => {
+                                    const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name)
+                                    if (existTagItem) { // label已添加
+                                      labelItem.list.forEach((valueItem, valIndex) => {
+                                        if (existTagItem.list.indexOf(valueItem) === -1) { // value未添加
+                                          existTagItem.list.push(valueItem)
                                         }
                                       })
-                                    }else {//label未添加
-                                      existMetricLabelList.push(labelItem);
+                                    } else { // label未添加
+                                      existMetricLabelList.push(labelItem)
                                     }
                                   })
-                                }else {
-                                  _this.metricLabelValInfo.set(metricName,labelValList);
+                                } else {
+                                  _this.metricLabelValInfo.set(metricName, labelValList)
                                 }
-                                //全局缓存数据设置
-                                _this.cacheData(project,module,metricName,labelValList);
-                              });
-                              resolve(metricArr);
-                            }else {
-                              resolve([]);
+                                // 全局缓存数据设置
+                                _this.cacheData(project, module, metricName, labelValList)
+                              })
+                              resolve(metricArr)
+                            } else {
+                              resolve([])
                             }
                           })
-                        }else {//已经加载过了
-                          resolve([]);
+                        } else { // 已经加载过了
+                          resolve([])
                         }
                       }
                     })
                   }
-                });
+                })
               }
-
-            }, 1000);
+            }, 1000)
           }
           setTimeout(() => {
-            _this.cascaderStyle();
-          }, 100);
+            _this.cascaderStyle()
+          }, 100)
         }
       },
-      labelValueProps:{ multiple: true },
-    };
+      labelValueProps: { multiple: true }
+    }
   },
   methods: {
     // 删除该选项,第一步,传递要删除的参数
-    deleteTarget() {
-      //alert('metric第一步，删除的指针，之后回调box的第一个步'+this.pointer);
-      this.$emit('on-delete-target', this.pointer);
+    deleteTarget () {
+      // alert('metric第一步，删除的指针，之后回调box的第一个步'+this.pointer);
+      this.$emit('on-delete-target', this.pointer)
     },
     // 第二步,on-delete-target回调，保存数据
-    subSave() {
-      this.convertLabelValueCascadeVal();
-      //alert('metric第二步，bus.chartAddInfo.metricTarget,指针'+JSON.stringify(bus.chartAddInfo.metricTarget)+'==pointer'+this.pointer);
-      bus.chartAddInfo.metricTarget[this.pointer] = this.elementInfo;
-      //alert('metric第二步，保存信息到bus'+JSON.stringify(this.elementInfo))
-      this.$emit('sub-save-ok');
+    subSave () {
+      this.convertLabelValueCascadeVal()
+      // alert('metric第二步，bus.chartAddInfo.metricTarget,指针'+JSON.stringify(bus.chartAddInfo.metricTarget)+'==pointer'+this.pointer);
+      bus.chartAddInfo.metricTarget[this.pointer] = this.elementInfo
+      // alert('metric第二步，保存信息到bus'+JSON.stringify(this.elementInfo))
+      this.$emit('sub-save-ok')
     },
     // 第三步,将数据重新赋值,sub-save-ok回调
-    setSubdata(index) {
-      //('metric第三步，bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
-      //console.log('metric第三步，bus('+this.pointer+')='+JSON.stringify(bus.chartAddInfo.metricTarget[this.pointer]));
-      this.elementInfo = bus.chartAddInfo.metricTarget[this.pointer];
-      //console.log('metric第三步，index'+index+',如果index是当前pointer('+this.pointer+')，则继续，把bus中的值赋值给当前metric')
-      //console.log('metric第三步，elementInfo='+JSON.stringify(this.elementInfo));
-      if(this.elementInfo.type==='expert'){
-        //alert('metric第三步，expert');
+    setSubdata (index) {
+      // ('metric第三步，bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+      // console.log('metric第三步，bus('+this.pointer+')='+JSON.stringify(bus.chartAddInfo.metricTarget[this.pointer]));
+      this.elementInfo = bus.chartAddInfo.metricTarget[this.pointer]
+      // console.log('metric第三步，index'+index+',如果index是当前pointer('+this.pointer+')，则继续，把bus中的值赋值给当前metric')
+      // console.log('metric第三步，elementInfo='+JSON.stringify(this.elementInfo));
+      if (this.elementInfo.type === 'expert') {
+        // alert('metric第三步，expert');
         // 当该项expression为空时，重置一下
         if (!this.elementInfo.expression && this.$refs.metricExpression) {
-          this.$refs.metricExpression.reset();
+          this.$refs.metricExpression.reset()
         }
-        this.clickTabelShow(2,'expert');
-      }else {
-       // alert('metric第三步，normal');
+        this.clickTabelShow(2, 'expert')
+      } else {
+        // alert('metric第三步，normal');
         // 当该项metric为空时，重置一下
         if (!this.elementInfo.metric && this.$refs.metricSelect) {
-          this.$refs.metricSelect.reset();
+          this.$refs.metricSelect.reset()
         }
-        this.setLabelValueCascader();
-        this.clickTabelShow(1,'normal');
+        this.setLabelValueCascader()
+        this.clickTabelShow(1, 'normal')
       }
     },
-    clearSelectedTagList(){
-      this.elementInfo.selectedTagList.forEach((selectItem)=>{
-        selectItem.value = [];//清空值，再进行赋值
-      });
+    clearSelectedTagList () {
+      this.elementInfo.selectedTagList.forEach((selectItem) => {
+        selectItem.value = []// 清空值，再进行赋值
+      })
     },
-    convertLabelValueCascadeVal(){
-      //把级联选择label及value，转换为selectedTagList里的value
-      this.clearSelectedTagList();
-      this.labelValueCascaderVal.forEach((item)=>{//[label,value]
-        let casLabel = item[0];
-        let casValue = item[1];
-        this.elementInfo.selectedTagList.forEach((selectItem)=>{
-          let selectLabel = selectItem.name;
-          let selectValue = selectItem.value;
-          if(selectLabel===casLabel){
-            if(selectValue.indexOf(casValue)===-1){
-              selectValue.push(casValue);
+    convertLabelValueCascadeVal () {
+      // 把级联选择label及value，转换为selectedTagList里的value
+      this.clearSelectedTagList()
+      this.labelValueCascaderVal.forEach((item) => { // [label,value]
+        const casLabel = item[0]
+        const casValue = item[1]
+        this.elementInfo.selectedTagList.forEach((selectItem) => {
+          const selectLabel = selectItem.name
+          const selectValue = selectItem.value
+          if (selectLabel === casLabel) {
+            if (selectValue.indexOf(casValue) === -1) {
+              selectValue.push(casValue)
             }
           }
-        });
-      });
+        })
+      })
     },
-    setSingleStat(){
-      this.hasLegend = false;
-      this.isSingleStat = true;
+    setSingleStat () {
+      this.hasLegend = false
+      this.isSingleStat = true
     },
-    setNotSingleStat(){
-      this.hasLegend = true;
-      this.isSingleStat = false;
+    setNotSingleStat () {
+      this.hasLegend = true
+      this.isSingleStat = false
     },
     // (最后整体保存添加的图标的时候执行)保存, chartdata点击确认后保存本身数据并返回给chartdata
-    saveTarget(pointer,optType) {
+    saveTarget (pointer, optType) {
       if (this.pointer === pointer) {
         this.$refs.elementInfo.validate((valid) => {
-          if (valid) {//根据设置的rules进行验证，验证通过，则返回，继续进行保存（每个el-form-item都需要验证）
-            if(this.elementInfo.expression){
+          if (valid) { // 根据设置的rules进行验证，验证通过，则返回，继续进行保存（每个el-form-item都需要验证）
+            if (this.elementInfo.expression) {
               // this.elementInfo.expression = this.elementInfo.expression.replace(/\s+|&nbsp;/ig,'');
-              //只取消两端空格，中间空格保留
-              this.elementInfo.expression = this.elementInfo.expression.trim();
+              // 只取消两端空格，中间空格保留
+              this.elementInfo.expression = this.elementInfo.expression.trim()
             }
-            if(this.elementInfo.type==='normal' && this.elementInfo.metric instanceof Array){
-              this.elementInfo.metric = this.elementInfo.metric[2];
+            if (this.elementInfo.type === 'normal' && this.elementInfo.metric instanceof Array) {
+              this.elementInfo.metric = this.elementInfo.metric[2]
             }
-            this.convertLabelValueCascadeVal();//将label，value级联选择的值，转换为selectTagList里
-            this.$emit('on-add-target-success', this.elementInfo, pointer,optType);
+            this.convertLabelValueCascadeVal()// 将label，value级联选择的值，转换为selectTagList里
+            this.$emit('on-add-target-success', this.elementInfo, pointer, optType)
           }
-        });
+        })
       }
     },
-    setLableValueFromCache(project,module){
-      let projectItem = this.metricAllData.get(project);
-      if(projectItem){
-        let moduleItem = projectItem.find(item => item.name === module);
-        if(moduleItem){
-          this.metricLabelValInfo = moduleItem.metricMap;
+    setLableValueFromCache (project, module) {
+      const projectItem = this.metricAllData.get(project)
+      if (projectItem) {
+        const moduleItem = projectItem.find(item => item.name === module)
+        if (moduleItem) {
+          this.metricLabelValInfo = moduleItem.metricMap
         }
       }
     },
-    cacheData(project,module,metricName,labelValList){
-      let projectItem = this.metricAllData.get(project);
-      if(projectItem){
-        let moduleItem = projectItem.find(item => item.name === module);
-        if(moduleItem){
-          let metricAllMap = moduleItem.metricMap;
-          if(metricAllMap.has(metricName)){
-            let existMetricLabelList =  metricAllMap.get(metricName);
-            labelValList.forEach((labelItem,index)=>{
-              const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name);
-              if(existTagItem){//label已添加
-                labelItem.list.forEach((valueItem,valIndex)=>{
-                  if(existTagItem.list.indexOf(valueItem)===-1){//value未添加
-                    existTagItem.list.push(valueItem);
+    cacheData (project, module, metricName, labelValList) {
+      const projectItem = this.metricAllData.get(project)
+      if (projectItem) {
+        const moduleItem = projectItem.find(item => item.name === module)
+        if (moduleItem) {
+          const metricAllMap = moduleItem.metricMap
+          if (metricAllMap.has(metricName)) {
+            const existMetricLabelList = metricAllMap.get(metricName)
+            labelValList.forEach((labelItem, index) => {
+              const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name)
+              if (existTagItem) { // label已添加
+                labelItem.list.forEach((valueItem, valIndex) => {
+                  if (existTagItem.list.indexOf(valueItem) === -1) { // value未添加
+                    existTagItem.list.push(valueItem)
                   }
                 })
-              }else {//label未添加
-                existMetricLabelList.push(labelItem);
+              } else { // label未添加
+                existMetricLabelList.push(labelItem)
               }
             })
-          }else {
-            moduleItem.metricMap.set(metricName,labelValList);
+          } else {
+            moduleItem.metricMap.set(metricName, labelValList)
           }
         }
       }
     },
-    setLabelDivHeight(count){
+    setLabelDivHeight (count) {
       /*
         if (count === 0) {
           const chartBox = document.getElementById('scrollDiv' + this.pointer);
@@ -719,7 +718,7 @@ export default {
       return metricArr;
     },
     */
-    //动态加载第三级选项metric及label
+    // 动态加载第三级选项metric及label
     /*
     handleItemChange(val) {
       if(val && val.length===2) {//点击二级菜单，才进行查询
@@ -800,405 +799,405 @@ export default {
       }
     },
     */
-    cascaderStyle(){
-      let cascaderElem = document.querySelectorAll('.dashboard-metric-dropdown>.el-cascader-panel>.el-cascader-menu');
-      if(cascaderElem[0]){
-        cascaderElem[0].style.minWidth = '80px';
+    cascaderStyle () {
+      const cascaderElem = document.querySelectorAll('.dashboard-metric-dropdown>.el-cascader-panel>.el-cascader-menu')
+      if (cascaderElem[0]) {
+        cascaderElem[0].style.minWidth = '80px'
       }
-      if(cascaderElem[1]){
-        cascaderElem[1].style.minWidth = '80px';
+      if (cascaderElem[1]) {
+        cascaderElem[1].style.minWidth = '80px'
       }
-      if(cascaderElem[2]){
-        cascaderElem[2].style.minWidth = '360px';
+      if (cascaderElem[2]) {
+        cascaderElem[2].style.minWidth = '360px'
       }
     },
-    setLabelValueCascader(){
-      this.labelValueCascaderOptions = [];
-      this.labelValueCascaderVal = [];
-      this.elementInfo.selectedTagList.forEach((item)=>{
-        let valList = item.list;
+    setLabelValueCascader () {
+      this.labelValueCascaderOptions = []
+      this.labelValueCascaderVal = []
+      this.elementInfo.selectedTagList.forEach((item) => {
+        const valList = item.list
         const labelOption = {
-          value:item.name,
-          label:item.name,
-          children:[]
-        };
-        if(valList && valList.length>0){
-          valList.forEach((valuItem)=>{
-            let disabled = false;
-            if(item.name==='project' || item.name==='module'){
-              disabled = true;
+          value: item.name,
+          label: item.name,
+          children: []
+        }
+        if (valList && valList.length > 0) {
+          valList.forEach((valuItem) => {
+            let disabled = false
+            if (item.name === 'project' || item.name === 'module') {
+              disabled = true
             }
             const valOption = {
-              value:valuItem,
-              label:valuItem,
-              disabled: disabled,
-            };
-            labelOption.children.push(valOption);
-          });
+              value: valuItem,
+              label: valuItem,
+              disabled: disabled
+            }
+            labelOption.children.push(valOption)
+          })
         }
-        this.labelValueCascaderOptions.push(labelOption);
+        this.labelValueCascaderOptions.push(labelOption)
 
-        if(item.value.length>0){
-          item.value.forEach((valueItem)=>{
-            let labelVal = [];
-            labelVal.push(item.name);
-            labelVal.push(valueItem);
-            this.labelValueCascaderVal.push(labelVal);
-          });
+        if (item.value.length > 0) {
+          item.value.forEach((valueItem) => {
+            const labelVal = []
+            labelVal.push(item.name)
+            labelVal.push(valueItem)
+            this.labelValueCascaderVal.push(labelVal)
+          })
         }
-      });
+      })
     },
-    changeTag(){
-      this.$emit('on-change-condition');
+    changeTag () {
+      this.$emit('on-change-condition')
     },
-    changeExpression(v){
-      this.$emit('on-change-condition');
+    changeExpression (v) {
+      this.$emit('on-change-condition')
     },
     // 选择metric
-    selectMetric() {
-      if (this.elementInfo.metric) {//选择了metric，则设置tagList，否则设置为空
-        this.getSuggestTags(this.elementInfo.metric);
-        this.setLabelValueCascader();
-        this.elementInfo.metric = this.elementInfo.metric[2];
+    selectMetric () {
+      if (this.elementInfo.metric) { // 选择了metric，则设置tagList，否则设置为空
+        this.getSuggestTags(this.elementInfo.metric)
+        this.setLabelValueCascader()
+        this.elementInfo.metric = this.elementInfo.metric[2]
       } else {
-        this.elementInfo.tagList = [];
-        this.setLabelDivHeight(0);
+        this.elementInfo.tagList = []
+        this.setLabelDivHeight(0)
       }
       this.$nextTick(() => {
         setTimeout(() => {
-          this.$refs.scrollbar.update();
-        }, 100);
-      });
-      this.changeTag();
+          this.$refs.scrollbar.update()
+        }, 100)
+      })
+      this.changeTag()
     },
-    setLabelValue(tagListTmp,project,module){
+    setLabelValue (tagListTmp, project, module) {
       tagListTmp.forEach((item) => {
-        if(item.name==='project'){
-          if(item.value.indexOf(project)===-1){
-            item.value.push(project);
+        if (item.name === 'project') {
+          if (item.value.indexOf(project) === -1) {
+            item.value.push(project)
           }
-        }else if(item.name==='module'){
-          if(item.value.indexOf(module)===-1) {
-            item.value.push(module);
+        } else if (item.name === 'module') {
+          if (item.value.indexOf(module) === -1) {
+            item.value.push(module)
           }
         }
-      });
+      })
 
       this.labelSort.forEach((sortItem) => {
-        let itemIndex = -1;
-        tagListTmp.forEach((item,i) => {
-          if(sortItem===item.name){//labelSort:['project','module','endpoint','datacenter','asset'],
-            this.elementInfo.selectedTagList.push(item);
-            itemIndex = i;
+        let itemIndex = -1
+        tagListTmp.forEach((item, i) => {
+          if (sortItem === item.name) { // labelSort:['project','module','endpoint','datacenter','asset'],
+            this.elementInfo.selectedTagList.push(item)
+            itemIndex = i
           }
-        });
-        if(itemIndex!==-1){
-          tagListTmp.splice(itemIndex,1);
+        })
+        if (itemIndex !== -1) {
+          tagListTmp.splice(itemIndex, 1)
         }
-      });
-      tagListTmp.forEach((item,i) => {
-        this.elementInfo.selectedTagList.push(item);
-      });
+      })
+      tagListTmp.forEach((item, i) => {
+        this.elementInfo.selectedTagList.push(item)
+      })
 
-      let tagNum = this.elementInfo.selectedTagList.length;
+      const tagNum = this.elementInfo.selectedTagList.length
       this.$nextTick(() => {
-        this.setLabelDivHeight(tagNum);
-      });
+        this.setLabelDivHeight(tagNum)
+      })
     },
     // 获取tags列表
-    getSuggestTags(metricArr) {
-      let metric = metricArr[2];
-      let proTmp = metricArr[0];
-      let project = proTmp.substring(0, proTmp.length - 4);
-      let module = metricArr[1];
-      this.elementInfo.selectedTagList = [];
-      if(this.metricLabelValInfo.has(metric)){
-        let tagListTmp = [];
-        tagListTmp = [...this.metricLabelValInfo.get(metric)];
-        tagListTmp.forEach((selectItem)=>{
-          selectItem.value = [];//清空值，再进行赋值
-        });
-        this.setLabelValue(tagListTmp,project,module);
-      }else {
-        let projectItem = this.metricAllData.get(project);
-        if(projectItem) {
-          let moduleItem = projectItem.find(item => item.name === module);
+    getSuggestTags (metricArr) {
+      const metric = metricArr[2]
+      const proTmp = metricArr[0]
+      const project = proTmp.substring(0, proTmp.length - 4)
+      const module = metricArr[1]
+      this.elementInfo.selectedTagList = []
+      if (this.metricLabelValInfo.has(metric)) {
+        let tagListTmp = []
+        tagListTmp = [...this.metricLabelValInfo.get(metric)]
+        tagListTmp.forEach((selectItem) => {
+          selectItem.value = []// 清空值，再进行赋值
+        })
+        this.setLabelValue(tagListTmp, project, module)
+      } else {
+        const projectItem = this.metricAllData.get(project)
+        if (projectItem) {
+          const moduleItem = projectItem.find(item => item.name === module)
           if (moduleItem) {
-            let metricAllMap = moduleItem.metricMap;
+            const metricAllMap = moduleItem.metricMap
             if (metricAllMap.has(metric)) {
-              let tagListTmp = metricAllMap.get(metric);
-              this.setLabelValue(tagListTmp,project,module);
+              const tagListTmp = metricAllMap.get(metric)
+              this.setLabelValue(tagListTmp, project, module)
             }
           }
         }
 
-        //this.elementInfo.selectedTagList = [];
-        //this.$nextTick(() => {
-          //this.setLabelDivHeight(0);
-        //});
+        // this.elementInfo.selectedTagList = [];
+        // this.$nextTick(() => {
+        // this.setLabelDivHeight(0);
+        // });
       }
     },
-    getStyles(width) {
-      return `width: ${width}px;`;
+    getStyles (width) {
+      return `width: ${width}px;`
     },
-    filterMethod(value, option) {
-      return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
+    filterMethod (value, option) {
+      return option.toUpperCase().indexOf(value.toUpperCase()) !== -1
     },
-    getItemValue(labArr,itemName){
-      let itemVal = '';
+    getItemValue (labArr, itemName) {
+      let itemVal = ''
       labArr.forEach((item, index) => {
-        let labNameTmp = item.substring(0,item.indexOf('='));//project   module   dc
-        if(labNameTmp===itemName){
-          let labVal = item.substring(item.indexOf('=')+1,item.length);
-          if(labVal.indexOf('~')!=-1){
-            labVal = labVal.substring(2,labVal.length-1);
-            let valArr = labVal.split('|');
-            itemVal = valArr[0];
-          }else {
-            labVal = labVal.substring(1,labVal.length-1);
-            itemVal = labVal;
+        const labNameTmp = item.substring(0, item.indexOf('='))// project   module   dc
+        if (labNameTmp === itemName) {
+          let labVal = item.substring(item.indexOf('=') + 1, item.length)
+          if (labVal.indexOf('~') != -1) {
+            labVal = labVal.substring(2, labVal.length - 1)
+            const valArr = labVal.split('|')
+            itemVal = valArr[0]
+          } else {
+            labVal = labVal.substring(1, labVal.length - 1)
+            itemVal = labVal
           }
         }
-      });
-      return itemVal;
+      })
+      return itemVal
     },
 
-    getMetricLabelValue(metric,othersParams){
-      let labArr = othersParams.split(',');
-      let projectVal = this.getItemValue(labArr,'project');
-      let projectCascaderVal = projectVal+'_par';
-      let moduleVal = this.getItemValue(labArr,'module');
-      this.elementInfo.metric = [projectCascaderVal,moduleVal,metric];
-      //先判断缓存中是否已经存在数据，无则再从后台获取
-      let metricLabelValMap = new Map();
-      let projectItem = this.metricAllData.get(projectVal);
-      if(projectItem){
-        let moduleItem = projectItem.find(item => item.name === moduleVal);
-        if(moduleItem){
-          metricLabelValMap = moduleItem.metricMap;
+    getMetricLabelValue (metric, othersParams) {
+      const labArr = othersParams.split(',')
+      const projectVal = this.getItemValue(labArr, 'project')
+      const projectCascaderVal = projectVal + '_par'
+      const moduleVal = this.getItemValue(labArr, 'module')
+      this.elementInfo.metric = [projectCascaderVal, moduleVal, metric]
+      // 先判断缓存中是否已经存在数据，无则再从后台获取
+      let metricLabelValMap = new Map()
+      const projectItem = this.metricAllData.get(projectVal)
+      if (projectItem) {
+        const moduleItem = projectItem.find(item => item.name === moduleVal)
+        if (moduleItem) {
+          metricLabelValMap = moduleItem.metricMap
         }
       }
-      if(metricLabelValMap.size>0){
-        //设置labelValue列表
-        this.metricLabelValInfo = metricLabelValMap;
-        //设置3级级联metric选择的metric
-        let metricArr = [];
-        metricLabelValMap.forEach((item,index)=>{
+      if (metricLabelValMap.size > 0) {
+        // 设置labelValue列表
+        this.metricLabelValInfo = metricLabelValMap
+        // 设置3级级联metric选择的metric
+        const metricArr = []
+        metricLabelValMap.forEach((item, index) => {
           const childOption = {
             value: index,
             label: index,
-            leaf:true,
-          };
-          metricArr.push(childOption);
-        });
-        this.metricCascaderList.map((item, index) => {
-          if (item.value === projectCascaderVal) {//选择的project
-            item.children.map((innerItem, innerIndex) => {
-              if (innerItem.value === moduleVal && innerItem.children.length === 0) {//不重复加载
-                this.$set(innerItem, 'children', metricArr);
+            leaf: true
+          }
+          metricArr.push(childOption)
+        })
+        this.metricCascaderList.forEach((item, index) => {
+          if (item.value === projectCascaderVal) { // 选择的project
+            item.children.forEach((innerItem, innerIndex) => {
+              if (innerItem.value === moduleVal && innerItem.children.length === 0) { // 不重复加载
+                this.$set(innerItem, 'children', metricArr)
               }
             })
           }
-        });
+        })
 
-        this.elementInfo.selectedTagList = [];
-        if(this.metricLabelValInfo.has(metric)){
-          let tagListTmp = [];
-          tagListTmp = [...this.metricLabelValInfo.get(metric)];//[...this.metricList],
-          tagListTmp.forEach((selectItem)=>{
-            selectItem.value = [];//清空值，再进行赋值
-          });
-          //设置选择的值
-          let labArr = othersParams.split(',');
+        this.elementInfo.selectedTagList = []
+        if (this.metricLabelValInfo.has(metric)) {
+          let tagListTmp = []
+          tagListTmp = [...this.metricLabelValInfo.get(metric)]// [...this.metricList],
+          tagListTmp.forEach((selectItem) => {
+            selectItem.value = []// 清空值，再进行赋值
+          })
+          // 设置选择的值
+          const labArr = othersParams.split(',')
           tagListTmp.forEach((tagItem) => {
-            let labelName = tagItem.name;
-            labArr.forEach((item, index) => {//b=~'1|2|3'
-              let labNameTmp = item.substring(0,item.indexOf('='));//project   module   dc
-              if(labNameTmp===labelName){
-                let labVal = item.substring(item.indexOf('=')+1,item.length);
-                if(labVal.indexOf('~')!=-1){
-                  labVal = labVal.substring(2,labVal.length-1);
-                  let valArr = labVal.split('|');
+            const labelName = tagItem.name
+            labArr.forEach((item, index) => { // b=~'1|2|3'
+              const labNameTmp = item.substring(0, item.indexOf('='))// project   module   dc
+              if (labNameTmp === labelName) {
+                let labVal = item.substring(item.indexOf('=') + 1, item.length)
+                if (labVal.indexOf('~') != -1) {
+                  labVal = labVal.substring(2, labVal.length - 1)
+                  const valArr = labVal.split('|')
                   valArr.forEach((labItem, labIndex) => {
-                    if(tagItem.value.indexOf(labItem)===-1){
-                      tagItem.value.push(labItem);
+                    if (tagItem.value.indexOf(labItem) === -1) {
+                      tagItem.value.push(labItem)
                     }
-                  });
-                }else {
-                  labVal = labVal.substring(1,labVal.length-1);
-                  if(tagItem.value.indexOf(labVal)===-1){
-                    tagItem.value.push(labVal);
+                  })
+                } else {
+                  labVal = labVal.substring(1, labVal.length - 1)
+                  if (tagItem.value.indexOf(labVal) === -1) {
+                    tagItem.value.push(labVal)
                   }
                 }
               }
-            });
-          });
-          //排序label顺序
-          this.sortLabel(tagListTmp,this.elementInfo.selectedTagList);
-          this.setLabelValueCascader();
+            })
+          })
+          // 排序label顺序
+          this.sortLabel(tagListTmp, this.elementInfo.selectedTagList)
+          this.setLabelValueCascader()
         }
-      }else {
-        let match = '{project="'+projectVal+'",module="'+moduleVal+'"}';
-        this.$get('/prom/api/v1/series?match[]='+match).then(res => {
+      } else {
+        const match = '{project="' + projectVal + '",module="' + moduleVal + '"}'
+        this.$get('/prom/api/v1/series?match[]=' + match).then(res => {
           if (res.status === 'success') {
-            let metricArr = [];
-            let metricArrTmp = [];
+            const metricArr = []
+            const metricArrTmp = []
             res.data.forEach((tag, i) => {
-              let metricName = tag.__name__;
-              if(metricArrTmp.indexOf(metricName)===-1){
+              const metricName = tag.__name__
+              if (metricArrTmp.indexOf(metricName) === -1) {
                 const childOption = {
-                  value: metricName,//+"_par",
+                  value: metricName, // +"_par",
                   label: metricName,
-                  leaf:true,
-                };
-                metricArrTmp.push(metricName);
-                metricArr.push(childOption);
+                  leaf: true
+                }
+                metricArrTmp.push(metricName)
+                metricArr.push(childOption)
               }
-              this.metricCascaderList.map((item, index) => {
-                if (item.value === projectCascaderVal) {//选择的project
-                  item.children.map((innerItem, innerIndex) => {
-                    if (innerItem.value === moduleVal && innerItem.children.length === 0) {//不重复加载
-                      this.$set(innerItem, 'children', metricArr);
+              this.metricCascaderList.forEach((item, index) => {
+                if (item.value === projectCascaderVal) { // 选择的project
+                  item.children.forEach((innerItem, innerIndex) => {
+                    if (innerItem.value === moduleVal && innerItem.children.length === 0) { // 不重复加载
+                      this.$set(innerItem, 'children', metricArr)
                     }
                   })
                 }
-              });
+              })
 
-              const tagsArr = Object.keys(tag);//["__name__","asset","idc","instance","job","module","project"]
-              let labelValList = [];
+              const tagsArr = Object.keys(tag)// ["__name__","asset","idc","instance","job","module","project"]
+              const labelValList = []
 
               tagsArr.forEach((tagName) => {
                 if (tagName !== '__name__') {
                   const tagObj = {
                     name: tagName,
-                    list:[],
-                    value:[]//最终选择的值
-                  };
-                  let tagValue = tag[tagName];
-                  const tagItem = labelValList.find(item => item.name === tagName);
-                  if(tagItem){//metric对应的label已添加
-                    if(tagItem.list.indexOf(tagValue)===-1){//label对于value是否添加，没有添加，则添加
-                      tagItem.list .push(tagValue);
+                    list: [],
+                    value: []// 最终选择的值
+                  }
+                  const tagValue = tag[tagName]
+                  const tagItem = labelValList.find(item => item.name === tagName)
+                  if (tagItem) { // metric对应的label已添加
+                    if (tagItem.list.indexOf(tagValue) === -1) { // label对于value是否添加，没有添加，则添加
+                      tagItem.list.push(tagValue)
                     }
-                  }else {//metric对于的label未添加
-                    tagObj.list.push(tagValue);
-                    labelValList.push(tagObj);
+                  } else { // metric对于的label未添加
+                    tagObj.list.push(tagValue)
+                    labelValList.push(tagObj)
                   }
                 }
-              });
-              if(this.metricLabelValInfo.has(metricName)){
-                let existMetricLabelList =  this.metricLabelValInfo.get(metricName);
-                labelValList.forEach((labelItem,index)=>{
-                  const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name);
-                  if(existTagItem){//label已添加
-                    labelItem.list.forEach((valueItem,valIndex)=>{
-                      if(existTagItem.list.indexOf(valueItem)===-1){//value未添加
-                        existTagItem.list.push(valueItem);
+              })
+              if (this.metricLabelValInfo.has(metricName)) {
+                const existMetricLabelList = this.metricLabelValInfo.get(metricName)
+                labelValList.forEach((labelItem, index) => {
+                  const existTagItem = existMetricLabelList.find(item => item.name === labelItem.name)
+                  if (existTagItem) { // label已添加
+                    labelItem.list.forEach((valueItem, valIndex) => {
+                      if (existTagItem.list.indexOf(valueItem) === -1) { // value未添加
+                        existTagItem.list.push(valueItem)
                       }
                     })
-                  }else {//label未添加
-                    existMetricLabelList.push(labelItem);
+                  } else { // label未添加
+                    existMetricLabelList.push(labelItem)
                   }
                 })
-              }else {
-                this.metricLabelValInfo.set(metricName,labelValList);
+              } else {
+                this.metricLabelValInfo.set(metricName, labelValList)
               }
-              //缓存数据
-              this.cacheData(projectVal,moduleVal,metricName,labelValList);
-            });
+              // 缓存数据
+              this.cacheData(projectVal, moduleVal, metricName, labelValList)
+            })
 
-            this.elementInfo.selectedTagList = [];
-            if(this.metricLabelValInfo.has(metric)){
-              let tagListTmp = [];
-              tagListTmp = [...this.metricLabelValInfo.get(metric)];//[...this.metricList],
-              tagListTmp.forEach((selectItem)=>{
-                selectItem.value = [];//清空值，再进行赋值
-              });
-              //设置选择的值
-              let labArr = othersParams.split(',');
+            this.elementInfo.selectedTagList = []
+            if (this.metricLabelValInfo.has(metric)) {
+              let tagListTmp = []
+              tagListTmp = [...this.metricLabelValInfo.get(metric)]// [...this.metricList],
+              tagListTmp.forEach((selectItem) => {
+                selectItem.value = []// 清空值，再进行赋值
+              })
+              // 设置选择的值
+              const labArr = othersParams.split(',')
               tagListTmp.forEach((tagItem) => {
-                let labelName = tagItem.name;
-                labArr.forEach((item, index) => {//b=~'1|2|3'
-                  let labNameTmp = item.substring(0,item.indexOf('='));//project   module   dc
-                  if(labNameTmp===labelName){
-                    let labVal = item.substring(item.indexOf('=')+1,item.length);
-                    if(labVal.indexOf('~')!=-1){
-                      labVal = labVal.substring(2,labVal.length-1);
-                      let valArr = labVal.split('|');
+                const labelName = tagItem.name
+                labArr.forEach((item, index) => { // b=~'1|2|3'
+                  const labNameTmp = item.substring(0, item.indexOf('='))// project   module   dc
+                  if (labNameTmp === labelName) {
+                    let labVal = item.substring(item.indexOf('=') + 1, item.length)
+                    if (labVal.indexOf('~') != -1) {
+                      labVal = labVal.substring(2, labVal.length - 1)
+                      const valArr = labVal.split('|')
                       valArr.forEach((labItem, labIndex) => {
-                        if(tagItem.value.indexOf(labItem)===-1){
-                          tagItem.value.push(labItem);
+                        if (tagItem.value.indexOf(labItem) === -1) {
+                          tagItem.value.push(labItem)
                         }
-                      });
-                    }else {
-                      labVal = labVal.substring(1,labVal.length-1);
-                      if(tagItem.value.indexOf(labVal)===-1){
-                        tagItem.value.push(labVal);
+                      })
+                    } else {
+                      labVal = labVal.substring(1, labVal.length - 1)
+                      if (tagItem.value.indexOf(labVal) === -1) {
+                        tagItem.value.push(labVal)
                       }
                     }
                   }
-                });
-              });
-              //排序label顺序
-              this.sortLabel(tagListTmp,this.elementInfo.selectedTagList);
-              this.setLabelValueCascader();
-              //let tagNum = this.elementInfo.selectedTagList.length;
-              //this.$nextTick(() => {
-                //this.setLabelDivHeight(tagNum);
-              //});
-            }else{
+                })
+              })
+              // 排序label顺序
+              this.sortLabel(tagListTmp, this.elementInfo.selectedTagList)
+              this.setLabelValueCascader()
+              // let tagNum = this.elementInfo.selectedTagList.length;
+              // this.$nextTick(() => {
+              // this.setLabelDivHeight(tagNum);
+              // });
+            } else {
               this.$nextTick(() => {
-                this.elementInfo.selectedTagList = [];
-                //this.setLabelDivHeight(0);
-              });
+                this.elementInfo.selectedTagList = []
+                // this.setLabelDivHeight(0);
+              })
             }
           }
-        });
+        })
       }
     },
-    sortLabel(tagListTmp,rltList){
+    sortLabel (tagListTmp, rltList) {
       this.labelSort.forEach((sortItem) => {
-        let itemIndex = -1;
-        tagListTmp.forEach((item,i) => {
-          if(sortItem===item.name){//labelSort:['project','module','endpoint','datacenter','asset'],
-            //this.elementInfo.selectedTagList.push(item);
-            rltList.push(item);
-            itemIndex = i;
+        let itemIndex = -1
+        tagListTmp.forEach((item, i) => {
+          if (sortItem === item.name) { // labelSort:['project','module','endpoint','datacenter','asset'],
+            // this.elementInfo.selectedTagList.push(item);
+            rltList.push(item)
+            itemIndex = i
           }
-        });
-        if(itemIndex!==-1){
-          tagListTmp.splice(itemIndex,1);
+        })
+        if (itemIndex !== -1) {
+          tagListTmp.splice(itemIndex, 1)
         }
-      });
-      tagListTmp.forEach((item,i) => {
-        //this.elementInfo.selectedTagList.push(item);
-        rltList.push(item);
-      });
+      })
+      tagListTmp.forEach((item, i) => {
+        // this.elementInfo.selectedTagList.push(item);
+        rltList.push(item)
+      })
     },
 
     // 编辑已有图表状态时，先填充数据
-    setMdata(data,statistics) {
-      this.setDataFlag = true;
-      this.target = Object.assign({}, data);
+    setMdata (data, statistics) {
+      this.setDataFlag = true
+      this.target = Object.assign({}, data)
 
-      this.elementInfo.statistics = statistics;
-      if(this.target.type==='expert'){
-        this.tableShow = 2;
-        this.elementInfo.type = this.target.type;
-        this.elementInfo.expression = this.target.expression;
-        this.elementInfo.legend=this.target.legend;
-      }else {
-        this.tableShow = 1;
-        this.elementInfo.type = this.target.type;
-        //解析expression，=>标签列表，值列表（index对应），设置selectedTagList及tagList里的isSelect为true
-        var expression = this.target.expression;
-        //alert('expression=='+expression);
-        if(expression.indexOf('{')>-1){
-          this.elementInfo.metric = expression.substring(0,expression.indexOf('{'));
-        }else {
-          this.elementInfo.metric = expression;
+      this.elementInfo.statistics = statistics
+      if (this.target.type === 'expert') {
+        this.tableShow = 2
+        this.elementInfo.type = this.target.type
+        this.elementInfo.expression = this.target.expression
+        this.elementInfo.legend = this.target.legend
+      } else {
+        this.tableShow = 1
+        this.elementInfo.type = this.target.type
+        // 解析expression，=>标签列表，值列表（index对应），设置selectedTagList及tagList里的isSelect为true
+        const expression = this.target.expression
+        // alert('expression=='+expression);
+        if (expression.indexOf('{') > -1) {
+          this.elementInfo.metric = expression.substring(0, expression.indexOf('{'))
+        } else {
+          this.elementInfo.metric = expression
         }
-        //设置metric显示的值
+        // 设置metric显示的值
         /*
         if (this.$refs.metricSelect) {
           let cascaderDiv = document.querySelector('#cascader'+this.pointer);
@@ -1208,15 +1207,15 @@ export default {
               cascaderInput.firstElementChild.value = this.elementInfo.metric;
             }
           }
-        }*/
+        } */
 
-        this.elementInfo.legend=this.target.legend;
-        let labelValList = expression.substring(expression.indexOf('{')+1,expression.indexOf('}'));
-        this.getMetricLabelValue(this.elementInfo.metric,labelValList);//获得metric及对应label及value
+        this.elementInfo.legend = this.target.legend
+        const labelValList = expression.substring(expression.indexOf('{') + 1, expression.indexOf('}'))
+        this.getMetricLabelValue(this.elementInfo.metric, labelValList)// 获得metric及对应label及value
       }
       setTimeout(() => {
-        this.$refs.scrollbar.update();
-      }, 1000);
+        this.$refs.scrollbar.update()
+      }, 1000)
     },
 
     /*
@@ -1272,128 +1271,129 @@ export default {
    },
    */
 
-    clearHistory() {
-      this.elementInfo.metric = '';
-      this.setDataFlag = false;
+    clearHistory () {
+      this.elementInfo.metric = ''
+      this.setDataFlag = false
       if (this.$refs.elementInfo) {
-        this.$refs.elementInfo.resetFields();//???
+        this.$refs.elementInfo.resetFields()// ???
       }
       if (this.$refs.metricSelect) {
-        this.$refs.metricSelect.reset();
+        this.$refs.metricSelect.reset()
       }
-      this.elementInfo.tagList = [];
+      this.elementInfo.tagList = []
     },
     // 获取文本宽度
-    getWidth(str) {
-      const sensor = document.createElement('pre');
-      sensor.innerHTML = str;
-      sensor.style.display = 'inline-block';
-      sensor.style.width = 'auto';
-      sensor.style.visibility = 'hidden';
-      sensor.style.height = 0;
-      sensor.style.position = 'relative';
-      sensor.style['z-index'] = -10;
-      document.body.appendChild(sensor);
-      const width = sensor.offsetWidth;
-      document.body.removeChild(sensor);
-      const widthL = width > 180 ? width : 180;
-      return widthL;
+    getWidth (str) {
+      const sensor = document.createElement('pre')
+      sensor.innerHTML = str
+      sensor.style.display = 'inline-block'
+      sensor.style.width = 'auto'
+      sensor.style.visibility = 'hidden'
+      sensor.style.height = 0
+      sensor.style.position = 'relative'
+      sensor.style['z-index'] = -10
+      document.body.appendChild(sensor)
+      const width = sensor.offsetWidth
+      document.body.removeChild(sensor)
+      const widthL = width > 180 ? width : 180
+      return widthL
     },
     // 将tag添加到相应框内
-    proTags(data) {
-      const dou = data.indexOf(',');
+    proTags (data) {
+      const dou = data.indexOf(',')
       // 只有一组tag
       if (dou === -1) {
-        const set = data.split('=');
-        const tagValueArr = set[1].indexOf('|') > -1 ? set[1].split('|') : [set[1]];
-        const tagIndex = this.elementInfo.tagList.findIndex(t => t.name === set[0]);
+        const set = data.split('=')
+        const tagValueArr = set[1].indexOf('|') > -1 ? set[1].split('|') : [set[1]]
+        const tagIndex = this.elementInfo.tagList.findIndex(t => t.name === set[0])
         if (tagIndex > -1) {
-          this.elementInfo.tagList[tagIndex].value = tagValueArr;
+          this.elementInfo.tagList[tagIndex].value = tagValueArr
         }
       } else { // 多组tag
-        const mid = data.split(','); // ['key=v1','key=v2|v3',....]
+        const mid = data.split(',') // ['key=v1','key=v2|v3',....]
         mid.forEach((item) => {
-          const setInner = item.split('=');
-          const innerValueArr = setInner[1].indexOf('|') > -1 ?
-          setInner[1].split('|') : [setInner[1]];
-          const tagIndex = this.elementInfo.tagList.findIndex(t => t.name === setInner[0]);
+          const setInner = item.split('=')
+          const innerValueArr = setInner[1].indexOf('|') > -1
+            ? setInner[1].split('|')
+            : [setInner[1]]
+          const tagIndex = this.elementInfo.tagList.findIndex(t => t.name === setInner[0])
           if (tagIndex > -1) {
-            this.elementInfo.tagList[tagIndex].value = innerValueArr;
+            this.elementInfo.tagList[tagIndex].value = innerValueArr
           }
-        });
+        })
       }
     },
-    //metricLabelName单击事件
-    getLidata(index, item) {
-      if(!item.isSelect){
-        this.vendorCount = index;
-        //查询metricLabel名称对应的LabelValue
-        this.$get('metric/labelVal?metric='+this.elementInfo.metric+"&name="+item.name).then(response => {
+    // metricLabelName单击事件
+    getLidata (index, item) {
+      if (!item.isSelect) {
+        this.vendorCount = index
+        // 查询metricLabel名称对应的LabelValue
+        this.$get('metric/labelVal?metric=' + this.elementInfo.metric + '&name=' + item.name).then(response => {
           const tagObj = {
-            name: item.name,//选中的metricLabel名称
-            list:[],//metricLabel名称对应的LabelValue
-            value:[]//最终选择的值
-          };
-          //this.elementInfo.selectedTagList = [];
+            name: item.name, // 选中的metricLabel名称
+            list: [], // metricLabel名称对应的LabelValue
+            value: []// 最终选择的值
+          }
+          // this.elementInfo.selectedTagList = [];
           if (response.code === 200) {
-            if(response.data.list){
+            if (response.data.list) {
               response.data.list.forEach((item) => {
                 tagObj.list.push(item.value)
-              });
-              this.elementInfo.selectedTagList.push(tagObj);
-            }else{
+              })
+              this.elementInfo.selectedTagList.push(tagObj)
+            } else {
               response.data.forEach((item) => {
                 tagObj.list.push(item.value)
-              });
-              this.elementInfo.selectedTagList.push(tagObj);
+              })
+              this.elementInfo.selectedTagList.push(tagObj)
             }
-          }else {
-            this.elementInfo.selectedTagList.push(tagObj);
+          } else {
+            this.elementInfo.selectedTagList.push(tagObj)
           }
-        });
-        item.isSelect = true;
+        })
+        item.isSelect = true
       }
     },
-    //删除MetricLabel时，需要将tagList中的isSelect设置为false，并删除elementInfo.selectedTagList里对应的元素
-    deleteMetricLabel(item,index) {
+    // 删除MetricLabel时，需要将tagList中的isSelect设置为false，并删除elementInfo.selectedTagList里对应的元素
+    deleteMetricLabel (item, index) {
       this.elementInfo.tagList.forEach((tagItem) => {
-        if(tagItem.name===item.name){
-          tagItem.isSelect = false;
+        if (tagItem.name === item.name) {
+          tagItem.isSelect = false
         }
-      });
-      this.elementInfo.selectedTagList.splice(index,1);
-      //this.$emit('on-delete-target', this.pointer);
+      })
+      this.elementInfo.selectedTagList.splice(index, 1)
+      // this.$emit('on-delete-target', this.pointer);
     },
-    clickTabelShow(val,type){
-      this.tableShow = val;
-      this.elementInfo.type = type;
-      if(val===2){
-        this.elementInfo.metric='';
+    clickTabelShow (val, type) {
+      this.tableShow = val
+      this.elementInfo.type = type
+      if (val === 2) {
+        this.elementInfo.metric = ''
       }
-      if(val===1){
-        this.elementInfo.expression='';
+      if (val === 1) {
+        this.elementInfo.expression = ''
       }
     },
-    resetZIndex,
+    resetZIndex
   },
   computed: {
-    metricShowList() {
+    metricShowList () {
       const obj = {
         arr: [...this.metricList],
-        text: '',
-      };
-      return obj;
-    },
+        text: ''
+      }
+      return obj
+    }
   },
-  mounted() {
+  mounted () {
     bus.$on('clear_history', () => {
-      this.clearHistory();
-    });
+      this.clearHistory()
+    })
   },
-  beforeDestroy() {
-    bus.$off('clear_history');
-  },
+  beforeDestroy () {
+    bus.$off('clear_history')
+  }
 
-};
+}
 
 </script>

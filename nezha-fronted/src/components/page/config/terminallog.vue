@@ -87,7 +87,7 @@
           </template>
         </el-table-column>
         <el-table-column width="28">
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
@@ -108,322 +108,322 @@
   </div>
 </template>
 <script>
-  import bus from "../../../libs/bus";
-  import {terminalLog} from "../../common/js/constants";
-  import {calcDurationByStringTimeB} from "../../common/js/tools";
+import bus from '../../../libs/bus'
+import { terminalLog } from '../../common/js/constants'
+import { calcDurationByStringTimeB } from '../../common/js/tools'
 
-  export default {
-    name: "terminallog",
-    data() {
-      return {
-        tableId: 'terminalLogTable', //需要分页的table的id，用于记录每页数量
+export default {
+  name: 'terminallog',
+  data () {
+    return {
+      tableId: 'terminalLogTable', // 需要分页的table的id，用于记录每页数量
 
-        /*二级页面相关*/
-        bottomBox: {
-          terminalLog: {},
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
+      /* 二级页面相关 */
+      bottomBox: {
+        terminalLog: {},
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
 
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        rightBox: { //弹出框相关
-          show: false,
-          isEdit: false, //false查看，true编辑
-          title: ''
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      rightBox: { // 弹出框相关
+        show: false,
+        isEdit: false, // false查看，true编辑
+        title: ''
 
+      },
+      rightBoxResize: { // resize弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      rightBoxDownload: { // 下载弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      rightBoxUpload: { // 上传弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: this.$t('config.terminallog.id'),
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: 'Session ID',
+          prop: 'uuid',
+          show: true
+        }, {
+          label: 'Username',
+          prop: 'username',
+          show: true
         },
-        rightBoxResize: { //resize弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.terminallog.source'),
+          prop: 'remoteAddr',
+          show: true
         },
-        rightBoxDownload: { //下载弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.terminallog.remote'),
+          prop: 'remote',
+          show: true
         },
-        rightBoxUpload: { //上传弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.terminallog.protocol'),
+          prop: 'protocol',
+          show: true
         },
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
+        {
+          label: this.$t('config.terminallog.startTime'),
+          prop: 'startTime',
+          show: true
         },
-        tableTitle: [
+        {
+          label: this.$t('config.terminallog.duration'),
+          prop: 'duration',
+          show: true
+        },
+        {
+          label: 'AuthType',
+          prop: 'authType',
+          show: false
+        },
+        {
+          label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
+          prop: 'status',
+          show: true,
+          width: 100
+        },
+        {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120,
+          fixed: 'right'
+        }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [
           {
-            label: this.$t("config.terminallog.id"),
-            prop: 'id',
-            show: true,
-            width: 80
+            id: 11,
+            name: this.$t('config.terminallog.host'),
+            type: 'input',
+            label: 'host',
+            disabled: false
           }, {
-            label: "Session ID",
-            prop: 'uuid',
-            show: true,
-          }, {
-            label: "Username",
-            prop: 'username',
-            show: true,
-          },
-          {
-            label: this.$t('config.terminallog.source'),
-            prop: 'remoteAddr',
-            show: true,
-          },
-          {
-            label: this.$t('config.terminallog.remote'),
-            prop: 'remote',
-            show: true,
-          },
-          {
-            label: this.$t('config.terminallog.protocol'),
-            prop: 'protocol',
-            show: true,
-          },
-          {
-            label: this.$t('config.terminallog.startTime'),
-            prop: 'startTime',
-            show: true,
-          },
-          {
-            label: this.$t('config.terminallog.duration'),
-            prop: 'duration',
-            show: true,
-          },
-          {
-            label: 'AuthType',
-            prop: 'authType',
-            show: false
-          },
-          {
-            label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
-            prop: 'status',
-            show: true,
-            width: 100
-          },
-          {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120,
-            fixed: "right"
+            id: 12,
+            name: this.$t('config.terminallog.user'),
+            type: 'input',
+            label: 'username',
+            disabled: false
           }
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [
-            {
-              id: 11,
-              name: this.$t('config.terminallog.host'),
-              type: 'input',
-              label: 'host',
-              disabled: false
-            },{
-              id: 12,
-              name: this.$t('config.terminallog.user'),
-              type: 'input',
-              label: 'username',
-              disabled: false
-            }
-          ],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-        nowTime:'',
+        ]
+      },
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      nowTime: ''
+    }
+  },
+  computed: {
+    getStatusText () {
+      return function (status) {
+        return terminalLog.status[status]
       }
     },
-    computed: {
-      getStatusText() {
-        return function(status) {
-          return terminalLog.status[status];
+    getRemoteText () {
+      return function (record) {
+        return `${record.loginUser}@${record.host}:${record.port}`
+      }
+    },
+    getDuration () {
+      return function (record) {
+        if (record.endTime) {
+          return calcDurationByStringTimeB(record.startTime, record.endTime)
         }
-      },
-      getRemoteText() {
-        return function(record) {
-          return `${record.loginUser}@${record.host}:${record.port}`;
-        }
-      },
-      getDuration() {
-        return function(record) {
-          if (record.endTime) {
-            return calcDurationByStringTimeB(record.startTime, record.endTime);
+        return calcDurationByStringTimeB(record.startTime, this.nowTime)
+      }
+    }
+  },
+  watch: {
+    'bottomBox.showSubList': function (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
+    }
+  },
+  methods: {
+    getTableData () {
+      const params = {
+        ...this.searchLabel,
+        pageNo: this.pageObj.pageNo,
+        pageSize: this.pageObj.pageSize
+      }
+      this.$get('terminal/session', params).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.tableData = response.data.list
+          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.terminalLogTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
           }
-          return calcDurationByStringTimeB(record.startTime, this.nowTime);
         }
-      },
+      })
     },
-    watch: {
-      'bottomBox.showSubList': function (n) {
-        let vm = this;
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
+
+    showRecord (record) {
+      this.bottomBox.targetTab = 'record'
+      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
+      this.bottomBox.showSubList = true
     },
-    methods: {
-      getTableData() {
-        let params={
-          ...this.searchLabel,
-          pageNo:this.pageObj.pageNo,
-          pageSize:this.pageObj.pageSize,
-        }
-        this.$get('terminal/session', params).then(response => {
-          this.tools.loading = false;
-          if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.nowTime=this.utcTimeToTimezoneStr(response.time);
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.terminalLogTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
+    showHistoryCMD (record) {
+      this.bottomBox.targetTab = 'cmd'
+      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
+      this.bottomBox.showSubList = true
+    },
+    monitor (record) {
+      this.bottomBox.targetTab = 'monitor'
+      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
+      this.bottomBox.showSubList = true
+    },
+    shutdown (record) {
+      this.$confirm(this.$t('tip.killTerm'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$put('/terminal/kill', { uuid: record.uuid }).then(res => {
+          if (res.code === 200) {
+            this.$message.success(this.$t('config.terminallog.success'))
+            this.bottomBox.showSubList = false
+            this.getTableData()
+          } else {
+            this.$message.error(this.$t('config.terminallog.killErrorTip'))
           }
         })
-      },
-
-      showRecord(record) {
-        this.bottomBox.targetTab = 'record';
-        this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
-        this.bottomBox.showSubList = true;
-      },
-      showHistoryCMD(record) {
-        this.bottomBox.targetTab = 'cmd';
-        this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
-        this.bottomBox.showSubList = true;
-      },
-      monitor(record) {
-        this.bottomBox.targetTab = 'monitor';
-        this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record));
-        this.bottomBox.showSubList = true;
-      },
-      shutdown(record) {
-        this.$confirm(this.$t("tip.killTerm"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$put("/terminal/kill", {uuid: record.uuid}).then(res => {
-            if (res.code === 200) {
-              this.$message.success(this.$t("config.terminallog.success"));
-              this.bottomBox.showSubList = false;
-              this.getTableData();
-            } else {
-              this.$message.error(this.$t("config.terminallog.killErrorTip"));
-            }
-          });
-        });
-      },
-      // 全屏
-      fullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.fullScreen(vm);
-      },
-      // 退出全屏
-      exitFullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.exitFullScreen(vm);
-      },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let vm = this;
-        this.$bottomBoxWindow.listResize(vm, e);
-      },
-      messageStyle(e) {
-        if (e.column.label == this.$t('config.terminallog.status')) {
-          if (e.row.status == '0') {
-            return 'success';
-          } else if (e.row.status == '1') {
-            return 'warning';
-          } else if (e.row.status == '2') {
-            return 'suspended';
-          } else if (e.row.status == '3') {
-            return 'danger';
-          } else if (e.row.status == '4') {
-            return 'danger';
-          }
-        }
-        return '';
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      search: function (searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        this.getTableData();
-      },
-      closeSubList(){
-        this.bottomBox.showSubList = false;
-        if( this.bottomBox.targetTab == 'monitor'){
-          this.getTableData();
-        }
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
+      })
     },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+    // 全屏
+    fullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.fullScreen(vm)
     },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+    // 退出全屏
+    exitFullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.exitFullScreen(vm)
+    },
+    // 鼠标拖动二级列表
+    listResize (e) {
+      const vm = this
+      this.$bottomBoxWindow.listResize(vm, e)
+    },
+    messageStyle (e) {
+      if (e.column.label == this.$t('config.terminallog.status')) {
+        if (e.row.status == '0') {
+          return 'success'
+        } else if (e.row.status == '1') {
+          return 'warning'
+        } else if (e.row.status == '2') {
+          return 'suspended'
+        } else if (e.row.status == '3') {
+          return 'danger'
+        } else if (e.row.status == '4') {
+          return 'danger'
+        }
+      }
+      return ''
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    search: function (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      this.getTableData()
+    },
+    closeSubList () {
+      this.bottomBox.showSubList = false
+      if (this.bottomBox.targetTab == 'monitor') {
+        this.getTableData()
       }
     },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    }
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
 
-      this.getTableData();
-    },
+    this.getTableData()
   }
+}
 </script>

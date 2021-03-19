@@ -119,7 +119,7 @@
           </template>
         </el-table-column>
         <el-table-column width="28" :resizable="false">
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
@@ -146,202 +146,202 @@
   </div>
 </template>
 <script>
-  import bus from '../../../libs/bus';
-  import dcBox from "../../common/rightBox/dcBox"; //dc弹框
-  import trafficSettingBox from "../../common/rightBox/trafficSetting/trafficSettingBox";
-  import deleteButton from "../../common/deleteButton";
-  var  regNum = /^[0-9]+.?[0-9]*/;
-  export default {
-    name: "dc",
-    components:{
-      'traffic-setting-box': trafficSettingBox,
-      'dc-box': dcBox,
-      'delete-button':deleteButton,
-    },
-    data() {
-      return {
-        /*二级页面相关*/
-        bottomBox: {
-          dcDetail: {},
-          dc: {},
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        batchDeleteObjs:[],
-        tableId: 'dcTable', //需要分页的table的id，用于记录每页数量
+import bus from '../../../libs/bus'
+import dcBox from '../../common/rightBox/dcBox' // dc弹框
+import trafficSettingBox from '../../common/rightBox/trafficSetting/trafficSettingBox'
+import deleteButton from '../../common/deleteButton'
+const regNum = /^[0-9]+.?[0-9]*/
+export default {
+  name: 'dc',
+  components: {
+    'traffic-setting-box': trafficSettingBox,
+    'dc-box': dcBox,
+    'delete-button': deleteButton
+  },
+  data () {
+    return {
+      /* 二级页面相关 */
+      bottomBox: {
+        dcDetail: {},
         dc: {},
-        blankDc: {
-          id: '',
-          name: '',
-          location: '',
-          tel: '',
-          principal: '',
-          // area: {
-          //   id: 0,
-          //   name: ''
-          // }
-          state:'ON',
-          longitude:undefined,
-          latitude:undefined,
-        },
-        rightBox: {
-          dc: {show: false},
-          trafficSetting: {show: false}
-        },
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("overall.name"),
-            prop: 'name',
-            show: true,
-          }, {
-            label: this.$t("asset.location"),
-            prop: 'location',
-            show: true,
-          }, {
-            label: this.$t("config.dc.cabinetNum"),
-            prop: 'cabinetNum',
-            show: true,
-          }, {
-            label: this.$t("config.dc.assets"),
-            prop: 'assetStat',
-            show: true,
-          }, {
-            label: this.$t('asset.tel'),
-            prop: 'tel',
-            show: true,
-          }, {
-            label: this.$t('asset.principal'),
-            prop: 'principal',
-            show: true
-          }, {
-            label: this.$t('config.dc.longitude'),
-            prop: 'longitude',
-            show: false
-          }, {
-            label: this.$t('config.dc.latitude'),
-            prop: 'latitude',
-            show: false
-          }, {
-            label: this.$t('config.dc.state'),
-            prop: 'state',
-            show: true
-          }, {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
-          }
-        ],
-        tableData: [],
-        userData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 10,
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          }],
-        },
-        searchLabel: {}, //搜索参数
-        tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
-        scrollbarWrap: null,
-        delFlag:false,
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      batchDeleteObjs: [],
+      tableId: 'dcTable', // 需要分页的table的id，用于记录每页数量
+      dc: {},
+      blankDc: {
+        id: '',
+        name: '',
+        location: '',
+        tel: '',
+        principal: '',
+        // area: {
+        //   id: 0,
+        //   name: ''
+        // }
+        state: 'ON',
+        longitude: undefined,
+        latitude: undefined
+      },
+      rightBox: {
+        dc: { show: false },
+        trafficSetting: { show: false }
+      },
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        }, {
+          label: this.$t('asset.location'),
+          prop: 'location',
+          show: true
+        }, {
+          label: this.$t('config.dc.cabinetNum'),
+          prop: 'cabinetNum',
+          show: true
+        }, {
+          label: this.$t('config.dc.assets'),
+          prop: 'assetStat',
+          show: true
+        }, {
+          label: this.$t('asset.tel'),
+          prop: 'tel',
+          show: true
+        }, {
+          label: this.$t('asset.principal'),
+          prop: 'principal',
+          show: true
+        }, {
+          label: this.$t('config.dc.longitude'),
+          prop: 'longitude',
+          show: false
+        }, {
+          label: this.$t('config.dc.latitude'),
+          prop: 'latitude',
+          show: false
+        }, {
+          label: this.$t('config.dc.state'),
+          prop: 'state',
+          show: true
+        }, {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120
+        }
+      ],
+      tableData: [],
+      userData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 10,
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }]
+      },
+      searchLabel: {}, // 搜索参数
+      tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
+      scrollbarWrap: null,
+      delFlag: false
+    }
+  },
+  computed: {
+    dcDataRefresh () { // 通过vuex更新dc   需要该属性到页面 否则不被监听
+      if (this.$store.getters.getDcDataRefresh) {
+        this.getTableData()
       }
+      return this.$store.getters.getDcDataRefresh
+    }
+  },
+  methods: {
+    assetStatClassName (param) {
+      if (param.column.label == this.$t('config.dc.assets')) {
+        return 'asset-state'
+      }
+      return ''
     },
-    computed:{
-      dcDataRefresh(){//通过vuex更新dc   需要该属性到页面 否则不被监听
-        if(this.$store.getters.getDcDataRefresh){
-          this.getTableData();
+    jumpTo (data, id) {
+      bus.$emit('menu-change', data)
+      this.$router.push({
+        path: '/' + data,
+        query: {
+          t: +new Date()
         }
-        return this.$store.getters.getDcDataRefresh;
-      },
+      })
     },
-    methods: {
-      assetStatClassName(param) {
-        if (param.column.label == this.$t("config.dc.assets")) {
-          return "asset-state";
-        }
-        return "";
-      },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      edit(u) {
-        this.dc = JSON.parse(JSON.stringify(u));
-        if(!regNum.test(this.dc.longitude)){
-          this.dc.longitude=undefined
-        }
-        if(!regNum.test(this.dc.latitude)){
-          this.dc.latitude=undefined
-        }
-        if (!this.dc.area) {
-          this.$set(this.dc, 'area', {id: '', name: ''});
-        }
-        this.rightBox.dc.show = true;
-      },
-      configTraffic(u) {
-        this.dc = JSON.parse(JSON.stringify(u));
-        this.rightBox.trafficSetting.show = true;
-      },
-      detail(u) {
-        this.bottomBox.dc = JSON.parse(JSON.stringify(u));
-        if (!this.bottomBox.dc.area) {
-          this.$set(this.bottomBox.dc, 'area', {id: '', name: ''});
-        }
-        this.bottomBox.targetTab = "detail";
-        this.bottomBox.showSubList = true;
-      },
-      // 全屏
-      fullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.fullScreen(vm);
-      },
-      // 退出全屏
-      exitFullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.exitFullScreen(vm);
-      },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let vm = this;
-        this.$bottomBoxWindow.listResize(vm, e);
-      },
-      convertToDetail(obj) {
-        let detail = JSON.parse(JSON.stringify(obj));
-        return detail;
-        /*let detail = [];
+    edit (u) {
+      this.dc = JSON.parse(JSON.stringify(u))
+      if (!regNum.test(this.dc.longitude)) {
+        this.dc.longitude = undefined
+      }
+      if (!regNum.test(this.dc.latitude)) {
+        this.dc.latitude = undefined
+      }
+      if (!this.dc.area) {
+        this.$set(this.dc, 'area', { id: '', name: '' })
+      }
+      this.rightBox.dc.show = true
+    },
+    configTraffic (u) {
+      this.dc = JSON.parse(JSON.stringify(u))
+      this.rightBox.trafficSetting.show = true
+    },
+    detail (u) {
+      this.bottomBox.dc = JSON.parse(JSON.stringify(u))
+      if (!this.bottomBox.dc.area) {
+        this.$set(this.bottomBox.dc, 'area', { id: '', name: '' })
+      }
+      this.bottomBox.targetTab = 'detail'
+      this.bottomBox.showSubList = true
+    },
+    // 全屏
+    fullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.fullScreen(vm)
+    },
+    // 退出全屏
+    exitFullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.exitFullScreen(vm)
+    },
+    // 鼠标拖动二级列表
+    listResize (e) {
+      const vm = this
+      this.$bottomBoxWindow.listResize(vm, e)
+    },
+    convertToDetail (obj) {
+      const detail = JSON.parse(JSON.stringify(obj))
+      return detail
+      /* let detail = [];
         detail.push({label: this.$t("overall.name"), value: obj.name});
         detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
         detail.push({label: this.$t("asset.location"), value: obj.location});
@@ -357,206 +357,206 @@
           }
         }
         detail.push({label: this.$t("asset.principal"), value: principal});
-        return detail;*/
-      },
-      add() {
-        this.dc = this.newDc();
-        this.rightBox.dc.show = true;
-      },
-      newDc() {
-        return JSON.parse(JSON.stringify(this.blankDc));
-      },
-      closeDcBox(refresh) {
-        this.rightBox.dc.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.getTableData();
-          bus.$emit("dc-list-change");
-        }
-      },
-      closeTrafficBox(refresh) {
-        this.rightBox.trafficSetting.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.getTableData();
-        }
-      },
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("idc?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.delFlag=true;
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-              bus.$emit("dc-list-change");
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-      statusChange(idc) {
-        this.$put('idc', idc).then(response => {
+        return detail; */
+    },
+    add () {
+      this.dc = this.newDc()
+      this.rightBox.dc.show = true
+    },
+    newDc () {
+      return JSON.parse(JSON.stringify(this.blankDc))
+    },
+    closeDcBox (refresh) {
+      this.rightBox.dc.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+        bus.$emit('dc-list-change')
+      }
+    },
+    closeTrafficBox (refresh) {
+      this.rightBox.trafficSetting.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
+    del (u) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('idc?ids=' + u.id).then(response => {
           if (response.code === 200) {
-            this.rightBox.show = false;
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.delFlag = true
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+            bus.$emit('dc-list-change')
           } else {
-            this.$message.error(response.msg);
-          }
-          this.getTableData();
-        });
-      },
-      getTableData() {
-        if (!this.hasButton('dc_view')) {
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
-        }
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('idc', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.dcTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
+            this.$message.error(response.msg)
           }
         })
-      },
-      getUserData() {
-        return new Promise(resolve => {
-          this.$get('sys/user/list', {pageSize: -1, pageNo: 1}).then(response => {
-            if (response.code === 200) {
-              this.userData = response.data.list;
-            }
-            resolve();
-          });
-        });
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.pageObj.pageSize = val;
-        this.getTableData();
-      },
-      search(searchObj) {
-        let orderBy = '';
-        if(this.searchLabel.orderBy) {
-          orderBy = this.searchLabel.orderBy;
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.dcTable&&this.$refs.dcTable.bodyWrapper){
-          this.$refs.dcTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      showCabinet(dc) {
-        this.bottomBox.targetTab = 'cabinet';
-        this.bottomBox.dc = JSON.parse(JSON.stringify(dc));
-        this.bottomBox.showSubList = true;
-      },
-      sortableShow(label,form){
-        if(label==='state'){
-          return false
-        }
-        return this.$tableSet.sortableShow(label,form)
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy = '';
-        if(item.order === 'ascending'){
-          orderBy = item.prop;
-        }
-        if(item.order === 'descending'){
-          orderBy = '-' + item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-      regNumTest(val){//校验是否是数字
-        return regNum.test(val)
-      },
-      initEvent() {
-        bus.$on("dc-list-change", () => {
-          this.getTableData();
-        });
-      },
+      })
     },
-    watch: {
-      'bottomBox.dc': {
-        deep: true,
-        handler(n) {
-          if (n.id) {
-            this.bottomBox.dcDetail = this.convertToDetail(n);
+    statusChange (idc) {
+      this.$put('idc', idc).then(response => {
+        if (response.code === 200) {
+          this.rightBox.show = false
+          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+        } else {
+          this.$message.error(response.msg)
+        }
+        this.getTableData()
+      })
+    },
+    getTableData () {
+      if (!this.hasButton('dc_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('idc', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dcTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
           }
         }
-      },
-      'bottomBox.showSubList': function(n) {
-        let vm = this;
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
+      })
+    },
+    getUserData () {
+      return new Promise(resolve => {
+        this.$get('sys/user/list', { pageSize: -1, pageNo: 1 }).then(response => {
+          if (response.code === 200) {
+            this.userData = response.data.list
           }
-
-          if(!this.delFlag){ // 不是删除时回到顶部
-            this.$refs.dcTable.bodyWrapper.scrollTop = 0
-          }else{
-            this.delFlag=false;
-          }
+          resolve()
+        })
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.pageObj.pageSize = val
+      this.getTableData()
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.dcTable && this.$refs.dcTable.bodyWrapper) {
+        this.$refs.dcTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    showCabinet (dc) {
+      this.bottomBox.targetTab = 'cabinet'
+      this.bottomBox.dc = JSON.parse(JSON.stringify(dc))
+      this.bottomBox.showSubList = true
+    },
+    sortableShow (label, form) {
+      if (label === 'state') {
+        return false
+      }
+      return this.$tableSet.sortableShow(label, form)
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    },
+    regNumTest (val) { // 校验是否是数字
+      return regNum.test(val)
+    },
+    initEvent () {
+      bus.$on('dc-list-change', () => {
+        this.getTableData()
+      })
+    }
+  },
+  watch: {
+    'bottomBox.dc': {
+      deep: true,
+      handler (n) {
+        if (n.id) {
+          this.bottomBox.dcDetail = this.convertToDetail(n)
         }
       }
     },
-    beforeDestroy(){
-      bus.$off("dc-list-change");
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+    'bottomBox.showSubList': function (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
     },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    destroyed() {
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
 
-    },
-    mounted() {
-      this.getUserData();
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      this.getTableData();
-    },
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.dcTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
+        }
+      }
+    }
+  },
+  beforeDestroy () {
+    bus.$off('dc-list-change')
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  destroyed () {
+
+  },
+  mounted () {
+    this.getUserData()
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.getTableData()
   }
+}
 </script>
 <style scoped>
   /deep/ td .nz-icon-gear:before{

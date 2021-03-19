@@ -66,8 +66,8 @@
               <div class="line-100"></div>
               <div class="endpoint-sub-table-body">
                 <div ref="assetScrollbar" style="height: 100%; overflow: auto;">
-                  <div :data="item.id" v-for="item,index in assetList" class="endpoint-sub-table-row"
-                       :id="'select-asset-'+item.id">
+                  <div v-for="(item, index) in assetList" :id="'select-asset-'+item.id" :key="index"
+                       :data="item.id" class="endpoint-sub-table-row">
                     <div class="endpoint-sub-table-col" style="width: 15px;">
                       <el-checkbox v-model="item.sel" @change="selectAsset" id="batch-edit-select-one"></el-checkbox>
                     </div>
@@ -180,7 +180,7 @@
             <div class="tag-edit-action">Action</div>
           </div>
           <div ref="tagEditBoxScrollbar" style="height: calc(100% - 32px); overflow: auto;" id="batch-edit-tags-box">
-            <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
+            <div v-for="(item, index) in editAsset.tags" :key="index" class="tag-edit-box-body">
               <el-form-item class="tag-edit tag-edit-tag" :label-width="'0px'"
                             :rules="{required: true, message: $t('validate.required'), trigger: 'change'}"
                             :prop="'tags.' + index + '.tag'">
@@ -206,7 +206,7 @@
         <!--cli-->
         <div class="right-box-sub-title">{{$t('config.account.account')}}
           <el-popover placement="right" width="70" trigger="click" :disabled="editAsset.accounts.length == 3"
-                      v-model.sync="showAccountOp" popper-class="no-style-class">
+                      v-model="showAccountOp" popper-class="no-style-class">
             <button slot="reference" id="add-type" type="button" class="float-right"
                     :class="{'nz-btn-disabled': editAsset.accounts.length == 3}">
               <span><i class="nz-icon nz-icon-create-square"></i></span>
@@ -254,485 +254,482 @@
 </template>
 
 <script>
-  import accountConfig from '../../page/asset/accountConfig';
-  import {host} from '../js/validate';
-  import {port} from '../js/validate'
-  import locationCascader from "./locationCascader";
+import accountConfig from '../../page/asset/accountConfig'
+import { host, port } from '../js/validate'
 
-  export default {
-    name:"batchEditAsset",
-    components:{
-      'account-config-box':accountConfig,
-      'location-cascader':locationCascader,
-    },
-    watch:{
-      assetSelList(n,o){
-        this.endpoint.assetSelList=n;
-        if(n.length>0){
-          this.paramBorderColor='#dcdfe6';
-        }else{
-          this.paramBorderColor='#F56C6C';
-        }
+export default {
+  name: 'batchEditAsset',
+  components: {
+    'account-config-box': accountConfig
+  },
+  watch: {
+    assetSelList (n) {
+      this.endpoint.assetSelList = n
+      if (n.length > 0) {
+        this.paramBorderColor = '#dcdfe6'
+      } else {
+        this.paramBorderColor = '#F56C6C'
+      }
+    }
+  },
+  data () {
+    return {
+      editAsset: {
+        assetIds: [],
+        tags: [],
+        accounts: []
       },
-    },
-    data(){
-      return {
-        editAsset:{
-          assetIds:[],
-          tags:[],
-          accounts:[],
-        },
-        assetSelList:[],
-        assetList:[],
-        assetListAll:false,
-        assetListHalf:false,
-        assetSearch:{host:'',sn:'',text:'',label:'Host',dropdownShow:false}, //侧滑框中asset的搜索相关
-        assetPageObj:{pageNo:1,pageSize:-1},
-        endpointTouch:false,
-        paramBorderColor:'#dcdfe6',
-        endpointTableTitle:[
-          {
-            label:this.$t("project.endpoint.asset"),
-            prop:'asset',
-            width:121,
-            show:false,
-          },{
-            label:this.$t("project.endpoint.host"),
-            prop:'host',
-            width:121,
-            show:true,
-          },{
-            label:"SN",
-            prop:'sn',
-            show:true,
-          },{
-            label:this.$t("project.endpoint.port"),
-            prop:'port',
-            width:54,
-            show:false,
-          },{
-            label:this.$t("project.endpoint.param"),
-            prop:'param',
-            width:90,
-            show:false,
-          },{
-            label:this.$t("project.endpoint.path"),
-            prop:'path',
-            width:66,
-            show:false,
-          }
+      assetSelList: [],
+      assetList: [],
+      assetListAll: false,
+      assetListHalf: false,
+      assetSearch: { host: '', sn: '', text: '', label: 'Host', dropdownShow: false }, // 侧滑框中asset的搜索相关
+      assetPageObj: { pageNo: 1, pageSize: -1 },
+      endpointTouch: false,
+      paramBorderColor: '#dcdfe6',
+      endpointTableTitle: [
+        {
+          label: this.$t('project.endpoint.asset'),
+          prop: 'asset',
+          width: 121,
+          show: false
+        }, {
+          label: this.$t('project.endpoint.host'),
+          prop: 'host',
+          width: 121,
+          show: true
+        }, {
+          label: 'SN',
+          prop: 'sn',
+          show: true
+        }, {
+          label: this.$t('project.endpoint.port'),
+          prop: 'port',
+          width: 54,
+          show: false
+        }, {
+          label: this.$t('project.endpoint.param'),
+          prop: 'param',
+          width: 90,
+          show: false
+        }, {
+          label: this.$t('project.endpoint.path'),
+          prop: 'path',
+          width: 66,
+          show: false
+        }
+      ],
+      endpoint: { projectId: '', moduleId: '', assetSelList: [] },
+      rightBox: { model: { show: false } },
+      modelData: [],
+      dcData: [],
+      assetTypeData: [],
+      cabinetData: [],
+      vendorAndModelOptionData: [], // 厂商型号下拉框选择数据
+
+      showAccountOp: false,
+      errorProtocol: [], // 校验不通过的account
+      selectableAccountTypes: ['SSH', 'TELNET', 'SNMP'],
+
+      modelSize: 1,
+      locationInfo: null,
+
+      accountType: '',
+      model: {},
+      blankModel: {
+        id: '',
+        name: '',
+        vendor: { id: '', value: '', code: '', type: '' },
+        type: { id: '', value: '', code: '', type: '' },
+        assetStat: { total: '', inStock: '', outStock: '' },
+        remark: '',
+        vendorCode: '',
+        typeCode: ''
+      },
+      userData: [], // 用户（人）信息
+      cabinetSelectedData: {
+        name: '',
+        uSize: 0,
+        remark: '',
+        idcId: ''
+      },
+      rules: {
+        sn: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        endpoint:{projectId:'',moduleId:'',assetSelList:[]},
-        rightBox:{model:{show:false}},
-        modelData:[],
-        dcData:[],
-        assetTypeData:[],
-        cabinetData:[],
-        vendorAndModelOptionData:[], //厂商型号下拉框选择数据
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: host, trigger: 'blur' }
+        ],
+        modelId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'model.type.code': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        idcId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'impi.host': [
+          { validator: host, trigger: 'blur' }
+        ],
+        'impi.port': [
+          { validator: port, trigger: 'blur' }
+        ]
+      },
+      cabRules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        uSize: [
+          { required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        idcId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      },
+      formData: null,
+      accountValidResult: true,
+      changeProtocolSwitch: true,
+      exporterDisableSwitch: false,
+      tagKeys: [],
+      tagValues: [],
+      tagValuesCache: new Map()
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    modelReload () {
 
-        showAccountOp:false,
-        errorProtocol:[], //校验不通过的account
-        selectableAccountTypes:["SSH","TELNET","SNMP"],
-
-        modelSize:1,
-        locationInfo:null,
-
-        accountType:'',
-        model:{},
-        blankModel:{
-          id:'',
-          name:'',
-          vendor:{id:'',value:'',code:'',type:''},
-          type:{id:'',value:'',code:'',type:''},
-          assetStat:{total:'',inStock:'',outStock:''},
-          remark:'',
-          vendorCode:'',
-          typeCode:''
-        },
-        userData:[], //用户（人）信息
-        cabinetSelectedData:{
-          name:'',
-          uSize:0,
-          remark:'',
-          idcId:'',
-        },
-        rules:{
-          sn:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          host:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-            {validator:host,trigger:'blur'}
-          ],
-          modelId:[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          "model.type.code":[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          idcId:[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          'impi.host':[
-            {validator:host,trigger:'blur'}
-          ],
-          'impi.port':[
-            {validator:port,trigger:'blur'}
-          ]
-        },
-        cabRules:{
-          name:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          uSize:[
-            {required:true,type:'number',min:1,max:47,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          idcId:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ]
-        },
-        formData:null,
-        accountValidResult:true,
-        changeProtocolSwitch:true,
-        exporterDisableSwitch:false,
-        tagKeys:[],
-        tagValues:[],
-        tagValuesCache:new Map(),
+    },
+    // 获取endpoint弹框中的asset子弹框里asset列表数据
+    getAssetList () {
+      this.$get('asset', this.assetPageObj).then(response => {
+        if (response.code === 200) {
+          const respData = response.data.list
+          for (let i = 0; i < respData.length; i++) {
+            respData[i].sel = false
+            for (let j = 0; j < this.assetSelList.length; j++) {
+              if (respData[i].id == this.assetSelList[j].id) {
+                respData.splice(i, 1)
+                i--
+                break
+              }
+            }
+          }
+          this.assetList = response.data.list
+        }
+      })
+    },
+    // 回车搜索searchAsset
+    searchAssetKeydown (e) {
+      e = e || window.event
+      const keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode
+      if (keyCode === 13) {
+        this.searchAsset()
       }
     },
-    methods:{
-      clickOutside(){
-        this.esc(false);
-      },
-      /*关闭弹框*/
-      esc(refresh){
-        this.prevent_opt.save=false;
-        this.$emit("close",refresh);
-      },
-      modelReload(){
-
-      },
-      // 获取endpoint弹框中的asset子弹框里asset列表数据
-      getAssetList(){
-        this.$get('asset',this.assetPageObj).then(response=>{
-          if(response.code===200){
-            let respData=response.data.list;
-            for(let i=0; i<respData.length; i++){
-              respData[i].sel=false;
-              for(let j=0; j<this.assetSelList.length; j++){
-                if(respData[i].id==this.assetSelList[j].id){
-                  respData.splice(i,1);
-                  i--;
-                  break;
-                }
-              }
-            }
-            this.assetList=response.data.list;
-          }
-        });
-      },
-      //回车搜索searchAsset
-      searchAssetKeydown(e){
-        e=e?e:window.event;
-        let keyCode=e.keyCode?e.keyCode:e.which?e.which:e.charCode;
-        if(keyCode===13){
-          this.searchAsset()
-        }
-      },
-      //endpoint弹框中的asset子弹框搜索
-      searchAsset(){
-        if(this.assetSearch.label=='Host'){
-          this.assetSearch.host=this.assetSearch.text;
-          this.assetSearch.sn='';
-        }else if(this.assetSearch.label=='SN'){
-          this.assetSearch.sn=this.assetSearch.text;
-          this.assetSearch.host='';
-        }
-        this.assetPageObj=Object.assign({},this.assetPageObj,this.assetSearch);
-        this.getAssetList();
-      },
-      // endpoint弹框的asset子弹框顶部搜索条件选中事件
-      dropdownSelect(label){
-        this.assetSearch.label=label;
-        this.assetSearch.dropdownShow=false;
-      },
-      // endpoint弹框中的asset子弹框里asset选择事件
-      selectAsset(){
-        this.$nextTick(()=>{
-          let index=0;
-          this.assetList.forEach(item=>{
-            if(item.sel){
-              index++;
-            }
-          });
-          if(index==0){
-            this.assetListAll=false;
-            this.assetListHalf=false;
-          }else if(index<this.assetList.length){
-            this.assetListAll=true;
-            this.assetListHalf=true;
-          }else{
-            this.assetListAll=true;
-            this.assetListHalf=false;
+    // endpoint弹框中的asset子弹框搜索
+    searchAsset () {
+      if (this.assetSearch.label == 'Host') {
+        this.assetSearch.host = this.assetSearch.text
+        this.assetSearch.sn = ''
+      } else if (this.assetSearch.label == 'SN') {
+        this.assetSearch.sn = this.assetSearch.text
+        this.assetSearch.host = ''
+      }
+      this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch)
+      this.getAssetList()
+    },
+    // endpoint弹框的asset子弹框顶部搜索条件选中事件
+    dropdownSelect (label) {
+      this.assetSearch.label = label
+      this.assetSearch.dropdownShow = false
+    },
+    // endpoint弹框中的asset子弹框里asset选择事件
+    selectAsset () {
+      this.$nextTick(() => {
+        let index = 0
+        this.assetList.forEach(item => {
+          if (item.sel) {
+            index++
           }
         })
-      },
-      addToEndpointList(){
-        let arr=[];
-        this.assetListAll=false;
-        this.assetListHalf=false;
-        this.endpointTouch=true;
-        this.assetList=this.assetList.filter(item=>{
-          let flag=item.sel;
-          if(flag){
-            item.sel=false;
-            arr.push(item);
-          }
-          return !flag
-        });
-        this.assetSelList=this.assetSelList.concat(arr);
-      },
-      assetListSelAll(flag){
-        if(flag){
-          this.assetListHalf=false;
-          this.assetList.forEach(item=>{
-            item.sel=flag;
-          });
-        }else if(!flag&& !this.assetListHalf){
-          this.assetList.forEach(item=>{
-            item.sel=flag;
-          });
-        }else if(!flag&&this.assetListHalf){
-          this.assetListHalf=false;
-          this.assetListAll=true;
-          this.assetList.forEach(item=>{
-            item.sel= !flag;
-          });
+        if (index == 0) {
+          this.assetListAll = false
+          this.assetListHalf = false
+        } else if (index < this.assetList.length) {
+          this.assetListAll = true
+          this.assetListHalf = true
+        } else {
+          this.assetListAll = true
+          this.assetListHalf = false
         }
-      },
-      setRowIndex({row,rowIndex}){
-        row.index=rowIndex;
-      },
-      //清空勾选的endpoint
-      clearSelection(){
-        let selections=this.$refs.endpointTable.selection;
-        if(selections&&selections.length>0){
-          for(let i=0; i<selections.length; i++){
-            this.removeEndpoint(selections[i])
-          }
-        }
-      },
-      //移除endpoint
-      removeEndpoint(endpoint){
-        endpoint.isEdit=false;
-        for(let i=0; i<this.assetSelList.length; i++){
-          if(this.assetSelList[i].id==endpoint.id){
-            this.assetSelList.splice(i,1);
-            this.assetList.unshift(endpoint);
-            i--;
-            break;
-          }
-        }
-      },
-      //组织符合cascader的数据格式
-      addTag(){
-        !this.editAsset.tags&&(this.$set(this.editAsset,"tags",[]));
-        this.editAsset.tags.push({tag:"",value:""});
-      },
-      addAccount(type){
-        if(type=="SSH"){
-          this.editAsset.accounts.push({
-            authType:1,
-            protocol:"SSH",
-            port:22,
-            params:{
-              user:"",
-              method:"password",
-              password:"",
-              key:"",
-              passwordKey:""
-            }
-          });
-        }else if(type=="TELNET"){
-          this.editAsset.accounts.push({
-            protocol:"TELNET",
-            port:23,
-            params:{
-              user:"",
-              password:"",
-              userTip:"",
-              passwordTip:"",
-              reloginTip:""
-            }
-          });
-        }else if(type=="SNMP"){
-          this.editAsset.accounts.push({
-            protocol:"SNMP",
-            port:161,
-            params:{
-              version:2,
-              community:"public",
-              securityName:"",
-              securityLevel:"",
-              password:"",
-              privPassword:"",
-              authProtocol:"",
-              privProtocol:"",
-              contextName:""
-            }
-          });
-        }
-        this.accountType=type;
-        this.showAccountOp=false;
-        this.$nextTick(()=>{
-          let sbWrap=this.$refs.scrollbar.$refs.wrap;
-          sbWrap.scrollTop=sbWrap.scrollHeight;
-        });
-      },
-      removeAccount(index){
-        this.editAsset.accounts.splice(index,1);
-        if(this.editAsset.accounts.length>0){
-          this.accountType=this.editAsset.accounts[0].protocol;
-        }else{
-          this.accountType="";
-        }
-      },
-      removeTag(index){
-        this.editAsset.tags.splice(index,1);
-      },
-      getUserData(){
-        return new Promise(resolve=>{
-          this.$get('sys/user/list').then(response=>{
-            if(response.code===200){
-              this.userData=response.data.list
-            }
-            resolve(this.userData);
-          });
-        });
-      },
-      setAccountValidResult(result,protocol){
-        this.accountValidResult=result;
-        let index=this.errorProtocol.indexOf(protocol);
-        if(result){
-          index!= -1?this.errorProtocol.splice(index,1):"";
-        }else{
-          index== -1?this.errorProtocol.push(protocol):"";
-        }
-      },
-      changeProtocolType(type){
-        this.accountType=type;
-        this.$nextTick(()=>{
-          let sbWrap=this.$refs.scrollbar.$refs.wrap;
-          sbWrap.scrollTop=sbWrap.scrollHeight;
-        });
-      },
-      save(){
-        if(this.prevent_opt.save){ return } ;
-        if(this.locationInfo){
-          if(this.locationInfo.idc){
-            this.editAsset.idcId=this.locationInfo.idc.id;
-          }
-          if(this.locationInfo.cabinet){
-            this.editAsset.cabinetId=this.locationInfo.cabinet.id;
-          }else{
-            this.editAsset.cabinetId=null;
-          }
-          if(this.locationInfo.u&&this.locationInfo.u.length>0){
-            this.editAsset.cabinetStart=this.locationInfo.u[0];
-            this.editAsset.cabinetEnd=this.locationInfo.u[1];
-          }else{
-            this.editAsset.cabinetStart=null;
-            this.editAsset.cabinetEnd=null;
-          }
-        }
-        this.endpointTouch=true;
-        if(this.$refs.accountConfigBox&&this.$refs.accountConfigBox.length>0){
-          this.$refs.accountConfigBox.forEach(box=>{
-            box.validateAccount();
-          });
-        }
-        this.$refs.assetEditForm.validate((valid)=>{
-          if(valid&&this.accountValidResult){
-            if(this.assetSelList.length===0){
-              return false;
-            }
-            this.assetSelList.forEach((item)=>{
-              this.editAsset.assetIds.push(item.id);
-            });
-            this.prevent_opt.save=true;
-            this.$put('/asset/batch',this.editAsset).then(res=>{
-              this.prevent_opt.save=false;
-              if(res.code===200){
-                this.$message({duration:2000,type:'success',message:this.$t("tip.saveSuccess")});
-                this.esc(true);
-              }else{
-                this.$message.error(res.msg);
-              }
-            });
-          }else{
-            this.prevent_opt.save=false;
-            return false;
-          }
-        });
-      },
-      protocolTypeChange(protocol){
-        if(protocol=='TELNET'){
-          this.exporterDisableSwitch=true;
-        }else{
-          this.exporterDisableSwitch=false;
-        }
-      },
-      loadValues:function(tag){
-        let tagVal=tag.tag&&tag.tag!=''?tag.tag:tag.value
-        if(!tagVal||tagVal==''){
-          this.tagValues=[];
-          return;
-        }
-
-        let value=this.tagValuesCache.get(tagVal)
-        if(!value){
-          value=[];
-          this.$get('/asset/tagValue',{key:encodeURIComponent(tagVal)}).then(res=>{
-            if(res.code==200){
-              value=res.data.list.map(item=>{
-                return {value:item}
-              })
-
-              this.tagValues=Object.assign([],value)
-              this.tagValuesCache.set(tag.tag,Object.assign([],value))
-            }
-          })
-        }else{
-          this.tagValues=Object.assign([],value)
-        }
-      },
-      filterKey:function(input,callback){
-        if(!input||input==''){
-          callback(this.tagKeys)
-        }else{
-          let result=this.tagKeys.filter(item=>{
-            return item.value.toLowerCase().indexOf(input.toLowerCase())!= -1
-          })
-          callback(result)
-        }
-      },
-      filterValue:function(input,callback){
-        if(!input||input==''){
-          callback(this.tagValues)
-        }else{
-          let result=this.tagValues.filter(item=>{
-            return item.value.toLowerCase().indexOf(input.toLowerCase())!= -1
-          })
-          callback(result)
-        }
-      },
+      })
     },
-    mounted(){
-      this.getUserData();
-      this.getAssetList();
-      this.showAccountOp=false;
+    addToEndpointList () {
+      const arr = []
+      this.assetListAll = false
+      this.assetListHalf = false
+      this.endpointTouch = true
+      this.assetList = this.assetList.filter(item => {
+        const flag = item.sel
+        if (flag) {
+          item.sel = false
+          arr.push(item)
+        }
+        return !flag
+      })
+      this.assetSelList = this.assetSelList.concat(arr)
+    },
+    assetListSelAll (flag) {
+      if (flag) {
+        this.assetListHalf = false
+        this.assetList.forEach(item => {
+          item.sel = flag
+        })
+      } else if (!flag && !this.assetListHalf) {
+        this.assetList.forEach(item => {
+          item.sel = flag
+        })
+      } else if (!flag && this.assetListHalf) {
+        this.assetListHalf = false
+        this.assetListAll = true
+        this.assetList.forEach(item => {
+          item.sel = !flag
+        })
+      }
+    },
+    setRowIndex ({ row, rowIndex }) {
+      row.index = rowIndex
+    },
+    // 清空勾选的endpoint
+    clearSelection () {
+      const selections = this.$refs.endpointTable.selection
+      if (selections && selections.length > 0) {
+        for (let i = 0; i < selections.length; i++) {
+          this.removeEndpoint(selections[i])
+        }
+      }
+    },
+    // 移除endpoint
+    removeEndpoint (endpoint) {
+      endpoint.isEdit = false
+      for (let i = 0; i < this.assetSelList.length; i++) {
+        if (this.assetSelList[i].id == endpoint.id) {
+          this.assetSelList.splice(i, 1)
+          this.assetList.unshift(endpoint)
+          i--
+          break
+        }
+      }
+    },
+    // 组织符合cascader的数据格式
+    addTag () {
+      !this.editAsset.tags && (this.$set(this.editAsset, 'tags', []))
+      this.editAsset.tags.push({ tag: '', value: '' })
+    },
+    addAccount (type) {
+      if (type == 'SSH') {
+        this.editAsset.accounts.push({
+          authType: 1,
+          protocol: 'SSH',
+          port: 22,
+          params: {
+            user: '',
+            method: 'password',
+            password: '',
+            key: '',
+            passwordKey: ''
+          }
+        })
+      } else if (type == 'TELNET') {
+        this.editAsset.accounts.push({
+          protocol: 'TELNET',
+          port: 23,
+          params: {
+            user: '',
+            password: '',
+            userTip: '',
+            passwordTip: '',
+            reloginTip: ''
+          }
+        })
+      } else if (type == 'SNMP') {
+        this.editAsset.accounts.push({
+          protocol: 'SNMP',
+          port: 161,
+          params: {
+            version: 2,
+            community: 'public',
+            securityName: '',
+            securityLevel: '',
+            password: '',
+            privPassword: '',
+            authProtocol: '',
+            privProtocol: '',
+            contextName: ''
+          }
+        })
+      }
+      this.accountType = type
+      this.showAccountOp = false
+      this.$nextTick(() => {
+        const sbWrap = this.$refs.scrollbar.$refs.wrap
+        sbWrap.scrollTop = sbWrap.scrollHeight
+      })
+    },
+    removeAccount (index) {
+      this.editAsset.accounts.splice(index, 1)
+      if (this.editAsset.accounts.length > 0) {
+        this.accountType = this.editAsset.accounts[0].protocol
+      } else {
+        this.accountType = ''
+      }
+    },
+    removeTag (index) {
+      this.editAsset.tags.splice(index, 1)
+    },
+    getUserData () {
+      return new Promise(resolve => {
+        this.$get('sys/user/list').then(response => {
+          if (response.code === 200) {
+            this.userData = response.data.list
+          }
+          resolve(this.userData)
+        })
+      })
+    },
+    setAccountValidResult (result, protocol) {
+      this.accountValidResult = result
+      const index = this.errorProtocol.indexOf(protocol)
+      if (result) {
+        index != -1 && this.errorProtocol.splice(index, 1)
+      } else {
+        index == -1 && this.errorProtocol.push(protocol)
+      }
+    },
+    changeProtocolType (type) {
+      this.accountType = type
+      this.$nextTick(() => {
+        const sbWrap = this.$refs.scrollbar.$refs.wrap
+        sbWrap.scrollTop = sbWrap.scrollHeight
+      })
+    },
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      if (this.locationInfo) {
+        if (this.locationInfo.idc) {
+          this.editAsset.idcId = this.locationInfo.idc.id
+        }
+        if (this.locationInfo.cabinet) {
+          this.editAsset.cabinetId = this.locationInfo.cabinet.id
+        } else {
+          this.editAsset.cabinetId = null
+        }
+        if (this.locationInfo.u && this.locationInfo.u.length > 0) {
+          this.editAsset.cabinetStart = this.locationInfo.u[0]
+          this.editAsset.cabinetEnd = this.locationInfo.u[1]
+        } else {
+          this.editAsset.cabinetStart = null
+          this.editAsset.cabinetEnd = null
+        }
+      }
+      this.endpointTouch = true
+      if (this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
+        this.$refs.accountConfigBox.forEach(box => {
+          box.validateAccount()
+        })
+      }
+      this.$refs.assetEditForm.validate((valid) => {
+        if (valid && this.accountValidResult) {
+          if (this.assetSelList.length === 0) {
+            return false
+          }
+          this.assetSelList.forEach((item) => {
+            this.editAsset.assetIds.push(item.id)
+          })
+          this.prevent_opt.save = true
+          this.$put('/asset/batch', this.editAsset).then(res => {
+            this.prevent_opt.save = false
+            if (res.code === 200) {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    protocolTypeChange (protocol) {
+      if (protocol == 'TELNET') {
+        this.exporterDisableSwitch = true
+      } else {
+        this.exporterDisableSwitch = false
+      }
+    },
+    loadValues: function (tag) {
+      const tagVal = tag.tag && tag.tag != '' ? tag.tag : tag.value
+      if (!tagVal || tagVal == '') {
+        this.tagValues = []
+        return
+      }
+
+      let value = this.tagValuesCache.get(tagVal)
+      if (!value) {
+        value = []
+        this.$get('/asset/tagValue', { key: encodeURIComponent(tagVal) }).then(res => {
+          if (res.code == 200) {
+            value = res.data.list.map(item => {
+              return { value: item }
+            })
+
+            this.tagValues = Object.assign([], value)
+            this.tagValuesCache.set(tag.tag, Object.assign([], value))
+          }
+        })
+      } else {
+        this.tagValues = Object.assign([], value)
+      }
+    },
+    filterKey: function (input, callback) {
+      if (!input || input == '') {
+        callback(this.tagKeys)
+      } else {
+        const result = this.tagKeys.filter(item => {
+          return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1
+        })
+        callback(result)
+      }
+    },
+    filterValue: function (input, callback) {
+      if (!input || input == '') {
+        callback(this.tagValues)
+      } else {
+        const result = this.tagValues.filter(item => {
+          return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1
+        })
+        callback(result)
+      }
     }
+  },
+  mounted () {
+    this.getUserData()
+    this.getAssetList()
+    this.showAccountOp = false
   }
+}
 </script>
 <style>
   .location-selector {
@@ -1139,4 +1136,3 @@
 
   /* end--子弹框*/
 </style>
-

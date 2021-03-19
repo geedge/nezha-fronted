@@ -32,51 +32,51 @@
 </template>
 
 <script>
-    export default {
-      name: "selectAssetType",
-      props:{
-        placement: {type: String},
-        assetTypeData: {type: Array},
-        showParent: {type: Object},
-      },
-      mounted() {
-        this.$refs.assetTypeTree.setCurrentKey(this.assetType);
-      },
-      watch: {
-        showParent: {
-          immediate: true,
-          handler(n) {
-            if (n) {
-              this.assetType = JSON.parse(JSON.stringify(n));
-            }
-          }
-        },
-      },
-      data(){
-        return {
-          popBox: {show: false},
-          assetType: {id: 0, name: ""},
+export default {
+  name: 'selectAssetType',
+  props: {
+    placement: { type: String },
+    assetTypeData: { type: Array },
+    showParent: { type: Object }
+  },
+  mounted () {
+    this.$refs.assetTypeTree.setCurrentKey(this.assetType)
+  },
+  watch: {
+    showParent: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.assetType = JSON.parse(JSON.stringify(n))
         }
-      },
-      methods:{
-        filterNode(value, data) {
-          if (!value) return true;
-          return data.name.indexOf(value) !== -1;
-        },
-        esc(){
-          this.popBox.show = false;
-        },
-        //确认选择某个节点，与父组件交互
-        selectAssetType(data, checked, child) {
-          if (data.disabled) {
-            return;
-          }
-          this.$emit('selectAssetType', data);
-          this.$refs.assetTypeTree.setCurrentKey(data);
-          this.esc();
-        },
-      },
+      }
     }
+  },
+  data () {
+    return {
+      popBox: { show: false },
+      assetType: { id: 0, name: '' }
+    }
+  },
+  methods: {
+    filterNode (value, data) {
+      if (!value) return true
+      return data.name.indexOf(value) !== -1
+    },
+    esc () {
+      this.popBox.show = false
+    },
+    // 确认选择某个节点，与父组件交互
+    selectAssetType (data, checked, child) {
+      if (data.disabled) {
+        return
+      }
+      this.$emit('selectAssetType', data)
+      this.$refs.assetTypeTree.setCurrentKey(data)
+      this.esc()
+    }
+  }
+}
 </script>
 <style>
   .tree--node__disabled {

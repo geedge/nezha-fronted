@@ -33,11 +33,10 @@
 </template>
 
 <script>
-import bus from '../../libs/bus';
-import {mapActions} from "vuex";
+import { mapActions } from 'vuex'
 export default {
-  name: "login",
-  data() {
+  name: 'login',
+  data () {
     return {
       loginData: {
         username: '',
@@ -45,67 +44,67 @@ export default {
         remember: false
       },
       loading: false,
-      lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', //en/cn
-      langListShow: false,
+      lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', // en/cn
+      langListShow: false
     }
   },
   methods: {
-    ...mapActions(["loginSuccess"]),
-    login() {
+    ...mapActions(['loginSuccess']),
+    login () {
       if (this.loading) {
-        return;
+        return
       }
-      if (this.validateLogin()&&(this.$route.path=='/'||this.$route.path=='/login')) {
-        this.loading = true;
+      if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
+        this.loading = true
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
-            //登录成功，记录用户名、token和lang
-            sessionStorage.setItem("nz-username", this.loginData.username);
-            localStorage.setItem("nz-username", this.loginData.username);
-            localStorage.setItem('nz-language', this.lang);
-            this.$i18n.locale = this.lang;
-            this.loginSuccess(res);
+            // 登录成功，记录用户名、token和lang
+            sessionStorage.setItem('nz-username', this.loginData.username)
+            localStorage.setItem('nz-username', this.loginData.username)
+            localStorage.setItem('nz-language', this.lang)
+            this.$i18n.locale = this.lang
+            this.loginSuccess(res)
           } else {
-            this.$message.error(res.msg);
+            this.$message.error(res.msg)
           }
         }).finally(() => {
-          this.loading = false;
-        });
+          this.loading = false
+        })
       }
     },
-    changeLang(lang) {
-      this.lang = lang;
-      this.langListShow = false;
-      this.$i18n.locale = this.lang;
-      localStorage.setItem('nz-language', this.lang);
+    changeLang (lang) {
+      this.lang = lang
+      this.langListShow = false
+      this.$i18n.locale = this.lang
+      localStorage.setItem('nz-language', this.lang)
     },
-    validateLogin() {
+    validateLogin () {
       if (!this.loginData.username || !this.loginData.password) {
-        this.$message.error("Empty username or password");
-        return false;
+        this.$message.error('Empty username or password')
+        return false
       } else {
-        return true;
+        return true
       }
     }
   },
   watch: {
-    /*'loginData.username': function(n, o) {
+    /* 'loginData.username': function(n, o) {
       let lang = localStorage.getItem('nz-language-' + n);
       if (lang) {
         this.lang = lang;
         this.$i18n.locale = this.lang;
       }
-    }*/
+    } */
   },
-  mounted() {
-    const _this = this;
-    this.$i18n.locale = this.lang;
-    document.onkeydown = function(e) {
-      if(e.key === 'Enter'){
-        _this.login();
+  mounted () {
+    const _this = this
+    this.$i18n.locale = this.lang
+    document.onkeydown = function (e) {
+      if (e.key === 'Enter') {
+        _this.login()
       }
-    };
-    document.getElementById("usernameInput").focus();
+    }
+    document.getElementById('usernameInput').focus()
   }
 }
 </script>

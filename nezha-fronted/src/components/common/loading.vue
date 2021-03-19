@@ -14,24 +14,22 @@
 
 <script>
 export default {
-  name: "loading",
+  name: 'loading',
   props: {
 
   },
-  data() {
+  data () {
     return {
-      showLoading:false,
-    };
+      showLoading: false
+    }
   },
   methods: {
-    startLoading(){
-      this.showLoading = true;
+    startLoading () {
+      this.showLoading = true
     },
-    endLoading(){
-      this.showLoading = false;
-    },
+    endLoading () {
+      this.showLoading = false
+    }
   }
-};
+}
 </script>
-
-

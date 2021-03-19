@@ -88,194 +88,194 @@
 </template>
 
 <script>
-  import cabinetBox from "../../rightBox/cabinetBox";
-  import deleteButton from "../../deleteButton";
-  export default {
-    name: "cabinetTab",
-    components: {
-      "cabinet-box": cabinetBox,
-      'delete-button':deleteButton,
-    },
-    props: {
-      obj: Object, //关联的实体对象
-    },
-    data() {
-      return {
-        cabinet: {},
-        blankCabinet: {
-          id:'',
-          idcId:'',
-          name:'',
-          remark:'',
-          seq:'',
-          uSize:1
+import cabinetBox from '../../rightBox/cabinetBox'
+import deleteButton from '../../deleteButton'
+export default {
+  name: 'cabinetTab',
+  components: {
+    'cabinet-box': cabinetBox,
+    'delete-button': deleteButton
+  },
+  props: {
+    obj: Object // 关联的实体对象
+  },
+  data () {
+    return {
+      cabinet: {},
+      blankCabinet: {
+        id: '',
+        idcId: '',
+        name: '',
+        remark: '',
+        seq: '',
+        uSize: 1
+      },
+      batchDeleteObjs: [],
+      rightBox: { show: false },
+      showTopBtn: false, // top按钮是否显示
+      loading: false,
+      currentDc: {},
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
         },
-        batchDeleteObjs:[],
-        rightBox: {show: false},
-        showTopBtn: false, //top按钮是否显示
-        loading: false,
-        currentDc: {},
-        tableTitle: [
+        {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        },
+        {
+          label: this.$t('asset.uSize'),
+          prop: 'uSize',
+          show: true
+        },
+        {
+          label: this.$t('config.dc.assets'),
+          prop: 'assetStat',
+          show: true
+        },
+        {
+          label: this.$t('alert.alert'),
+          prop: 'alertStat',
+          show: true
+        },
+        {
+          label: this.$t('config.dc.remark'),
+          prop: 'remark',
+          show: true
+        },
+        {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120
+        }
+      ],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [
           {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
+            id: 11,
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
           },
           {
-            label:this.$t('overall.name'),
-            prop:'name',
-            show:true
+            id: 12,
+            name: this.$t('asset.uSize'),
+            label: 'uSize',
+            disabled: false
           },
           {
-            label:this.$t('asset.uSize'),
-            prop:'uSize',
-            show:true
-          },
-          {
-            label:this.$t('config.dc.assets'),
-            prop:'assetStat',
-            show:true
-          },
-          {
-            label:this.$t('alert.alert'),
-            prop:'alertStat',
-            show:true
-          },
-          {
-            label:this.$t('config.dc.remark'),
-            prop:'remark',
-            show:true
-          },
-          {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
+            id: 13,
+            name: this.$t('config.dc.remark'),
+            label: 'remark',
+            disabled: false
           }
-        ],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [
-            {
-              id: 11,
-              name: this.$t('overall.name'),
-              type: 'input',
-              label: 'name',
-              disabled: false
-            },
-            {
-              id:12,
-              name:this.$t('asset.uSize'),
-              label:'uSize',
-              disabled: false
-            },
-            {
-              id:13,
-              name:this.$t('config.dc.remark'),
-              label:'remark',
-              disabled: false
-            }
-          ],
-        },
-        searchLabel: { //搜索参数
-        },
-        tableData: [],
+        ]
+      },
+      searchLabel: { // 搜索参数
+      },
+      tableData: []
+    }
+  },
+  methods: {
+    // 切换tab
+    changeTab (tab) {
+      this.$emit('changeTab', tab)
+    },
+    add () {
+      this.cabinet = this.newCabinet()
+      this.rightBox.show = true
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.getTableData()
+        this.$store.commit('setDcDataRefresh')
       }
     },
-    methods: {
-      // 切换tab
-      changeTab(tab) {
-        this.$emit('changeTab', tab);
-      },
-      add() {
-        this.cabinet = this.newCabinet();
-        this.rightBox.show = true;
-      },
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.getTableData();
-          this.$store.commit('setDcDataRefresh');
+    newCabinet () {
+      return JSON.parse(JSON.stringify(this.blankCabinet))
+    },
+    edit (cabinet) {
+      this.cabinet = JSON.parse(JSON.stringify(cabinet))
+      this.rightBox.show = true
+    },
+    getTableData () {
+      if (!this.hasButton('dc_cabinet_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.tableData = []
+      this.loading = true
+      this.$set(this.searchLabel, 'pageNo', 1)
+      this.$set(this.searchLabel, 'pageSize', -1)
+      this.$get('/cabinet', this.searchLabel).then(response => {
+        this.loading = false
+        if (response.code == 200) {
+          this.tableData = response.data.list
         }
-      },
-      newCabinet() {
-        return JSON.parse(JSON.stringify(this.blankCabinet));
-      },
-      edit(cabinet) {
-        this.cabinet = JSON.parse(JSON.stringify(cabinet));
-        this.rightBox.show = true;
-      },
-      getTableData() {
-        if (!this.hasButton('dc_cabinet_view')) {
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
+      })
+    },
+    search (searchObj) {
+      this.searchLabel = { idcId: this.currentDc.id, pageNo: 1, pageSize: -1 }
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
         }
-        this.tableData = [];
-        this.loading = true;
-        this.$set(this.searchLabel, "pageNo", 1);
-        this.$set(this.searchLabel, "pageSize", -1);
-        this.$get("/cabinet", this.searchLabel).then(response => {
-          this.loading = false;
+      }
+      if (this.$refs.cabTable && this.$refs.cabTable.bodyWrapper) {
+        this.$refs.cabTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    assetStatClassName (param) {
+      if (param.column.label == this.$t('config.model.assets') || param.column.label == this.$t('alert.alert')) {
+        return 'asset-state'
+      }
+      return ''
+    },
+    del: function (cabinet) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/cabinet?ids=' + cabinet.id).then(response => {
           if (response.code == 200) {
-            this.tableData = response.data.list;
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+            this.getTableData()
+            this.$store.commit('setDcDataRefresh')
+          } else {
+            this.$message.error(response.msg)
           }
-        });
-      },
-      search(searchObj) {
-        this.searchLabel = {idcId: this.currentDc.id, pageNo: 1, pageSize: -1};
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(this.$refs.cabTable&&this.$refs.cabTable.bodyWrapper){
-          this.$refs.cabTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      assetStatClassName(param) {
-        if (param.column.label == this.$t("config.model.assets") || param.column.label == this.$t("alert.alert")) {
-          return "asset-state";
-        }
-        return "";
-      },
-      del:function(cabinet){
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete('/cabinet?ids='+cabinet.id).then(response=>{
-            if(response.code ==  200){
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-              this.getTableData();
-              this.$store.commit('setDcDataRefresh');
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
         })
-      },
-      allDelAfter(){
-        this.getTableData();
-        this.$store.commit('setDcDataRefresh');
-      },
+      })
     },
-    watch: {
-      obj: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          if (n) {
-            this.currentDc = JSON.parse(JSON.stringify(n));
-            this.searchLabel = {idcId: this.currentDc.id};
-            this.getTableData();
-          }
+    allDelAfter () {
+      this.getTableData()
+      this.$store.commit('setDcDataRefresh')
+    }
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.currentDc = JSON.parse(JSON.stringify(n))
+          this.searchLabel = { idcId: this.currentDc.id }
+          this.getTableData()
         }
-      },
-    },
+      }
+    }
   }
+}
 </script>
 
 <style scoped>

@@ -5,7 +5,7 @@
       <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
         <div class="top-tool-search margin-r-20">
           <search-input :searchMsg="searchMsg" @search="search"
-                        :bottomBox.inTransform="bottomBox.inTransform" :single="true"></search-input>
+                        :inTransform="bottomBox.inTransform" :single="true"></search-input>
         </div>
         <export-excel
           id="asset-list"
@@ -62,7 +62,6 @@
         align="center">
       </el-table-column>
 
-
       <el-table-column
         :resizable="true"
         v-for="(item, index) in tools.customTableTitle"
@@ -103,9 +102,8 @@
         </template>
       </el-table-column>
 
-
       <el-table-column width="28" :resizable="false">
-        <template slot="header" slot-scope="scope">
+        <template slot="header">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)"
                 class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
@@ -145,317 +143,316 @@
 </template>
 
 <script>
-  import bus from '../../../libs/bus';
-  import axios from 'axios';
-  import exportXLSX from "../../common/exportXLSX";
-  import deleteButton from "../../common/deleteButton";
-  import exprTempBox from'../../common/rightBox/exprTempBox';
-  import {calcDurationByStringTimeB} from "../../common/js/tools";
-  export default {
-    name:"exprTemp",
-    components:{
-      deleteButton,
-      exprTempBox,
-      'export-excel':exportXLSX
-    },
-    data(){
-      return {
-        tableId:'exprTemp',
-        //侧滑
-        rightBox:{
-          show:false,
-        },
-        /*二级列表相关*/
-        mainTableHeight:this.$tableHeight.normal, //主列表table高度
-        /*二级页面相关*/
-        bottomBox:{
-          tabList:[], //二级列表的标签
-          tabDetailList:[], //多个详情
-          mainResizeShow:true, //dom高度改变时是否展示|隐藏
-          subResizeShow:true,
-          isFullScreen:false, //全屏状态
-          showSubList:false, //是否显示二级列表
-          targetTab:'', //显示二级列表中的哪个页签
-          inTransform:false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-        /*工具参数*/
-        tools:{
-          loading:false, //是否显示table加载动画
-          toTopBtnTop:this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover:false, //控制滚动条和top按钮同时出现
-          showTopBtn:false, //显示To top按钮
-          showCustomTableTitle:false, //自定义列弹框是否显示
-          customTableTitle:[], //自定义列工具的数据
-        },
-        /*批量删除相关*/
-        batchDeleteObjs:[],
-        /*搜素相关*/
-        searchMsg:{ //给搜索框子组件传递的信息
-          zheze_none:true,
-          searchLabelList:[
-            {
-              id: 11,
-              name: 'Id',
-              type: 'input',
-              label: 'id',
-              disabled: false
-            },{
-              id: 12,
-              name: this.$t('config.exprTemp.name'),
-              type: 'input',
-              label: 'name',
-              disabled: false
-            },{
-              id: 13,
-              name: this.$t('config.exprTemp.gname'),
-              type: 'selectTemp',
-              label: 'gname',
-              disabled: false
-            },
-          ],
-        },
-        searchLabel:{}, //搜索参数
-        pageObj:{
-          pageNo:1,
-          pageSize:this.$CONSTANTS.defaultPageSize,
-          total:0
-        },
-        /*表格相关*/
-        tableTitle:[
+import bus from '../../../libs/bus'
+import exportXLSX from '../../common/exportXLSX'
+import deleteButton from '../../common/deleteButton'
+import exprTempBox from '../../common/rightBox/exprTempBox'
+import { calcDurationByStringTimeB } from '../../common/js/tools'
+export default {
+  name: 'exprTemp',
+  components: {
+    deleteButton,
+    exprTempBox,
+    'export-excel': exportXLSX
+  },
+  data () {
+    return {
+      tableId: 'exprTemp',
+      // 侧滑
+      rightBox: {
+        show: false
+      },
+      /* 二级列表相关 */
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      /* 二级页面相关 */
+      bottomBox: {
+        tabList: [], // 二级列表的标签
+        tabDetailList: [], // 多个详情
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      /* 批量删除相关 */
+      batchDeleteObjs: [],
+      /* 搜素相关 */
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [
           {
-            label:'ID',
-            prop:'id',
-            show:true,
-            width:80
-          },{
-            label:this.$t('config.exprTemp.name'),
-            prop:'name',
-            show:true,
-          },{
-            label:this.$t('config.exprTemp.gname'),
-            prop:'gname',
-            show:true,
-          },{
-            label:this.$t('config.exprTemp.expression'),
-            prop:'expression',
-            show:true,
-          },{
-            label:this.$t('config.exprTemp.remark'),
-            prop:'remark',
-            show:true,
-          },{
-            label:this.$t('alert.config.option'),
-            prop:'option',
-            show:true,
-            width:120
+            id: 11,
+            name: 'Id',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          }, {
+            id: 12,
+            name: this.$t('config.exprTemp.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }, {
+            id: 13,
+            name: this.$t('config.exprTemp.gname'),
+            type: 'selectTemp',
+            label: 'gname',
+            disabled: false
           }
-        ],
-        tableData:[],
-        //导出相关
-        importBox:{show:false,title:this.$t('overall.exportExcel')},
-        deleteBox:{show:false,ids:"",remark:'',state:2},
-        //创建修改相关
-        blackExprTemp:{
-          "id": '',
-          "name": "",
-          "gname": "default",
-          "expression": "",
-          "remark": "",
-        },
-        exprTemp:{},
-        nowTime:''
+        ]
+      },
+      searchLabel: {}, // 搜索参数
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      /* 表格相关 */
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('config.exprTemp.name'),
+          prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.exprTemp.gname'),
+          prop: 'gname',
+          show: true
+        }, {
+          label: this.$t('config.exprTemp.expression'),
+          prop: 'expression',
+          show: true
+        }, {
+          label: this.$t('config.exprTemp.remark'),
+          prop: 'remark',
+          show: true
+        }, {
+          label: this.$t('alert.config.option'),
+          prop: 'option',
+          show: true,
+          width: 120
+        }
+      ],
+      tableData: [],
+      // 导出相关
+      importBox: { show: false, title: this.$t('overall.exportExcel') },
+      deleteBox: { show: false, ids: '', remark: '', state: 2 },
+      // 创建修改相关
+      blackExprTemp: {
+        id: '',
+        name: '',
+        gname: 'default',
+        expression: '',
+        remark: ''
+      },
+      exprTemp: {},
+      nowTime: ''
+    }
+  },
+  computed: {
+    getDuration () {
+      return function (record) {
+        if (record.endAt) {
+          return calcDurationByStringTimeB(record.startAt, record.endAt)
+        }
+        return calcDurationByStringTimeB(record.startAt, this.nowTime)
       }
-    },
-    computed:{
-      getDuration(){
-        return function(record) {
-          if (record.endAt) {
-            return calcDurationByStringTimeB(record.startAt, record.endAt);
-          }
-          return calcDurationByStringTimeB(record.startAt, this.nowTime);
-        }
-      },
-    },
-    created(){
+    }
+  },
+  created () {
 
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.initEvent()
+    this.getexprTemp()
+  },
+  methods: {
+    initEvent () {
+      bus.$on('alert-rule-list-change', () => {
+        this.getexprTemp()
+      })
+      bus.$on('dc-list-change', () => {
+        this.getexprTemp()
+      })
+      bus.$on('alert-message-change', () => {
+        this.getexprTemp()
+      })
     },
-    mounted(){
-      //初始化表头
-      this.tools.customTableTitle=localStorage.getItem("nz-tableTitle-"+localStorage.getItem("nz-username")+"-"+this.$route.path)
-        ?JSON.parse(localStorage.getItem("nz-tableTitle-"+localStorage.getItem("nz-username")+"-"+this.$route.path))
-        :this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      this.initEvent();
-      this.getexprTemp();
-    },
-    methods:{
-      initEvent(){
-        bus.$on("alert-rule-list-change",()=>{
-          this.getexprTemp();
-        });
-        bus.$on("dc-list-change",()=>{
-          this.getexprTemp();
-        });
-        bus.$on('alert-message-change',()=>{
-          this.getexprTemp();
-        })
-      },
-      getexprTemp(){
-        if(!this.hasButton('rule_view')){
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
-        }
-        this.$set(this.searchLabel,"pageNo",this.pageObj.pageNo);
-        this.$set(this.searchLabel,"pageSize",this.pageObj.pageSize);
-        this.tools.loading=true;
-        this.$get('expression/tmpl',this.searchLabel).then(response=>{
-          this.tools.loading=false;
-          if(response.code==200){
-            this.tableData=response.data.list;
-            this.pageObj.total=response.data.total;
-            this.nowTime=this.utcTimeToTimezoneStr(response.time);
-            console.info(this.$refs.exprTempTable)
-            if(!this.scrollbarWrap){
-              this.$nextTick(()=>{
-                this.scrollbarWrap=this.$refs.exprTempTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
-          }
-        })
-      },
-      pageNo(val){
-        this.pageObj.pageNo=val;
-        this.getexprTemp();
-      },
-      pageSize(val){
-        this.pageObj.pageSize=val;
-        localStorage.setItem('nz-pageSize-'+localStorage.getItem('nz-username')+'-'+this.tableId,val);
-        this.getexprTemp();
-      },
-      search(searchObj){
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.searchLabel={};
-        this.pageObj.pageNo=1;
-        for(let item in searchObj){
-          if(searchObj[item]){
-            this.$set(this.searchLabel,item,searchObj[item]);
+    getexprTemp () {
+      if (!this.hasButton('rule_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('expression/tmpl', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code == 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          console.info(this.$refs.exprTempTable)
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.exprTempTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
           }
         }
-        if(orderBy){
-          this.$set(this.searchLabel,'orderBy',orderBy);
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getexprTemp()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getexprTemp()
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
         }
-        this.$refs.exprTempTable.bodyWrapper.scrollTop=0;
-        this.getexprTemp();
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.$set(this.searchLabel,"orderBy",orderBy);
-        this.getexprTemp();
-      },
-      openDelMessageBox:function(){
-        if(this.batchDeleteObjs.length<1) return;
-      },
-      showExportDialog(){
-        this.importBox.show=true;
-      },
-      closeDialog(){
-        this.importBox.show=false;
-        this.deleteBox.show=false;
-      },
-      exportCur:function(){
-        let searchLabel=Object.assign({},this.searchLabel)
-        this.$set(searchLabel,'language',localStorage.getItem("nz-language")?localStorage.getItem("nz-language"):'en')
-        this.exportExcel(searchLabel);
-        this.closeDialog();
-      },
-      exportAll:function(){
-        let temp=JSON.parse(JSON.stringify(this.searchLabel));
-        temp.pageSize= -1;
-        this.$set(temp,'language',localStorage.getItem("nz-language")?localStorage.getItem("nz-language"):'en')
-        this.exportExcel(temp);
-        this.closeDialog();
-      },
-      afterTableListChange(){
-        this.getexprTemp();
-      },
-      addTemp(){
-        this.exprTemp=JSON.parse(JSON.stringify(this.blackExprTemp));
-        this.rightBox.show=true;
-      },
-      edit(row){
-        this.$get('expression/tmpl/'+row.id).then(res=>{
-          this.exprTemp={...res.data};
-          this.rightBox.show=true;
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      this.$refs.exprTempTable.bodyWrapper.scrollTop = 0
+      this.getexprTemp()
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getexprTemp()
+    },
+    openDelMessageBox () {
+      // if (this.batchDeleteObjs.length < 1) return
+    },
+    showExportDialog () {
+      this.importBox.show = true
+    },
+    closeDialog () {
+      this.importBox.show = false
+      this.deleteBox.show = false
+    },
+    exportCur () {
+      const searchLabel = Object.assign({}, this.searchLabel)
+      this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(searchLabel)
+      this.closeDialog()
+    },
+    exportAll () {
+      const temp = JSON.parse(JSON.stringify(this.searchLabel))
+      temp.pageSize = -1
+      this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(temp)
+      this.closeDialog()
+    },
+    afterTableListChange () {
+      this.getexprTemp()
+    },
+    addTemp () {
+      this.exprTemp = JSON.parse(JSON.stringify(this.blackExprTemp))
+      this.rightBox.show = true
+    },
+    edit (row) {
+      this.$get('expression/tmpl/' + row.id).then(res => {
+        this.exprTemp = { ...res.data }
+        this.rightBox.show = true
+      })
+    },
+    del (row) {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('expression/tmpl?ids=' + row.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getexprTemp()
+          } else {
+            this.$message.error(response.msg)
+          }
         })
-      },
-      del(row){
-        if(this.prevent_opt.save){
-          return
-        }
-        ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$delete("expression/tmpl?ids="+row.id).then(response=>{
-            this.prevent_opt.save=false;
-            if(response.code===200){
-              this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
-              this.getexprTemp();
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      overtime(row){
-        if(this.prevent_opt.save){
-          return
-        }
-        ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmOvertime"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$delete("expression/tmpl?ids="+row.id).then(response=>{
-            this.prevent_opt.save=false;
-            if(response.code===200){
-              this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
-              this.getexprTemp();
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.getexprTemp();
-        }
-      },
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    overtime (row) {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmOvertime'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('expression/tmpl?ids=' + row.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getexprTemp()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getexprTemp()
+      }
     }
   }
+}
 </script>
 
 <style scoped lang="scss">

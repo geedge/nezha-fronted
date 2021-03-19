@@ -35,14 +35,14 @@
 
 <script>
 export default {
-  name: "moduleListPop",
-  props:{
-    assetId: {type: String},
-    placement: {type: String}
+  name: 'moduleListPop',
+  props: {
+    assetId: { type: String },
+    placement: { type: String }
   },
-  data() {
+  data () {
     return {
-      popBox: {show: false},
+      popBox: { show: false },
       moduleList: [],
       pageObj: {
         pageNo: 1,
@@ -53,26 +53,26 @@ export default {
     }
   },
   methods: {
-    getModuleList() {
+    getModuleList () {
       this.$get('module', this.pageObj).then(response => {
         if (response.code === 200) {
-          this.moduleList = response.data.list;
+          this.moduleList = response.data.list
         }
-      });
+      })
     },
-    hidePop() {
-      this.pageObj.name = '';
-      this.moduleList = [];
+    hidePop () {
+      this.pageObj.name = ''
+      this.moduleList = []
     },
-    show(show) {
-      this.popBox.show = show;
+    show (show) {
+      this.popBox.show = show
     }
   },
-  watch:{
-    assetId:{
-      immediate:true,
-      handler(n,o){
-        this.pageObj.assetId=n;
+  watch: {
+    assetId: {
+      immediate: true,
+      handler (n, o) {
+        this.pageObj.assetId = n
       }
     }
   }

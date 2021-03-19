@@ -99,7 +99,7 @@
               <div class="tag-edit-action">Action</div>
             </div>
             <div style="height: calc(100% - 32px); overflow: auto" id="asset-box-tags">
-              <div class="tag-edit-box-body" v-for="(item, index) in editAsset.tags">
+              <div v-for="(item, index) in editAsset.tags" :key="index" class="tag-edit-box-body">
                 <el-form-item class="tag-edit tag-edit-tag" :rules="{required: true, message: $t('validate.required'), trigger: 'change'}" :prop="'tags.' + index + '.tag'">
                   <el-autocomplete placeholder="tag" size="mini" v-model="item.tag" :fetch-suggestions="filterKey" @blur="loadValues(item)" @select="loadValues" popper-class="no-style-class"></el-autocomplete>
                 </el-form-item>
@@ -117,7 +117,7 @@
         <!------------------------------------------IDC---------------------------------------------->
         <!--cli-->
         <div class="right-box-sub-title">{{$t('config.account.account')}}
-          <el-popover placement="right" width="70" trigger="click" :disabled="editAsset.accounts.length == 3" v-model.sync="showAccountOp" popper-class="no-style-class">
+          <el-popover v-model="showAccountOp" :disabled="editAsset.accounts.length == 3" placement="right" popper-class="no-style-class" trigger="click" width="70">
             <button slot="reference" id="add-type" type="button" class="float-right" :class="{'nz-btn-disabled': editAsset.accounts.length == 3}">
               <span><i class="nz-icon nz-icon-create-square"></i></span>
             </button>
@@ -164,527 +164,527 @@
 </template>
 
 <script>
-  import accountConfig from '../../page/asset/accountConfig';
-  import {host} from '../js/validate';
-  import {port} from '../js/validate'
-  import locationCascader from "./locationCascader";
-  export default {
-    name: "assetBox",
-    props: {
-      asset: Object
-    },
-    components:{
-      'account-config-box': accountConfig,
-      'location-cascader':locationCascader,
-    },
-    data() {
-      return {
-        editAsset: {},
+import accountConfig from '../../page/asset/accountConfig'
+import { host, port } from '../js/validate'
 
-        rightBox: {model: {show: false}},
-        modelData: [],
-        dcData: [],
-        assetTypeData: [],
-        cabinetData: [],
-        vendorAndModelOptionData: [], //厂商型号下拉框选择数据
+import locationCascader from './locationCascader'
+export default {
+  name: 'assetBox',
+  props: {
+    asset: Object
+  },
+  components: {
+    'account-config-box': accountConfig,
+    'location-cascader': locationCascader
+  },
+  data () {
+    return {
+      editAsset: {},
 
-        showAccountOp: false,
-        errorProtocol: [], //校验不通过的account
-        selectableAccountTypes: ["SSH", "TELNET", "SNMP"],
+      rightBox: { model: { show: false } },
+      modelData: [],
+      dcData: [],
+      assetTypeData: [],
+      cabinetData: [],
+      vendorAndModelOptionData: [], // 厂商型号下拉框选择数据
 
-        modelSize: 1,
-        locationInfo: null,
+      showAccountOp: false,
+      errorProtocol: [], // 校验不通过的account
+      selectableAccountTypes: ['SSH', 'TELNET', 'SNMP'],
 
-        accountType: '',
-        model: {},
-        blankModel: {
-          id: '',
-          name: '',
-          vendor: {id: '', value: '', code: '', type: ''},
-          type: {id: '', value: '', code: '', type: ''},
-          assetStat: {total: '', inStock: '', outStock: ''},
-          remark: '',
-          vendorCode: '',
-          typeCode: ''
-        },
-        userData: [], //用户（人）信息
-        cabinetSelectedData: {
-          name: '',
-          uSize: 0,
-          remark: '',
-          idcId: '',
-        },
-        rules: {
-          sn: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          host: [
-            {required:true,message:this.$t('validate.required'),trigger: 'blur'},
-            {validator:host, trigger: 'blur'}
-          ],
-          modelId: [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          "model.type.code": [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          idcId: [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          'impi.host':[
-            {validator:host,trigger:'blur'}
-          ],
-          'impi.port':[
-            {validator:port,trigger:'blur'}
-          ]
-        },
-        cabRules: {
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          uSize: [
-            {required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          idcId: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ]
-        },
-        formData:null,
-        accountValidResult: true,
-        changeProtocolSwitch: true,
-        exporterDisableSwitch: false,
-        tagKeys:[],
-        tagValues:[],
-        tagValuesCache:new Map(),
+      modelSize: 1,
+      locationInfo: null,
+
+      accountType: '',
+      model: {},
+      blankModel: {
+        id: '',
+        name: '',
+        vendor: { id: '', value: '', code: '', type: '' },
+        type: { id: '', value: '', code: '', type: '' },
+        assetStat: { total: '', inStock: '', outStock: '' },
+        remark: '',
+        vendorCode: '',
+        typeCode: ''
+      },
+      userData: [], // 用户（人）信息
+      cabinetSelectedData: {
+        name: '',
+        uSize: 0,
+        remark: '',
+        idcId: ''
+      },
+      rules: {
+        sn: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: host, trigger: 'blur' }
+        ],
+        modelId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'model.type.code': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        idcId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'impi.host': [
+          { validator: host, trigger: 'blur' }
+        ],
+        'impi.port': [
+          { validator: port, trigger: 'blur' }
+        ]
+      },
+      cabRules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        uSize: [
+          { required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        idcId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      },
+      formData: null,
+      accountValidResult: true,
+      changeProtocolSwitch: true,
+      exporterDisableSwitch: false,
+      tagKeys: [],
+      tagValues: [],
+      tagValuesCache: new Map()
+    }
+  },
+  watch: {
+    asset: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        // console.info(n);
+        this.editAsset = JSON.parse(JSON.stringify(n))
+        if (!this.editAsset.accounts) {
+          this.$set(this.editAsset, 'accounts', [])
+        } else {
+          this.editAsset.accounts.length > 0 && (this.accountType = this.editAsset.accounts[0].protocol)
+        }
+        this.$set(this.editAsset, 'modelId', n.model.id)
+        this.modelSize = n.model.usize
+        const initLocationData = {
+          idc: n.idc,
+          cabinet: n.cabinet,
+          u: [n.cabinetStart, n.cabinetEnd]
+        }
+        this.$nextTick(() => {
+          this.$refs.locationCascader.initComponet(initLocationData)
+          this.getVendorAndModelOptionData(n.model.type.code)
+        })
       }
     },
-    watch: {
-      asset: {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          //console.info(n);
-          this.editAsset = JSON.parse(JSON.stringify(n));
-          if (!this.editAsset.accounts) {
-            this.$set(this.editAsset, "accounts", []);
-          } else {
-            this.editAsset.accounts.length > 0 && (this.accountType = this.editAsset.accounts[0].protocol);
-          }
-          this.$set(this.editAsset, "modelId", n.model.id);
-          this.modelSize = n.model.usize;
-          let initLocationData={
-            idc: n.idc,
-            cabinet: n.cabinet,
-            u: [n.cabinetStart, n.cabinetEnd]
-          };
-          this.$nextTick(() => {
-            this.$refs.locationCascader.initComponet(initLocationData);
-            this.getVendorAndModelOptionData(n.model.type.code);
-          });
-        }
-      },
-      'editAsset.accounts': {
-        deep: true,
-        handler(n) {
-          let temp = ["SSH", "TELNET", "SNMP"];
-          n.forEach(item => {
-            let i = temp.indexOf(item.protocol);
-            if (i > -1) {
-              temp.splice(i, 1);
-            }
-          });
-          this.selectableAccountTypes = temp;
-        }
-      },
-    },
-    methods: {
-      clickOutside() {
-        this.esc(false);
-      },
-      /*关闭弹框*/
-      esc(refresh) {
-        this.prevent_opt.save=false;
-        this.$emit("close", refresh);
-      },
-      modelReload() {
-
-      },
-      //关闭model侧滑框
-      closeRightBox(refresh) {
-        this.rightBox.model.show = false;
-        if (refresh) { //新增修改型号后刷新相关数据
-          this.getVendorData();
-          this.getModelData(this.editAsset.model.type.code);
-        }
-      },
-      getVendorData() {
-        return new Promise(resolve => {
-          this.$get('sys/dict/all?type=vendor&pageSize=-1').then(response => {
-            if (response.code === 200) {
-              this.vendorData = response.data;
-            }
-            resolve(this.vendorData);
-          });
-        });
-      },
-      getModelData(assetType) {
-        return new Promise(resolve => {
-          let url = assetType ? ('model?typeCode=' + assetType+'&pageSize=-1') : 'model?pageSize=-1';
-          this.$get(url).then(response => {
-            if (response.code === 200) {
-              this.modelData = response.data.list;
-            }
-            resolve(this.modelData);
-          });
-        });
-      },
-      //组织符合cascader的数据格式
-      getVendorAndModelOptionData(assetType,event) {
-        if(event){
-          this.editAsset.modelId='';
-        }
-        let request = this.getModelData(assetType);
-        request.then(response => {
-          let resultData = [];
-          let modelData = response;
-          for (let i = 0; i < modelData.length; i++) {
-            if (!modelData[i].vendor) {
-              continue;
-            }
-            let obj = {};
-            obj.id = modelData[i].vendor.id;
-            obj.code = modelData[i].vendor.code;
-            obj.value ='vendor-'+ modelData[i].vendor.code;
-            obj.label = modelData[i].vendor.value;
-            obj.children = [];
-            resultData.push(obj);
-          }
-          let result = [];
-          let obj1 = {};
-          for (let i = 0; i < resultData.length; i++) {
-            if (!obj1[resultData[i].id]) {
-              result.push(resultData[i]);
-              obj1[resultData[i].id] = true;
-            }
-          }
-          for (let x = 0; x < result.length; x++) {
-            for (let y = 0; y < modelData.length; y++) {
-              if (!modelData[y].vendor) {
-                continue;
-              }
-              if (result[x].code === modelData[y].vendor.code) {
-                let obj2 = {};
-                obj2.value = modelData[y].id;
-                obj2.label = modelData[y].name;
-                result[x].children.push(obj2);
-              }
-            }
-          }
-          this.vendorAndModelOptionData = result;
-        });
-      },
-      addTag() {
-        !this.editAsset.tags && (this.$set(this.editAsset, "tags", []));
-        this.editAsset.tags.push({tag: "", value: ""});
-      },
-      addAccount(type) {
-        if (type == "SSH") {
-          this.editAsset.accounts.push({
-            authType: 1,
-            protocol: "SSH",
-            port: 22,
-            params: {
-              user: "",
-              method: "password",
-              password: "",
-              key: "",
-              keyPassword: ""
-            }
-          });
-        } else if (type == "TELNET") {
-          this.editAsset.accounts.push({
-            protocol: "TELNET",
-            port: 23,
-            params: {
-              user: "",
-              password: "",
-              userTip: "",
-              passwordTip: "",
-              reloginTip: ""
-            }
-          });
-        } else if (type == "SNMP") {
-          this.editAsset.accounts.push({
-            protocol: "SNMP",
-            port: 161,
-            params: {
-              version:2,
-              community:"public",
-              securityName:"",
-              securityLevel:"",
-              password:"",
-              privPassword:"",
-              authProtocol:"",
-              privProtocol:"",
-              contextName:""
-            }
-          });
-        }
-        this.accountType = type;
-        this.showAccountOp = false;
-      },
-      removeAccount(index) {
-        this.editAsset.accounts.splice(index, 1);
-        if (this.editAsset.accounts.length > 0) {
-          this.accountType = this.editAsset.accounts[0].protocol;
-        } else {
-          this.accountType = "";
-        }
-      },
-      removeTag(index) {
-        this.editAsset.tags.splice(index, 1);
-      },
-      setLocationData(data) {
-        this.locationInfo = data;
-      },
-      locationValidator:function(rule, value, callback){
-        let $temp=this;
-        setTimeout(()=>{
-          if(!this.locationInfo){
-            callback(new Error($temp.$t('validate.required')))
-          }else if(this.locationInfo && !this.locationInfo.idc){
-            callback(new Error($temp.$t('validate.required')))
-          }else{
-            callback();
-          }
-        }, 100)
-      },
-      modelChange(modelId) {
-        let model = this.modelData.find((item, index)=>{
-          return modelId == item.id;
-        });
-        this.modelSize = model.usize;
-      },
-      getDcData() {
-        return new Promise(resolve => {
-          this.$get('idc?pageSize=-1').then(response => {
-            if (response.code === 200) {
-              this.dcData = response.data.list;
-            }
-            resolve(this.dcData);
-          });
-        });
-      },
-      getUserData() {
-        return new Promise(resolve => {
-          this.$get('sys/user/list').then(response => {
-            if (response.code === 200) {
-              this.userData = response.data.list
-            }
-            resolve(this.userData);
-          });
-        });
-      },
-      getCabinetData(id) {
-        return new Promise(resolve => {
-          this.$get('cabinet?idcId=' + id).then(response => {
-            if (response.code === 200) {
-              this.cabinetData = response.data.list;
-              for (let i = 0; i < this.cabinetData.length; i++) {
-                this.$set(this.cabinetData[i], 'children', this.dcData)
-              }
-            }
-            resolve(this.cabinetData);
-          });
-        });
-      },
-      getAssetTypeData() {
-        return new Promise(resolve => {
-          this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
-            if (response.code === 200) {
-              this.assetTypeData = response.data;
-              if(this.editAsset.model&&!this.editAsset.model.type.code){
-                this.editAsset.model.type.code=response.data[0].code;
-              }
-            }
-            resolve(this.assetTypeData);
-          });
-        });
-      },
-      newModel() {
-        return JSON.parse(JSON.stringify(this.blankModel));
-      },
-      addVendor(assetType) {
-        this.model = this.newModel();
-        if (assetType) {
-          //model侧滑弹出时，自动选好assetType
-          for (let i = 0; i < this.assetTypeData.length; i++) {
-            if (this.assetTypeData[i].code == assetType) {
-              this.model.type.code = assetType;
-              this.model.type.value = this.assetTypeData[i].value;
-              break;
-            }
-          }
-        }
-        this.rightBox.model.show = true;
-      },
-      setAccountValidResult(result, protocol) {
-        this.accountValidResult = result;
-        let index = this.errorProtocol.indexOf(protocol);
-        if (result) {
-          index != -1 ? this.errorProtocol.splice(index, 1) : "";
-        } else {
-          index == -1 ? this.errorProtocol.push(protocol) : "";
-        }
-      },
-      del() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.prevent_opt.save=false;
-          this.$delete("asset?ids=" + this.editAsset.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      changeProtocolType(type) {
-        this.accountType = type;
-      },
-      save() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        if(this.locationInfo) {
-          if(this.locationInfo.idc){
-            this.editAsset.idcId = this.locationInfo.idc.id;
-          }
-          if(this.locationInfo.cabinet) {
-            this.editAsset.cabinetId = this.locationInfo.cabinet.id;
-          }else{
-            this.editAsset.cabinetId = null;
-          }
-          if(this.locationInfo.u && this.locationInfo.u.length > 0) {
-            this.editAsset.cabinetStart = this.locationInfo.u[0];
-            this.editAsset.cabinetEnd = this.locationInfo.u[1];
-          }else{
-            this.editAsset.cabinetStart = null;
-            this.editAsset.cabinetEnd = null;
-          }
-        }
-
-        if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
-          this.$refs.accountConfigBox.forEach(box => {
-            box.validateAccount();
-          });
-        }
-        // if(this.editAsset.model){
-        //   delete this.editAsset.model;
-        // }
-        this.$refs.assetEditForm.validate((valid) => {
-          if (valid && this.accountValidResult) {
-            if (this.editAsset.id) {
-              this.$put('asset', this.editAsset).then(res => {
-                this.prevent_opt.save=false;
-                if (res.code === 200) {
-                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(res.msg);
-                }
-              });
-            } else {
-              if(this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0){
-                this.$refs.accountConfigBox[0].validateAccount();
-              }
-              this.$post('asset', this.editAsset).then(res => {
-                this.prevent_opt.save=false;
-                if (res.code === 200) {
-                  this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(res.msg);
-                }
-              });
-            }
-          } else {
-            this.prevent_opt.save=false;
-            return false;
-          }
-        });
-      },
-      protocolTypeChange(protocol) {
-        if(protocol == 'TELNET'){
-          this.exporterDisableSwitch = true;
-        }else{
-          this.exporterDisableSwitch = false;
-        }
-      },
-      loadKeys:function(){
-        this.$get('/asset/tagKey').then(res=>{
-          if(res.code == 200){
-            this.tagKeys = res.data.list.map(item=>{
-                return {value:item}
-              })
+    'editAsset.accounts': {
+      deep: true,
+      handler (n) {
+        const temp = ['SSH', 'TELNET', 'SNMP']
+        n.forEach(item => {
+          const i = temp.indexOf(item.protocol)
+          if (i > -1) {
+            temp.splice(i, 1)
           }
         })
-      },
-      loadValues:function(tag){
-        let tagVal=tag.tag && tag.tag!=''?tag.tag:tag.value
-        if(!tagVal || tagVal ==''){this.tagValues=[]; return; }
-
-        let value = this.tagValuesCache.get(tagVal)
-        if(!value){
-          value = [];
-          this.$get('/asset/tagValue',{key:encodeURIComponent(tagVal)}).then(res => {
-            if(res.code == 200){
-              value = res.data.list.map(item=>{
-                return {value:item}
-              })
-
-              this.tagValues=Object.assign([],value)
-              this.tagValuesCache.set(tag.tag,Object.assign([],value))
-            }
-          })
-        }else{
-          this.tagValues=Object.assign([],value)
-        }
-      },
-      filterKey:function(input,callback){
-        if(!input || input == ''){
-          callback(this.tagKeys)
-        }else{
-          let result=this.tagKeys.filter(item=>{return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1})
-          callback(result)
-        }
-      },
-      filterValue:function(input,callback){
-        if(!input || input == ''){
-          callback(this.tagValues)
-        }else{
-          let result=this.tagValues.filter(item=>{return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1})
-          callback(result)
-        }
-      },
-    },
-    mounted() {
-      this.getUserData();
-      this.getVendorData();
-      this.getAssetTypeData();
-      this.getDcData();
-      this.loadKeys();
-      this.showAccountOp = false;
+        this.selectableAccountTypes = temp
+      }
     }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    modelReload () {
+
+    },
+    // 关闭model侧滑框
+    closeRightBox (refresh) {
+      this.rightBox.model.show = false
+      if (refresh) { // 新增修改型号后刷新相关数据
+        this.getVendorData()
+        this.getModelData(this.editAsset.model.type.code)
+      }
+    },
+    getVendorData () {
+      return new Promise(resolve => {
+        this.$get('sys/dict/all?type=vendor&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.vendorData = response.data
+          }
+          resolve(this.vendorData)
+        })
+      })
+    },
+    getModelData (assetType) {
+      return new Promise(resolve => {
+        const url = assetType ? ('model?typeCode=' + assetType + '&pageSize=-1') : 'model?pageSize=-1'
+        this.$get(url).then(response => {
+          if (response.code === 200) {
+            this.modelData = response.data.list
+          }
+          resolve(this.modelData)
+        })
+      })
+    },
+    // 组织符合cascader的数据格式
+    getVendorAndModelOptionData (assetType, event) {
+      if (event) {
+        this.editAsset.modelId = ''
+      }
+      const request = this.getModelData(assetType)
+      request.then(response => {
+        const resultData = []
+        const modelData = response
+        for (let i = 0; i < modelData.length; i++) {
+          if (!modelData[i].vendor) {
+            continue
+          }
+          const obj = {}
+          obj.id = modelData[i].vendor.id
+          obj.code = modelData[i].vendor.code
+          obj.value = 'vendor-' + modelData[i].vendor.code
+          obj.label = modelData[i].vendor.value
+          obj.children = []
+          resultData.push(obj)
+        }
+        const result = []
+        const obj1 = {}
+        for (let i = 0; i < resultData.length; i++) {
+          if (!obj1[resultData[i].id]) {
+            result.push(resultData[i])
+            obj1[resultData[i].id] = true
+          }
+        }
+        for (let x = 0; x < result.length; x++) {
+          for (let y = 0; y < modelData.length; y++) {
+            if (!modelData[y].vendor) {
+              continue
+            }
+            if (result[x].code === modelData[y].vendor.code) {
+              const obj2 = {}
+              obj2.value = modelData[y].id
+              obj2.label = modelData[y].name
+              result[x].children.push(obj2)
+            }
+          }
+        }
+        this.vendorAndModelOptionData = result
+      })
+    },
+    addTag () {
+      !this.editAsset.tags && (this.$set(this.editAsset, 'tags', []))
+      this.editAsset.tags.push({ tag: '', value: '' })
+    },
+    addAccount (type) {
+      if (type == 'SSH') {
+        this.editAsset.accounts.push({
+          authType: 1,
+          protocol: 'SSH',
+          port: 22,
+          params: {
+            user: '',
+            method: 'password',
+            password: '',
+            key: '',
+            keyPassword: ''
+          }
+        })
+      } else if (type == 'TELNET') {
+        this.editAsset.accounts.push({
+          protocol: 'TELNET',
+          port: 23,
+          params: {
+            user: '',
+            password: '',
+            userTip: '',
+            passwordTip: '',
+            reloginTip: ''
+          }
+        })
+      } else if (type == 'SNMP') {
+        this.editAsset.accounts.push({
+          protocol: 'SNMP',
+          port: 161,
+          params: {
+            version: 2,
+            community: 'public',
+            securityName: '',
+            securityLevel: '',
+            password: '',
+            privPassword: '',
+            authProtocol: '',
+            privProtocol: '',
+            contextName: ''
+          }
+        })
+      }
+      this.accountType = type
+      this.showAccountOp = false
+    },
+    removeAccount (index) {
+      this.editAsset.accounts.splice(index, 1)
+      if (this.editAsset.accounts.length > 0) {
+        this.accountType = this.editAsset.accounts[0].protocol
+      } else {
+        this.accountType = ''
+      }
+    },
+    removeTag (index) {
+      this.editAsset.tags.splice(index, 1)
+    },
+    setLocationData (data) {
+      this.locationInfo = data
+    },
+    locationValidator: function (rule, value, callback) {
+      const $temp = this
+      setTimeout(() => {
+        if (!this.locationInfo) {
+          callback(new Error($temp.$t('validate.required')))
+        } else if (this.locationInfo && !this.locationInfo.idc) {
+          callback(new Error($temp.$t('validate.required')))
+        } else {
+          callback()
+        }
+      }, 100)
+    },
+    modelChange (modelId) {
+      const model = this.modelData.find((item, index) => {
+        return modelId == item.id
+      })
+      this.modelSize = model.usize
+    },
+    getDcData () {
+      return new Promise(resolve => {
+        this.$get('idc?pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.dcData = response.data.list
+          }
+          resolve(this.dcData)
+        })
+      })
+    },
+    getUserData () {
+      return new Promise(resolve => {
+        this.$get('sys/user/list').then(response => {
+          if (response.code === 200) {
+            this.userData = response.data.list
+          }
+          resolve(this.userData)
+        })
+      })
+    },
+    getCabinetData (id) {
+      return new Promise(resolve => {
+        this.$get('cabinet?idcId=' + id).then(response => {
+          if (response.code === 200) {
+            this.cabinetData = response.data.list
+            for (let i = 0; i < this.cabinetData.length; i++) {
+              this.$set(this.cabinetData[i], 'children', this.dcData)
+            }
+          }
+          resolve(this.cabinetData)
+        })
+      })
+    },
+    getAssetTypeData () {
+      return new Promise(resolve => {
+        this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.assetTypeData = response.data
+            if (this.editAsset.model && !this.editAsset.model.type.code) {
+              this.editAsset.model.type.code = response.data[0].code
+            }
+          }
+          resolve(this.assetTypeData)
+        })
+      })
+    },
+    newModel () {
+      return JSON.parse(JSON.stringify(this.blankModel))
+    },
+    addVendor (assetType) {
+      this.model = this.newModel()
+      if (assetType) {
+        // model侧滑弹出时，自动选好assetType
+        for (let i = 0; i < this.assetTypeData.length; i++) {
+          if (this.assetTypeData[i].code == assetType) {
+            this.model.type.code = assetType
+            this.model.type.value = this.assetTypeData[i].value
+            break
+          }
+        }
+      }
+      this.rightBox.model.show = true
+    },
+    setAccountValidResult (result, protocol) {
+      this.accountValidResult = result
+      const index = this.errorProtocol.indexOf(protocol)
+      if (result) {
+        index != -1 && this.errorProtocol.splice(index, 1)
+      } else {
+        index == -1 && this.errorProtocol.push(protocol)
+      }
+    },
+    del () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.prevent_opt.save = false
+        this.$delete('asset?ids=' + this.editAsset.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    changeProtocolType (type) {
+      this.accountType = type
+    },
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      if (this.locationInfo) {
+        if (this.locationInfo.idc) {
+          this.editAsset.idcId = this.locationInfo.idc.id
+        }
+        if (this.locationInfo.cabinet) {
+          this.editAsset.cabinetId = this.locationInfo.cabinet.id
+        } else {
+          this.editAsset.cabinetId = null
+        }
+        if (this.locationInfo.u && this.locationInfo.u.length > 0) {
+          this.editAsset.cabinetStart = this.locationInfo.u[0]
+          this.editAsset.cabinetEnd = this.locationInfo.u[1]
+        } else {
+          this.editAsset.cabinetStart = null
+          this.editAsset.cabinetEnd = null
+        }
+      }
+
+      if (this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
+        this.$refs.accountConfigBox.forEach(box => {
+          box.validateAccount()
+        })
+      }
+      // if(this.editAsset.model){
+      //   delete this.editAsset.model;
+      // }
+      this.$refs.assetEditForm.validate((valid) => {
+        if (valid && this.accountValidResult) {
+          if (this.editAsset.id) {
+            this.$put('asset', this.editAsset).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          } else {
+            if (this.$refs.accountConfigBox && this.$refs.accountConfigBox.length > 0) {
+              this.$refs.accountConfigBox[0].validateAccount()
+            }
+            this.$post('asset', this.editAsset).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    protocolTypeChange (protocol) {
+      if (protocol == 'TELNET') {
+        this.exporterDisableSwitch = true
+      } else {
+        this.exporterDisableSwitch = false
+      }
+    },
+    loadKeys: function () {
+      this.$get('/asset/tagKey').then(res => {
+        if (res.code == 200) {
+          this.tagKeys = res.data.list.map(item => {
+            return { value: item }
+          })
+        }
+      })
+    },
+    loadValues: function (tag) {
+      const tagVal = tag.tag && tag.tag != '' ? tag.tag : tag.value
+      if (!tagVal || tagVal == '') { this.tagValues = []; return }
+
+      let value = this.tagValuesCache.get(tagVal)
+      if (!value) {
+        value = []
+        this.$get('/asset/tagValue', { key: encodeURIComponent(tagVal) }).then(res => {
+          if (res.code == 200) {
+            value = res.data.list.map(item => {
+              return { value: item }
+            })
+
+            this.tagValues = Object.assign([], value)
+            this.tagValuesCache.set(tag.tag, Object.assign([], value))
+          }
+        })
+      } else {
+        this.tagValues = Object.assign([], value)
+      }
+    },
+    filterKey: function (input, callback) {
+      if (!input || input == '') {
+        callback(this.tagKeys)
+      } else {
+        const result = this.tagKeys.filter(item => { return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1 })
+        callback(result)
+      }
+    },
+    filterValue: function (input, callback) {
+      if (!input || input == '') {
+        callback(this.tagValues)
+      } else {
+        const result = this.tagValues.filter(item => { return item.value.toLowerCase().indexOf(input.toLowerCase()) != -1 })
+        callback(result)
+      }
+    }
+  },
+  mounted () {
+    this.getUserData()
+    this.getVendorData()
+    this.getAssetTypeData()
+    this.getDcData()
+    this.loadKeys()
+    this.showAccountOp = false
   }
+}
 </script>
 <style >
   .location-selector{

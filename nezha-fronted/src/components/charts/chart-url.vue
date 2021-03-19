@@ -57,252 +57,246 @@
 </template>
 
 <script>
-import bus from '../../libs/bus';
-import chartDataFormat from './chartDataFormat'
-import loading from "../common/loading";
+import loading from '../common/loading'
 
 export default {
   name: 'chartUrl',
   components: {
-    'loading': loading,
+    loading: loading
   },
   props: {
-    chartData: {
-      type: Object
-    },
     chartData: {
       type: Object
     },
     // 看板id
     panelId: {
       type: Number,
-      default: 0,
+      default: 0
     },
     editChartId: {
       type: String,
-      default: 'editChartId',
+      default: 'editChartId'
     },
-    chartIndex:{
+    chartIndex: {
       type: Number,
-      default: 0,
+      default: 0
     },
-    from: {type: String},
-    isLock:{type:Boolean,default:false}
+    from: { type: String },
+    isLock: { type: Boolean, default: false }
   },
-  data() {
+  data () {
     return {
       data: {}, // 该图表信息,chartItem
-      unit:{},
+      unit: {},
 
       images: '',
-      loading:Object,
+      loading: Object,
       panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
       firstLoad: false, // 是否第一次加载
       screenModal: false,
       firstShow: false, // 默认不显示操作按钮,
-      caretShow:false,
-      dragTitleShow:false,
-      dropdownMenuShow:false,
-      minHeight:200,
-      chartSpaceHeight:5,//top-border: 1,bottom-border: 1,padding-bottome:3
-      titleHeight:38,//title-height:28,magrin-bottom:10
-      paddingBottom:6,
-      divFirstShow:false,
-      showStatic:false,
-    };
+      caretShow: false,
+      dragTitleShow: false,
+      dropdownMenuShow: false,
+      minHeight: 200,
+      chartSpaceHeight: 5, // top-border: 1,bottom-border: 1,padding-bottome:3
+      titleHeight: 38, // title-height:28,magrin-bottom:10
+      paddingBottom: 6,
+      divFirstShow: false,
+      showStatic: false
+    }
   },
   methods: {
-    startResize(e) {
-      let vm = this;
-      this.$chartResizeTool.start(vm, this.chartData, e);
+    startResize (e) {
+      const vm = this
+      this.$chartResizeTool.start(vm, this.chartData, e)
     },
-    resize(chartItem) {
-      let chartBox = document.getElementById('chartUrlDiv'+this.chartIndex);
-      chartBox.querySelector(".url-container").style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`
+    resize (chartItem) {
+      const chartBox = document.getElementById('chartUrlDiv' + this.chartIndex)
+      chartBox.querySelector('.url-container').style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`
     },
-    showLoad(chartItem) {
-      this.data = chartItem;
-      this.panelIdInner = this.panelId;
-      //设置高度
+    showLoad (chartItem) {
+      this.data = chartItem
+      this.panelIdInner = this.panelId
+      // 设置高度
       this.$nextTick(() => {
-        this.resize(chartItem);
-      });
-      this.startLoading();
+        this.resize(chartItem)
+      })
+      this.startLoading()
 
-      if(/\{\{.*?\}\}/g.test(this.data.param.url)){
-        this.showStatic=true;
-        this.setStaticContent();
-      }else{
-        this.showStatic=false;
-        this.setLoadFrame();
+      if (/\{\{.*?\}\}/g.test(this.data.param.url)) {
+        this.showStatic = true
+        this.setStaticContent()
+      } else {
+        this.showStatic = false
+        this.setLoadFrame()
       }
-      this.divFirstShow = true;
+      this.divFirstShow = true
     },
-    setStaticContent:function(){
-      let that = this;
+    setStaticContent: function () {
+      const that = this
       this.$nextTick(() => {
-        let staticDiv = document.querySelector('#staticContainer'+this.chartIndex);
-        staticDiv.innerHTML=`<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
-        that.firstShow = true;
-        that.endLoading();
-      });
+        const staticDiv = document.querySelector('#staticContainer' + this.chartIndex)
+        staticDiv.innerHTML = `<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
+        that.firstShow = true
+        that.endLoading()
+      })
     },
-    setLoadFrame(){
-      let that = this;
+    setLoadFrame () {
+      const that = this
       this.$nextTick(() => {
-        let iframe = document.querySelector('#urlContainer'+this.chartIndex);
+        const iframe = document.querySelector('#urlContainer' + this.chartIndex)
         // 处理兼容行问题
         if (iframe.attachEvent) {
           iframe.attachEvent('onload', function () {
             // iframe加载完毕以后执行操作
-            that.firstShow = true;
+            that.firstShow = true
             // console.log('iframe已加载完毕');
-            that.endLoading();
+            that.endLoading()
           })
         } else {
           iframe.onload = function () {
             // iframe加载完毕以后执行操作
-            that.firstShow = true;
+            that.firstShow = true
             // console.log('iframe已加载完毕');
-            that.endLoading();
+            that.endLoading()
           }
         }
-        iframe.src = that.data.param.url;
-      });
+        iframe.src = that.data.param.url
+      })
     },
-    initDialog(){
-      this.startLoading('screen');
-      if(/\{\{.*?\}\}/g.test(this.data.param.url)){
-        this.showStatic=true;
-        this.setStaticContentFull();
-      }else{
-        this.showStatic=false;
-        this.setLoadFrameFull();
-      }
-
-    },
-    startLoading(area){
-      if(area==='screen'){
-        this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
-      }else {
-        this.$refs['localLoading'+this.chartIndex].startLoading();
+    initDialog () {
+      this.startLoading('screen')
+      if (/\{\{.*?\}\}/g.test(this.data.param.url)) {
+        this.showStatic = true
+        this.setStaticContentFull()
+      } else {
+        this.showStatic = false
+        this.setLoadFrameFull()
       }
     },
-    endLoading(area){
-      if(area==='screen'){
-        this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
-      }else {
-        this.$refs['localLoading'+this.chartIndex].endLoading();
+    startLoading (area) {
+      if (area === 'screen') {
+        this.$refs['localLoadingScreen' + this.chartIndex].startLoading()
+      } else {
+        this.$refs['localLoading' + this.chartIndex].startLoading()
       }
     },
-    clearChart(){
-      this.data = {};
+    endLoading (area) {
+      if (area === 'screen') {
+        this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
+      } else {
+        this.$refs['localLoading' + this.chartIndex].endLoading()
+      }
     },
-    screenRefreshChart(){
-     ('urlContainerFull'+this.chartIndex).window.location.reload()
+    clearChart () {
+      this.data = {}
+    },
+    screenRefreshChart () {
+      ('urlContainerFull' + this.chartIndex).window.location.reload()
     },
     // 重新请求数据 刷新操作-local
-    refreshChart() {
-        this.dropdownMenuShow=false;
-        this.startLoading();
-        this.firstShow = false;
-        let iframe = document.querySelector('#urlContainer'+this.chartIndex);
-        iframe.src = '';
-        iframe.src = this.data.param.url;
+    refreshChart () {
+      this.dropdownMenuShow = false
+      this.startLoading()
+      this.firstShow = false
+      const iframe = document.querySelector('#urlContainer' + this.chartIndex)
+      iframe.src = ''
+      iframe.src = this.data.param.url
     },
     // 编辑图表
-    editChart() {
-      this.dropdownMenuShow=false;
-      this.$emit('on-edit-chart-block', this.data.id);
+    editChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-edit-chart-block', this.data.id)
     },
     // 删除该图表
-    removeChart() {
-      this.dropdownMenuShow=false;
-      this.$emit('on-remove-chart-block', this.data.id);
+    removeChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-remove-chart-block', this.data.id)
     },
-    clickos() {
-      this.dropdownMenuShow=false;
+    clickos () {
+      this.dropdownMenuShow = false
     },
     // 全屏查看
-    showAllScreen() {
-      this.dropdownMenuShow=false;
-      this.screenModal = true;
+    showAllScreen () {
+      this.dropdownMenuShow = false
+      this.screenModal = true
     },
-    duplicate(){
-      this.dropdownMenuShow=false;
-      this.$confirm(this.$t("tip.confirmDuplicate"), {
-        confirmButtonText: this.$t("tip.yes"),
-        cancelButtonText: this.$t("tip.no"),
+    duplicate () {
+      this.dropdownMenuShow = false
+      this.$confirm(this.$t('tip.confirmDuplicate'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
         type: 'info'
       }).then(() => {
-        const param = {id:this.data.id};
-        this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
+        const param = { id: this.data.id }
+        this.$post('panel/' + this.data.panelId + '/charts/duplicate', (param)).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 2000,
               type: 'success',
-              message: this.$t("tip.duplicateSuccess")
-            });
-            this.$emit('on-duplicate-chart-block', this.data.id,response.data);
-          }else {
-            if(response.msg){
-              this.$message.error(response.msg);
-            }else if(response.error){
-              this.$message.error(response.error);
-            }else {
-              this.$message.error(response);
+              message: this.$t('tip.duplicateSuccess')
+            })
+            this.$emit('on-duplicate-chart-block', this.data.id, response.data)
+          } else {
+            if (response.msg) {
+              this.$message.error(response.msg)
+            } else if (response.error) {
+              this.$message.error(response.error)
+            } else {
+              this.$message.error(response)
             }
           }
-        });
-      });
+        })
+      })
     },
-    setLoadFrameFull(){
-      let that = this;
+    setLoadFrameFull () {
+      const that = this
       this.$nextTick(() => {
-        let iframe = document.querySelector('#urlContainerFull'+this.chartIndex);
+        const iframe = document.querySelector('#urlContainerFull' + this.chartIndex)
 
         // 处理兼容行问题
         if (iframe.attachEvent) {
           iframe.attachEvent('onload', function () {
             // iframe加载完毕以后执行操作
-            that.firstShow = true;
+            that.firstShow = true
             // console.log('iframe已加载完毕');
-            that.endLoading('screen');
+            that.endLoading('screen')
           })
         } else {
           iframe.onload = function () {
             // iframe加载完毕以后执行操作
-            that.firstShow = true;
+            that.firstShow = true
             // console.log('iframe已加载完毕');
-            that.endLoading('screen');
+            that.endLoading('screen')
           }
         }
 
-        iframe.src = this.data.param.url;
-      });
+        iframe.src = this.data.param.url
+      })
     },
-    setStaticContentFull:function(){
-      let that = this;
+    setStaticContentFull: function () {
+      const that = this
       this.$nextTick(() => {
-        let staticDiv = document.querySelector('#staticContainerFull'+this.chartIndex);
-        staticDiv.innerHTML=`<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
-        that.firstShow = true;
-        that.endLoading('screen');
-      });
-    },
-  },
-  watch: {
-    dropdownMenuShow(n) {
-      this.$emit("dropmenu-change", n);
+        const staticDiv = document.querySelector('#staticContainerFull' + this.chartIndex)
+        staticDiv.innerHTML = `<div class="content-static-url">${that.data.param.url}</div><div class="content-static-tip">${that.$t('dashboard.panel.chartForm.typeVal.url.staticTip')}</div>`
+        that.firstShow = true
+        that.endLoading('screen')
+      })
     }
   },
-  mounted() {
-    this.firstLoad = false;
+  watch: {
+    dropdownMenuShow (n) {
+      this.$emit('dropmenu-change', n)
+    }
   },
-  beforeDestroy() {
-    this.clearChart();
+  mounted () {
+    this.firstLoad = false
   },
-};
+  beforeDestroy () {
+    this.clearChart()
+  }
+}
 </script>
 <style>
   .center-content .content-static-url{

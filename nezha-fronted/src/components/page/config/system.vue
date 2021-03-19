@@ -8,10 +8,10 @@
               <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
-              <el-input v-model="basic.alert_api"id="system-baisc-alert_api"></el-input>
+              <el-input id="system-baisc-alert_api" v-model="basic.alert_api"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.assetPingSwith')" prop="asset_ping_switch">
-              <el-switch v-model.number="basic.asset_ping_switch" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off'id="system-baisc-asset_ping_switch">
+              <el-switch id="system-baisc-asset_ping_switch" v-model.number="basic.asset_ping_switch"  active-color="rgb(238, 157, 63)" active-value='on' inactive-value='off'>
               </el-switch>
             </el-form-item>
             <!--<el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
@@ -233,10 +233,10 @@
                        :move="move"
                        handle=".handle"
             >
-              <div v-for="(item,index) in notification" class="linkContent" :id="'notificationDiv'+item.id">
+              <div v-for="(item,index) in notification" :id="'notificationDiv'+item.id" :key="index" class="linkContent">
                 <i class="nz-icon nz-icon-sort4 handle" style="display:none"></i>
                 <span style="display: inline-block;width: 26px"></span>
-                <el-form :inline="true"  :model="notification[index]" :ref="'notificationForm'+item.id" label-width="180px" size="small" ref="resetForm" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit" >
+                <el-form v-if="item.isEdit"  :key="index" :ref="'notificationForm'+item.id" :inline="true" :model="notification[index]" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" label-width="180px" size="small" >
                   <el-form-item  prop="name" class="linkName">
                     <el-input v-model="item.name" width="140px" />
                   </el-form-item>
@@ -300,9 +300,9 @@
                        :move="move"
                        handle=".handle"
             >
-              <div v-for="(item,index) in link" class="linkContent" :id="'linkDiv'+item.id">
+              <div v-for="(item,index) in link" :id="'linkDiv'+item.id" :key="index" class="linkContent">
                 <i class="nz-icon nz-icon-sort4 handle"></i>
-                <el-form :inline="true"  :model="link[index]" :ref="'linkForm'+item.id" label-width="180px" size="small" ref="resetForm" :rules="linkRules" :validate-on-rule-change="false" class="reset-form" :key="index" v-if="item.isEdit" >
+                <el-form v-if="item.isEdit"  :key="index" :ref="'linkForm'+item.id" :inline="true" :model="link[index]" :rules="linkRules" :validate-on-rule-change="false" class="reset-form" label-width="180px" size="small" >
                 <el-form-item  prop="name" class="linkName">
                   <el-input v-model="item.name" width="140px" />
                 </el-form-item>
@@ -363,663 +363,633 @@
 </template>
 
 <script>
-    import {positiveInteger} from '../../common/js/validate'
-    import {port} from '../../common/js/validate'
-    import {hostPlus} from '../../common/js/validate'
-    import {host} from '../../common/js/validate'
-    import {uSize} from '../../common/js/validate'
-    import bus from '../../../libs/bus';
-    import draggable from 'vuedraggable'
-    // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
-    import 'leaflet/dist/leaflet.css'
-    import * as L from 'leaflet'
-    import icon from 'leaflet/dist/images/marker-icon.png';
-    import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-    export default {
-        name: "system",
-        components:{draggable},
-        data(){
-          return {
-            basic:{
-              alert_api:'',
-              asset_ping_switch:'on',//主机连通性检查开关，'on'：开启，off：关闭
-              asset_ping_interval:null,//检查周期，单位：s
-              node_exporter_target_path:'',
-              scrape_interval:15,
-              storage_local_retention:15*24,
-              system_name:'',
-              current_site_url:'',
-              timezone:'',
-              default_cabinet_usize:'',
-              query_max_series:'',
-              unsaved_change:'on',
-              map_center_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
-            },
-            mapConfigVisible:false,
-            map:null,
-            marker:null,
-            basicCopy:null,
-            basicRules:{
-              system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              // node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:host,trigger: 'blur'}],
-              asset_ping_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
-              default_cabinet_usize:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
-              query_max_series:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-            },
-            basicRules2:{
-              system_name:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              alert_api:[{required:true,message:this.$t('validate.required'),trigger:'blur'},,{validator:host,trigger: 'blur'}],
-              scrape_interval:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              storage_local_retention:[{required:true,message:this.$t('validate.required'),trigger:'blur'},{validator:positiveInteger,trigger:'blur'}],
-              timezone:[{required:true,message:this.$t('validate.required'),trigger:'blur'}],
-              default_cabinet_usize:[{validator:positiveInteger,trigger:'blur'},{validator:uSize,trigger:'blur'}],
-               query_max_series:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-            },
-            timezoneOption:[
-              {label:'UTC-12:00',value:'-12'},
-              {label:'UTC-11:00',value:'-11'},
-              {label:'UTC-10:00',value:'-10'},
-              {label:'UTC-09:00',value:'-9'},
-              {label:'UTC-08:00',value:'-8'},
-              {label:'UTC-07:00',value:'-7'},
-              {label:'UTC-06:00',value:'-6'},
-              {label:'UTC-05:00',value:'-5'},
-              {label:'UTC-04:00',value:'-4'},
-              {label:'UTC-03:00',value:'-3'},
-              {label:'UTC-02:00',value:'-2'},
-              {label:'UTC-01:00',value:'-1'},
-              {label:'UTC 00:00',value:'0'},
-              {label:'UTC+01:00',value:'1'},
-              {label:'UTC+02:00',value:'2'},
-              {label:'UTC+03:00',value:'3'},
-              {label:'UTC+04:00',value:'4'},
-              {label:'UTC+05:00',value:'5'},
-              {label:'UTC+06:00',value:'6'},
-              {label:'UTC+07:00',value:'7'},
-              {label:'UTC+08:00',value:'8'},
-              {label:'UTC+09:00',value:'9'},
-              {label:'UTC+10:00',value:'10'},
-              {label:'UTC+11:00',value:'11'},
-              {label:'UTC+12:00',value:'12'},
-            ],
-            email:{
-              email_enable: 'on',
-              email_smtp_host: '',
-              email_smtp_port: 25,
-              email_smtp_account: "",
-              email_smtp_password: "",
-              email_send_account: "",
-              email_test_reciver: "",
-              email_ssl_flag: 'off',
-              email_tls_flag: 'off',
-            },
-            emailCopy:null,
-            emailRules:{
-              email_smtp_host: [
-                {required:true,message:this.$t('validate.required'),trigger:'blur'},
-                {validator:hostPlus,trigger: 'blur'}
-              ],
-              email_smtp_port: [
-                {required:true,message:this.$t('validate.required'),trigger:'blur'},
-                {validator:port,trigger:'blur'}
-              ],
-              email_smtp_account: [
-                {required:true,message:this.$t('validate.required'),trigger:'blur'},
-                { type: 'email', message: this.$t('validate.email'), trigger: 'blur' }
-              ],
-              email_send_account:[{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }],
-              email_test_reciver: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }],
-            },
-            terminal:{
-              max_terminal_num:10
-            },
-            terminalCopy:null,
-            terminalRules:{
-              max_terminal_num:[
-                {required:true,message:this.$t('validate.required'),trigger:'blur'},
-                {validator:positiveInteger,trigger:'blur'}
-              ]
-            },
-            ldap:{
-              ldap_address:'',
-              ldap_dn:'',
-              ldap_password:'',
-              ldap_ou:'',
-              ldap_user_filter:'',
-              ldap_mapping:'',
-              ldap_enable:'off',
-            },
-            ldapCopy:null,
-            ldapRules:{
-              ldap_address:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              ldap_user_filter:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              ldap_mapping:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-            },
-            reset:{
-              type:[],
-              password:'',
-            },
-            linkTemp:{
-              name:'',url:''
-            },
-            link:[],
-            linkReserved:[],
-            linkRules:{
-              name:[
-                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-                { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
-                ],
-              url:[
-                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-                // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
-              ]
-            },
-            notificationTemp:{
-              name:'',filePath:''
-            },
-            notification:[],
-            notificationReserved:[],
-            notificationRules:{
-              name:[
-                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-                { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
-              ],
-              filePath:[
-                { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-                { pattern: /^\/(.*\.*.+\/?)+$/, message: this.$t('config.system.notification.filePathReg') }
-                // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
-              ]
-            },
-            resetRules:{
-              type:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-              password:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
-            },
-            resetOptions:[
-              {
-                label:this.$t('config.system.reset.metric'),
-                value:'metric',
-              },
-              {
-                label:this.$t('config.system.reset.alert'),
-                value:'alert',
-              },
-              {
-                label:this.$t('config.system.reset.sysConfig'),
-                value:'sysconfig',
-              },
-            ],
-            activeTab:'basic'
-          }
+import { positiveInteger, port, hostPlus, host, uSize } from '../../common/js/validate'
+
+import bus from '../../../libs/bus'
+import draggable from 'vuedraggable'
+// 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
+import 'leaflet/dist/leaflet.css'
+import * as L from 'leaflet'
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+export default {
+  name: 'system',
+  components: { draggable },
+  data () {
+    return {
+      basic: {
+        alert_api: '',
+        asset_ping_switch: 'on', // 主机连通性检查开关，'on'：开启，off：关闭
+        asset_ping_interval: null, // 检查周期，单位：s
+        node_exporter_target_path: '',
+        scrape_interval: 15,
+        storage_local_retention: 15 * 24,
+        system_name: '',
+        current_site_url: '',
+        timezone: '',
+        default_cabinet_usize: '',
+        query_max_series: '',
+        unsaved_change: 'on',
+        map_center_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
+      },
+      mapConfigVisible:false,
+      map:null,
+      marker:null,
+      basicCopy: null,
+      basicRules: {
+        system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        // node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
+        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
+        asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        storage_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        timezone: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        default_cabinet_usize: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }, { validator: uSize, trigger: 'blur' }],
+        query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
+      basicRules2: {
+        system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        node_exporter_target_path: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
+        scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        storage_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        timezone: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        default_cabinet_usize: [{ validator: positiveInteger, trigger: 'blur' }, { validator: uSize, trigger: 'blur' }],
+        query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
+      timezoneOption: [
+        { label: 'UTC-12:00', value: '-12' },
+        { label: 'UTC-11:00', value: '-11' },
+        { label: 'UTC-10:00', value: '-10' },
+        { label: 'UTC-09:00', value: '-9' },
+        { label: 'UTC-08:00', value: '-8' },
+        { label: 'UTC-07:00', value: '-7' },
+        { label: 'UTC-06:00', value: '-6' },
+        { label: 'UTC-05:00', value: '-5' },
+        { label: 'UTC-04:00', value: '-4' },
+        { label: 'UTC-03:00', value: '-3' },
+        { label: 'UTC-02:00', value: '-2' },
+        { label: 'UTC-01:00', value: '-1' },
+        { label: 'UTC 00:00', value: '0' },
+        { label: 'UTC+01:00', value: '1' },
+        { label: 'UTC+02:00', value: '2' },
+        { label: 'UTC+03:00', value: '3' },
+        { label: 'UTC+04:00', value: '4' },
+        { label: 'UTC+05:00', value: '5' },
+        { label: 'UTC+06:00', value: '6' },
+        { label: 'UTC+07:00', value: '7' },
+        { label: 'UTC+08:00', value: '8' },
+        { label: 'UTC+09:00', value: '9' },
+        { label: 'UTC+10:00', value: '10' },
+        { label: 'UTC+11:00', value: '11' },
+        { label: 'UTC+12:00', value: '12' }
+      ],
+      email: {
+        email_enable: 'on',
+        email_smtp_host: '',
+        email_smtp_port: 25,
+        email_smtp_account: '',
+        email_smtp_password: '',
+        email_send_account: '',
+        email_test_reciver: '',
+        email_ssl_flag: 'off',
+        email_tls_flag: 'off'
+      },
+      emailCopy: null,
+      emailRules: {
+        email_smtp_host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: hostPlus, trigger: 'blur' }
+        ],
+        email_smtp_port: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: port, trigger: 'blur' }
+        ],
+        email_smtp_account: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { type: 'email', message: this.$t('validate.email'), trigger: 'blur' }
+        ],
+        email_send_account: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }],
+        email_test_reciver: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }]
+      },
+      terminal: {
+        max_terminal_num: 10
+      },
+      terminalCopy: null,
+      terminalRules: {
+        max_terminal_num: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: positiveInteger, trigger: 'blur' }
+        ]
+      },
+      ldap: {
+        ldap_address: '',
+        ldap_dn: '',
+        ldap_password: '',
+        ldap_ou: '',
+        ldap_user_filter: '',
+        ldap_mapping: '',
+        ldap_enable: 'off'
+      },
+      ldapCopy: null,
+      ldapRules: {
+        ldap_address: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        ldap_user_filter: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        ldap_mapping: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
+      reset: {
+        type: [],
+        password: ''
+      },
+      linkTemp: {
+        name: '', url: ''
+      },
+      link: [],
+      linkReserved: [],
+      linkRules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
+        ],
+        url: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
+        ]
+      },
+      notificationTemp: {
+        name: '', filePath: ''
+      },
+      notification: [],
+      notificationReserved: [],
+      notificationRules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { max: 64, message: this.$t('config.system.link.nameMaxLength'), trigger: 'blur' }
+        ],
+        filePath: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { pattern: /^\/(.*\.*.+\/?)+$/, message: this.$t('config.system.notification.filePathReg') }
+          // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
+        ]
+      },
+      resetRules: {
+        type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
+      resetOptions: [
+        {
+          label: this.$t('config.system.reset.metric'),
+          value: 'metric'
         },
-        methods:{
-          initMap:function(){
-            if(this.map){
-              this.map.remove();
-              this.map=null;
-            }
-            let DefaultIcon = L.icon({
-              iconUrl: icon,
-              iconSize: [26, 40],
-              iconAnchor: [13, 40],
-              shadowUrl: iconShadow
-            });
-            L.Marker.prototype.options.icon = DefaultIcon;
-            let map = L.map("map",{
-              minZoom:this.basic.map_center_config.minZoom,
-              maxZoom:this.basic.map_center_config.maxZoom,
-              attributionControl:false,
-              zoomControl:false,
-              maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
-            }).setView([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude],this.basic.map_center_config.zoom);
-
-            L.tileLayer(
-              "/static/Tiles/{z}/{x}/{y}.png",
-              {noWrap:true}
-            ).addTo(map);
-
-            let attribution=L.control.attribution({position:'bottomright',prefix:''})
-            attribution.addAttribution(' © OpenStreetMap contributors')
-            attribution.addTo(map)
-
-            L.control.zoom({
-              position:'bottomright',
-              zoomInText:`<i class="nz-icon nz-icon-enlarge"></i>`,
-              zoomOutText:`<i class="nz-icon nz-icon-narrow"></i>`,
-              zoomInTitle:'',
-              zoomOutTitle:'',
-            }).addTo(map)
-
-            let marker = L.marker([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude]).addTo(map);
-            map.on("click", function(e) {
-              var lat = e.latlng.lat;
-              var lng = e.latlng.lng;
-              marker.setLatLng([lat,lng]);
-            });
-            this.map = map;
-            this.marker = marker;
-          },
-          mapClose:function(){
-            this.mapConfigVisible=false
-            let latlng = this.marker.getLatLng();
-            this.basic.map_center_config.latitude = latlng.lat;
-            this.basic.map_center_config.longitude = latlng.lng;
-            this.basic.map_center_config.zoom = this.map.getZoom();
-          },
-          selectTab:function(tab){
-            this.querySetInfo(tab.name)
-          },
-          querySetInfo:function(type){ // 切换tab
-            if(!type){
-              console.error('type is required')
-              return
-            }
-            if(type == 'reset'){
-              return ;
-            }
-            if(type == 'link'){
-              this.getLinkData();
-              return
-            }
-            if(type == 'notification'){
-              this.getNotificationData();
-              return
-            }
-            this.$get('sysConfig?type='+type).then(response=>{
-              if(response.code == 200){
-                let sets=response.data[type];
-                for(let key in sets){
-                  this[type][key]=sets[key];
-                }
-                if(type ==  'basic'){
-                  localStorage.setItem('nz-sys-name',this.basic.system_name);
-                  localStorage.setItem('nz-sys-timezone',this.basic.timezone);
-                  localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
-                  localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
-                  localStorage.setItem('nz-unnsaved-change',this.basic.unsaved_change)
-                  this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
-                }else if(type == 'terminal'){
-                  localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
-                }
-                if(type == 'email'){
-                  this.$refs.emailForm.clearValidate();
-                }
-                this[type+"Copy"]=Object.assign({},this[type])
-              }
-            })
-          },
-          saveSetInfo:function(type,formName){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs[formName].validate((valid) => {
-              if (valid) {
-                let param={};
-                if(type == 'basic'){
-                  this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
-                }
-                param[type]=Object.assign({},this[type]);
-                this.$set(param[type],'test','false')
-                let postParam=Object.assign({},param);
-
-                for (let key in postParam[type]){
-                  postParam[type][key]=postParam[type][key]+'';
-                }
-                this.$put('/sysConfig',postParam).then(response=>{
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                    // this.resetForm(formName);
-                    setTimeout(()=> {
-                      this.querySetInfo(type);
-                    },200)
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              }else{
-                this.prevent_opt.save=true;
-                return false
-              }
-            });
-          },
-          testSetInfo:function(type,formName){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs[formName].validate((valid) => {
-              if (valid) {
-                let param={};
-                param[type]=Object.assign({},this[type]);
-                this.$set(param[type],'test','true')
-                let postParam=Object.assign({},param);
-                for (let key in postParam[type]){
-                  postParam[type][key]=postParam[type][key]+'';
-                }
-                this.$put('/sysConfig',postParam).then(response=>{
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.testSuccess")});
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              }else{
-                this.prevent_opt.save=false;
-                return false
-              }
-            });
-          },
-          resetSys:function(){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            let $temp=this;
-            this.$prompt(this.$t('config.system.reset.pwdTip'), this.$t('config.system.reset.promptTitle'), {
-              confirmButtonText: this.$t('config.system.reset.yes'),
-              cancelButtonText: this.$t('config.system.reset.no'),
-              inputType:'password',
-            }).then(({ value }) => {
-              $temp.reset.password=value
-              $temp.$refs['resetForm'].validate(valid=>{
-                if(valid){
-                  $temp.$put('/sysConfig/reset',$temp.reset).then(response=>{
-                    $temp.prevent_opt.save=false;
-                    if(response.code == 200){
-                      $temp.$message({duration: 2000, type: 'success', message: this.$t("tip.resetSuccess")});
-                    }else{
-                      $temp.$message.error(response.msg);
-                    }
-                  })
-                }else{
-                  $temp.prevent_opt.save=false;
-                }
-              })
-            }).catch(() => {
-
-            });
-          },
-          resetForm(formName,type){
-            this.$refs[formName].resetFields();
-            this[type]=Object.assign({},this[type+"Copy"]);
-          },
-          switchChange:function(formName){
-            let $temp=this;
-            $temp.$refs[formName].clearValidate();
-            setTimeout(()=>{
-              $temp.$refs[formName].validate();
-            },100)
-          },
-          resetCheckBoxChange:function(e){
-            if(e.target.checked == true ){
-              this.reset.type.push(e.target.value)
-            }else{
-              let index = this.reset.type.indexOf(e.target.value);
-              this.reset.type.splice(index,1);
-            }
-          },
-          jumpTo(data, id) {
-            bus.$emit("menu-change", data);
-            this.$router.push({
-              path: "/" + data,
-              query: {
-                t: +new Date()
-              }
-            });
-          },
-          // link 移动
-          change: function (evt) {
-            // console.log(evt)
-          },
-          //start ,end ,add,update, sort, remove 得到的都差不多
-          start: function (evt) {
-            // console.log(evt)
-          },
-          notificationEnd: function (evt) {
-            let length=this.notification.length;
-            if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
-              return
-            }
-            let parmas={
-              id:this.notification[evt.newIndex].id,
-              prev:0,
-              next:-1
-            }
-            if(evt.newIndex==length-1){
-              parmas.prev=this.notification[evt.newIndex-1].id;
-            }else if(evt.newIndex==0){
-              parmas.next=this.notification[evt.newIndex+1].id;
-            }else{
-              parmas.prev=this.notification[evt.newIndex-1].id;
-              parmas.next=this.notification[evt.newIndex+1].id;
-            }
-            this.$put('/alert/script/modify',parmas).then((response)=>{
-              // this.$store.commit('setLinkData',this.link);
-            })
-          },
-          end: function (evt) {
-            let length=this.link.length;
-            if(evt.newIndex==evt.oldIndex){ // 如果没有移动返回
-              return
-            }
-            let parmas={
-              id:this.link[evt.newIndex].id,
-              prev:0,
-              next:-1
-            }
-            if(evt.newIndex==length-1){
-              parmas.prev=this.link[evt.newIndex-1].id;
-            }else if(evt.newIndex==0){
-              parmas.next=this.link[evt.newIndex+1].id;
-            }else{
-              parmas.prev=this.link[evt.newIndex-1].id;
-              parmas.next=this.link[evt.newIndex+1].id;
-            }
-            this.$put('/link/modify',parmas).then((response)=>{
-              this.$store.commit('setLinkData',this.link);
-            })
-          },
-          move: function (evt, originalEvent) {
-            // console.log(evt)
-            // console.log(originalEvent) //鼠标位置
-          },
-          getLinkData(){
-            this.linkTemp={name:'',url:''};
-            this.$refs['linkTempForm'].clearValidate();
-            this.$get('/link').then(response=>{
-              this.link=response.data;
-              this.linkReserved=[...this.link];
-            });
-          },
-          // link add
-          linkAdd(){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs['linkTempForm'].validate((valid) => {
-              if (valid) {
-                this.$post('/link',this.linkTemp).then(response=>{//新增link
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    this.linkTemp={name:'',url:''};
-                    this.linkAddCallBack();
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.addSuccess")});
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              } else {
-                this.prevent_opt.save=false;
-                return false;
-              }
-            });
-          },
-          linkAddCallBack(){
-            this.$get('/link').then(response=>{
-              this.link.push(response.data[response.data.length-1]);
-              this.linkReserved.push(response.data[response.data.length-1]);
-              this.$store.commit('setLinkData',this.link);
-            });
-          },
-          // link edit
-          linkEdit(item){
-            let index=this.link.findIndex((item1)=>item.id==item1.id);
-            this.$set(this.link,index,{...this.link[index],isEdit:true});
-          },
-          // link update
-          linkUpdate(item){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs['linkForm'+item.id][0].validate((valid) => {
-              if (valid) {
-                let params={
-                  id:item.id,
-                  name:item.name,
-                  url:item.url,
-                };
-                this.$put('/link',params).then(response=>{
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    let index=this.link.findIndex((item1)=>item.id==item1.id);
-                    this.$set(this.link,index,{...this.link[index],isEdit:false});
-                    this.linkReserved=[...this.link];
-                    this.$store.commit('setLinkData',this.link);
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              } else {
-                this.prevent_opt.save=false;
-                return false;
-              }
-            });
-          },
-          // link cancel
-          linkCancel(item){
-            let index=this.link.findIndex((item1)=>item.id==item1.id);
-            let indexReserved=this.linkReserved.findIndex((item1)=>item.id==item1.id);
-            this.$set(this.link,index,{...this.linkReserved[indexReserved],isEdit:false});
-          },
-          // link del
-          linkDel(item){
-            if(this.prevent_opt.query){ return } ;
-            this.prevent_opt.query=true;
-            this.$delete('/link?ids='+item.id).then((response)=>{
-              this.prevent_opt.query=false;
-              if(response.code == 200){
-                this.link=this.link.filter((item1)=>item.id!==item1.id);
-                this.linkReserved=this.linkReserved.filter((item1)=>item.id!==item1.id);
-                this.$store.commit('setLinkData',this.link);
-                this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              }else{
-                this.$message.error(response.msg);
-              }
-            });
-          },
-
-          getNotificationData(){
-            this.notificationTemp={name:'',filePath:''};
-            this.$refs['notificationTempForm'].clearValidate();
-            this.$get('/alert/script').then(response=>{
-              this.notification=response.data.list;
-              this.notificationReserved=[...this.notification];
-            });
-          },
-          // link add
-          notificationAdd(){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs['notificationTempForm'].validate((valid) => {
-              if (valid) {
-                this.$post('/alert/script',this.notificationTemp).then(response=>{//新增notification
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    this.notificationTemp={name:'',filePath:''};
-                    this.notificationAddCallBack();
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.addSuccess")});
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              } else {
-                this.prevent_opt.save=false;
-                return false;
-              }
-            });
-          },
-          notificationAddCallBack(){
-            this.$get('/alert/script').then(response=>{
-              this.notification.push(response.data.list[response.data.list.length-1]);
-              this.notificationReserved.push(response.data.list[response.data.list.length-1]);
-              // this.$store.commit('setLinkData',this.link);
-            });
-          },
-          // link edit
-          notificationEdit(item){
-            let index=this.notification.findIndex((item1)=>item.id==item1.id);
-            this.$set(this.notification,index,{...this.notification[index],isEdit:true});
-          },
-          // link update
-          notificationUpdate(item){
-            if(this.prevent_opt.save){ return } ;
-            this.prevent_opt.save=true;
-            this.$refs['notificationForm'+item.id][0].validate((valid) => {
-              if (valid) {
-                let params={
-                  id:item.id,
-                  name:item.name,
-                  filePath:item.filePath,
-                };
-                this.$put('/alert/script',params).then(response=>{
-                  this.prevent_opt.save=false;
-                  if(response.code == 200){
-                    let index=this.notification.findIndex((item1)=>item.id==item1.id);
-                    this.$set(this.notification,index,{...this.notification[index],isEdit:false});
-                    this.notificationReserved=[...this.notification];
-                    // this.$store.commit('setLinkData',this.notification);
-                    this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  }else{
-                    this.$message.error(response.msg);
-                  }
-                })
-              } else {
-                this.prevent_opt.save=false;
-                return false;
-              }
-            });
-          },
-          // link cancel
-          notificationCancel(item){
-            let index=this.notification.findIndex((item1)=>item.id==item1.id);
-            let indexReserved=this.notificationReserved.findIndex((item1)=>item.id==item1.id);
-            this.$set(this.notification,index,{...this.notificationReserved[indexReserved],isEdit:false});
-          },
-          // link del
-          notificationDel(item){
-            if(this.prevent_opt.query){ return } ;
-            this.prevent_opt.query=true;
-            this.$delete('/alert/script?ids='+item.id).then((response)=>{
-              this.prevent_opt.query=false;
-              if(response.code == 200){
-                this.notification=this.notification.filter((item1)=>item.id!==item1.id);
-                this.notificationReserved=this.notificationReserved.filter((item1)=>item.id!==item1.id);
-                // this.$store.commit('setLinkData',this.link);
-                this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              }else{
-                this.$message.error(response.msg);
-              }
-            });
-          },
-          //openUrl 跳转页面
-          openUrl(item){
-            // window.open(item.url)
-          },
+        {
+          label: this.$t('config.system.reset.alert'),
+          value: 'alert'
         },
-        mounted() {
-          this.querySetInfo('basic');
+        {
+          label: this.$t('config.system.reset.sysConfig'),
+          value: 'sysconfig'
         }
+      ],
+      activeTab: 'basic'
     }
+  },
+  methods: {
+    initMap:function(){
+      if(this.map){
+        this.map.remove();
+        this.map=null;
+      }
+      let DefaultIcon = L.icon({
+        iconUrl: icon,
+        iconSize: [26, 40],
+        iconAnchor: [13, 40],
+        shadowUrl: iconShadow
+      });
+      L.Marker.prototype.options.icon = DefaultIcon;
+      let map = L.map("map",{
+        minZoom:this.basic.map_center_config.minZoom,
+        maxZoom:this.basic.map_center_config.maxZoom,
+        attributionControl:false,
+        zoomControl:false,
+        maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
+      }).setView([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude],this.basic.map_center_config.zoom);
+
+      L.tileLayer(
+        "/static/Tiles/{z}/{x}/{y}.png",
+        {noWrap:true}
+      ).addTo(map);
+
+      let attribution=L.control.attribution({position:'bottomright',prefix:''})
+      attribution.addAttribution(' © OpenStreetMap contributors')
+      attribution.addTo(map)
+
+      L.control.zoom({
+        position:'bottomright',
+        zoomInText:`<i class="nz-icon nz-icon-enlarge"></i>`,
+        zoomOutText:`<i class="nz-icon nz-icon-narrow"></i>`,
+        zoomInTitle:'',
+        zoomOutTitle:'',
+      }).addTo(map)
+
+      let marker = L.marker([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude]).addTo(map);
+      map.on("click", function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        marker.setLatLng([lat,lng]);
+      });
+      this.map = map;
+      this.marker = marker;
+    },
+    mapClose:function(){
+      this.mapConfigVisible=false
+      let latlng = this.marker.getLatLng();
+      this.basic.map_center_config.latitude = latlng.lat;
+      this.basic.map_center_config.longitude = latlng.lng;
+      this.basic.map_center_config.zoom = this.map.getZoom();
+    },
+    selectTab: function (tab) {
+      this.querySetInfo(tab.name)
+    },
+    querySetInfo: function (type) { // 切换tab
+      if (!type) {
+        console.error('type is required')
+        return
+      }
+      if (type == 'reset') {
+        return
+      }
+      if (type == 'link') {
+        this.getLinkData()
+        return
+      }
+      if (type == 'notification') {
+        this.getNotificationData()
+        return
+      }
+      this.$get('sysConfig?type=' + type).then(response => {
+        if (response.code == 200) {
+          const sets = response.data[type]
+          for (const key in sets) {
+            this[type][key] = sets[key]
+          }
+          if (type == 'basic') {
+            localStorage.setItem('nz-sys-name', this.basic.system_name)
+            localStorage.setItem('nz-sys-timezone', this.basic.timezone)
+            localStorage.setItem('nz-sys-asset-ping-switch', this.basic.asset_ping_switch)
+            localStorage.setItem('nz-sys-default-cabinet-usize', this.basic.default_cabinet_usize)
+            localStorage.setItem('nz-unnsaved-change', this.basic.unsaved_change)
+            this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
+          } else if (type == 'terminal') {
+            localStorage.setItem('nz-sys-max-terminal-num', this.terminal.max_terminal_num)
+          }
+          if (type == 'email') {
+            this.$refs.emailForm.clearValidate()
+          }
+          this[type + 'Copy'] = Object.assign({}, this[type])
+        }
+      })
+    },
+    saveSetInfo: function (type, formName) {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let param={};
+          if(type == 'basic'){
+            this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
+          }
+          param[type] = Object.assign({}, this[type])
+          this.$set(param[type], 'test', 'false')
+          let postParam = Object.assign({}, param)
+          for (let key in postParam[type]) {
+            postParam[type][key] = postParam[type][key] + ''
+          }
+          this.$put('/sysConfig', postParam).then(response => {
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+              // this.resetForm(formName);
+              setTimeout(() => {
+                this.querySetInfo(type)
+              }, 200)
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = true
+          return false
+        }
+      })
+    },
+    testSetInfo: function (type, formName) {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let param = {}
+          param[type] = Object.assign({}, this[type])
+          this.$set(param[type], 'test', 'true')
+          let postParam = Object.assign({}, param)
+          for (let key in postParam[type]) {
+            postParam[type][key] = postParam[type][key] + ''
+          }
+          this.$put('/sysConfig', postParam).then(response => {
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.testSuccess') })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+
+
+    resetForm (formName, type) {
+      this.$refs[formName].resetFields()
+      this[type] = Object.assign({}, this[type + 'Copy'])
+    },
+    switchChange: function (formName) {
+      const $temp = this
+      $temp.$refs[formName].clearValidate()
+      setTimeout(() => {
+        $temp.$refs[formName].validate()
+      }, 100)
+    },
+    resetCheckBoxChange: function (e) {
+      if (e.target.checked == true) {
+        this.reset.type.push(e.target.value)
+      } else {
+        const index = this.reset.type.indexOf(e.target.value)
+        this.reset.type.splice(index, 1)
+      }
+    },
+    jumpTo (data, id) {
+      bus.$emit('menu-change', data)
+      this.$router.push({
+        path: '/' + data,
+        query: {
+          t: +new Date()
+        }
+      })
+    },
+    // link 移动
+    change: function (evt) {
+      // console.log(evt)
+    },
+    // start ,end ,add,update, sort, remove 得到的都差不多
+    start: function (evt) {
+      // console.log(evt)
+    },
+    notificationEnd: function (evt) {
+      const length = this.notification.length
+      if (evt.newIndex == evt.oldIndex) { // 如果没有移动返回
+        return
+      }
+      const parmas = {
+        id: this.notification[evt.newIndex].id,
+        prev: 0,
+        next: -1
+      }
+      if (evt.newIndex == length - 1) {
+        parmas.prev = this.notification[evt.newIndex - 1].id
+      } else if (evt.newIndex == 0) {
+        parmas.next = this.notification[evt.newIndex + 1].id
+      } else {
+        parmas.prev = this.notification[evt.newIndex - 1].id
+        parmas.next = this.notification[evt.newIndex + 1].id
+      }
+      this.$put('/alert/script/modify', parmas).then((response) => {
+        // this.$store.commit('setLinkData',this.link);
+      })
+    },
+    end: function (evt) {
+      const length = this.link.length
+      if (evt.newIndex == evt.oldIndex) { // 如果没有移动返回
+        return
+      }
+      const parmas = {
+        id: this.link[evt.newIndex].id,
+        prev: 0,
+        next: -1
+      }
+      if (evt.newIndex == length - 1) {
+        parmas.prev = this.link[evt.newIndex - 1].id
+      } else if (evt.newIndex == 0) {
+        parmas.next = this.link[evt.newIndex + 1].id
+      } else {
+        parmas.prev = this.link[evt.newIndex - 1].id
+        parmas.next = this.link[evt.newIndex + 1].id
+      }
+      this.$put('/link/modify', parmas).then((response) => {
+        this.$store.commit('setLinkData', this.link)
+      })
+    },
+    move: function (evt, originalEvent) {
+      // console.log(evt)
+      // console.log(originalEvent) //鼠标位置
+    },
+    getLinkData () {
+      this.linkTemp = { name: '', url: '' }
+      this.$refs.linkTempForm.clearValidate()
+      this.$get('/link').then(response => {
+        this.link = response.data
+        this.linkReserved = [...this.link]
+      })
+    },
+    // link add
+    linkAdd () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.linkTempForm.validate((valid) => {
+        if (valid) {
+          this.$post('/link', this.linkTemp).then(response => { // 新增link
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              this.linkTemp = { name: '', url: '' }
+              this.linkAddCallBack()
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.addSuccess') })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    linkAddCallBack () {
+      this.$get('/link').then(response => {
+        this.link.push(response.data[response.data.length - 1])
+        this.linkReserved.push(response.data[response.data.length - 1])
+        this.$store.commit('setLinkData', this.link)
+      })
+    },
+    // link edit
+    linkEdit (item) {
+      const index = this.link.findIndex((item1) => item.id == item1.id)
+      this.$set(this.link, index, { ...this.link[index], isEdit: true })
+    },
+    // link update
+    linkUpdate (item) {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs['linkForm' + item.id][0].validate((valid) => {
+        if (valid) {
+          const params = {
+            id: item.id,
+            name: item.name,
+            url: item.url
+          }
+          this.$put('/link', params).then(response => {
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              const index = this.link.findIndex((item1) => item.id == item1.id)
+              this.$set(this.link, index, { ...this.link[index], isEdit: false })
+              this.linkReserved = [...this.link]
+              this.$store.commit('setLinkData', this.link)
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    // link cancel
+    linkCancel (item) {
+      const index = this.link.findIndex((item1) => item.id == item1.id)
+      const indexReserved = this.linkReserved.findIndex((item1) => item.id == item1.id)
+      this.$set(this.link, index, { ...this.linkReserved[indexReserved], isEdit: false })
+    },
+    // link del
+    linkDel (item) {
+      if (this.prevent_opt.query) { return } ;
+      this.prevent_opt.query = true
+      this.$delete('/link?ids=' + item.id).then((response) => {
+        this.prevent_opt.query = false
+        if (response.code == 200) {
+          this.link = this.link.filter((item1) => item.id !== item1.id)
+          this.linkReserved = this.linkReserved.filter((item1) => item.id !== item1.id)
+          this.$store.commit('setLinkData', this.link)
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+
+    getNotificationData () {
+      this.notificationTemp = { name: '', filePath: '' }
+      this.$refs.notificationTempForm.clearValidate()
+      this.$get('/alert/script').then(response => {
+        this.notification = response.data.list
+        this.notificationReserved = [...this.notification]
+      })
+    },
+    // link add
+    notificationAdd () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.notificationTempForm.validate((valid) => {
+        if (valid) {
+          this.$post('/alert/script', this.notificationTemp).then(response => { // 新增notification
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              this.notificationTemp = { name: '', filePath: '' }
+              this.notificationAddCallBack()
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.addSuccess') })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    notificationAddCallBack () {
+      this.$get('/alert/script').then(response => {
+        this.notification.push(response.data.list[response.data.list.length - 1])
+        this.notificationReserved.push(response.data.list[response.data.list.length - 1])
+        // this.$store.commit('setLinkData',this.link);
+      })
+    },
+    // link edit
+    notificationEdit (item) {
+      let index = this.notification.findIndex((item1) => item.id == item1.id)
+      this.$set(this.notification, index, { ...this.notification[index], isEdit: true })
+    },
+    // link update
+    notificationUpdate (item) {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs['notificationForm' + item.id][0].validate((valid) => {
+        if (valid) {
+          let params = {
+            id: item.id,
+            name: item.name,
+            filePath: item.filePath
+          }
+          this.$put('/alert/script', params).then(response => {
+            this.prevent_opt.save = false
+            if (response.code == 200) {
+              let index = this.notification.findIndex((item1) => item.id == item1.id)
+              this.$set(this.notification, index, { ...this.notification[index], isEdit: false })
+              this.notificationReserved = [...this.notification]
+              // this.$store.commit('setLinkData',this.notification);
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    // link cancel
+    notificationCancel (item) {
+      let index = this.notification.findIndex((item1) => item.id == item1.id)
+      let indexReserved = this.notificationReserved.findIndex((item1) => item.id == item1.id)
+      this.$set(this.notification, index, { ...this.notificationReserved[indexReserved], isEdit: false })
+    },
+    // link del
+    notificationDel (item) {
+      if (this.prevent_opt.query) { return } ;
+      this.prevent_opt.query = true
+      this.$delete('/alert/script?ids=' + item.id).then((response) => {
+        this.prevent_opt.query = false
+        if (response.code == 200) {
+          this.notification = this.notification.filter((item1) => item.id !== item1.id)
+          this.notificationReserved = this.notificationReserved.filter((item1) => item.id !== item1.id)
+          // this.$store.commit('setLinkData',this.link);
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    // openUrl 跳转页面
+    openUrl (item) {
+      // window.open(item.url)
+    }
+  },
+  mounted () {
+    this.querySetInfo('basic')
+  }
+}
 </script>
 
 <style lang="scss" scoped>

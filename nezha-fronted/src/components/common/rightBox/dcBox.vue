@@ -27,7 +27,7 @@
           </el-form-item>
           <el-form-item :label='$t("asset.principal")' prop="principal">
             <el-select value-key="id" popper-class="config-dropdown" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
-              <el-option @click.native="" v-for="item in userData" :key="item.userId" :label="item.username" :value="item.userId" :id="'dc-principal-op-'+item.userId">
+              <el-option v-for="item in userData" :id="'dc-principal-op-'+item.userId" :key="item.userId" :label="item.username" :value="item.userId">
                 <span>{{item.username}}</span>
               </el-option>
             </el-select>
@@ -94,154 +94,150 @@
 </template>
 
 <script>
-  import selectArea from "../popBox/selectArea"; //dc弹框
-  var  regNum = /^[0-9]+.?[0-9]*/;
-  export default {
-    name: "dcBox",
-    props: {
-      dc: Object,
-      userData: Array
-    },
-    components:{
-      'select-area': selectArea
-    },
-    data() {
-      return {
-        editDc: {},
-        rules: {
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          state:[
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ]
-        },
-        areaData: [],
-        coordinateFlag:false,
-      }
-    },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.prevent_opt.save=false;
-        this.$emit("close", refresh);
+const regNum = /^[0-9]+.?[0-9]*/
+export default {
+  name: 'dcBox',
+  props: {
+    dc: Object,
+    userData: Array
+  },
+  data () {
+    return {
+      editDc: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        state: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
       },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*弹出选择area弹框*/
-      toSelectArea() {
-        this.$refs.selectArea.openBox(this.editDc.area);
-      },
+      areaData: [],
+      coordinateFlag: false
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 弹出选择area弹框 */
+    toSelectArea () {
+      this.$refs.selectArea.openBox(this.editDc.area)
+    },
 
-      /*保存*/
-      save() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$refs.dcForm.validate((valid) => {
-          if (valid) {
-            if (this.editDc.id) {
-              let param={...this.editDc};
-              if (param.area) {
-                param.areaId = param.area.id;
-              }
-              if(!regNum.test(param.longitude)){
-                param.longitude=null
-              }
-              if(!regNum.test(param.latitude)){
-                param.latitude=null
-              }
-
-              this.$put('idc', param).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              let param={...this.editDc}
-              if (param.area) {
-                param.areaId = param.area.id;
-              }
-              if(!regNum.test(param.longitude)){
-                param.longitude=null;
-              }
-              if(!regNum.test(param.latitude)){
-                param.latitude=null;
-              }
-              this.$post('idc', param).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
+    /* 保存 */
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.dcForm.validate((valid) => {
+        if (valid) {
+          if (this.editDc.id) {
+            const param = { ...this.editDc }
+            if (param.area) {
+              param.areaId = param.area.id
             }
+            if (!regNum.test(param.longitude)) {
+              param.longitude = null
+            }
+            if (!regNum.test(param.latitude)) {
+              param.latitude = null
+            }
+
+            this.$put('idc', param).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           } else {
-            this.prevent_opt.save=false;
-            return false;
-          }
-        });
-      },
-      /*删除*/
-      del() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("idc?ids=" + this.editDc.id).then(response => {
-            this.prevent_opt.save=false;
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
+            const param = { ...this.editDc }
+            if (param.area) {
+              param.areaId = param.area.id
             }
-          });
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      // getAreaData() {
-      //   this.$get('area', {pid: 0}).then(response => {
-      //     if (response.code === 200) {
-      //       this.areaData = response.data.list;
-      //     }
-      //   });
-      // },
+            if (!regNum.test(param.longitude)) {
+              param.longitude = null
+            }
+            if (!regNum.test(param.latitude)) {
+              param.latitude = null
+            }
+            this.$post('idc', param).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('idc?ids=' + this.editDc.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    // getAreaData() {
+    //   this.$get('area', {pid: 0}).then(response => {
+    //     if (response.code === 200) {
+    //       this.areaData = response.data.list;
+    //     }
+    //   });
+    // },
 
-      selectArea(area) {
-        this.editDc.area.id = area.id;
-        this.editDc.area.name = area.name;
-      },
-      coordinateChange(val,str){//经纬度改变
-        if(regNum.test(this.editDc.longitude) || regNum.test(this.editDc.latitude)){
-          this.coordinateFlag=true
-        }else{
-          this.coordinateFlag=false;
-          this.$refs['dcForm'].clearValidate(['longitude','latitude'])
-        }
-      },
+    selectArea (area) {
+      this.editDc.area.id = area.id
+      this.editDc.area.name = area.name
     },
-    mounted() {
-      // this.getAreaData();
-    },
-    watch: {
-      dc: {
-        immediate: true,
-        deep:true,
-        handler(n, o) {
-          this.editDc = JSON.parse(JSON.stringify(n));
-        }
-      },
+    coordinateChange (val, str) { // 经纬度改变
+      if (regNum.test(this.editDc.longitude) || regNum.test(this.editDc.latitude)) {
+        this.coordinateFlag = true
+      } else {
+        this.coordinateFlag = false
+        this.$refs.dcForm.clearValidate(['longitude', 'latitude'])
+      }
+    }
+  },
+  mounted () {
+    // this.getAreaData();
+  },
+  watch: {
+    dc: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.editDc = JSON.parse(JSON.stringify(n))
+      }
     }
   }
+}
 </script>

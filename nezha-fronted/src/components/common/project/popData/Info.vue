@@ -41,39 +41,39 @@
 </template>
 
 <script>
-  export default {
-    name:"popDataInfo",
-    props:{
-      moduleId:{},
-      projectId:{},
-    },
-    watch:{},
-    data(){
-      return{
-        loading:true,
-        moduleInfo:{
-          project:{name:''},
-          name:'',
-          type:'http',
-          remark:'',
-          port:'',
-          path:'',
-          seq:'',
-        }
+export default {
+  name: 'popDataInfo',
+  props: {
+    moduleId: {},
+    projectId: {}
+  },
+  watch: {},
+  data () {
+    return {
+      loading: true,
+      moduleInfo: {
+        project: { name: '' },
+        name: '',
+        type: 'http',
+        remark: '',
+        port: '',
+        path: '',
+        seq: ''
       }
-    },
-    mounted(){
-      this.loading=true;
-      this.$get('/module',{id:this.moduleId}).then(res=>{
-        this.loading=false;
-        this.moduleInfo=res.data.list[0];
-      })
-    },
-    methods:{},
-    beforeDestroy(){
-
     }
+  },
+  mounted () {
+    this.loading = true
+    this.$get('/module', { id: this.moduleId }).then(res => {
+      this.loading = false
+      this.moduleInfo = res.data.list[0]
+    })
+  },
+  methods: {},
+  beforeDestroy () {
+
   }
+}
 </script>
 
 <style scoped>

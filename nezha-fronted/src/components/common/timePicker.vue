@@ -120,8 +120,8 @@
       </el-popover>
       <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
         <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
-        <template v-for="item in timeData" >
-          <el-dropdown-item :class="showTime.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item" v-if="item.id != 12 || showEmpty">
+        <template v-for="(item, index) in timeData" >
+          <el-dropdown-item v-if="item.id !== 12 || showEmpty" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
             {{item.text}}
           </el-dropdown-item>
         </template>
@@ -132,122 +132,122 @@
 </template>
 
 <script>
-import bus from '../../libs/bus';
+import bus from '../../libs/bus'
 
 export default {
-  name: "timePicker",
+  name: 'timePicker',
   props: {
-    defaultPick:Number,
-    showEmpty:{default:false,type:Boolean}
+    defaultPick: Number,
+    showEmpty: { default: false, type: Boolean }
   },
-  data() {
+  data () {
     return {
-      isPopoverDisabled:false,
-      isCustom:false,
-      searchTime:[
-        bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
-        bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
+      isPopoverDisabled: false,
+      isCustom: false,
+      searchTime: [
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
+        bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
       ],
       showTime: {
         id: 4,
-        text: this.$t("dashboard.panel.lastOneHour"),
+        text: this.$t('dashboard.panel.lastOneHour')
       },
       timeData: [
         {
-          id:0,
-          text:this.$t("dashboard.panel.customTimeRange"),
+          id: 0,
+          text: this.$t('dashboard.panel.customTimeRange')
         },
         {
-          id:12,
-          text:this.$t("dashboard.panel.noDate"),
+          id: 12,
+          text: this.$t('dashboard.panel.noDate')
 
         },
         {
-          id:1,
-          text:this.$t("dashboard.panel.lastFiveMin"),
-          type:'minute',
-          value:5,
+          id: 1,
+          text: this.$t('dashboard.panel.lastFiveMin'),
+          type: 'minute',
+          value: 5
         },
         {
-          id:2,
-          text:this.$t("dashboard.panel.lastFifteenMin"),
-          type:'minute',
-          value:15,
+          id: 2,
+          text: this.$t('dashboard.panel.lastFifteenMin'),
+          type: 'minute',
+          value: 15
         },
         {
-          id:3,
-          text:this.$t("dashboard.panel.lastThirtyMin"),
-          type:'minute',
-          value:30,
+          id: 3,
+          text: this.$t('dashboard.panel.lastThirtyMin'),
+          type: 'minute',
+          value: 30
         },
         {
-          id:4,
-          text:this.$t("dashboard.panel.lastOneHour"),
-          type:'hour',
-          value:1,
+          id: 4,
+          text: this.$t('dashboard.panel.lastOneHour'),
+          type: 'hour',
+          value: 1
         },
         {
-          id:5,
-          text:this.$t("dashboard.panel.lastThreeHour"),
-          type:'hour',
-          value:3,
+          id: 5,
+          text: this.$t('dashboard.panel.lastThreeHour'),
+          type: 'hour',
+          value: 3
         },
         {
-          id:6,
-          text:this.$t("dashboard.panel.lastSixHour"),
-          type:'hour',
-          value:6,
+          id: 6,
+          text: this.$t('dashboard.panel.lastSixHour'),
+          type: 'hour',
+          value: 6
         },
         {
-          id:7,
-          text:this.$t("dashboard.panel.lastTwelveHour"),
-          type:'hour',
-          value:12,
+          id: 7,
+          text: this.$t('dashboard.panel.lastTwelveHour'),
+          type: 'hour',
+          value: 12
         },
         {
-          id:8,
-          text:this.$t("dashboard.panel.lastTwentyFourHour"),
-          type:'hour',
-          value:24,
+          id: 8,
+          text: this.$t('dashboard.panel.lastTwentyFourHour'),
+          type: 'hour',
+          value: 24
         },
         {
-          id:9,
-          text:this.$t("dashboard.panel.lastTwoDay"),
-          type:'date',
-          value:2,
+          id: 9,
+          text: this.$t('dashboard.panel.lastTwoDay'),
+          type: 'date',
+          value: 2
         },
         {
-          id:10,
-          text:this.$t("dashboard.panel.lastSevenDay"),
-          type:'date',
-          value:7,
+          id: 10,
+          text: this.$t('dashboard.panel.lastSevenDay'),
+          type: 'date',
+          value: 7
         },
         {
-          id:11,
-          text:this.$t("dashboard.panel.lastThirtyDay"),
-          type:'date',
-          value:30,
+          id: 11,
+          text: this.$t('dashboard.panel.lastThirtyDay'),
+          type: 'date',
+          value: 30
         }
       ],
-      nowTimeType:{
-        id:4,
-        text:this.$t("dashboard.panel.lastOneHour"),
-        type:'hour',
-        value:1,
-      },
-    };
+      nowTimeType: {
+        id: 4,
+        text: this.$t('dashboard.panel.lastOneHour'),
+        type: 'hour',
+        value: 1
+      }
+    }
   },
   methods: {
-    dateChange(val){
-      let startTime = bus.timeFormate(val[0], 'yyyy-MM-dd hh:mm:ss');
-      let endTime = bus.timeFormate(val[1], 'yyyy-MM-dd hh:mm:ss');
-      this.$set(this.searchTime, 0, startTime);
-      this.$set(this.searchTime, 1, endTime);
+    dateChange (val) {
+      const startTime = bus.timeFormate(val[0], 'yyyy-MM-dd hh:mm:ss')
+      const endTime = bus.timeFormate(val[1], 'yyyy-MM-dd hh:mm:ss')
+      this.$set(this.searchTime, 0, startTime)
+      this.$set(this.searchTime, 1, endTime)
 
-      //let timerPicker = document.querySelector('#timePickerContent');
-      //timerPicker.innerText = this.searchTime[0]+" "+this.$t("dashboard.panel.to")+" "+this.searchTime[1];
-      this.$set(this.showTime, 'id', 0);
-      this.$set(this.showTime, 'text', this.searchTime[0]+" "+this.$t("dashboard.panel.to")+" "+this.searchTime[1]);
+      // let timerPicker = document.querySelector('#timePickerContent');
+      // timerPicker.innerText = this.searchTime[0]+" "+this.$t("dashboard.panel.to")+" "+this.searchTime[1];
+      this.$set(this.showTime, 'id', 0)
+      this.$set(this.showTime, 'text', this.searchTime[0] + ' ' + this.$t('dashboard.panel.to') + ' ' + this.searchTime[1])
       /*
             let tipElementList = document.getElementsByClassName('calendar-popover-text');
             if(tipElementList && tipElementList.length===3){
@@ -256,129 +256,126 @@ export default {
               tipElementList[1].innerHTML = this.$t("dashboard.panel.to");
               tipElementList[2].innerHTML = this.searchTime[1];
               console.log('-0-0-2',tipElementList);
-            }*/
-      this.$emit('change', this.searchTime);
-
+            } */
+      this.$emit('change', this.searchTime)
     },
-    setCustomTime(timeGroup){
-      if(timeGroup.length===2){
-        this.$set(this.searchTime, 0, timeGroup[0]);
-        this.$set(this.searchTime, 1, timeGroup[1]);
+    setCustomTime (timeGroup) {
+      if (timeGroup.length === 2) {
+        this.$set(this.searchTime, 0, timeGroup[0])
+        this.$set(this.searchTime, 1, timeGroup[1])
 
-        this.nowTimeType={
-          id:4,
-          text:this.$t("dashboard.panel.lastOneHour"),
-          type:'hour',
-          value:1,
-        };
-        this.$set(this.showTime, 'id',  this.nowTimeType.id);
-        this.$set(this.showTime, 'text',  this.nowTimeType.text);
+        this.nowTimeType = {
+          id: 4,
+          text: this.$t('dashboard.panel.lastOneHour'),
+          type: 'hour',
+          value: 1
+        }
+        this.$set(this.showTime, 'id', this.nowTimeType.id)
+        this.$set(this.showTime, 'text', this.nowTimeType.text)
       }
     },
-    //left(){},
-    //right(){},
-    timeChange(val,from) {
-      this.nowTimeType=val;
-      this.$set(this.showTime, 'id', val.id);
-      this.$set(this.showTime, 'text', val.text);
+    // left(){},
+    // right(){},
+    timeChange (val, from) {
+      this.nowTimeType = val
+      this.$set(this.showTime, 'id', val.id)
+      this.$set(this.showTime, 'text', val.text)
       if (!val) {
-        this.isCustom = false;
-        return false;
-      }else {
-        this.setSearchTime(val.type,val.value);
-        //let timerPicker = document.querySelector('#timePickerContent');
-        //timerPicker.innerText = val.text;
-/*
+        this.isCustom = false
+        return false
+      } else {
+        this.setSearchTime(val.type, val.value)
+        // let timerPicker = document.querySelector('#timePickerContent');
+        // timerPicker.innerText = val.text;
+        /*
         let tipElementList = document.getElementsByClassName('calendar-popover-text');
         if(tipElementList && tipElementList.length===3){
           tipElementList[0].innerHTML = this.searchTime[0];
           tipElementList[1].innerHTML = this.$t("dashboard.panel.to");
           tipElementList[2].innerHTML = this.searchTime[1];
-        }*/
+        } */
 
-        let id = val.id;
-        if(id===0){//custom
-         if(from==='chart'){
-           this.isCustom = false;
-           this.$emit('change', this.searchTime);
-         } else{
-           this.isCustom = true;
-           this.$refs.calendar.focus();
-         }
-        }else {
-          this.isCustom = false;
-          if(this.showEmpty&& id === 12){
-            this.searchTime=[]
+        const id = val.id
+        if (id === 0) { // custom
+          if (from === 'chart') {
+            this.isCustom = false
+            this.$emit('change', this.searchTime)
+          } else {
+            this.isCustom = true
+            this.$refs.calendar.focus()
           }
-          this.$emit('change', this.searchTime);
-
+        } else {
+          this.isCustom = false
+          if (this.showEmpty && id === 12) {
+            this.searchTime = []
+          }
+          this.$emit('change', this.searchTime)
         }
       }
     },
-    getCurrentTime(){
-       let timeTypeId = this.showTime.id;
-       if(timeTypeId===0){
-         return this.searchTime;
-       }else {
-         if(!timeTypeId){timeTypeId = 4;}
-         let currentTime = this.timeData.find(item => item.id === timeTypeId);
-         this.setSearchTime(currentTime.type,currentTime.value);
-         return this.searchTime;
-       }
-
-    },
-    setSearchTime(type,val){
-      if(type==='minute'){
-        let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
-        let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-        this.$set(this.searchTime, 0, startTime);
-        this.$set(this.searchTime, 1, endTime);
-        this.$set(this.searchTime, 2, val + "m");
-      }else if(type==='hour'){
-        let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
-        let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-        this.$set(this.searchTime, 0, startTime);
-        this.$set(this.searchTime, 1, endTime);
-        this.$set(this.searchTime, 2, val + "h");
-      }else if(type==='date'){
-        let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
-        let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-        this.$set(this.searchTime, 0, startTime);
-        this.$set(this.searchTime, 1, endTime);
-        this.$set(this.searchTime, 2, val + "d");
+    getCurrentTime () {
+      let timeTypeId = this.showTime.id
+      if (timeTypeId === 0) {
+        return this.searchTime
+      } else {
+        if (!timeTypeId) { timeTypeId = 4 }
+        const currentTime = this.timeData.find(item => item.id === timeTypeId)
+        this.setSearchTime(currentTime.type, currentTime.value)
+        return this.searchTime
       }
     },
-    setCostomTime:function(costomTime){
-      this.searchTime=Object.assign(costomTime);
-      let val=Object.assign(this.timeData[0]);
-      this.$set(this.showTime, 'id', val.id);
-      this.$set(this.showTime, 'text', val.text);
-    },
-    popoverClick(val){
-      if(val){
-        this.isPopoverDisabled = true;
-      }else{
-        this.isPopoverDisabled = false;
+    setSearchTime (type, val) {
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'd')
       }
     },
+    setCostomTime: function (costomTime) {
+      this.searchTime = Object.assign(costomTime)
+      const val = Object.assign(this.timeData[0])
+      this.$set(this.showTime, 'id', val.id)
+      this.$set(this.showTime, 'text', val.text)
+    },
+    popoverClick (val) {
+      if (val) {
+        this.isPopoverDisabled = true
+      } else {
+        this.isPopoverDisabled = false
+      }
+    }
   },
-  created() {
+  created () {
   },
-  watch:{
-    defaultPick:{
-      immediate:true,
-      handler(n,o){
-        if(n&&Number.isInteger(n)){
-          let showTime=this.timeData.find(item=>item.id == n);
-          if(showTime){
-            this.showTime = Object.assign({},showTime);
+  watch: {
+    defaultPick: {
+      immediate: true,
+      handler (n, o) {
+        if (n && Number.isInteger(n)) {
+          const showTime = this.timeData.find(item => item.id == n)
+          if (showTime) {
+            this.showTime = Object.assign({}, showTime)
           }
-          if(this.showEmpty&& this.defaultPick === 12){
-            this.searchTime=[]
+          if (this.showEmpty && this.defaultPick === 12) {
+            this.searchTime = []
           }
         }
       }
-    },
+    }
   },
   mounted: function () {
     /*
@@ -395,9 +392,7 @@ export default {
       this.$set(this.showTime, 'id', this.timeDataId);
       this.$set(this.showTime, 'text', timeObj.text);
       this.setSearchTime(timeObj.type,timeObj.value);
-    }*/
-  },
-};
+    } */
+  }
+}
 </script>
-
-

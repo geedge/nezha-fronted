@@ -15,106 +15,103 @@
 </template>
 
 <script>
-  import Terminal from '../../js/Xterm';
-  import bus from "../../../../libs/bus";
+import Terminal from '../../js/Xterm'
+import bus from '../../../../libs/bus'
 
-  export default {
-    name:"terminalLogReplayTab",
-    components:{
-      Terminal
-    },
-    props:{
-      obj:Object, //关联的实体对象
-    },
-    data(){
-      return {
-        filter:{
-          size:1,
-          uuid:""
-        },
-        terminal:null,
-        term:null,
-        terminalSocket:null,
-        recordData:[],
-        isNeedStop:false, // 是否需要停止
-        playedCount:0, // 当前已经播放完的数量
-        isPlaying:true, // 是否正在播放
-        isFinish:false, //是否已结束
-        isDragging:false, //是否正在拖动进度条
-        draggingOriginalX:0, //开始拖拽时鼠标的x
-        draggingOriginalProgress:0, //开始拖拽时的进度
-        recordTick:50, // 输出间隔时间ms，默认50
-        playerTimer:null, // 定时器
-        playerCurrentTime:0, // 当前时间进度
-        speedTable:[ // 快进倍速选项
-          {speed:1,name:'×1'},
-          {speed:2,name:'×2'},
-          {speed:4,name:'×4'},
-          {speed:8,name:'×8'},
-          {speed:16,name:'×16'}
-        ],
-        speedOffset:0, // 快进倍数index
-        progress:0, // 进度条进度
-        needSkip:true, // 是否跳过无操作时间，为true时表示需要，即不跳过无操作时间
-        timeUsed:0,
-        successBackContent:'Connecting to',
-        failBackContent:'Sorry',
-        connectFailContent:'Connection failed',
-        welcomeBackContent:'Welcome',
-        psdCont:'password: ',
+export default {
+  name: 'terminalLogReplayTab',
+  props: {
+    obj: Object // 关联的实体对象
+  },
+  data () {
+    return {
+      filter: {
+        size: 1,
+        uuid: ''
+      },
+      terminal: null,
+      term: null,
+      terminalSocket: null,
+      recordData: [],
+      isNeedStop: false, // 是否需要停止
+      playedCount: 0, // 当前已经播放完的数量
+      isPlaying: true, // 是否正在播放
+      isFinish: false, // 是否已结束
+      isDragging: false, // 是否正在拖动进度条
+      draggingOriginalX: 0, // 开始拖拽时鼠标的x
+      draggingOriginalProgress: 0, // 开始拖拽时的进度
+      recordTick: 50, // 输出间隔时间ms，默认50
+      playerTimer: null, // 定时器
+      playerCurrentTime: 0, // 当前时间进度
+      speedTable: [ // 快进倍速选项
+        { speed: 1, name: '×1' },
+        { speed: 2, name: '×2' },
+        { speed: 4, name: '×4' },
+        { speed: 8, name: '×8' },
+        { speed: 16, name: '×16' }
+      ],
+      speedOffset: 0, // 快进倍数index
+      progress: 0, // 进度条进度
+      needSkip: true, // 是否跳过无操作时间，为true时表示需要，即不跳过无操作时间
+      timeUsed: 0,
+      successBackContent: 'Connecting to',
+      failBackContent: 'Sorry',
+      connectFailContent: 'Connection failed',
+      welcomeBackContent: 'Welcome',
+      psdCont: 'password: '
+    }
+  },
+  methods: {
+    // 创建连接
+    create () {
+      const that = this
+      if (this.terminalSocket) {
+        this.terminalSocket.close()
       }
-    },
-    methods:{
-      //创建连接
-      create(){
-        let that=this;
-        if(this.terminalSocket){
-          this.terminalSocket.close();
-        }
-        if(this.terminal){
-          this.terminal.off("selection");
-          this.terminal.off("data")
-          this.terminal.destroy();
-        }
-        this.terminal=new Terminal({
-          rows:parseInt(this.$refs.recordConsole.offsetHeight/18),
-          cols:parseInt(this.$refs.recordConsole.offsetWidth/11),
-          cursorStyle:'block', // 光标样式  null | 'block' | 'underline' | 'bar'
-          //bellStyle:'sound',
-          disableStdin:true,//是否应禁用输入
-        });
-        this.terminal.open(document.getElementById(this.obj.uuid));
+      if (this.terminal) {
+        this.terminal.off('selection')
+        this.terminal.off('data')
+        this.terminal.destroy()
+      }
+      this.terminal = new Terminal({
+        rows: parseInt(this.$refs.recordConsole.offsetHeight / 18),
+        cols: parseInt(this.$refs.recordConsole.offsetWidth / 11),
+        cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
+        // bellStyle:'sound',
+        disableStdin: true// 是否应禁用输入
+      })
+      this.terminal.open(document.getElementById(this.obj.uuid))
 
-        let token=sessionStorage.getItem('nz-token');
-        let baseUrl=this.$axios.defaults.baseURL;
-        if(baseUrl.startsWith("/")){
-          baseUrl="ws://"+window.location.host+baseUrl;
-        }else{
-          baseUrl=baseUrl.replace("http://","ws://").replace("https://","ws://");
-        }
-        ///monitor
-        let url=baseUrl+"/terminal/monitor.ws?"+"&token="+token+"&uuid="+this.obj.uuid;
-        console.info(url);
-        if(this.terminalSocket){//如果存在之前的链接 先断开 再链接新的
-          this.terminalSocket.close();
-        }
-        this.terminalSocket=new WebSocket(url);
-//连接成功
-        this.terminalSocket.onopen=()=>{
-        };
-        //登录后，你输入的内容从后台服务返回
-        this.terminal.on("data",function(data){
-          /*
+      const token = sessionStorage.getItem('nz-token')
+      let baseUrl = this.$axios.defaults.baseURL
+      if (baseUrl.startsWith('/')) {
+        baseUrl = 'ws://' + window.location.host + baseUrl
+      } else {
+        baseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'ws://')
+      }
+      /// monitor
+      const url = baseUrl + '/terminal/monitor.ws?' + '&token=' + token + '&uuid=' + this.obj.uuid
+      console.info(url)
+      if (this.terminalSocket) { // 如果存在之前的链接 先断开 再链接新的
+        this.terminalSocket.close()
+      }
+      this.terminalSocket = new WebSocket(url)
+      // 连接成功
+      this.terminalSocket.onopen = () => {
+      }
+      // 登录后，你输入的内容从后台服务返回
+      this.terminal.on('data', function (data) {
+        /*
           let code = data.charCodeAt(0);
           if(code==13){
           }else {
             //that.term.write(data);
-          }*/
-        });
-        //返回
-        this.terminalSocket.onmessage=function(evt){
-          let backContent=evt.data;
-          /*
+          } */
+      })
+      // 返回
+      this.terminalSocket.onmessage = function (evt) {
+        let backContent = evt.data
+        /*
           if(that.inputSecret){//当前为密码输入状态
           }
           if(backContent.length>1){
@@ -122,172 +119,169 @@
             if(pwdInput){//输入密码
               that.inputSecret = true;
             }
-          }*/
+          } */
 
-          let welComIndex=backContent.indexOf(that.welcomeBackContent);
-          if(welComIndex> -1){//无服务器信息（只与nezha进行了连接）
-            const connectResult={
-              title:'',
-              color:1,
-            };
-            that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
-          }else{
-            let successContentIndex=backContent.indexOf(that.successBackContent);
-            if(successContentIndex> -1){
-              //that.conFinish = true;
-              let startIndex=successContentIndex+that.successBackContent.length+1;
-              backContent=backContent.substring(startIndex);
-              let endIndex=backContent.indexOf('\r\n');
-              let title=backContent.substring(0,endIndex);
-              const connectResult={
-                title:title,
-                color:2,
-              };
-              that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
-            }else{//失败
-              let failContentIndex=backContent.indexOf(that.failBackContent);
-              let connectFailIndex=backContent.indexOf(that.connectFailContent);
-              if(failContentIndex> -1){
-                //that.conFinish = true;
-                const connectResult={
-                  title:'',
-                  color:3,
-                };
-                that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
-              }else if(connectFailIndex> -1){
-                let startIndex=successContentIndex+that.successBackContent.length+1;
-                backContent=backContent.substring(startIndex);
-                let endIndex=backContent.indexOf('\r\n');
-                let title=backContent.substring(0,endIndex);
-                const connectResult={
-                  title:'',
-                  color:3,
-                };
-                that.$emit("refreshConsoleTitle",connectResult);//1:grey 2 green 3 red
+        const welComIndex = backContent.indexOf(that.welcomeBackContent)
+        if (welComIndex > -1) { // 无服务器信息（只与nezha进行了连接）
+          const connectResult = {
+            title: '',
+            color: 1
+          }
+          that.$emit('refreshConsoleTitle', connectResult)// 1:grey 2 green 3 red
+        } else {
+          const successContentIndex = backContent.indexOf(that.successBackContent)
+          if (successContentIndex > -1) {
+            // that.conFinish = true;
+            const startIndex = successContentIndex + that.successBackContent.length + 1
+            backContent = backContent.substring(startIndex)
+            const endIndex = backContent.indexOf('\r\n')
+            const title = backContent.substring(0, endIndex)
+            const connectResult = {
+              title: title,
+              color: 2
+            }
+            that.$emit('refreshConsoleTitle', connectResult)// 1:grey 2 green 3 red
+          } else { // 失败
+            const failContentIndex = backContent.indexOf(that.failBackContent)
+            const connectFailIndex = backContent.indexOf(that.connectFailContent)
+            if (failContentIndex > -1) {
+              // that.conFinish = true;
+              const connectResult = {
+                title: '',
+                color: 3
               }
+              that.$emit('refreshConsoleTitle', connectResult)// 1:grey 2 green 3 red
+            } else if (connectFailIndex > -1) {
+              const startIndex = successContentIndex + that.successBackContent.length + 1
+              backContent = backContent.substring(startIndex)
+              const connectResult = {
+                title: '',
+                color: 3
+              }
+              that.$emit('refreshConsoleTitle', connectResult)// 1:grey 2 green 3 red
             }
           }
-        };
-        //关闭
-        this.terminalSocket.onclose=()=>{
-          //报错sorry的，还没来得及看信息就关闭
-          // this.$emit("closeConsole",this.terminal.name);//应该调用父窗口
-        };
-
-
-        //错误
-        this.terminalSocket.onerror=(e)=>{
-        };
-        //选中 复制
-        this.terminal.on("selection",function(){
-        });
-        this.terminal.attachCustomKeyEventHandler(function(ev){
-        });
-
-        this.terminal.attach(this.terminalSocket);
-        this.terminal._initialized=true;
-        this.terminal.fit();//自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
-        // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
-        //   this.setFontSize(this.fontSize);
-        // })
-      },
-
-      //关闭连接
-      closeSocket(){
-        if(this.terminalSocket){
-          this.terminalSocket.close();
         }
-        if(this.terminal){
-          this.terminal.destroy();
-        }
-      },
-      // 切换tab
-      changeTab(tab){
-        this.$emit('changeTab',tab);
-      },
+      }
+      // 关闭
+      this.terminalSocket.onclose = () => {
+        // 报错sorry的，还没来得及看信息就关闭
+        // this.$emit("closeConsole",this.terminal.name);//应该调用父窗口
+      }
 
-      getRecordData(){
-        return new Promise(resolve=>{
-          this.$get("/terminal/record",this.filter).then(res=>{
-            if(res.code===200){
-              this.recordData=res.data.list;
-              this.timeUsed=res.data.endTime;
-            }
-            resolve();
-          });
-        });
-      },
+      // 错误
+      this.terminalSocket.onerror = (e) => {
+      }
+      // 选中 复制
+      this.terminal.on('selection', function () {
+      })
+      this.terminal.attachCustomKeyEventHandler(function (ev) {
+      })
 
-      consoleResize(){
-        this.terminal&&this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth/11),parseInt(this.$refs.recordConsole.offsetHeight/18));
-        this.$nextTick(()=>{
-          this.terminal&&this.terminal.fit();
-        });
-      },
-      shutdown(){
-        this.$confirm(this.$t("tip.killTerm"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$put("/terminal/kill",{uuid:this.obj.uuid}).then(res=>{
-            if(res.code===200){
-              this.$message.success(this.$t("config.terminallog.success"));
-              this.$emit('exit')
-            }else{
-              this.$message.error(this.$t("config.terminallog.killErrorTip"));
-            }
-          });
-        });
-      },
+      this.terminal.attach(this.terminalSocket)
+      this.terminal._initialized = true
+      this.terminal.fit()// 自适应大小(使终端的尺寸和几何尺寸适合于终端容器的尺寸) 只是width
+      // this.$nextTick(()=>{// 解决进入全屏和退出全屏是底部隐藏
+      //   this.setFontSize(this.fontSize);
+      // })
     },
-    watch:{
-      // 入口，监听terminal session的变化，开始功能
-      obj:{
-        immediate:true,
-        deep:true,
-        handler(n){
-          if(n.uuid){
-            this.recordData=[];
-            this.filter.uuid=n.uuid;
-            this.playerCurrentTime=0;
-            if(this.playerTimer){
-              clearTimeout(this.playerTimer);
-            }
-            setTimeout(()=>{
-              this.create();
-            },200);
+
+    // 关闭连接
+    closeSocket () {
+      if (this.terminalSocket) {
+        this.terminalSocket.close()
+      }
+      if (this.terminal) {
+        this.terminal.destroy()
+      }
+    },
+    // 切换tab
+    changeTab (tab) {
+      this.$emit('changeTab', tab)
+    },
+
+    getRecordData () {
+      return new Promise(resolve => {
+        this.$get('/terminal/record', this.filter).then(res => {
+          if (res.code === 200) {
+            this.recordData = res.data.list
+            this.timeUsed = res.data.endTime
           }
-        }
-      },
-      progress(n){
-        let progressController=document.getElementById("progressController");
-        progressController.style.left=`${n}%`;
-      }
+          resolve()
+        })
+      })
     },
-    computed:{
-      parseCurrentTime(){
-        let currentTime=parseInt(this.playerCurrentTime/1000);
-        let totalTime=parseInt(this.timeUsed/1000);
-        if(currentTime>totalTime){
-          currentTime=totalTime;
-        }
-        return `${currentTime} / ${totalTime}`;
-      }
-    },
-    created(){
-      window.addEventListener('resize',bus.debounce(this.consoleResize,1000));
-    },
-    mounted(){
 
+    consoleResize () {
+      this.terminal && this.terminal.resize(parseInt(this.$refs.recordConsole.offsetWidth / 11), parseInt(this.$refs.recordConsole.offsetHeight / 18))
+      this.$nextTick(() => {
+        this.terminal && this.terminal.fit()
+      })
     },
-    beforeDestroy(){
-      window.removeEventListener('resize',bus.debounce);
-      this.closeSocket();
-      this.terminal.off("selection");
-      this.terminal.off("data")
+    shutdown () {
+      this.$confirm(this.$t('tip.killTerm'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$put('/terminal/kill', { uuid: this.obj.uuid }).then(res => {
+          if (res.code === 200) {
+            this.$message.success(this.$t('config.terminallog.success'))
+            this.$emit('exit')
+          } else {
+            this.$message.error(this.$t('config.terminallog.killErrorTip'))
+          }
+        })
+      })
+    }
+  },
+  watch: {
+    // 入口，监听terminal session的变化，开始功能
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n.uuid) {
+          this.recordData = []
+          this.filter.uuid = n.uuid
+          this.playerCurrentTime = 0
+          if (this.playerTimer) {
+            clearTimeout(this.playerTimer)
+          }
+          setTimeout(() => {
+            this.create()
+          }, 200)
+        }
+      }
     },
+    progress (n) {
+      const progressController = document.getElementById('progressController')
+      progressController.style.left = `${n}%`
+    }
+  },
+  computed: {
+    parseCurrentTime () {
+      let currentTime = parseInt(this.playerCurrentTime / 1000)
+      const totalTime = parseInt(this.timeUsed / 1000)
+      if (currentTime > totalTime) {
+        currentTime = totalTime
+      }
+      return `${currentTime} / ${totalTime}`
+    }
+  },
+  created () {
+    window.addEventListener('resize', bus.debounce(this.consoleResize, 1000))
+  },
+  mounted () {
+
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', bus.debounce)
+    this.closeSocket()
+    this.terminal.off('selection')
+    this.terminal.off('data')
   }
+}
 </script>
 
 <style lang="scss">

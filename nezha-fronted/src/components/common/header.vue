@@ -12,28 +12,28 @@
     >
       <template v-for="(menu, index) in getMenuList" v-if="menu.code == 'header' && menu.children && menu.children.length > 0">
         <template v-for="(subMenu, subIndex) in menu.children">
-          <el-submenu :disabled="!linkData||linkData.length <1" :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu" v-if="subMenu.code == 'header_link'">
+          <el-submenu v-if="subMenu.code == 'header_link'" :key="subIndex" :disabled="!linkData||linkData.length <1" :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu">
             <template slot="title">
               <i class="nz-icon-navmore nz-icon" style="font-size: 17px;"></i>
             </template>
             <template v-for="(item, index) in linkData">
-              <el-menu-item :index="'0-' + index">
+              <el-menu-item :key="index" :index="'0-' + index">
                 <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
               </el-menu-item>
             </template>
           </el-submenu>
-          <el-submenu :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="display-none" v-if="subMenu.code == 'header_terminal'">
+          <el-submenu v-if="subMenu.code == 'header_terminal'" :key="subIndex" :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="display-none">
             <div @click="cli" class="el-submenu__title" slot="title" id="header-open-cli">
               <i class="nz-icon nz-icon-cli" style="font-size: 18px;"></i>
               <div class="right-tip" v-show="$store.state.consoleCount>0">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</div>
             </div>
           </el-submenu>
-          <el-submenu :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu" v-if="subMenu.code == 'header_add'">
+          <el-submenu v-if="subMenu.code == 'header_add'" :key="subIndex" :index="`${index}-${subIndex}`" class="icon-menu-item" popper-class="nz-submenu">
             <template slot="title">
               <i class="nz-icon-create-square nz-icon" style="font-size: 18px;"></i>
             </template>
             <template v-for="(item, createIndex) in createMenu">
-              <el-menu-item :index="`${index}-${subIndex}-${createIndex}`" v-has="item.permission">
+              <el-menu-item :key="createIndex" v-has="item.permission" :index="`${index}-${subIndex}-${createIndex}`">
                 <div @click="createBox(item)" :id="'create-box-'+createIndex">
                   <span>{{item.label}}</span>
                 </div>
@@ -159,419 +159,418 @@
 </template>
 
 <script>
-  import bus from '../../libs/bus';
-  import dcBox from "./rightBox/dcBox"; //dc弹框
-  import {mapActions} from "vuex";
-  import changePwd from "../page/config/changePwd";
-  export default {
-    name: "Header",
-    components: {
-      'change-password': changePwd,
-      'dc-box': dcBox,
-    },
-    data() {
-      return {
-        username: sessionStorage.getItem("nz-username"),
-        language: localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en',
+import bus from '../../libs/bus'
+import dcBox from './rightBox/dcBox' // dc弹框
+import { mapActions } from 'vuex'
+import changePwd from '../page/config/changePwd'
+export default {
+  name: 'Header',
+  components: {
+    'change-password': changePwd,
+    'dc-box': dcBox
+  },
+  data () {
+    return {
+      username: sessionStorage.getItem('nz-username'),
+      language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
 
-        //顶部菜单相关
-        /*activeIndex: '',*/
-        activeItemIndex: '',
-        activeItemIndexes: [],
-        hoverItemIndex: '',
-        systemName: localStorage.getItem('nz-sys-name'),
-        dc: {
-          id: '',
-          name: '',
-          location: '',
-          tel: '',
-          principal: '',
-          area: {
-            id: 0,
-            name: ''
-          }
-        },
-        userData: [],
-        assetData: [], //顶部菜单asset的下拉内容
-
-        //add侧滑相关
-        rightBox: {
-          project: {show: false},
-          module: {show: false},
-          endpoint: {show: false},
-          asset: {show: false},
-          alertRule: {show: false},
-          dc: {show: false}
-        },
-        projectData: [], //顶部菜单project列表中的数据
-        editProject: {id: '', name: '', remark: ''}, //新增/编辑的project
-        currentProject: {id: '', name: '', remark: ''}, //module/endpoint弹框用来回显project
-        editModule: { type: 'http', name: '', project: {}, port: 9100, path: '', param: '', paramObj: [], labelModule:[],labels:'',}, //新增/编辑的module
-        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [],labels:'',labelModule:[],}, //endpoint弹框用来回显module，此处固定为空对象
-        editEndpoint: { //新增/编辑的endpoint
-          id: '',
-          host: '',
-          port: '',
-          param: '',
-          path: '',
-          asset: {id: '', name: '', host: ''},
-          project: {id: '', name: ''},
-          module: {id: '', name: '', param: '', paramObj: {}, projectId: '',labelModule:[],labels:''},
-          moduleId: '',
-          assetId: '',
-          labelModule:[]
-        },
-        editAsset: {
-          id: '',
-          sn: '',
-          host: '',
-          state: 1,
-          purchaseDate: '',
-          idcId: '',
-          cabinetId: '',
-          modelId: '',
-          model: {type: {code: ""}},
-          assetType: '',
-          impi:{
-            host:'',
-            port:'',
-          },
-          tags: [],
-          accounts: [],
-        },
-        editAlertRule: {
-          id: '',
-          alertName: '',
-          linkObject: {id: '', name: ''},
-          expr: '',
-          unit:2,
-          operator: '>',
-          last: 60,
-          severity: 'P2',
-          summary: '',
-          description: '',
-        },
-        createMenu: [ //新增按钮内容
-          {
-            label: this.$t('project.project.project'),
-            url: 'project',
-            type: 1,
-            permission: 'header_add_project'
-          },
-          {
-            label: this.$t('project.module.module'),
-            url: 'project',
-            type: 2,
-            permission: 'header_add_module'
-          },
-          {
-            label: this.$t('project.endpoint.endpoint'),
-            url: 'project',
-            type: 3,
-            permission: 'header_add_endpoint'
-          },
-          {
-            label: this.$t('asset.asset'),
-            url: 'asset',
-            type: 4,
-            permission: 'header_add_asset'
-          },
-          {
-            label: this.$t('alert.config.alertConfig'),
-            url: 'alertConfig',
-            type: 5,
-            permission: 'header_add_rule'
-          },
-        ],
-        showChangePwd:false,
-      }
-    },
-    methods: {
-      ...mapActions(["logoutSuccess"]),
-      cli(){
-        this.$store.commit('openConsole');
+      // 顶部菜单相关
+      /* activeIndex: '', */
+      activeItemIndex: '',
+      activeItemIndexes: [],
+      hoverItemIndex: '',
+      systemName: localStorage.getItem('nz-sys-name'),
+      dc: {
+        id: '',
+        name: '',
+        location: '',
+        tel: '',
+        principal: '',
+        area: {
+          id: 0,
+          name: ''
+        }
       },
+      userData: [],
+      assetData: [], // 顶部菜单asset的下拉内容
 
-      /**
+      // add侧滑相关
+      rightBox: {
+        project: { show: false },
+        module: { show: false },
+        endpoint: { show: false },
+        asset: { show: false },
+        alertRule: { show: false },
+        dc: { show: false }
+      },
+      projectData: [], // 顶部菜单project列表中的数据
+      editProject: { id: '', name: '', remark: '' }, // 新增/编辑的project
+      currentProject: { id: '', name: '', remark: '' }, // module/endpoint弹框用来回显project
+      editModule: { type: 'http', name: '', project: {}, port: 9100, path: '', param: '', paramObj: [], labelModule: [], labels: '' }, // 新增/编辑的module
+      currentModule: { id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [], labels: '', labelModule: [] }, // endpoint弹框用来回显module，此处固定为空对象
+      editEndpoint: { // 新增/编辑的endpoint
+        id: '',
+        host: '',
+        port: '',
+        param: '',
+        path: '',
+        asset: { id: '', name: '', host: '' },
+        project: { id: '', name: '' },
+        module: { id: '', name: '', param: '', paramObj: {}, projectId: '', labelModule: [], labels: '' },
+        moduleId: '',
+        assetId: '',
+        labelModule: []
+      },
+      editAsset: {
+        id: '',
+        sn: '',
+        host: '',
+        state: 1,
+        purchaseDate: '',
+        idcId: '',
+        cabinetId: '',
+        modelId: '',
+        model: { type: { code: '' } },
+        assetType: '',
+        impi: {
+          host: '',
+          port: ''
+        },
+        tags: [],
+        accounts: []
+      },
+      editAlertRule: {
+        id: '',
+        alertName: '',
+        linkObject: { id: '', name: '' },
+        expr: '',
+        unit: 2,
+        operator: '>',
+        last: 60,
+        severity: 'P2',
+        summary: '',
+        description: ''
+      },
+      createMenu: [ // 新增按钮内容
+        {
+          label: this.$t('project.project.project'),
+          url: 'project',
+          type: 1,
+          permission: 'header_add_project'
+        },
+        {
+          label: this.$t('project.module.module'),
+          url: 'project',
+          type: 2,
+          permission: 'header_add_module'
+        },
+        {
+          label: this.$t('project.endpoint.endpoint'),
+          url: 'project',
+          type: 3,
+          permission: 'header_add_endpoint'
+        },
+        {
+          label: this.$t('asset.asset'),
+          url: 'asset',
+          type: 4,
+          permission: 'header_add_asset'
+        },
+        {
+          label: this.$t('alert.config.alertConfig'),
+          url: 'alertConfig',
+          type: 5,
+          permission: 'header_add_rule'
+        }
+      ],
+      showChangePwd: false
+    }
+  },
+  methods: {
+    ...mapActions(['logoutSuccess']),
+    cli () {
+      this.$store.commit('openConsole')
+    },
+
+    /**
        * @param route 路由地址
        * @param parentMenu 菜单大类
        * */
-      jumpTo(route) {
-        if (route != "asset") {
-          this.activeItemIndexes = [];
+    jumpTo (route) {
+      if (route != 'asset') {
+        this.activeItemIndexes = []
+      }
+      this.$router.push({
+        path: route,
+        query: {
+          t: +new Date()
         }
-        this.$router.push({
-          path: route,
-          query: {
-            t: +new Date()
+      })
+    },
+    getLinkData () {
+      this.$get('link').then(response => {
+        this.$store.commit('setLinkData', response.data)
+      })
+    },
+    createBox (item) {
+      if (item.type == 1) {
+        this.rightBox.project.show = true
+        this.editProject = { id: '', name: '', remark: '' }
+      } else if (item.type == 2) {
+        this.rightBox.module.show = true
+        this.editModule = {
+          name: '',
+          project: {},
+          port: 9100,
+          path: '',
+          param: '',
+          labels: '',
+          type: 'http',
+          paramObj: [],
+          snmpParam: '',
+          labelModule: [],
+          // snmp setting 下划线命名是因为业务需求
+          walk: [],
+          version: 2, // 2/3
+          max_repetitions: 25,
+          retries: 3,
+          timeout: 10, // s
+          community: 'public',
+          username: '',
+          security_level: 'noAuthNoPriv', // noAuthNoPriv/authNoPriv/authPriv
+          password: '',
+          auth_protocol: 'MD5', // MD5/SHA
+          priv_protocol: 'DES', // DES/AES
+          priv_password: '',
+          context_name: ''
+        }
+      } else if (item.type == 3) {
+        this.rightBox.endpoint.show = true
+      } else if (item.type == 4) {
+        this.rightBox.asset.show = true
+      } else if (item.type == 5) {
+        this.rightBox.alertRule.show = true
+      } else if (item.type == 6) {
+        this.rightBox.dc.show = true
+      }
+    },
+    jumpToAsset (dc) {
+      if (dc) {
+        this.activeItemIndex = dc.id
+        this.$store.commit('setCurrentDc', dc.id)
+        bus.$emit('header-dc-change', dc.id) // 发送给leftMenu，顶部dc条件改变了
+      } else {
+        this.activeItemIndex = ''
+        this.$store.commit('setCurrentDc', '')
+        bus.$emit('clear-asset-filter') // 清除leftMenu左侧菜单过滤条件
+      }
+      this.jumpTo('/asset')
+    },
+    jumpToProject (p) {
+      if (!this.hasButton('project_view')) {
+        return
+      }
+      this.currentProject = p
+      if (p.id !== this.$store.state.currentProject.id) {
+        bus.$emit('project-page-type', 'project')
+      }
+      this.$store.commit('currentProjectChange', p)
+      this.activeItemIndex = p.id
+      this.jumpTo('/project')
+    },
+    getAssetData () {
+      this.$get('idc', { pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.assetData = response.data.list
+          this.assetData.forEach(item => {
+            this.$set(item, item.name, false)
+          })
+          this.$store.commit('setIdcArr', this.assetData)
+        }
+      })
+    },
+    changeLocal (lang) {
+      if (lang != localStorage.getItem('nz-language')) {
+        localStorage.setItem('nz-language', lang)
+        this.$i18n.locale = lang
+        window.location.reload()
+      }
+    },
+    getProjectList () {
+      this.$get('project', { pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.projectData = response.data.list
+          let flag = false
+          // 如果currentProject不在新取到的数据里，说明它被删了
+          for (let i = 0; i < this.projectData.length; i++) {
+            if (this.projectData[i].id == this.currentProject.id) {
+              flag = true
+              break
+            }
           }
-        });
-      },
-      getLinkData(){
-        this.$get('link').then(response=>{
-          this.$store.commit('setLinkData', response.data);
-        });
-      },
-      createBox(item) {
-        if (item.type == 1) {
-          this.rightBox.project.show = true;
-          this.editProject = {id: '', name: '', remark: ''};
-        } else if (item.type == 2) {
-          this.rightBox.module.show = true;
-          this.editModule = {
-            name: '',
-            project: {},
-            port: 9100,
-            path: '',
-            param: '',
-            labels:'',
-            type: 'http',
-            paramObj: [],
-            snmpParam: '',
-            labelModule:[],
-            //snmp setting 下划线命名是因为业务需求
-            walk: [],
-            version: 2, //2/3
-            max_repetitions: 25,
-            retries: 3,
-            timeout: 10, //s
-            community: 'public',
-            username: '',
-            security_level: 'noAuthNoPriv', //noAuthNoPriv/authNoPriv/authPriv
-            password: '',
-            auth_protocol: 'MD5', //MD5/SHA
-            priv_protocol: 'DES', //DES/AES
-            priv_password: '',
-            context_name: ''
-          };
-        } else if (item.type == 3) {
-          this.rightBox.endpoint.show = true;
-        } else if (item.type == 4) {
-          this.rightBox.asset.show = true;
-        } else if (item.type == 5) {
-          this.rightBox.alertRule.show = true;
-        } else if (item.type == 6) {
-          this.rightBox.dc.show = true;
-        }
-      },
-      jumpToAsset(dc) {
-        if (dc) {
-          this.activeItemIndex = dc.id;
-          this.$store.commit('setCurrentDc',dc.id)
-          bus.$emit("header-dc-change", dc.id); //发送给leftMenu，顶部dc条件改变了
-        } else {
-          this.activeItemIndex = "";
-          this.$store.commit('setCurrentDc','');
-          bus.$emit("clear-asset-filter"); //清除leftMenu左侧菜单过滤条件
-        }
-        this.jumpTo("/asset");
-      },
-      jumpToProject(p) {
-        if (!this.hasButton('project_view')) {
-          return;
-        }
-        this.currentProject = p;
-        if(p.id!==this.$store.state.currentProject.id){
-          bus.$emit("project-page-type", "project");
-        }
-        this.$store.commit("currentProjectChange", p);
-        this.activeItemIndex = p.id;
-        this.jumpTo('/project');
-      },
-      getAssetData() {
-        this.$get('idc', {pageSize:-1}).then(response => {
-          if (response.code == 200) {
-            this.assetData = response.data.list;
-            this.assetData.forEach(item => {
-              this.$set(item, item.name, false)
-            });
-            this.$store.commit('setIdcArr',this.assetData);
+          if (!flag && this.projectData.length > 0) {
+            this.currentProject = this.projectData[0]
+            this.activeItemIndex = this.currentProject.id
+            this.$store.commit('currentProjectChange', this.currentProject)
           }
+        }
+      })
+    },
+    getUserData () {
+      return new Promise(resolve => {
+        this.$get('sys/user/list', { pageSize: -1, pageNo: 1 }).then(response => {
+          if (response.code === 200) {
+            this.userData = response.data.list
+          }
+          resolve()
         })
-      },
-      changeLocal(lang) {
-        if (lang != localStorage.getItem("nz-language")) {
-          localStorage.setItem("nz-language", lang);
-          this.$i18n.locale = lang;
-          window.location.reload();
-        }
-      },
-      getProjectList() {
-        this.$get('project', {pageSize:-1}).then(response => {
-          if (response.code == 200) {
-            this.projectData = response.data.list
-            let flag = false;
-            //如果currentProject不在新取到的数据里，说明它被删了
-            for (let i = 0; i < this.projectData.length; i++) {
-              if (this.projectData[i].id == this.currentProject.id) {
-                flag = true;
-                break;
-              }
-            }
-            if (!flag && this.projectData.length > 0) {
-              this.currentProject = this.projectData[0];
-              this.activeItemIndex = this.currentProject.id;
-              this.$store.commit('currentProjectChange', this.currentProject);
-            }
-          }
-        })
-      },
-      getUserData() {
-        return new Promise(resolve => {
-          this.$get('sys/user/list', {pageSize: -1, pageNo: 1}).then(response => {
-            if (response.code === 200) {
-              this.userData = response.data.list;
-            }
-            resolve();
-          });
-        });
-      },
-      closeProjectRightBox(refresh) {
-        this.rightBox.project.show = false;
-        if (refresh) {
-          this.getProjectList();
-          bus.$emit("project-list-change");
-        }
-      },
-      closeModuleRightBox(refresh) {
-        this.rightBox.module.show = false;
-        if (refresh) {
-          bus.$emit("module-list-change");
-        }
-      },
-      closeEndpointRightBox(refresh) {
-        this.rightBox.endpoint.show = false;
-        if (refresh) {
-          bus.$emit("endpoint-list-change");
-        }
-      },
-      closeAssetRightBox(refresh) {
-        this.rightBox.asset.show = false;
-        if (refresh) {
-          bus.$emit("asset-list-change");
-        }
-      },
-      closeAlertRuleRightBox(refresh) {
-        this.rightBox.alertRule.show = false;
-        if (refresh) {
-          bus.$emit("alert-rule-list-change");
-        }
-      },
-      closeDcBox(refresh) {
-        this.rightBox.dc.show = false;
-        if (refresh) {
-          this.getAssetData();
-          bus.$emit("dc-list-change");
-        }
-      },
-      toEditProject(p) {
-        this.editProject = Object.assign({}, p);
-        this.rightBox.project.show = true;
-      },
-      logout() {
-        this.$get('logout').then(() => {
-          this.logoutSuccess();
-          document.location.href = "/";
-        });
-
-        //this.jumpTo('/login');
-      },
-      refreshLang() {
-        this.language = localStorage.getItem("nz-language");
-        this.$i18n.locale = this.language;
-        this.$nextTick(() => {
-          window.location.reload();
-        });
-      },
-      showPwdDialog() {
-        this.showChangePwd = true;
-      },
-      dialogClosed() {
-        this.showChangePwd = false;
-      },
-      cancel() {
-        this.jumpTo(this.$route.path.slice(1, this.$route.path.length));
-      },
-
-      initEvent() {
-        bus.$on('login', () => {
-          this.username = sessionStorage.getItem("nz-username");
-          this.refreshLang();
-        });
-        bus.$on("dc-list-change", () => { //dc.vue增删改dc时刷新顶部菜单dc列表
-          this.getAssetData();
-        });
-        bus.$on("current-project-change", project => {
-          this.currentProject = project;
-          this.activeItemIndex = project.id;
-        });
-        if (window.history && window.history.pushState) {
-          history.pushState(null, null, document.URL);
-          window.addEventListener('popstate', this.cancel, false);
-        }
-      },
+      })
     },
-    mounted() {
-      this.$i18n.locale = this.language;
-      if (sessionStorage.getItem('nz-token')) {
-        this.initEvent();
-        this.getAssetData();
-        this.getUserData();
-        this.getProjectList();
-        this.getLinkData();
-      }
-      // 刷新后有高亮
-      /*let activePath = this.$route.path.slice(1);
-      this.activeIndex = activePath;*/
-    },
-    computed: {
-      linkData(){
-        return this.$store.getters.getLinkData;
-      },
-      route() {
-        return this.$route.path;
-      },
-      overViewProject(){
-        return this.$store.getters.getOverViewProject;
-      },
-      menuIsActive() {
-        return function(menu, isParent) {
-          if (isParent) {
-            let isCurrent = menu.children.some(sub => {
-              return sub.route == this.route;
-            });
-            if (isCurrent) {
-              return "menu-active";
-            } else {
-              return "";
-            }
-          } else {
-            if (menu.route == this.route) {
-              return "menu-item-active";
-            } else {
-              return "";
-            }
-          }
-        };
+    closeProjectRightBox (refresh) {
+      this.rightBox.project.show = false
+      if (refresh) {
+        this.getProjectList()
+        bus.$emit('project-list-change')
       }
     },
-    watch:{
-      overViewProject(n){
-        if(n){
-          this.jumpToProject(n)
-        }
+    closeModuleRightBox (refresh) {
+      this.rightBox.module.show = false
+      if (refresh) {
+        bus.$emit('module-list-change')
       }
     },
-    beforeDestroy(){
-      bus.$off('login');
-      bus.$off("dc-list-change");
-      bus.$off("current-project-change");
-
+    closeEndpointRightBox (refresh) {
+      this.rightBox.endpoint.show = false
+      if (refresh) {
+        bus.$emit('endpoint-list-change')
+      }
     },
-    destroyed() {
-      window.removeEventListener('popstate', this.cancel, false);
+    closeAssetRightBox (refresh) {
+      this.rightBox.asset.show = false
+      if (refresh) {
+        bus.$emit('asset-list-change')
+      }
+    },
+    closeAlertRuleRightBox (refresh) {
+      this.rightBox.alertRule.show = false
+      if (refresh) {
+        bus.$emit('alert-rule-list-change')
+      }
+    },
+    closeDcBox (refresh) {
+      this.rightBox.dc.show = false
+      if (refresh) {
+        this.getAssetData()
+        bus.$emit('dc-list-change')
+      }
+    },
+    toEditProject (p) {
+      this.editProject = Object.assign({}, p)
+      this.rightBox.project.show = true
+    },
+    logout () {
+      this.$get('logout').then(() => {
+        this.logoutSuccess()
+        document.location.href = '/'
+      })
+
+      // this.jumpTo('/login');
+    },
+    refreshLang () {
+      this.language = localStorage.getItem('nz-language')
+      this.$i18n.locale = this.language
+      this.$nextTick(() => {
+        window.location.reload()
+      })
+    },
+    showPwdDialog () {
+      this.showChangePwd = true
+    },
+    dialogClosed () {
+      this.showChangePwd = false
+    },
+    cancel () {
+      this.jumpTo(this.$route.path.slice(1, this.$route.path.length))
+    },
+
+    initEvent () {
+      bus.$on('login', () => {
+        this.username = sessionStorage.getItem('nz-username')
+        this.refreshLang()
+      })
+      bus.$on('dc-list-change', () => { // dc.vue增删改dc时刷新顶部菜单dc列表
+        this.getAssetData()
+      })
+      bus.$on('current-project-change', project => {
+        this.currentProject = project
+        this.activeItemIndex = project.id
+      })
+      if (window.history && window.history.pushState) {
+        history.pushState(null, null, document.URL)
+        window.addEventListener('popstate', this.cancel, false)
+      }
     }
+  },
+  mounted () {
+    this.$i18n.locale = this.language
+    if (sessionStorage.getItem('nz-token')) {
+      this.initEvent()
+      this.getAssetData()
+      this.getUserData()
+      this.getProjectList()
+      this.getLinkData()
+    }
+    // 刷新后有高亮
+    /* let activePath = this.$route.path.slice(1);
+      this.activeIndex = activePath; */
+  },
+  computed: {
+    linkData () {
+      return this.$store.getters.getLinkData
+    },
+    route () {
+      return this.$route.path
+    },
+    overViewProject () {
+      return this.$store.getters.getOverViewProject
+    },
+    menuIsActive () {
+      return function (menu, isParent) {
+        if (isParent) {
+          const isCurrent = menu.children.some(sub => {
+            return sub.route == this.route
+          })
+          if (isCurrent) {
+            return 'menu-active'
+          } else {
+            return ''
+          }
+        } else {
+          if (menu.route == this.route) {
+            return 'menu-item-active'
+          } else {
+            return ''
+          }
+        }
+      }
+    }
+  },
+  watch: {
+    overViewProject (n) {
+      if (n) {
+        this.jumpToProject(n)
+      }
+    }
+  },
+  beforeDestroy () {
+    bus.$off('login')
+    bus.$off('dc-list-change')
+    bus.$off('current-project-change')
+  },
+  destroyed () {
+    window.removeEventListener('popstate', this.cancel, false)
   }
+}
 </script>
 
 <style lang="scss">

@@ -47,7 +47,7 @@
         <el-form-item :label="$t('config.account.roles')" prop="roleIds">
           <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.userId==1" id="account-input-roleIds">
             <template v-for="role in roles">
-              <el-option :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
+              <el-option :key="role.id" :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
             </template>
           </el-select>
         </el-form-item>
@@ -90,226 +90,226 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "accountBox",
-    props: {
-      user: Object,
-      roles:Array
-    },
-    computed: {
-      isCurrentUser() {
-        return function(username) {
-          return localStorage.getItem('nz-username') == username;
-        }
-      },
-      addDisabled() {
-        let enabled = this.selectableScripts.filter(item => {
-          return !item.disabled
-        });
-        return enabled.length === 0;
+export default {
+  name: 'accountBox',
+  props: {
+    user: Object,
+    roles: Array
+  },
+  computed: {
+    isCurrentUser () {
+      return function (username) {
+        return localStorage.getItem('nz-username') == username
       }
     },
-    created() {
-      this.getRoles();
-    },
-    data() {
-      let validatePassword = (rule, value, callback) => { // 确认密码的二次校验
-        if(value === '' && this.editUser.password){
-          callback(new Error(this.$t('config.account.inputConfirmPwd')));
-        }else if (value !== this.editUser.password) {
-          callback(new Error(this.$t('config.account.confirmPwdErr')));
-        } else {
-          callback();
-        }
-      };
-      return {
-        scriptIds: [],
-        rules: { //表单校验规则
-          username: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          passwordChange: [
-            { validator: validatePassword, trigger: 'blur' },
-            {required: true, message: '', trigger: 'blur'},
-          ],
-          roleIds: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          email: [
-            {type: 'email', message: this.$t('validate.email')}
-          ]
-        },
-        rules2: { //表单校验规则
-          username: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          passwordChange: [
-            { validator: validatePassword, trigger: 'blur' },
-          ],
-          roleIds: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          email: [
-            {type: 'email', message: this.$t('validate.email')}
-          ]
-        },
-        editUser: {},
-        scripts: [],
-        selectableScripts: [],
-        roles:[],
-        passwordChange:'',
+    addDisabled () {
+      const enabled = this.selectableScripts.filter(item => {
+        return !item.disabled
+      })
+      return enabled.length === 0
+    }
+  },
+  created () {
+    this.getRoles()
+  },
+  data () {
+    const validatePassword = (rule, value, callback) => { // 确认密码的二次校验
+      if (value === '' && this.editUser.password) {
+        callback(new Error(this.$t('config.account.inputConfirmPwd')))
+      } else if (value !== this.editUser.password) {
+        callback(new Error(this.$t('config.account.confirmPwdErr')))
+      } else {
+        callback()
       }
+    }
+    return {
+      scriptIds: [],
+      rules: { // 表单校验规则
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        passwordChange: [
+          { validator: validatePassword, trigger: 'blur' },
+          { required: true, message: '', trigger: 'blur' }
+        ],
+        roleIds: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', message: this.$t('validate.email') }
+        ]
+      },
+      rules2: { // 表单校验规则
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        passwordChange: [
+          { validator: validatePassword, trigger: 'blur' }
+        ],
+        roleIds: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', message: this.$t('validate.email') }
+        ]
+      },
+      editUser: {},
+      scripts: [],
+      selectableScripts: [],
+      roles: [],
+      passwordChange: ''
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.prevent_opt.save = false
+      console.log('cancel function ')
+      this.$emit('close', refresh)
     },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.prevent_opt.save=false;
-        console.log('cancel function ')
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*保存*/
-      save() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$refs.accountForm.validate(valid => {
-          if (valid) {
-            let editUser = JSON.parse(JSON.stringify(this.editUser))
-            editUser.roleIds = [editUser.roleIds]
-            if (this.editUser.userId) {
-              this.$put('sys/user/update',editUser).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('sys/user/save', editUser).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 保存 */
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.accountForm.validate(valid => {
+        if (valid) {
+          const editUser = JSON.parse(JSON.stringify(this.editUser))
+          editUser.roleIds = [editUser.roleIds]
+          if (this.editUser.userId) {
+            this.$put('sys/user/update', editUser).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           } else {
-            this.prevent_opt.save=false;
-            return false;
+            this.$post('sys/user/save', editUser).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      if (this.prevent_opt.save) { return }
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('sys/user/delete?userIds=' + this.editUser.userId).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
           }
         })
-      },
-      /*删除*/
-      del() {
-        if(this.prevent_opt.save){ return }
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/user/delete?userIds=" + this.editUser.userId).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-          this.prevent_opt.save=false;
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      /*密码失去焦点 检验确认密码*/
-      passwordBlur(){
-        if(this.editUser.password&&this.editUser.passwordChange){
-          this.$refs.accountForm.validateField('passwordChange')
-        }
-      },
-      getScripts() {
-        this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
-          this.scripts = response.data.list;
-          this.getSelectableScripts();
-        });
-        /*this.scripts = [
+        this.prevent_opt.save = false
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    /* 密码失去焦点 检验确认密码 */
+    passwordBlur () {
+      if (this.editUser.password && this.editUser.passwordChange) {
+        this.$refs.accountForm.validateField('passwordChange')
+      }
+    },
+    getScripts () {
+      this.$get('/alert/script?pageNo=1&pageSize=-1').then(response => {
+        this.scripts = response.data.list
+        this.getSelectableScripts()
+      })
+      /* this.scripts = [
           {id: 1, name: "DOLBY"},
           {id: 2, name: "IMAX"},
           {id: 3, name: "CGS"},
           {id: 4, name: "LUXE"},
           {id: 5, name: "DST:X"},
         ];
-        this.getSelectableScripts();*/
-      },
+        this.getSelectableScripts(); */
+    },
 
-      getSelectableScripts() {
-        let userNotifications = this.editUser.notifications;
-        if (userNotifications) {
-          this.selectableScripts = this.scripts.map(item => {
-            let exist = this.editUser.notifications.some(n => {
-              return item.id === n.scriptId;
-            });
-            if (exist) {
-              this.$set(item, "disabled", true);
-            } else {
-              this.$set(item, "disabled", false);
-            }
-            return item;
-          });
-        } else {
-          this.selectableScripts = this.scripts.map(item => {
-            this.$set(item, "disabled", false);
-            return item;
-          });
-        }
-      },
-      addNotification() {
-        let scripts = this.selectableScripts.find(item => {
-          return item.disabled === false;
-        });
-        if (scripts) {
-          if (!this.editUser.notifications) {
-            this.editUser.notifications = [];
+    getSelectableScripts () {
+      const userNotifications = this.editUser.notifications
+      if (userNotifications) {
+        this.selectableScripts = this.scripts.map(item => {
+          const exist = this.editUser.notifications.some(n => {
+            return item.id === n.scriptId
+          })
+          if (exist) {
+            this.$set(item, 'disabled', true)
+          } else {
+            this.$set(item, 'disabled', false)
           }
-          this.editUser.notifications.push({scriptId: scripts.id, account: ""});
-        }
-      },
-
-      removeNotification(index) {
-        this.editUser.notifications.splice(index, 1);
+          return item
+        })
+      } else {
+        this.selectableScripts = this.scripts.map(item => {
+          this.$set(item, 'disabled', false)
+          return item
+        })
       }
     },
-    mounted() {
-      this.getScripts();
-    },
-    watch: {
-      //将prop里的user转为组件内部对象
-      user: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          this.editUser = JSON.parse(JSON.stringify(n));
-          this.editUser.roleIds=n.roles&&n.roles.map(t=>t.id)[0]
+    addNotification () {
+      const scripts = this.selectableScripts.find(item => {
+        return item.disabled === false
+      })
+      if (scripts) {
+        if (!this.editUser.notifications) {
+          this.editUser.notifications = []
         }
-      },
-      "editUser.notifications": {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          this.getSelectableScripts();
-        }
-      },
+        this.editUser.notifications.push({ scriptId: scripts.id, account: '' })
+      }
     },
+
+    removeNotification (index) {
+      this.editUser.notifications.splice(index, 1)
+    }
+  },
+  mounted () {
+    this.getScripts()
+  },
+  watch: {
+    // 将prop里的user转为组件内部对象
+    user: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.editUser = JSON.parse(JSON.stringify(n))
+        this.editUser.roleIds = n.roles && n.roles.map(t => t.id)[0]
+      }
+    },
+    'editUser.notifications': {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.getSelectableScripts()
+      }
+    }
   }
+}
 </script>
 <style lang="scss">
   .right-box-account {

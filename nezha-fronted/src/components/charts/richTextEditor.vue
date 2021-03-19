@@ -6,102 +6,102 @@
 </template>
 
 <script>
-  import 'quill/dist/quill.snow.css'
-  import Quill from 'quill'
-  export default {
-    name: "richTextEditor",
-    props:{
-      editData:String,
-    },
-    data(){
-      return {
-        id:'editor-'+this.guid(),
-        quill:null,
-        options:{
-          theme: 'snow',
-          modules:{
-            toolbar:[
-              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              ['bold', 'italic', 'underline', 'strike'],
-              ['link','code-block'],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              [{ 'color': [] }, { 'background': [] }],
-              [{ 'align': [] }],
-            ]
-          }
-        },
-        maxLength:0,//记录最大长度
-        tooLong:false,
-      }
-    },
-    created() {
-    },
-    methods:{
-      initEditor:function(){
-        let $self=this;
-        if(!this.quill){
-          this.quill = new Quill(this.$refs.editor, this.options);
-          this.quill.on('selection-change',function(range, oldRange, source){
-            let tooltip=$self.$el.querySelector('.ql-tooltip')
-            if(tooltip){
-              let left=tooltip.style.left;
-              if(left&&/\-\d+\.?\d+?px/.test(left)){
-                tooltip.style.left = '10px';
-              }
-            }
-          })
-          this.quill.on('text-change',function(delta, oldDelta, source){
-            let length=$self.getHtml().length;
-            if(length>60000){
-              $self.quill.deleteText($self.maxLength-1,$self.quill.getText().length-1,'api')
-              $self.tooLong=true;
-            }else{
-              $self.maxLength=$self.quill.getText().length;
-              $self.tooLong=false;
-            }
-          })
-          this.$nextTick(()=>{
-            this.$emit('after-init')
-          })
+import 'quill/dist/quill.snow.css'
+import Quill from 'quill'
+export default {
+  name: 'richTextEditor',
+  props: {
+    editData: String
+  },
+  data () {
+    return {
+      id: 'editor-' + this.guid(),
+      quill: null,
+      options: {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['link', 'code-block'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }]
+          ]
         }
       },
-      getHtml:function(){
-        let html=`<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${this.quill.root.innerHTML}</div></div>`;
-        return html;
-      },
-      getContent:function(){
-        if(this.tooLong){
-          return false;
-        }else{
-          return this.getHtml();
-        }
-      },
-      guid() {
-        function S4() {
-          return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-      },
-    },
-    watch:{
-      editData:{
-        immediate:true,
-        handler(n,o){
-          this.$nextTick(()=>{
-            this.initEditor();
-            this.quill.clipboard.dangerouslyPasteHTML(null,this.editData,'api')
-          })
-        }
-      }
-    },
-    mounted() {
-      this.initEditor();
-    },
-    beforeDestroy(){
-      this.quill.off('selection-change');
-      this.quill.off('text-change');
+      maxLength: 0, // 记录最大长度
+      tooLong: false
     }
+  },
+  created () {
+  },
+  methods: {
+    initEditor: function () {
+      const $self = this
+      if (!this.quill) {
+        this.quill = new Quill(this.$refs.editor, this.options)
+        this.quill.on('selection-change', function (range, oldRange, source) {
+          const tooltip = $self.$el.querySelector('.ql-tooltip')
+          if (tooltip) {
+            const left = tooltip.style.left
+            if (left && /\-\d+\.?\d+?px/.test(left)) {
+              tooltip.style.left = '10px'
+            }
+          }
+        })
+        this.quill.on('text-change', function (delta, oldDelta, source) {
+          const length = $self.getHtml().length
+          if (length > 60000) {
+            $self.quill.deleteText($self.maxLength - 1, $self.quill.getText().length - 1, 'api')
+            $self.tooLong = true
+          } else {
+            $self.maxLength = $self.quill.getText().length
+            $self.tooLong = false
+          }
+        })
+        this.$nextTick(() => {
+          this.$emit('after-init')
+        })
+      }
+    },
+    getHtml: function () {
+      const html = `<div  class="editor-core ql-container ql-snow"><div class="ql-editor">${this.quill.root.innerHTML}</div></div>`
+      return html
+    },
+    getContent: function () {
+      if (this.tooLong) {
+        return false
+      } else {
+        return this.getHtml()
+      }
+    },
+    guid () {
+      function S4 () {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+      }
+      return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4())
+    }
+  },
+  watch: {
+    editData: {
+      immediate: true,
+      handler (n, o) {
+        this.$nextTick(() => {
+          this.initEditor()
+          this.quill.clipboard.dangerouslyPasteHTML(null, this.editData, 'api')
+        })
+      }
+    }
+  },
+  mounted () {
+    this.initEditor()
+  },
+  beforeDestroy () {
+    this.quill.off('selection-change')
+    this.quill.off('text-change')
   }
+}
 </script>
 
 <style>

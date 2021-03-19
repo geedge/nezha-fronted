@@ -27,53 +27,53 @@
 </template>
 
 <script>
-    export default {
-      name: "selectArea",
-      props:{
-        placement: {type: String},
-        isEdit: {type: Boolean, default: true},
-        areaData: {type: Array},
-        currentArea: {type: Number}
-      },
-      mounted() {
-        this.$refs.areaTree.setCurrentKey(this.currentArea);
-      },
-      data(){
-        return {
-          popBox: {show: false},
-          area: {id: '', name: ''}
-        }
-      },
-      methods:{
-        openBox(area){
-          if (area) {
-            this.area = area;
-            this.$refs.areaTree.setChecked(this.area.id, true, false);
-          }
-        },
-        esc(){
-          this.popBox.show = false;
-        },
-        //确认选择某个节点，与父组件交互
-        selectArea(data, checked, child) {
-          this.area = data;
-          this.$emit('selectArea', this.area);
-          this.esc();
-        },
-        //tree设为单选
-        clearOthers(data, checked, child) {
-          if (checked) {
-            this.area = data;
-            this.$refs.areaTree.setCheckedKeys([data.id]);
-          } else {
-            this.area = {id: '', name: ''};
-          }
-        }
-      },
-      beforeDestroy(){
-
+export default {
+  name: 'selectArea',
+  props: {
+    placement: { type: String },
+    isEdit: { type: Boolean, default: true },
+    areaData: { type: Array },
+    currentArea: { type: Number }
+  },
+  mounted () {
+    this.$refs.areaTree.setCurrentKey(this.currentArea)
+  },
+  data () {
+    return {
+      popBox: { show: false },
+      area: { id: '', name: '' }
+    }
+  },
+  methods: {
+    openBox (area) {
+      if (area) {
+        this.area = area
+        this.$refs.areaTree.setChecked(this.area.id, true, false)
+      }
+    },
+    esc () {
+      this.popBox.show = false
+    },
+    // 确认选择某个节点，与父组件交互
+    selectArea (data, checked, child) {
+      this.area = data
+      this.$emit('selectArea', this.area)
+      this.esc()
+    },
+    // tree设为单选
+    clearOthers (data, checked, child) {
+      if (checked) {
+        this.area = data
+        this.$refs.areaTree.setCheckedKeys([data.id])
+      } else {
+        this.area = { id: '', name: '' }
       }
     }
+  },
+  beforeDestroy () {
+
+  }
+}
 </script>
 
 <style lang="scss">

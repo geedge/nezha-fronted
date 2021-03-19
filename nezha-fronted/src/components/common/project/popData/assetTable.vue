@@ -18,7 +18,7 @@
       <div class="top-tools">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
           <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
+            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
           <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
           <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
@@ -108,251 +108,239 @@
 </template>
 
 <script>
-  import bus from '@/libs/bus';
-  import axios from 'axios';
-  import nzAlertTag from '@/components/page/alert/nzAlertTag';
-  import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
-  import alertLabel from '@/components/common/alert/alertLabel'
-  export default {
-    name:"assetTable",
-    props:{
-      moduleId:{},
-      projectId:{},
-    },
-    components: {
-      'nz-alert-tag': nzAlertTag,
-      'alertRuleInfo':alertRuleInfo,
-      'alertLabel':alertLabel,
-    },
-    watch:{
-    },
-    computed: {
-      tagType() {
-        return (key) => {
-          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "normal";
-          } else {
-            return "info";
-          }
-        }
-      },
-      tagValue() {
-        return (key, value) => {
-          if (key == 'type') {
-            if (value ==  1) {
-              value = this.$t("project.project.project");
-            } else if (value == 2) {
-              value = this.$t("module.module.module");
-            } else if (value == 3) {
-              value = this.$t("asset.asset");
-            }
-          }
-          return key + "：" + value;
+export default {
+  name: 'assetTable',
+  props: {
+    moduleId: {},
+    projectId: {}
+  },
+  watch: {
+  },
+  computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
         }
       }
     },
-    data(){
-      vm=this;
-      return{
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        mainTableHeight:'100%',
-        tableTitle: [
-          {
-            label: this.$t("asset.tableTitle.host"),
-            prop: 'HOST',
-            show: true,
-            width: 130,
-            fixed:'left'
-          },
-          {
-            label: this.$t("asset.tableTitle.device"),
-            prop: 'SN',
-            show: true,
-            width: 130
-          },
-           {
-            label: this.$t("asset.tableTitle.assetType"),
-            prop: 'assetType',
-            show: true,
-          },{
-            label: this.$t("asset.tableTitle.assetState"),
-            prop: 'state',
-            show: true,
-          }, {
-            label:this.$t('asset.tableTitle.assetPing'),
-            prop:'pingStatus',
-            show:true,
-          },{
-            label: this.$t("asset.tableTitle.alerts"),
-            prop: 'Alert',
-            show: true,
-            width: 100
-          },],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: 'ID',
-            type: 'input',
-            label: 'id',
-            disabled: false
-          },{
-            id: 20,
-            name: 'SN',
-            type: 'input',
-            label: 'sn',
-            disabled: false
-          },{
-            id: 21,
-            name: 'Host',
-            type: 'input',
-            label: 'host',
-            disabled: false
-          },{
-            id: 22,
-            name: this.$t("asset.state"),
-            type: 'select',
-            label: 'assetState',
-            disabled: false
-          },{
-            id: 23,
-            name: "pingStatus",
-            type: 'select',
-            label: 'pingStatus',
-            disabled: false
-          }],
-        },
-        tableData:[],
-        loading:false,
-        tableHeight:'100%',
-        searchLabel:{
-
-        },
-        deleteBox:{}
+    tagValue () {
+      return (key, value) => {
+        if (key == 'type') {
+          if (value == 1) {
+            value = this.$t('project.project.project')
+          } else if (value == 2) {
+            value = this.$t('module.module.module')
+          } else if (value == 3) {
+            value = this.$t('asset.asset')
+          }
+        }
+        return key + '：' + value
       }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    mounted(){
-      this.getTableTitle();
-      this.getAssetList();
-    },
-    methods:{
-      getAssetList: function () {
-        this.loading=true;
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.$set(this.searchLabel, "moduleId", this.moduleId);
-        this.$get('asset', {...this.searchLabel}).then(response => {
-          this.loading=false;
-          if (response.code == 200) {
-            this.tableData = response.data.list;
-            this.deleteBox.ids='';
-            this.pageObj.total = response.data.total;
-          }
-        });
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getAssetList();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getAssetList();
-      },
-      selectChange(s) {
-        let ids = [];
-        this.deleteBox.ids = "";
-        s.forEach(item => {
-          ids.push(item.id);
-        });
-        this.deleteBox.ids = ids.join(",");
-      },
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.pageObj.orderBy=orderBy;
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getAssetList();
-      },
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      messageStyle(e) {
-        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
-          if (e.row.alertNum > 0) {
-            return 'danger';
-          } else {
-            return 'success';
-          }
-        }
-        return '';
-      },
-      formatPingTime:function(str){
-        if(!str || str == ''){
-          return this.$t('asset.assetStatPre')+this.$t('asset.assetStatDown');
-        }
-        let ds='-';
-        let ts=':';
-        let time=new Date(str);
-        let year=time.getFullYear();
-        let month=time.getMonth()+1 > 9 ? time.getMonth()+1 : ('0'+(time.getMonth()+1));
-        let day=time.getDate() > 9 ? time.getDate():('0'+time.getDate());
-        let hours=time.getHours() > 9? time.getHours():('0'+time.getHours());
-        let minutes=time.getMinutes() > 9 ?time.getMinutes():('0'+time.getMinutes());
-        let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
-        return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
-
-      },
-      getTableTitle(){
-        if(localStorage.getItem('nz-sys-asset-ping-switch')==='off'){
-          this.tableTitle=this.tableTitle.filter(item=>item.prop!=='pingStatus');
-        }
-      },
-      search(searchObj) {
-        let orderBy = '';
-        if(this.searchLabel.orderBy){
-          orderBy = this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.assetTable&& this.$refs.assetTable.bodyWrapper){
-          this.$refs.assetTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getAssetList();
-      },
-    },
-    beforeDestroy(){
-
     }
+  },
+  data () {
+    return {
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      mainTableHeight: '100%',
+      tableTitle: [
+        {
+          label: this.$t('asset.tableTitle.host'),
+          prop: 'HOST',
+          show: true,
+          width: 130,
+          fixed: 'left'
+        },
+        {
+          label: this.$t('asset.tableTitle.device'),
+          prop: 'SN',
+          show: true,
+          width: 130
+        },
+        {
+          label: this.$t('asset.tableTitle.assetType'),
+          prop: 'assetType',
+          show: true
+        }, {
+          label: this.$t('asset.tableTitle.assetState'),
+          prop: 'state',
+          show: true
+        }, {
+          label: this.$t('asset.tableTitle.assetPing'),
+          prop: 'pingStatus',
+          show: true
+        }, {
+          label: this.$t('asset.tableTitle.alerts'),
+          prop: 'Alert',
+          show: true,
+          width: 100
+        }],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 20,
+          name: 'SN',
+          type: 'input',
+          label: 'sn',
+          disabled: false
+        }, {
+          id: 21,
+          name: 'Host',
+          type: 'input',
+          label: 'host',
+          disabled: false
+        }, {
+          id: 22,
+          name: this.$t('asset.state'),
+          type: 'select',
+          label: 'assetState',
+          disabled: false
+        }, {
+          id: 23,
+          name: 'pingStatus',
+          type: 'select',
+          label: 'pingStatus',
+          disabled: false
+        }]
+      },
+      tableData: [],
+      loading: false,
+      tableHeight: '100%',
+      searchLabel: {
+
+      },
+      deleteBox: {}
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    this.getTableTitle()
+    this.getAssetList()
+  },
+  methods: {
+    getAssetList: function () {
+      this.loading = true
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'moduleId', this.moduleId)
+      this.$get('asset', { ...this.searchLabel }).then(response => {
+        this.loading = false
+        if (response.code == 200) {
+          this.tableData = response.data.list
+          this.deleteBox.ids = ''
+          this.pageObj.total = response.data.total
+        }
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getAssetList()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getAssetList()
+    },
+    selectChange (s) {
+      const ids = []
+      this.deleteBox.ids = ''
+      s.forEach(item => {
+        ids.push(item.id)
+      })
+      this.deleteBox.ids = ids.join(',')
+    },
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.pageObj.orderBy = orderBy
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getAssetList()
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    messageStyle (e) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.tableTitle.alerts')) {
+        if (e.row.alertNum > 0) {
+          return 'danger'
+        } else {
+          return 'success'
+        }
+      }
+      return ''
+    },
+    formatPingTime: function (str) {
+      if (!str || str == '') {
+        return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
+      }
+      const ds = '-'
+      const ts = ':'
+      const time = new Date(str)
+      const year = time.getFullYear()
+      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
+      const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
+      const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
+      const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
+      const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
+      return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
+    },
+    getTableTitle () {
+      if (localStorage.getItem('nz-sys-asset-ping-switch') === 'off') {
+        this.tableTitle = this.tableTitle.filter(item => item.prop !== 'pingStatus')
+      }
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.assetTable && this.$refs.assetTable.bodyWrapper) {
+        this.$refs.assetTable.bodyWrapper.scrollTop = 0
+      }
+      this.getAssetList()
+    }
+  },
+  beforeDestroy () {
+
   }
+}
 </script>
 
 <style scoped>
@@ -382,4 +370,3 @@
   }
   /* end--table*/
 </style>
-

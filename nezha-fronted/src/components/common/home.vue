@@ -13,20 +13,20 @@
 </template>
 
 <script>
-import Header from "./header";
-import webSSH from "../cli/webSSH";
-import leftMenu from "./leftMenu";
-import menus from "../page/config/menus";
+import Header from './header'
+import webSSH from '../cli/webSSH'
+import leftMenu from './leftMenu'
+import menus from '../page/config/menus'
 export default {
-  name: "home",
+  name: 'home',
   components: {
     Header,
     'web-ssh': webSSH,
     'left-menu': leftMenu,
     menus
   },
-  computed:{
-    isMenuPage:function(){
+  computed: {
+    isMenuPage: function () {
       return this.$route.path == '/menu'
     }
   }

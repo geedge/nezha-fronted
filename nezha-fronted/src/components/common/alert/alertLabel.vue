@@ -128,15 +128,15 @@
 </template>
 
 <script>
-  export default {
-    name:"alertLabel",
-    props:{
-      id:{},
-      type:{},
-      //labelLoading:{},
-      that:{}
-    },
-    /*watch:{
+export default {
+  name: 'alertLabel',
+  props: {
+    id: {},
+    type: {},
+    // labelLoading:{},
+    that: {}
+  },
+  /* watch:{
       labelLoading: {
         immediate: true,
         handler(n) {
@@ -172,107 +172,106 @@
           }
         }
       }
-    },*/
-    data() {
-      return {
-        alertLabelData:null,
-        loading: true
-      }
-    },
-    components:{
-
-    },
-    computed: {
-      calcPosition() {
-        let self=this;
-        return function(position) {
-          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?318:(self.type==='project'?70:70);
-          if(position.top+elHeight>clientHeight){
-            return {
-              left: `${position.left + position.width + 20}px`,
-              top: `${position.top -elHeight- 20}px`,
-            }
-          }else{
-            return {
-              left: `${position.left + position.width + 20}px`,
-              top: `${position.top - 20}px`,
-            }
-          }
-        }
-      },
-      calcHeight(){
-        let self=this;
-        return function(position) {
-          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=self.type==='asset'?318:(self.type==='project'?70:70);
-           if(position.top+elHeight>clientHeight){
-             return 'alert-labelUp'
-           }else{
-             return 'alert-label'
-           }
-
-        }
-      }
-    },
-    methods:{
-      alertActiveStr(){
-        return this.$t('overall.active');
-      },
-      alertStateStr(num){
-        if( num == 1){
-          return this.$t('asset.inStock')
-        } else {
-          return this.$t('asset.notInStock')
-        }
-      },
-    },
-    mounted(){
-      if(this.type==='asset'){
-        this.$get('/asset/info?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.Basic;
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='project'){
-        this.$get('/project?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='module'){
-        this.$get('/module?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-      if(this.type==='endpoint'){
-        this.$get('/endpoint?id='+this.id).then((res)=>{
-          if(res.msg==='success'){
-            this.loading=false;
-            this.alertLabelData=res.data.list[0];
-          } else{
-            this.$message.error(res.msg);
-          }
-        })
-      }
-    },
-    beforeDestroy(){
-
+    }, */
+  data () {
+    return {
+      alertLabelData: null,
+      loading: true
     }
+  },
+  components: {
+
+  },
+  computed: {
+    calcPosition () {
+      const self = this
+      return function (position) {
+        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
+        if (position.top + elHeight > clientHeight) {
+          return {
+            left: `${position.left + position.width + 20}px`,
+            top: `${position.top - elHeight - 20}px`
+          }
+        } else {
+          return {
+            left: `${position.left + position.width + 20}px`,
+            top: `${position.top - 20}px`
+          }
+        }
+      }
+    },
+    calcHeight () {
+      const self = this
+      return function (position) {
+        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
+        if (position.top + elHeight > clientHeight) {
+          return 'alert-labelUp'
+        } else {
+          return 'alert-label'
+        }
+      }
+    }
+  },
+  methods: {
+    alertActiveStr () {
+      return this.$t('overall.active')
+    },
+    alertStateStr (num) {
+      if (num == 1) {
+        return this.$t('asset.inStock')
+      } else {
+        return this.$t('asset.notInStock')
+      }
+    }
+  },
+  mounted () {
+    if (this.type === 'asset') {
+      this.$get('/asset/info?id=' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertLabelData = res.data.Basic
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
+    if (this.type === 'project') {
+      this.$get('/project?id=' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertLabelData = res.data.list[0]
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
+    if (this.type === 'module') {
+      this.$get('/module?id=' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertLabelData = res.data.list[0]
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
+    if (this.type === 'endpoint') {
+      this.$get('/endpoint?id=' + this.id).then((res) => {
+        if (res.msg === 'success') {
+          this.loading = false
+          this.alertLabelData = res.data.list[0]
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    }
+  },
+  beforeDestroy () {
+
   }
+}
 
 </script>
 

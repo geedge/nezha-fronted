@@ -18,93 +18,93 @@
 
     <!------TAB区------>
       <!--机柜-->
-      <cabinet-tab :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.dc && targetTab == 'cabinet'" v-show="subResizeShow"></cabinet-tab>
+      <cabinet-tab v-if="from === $CONSTANTS.fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
-      <alert-message-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="((from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'alertMessage')" v-show="subResizeShow"></alert-message-tab>
+      <alert-message-tab v-if="((from === $CONSTANTS.fromRoute.rule || from === $CONSTANTS.fromRoute.asset || from === $CONSTANTS.fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
       <!--asset页的endpoint列表-->
-      <endpoint-tab :from="from" :obj="obj" @changeTab="changeTab" v-if="from == $CONSTANTS.fromRoute.asset && targetTab == $CONSTANTS.fromRoute.endpoint" v-show="subResizeShow"></endpoint-tab>
+      <endpoint-tab v-if="from === $CONSTANTS.fromRoute.asset && targetTab === $CONSTANTS.fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
       <!--endpoint-query-->
-      <endpoint-query-tab :from="from" :obj="obj" @changeTab="changeTab" ref="endpointQuery" v-if="(from == $CONSTANTS.fromRoute.endpoint && targetTab == 'endpointQuery')" v-show="subResizeShow"></endpoint-query-tab>
+      <endpoint-query-tab v-if="(from === $CONSTANTS.fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
 
       <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab :from="from" :obj="obj" ref="panelTab" v-if="(from == $CONSTANTS.fromRoute.model || from == $CONSTANTS.fromRoute.asset || from == $CONSTANTS.fromRoute.project || from == $CONSTANTS.fromRoute.rule || from == $CONSTANTS.fromRoute.endpoint) && targetTab == 'panel'" v-show="subResizeShow"
+      <panel-tab v-if="(from === $CONSTANTS.fromRoute.model || from === $CONSTANTS.fromRoute.asset || from === $CONSTANTS.fromRoute.project || from === $CONSTANTS.fromRoute.rule || from === $CONSTANTS.fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :from="from" :obj="obj"
                  @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
 
       <!--terminal-log的记录和回放-->
-      <terminal-log-cmd-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogCMDTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'cmd'"></terminal-log-cmd-tab>
-      <terminal-log-record-tab :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'record'"></terminal-log-record-tab>
+      <terminal-log-cmd-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
+      <terminal-log-record-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
 
-      <terminal-log-monitor-tab @exit="closeSubList" :from="from" :obj="obj" @changeTab="changeTab" ref="reminalLogRecordTab" v-if="from == $CONSTANTS.fromRoute.terminalLog && targetTab == 'monitor'"></terminal-log-monitor-tab>
+      <terminal-log-monitor-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
 
     </div>
   </div>
 </template>
 
 <script>
-  import cabinetTab from "./tabs/cabinetTab";
-  import alertMessageTab from "./tabs/alertMessageTab";
-  import endpointQueryTab from "./tabs/endpointQueryTab";
-  import endpointTab from "./tabs/endpointTab";
-  import panelTab from "./tabs/panelTab";
-  import terminalLogRecordTab from "./tabs/terminalLogRecordTab";
-  import terminalLogMonitorTab from "./tabs/terminalLogMonitorTab";
-  import terminalLogCMDTab from "./tabs/terminalLogCMDTab";
+import cabinetTab from './tabs/cabinetTab'
+import alertMessageTab from './tabs/alertMessageTab'
+import endpointQueryTab from './tabs/endpointQueryTab'
+import endpointTab from './tabs/endpointTab'
+import panelTab from './tabs/panelTab'
+import terminalLogRecordTab from './tabs/terminalLogRecordTab'
+import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
+import terminalLogCMDTab from './tabs/terminalLogCMDTab'
 
-  export default {
-    name: "bottomBox",
-    components:{
-      'cabinet-tab': cabinetTab,
-      'alert-message-tab': alertMessageTab,
-      'endpoint-query-tab': endpointQueryTab,
-      'endpoint-tab': endpointTab,
-      'panel-tab': panelTab,
-      terminalLogRecordTab,
-      'terminal-log-cmd-tab': terminalLogCMDTab,
-      terminalLogMonitorTab
-    },
-    props: {
-      isFullScreen: false, //是否全屏
-      subResizeShow: Boolean, //resize时，用v-show="subResizeShow"控制页面内容是否显示
-      obj: Object, //关联的实体对象
-      from: String, //来自哪个页面
-      tabList: Array, //动态页签列表
-      targetTab: String, //展示哪个页签
-      detail: Object, //对象详情内容
-      detailList: Array, //多个对象详情内容
+export default {
+  name: 'bottomBox',
+  components: {
+    'cabinet-tab': cabinetTab,
+    'alert-message-tab': alertMessageTab,
+    'endpoint-query-tab': endpointQueryTab,
+    'endpoint-tab': endpointTab,
+    'panel-tab': panelTab,
+    terminalLogRecordTab,
+    'terminal-log-cmd-tab': terminalLogCMDTab,
+    terminalLogMonitorTab
+  },
+  props: {
+    isFullScreen: Boolean, // 是否全屏
+    subResizeShow: Boolean, // resize时，用v-show="subResizeShow"控制页面内容是否显示
+    obj: Object, // 关联的实体对象
+    from: String, // 来自哪个页面
+    tabList: Array, // 动态页签列表
+    targetTab: String, // 展示哪个页签
+    detail: Object, // 对象详情内容
+    detailList: Array, // 多个对象详情内容
 
-      assetDetail: Object, //endpoint页的asset详情
+    assetDetail: Object // endpoint页的asset详情
+  },
+  data () {
+    return {}
+  },
+  methods: {
+    exitFullScreen () {
+      this.$emit('exitFullScreen')
+      this.$nextTick(() => { this.afterResize() })
     },
-    data() {
-      return {}
+    fullScreen () {
+      this.$emit('fullScreen')
+      this.$nextTick(() => { this.afterResize() })
     },
-    methods: {
-      exitFullScreen() {
-        this.$emit("exitFullScreen");
-        this.$nextTick(() => {this.afterResize()});
-      },
-      fullScreen() {
-        this.$emit("fullScreen");
-        this.$nextTick(() => {this.afterResize()});
-      },
-      closeSubList() {
-        this.$emit("closeSubList");
-      },
-      listResize(e) {
-        this.$emit('listResize', e);
-        this.$nextTick(() => {this.afterResize()});
-      },
-      changeTab(tab) {
-        this.$emit('update:targetTab', tab);
-      },
-      afterResize() {
-        if (this.from == this.$CONSTANTS.fromRoute.endpoint && this.targetTab == 'endpointQuery') {
-          this.$refs.endpointQuery.tableReload();
-        } else if (this.from == this.$CONSTANTS.fromRoute.terminalLog && this.targetTab == 'record') {
-          setTimeout(() => {
-            this.$refs.reminalLogRecordTab.consoleResize();
-          }, 600);
-        }
+    closeSubList () {
+      this.$emit('closeSubList')
+    },
+    listResize (e) {
+      this.$emit('listResize', e)
+      this.$nextTick(() => { this.afterResize() })
+    },
+    changeTab (tab) {
+      this.$emit('update:targetTab', tab)
+    },
+    afterResize () {
+      if (this.from === this.$CONSTANTS.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
+        this.$refs.endpointQuery.tableReload()
+      } else if (this.from === this.$CONSTANTS.fromRoute.terminalLog && this.targetTab === 'record') {
+        setTimeout(() => {
+          this.$refs.reminalLogRecordTab.consoleResize()
+        }, 600)
       }
-    },
+    }
   }
+}
 </script>

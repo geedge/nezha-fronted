@@ -69,7 +69,7 @@
 
 <script >
 export default {
-  data() {
+  data () {
     return {}
   },
   props: {
@@ -83,7 +83,7 @@ export default {
     }
   },
   methods: {
-    onTop() {
+    onTop () {
       if (this.props.node) {
         this.canvas.top(this.props.node)
       }
@@ -97,7 +97,7 @@ export default {
       this.canvas.render()
     },
 
-    onBottom() {
+    onBottom () {
       if (this.props.node) {
         this.canvas.bottom(this.props.node)
       }
@@ -111,7 +111,7 @@ export default {
       this.canvas.render()
     },
 
-    onCombine(stand) {
+    onCombine (stand) {
       if (!this.props.nodes) {
         return
       }
@@ -119,7 +119,7 @@ export default {
       this.canvas.render()
     },
 
-    onUncombine() {
+    onUncombine () {
       if (!this.props.node) {
         return
       }
@@ -127,9 +127,11 @@ export default {
       this.canvas.render()
     },
 
-    onLock() {
+    onLock () {
+      // eslint-disable-next-line vue/no-mutating-props
       this.props.locked = !this.props.locked
       if (this.props.node) {
+        // eslint-disable-next-line vue/no-mutating-props
         this.props.node.locked = this.props.locked
       }
       if (this.props.nodes) {
@@ -145,7 +147,7 @@ export default {
       this.canvas.render(true)
     },
 
-    onDel() {
+    onDel () {
       this.canvas.delete()
     }
   }

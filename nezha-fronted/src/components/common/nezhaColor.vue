@@ -9,7 +9,6 @@
       </span>
     </div>
 
-
     <div class="color-show" v-if="!single" ref="colorShow" @click.stop="changeColor">
       <div :style="{background:findColor('bac'),border:'2px solid '+findColor('line'),'line-height':'18px'}" class="color-show-left">
         <span :style="{color:findColor('text')}" style="line-height: 18px;">
@@ -29,183 +28,176 @@
 
 <script>
 
-  import { Sketch} from 'vue-color'
-	export default {
-		name:"nezhaColor",
-    components:{
-      Sketch,
-    },
-    props:{
-      valueArr:{
-		    type:Array,
-        default(){
-          return []
-          /*ex
+import { Sketch } from 'vue-color'
+export default {
+  name: 'nezhaColor',
+  components: {
+    Sketch
+  },
+  props: {
+    valueArr: {
+      type: Array,
+      default () {
+        return []
+        /* ex
           * {
           *   {name:'name',value:value,key:'name'}
           * }
           * */
-        },
-      },
-      colorVal:{
-
-      },
-      single:{
-        type:Boolean,
-        default(){
-          return true
-        },
-      },
-      presetColors: {
-        type: Array,
-        default () {
-          return []
-        }
-      },
-    },
-    watch:{
-      // valueArr:{
-      //   immediate: true,
-      //   handler(n) {
-      //     console.log(n);
-      //     if(n.length){
-      //
-      //     }
-      //   }
-      // },
-      // keyName:{
-      //   deep:true,
-      //   immediate: true,
-      //   handler(n) {
-      //     console.log(n);
-      //   }
-      // }
-    },
-    data(){
-		  return {
-		    colors:'#ffffff',
-        keyName:'',
-        showColorPicker:false,
-        position:{
-          x:undefined,
-          y:undefined,
-        },
-        timer:null
       }
     },
-    mounted(){
-      this.colors = this.valueArr[0].value;
-      this.keyName = this.valueArr[0].name;
+    colorVal: {
+
     },
-    methods:{
-      updateValue(color){
-        this.colors=color.hex;
-        this.$emit('colorChange',color.hex,this.keyName);
-      },
-      changeColor(){
-        this.showColorPicker=!this.showColorPicker;
-        if(this.showColorPicker){
-          window.addEventListener('mousewheel',this.mousewheel);
-         setTimeout(()=>{
-           let position=this.$refs.colorShow.getBoundingClientRect();
-           let colorBox=this.$refs.colorBox.getBoundingClientRect();
-           let w=window.innerWidth;
-           let h=window.innerHeight;
-           //确定x位置
-           if(position.x + colorBox.width>w){
-             position.x=w-colorBox.width;
-           }else{
-             position.x=position.x
-           }
-           //确定Y位置
-
-           if(position.y + colorBox.height > h){
-             position.y=position.y-colorBox.height;
-           } else{
-             position.y=position.y+position.height;
-           }
-           this.position.x=position.x;
-           this.position.y=position.y;
-         })
-        }else{
-          window.removeEventListener('mousewheel',this.mousewheel);
-        }
-        //
-      },
-      colorTabChange(item){
-        this.keyName=item.name;
-        this.colors=this.colorVal[item.name];
-      },
-      exitColor(){
-        this.showColorPicker=false;
-      },
-      mousewheel(){
-        if(!this.$refs.colorBox) return;
-        if(this.timer){
-          clearTimeout(this.timer);
-          this.timer=setTimeout(()=>{
-            let position=this.$refs.colorShow.getBoundingClientRect();
-            let colorBox=this.$refs.colorBox.getBoundingClientRect();
-            let w=window.innerWidth;
-            let h=window.innerHeight;
-            //确定x位置
-            if(position.x + colorBox.width>w){
-              position.x=w-colorBox.width;
-            }else{
-              position.x=position.x
-            }
-            //确定Y位置
-
-            if(position.y + colorBox.height > h){
-              position.y=position.y-colorBox.height;
-            } else{
-              position.y=position.y+position.height;
-            }
-            this.position.x=position.x;
-            this.position.y=position.y;
-            clearTimeout(this.timer);
-            this.timer=null;
-          },200)
-        } else {
-          this.timer=setTimeout(()=>{
-            let position=this.$refs.colorShow.getBoundingClientRect();
-            let colorBox=this.$refs.colorBox.getBoundingClientRect();
-            let w=window.innerWidth;
-            let h=window.innerHeight;
-            //确定x位置
-            if(position.x + colorBox.width>w){
-              position.x=w-colorBox.width;
-            }else{
-              position.x=position.x
-            }
-            //确定Y位置
-
-            if(position.y + colorBox.height > h){
-              position.y=position.y-colorBox.height;
-            } else{
-              position.y=position.y+position.height;
-            }
-            this.position.x=position.x;
-            this.position.y=position.y;
-            clearTimeout(this.timer);
-            this.timer=null;
-          },200)
-        }
-
-      },
-      findColor(key){
-        let findItem=this.valueArr.find(item=>item.key==key);
-        if(findItem){
-          return this.colorVal[findItem.name]
-        }else{
-          return "#000000"
-        };
+    single: {
+      type: Boolean,
+      default () {
+        return true
       }
     },
-    destroyed(){
-		  window.removeEventListener('mousewheel',this.mousewheel);
+    presetColors: {
+      type: Array,
+      default () {
+        return []
+      }
     }
+  },
+  watch: {
+    // valueArr:{
+    //   immediate: true,
+    //   handler(n) {
+    //     console.log(n);
+    //     if(n.length){
+    //
+    //     }
+    //   }
+    // },
+    // keyName:{
+    //   deep:true,
+    //   immediate: true,
+    //   handler(n) {
+    //     console.log(n);
+    //   }
+    // }
+  },
+  data () {
+    return {
+      colors: '#ffffff',
+      keyName: '',
+      showColorPicker: false,
+      position: {
+        x: undefined,
+        y: undefined
+      },
+      timer: null
+    }
+  },
+  mounted () {
+    this.colors = this.valueArr[0].value
+    this.keyName = this.valueArr[0].name
+  },
+  methods: {
+    updateValue (color) {
+      this.colors = color.hex
+      this.$emit('colorChange', color.hex, this.keyName)
+    },
+    changeColor () {
+      this.showColorPicker = !this.showColorPicker
+      if (this.showColorPicker) {
+        window.addEventListener('mousewheel', this.mousewheel)
+        setTimeout(() => {
+          const position = this.$refs.colorShow.getBoundingClientRect()
+          const colorBox = this.$refs.colorBox.getBoundingClientRect()
+          const w = window.innerWidth
+          const h = window.innerHeight
+          // 确定x位置
+          if (position.x + colorBox.width > w) {
+            position.x = w - colorBox.width
+          }
+          // 确定Y位置
+
+          if (position.y + colorBox.height > h) {
+            position.y = position.y - colorBox.height
+          } else {
+            position.y = position.y + position.height
+          }
+          this.position.x = position.x
+          this.position.y = position.y
+        })
+      } else {
+        window.removeEventListener('mousewheel', this.mousewheel)
+      }
+      //
+    },
+    colorTabChange (item) {
+      this.keyName = item.name
+      this.colors = this.colorVal[item.name]
+    },
+    exitColor () {
+      this.showColorPicker = false
+    },
+    mousewheel () {
+      if (!this.$refs.colorBox) return
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          const position = this.$refs.colorShow.getBoundingClientRect()
+          const colorBox = this.$refs.colorBox.getBoundingClientRect()
+          const w = window.innerWidth
+          const h = window.innerHeight
+          // 确定x位置
+          if (position.x + colorBox.width > w) {
+            position.x = w - colorBox.width
+          }
+          // 确定Y位置
+
+          if (position.y + colorBox.height > h) {
+            position.y = position.y - colorBox.height
+          } else {
+            position.y = position.y + position.height
+          }
+          this.position.x = position.x
+          this.position.y = position.y
+          clearTimeout(this.timer)
+          this.timer = null
+        }, 200)
+      } else {
+        this.timer = setTimeout(() => {
+          const position = this.$refs.colorShow.getBoundingClientRect()
+          const colorBox = this.$refs.colorBox.getBoundingClientRect()
+          const w = window.innerWidth
+          const h = window.innerHeight
+          // 确定x位置
+          if (position.x + colorBox.width > w) {
+            position.x = w - colorBox.width
+          }
+          // 确定Y位置
+
+          if (position.y + colorBox.height > h) {
+            position.y = position.y - colorBox.height
+          } else {
+            position.y = position.y + position.height
+          }
+          this.position.x = position.x
+          this.position.y = position.y
+          clearTimeout(this.timer)
+          this.timer = null
+        }, 200)
+      }
+    },
+    findColor (key) {
+      const findItem = this.valueArr.find(item => item.key == key)
+      if (findItem) {
+        return this.colorVal[findItem.name]
+      } else {
+        return '#000000'
+      };
+    }
+  },
+  destroyed () {
+    window.removeEventListener('mousewheel', this.mousewheel)
   }
+}
 </script>
 
 <style scoped>

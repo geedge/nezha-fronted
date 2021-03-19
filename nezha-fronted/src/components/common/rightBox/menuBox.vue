@@ -77,168 +77,168 @@
   </div>
 </template>
 <script>
-  import Treeselect from '@riophae/vue-treeselect'
-  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-  export default {
-    name: "menuBox",
-    components:{
-      'tree-select':Treeselect,
-    },
-    props: {
-      menu: Object
-    },
-    computed: {
-      isCurrentUser() {
-        return function(username) {
-          return localStorage.getItem('nz-username') == username;
-        }
-      },
-      addDisabled() {
-        let enabled = this.selectableScripts.filter(item => {
-          return !item.disabled
-        });
-        return enabled.length === 0;
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+export default {
+  name: 'menuBox',
+  components: {
+    'tree-select': Treeselect
+  },
+  props: {
+    menu: Object
+  },
+  computed: {
+    isCurrentUser () {
+      return function (username) {
+        return localStorage.getItem('nz-username') == username
       }
     },
-    data() {
-      return {
-        rules: { //表单校验规则
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          type: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          code: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          i18n: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          orderNum: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-        },
-        editMenu: {},
-        menus:[],
-        option:{
-          save:false,
+    addDisabled () {
+      const enabled = this.selectableScripts.filter(item => {
+        return !item.disabled
+      })
+      return enabled.length === 0
+    }
+  },
+  data () {
+    return {
+      rules: { // 表单校验规则
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        i18n: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        orderNum: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      },
+      editMenu: {},
+      menus: [],
+      option: {
+        save: false
 
+      }
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.menuForm.validate(valid => {
+        if (valid) {
+          this.editMenu.perms = this.editMenu.permissions && this.editMenu.permissions.length > 0 ? this.editMenu.permissions.map(t => t.value).join(',') : ''
+          delete this.editMenu.permissions
+          if (this.editMenu.id) {
+            this.$put('sys/menu', this.editMenu).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          } else {
+            this.$post('sys/menu', this.editMenu).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          }
+        } else {
+          return false
         }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('sys/menu/?ids=' + this.editMenu.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    addPermission: function () {
+      if (this.editMenu.permissions) {
+        this.editMenu.permissions.push({ value: '' })
+      } else {
+        this.$set(this.editMenu, 'permissions', [{ value: '' }])
       }
     },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*保存*/
-      save() {
-        this.$refs.menuForm.validate(valid => {
-          if (valid) {
-            this.editMenu.perms = this.editMenu.permissions&&this.editMenu.permissions.length>0?this.editMenu.permissions.map(t=>t.value).join(','):'';
-            delete this.editMenu.permissions;
-            if (this.editMenu.id) {
-              this.$put('sys/menu', this.editMenu).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('sys/menu', this.editMenu).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            return false;
+    removePermission: function (index) {
+      this.editMenu.permissions.splice(index, 1)
+    },
+    getMenus: function () {
+      this.menus = []
+      this.$get('sys/menu').then(response => {
+        if (response.code == 200) {
+          this.menus = response.data.list
+          function replaceFunc (data) {
+            data.forEach(t => {
+              t.label = t.name
+              if (t.children && t.children instanceof Array && t.children.length > 0) {
+                replaceFunc(t.children)
+              } else {
+                delete t.children
+              }
+            })
           }
-        })
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/menu/?ids=" + this.editMenu.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-      addPermission:function(){
-        if(this.editMenu.permissions){
-          this.editMenu.permissions.push({value:''})
-        } else{
-          this.$set(this.editMenu,'permissions',[{value:''}])
+          replaceFunc(this.menus)
+          this.menus = [{
+            id: 0,
+            label: this.$t('config.menus.mainMenu'),
+            children: JSON.parse(JSON.stringify(this.menus))
+          }]
+        } else {
+          this.$message.error('load menu faild')
         }
-      },
-      removePermission:function(index){
-        this.editMenu.permissions.splice(index,1)
-      },
-      getMenus:function(){
-        this.menus = [];
-        this.$get("sys/menu").then(response=>{
-          if (response.code  == 200){
-            this.menus = response.data.list;
-            function replaceFunc(data){
-              data.forEach(t=>{
-                t.label = t.name;
-                if(t.children&&t.children instanceof Array&&t.children.length>0){
-                  replaceFunc(t.children)
-                }else{
-                  delete t.children
-                }
-              })
-            }
-            replaceFunc(this.menus)
-            this.menus = [{
-              id:0,
-              label:this.$t('config.menus.mainMenu'),
-              children:JSON.parse(JSON.stringify(this.menus))
-            }]
-          }else{
-            this.$message.error("load menu faild")
-          }
-        })
-      },
-      inputValid:function(val){
-        return val.replace(/[,]/g,'')
-      },
+      })
     },
-    mounted() {
-      this.getMenus();
-    },
-    watch: {
-      //将prop里的user转为组件内部对象
-      menu: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          this.editMenu = JSON.parse(JSON.stringify(n));
-          if(this.editMenu.perms&&this.editMenu.perms != ''){
-            this.$set(this.editMenu,'permissions',this.editMenu.perms.split(',').map(t=>{return {value:t};}))
-          }
+    inputValid: function (val) {
+      return val.replace(/[,]/g, '')
+    }
+  },
+  mounted () {
+    this.getMenus()
+  },
+  watch: {
+    // 将prop里的user转为组件内部对象
+    menu: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.editMenu = JSON.parse(JSON.stringify(n))
+        if (this.editMenu.perms && this.editMenu.perms != '') {
+          this.$set(this.editMenu, 'permissions', this.editMenu.perms.split(',').map(t => { return { value: t } }))
         }
-      },
-    },
+      }
+    }
   }
+}
 </script>
 <style lang="scss">
   .right-box-menu .el-input-number .el-input__inner{

@@ -62,89 +62,89 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "asset-state-right-box",
-    props: {
-      assetState: Object,
-      assetStateData: Array, // 所有数据，用于选择下拉框显示内容
-    },
-    data() {
-      return {
-        rules: { //表单校验规则
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-        },
-        editAssetState: {},
-      }
-    },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
+export default {
+  name: 'asset-state-right-box',
+  props: {
+    assetState: Object,
+    assetStateData: Array // 所有数据，用于选择下拉框显示内容
+  },
+  data () {
+    return {
+      rules: { // 表单校验规则
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
       },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*保存*/
-      save() {
-        this.$refs.assetStateForm.validate((valid) => {
-          if (valid) {
-            if (this.assetState.id) {
-              this.$put('/asset/stateConf', this.editAssetState).then(response => {
-                if (response.code === 200) {
-                  this.esc(true);
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('/asset/stateConf', this.editAssetState).then(response => {
-                if (response.code === 200) {
-                  this.esc(true);
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
+      editAssetState: {}
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.assetStateForm.validate((valid) => {
+        if (valid) {
+          if (this.assetState.id) {
+            this.$put('/asset/stateConf', this.editAssetState).then(response => {
+              if (response.code === 200) {
+                this.esc(true)
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           } else {
-            return false;
+            this.$post('/asset/stateConf', this.editAssetState).then(response => {
+              if (response.code === 200) {
+                this.esc(true)
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           }
-        });
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("/asset/stateConf?ids=" + this.editAssetState.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }).catch(()=>{
-        });
-      },
-    },
-    watch: {
-      assetState: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          if (n) {
-            this.editAssetState = JSON.parse(JSON.stringify(n));
-          }
+        } else {
+          return false
         }
-      },
+      })
     },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/asset/stateConf?ids=' + this.editAssetState.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+      })
+    }
+  },
+  watch: {
+    assetState: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.editAssetState = JSON.parse(JSON.stringify(n))
+        }
+      }
+    }
   }
+}
 </script>
 <style lang="scss">
   .right-box-asset-state {

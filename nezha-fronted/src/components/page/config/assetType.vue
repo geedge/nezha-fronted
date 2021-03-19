@@ -109,7 +109,7 @@
           </template>
         </el-table-column>
         <el-table-column fixed="right" width="28">
-          <template :resizable="false" slot="header" slot-scope="scope">
+          <template slot="header" :resizable="false">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
@@ -128,299 +128,299 @@
   </div>
 </template>
 <script>
-  import deleteButton from "../../common/deleteButton";
-  import assetTypeBox from "../../common/rightBox/assetTypeBox";
-  import bus from "../../../libs/bus";
+import deleteButton from '../../common/deleteButton'
+import assetTypeBox from '../../common/rightBox/assetTypeBox'
+import bus from '../../../libs/bus'
 
-  export default {
-    name: "asset-type-list",
-    components: {
-      'delete-button': deleteButton,
-      'asset-type-box': assetTypeBox,
-    },
-    data() {
-      return {
-        //侧滑
-        rightBox: {
-          show: false,
-        },
-        /*二级页面相关*/
-        bottomBox: {
-          assetTypeDetail: {},
-          assetType: {},
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        batchDeleteObjs:[],
+export default {
+  name: 'asset-type-list',
+  components: {
+    'delete-button': deleteButton,
+    'asset-type-box': assetTypeBox
+  },
+  data () {
+    return {
+      // 侧滑
+      rightBox: {
+        show: false
+      },
+      /* 二级页面相关 */
+      bottomBox: {
+        assetTypeDetail: {},
         assetType: {},
-        assetTypeData: [],
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
 
-        tableId: 'assetTypeTable', //需要分页的table的id，用于记录每页数量
-        blankAssetType: { //空白对象
-          id: "", pid: "", pname: "", name: "", vm: 0, vmh: 0, ssh: 0, telnet: 0, buildIn: 0, remark: "",
-        },
-        pageObj: { //分页对象
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [ //原table列
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("overall.name"),
-            prop: 'name',
-            show: true,
-          }, {
-            label: this.$t("config.assetType.parent"),
-            prop: 'pname',
-            show: true,
-          }, {
-            label: "VM",
-            prop: 'vm',
-            show: true,
-          }, {
-            label: 'VM host',
-            prop: 'vmh',
-            show: true,
-          }, {
-            label: "SSH",
-            prop: 'ssh',
-            show: true,
-          }, {
-            label: "Telnet",
-            prop: 'telnet',
-            show: true,
-          }, {
-            label: this.$t('overall.remark'),
-            prop: 'remark',
-            show: true,
-          }, {
-            label: this.$t('overall.option'),
-            prop: 'option',
-            show: true,
-            width: 120,
-            fixed: "right"
-          }
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 10,
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          }],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-        delFlag: false,
-      }
-    },
-    methods: {
-      // 全屏
-      /*fullScreen() {
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      batchDeleteObjs: [],
+      assetType: {},
+      assetTypeData: [],
+
+      tableId: 'assetTypeTable', // 需要分页的table的id，用于记录每页数量
+      blankAssetType: { // 空白对象
+        id: '', pid: '', pname: '', name: '', vm: 0, vmh: 0, ssh: 0, telnet: 0, buildIn: 0, remark: ''
+      },
+      pageObj: { // 分页对象
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [ // 原table列
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.assetType.parent'),
+          prop: 'pname',
+          show: true
+        }, {
+          label: 'VM',
+          prop: 'vm',
+          show: true
+        }, {
+          label: 'VM host',
+          prop: 'vmh',
+          show: true
+        }, {
+          label: 'SSH',
+          prop: 'ssh',
+          show: true
+        }, {
+          label: 'Telnet',
+          prop: 'telnet',
+          show: true
+        }, {
+          label: this.$t('overall.remark'),
+          prop: 'remark',
+          show: true
+        }, {
+          label: this.$t('overall.option'),
+          prop: 'option',
+          show: true,
+          width: 120,
+          fixed: 'right'
+        }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 10,
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }]
+      },
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      delFlag: false
+    }
+  },
+  methods: {
+    // 全屏
+    /* fullScreen() {
         let vm = this;
         this.$bottomBoxWindow.fullScreen(vm);
-      },*/
-      // 退出全屏
-      /*exitFullScreen() {
+      }, */
+    // 退出全屏
+    /* exitFullScreen() {
         let vm = this;
         this.$bottomBoxWindow.exitFullScreen(vm);
-      },*/
-      // 鼠标拖动二级列表
-      /*listResize(e) {
+      }, */
+    // 鼠标拖动二级列表
+    /* listResize(e) {
         let vm = this;
         this.$bottomBoxWindow.listResize(vm, e);
-      },*/
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.delFlag = true;
-          this.getAssetTypeTreeData();
-          this.getTableData();
-        }
-      },
-      edit(u) {
-        this.assetType = JSON.parse(JSON.stringify(u));
-        this.rightBox.show = true;
-      },
-      /*detail(u) {
+      }, */
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getAssetTypeTreeData()
+        this.getTableData()
+      }
+    },
+    edit (u) {
+      this.assetType = JSON.parse(JSON.stringify(u))
+      this.rightBox.show = true
+    },
+    /* detail(u) {
         this.bottomBox.assetType = JSON.parse(JSON.stringify(u));
         this.bottomBox.targetTab = "detail";
         this.bottomBox.showSubList = true;
-      },*/
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("/asset/typeConf?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.delFlag=true;
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-              this.getAssetTypeTreeData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      getAssetTypeTreeData() {
-        this.$get('/asset/typeConf/tree').then(response => {
+      }, */
+    del (u) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/asset/typeConf?ids=' + u.id).then(response => {
           if (response.code === 200) {
-            this.assetTypeData = response.data.list;
-          }
-        });
-      },
-      getTableData() {
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        if (!this.scrollbarWrap) {
-          this.$nextTick(() => {
-            this.scrollbarWrap = this.$refs.assetTypeTable.bodyWrapper;
-            this.toTopBtnHandler(this.scrollbarWrap);
-          });
-        }
-        this.tools.loading = true;
-        this.$get('/asset/typeConf', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          if (response.code === 200) {
-            for (let i = 0; i < response.data.list.length; i++) {
-              response.data.list[i].status = response.data.list[i].status + "";
-            }
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.assetTypeTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+            this.getAssetTypeTreeData()
+          } else {
+            this.$message.error(response.msg)
           }
         })
-      },
-      add() {
-        this.assetType = this.newAssetType();
-        this.rightBox.show = true;
-      },
-      statusChange(obj) {
+      })
+    },
+    getAssetTypeTreeData () {
+      this.$get('/asset/typeConf/tree').then(response => {
+        if (response.code === 200) {
+          this.assetTypeData = response.data.list
+        }
+      })
+    },
+    getTableData () {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (!this.scrollbarWrap) {
         this.$nextTick(() => {
-          this.$put('/asset/typeConf', obj).then(response => {
-            if (response.code === 200) {
-              this.rightBox.show = false;
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            } else {
-              this.$message.error(response.msg);
-            }
-            this.getTableData();
-          });
-        });
-      },
-      esc() {
-        this.rightBox.show = false;
-      },
-      newAssetType() {
-        return JSON.parse(JSON.stringify(this.blankAssetType));
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      search(searchObj) {
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(this.$refs.assetTypeTable){
-          this.$refs.assetTypeTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy = '';
-        if(item.order === 'ascending') {
-          orderBy = item.prop;
-        }
-        if(item.order === 'descending') {
-          orderBy = '-' + item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-    },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
+          this.scrollbarWrap = this.$refs.assetTypeTable.bodyWrapper
+          this.toTopBtnHandler(this.scrollbarWrap)
+        })
       }
-    },
-    watch: {
-      'bottomBox.showSubList': function(n) {
-        let vm = this;
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
+      this.tools.loading = true
+      this.$get('/asset/typeConf', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
           }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.assetTypeTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
+    },
+    add () {
+      this.assetType = this.newAssetType()
+      this.rightBox.show = true
+    },
+    statusChange (obj) {
+      this.$nextTick(() => {
+        this.$put('/asset/typeConf', obj).then(response => {
+          if (response.code === 200) {
+            this.rightBox.show = false
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+          } else {
+            this.$message.error(response.msg)
+          }
+          this.getTableData()
+        })
+      })
+    },
+    esc () {
+      this.rightBox.show = false
+    },
+    newAssetType () {
+      return JSON.parse(JSON.stringify(this.blankAssetType))
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    search (searchObj) {
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (this.$refs.assetTypeTable) {
+        this.$refs.assetTypeTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    }
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    }
+  },
+  watch: {
+    'bottomBox.showSubList': function (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
+    },
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
 
-          if(!this.delFlag){ // 不是删除时回到顶部
-            this.$refs.assetTypeTable.bodyWrapper.scrollTop = 0
-          }else{
-            this.delFlag=false;
-          }
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.assetTypeTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
         }
       }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
 
-      this.getAssetTypeTreeData();
-      this.getTableData();
-    },
+    this.getAssetTypeTreeData()
+    this.getTableData()
   }
+}
 </script>

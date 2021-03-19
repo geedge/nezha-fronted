@@ -73,7 +73,7 @@
           </div>
           <div class="param-box param-box-module">
             <div style="height: 100%; overflow: auto" id="edit-endpoint-params">
-              <div class="param-box-row" v-for="(item, index) in editEndpoint.paramObj" >
+              <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -101,7 +101,7 @@
 
           <div class="param-box param-box-module">
             <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="edit-endpoint-labels">
-              <div class="param-box-row" v-for="(item, index) in editEndpoint.labelModule" >
+              <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row" >
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -136,297 +136,297 @@
 </template>
 
 <script>
-  export default {
-    name: "endpointBox",
-    props: {
-      endpoint: Object,
+export default {
+  name: 'endpointBox',
+  props: {
+    endpoint: Object
+  },
+  data () {
+    return {
+      editEndpoint: {},
+      subBox: { show: false, title: this.$t('overall.asset') }, // asset子弹框
+      assetSearch: { host: '', sn: '', text: '', label: 'IP', dropdownShow: false }, // 侧滑框中asset的搜索相关
+      assetPageObj: { pageNo: 1, pageSize: 11, total: 0 },
+      selectedAsset: { id: '', host: '', sn: '' }, // endpoint侧滑框中选中的asset
+      projectList: [],
+      moduleList: [],
+      assetList: [],
+      rules: {
+        'project.id': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        'module.id': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        assetId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        port: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods: {
+    // endpoint弹框中asset子弹框控制
+    showSubBox (show) {
+      this.subBox.show = show
     },
-    data() {
-      return {
-        editEndpoint: {},
-        subBox: {show: false, title: this.$t("overall.asset")}, //asset子弹框
-        assetSearch: {host: '', sn: '', text: '', label: 'IP', dropdownShow: false}, //侧滑框中asset的搜索相关
-        assetPageObj: {pageNo: 1, pageSize: 11, total: 0},
-        selectedAsset: {id: '', host: '', sn: ''}, //endpoint侧滑框中选中的asset
-        projectList: [],
-        moduleList: [],
-        assetList: [],
-        rules:{
-          'project.id':[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          'module.id':[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          assetId: [
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          port:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          path:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ]
+
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+
+    /* 关闭子弹框 */
+    subEsc () {
+      this.subBox.show = false
+    },
+
+    clickOutside () {
+      this.esc(false)
+    },
+
+    // 清除param
+    clearAllParam () {
+      this.editEndpoint.paramObj = []
+    },
+
+    // 新增param
+    addParam () {
+      this.editEndpoint.paramObj.push({ key: '', value: '' })
+    },
+
+    // 移除单个param
+    removeParam (index) {
+      this.editEndpoint.paramObj.splice(index, 1)
+    },
+
+    // 将param转为json字符串格式
+    paramToJson (param) {
+      const tempParam = {}
+      for (let i = 0; i < param.length; i++) {
+        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
+      }
+      const jsonString = JSON.stringify(tempParam)
+      if (jsonString == '{}') {
+        return ''
+      } else {
+        return jsonString
+      }
+    },
+
+    // 新增label
+    addLabel () {
+      this.editEndpoint.labelModule.push({ key: '', value: '' })
+    },
+    // 移除单个Label
+    removeLabel (index) {
+      this.editEndpoint.labelModule.splice(index, 1)
+    },
+
+    // 将labels转为json字符串格式
+    labelsToJson (param) {
+      const tempParam = {}
+      for (let i = 0; i < param.length; i++) {
+        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
+      }
+      const jsonString = JSON.stringify(tempParam)
+      if (jsonString == '{}') {
+        return ''
+      } else {
+        return jsonString
+      }
+    },
+    /* 获取project列表 */
+    getProjectList () {
+      return new Promise(resolve => {
+        this.$get('project', { pageSize: -1, pageNo: 1 }).then(response => {
+          if (response.code === 200) {
+            this.projectList = response.data.list
+            if (!this.editEndpoint.projectId && this.projectList.length > 0) {
+              this.editEndpoint.projectId = this.projectList[0].id
+            }
+          }
+          resolve()
+        })
+      })
+    },
+
+    // project下拉框点击事件
+    changeProject (projectId) {
+      this.getModuleList(projectId)
+      this.editEndpoint.projectId = projectId
+      this.editEndpoint.moduleId = ''
+    },
+
+    // project下拉框点击事件
+    changeModule (moduleId) {
+      const newModule = this.moduleList.find(item => { return item.id == this.endpoint.moduleId })
+      this.editEndpoint.moduleId = moduleId
+      this.editEndpoint.port = newModule.port
+      this.editEndpoint.path = newModule.path
+      this.editEndpoint.paramObj = newModule.paramObj
+    },
+
+    // 获取endpoint弹框中的asset子弹框里asset列表数据
+    getAssetList (currentPage) {
+      if (currentPage) {
+        this.assetPageObj.pageNo = currentPage
+      } else {
+        this.assetPageObj.pageNo = 1
+      }
+      this.$get('asset', this.assetPageObj).then(response => {
+        if (response.code === 200) {
+          this.assetList = response.data.list
+          this.assetPageObj.total = response.data.total
+        }
+      })
+    },
+
+    // endpoint弹框中的asset子弹框搜索
+    searchAsset () {
+      if (this.assetSearch.label == 'IP') {
+        this.assetSearch.host = this.assetSearch.text
+        this.assetSearch.sn = ''
+      } else if (this.assetSearch.label == 'SN') {
+        this.assetSearch.sn = this.assetSearch.text
+        this.assetSearch.host = ''
+      }
+      this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch)
+      this.getAssetList(false)
+    },
+
+    // endpoint弹框中的asset子弹框里asset选择事件
+    selectAsset (obj) {
+      this.selectedAsset = obj
+      this.editEndpoint.host = obj.host
+      this.editEndpoint.assetId = obj.id
+      this.$refs.endpointForm.validate()
+    },
+    inputAsset (e) {
+      this.editEndpoint.assetId = ''
+      const host = e.target.value
+      if (host) {
+        for (let i = 0; i < this.assetList.length; i++) {
+          if (host == this.assetList[i].host) {
+            this.editEndpoint.assetId = this.assetList[i].id
+            this.selectedAsset = this.assetList[i]
+            this.editEndpoint.host = host
+            break
+          }
         }
       }
     },
-    methods: {
-      //endpoint弹框中asset子弹框控制
-      showSubBox(show) {
-        this.subBox.show = show;
-      },
-
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-
-      /*关闭子弹框*/
-      subEsc() {
-        this.subBox.show = false;
-      },
-
-      clickOutside() {
-        this.esc(false);
-      },
-
-      // 清除param
-      clearAllParam() {
-        this.editEndpoint.paramObj = [];
-      },
-
-      // 新增param
-      addParam() {
-        this.editEndpoint.paramObj.push({key: '', value: ''});
-      },
-
-      // 移除单个param
-      removeParam(index) {
-        this.editEndpoint.paramObj.splice(index, 1);
-      },
-
-      //将param转为json字符串格式
-      paramToJson(param) {
-        let tempParam = {};
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
+    // 获取endpoint弹框中module下拉框数据
+    getModuleList (projectId, setCurModule = false) {
+      this.$get('module', { projectId: projectId }).then(response => {
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            try {
+              const tempObj = JSON.parse(response.data.list[i].param)
+              response.data.list[i].paramObj = []
+              for (const k in tempObj) {
+                response.data.list[i].paramObj.push({ key: k, value: tempObj[k] })
+              }
+            } catch (err) {
+              // console.info(response.data.list[i], err);
+            }
+          }
+          this.moduleList = response.data.list
+          if (setCurModule) {
+            this.editEndpoint.moduleId = this.moduleList.find(item => { return item.id == this.editEndpoint.moduleId }).id
+          }
         }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
-        }
-      },
-
-      // 新增label
-      addLabel() {
-        this.editEndpoint.labelModule.push({key: '', value: ''});
-      },
-      // 移除单个Label
-      removeLabel(index) {
-        this.editEndpoint.labelModule.splice(index, 1);
-      },
-
-      //将labels转为json字符串格式
-      labelsToJson(param) {
-        let tempParam = {};
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
-        }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
-        }
-      },
-      /*获取project列表*/
-      getProjectList() {
-        return new Promise(resolve => {
-          this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
+      })
+    },
+    // 保存endpoint
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.endpointForm.validate(valide => {
+        if (valide) {
+          this.editEndpoint.param = this.paramToJson(this.editEndpoint.paramObj)
+          this.editEndpoint.labels = this.labelsToJson(this.editEndpoint.labelModule)
+          const requestData = []
+          requestData.push(this.editEndpoint)
+          this.$put('endpoint', requestData).then(response => {
+            this.prevent_opt.save = false
             if (response.code === 200) {
-              this.projectList = response.data.list;
-              if (!this.editEndpoint.projectId && this.projectList.length > 0) {
-                this.editEndpoint.projectId = this.projectList[0].id;
-              }
-            }
-            resolve();
-          });
-        });
-      },
-
-      //project下拉框点击事件
-      changeProject(projectId) {
-        this.getModuleList(projectId);
-        this.editEndpoint.projectId = projectId;
-        this.editEndpoint.moduleId = '';
-      },
-
-      //project下拉框点击事件
-      changeModule(moduleId) {
-        let newModule = this.moduleList.find(item => {return item.id == this.endpoint.moduleId});
-        this.editEndpoint.moduleId = moduleId;
-        this.editEndpoint.port = newModule.port;
-        this.editEndpoint.path = newModule.path;
-        this.editEndpoint.paramObj = newModule.paramObj;
-      },
-
-      // 获取endpoint弹框中的asset子弹框里asset列表数据
-      getAssetList(currentPage) {
-        if (currentPage) {
-          this.assetPageObj.pageNo = currentPage;
-        } else {
-          this.assetPageObj.pageNo = 1;
-        }
-        this.$get('asset', this.assetPageObj).then(response => {
-          if (response.code === 200) {
-            this.assetList = response.data.list;
-            this.assetPageObj.total = response.data.total;
-          }
-        });
-      },
-
-      //endpoint弹框中的asset子弹框搜索
-      searchAsset() {
-        if (this.assetSearch.label == 'IP') {
-          this.assetSearch.host = this.assetSearch.text;
-          this.assetSearch.sn = '';
-        } else if (this.assetSearch.label == 'SN') {
-          this.assetSearch.sn = this.assetSearch.text;
-          this.assetSearch.host = '';
-        }
-        this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch);
-        this.getAssetList(false);
-      },
-
-      // endpoint弹框中的asset子弹框里asset选择事件
-      selectAsset(obj) {
-        this.selectedAsset = obj;
-        this.editEndpoint.host = obj.host;
-        this.editEndpoint.assetId = obj.id;
-        this.$refs.endpointForm.validate();
-      },
-      inputAsset(e) {
-        this.editEndpoint.assetId = "";
-        let host = e.target.value;
-        if (host) {
-          for (let i = 0; i < this.assetList.length; i++) {
-            if (host == this.assetList[i].host) {
-              this.editEndpoint.assetId = this.assetList[i].id;
-              this.selectedAsset = this.assetList[i];
-              this.editEndpoint.host = host;
-              break;
-            }
-          }
-        }
-      },
-      // 获取endpoint弹框中module下拉框数据
-      getModuleList(projectId, setCurModule = false) {
-        this.$get('module', {projectId: projectId}).then(response => {
-          if (response.code === 200) {
-            for (let i = 0; i < response.data.list.length; i++) {
-              try {
-                let tempObj = JSON.parse(response.data.list[i].param);
-                response.data.list[i].paramObj = [];
-                for (let k in tempObj) {
-                  response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
-                }
-              } catch(err) {
-                //console.info(response.data.list[i], err);
-              }
-            }
-            this.moduleList = response.data.list;
-            if(setCurModule){
-              this.editEndpoint.moduleId = this.moduleList.find(item => {return item.id == this.editEndpoint.moduleId}).id;
-            }
-          }
-        });
-      },
-      //保存endpoint
-      save() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$refs.endpointForm.validate((valide=>{
-          if(valide){
-            this.editEndpoint.param = this.paramToJson(this.editEndpoint.paramObj);
-            this.editEndpoint.labels = this.labelsToJson(this.editEndpoint.labelModule);
-            let requestData = [];
-            requestData.push(this.editEndpoint);
-            this.$put('endpoint', requestData).then(response => {
-              this.prevent_opt.save=false;
-              if (response.code === 200) {
-                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                this.esc(true);
-              } else {
-                this.$message.error(response.msg);
-              }
-            });
-          }else{
-            this.prevent_opt.save=false;
-            return false;
-          }
-        }))
-      },
-
-      //删除endpoint
-      del() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("endpoint?ids=" + this.editEndpoint.id).then(response => {
-            this.prevent_opt.save=false;
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
+              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
             } else {
-              this.$message.error(response.msg);
+              this.$message.error(response.msg)
             }
-          });
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      // endpoint弹框的asset子弹框顶部搜索条件选中事件
-      dropdownSelect(label) {
-        this.assetSearch.label = label;
-        this.assetSearch.dropdownShow = false;
-      },
-      /*asset搜索建议*/
-      assetSuggestion(queryString, callback) {
-        let data = [];
-        if (!queryString) {
-          data = this.assetList;
+          })
         } else {
-          for (let i = 0; i < this.assetList.length; i++) {
-            if (this.assetList[i].host.indexOf(queryString.toLowerCase()) != -1) {
-              data.push(this.assetList[i]);
-            }
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+
+    // 删除endpoint
+    del () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('endpoint?ids=' + this.editEndpoint.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    // endpoint弹框的asset子弹框顶部搜索条件选中事件
+    dropdownSelect (label) {
+      this.assetSearch.label = label
+      this.assetSearch.dropdownShow = false
+    },
+    /* asset搜索建议 */
+    assetSuggestion (queryString, callback) {
+      let data = []
+      if (!queryString) {
+        data = this.assetList
+      } else {
+        for (let i = 0; i < this.assetList.length; i++) {
+          if (this.assetList[i].host.indexOf(queryString.toLowerCase()) != -1) {
+            data.push(this.assetList[i])
           }
         }
-        callback(data);
-      },
-    },
-    mounted() {
-      this.getProjectList().then(response => {
-        this.getModuleList(this.editEndpoint.projectId);
-      });
-      this.getAssetList();
-    },
-    watch: {
-      endpoint:{
-        immediate: true,
-        deep: true,
-        handler(n, o) {
-          this.editEndpoint = JSON.parse(JSON.stringify(n));
-        },
-      },
+      }
+      callback(data)
+    }
+  },
+  mounted () {
+    this.getProjectList().then(response => {
+      this.getModuleList(this.editEndpoint.projectId)
+    })
+    this.getAssetList()
+  },
+  watch: {
+    endpoint: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.editEndpoint = JSON.parse(JSON.stringify(n))
+      }
     }
   }
+}
 </script>
 
 <style scoped>

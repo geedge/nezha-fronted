@@ -42,12 +42,12 @@
   </div>
 </template>
 <script>
-//import axios from 'axios';
-import bus from '../../../libs/bus';
-//import chartMetric from "./chartMetricForPreview";
-import chartMetric from "./chartMetric";
-import chartBox from "./chartBox";
-//import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
+// import axios from 'axios';
+import bus from '../../../libs/bus'
+// import chartMetric from "./chartMetricForPreview";
+import chartMetric from './chartMetric'
+import chartBox from './chartBox'
+// import metricPrePanelBox from "../../common/rightBox/metricPrePanelBox";
 
 export default {
   name: 'metricSet',
@@ -55,23 +55,23 @@ export default {
     panelData: Array
   },
   components: {
-    'chart-metric':chartMetric,
-    'chart-box':chartBox,
-    //'metric-pre-panel-box':metricPrePanelBox
+    'chart-metric': chartMetric,
+    'chart-box': chartBox
+    // 'metric-pre-panel-box':metricPrePanelBox
   },
-  data() {
+  data () {
     return {
       total: 0,
       loading: false, // 加载中
       chartModal: false, // 展示弹出框
-      //elements: [1], // 指标部分 tarNum
+      // elements: [1], // 指标部分 tarNum
       // 新建信息
-      /*chartInfo: {
+      /* chartInfo: {
         title: '', // 名称
         span: 12, // 宽度
         height: 400, // 高度
         type: 'line', // 类型
-      },*/
+      }, */
       chartId: 0,
       elements: [1], // 指标部分 tarNum
       elementTarget: {}, // 获取chartTag数据后保存
@@ -79,19 +79,19 @@ export default {
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       typeList: [
         {
-          id:"line",
-          name:this.$t("dashboard.panel.chartForm.typeVal.line.label")
+          id: 'line',
+          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
         {
-          id:"bar",
-          name:this.$t("dashboard.panel.chartForm.typeVal.bar.label")
+          id: 'bar',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         }
       ],
-      //productId: 0,
+      // productId: 0,
       panelId: 0,
       metricList: [], // metric列表
-      metricCascaderList:[],//metric级联列表
-      metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
+      metricCascaderList: [], // metric级联列表
+      metricAllData: new Map(), // 存放所有的project-module-metric-labelValue，避免重复加载
       isSave: false, // 是否要保存
       saveDisabled: true, // 不可保存
       createModal: false, // 创建看板panel
@@ -100,7 +100,7 @@ export default {
       chartSaveInfo: {
         title: '', // 图表名称
         name: '', // panel名称
-        panelId: '', // 选择以后panelId
+        panelId: '' // 选择以后panelId
       }, // 保存看板
       isCreatePanel: false,
       createModalTitle: '',
@@ -108,108 +108,108 @@ export default {
       metricInfo: {}, // 保存从chartTag中获取的seriesData
       createChartList: [], // 创建多个图表的图表信息
       seriesData: [], // 查询图表后生成的series信息,用于生成多个图表时提供图表title
-      series:[],//组织好的数据
-      panelItem: {}, // 保存看板信息
-    };
+      series: [], // 组织好的数据
+      panelItem: {} // 保存看板信息
+    }
   },
   computed: {
-    chartSwitchWord() {
-      const word = this.chartCount === 'single' ? this.$t('dashboard.metric.multiChartsShow'): this.$t('dashboard.metric.singleChartShow');
-      return word;
-    },
+    chartSwitchWord () {
+      const word = this.chartCount === 'single' ? this.$t('dashboard.metric.multiChartsShow') : this.$t('dashboard.metric.singleChartShow')
+      return word
+    }
   },
   watch: {},
   methods: {
     // 父级调用保存series,作为多个图表生成title
-    setSeries(data,series) {
-      this.seriesData = data;
-      this.series = series;
+    setSeries (data, series) {
+      this.seriesData = data
+      this.series = series
     },
-    reloadPanelData() { //刷新panelData
-      this.$emit("reloadPanel");
+    reloadPanelData () { // 刷新panelData
+      this.$emit('reloadPanel')
     },
-    createSuccess(type, response, param, panel) { //添加chart成功
-      this.$confirm(this.$t("dashboard.metric.goPanelTip"),this.$t("tip.saveSuccess"), {
-        confirmButtonText: this.$t("tip.yes"),
-        cancelButtonText: this.$t("tip.no"),
+    createSuccess (type, response, param, panel) { // 添加chart成功
+      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
         type: 'success'
       }).then(() => {
-        bus.$emit("menu-change", 'panel');
-        this.$store.state.showPanel.id = panel.id;
-        this.$store.state.showPanel.name = panel.name;
+        bus.$emit('menu-change', 'panel')
+        this.$store.state.showPanel.id = panel.id
+        this.$store.state.showPanel.name = panel.name
         this.$router.push({
-          path: "/panel",
+          path: '/panel',
           query: {
             t: +new Date()
           }
-        });
-      });
+        })
+      })
     },
     // 默认打开
-    initOpen() {
-      this.getSuggestMetric();
+    initOpen () {
+      this.getSuggestMetric()
     },
     // chart-tag中条件更改时,触发不能创建
-    getCondition() {
-      this.saveDisabled = true;
+    getCondition () {
+      this.saveDisabled = true
     },
-    reload(){
-      this.saveDisabled = true;
-      this.elementTarget = {};
+    reload () {
+      this.saveDisabled = true
+      this.elementTarget = {}
     },
     // 创建看板
-    createNew() {
-      /*this.$refs.panelBox.show(true);
+    createNew () {
+      /* this.$refs.panelBox.show(true);
       //this.panel = {id: '', name: ''};
       this.$refs.panelBox.setTitle(this.$t("dashboard.panel.createPanelTitle"));
       this.$refs.panelBox.setIsCreatePanel(true);
-      this.$refs.panelBox.setChartTitle(this.metricInfo.metric);*/
+      this.$refs.panelBox.setChartTitle(this.metricInfo.metric); */
     },
     // 选择看板
-    selectPanel() {
-      /*this.$refs.panelBox.show(true);
+    selectPanel () {
+      /* this.$refs.panelBox.show(true);
       this.$refs.panelBox.setTitle(this.$t("dashboard.panel.selectPanelTitle"));
       this.$refs.panelBox.setIsCreatePanel(false);
       this.$refs.panelBox.setChartTitle(this.metricInfo.metric);
-      this.$refs.panelBox.getTableData();*/
+      this.$refs.panelBox.getTableData(); */
     },
-    saveChart() { //新增chart
-      this.$refs.addChartModal.setTitle(this.$t("dashboard.panel.createChartTitle"));
-      this.$refs.addChartModal.show(true);
-      //console.log('1_+_+_+_+_+_+',JSON.stringify(this.metricInfo));
-      this.$refs.addChartModal.createData(-1, this.metricInfo);
+    saveChart () { // 新增chart
+      this.$refs.addChartModal.setTitle(this.$t('dashboard.panel.createChartTitle'))
+      this.$refs.addChartModal.show(true)
+      // console.log('1_+_+_+_+_+_+',JSON.stringify(this.metricInfo));
+      this.$refs.addChartModal.createData(-1, this.metricInfo)
     },
-     // 删除指标,第一步, 新方法
-      deleteTarget(index) {
-        //alert('box第一步，循环所有的metric，为什么要循环？？');
-        this.deleteIndex = index;
-       // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
-        this.$refs.chartTag.forEach((item) => {
-          // 子组件保存内容到bus
-          item.subSave();
-        });
-      },
-       // subSave保存成功后回调,第二步
-      subOk() {
-        // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
-        //alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
-        this.subCount += 1;
-        if (this.subCount === this.elements.length) {
-          this.subCount = 0;
-          // 保存完成,进行删除操作
-          //alert('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
-          //alert('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
-          this.elements.splice(this.deleteIndex, 1);
-          this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
-          bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
-          //alert('box第二步，删除完毕，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
-          this.$nextTick(() => {
-            this.$refs.chartTag.forEach((item, index) => {
-              item.setSubdata(index); // 将数据从bus重新赋值
-            });
-          });
-        }
-      },
+    // 删除指标,第一步, 新方法
+    deleteTarget (index) {
+      // alert('box第一步，循环所有的metric，为什么要循环？？');
+      this.deleteIndex = index
+      // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
+      this.$refs.chartTag.forEach((item) => {
+        // 子组件保存内容到bus
+        item.subSave()
+      })
+    },
+    // subSave保存成功后回调,第二步
+    subOk () {
+      // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
+      // alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
+      this.subCount += 1
+      if (this.subCount === this.elements.length) {
+        this.subCount = 0
+        // 保存完成,进行删除操作
+        // alert('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+        // alert('box第二步，删除之前，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+        this.elements.splice(this.deleteIndex, 1)
+        this.elementTarget.splice(this.deleteIndex, 1)// 没有作用，此处是[]
+        bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1)
+        // alert('box第二步，删除完毕，elements='+JSON.stringify(this.elements)+'  elementTarget='+JSON.stringify(this.elementTarget)+'  bus='+JSON.stringify(bus.chartAddInfo.metricTarget));
+        this.$nextTick(() => {
+          this.$refs.chartTag.forEach((item, index) => {
+            item.setSubdata(index) // 将数据从bus重新赋值
+          })
+        })
+      }
+    },
 
     /*
     // 取消创建modal
@@ -240,61 +240,61 @@ export default {
     },
     */
     // 初始化信息
-    /*initInfo() {
+    /* initInfo() {
       this.chartInfo.title = '';
       this.chartInfo.type = 1;
       this.chartInfo.span = 12;
       this.chartInfo.height = 400;
       this.elements = [1];
       this.elementTarget = {};
-    },*/
+    }, */
     // 生成预览图表
-    preview(params) {
+    preview (params) {
       if (params === 'change') {
-        this.chartCount = this.chartCount === 'single' ? 'multiple' : 'single';
+        this.chartCount = this.chartCount === 'single' ? 'multiple' : 'single'
       }
-      this.elementTarget = {}; // 初始化清空参数
+      this.elementTarget = {} // 初始化清空参数
       // 触发每个tag组件内部进行校验
-      this.$refs.chartTag.saveTarget(0);
+      this.$refs.chartTag.saveTarget(0)
     },
     // 获取每个tag组件内部校验后数据,点击生成图表时触发
-    getTarget(target) {
+    getTarget (target) {
       // 由于条件限制，每次其实只有一个target
-      this.elementTarget = JSON.parse(JSON.stringify(target));
-      /*this.$refs.chartInfo.validate((valid) => {
-        if (valid) {*/
-          this.loading = true;
-          // 保存图表到看板
-          const params = {};
-          //const params = Object.assign({}, this.chartInfo);
+      this.elementTarget = JSON.parse(JSON.stringify(target))
+      /* this.$refs.chartInfo.validate((valid) => {
+        if (valid) { */
+      this.loading = true
+      // 保存图表到看板
+      const params = {}
+      // const params = Object.assign({}, this.chartInfo);
 
-          //params.tags = this.tagsToString(this.elementTarget.tagList);
-          const elements = [];
-          //params.elementTargetType = this.elementTarget.type;
-          if(this.elementTarget.type==='normal'){
-            const metricStr = bus.tagsToString(this.elementTarget.metric,this.elementTarget.selectedTagList);
-            //params.expression = metricStr;
-            elements.push({
-              expression: metricStr,
-              type: this.elementTarget.type,
-            });
-            params.metric = this.elementTarget.metric;
-          }else if(this.elementTarget.type==='expert'){
-            //params.expression = this.elementTarget.expression;
-            elements.push({
-              expression: this.elementTarget.expression,
-              type: this.elementTarget.type,
-            });
-            params.metric = this.elementTarget.expression;
-          }
-          params.elements = elements;
-          //params.expression
-          this.metricInfo = params;
-          this.saveDisabled = false; // 查询成功以后,可以进行保存操作
-          // 将参数返回,进行查询
-          this.$emit('on-view-chart', params, this.chartCount);
-        /*}
-      });*/
+      // params.tags = this.tagsToString(this.elementTarget.tagList);
+      const elements = []
+      // params.elementTargetType = this.elementTarget.type;
+      if (this.elementTarget.type === 'normal') {
+        const metricStr = bus.tagsToString(this.elementTarget.metric, this.elementTarget.selectedTagList)
+        // params.expression = metricStr;
+        elements.push({
+          expression: metricStr,
+          type: this.elementTarget.type
+        })
+        params.metric = this.elementTarget.metric
+      } else if (this.elementTarget.type === 'expert') {
+        // params.expression = this.elementTarget.expression;
+        elements.push({
+          expression: this.elementTarget.expression,
+          type: this.elementTarget.type
+        })
+        params.metric = this.elementTarget.expression
+      }
+      params.elements = elements
+      // params.expression
+      this.metricInfo = params
+      this.saveDisabled = false // 查询成功以后,可以进行保存操作
+      // 将参数返回,进行查询
+      this.$emit('on-view-chart', params, this.chartCount)
+      /* }
+      }); */
     },
     /*
     // 确认创建图表
@@ -478,73 +478,72 @@ export default {
     },
     */
     // 获取metric列表
-    getSuggestMetric() {
-      //this.$get('/prom/api/v1/label/__name__/values').then(response => {
+    getSuggestMetric () {
+      // this.$get('/prom/api/v1/label/__name__/values').then(response => {
       this.$get('/module?pageSize=-1').then(response => {
         if (response.code === 200) {
-          this.metricList = response.data.list;
-          const cascaderMap = new Map();
-          this.metricList.forEach((item,index) => {
-            let projectName = item.project.name;
-            let moduleName = item.name;
+          this.metricList = response.data.list
+          const cascaderMap = new Map()
+          this.metricList.forEach((item, index) => {
+            const projectName = item.project.name
+            const moduleName = item.name
             const childOption = {
               value: moduleName,
               label: moduleName,
-              children:[],
-            };
-            if(cascaderMap.has(projectName)){
-              cascaderMap.get(projectName).push(childOption);
-            }else {
-              let childArr = [];
-              childArr.push(childOption);
-              cascaderMap.set(projectName,childArr);
+              children: []
             }
-            //缓存全局数据
+            if (cascaderMap.has(projectName)) {
+              cascaderMap.get(projectName).push(childOption)
+            } else {
+              const childArr = []
+              childArr.push(childOption)
+              cascaderMap.set(projectName, childArr)
+            }
+            // 缓存全局数据
             const moduleItem = {
-              name:moduleName,
-              metricMap:new Map()
-            };
-            if(this.metricAllData.has(projectName)){
-              let moduleGroup = this.metricAllData.get(projectName);
-              this.metricAllData.get(projectName).push(moduleItem);
-            }else {
-              let moduleList = [];
-              moduleList.push(moduleItem);
-              this.metricAllData.set(projectName,moduleList);
+              name: moduleName,
+              metricMap: new Map()
             }
-          });
-          let metricCascaderArr = [];
-          cascaderMap.forEach(function(value,index){
+            if (this.metricAllData.has(projectName)) {
+              this.metricAllData.get(projectName).push(moduleItem)
+            } else {
+              const moduleList = []
+              moduleList.push(moduleItem)
+              this.metricAllData.set(projectName, moduleList)
+            }
+          })
+          const metricCascaderArr = []
+          cascaderMap.forEach(function (value, index) {
             const option = {
-              value: index+"_par",
+              value: index + '_par',
               label: index,
-              children:value,
-            };
-            metricCascaderArr.push(option);
-          });
+              children: value
+            }
+            metricCascaderArr.push(option)
+          })
 
-          this.metricCascaderList = metricCascaderArr;
-        }else {
-          this.metricList = [];
-          this.metricCascaderList = [];
+          this.metricCascaderList = metricCascaderArr
+        } else {
+          this.metricList = []
+          this.metricCascaderList = []
         }
       })
     },
     // 获取文本宽度
-    getWidth(str) {
-      const sensor = document.createElement('pre');
-      sensor.innerHTML = str;
-      sensor.style.display = 'inline-block';
-      sensor.style.width = 'auto';
-      sensor.style.visibility = 'hidden';
-      sensor.style.height = 0;
-      sensor.style.position = 'relative';
-      sensor.style['z-index'] = -10;
-      document.body.appendChild(sensor);
-      const width = sensor.offsetWidth;
-      document.body.removeChild(sensor);
-      return width;
-    },
+    getWidth (str) {
+      const sensor = document.createElement('pre')
+      sensor.innerHTML = str
+      sensor.style.display = 'inline-block'
+      sensor.style.width = 'auto'
+      sensor.style.visibility = 'hidden'
+      sensor.style.height = 0
+      sensor.style.position = 'relative'
+      sensor.style['z-index'] = -10
+      document.body.appendChild(sensor)
+      const width = sensor.offsetWidth
+      document.body.removeChild(sensor)
+      return width
+    }
     /*
     // 创建打开
     createData(panelId) {
@@ -570,23 +569,23 @@ export default {
     },
     */
   },
-  created() {
-    this.getSuggestMetric();
+  created () {
+    this.getSuggestMetric()
   },
-  mounted() {
-    //this.initOpen();
+  mounted () {
+    // this.initOpen();
     /*
     bus.$on('on-shrink-change', () => {
       this.preview();
     });
     */
   },
-  beforeDestroy() {
+  beforeDestroy () {
     /*
     bus.$off('on-shrink-change');
 
      */
-  },
-};
+  }
+}
 
 </script>

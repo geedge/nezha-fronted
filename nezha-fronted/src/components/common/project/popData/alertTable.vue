@@ -19,7 +19,7 @@
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
           <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
           <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
+            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
           <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
                   <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
@@ -92,17 +92,17 @@
                     <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
               </span>
               <template v-else-if="item.prop == 'labels'" class="labels">
-                <span v-for="(item,i) in labelsSort(scope.row.labels)">
-              <span @mouseenter="labelHover(scope.row,scope.$index, item.label, true, $event)" @mouseleave="labelHover(scope.row,scope.$index, item.label, false)">
-                <nz-alert-tag
-                  :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                  :cursor-point="tagType(item.label) == 'info' ? false : true"
-                  :key="item.label"
-                  v-if="item.label != 'alertname' && item.label != 'severity'"
-                >
-                 {{item.value}}
-                </nz-alert-tag>
-              </span>
+                <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
+                  <span @mouseenter="labelHover(scope.row,scope.$index, item.label, true, $event)" @mouseleave="labelHover(scope.row,scope.$index, item.label, false)">
+                    <nz-alert-tag
+                      v-if="item.label != 'alertname' && item.label != 'severity'" :key="item.label" :cursor-point="tagType(item.label) == 'info' ? false : true"
+                      :label="item.label"
+                      :type="tagType(item.label)"
+                      style="margin: 5px 0 5px 5px;"
+                    >
+                     {{item.value}}
+                    </nz-alert-tag>
+                  </span>
                   <alertLabel
                     v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project') && scope.row[item.label] && scope.row[item.label].loading"
                     :id="scope.row[item.label].id"
@@ -172,318 +172,317 @@
 </template>
 
 <script>
-  import bus from '@/libs/bus';
-  import axios from 'axios';
-  import nzAlertTag from '@/components/page/alert/nzAlertTag';
-  import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
-  import alertLabel from '@/components/common/alert/alertLabel'
-  export default {
-    name:"alertTable",
-    props:{
-      moduleId:{},
-      projectId:{},
-    },
-    components: {
-      'nz-alert-tag': nzAlertTag,
-      'alertRuleInfo':alertRuleInfo,
-      'alertLabel':alertLabel,
-    },
-    watch:{
-    },
-    computed: {
-      tagType() {
-        return (key) => {
-          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "normal";
-          } else {
-            return "info";
-          }
-        }
-      },
-      tagValue() {
-        return (key, value) => {
-          if (key == 'type') {
-            if (value ==  1) {
-              value = this.$t("project.project.project");
-            } else if (value == 2) {
-              value = this.$t("module.module.module");
-            } else if (value == 3) {
-              value = this.$t("asset.asset");
-            }
-          }
-          return key + "：" + value;
+import bus from '@/libs/bus'
+import nzAlertTag from '@/components/page/alert/nzAlertTag'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
+import alertLabel from '@/components/common/alert/alertLabel'
+export default {
+  name: 'alertTable',
+  props: {
+    moduleId: {},
+    projectId: {}
+  },
+  components: {
+    'nz-alert-tag': nzAlertTag,
+    alertRuleInfo: alertRuleInfo,
+    alertLabel: alertLabel
+  },
+  watch: {
+  },
+  computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
         }
       }
     },
-    data(){
-      return{
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [
-          {
-            label: this.$t("alert.alertName"),
-            prop: 'alertRule',
-            show: true,
-            width: 180
-          }, {
-            label: this.$t("alert.list.labels"),
-            prop: 'labels',
-            show: true,
-            NotSet:true,
-            minWidth:200
-          }, {
-            label: this.$t("alert.severity"),
-            prop: 'severity',
-            show: true,
-            width: 110,
-          }, {
-            label: this.$t('alert.summary'),
-            prop: 'summary',
-            show: true,
-            minWidth:100
-          },  {
-            label: this.$t('alert.list.state'),
-            prop: 'state',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t("alert.startAt"),
-            prop: 'startAt',
-            show: true,
-            width: 150
-          },
-        ],
-        searchTime: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: this.$t('alert.alertName'),
-            type: 'input',
-            label: 'alertName',
-            disabled: false
-          }, /*{
+    tagValue () {
+      return (key, value) => {
+        if (key == 'type') {
+          if (value == 1) {
+            value = this.$t('project.project.project')
+          } else if (value == 2) {
+            value = this.$t('module.module.module')
+          } else if (value == 3) {
+            value = this.$t('asset.asset')
+          }
+        }
+        return key + '：' + value
+      }
+    }
+  },
+  data () {
+    return {
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: this.$t('alert.alertName'),
+          prop: 'alertRule',
+          show: true,
+          width: 180
+        }, {
+          label: this.$t('alert.list.labels'),
+          prop: 'labels',
+          show: true,
+          NotSet: true,
+          minWidth: 200
+        }, {
+          label: this.$t('alert.severity'),
+          prop: 'severity',
+          show: true,
+          width: 110
+        }, {
+          label: this.$t('alert.summary'),
+          prop: 'summary',
+          show: true,
+          minWidth: 100
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('alert.startAt'),
+          prop: 'startAt',
+          show: true,
+          width: 150
+        }
+      ],
+      searchTime: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: this.$t('alert.alertName'),
+          type: 'input',
+          label: 'alertName',
+          disabled: false
+        }, /* {
             id: 3,
             name: this.$t('alert.list.type'),
             type: 'select',
             label: 'alertType',
             disabled: false
           }, */{
-            id: 20,
-            name: this.$t('alert.severity'),
-            type: 'selectString',
-            label: 'severity',
-            disabled: false
-          }, {
-            id: 21,
-            name: this.$t('asset.asset'),
-            type: 'asset',
-            label: 'asset',
-            disabled: false
-          }, {
-            id:22,
-            name: this.$t('project.project.project'),
-            type: 'project',
-            label: 'project',
-            disabled: false
-          }, {
-            id:23,
-            name: this.$t('project.module.module'),
-            type: 'module',
-            label: 'module',
-            disabled: false
-          }, {
-            id:24,
-            name: this.$t('project.endpoint.endpoint'),
-            type: 'input',
-            label: 'endpointId',
-            disabled: false
-          }, {
-            id:25,
-            name: this.$t('alert.list.state'),
-            type: 'select',
-            label: 'alertMessageState',
-            disabled: false
-          }],
-        },
-        tableData:[],
-        loading:false,
-        tableHeight:'100%',
-        searchLabel:{
+          id: 20,
+          name: this.$t('alert.severity'),
+          type: 'selectString',
+          label: 'severity',
+          disabled: false
+        }, {
+          id: 21,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: false
+        }, {
+          id: 22,
+          name: this.$t('project.project.project'),
+          type: 'project',
+          label: 'project',
+          disabled: false
+        }, {
+          id: 23,
+          name: this.$t('project.module.module'),
+          type: 'module',
+          label: 'module',
+          disabled: false
+        }, {
+          id: 24,
+          name: this.$t('project.endpoint.endpoint'),
+          type: 'input',
+          label: 'endpointId',
+          disabled: false
+        }, {
+          id: 25,
+          name: this.$t('alert.list.state'),
+          type: 'select',
+          label: 'alertMessageState',
+          disabled: false
+        }]
+      },
+      tableData: [],
+      loading: false,
+      tableHeight: '100%',
+      searchLabel: {
 
-        },
-        deleteBox:{},
-        nowTime:''
-      }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    mounted(){
-      this.getAlertList();
-    },
-    methods:{
-      getAlertList: function () {
-        this.loading=true;
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.$set(this.searchLabel, "moduleId", this.moduleId);
-        if(this.searchTime&& this.searchTime.length>1){
-          this.$set(this.searchLabel, "startAt", bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'));
-          this.$set(this.searchLabel, "endAt", bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'));
-        }else{
-          delete this.searchLabel.startAt
-          delete this.searchLabel.endAt
-        }
-        this.$get('alert/message', {...this.searchLabel}).then(response => {
-          this.loading=false;
-          if (response.code == 200) {
-            this.nowTime=this.utcTimeToTimezoneStr(response.time);
-            this.tableData = response.data.list;
-            this.tableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels);
-            });
-            this.deleteBox.ids='';
-            this.pageObj.total = response.data.total;
-          }
-        });
       },
-      labelsSort:function(obj){
-        let buildIn=['asset','endpoint','module','project','datacenter']
-        let labels=JSON.parse(JSON.stringify(obj));
-        let result=[];
-        for(let key of buildIn){
-          if(key in labels){
-            result.push({label:key,value:labels[key]})
-            delete labels[key]
-          }
-        }
-        Object.keys(labels).sort().forEach(key=>{
-          result.push({label:key,value:labels[key]})
-        });
-        return result;
-      },
-      labelsClassName(row) {
-        if (row.column.label == this.$t("alert.list.labels")) {
-          return "alert-message-list-labels";
-        } else {
-          return "";
-        }
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getAlertList();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getAlertList();
-      },
-      selectChange(s) {
-        let ids = [];
-        this.deleteBox.ids = "";
-        s.forEach(item => {
-          ids.push(item.id);
-        });
-        this.deleteBox.ids = ids.join(",");
-      },
-      // alertNmae鼠标划入
-      alertMessagehover(item, loading, e) {
-        if (e) {
-          let dom = e.currentTarget;
-          let position = dom.getBoundingClientRect();
-          this.$set(item, "position", position);
-        }
-        this.$set(item, "loading", loading);
-        //item.loading = true;
-        //this.$set(this.tableData,index,item);// 调用父组件
-      },
-      // label 鼠标划入
-      labelHover(item,index, type, loading, e){
-        if(this.labelToolTipDis(type)){
-          return;
-        }
-        if (e) {
-          let dom = e.currentTarget;
-          let position = dom.getBoundingClientRect();
-          this.$set(item[type], "position", position);
-        }
-        this.$set(item[type], "loading", loading);
-        this.$set(this.tableData,index,item);// 调用父组件
-      },
-      // label tooltip是否显示
-      labelToolTipDis(labelType){
-        switch(labelType){
-          case 'asset':
-          case 'module':
-          case 'project':
-            return false;
-          default: return true;
-        }
-      },
-      // Severity Label
-      returnSeverityLabel(key){
-        return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
-      },
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.pageObj.orderBy=orderBy;
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getAlertList();
-      },
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      search(searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            if (item == "alertMessageState") {
-              this.$set(this.searchLabel, "state", searchObj[item]);
-            } else{
-              this.$set(this.searchLabel, item, searchObj[item]);
-            }
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.alertListTable&&this.$refs.alertListTable.bodyWrapper){
-          this.$refs.alertListTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getAlertList();
-      },
-
-      showExportDialog() {
-        this.importBox.show = true;
-      },
-    },
-    beforeDestroy(){
-
+      deleteBox: {},
+      nowTime: ''
     }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    this.getAlertList()
+  },
+  methods: {
+    getAlertList: function () {
+      this.loading = true
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'moduleId', this.moduleId)
+      if (this.searchTime && this.searchTime.length > 1) {
+        this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'))
+        this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'))
+      } else {
+        delete this.searchLabel.startAt
+        delete this.searchLabel.endAt
+      }
+      this.$get('alert/message', { ...this.searchLabel }).then(response => {
+        this.loading = false
+        if (response.code == 200) {
+          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.tableData = response.data.list
+          this.tableData.forEach((item) => {
+            item.labels = JSON.parse(item.labels)
+          })
+          this.deleteBox.ids = ''
+          this.pageObj.total = response.data.total
+        }
+      })
+    },
+    labelsSort: function (obj) {
+      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      const labels = JSON.parse(JSON.stringify(obj))
+      const result = []
+      for (const key of buildIn) {
+        if (key in labels) {
+          result.push({ label: key, value: labels[key] })
+          delete labels[key]
+        }
+      }
+      Object.keys(labels).sort().forEach(key => {
+        result.push({ label: key, value: labels[key] })
+      })
+      return result
+    },
+    labelsClassName (row) {
+      if (row.column.label == this.$t('alert.list.labels')) {
+        return 'alert-message-list-labels'
+      } else {
+        return ''
+      }
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getAlertList()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getAlertList()
+    },
+    selectChange (s) {
+      const ids = []
+      this.deleteBox.ids = ''
+      s.forEach(item => {
+        ids.push(item.id)
+      })
+      this.deleteBox.ids = ids.join(',')
+    },
+    // alertNmae鼠标划入
+    alertMessagehover (item, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+      }
+      this.$set(item, 'loading', loading)
+      // item.loading = true;
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    // label 鼠标划入
+    labelHover (item, index, type, loading, e) {
+      if (this.labelToolTipDis(type)) {
+        return
+      }
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item[type], 'position', position)
+      }
+      this.$set(item[type], 'loading', loading)
+      this.$set(this.tableData, index, item)// 调用父组件
+    },
+    // label tooltip是否显示
+    labelToolTipDis (labelType) {
+      switch (labelType) {
+        case 'asset':
+        case 'module':
+        case 'project':
+          return false
+        default: return true
+      }
+    },
+    // Severity Label
+    returnSeverityLabel (key) {
+      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+    },
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.pageObj.orderBy = orderBy
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getAlertList()
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          if (item == 'alertMessageState') {
+            this.$set(this.searchLabel, 'state', searchObj[item])
+          } else {
+            this.$set(this.searchLabel, item, searchObj[item])
+          }
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.alertListTable && this.$refs.alertListTable.bodyWrapper) {
+        this.$refs.alertListTable.bodyWrapper.scrollTop = 0
+      }
+      this.getAlertList()
+    },
+
+    showExportDialog () {
+      this.importBox.show = true
+    }
+  },
+  beforeDestroy () {
+
   }
+}
 </script>
 
 <style scoped>
@@ -539,4 +538,3 @@
   }
   /* end--table*/
 </style>
-

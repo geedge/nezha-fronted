@@ -120,7 +120,7 @@
 <!--                           时间计划-->
                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'&&val.id==5">
                                 <ul>
-                                    <li v-for="item in schlist" @click="selectSul(item.name)">{{item.name}}</li>
+                                    <li v-for="(item, i) in schlist" :key="i" @click="selectSul(item.name)">{{item.name}}</li>
                                 </ul>
                             </div>
                           <!--endpoint 状态-->
@@ -193,134 +193,134 @@
 </template>
 
 <script>
-    import searchSelectInfo from "./searchSelectInfo"; //搜索框组件--下拉框内容
-    export default {
-        name: "index",
-        data() {
-            return {
-                selectDom: {top: '', tempTop: '', show: true}, // 选择弹框的位置
-                clearSearchShow: false,
-                select_conditionsName:'',
-                selectInfoList: searchSelectInfo,
-                select_title: '',
-                other: '',
-                localStorage_display: true,
-                input_list: true,
-                change_sreach_show: true,
-                select_list: [], //当前的搜索条件和值
-                historyList: [],
-                actionSelect:[],
-                dcSelect: [], //数据中心
-                assetSelect: [], //资产
-                projectSelect: [],
-                moduleSelect: [],
-                modelSelect: [],
-                gnameList:[],
-                schemaTypeSelect:[], //日志检索Protocol下拉菜单
-                TypeSelect:[],//Protocol二层下拉菜单
-                secondShow:'',//二层显示控制
-                input_sreach: '',
-                sreach_num: 0,
-                searchLabelList: [ //下拉列表里的选项
-                ],
-                bool: false,
-                no_condition: '',
-                //历史记录列表
-                history_once: [],
-                name:"",
-                id:"",
-                schedata:{
-                    name:'',
-                    isValid:1,
-                    pageSize:30,
-                    pageNo:1
-                },
-                schlist:[],
-                timeFrame: [new Date(new Date() - 1 * 60 * 60 * 1000), new Date()],
-                dataBackG:true,
-                delBool : false,
-                searchStyleNum:-1,
-                isSearchNum :-1,
-                search_select_style_num:-1,
-                keyBool : false,
-                delnum :0,
-                delcriteriaBool:false,
-                selectInfo:false,
-                disabaled:true,
-                downBool:false,
-                where:this.$route.path
-            }
-        },
-        watch: {
-          defaultValue: {
-            immediate: true,
-            handler(n) {
-              if (n) {
-                this.$nextTick(() => {
-                  if (this.defaultItem) {
-                    if (this.defaultItem == 'alertMessageState' && this.defaultValue) {
-                      this.searchLabelList.forEach((item, index) => {
-                        if (item.id == 12) {
-                          this.searchLabelList.splice(index, 1);
-                        }
-                      });
-                      this.select_list.push({
-                        name: this.$t('alert.list.state'),
-                        type: 'select',
-                        label: 'state',
-                        disabled: false,
-                        val: this.$t('alert.list.pending'),
-                        valnum: 1
-                      });
-                      this.input_sreach = '';
-                      this.sreach_num = this.select_list.length;
-                      this.change_sreach_show = false;
-                      this.input_list = true;
-                      this.select();
-                    }
+import searchSelectInfo from './searchSelectInfo' // 搜索框组件--下拉框内容
+export default {
+  name: 'index',
+  data () {
+    return {
+      selectDom: { top: '', tempTop: '', show: true }, // 选择弹框的位置
+      clearSearchShow: false,
+      select_conditionsName: '',
+      selectInfoList: searchSelectInfo,
+      select_title: '',
+      other: '',
+      localStorage_display: true,
+      input_list: true,
+      change_sreach_show: true,
+      select_list: [], // 当前的搜索条件和值
+      historyList: [],
+      actionSelect: [],
+      dcSelect: [], // 数据中心
+      assetSelect: [], // 资产
+      projectSelect: [],
+      moduleSelect: [],
+      modelSelect: [],
+      gnameList: [],
+      schemaTypeSelect: [], // 日志检索Protocol下拉菜单
+      TypeSelect: [], // Protocol二层下拉菜单
+      secondShow: '', // 二层显示控制
+      input_sreach: '',
+      sreach_num: 0,
+      searchLabelList: [ // 下拉列表里的选项
+      ],
+      bool: false,
+      no_condition: '',
+      // 历史记录列表
+      history_once: [],
+      name: '',
+      id: '',
+      schedata: {
+        name: '',
+        isValid: 1,
+        pageSize: 30,
+        pageNo: 1
+      },
+      schlist: [],
+      timeFrame: [new Date(new Date() - 1 * 60 * 60 * 1000), new Date()],
+      dataBackG: true,
+      delBool: false,
+      searchStyleNum: -1,
+      isSearchNum: -1,
+      search_select_style_num: -1,
+      keyBool: false,
+      delnum: 0,
+      delcriteriaBool: false,
+      selectInfo: false,
+      disabaled: true,
+      downBool: false,
+      where: this.$route.path
+    }
+  },
+  watch: {
+    defaultValue: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.$nextTick(() => {
+            if (this.defaultItem) {
+              if (this.defaultItem == 'alertMessageState' && this.defaultValue) {
+                this.searchLabelList.forEach((item, index) => {
+                  if (item.id == 12) {
+                    this.searchLabelList.splice(index, 1)
                   }
-                });
+                })
+                this.select_list.push({
+                  name: this.$t('alert.list.state'),
+                  type: 'select',
+                  label: 'state',
+                  disabled: false,
+                  val: this.$t('alert.list.pending'),
+                  valnum: 1
+                })
+                this.input_sreach = ''
+                this.sreach_num = this.select_list.length
+                this.change_sreach_show = false
+                this.input_list = true
+                this.select()
               }
             }
-          },
-          inTransform: {
-            immediate: true,
-            handler(n) {
-              let listsK = document.querySelectorAll(".input_list");
-              listsK.forEach((item, index) => {
-                item.style.display = "none";
-              });
-              let listsV = document.querySelectorAll(".select_info_list");
-              listsV.forEach((item, index) => {
-                item.style.display = "none";
-              });
-              /*if (n) {
+          })
+        }
+      }
+    },
+    inTransform: {
+      immediate: true,
+      handler (n) {
+        const listsK = document.querySelectorAll('.input_list')
+        listsK.forEach((item, index) => {
+          item.style.display = 'none'
+        })
+        const listsV = document.querySelectorAll('.select_info_list')
+        listsV.forEach((item, index) => {
+          item.style.display = 'none'
+        })
+        /* if (n) {
                 this.selectDom.tempTop = this.selectDom.top;
                 this.selectDom.top = '36px';
               } else {
                 this.selectDom.top = this.selectDom.tempTop;
-              }*/
-              setTimeout(() => {
-                listsK.forEach((item, index) => {
-                  item.style.display = "";
-                });
-                listsV.forEach((item, index) => {
-                  item.style.display = "";
-                });
-              }, 500);
-            }
-          },
-          select_list: {
-            //监听下拉列表
-            handler(newData, oldData) {
-              this.$refs.searchScrollbar.update();
-              if (newData.length == 0) {
-                this.change_sreach_show = true;
-                this.clearSearchShow = false;
-              } else {
-                this.clearSearchShow = true;
-              }
-              /*if (this.$route.path.indexOf("alertList") > -1 || this.$route.path.indexOf("alertConfig") > -1) {
+              } */
+        setTimeout(() => {
+          listsK.forEach((item, index) => {
+            item.style.display = ''
+          })
+          listsV.forEach((item, index) => {
+            item.style.display = ''
+          })
+        }, 500)
+      }
+    },
+    select_list: {
+      // 监听下拉列表
+      handler (newData, oldData) {
+        this.$refs.searchScrollbar.update()
+        if (newData.length == 0) {
+          this.change_sreach_show = true
+          this.clearSearchShow = false
+        } else {
+          this.clearSearchShow = true
+        }
+        /* if (this.$route.path.indexOf("alertList") > -1 || this.$route.path.indexOf("alertConfig") > -1) {
                 // 处理alertType--asset联动问题：
                 // 当已选alertType为asset时，将可选列表中的asset的disabled恢复为false；
                 // 当已选alertType不为asset时，将可选列表中的asset的disabled设为true，若有已选的asset，则删除；
@@ -362,656 +362,654 @@
                     }
                   }
                 }
-              }*/
+              } */
+      }
+    },
+    no_condition: {
+      handler (newData, oldData) {
+        if (newData != '') {
+          this.input_list = true
+        }
+      }
+    },
+    searchMsg: {
+      immediate: true,
+      handler (n) {
+        // console.log(n);
+        if (n) {
+          n.searchLabelList.forEach(item => {
+            if (item.id === 27 && item.type === 'idc' && item.label === 'idcId') {
+              this.getDcData()
             }
-          },
-          no_condition: {
-              handler(newData, oldData) {
-                  if (newData != '') {
-                      this.input_list = true
-                  }
-              }
-          },
-          searchMsg:{
-            immediate: true,
-            handler(n){
-             //console.log(n);
-             if(n){
-               n.searchLabelList.forEach(item=>{
-                 if(item.id===27&&item.type==='idc'&&item.label==='idcId'){
-                   this.getDcData()
-                 }
-               })
-             }
-            }
-          },
-        },
-        props:['searchMsg','defaultItem','defaultValue','inTransform','position','single'],
-        methods: {
-              //dc
-              clearSearch() {
-                this.select_list = [];
-              },
-              clickout(){
-                this.input_list=true;
-              },
-              selectObject(column, selectItem, e) {
-                this.stop_click(e);
-                for (let i = 0; i < this.select_list.length; i++) {
-                  let val = this.select_list[i];
-                  if (val.type == 'dc' && selectItem.searchType == 'dc'){
-                    val.val = selectItem.name;
-                    val.valnum = selectItem.id;
-                    val.valString = '';
-                  } else if (val.type == 'project' && selectItem.searchType == 'project') {
-                    val.val = selectItem.name;
-                    val.valnum = selectItem.id;
-                    val.valString = '';
-                  } else if (val.type == 'module' && selectItem.searchType == 'module') {
-                    val.val = selectItem.name;
-                    val.valnum = selectItem.id;
-                    val.valString = '';
-                  } else if (val.type == 'asset' && selectItem.searchType == 'asset') {
-                    val.val = selectItem.host;
-                    val.valnum = selectItem.id;
-                    val.valString = '';
-                  }
-                }
-                //this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
-                this.input_sreach = '';
-                this.sreach_num = this.select_list.length;
-                this.change_sreach_show = true;
-                this.input_list = false;
-                var _this = this;
-                setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                setTimeout(function () {
-                  _this.getHeight();
-                });
-                /*this.$nextTick(() => {
+          })
+        }
+      }
+    }
+  },
+  props: ['searchMsg', 'defaultItem', 'defaultValue', 'inTransform', 'position', 'single'],
+  methods: {
+    // dc
+    clearSearch () {
+      this.select_list = []
+    },
+    clickout () {
+      this.input_list = true
+    },
+    selectObject (column, selectItem, e) {
+      this.stop_click(e)
+      for (let i = 0; i < this.select_list.length; i++) {
+        const val = this.select_list[i]
+        if (val.type == 'dc' && selectItem.searchType == 'dc') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type == 'project' && selectItem.searchType == 'project') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type == 'module' && selectItem.searchType == 'module') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type == 'asset' && selectItem.searchType == 'asset') {
+          val.val = selectItem.host
+          val.valnum = selectItem.id
+          val.valString = ''
+        }
+      }
+      // this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
+      this.input_sreach = ''
+      this.sreach_num = this.select_list.length
+      this.change_sreach_show = true
+      this.input_list = false
+      const _this = this
+      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(function () {
+        _this.getHeight()
+      })
+      /* this.$nextTick(() => {
                   this.$refs.searchScrollbar.update();
-                });*/
-              },
-               //一层下拉点击
-              tr_selectTypeInfo(val){
-                  this.TypeSelect=[];
-                  val.data.length!=0?this.TypeSelect.push(val.data[0]):'';
-                  val.data.length!=0?this.secondShow=true:''
-              },
-               //二层下拉点击
-              tr_selectProtocolInfo(val){
-                  this.select_list=[];
-                  this.select_list.push({
-                    name: val.name,
-                    // id:id,
-                    type:val.type,
-                    label:val.label,
-                    // disabled:disabled
-                  })
-                  this.change_sreach_show = false
-                  this.sreach_num = this.select_list.length-1
-                  this.input_list = !this.input_list
-                //   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  var _this = this
-                  setTimeout(function () {
-                    _this.getHeight()
-                  },)
-            },
-            Iskeywords(ind){
-              if(this.select_list[ind].id==29){
-                this.searchLabelList.forEach(val=>{
-                  if(val.id==30||val.id==31||val.id==32||val.id==33){
-                    val.disabled = false
-                  }
-                })
-              }else if(this.select_list[ind].id==30||this.select_list[ind].id==31||this.select_list[ind].id==32||this.select_list[ind].id==33){
-                this.searchLabelList.forEach(val=>{
-                  if(val.id==29){
-                    val.disabled = false
-                  }
-                })
-              }
-            },
-            getDcData() {
-              this.$get('idc', {pageNo: 1, pageSize: -1}).then(response => {
-                if (response.code === 200) {
-                  this.dcSelect = response.data.list;
-                  this.dcSelect.forEach((item, index) => {
-                    this.$set(item, 'searchType', 'dc');
-                  });
-                }
-              });
-            },
-            getAssetData() {
-              this.$get('asset', {pageNo: 1, pageSize: -1}).then(response => {
-                if (response.code === 200) {
-                  this.assetSelect = response.data.list;
-                  this.assetSelect.forEach((item, index) => {
-                    this.$set(item, 'searchType', 'asset');
-                  });
-                }
-              });
-            },
-            getModelData() {
-              this.$get('model', {pageNo: 1, pageSize: -1}).then(response => {
-                if (response.code === 200) {
-                  this.modelSelect = response.data.list;
-                  this.modelSelect.forEach((item, index) => {
-                    this.$set(item, 'searchType', 'model');
-                  });
-                }
-              });
-            },
-            getProjectData() {
-              this.$get('project', {pageNo: 1, pageSize: -1}).then(response => {
-                if (response.code === 200) {
-                  this.projectSelect = response.data.list;
-                  this.projectSelect.forEach((item, index) => {
-                    this.$set(item, 'searchType', 'project');
-                  });
-                }
-              });
-            },
-            getModuleData() {
-              this.$get('module', {pageNo: 1, pageSize: -1}).then(response => {
-                if (response.code === 200) {
-                  this.moduleSelect = response.data.list;
-                  this.moduleSelect.forEach((item, index) => {
-                    this.$set(item, 'searchType', 'module');
-                  });
-                }
-              });
-            },
-          getGnameList(){
-            this.$get('/expression/tmpl/gname').then(res=>{
-              if(res.code===200){
-                this.gnameList = res.data.list.map((item,index)=>{
-                  return {
-                    value:item,
-                    name:item,
-                    id:index,
-                  }
-                })
+                }); */
+    },
+    // 一层下拉点击
+    tr_selectTypeInfo (val) {
+      this.TypeSelect = []
+      val.data.length != 0 && this.TypeSelect.push(val.data[0])
+      val.data.length != 0 && (this.secondShow = true)
+    },
+    // 二层下拉点击
+    tr_selectProtocolInfo (val) {
+      this.select_list = []
+      this.select_list.push({
+        name: val.name,
+        // id:id,
+        type: val.type,
+        label: val.label
+        // disabled:disabled
+      })
+      this.change_sreach_show = false
+      this.sreach_num = this.select_list.length - 1
+      this.input_list = !this.input_list
+      //   setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
+      const _this = this
+      setTimeout(function () {
+        _this.getHeight()
+      })
+    },
+    Iskeywords (ind) {
+      if (this.select_list[ind].id == 29) {
+        this.searchLabelList.forEach(val => {
+          if (val.id == 30 || val.id == 31 || val.id == 32 || val.id == 33) {
+            val.disabled = false
+          }
+        })
+      } else if (this.select_list[ind].id == 30 || this.select_list[ind].id == 31 || this.select_list[ind].id == 32 || this.select_list[ind].id == 33) {
+        this.searchLabelList.forEach(val => {
+          if (val.id == 29) {
+            val.disabled = false
+          }
+        })
+      }
+    },
+    getDcData () {
+      this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.dcSelect = response.data.list
+          this.dcSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'dc')
+          })
+        }
+      })
+    },
+    getAssetData () {
+      this.$get('asset', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.assetSelect = response.data.list
+          this.assetSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'asset')
+          })
+        }
+      })
+    },
+    getModelData () {
+      this.$get('model', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.modelSelect = response.data.list
+          this.modelSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'model')
+          })
+        }
+      })
+    },
+    getProjectData () {
+      this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.projectSelect = response.data.list
+          this.projectSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'project')
+          })
+        }
+      })
+    },
+    getModuleData () {
+      this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.moduleSelect = response.data.list
+          this.moduleSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'module')
+          })
+        }
+      })
+    },
+    getGnameList () {
+      this.$get('/expression/tmpl/gname').then(res => {
+        if (res.code === 200) {
+          this.gnameList = res.data.list.map((item, index) => {
+            return {
+              value: item,
+              name: item,
+              id: index
+            }
+          })
+        }
+      })
+    },
+    // 点击确认选择下拉内容
+    tr_selectInfo (selectLabel, value, label, e) {
+      this.stop_click(e)
+      this.select_list.forEach(val => {
+        if (val.label == selectLabel) {
+          val.val = label
+          val.valnum = value
+        }
+      })
+      for (let i = 0; i < this.select_list.length; i++) {
+        if (this.select_list[i].label == selectLabel) {
+          this.select_list.splice(i, 1, Object.assign({}, this.select_list[i], { val: label, valnum: value }))
+          /* this.select_list[i].val = label;
+                    this.select_list[i].valnum = value; */
+        }
+      }
+      this.input_sreach = ''
+      this.sreach_num = this.select_list.length
+      this.change_sreach_show = true
+      this.input_list = false
+      const _this = this
+      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(function () {
+        _this.getHeight()
+      })
+    },
+    // 点击确认value是string类型的下拉内容, param: 字段对象，选中的选项
+    stringSelectInfo (column, selectItem, e) {
+      this.stop_click(e)
+      this.select_list.forEach(val => {
+        if (val.label == column.label) {
+          val.val = selectItem.value
+          val.valString = selectItem.label
+        }
+      })
+      this.input_sreach = ''
+      this.sreach_num = this.select_list.length
+      this.change_sreach_show = true
+      this.input_list = false
+      const _this = this
+      setTimeout('document.getElementById("one-input").focus()', 500)
+      setTimeout(function () {
+        _this.getHeight()
+      })
+    },
+    // 点击历史记录图标
+    look_history (e) {
+      this.stop_click(e)
+      this.localStorage_display = !this.localStorage_display
+      this.restructure_historyDate()
+    },
+    backtime (t) {
+      const myDate = new Date(t)
+      const nt = myDate.getFullYear() + '-' + (myDate.getMonth() > 8 ? '' : 0) +
+                    (myDate.getMonth() + 1) + '-' + (myDate.getDate() > 9 ? '' : 0) +
+                    myDate.getDate() + ' ' +
+                    (myDate.getHours() > 9 ? '' : '0') + myDate.getHours() + ':' +
+                    (myDate.getMinutes() > 9 ? '' : 0) + myDate.getMinutes() + ':' +
+                    (myDate.getSeconds() > 9 ? '' : 0) + myDate.getSeconds()
+      return nt
+    },
+    changeDate () {
+      this.dataBackG = false
+      this.change_sreach_show = true
+      if (this.timeFrame != []) {
+        this.select_list[this.sreach_num].val = this.backtime(this.timeFrame[0]) + ' - ' + this.backtime(this.timeFrame[1])
+        this.input_sreach = ''
+        this.sreach_num++
+      }
+    },
+    // 选择时间计划
+    selectSul (name) {
+      this.change_sreach_show = true
+      this.select_list[this.sreach_num].val = name
+      this.input_sreach = ''
+      this.sreach_num++
+      this.getHeight()
+    },
+    // 点击搜索
+    select () {
+      const objectInfo = {}
+      this.change_sreach_show = true
+      this.name = '', this.id = ''
+      if (this.input_sreach != '') {
+        this.select_list[this.sreach_num].val = this.input_sreach
+        this.input_sreach = ''
+        this.sreach_num = this.select_list.length
+      }
+      // input有值  默认添加到name中
+      if (this.no_condition != '') {
+        const no_condition_bool = false; let no_condition_str = ''; const route = this.$route.path
+        if (this.select_list.length == 0) {
+          // 日志模块新增路由判断
+          if (route == '/Log_SecurityEventLogs' || route == '/Log_ProxyEventLogs' || route == '/Log_SesssionRecords' || route == '/Log_RadiusLogs') {
+            no_condition_str = 'logId'
+          } else if (route == '/Device_DeviceList') {
+            no_condition_str = 'sn'
+          } else if (route == '/system_PolicyConfigurationLog' || route == '/system_LoginLog') {
+            no_condition_str = 'modifyBy'
+          } else {
+            no_condition_str = 'name'
+          }
+          if (no_condition_str == 'name') {
+            // 处理空白输入时不可作为搜索条件
+            // this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'name'});
+            // this.searchLabelList.forEach((val,ind)=>{
+            //   if(val.id == 2){
+            //     this.searchLabelList.splice(ind,1);
+            //   }
+            // })
+          } else if (no_condition_str == 'modifyBy') {
+            this.select_list.push({ name: this.select_title.Operator, id: 6, type: 'input', val: this.no_condition, label: 'modifyBy' })
+            this.searchLabelList.forEach((val, ind) => {
+              if (val.id == 6) {
+                this.searchLabelList.splice(ind, 1)
               }
             })
-          },
-            //点击确认选择下拉内容
-            tr_selectInfo(selectLabel,value,label,e){
-                this.stop_click(e);
-                this.select_list.forEach(val=>{
-                    if(val.label == selectLabel){
-                        val.val = label;
-                        val.valnum = value;
-                    }
-                });
-                for (let i = 0; i < this.select_list.length; i++) {
-                  if (this.select_list[i].label == selectLabel) {
-                    this.select_list.splice(i, 1, Object.assign({}, this.select_list[i], {val: label, valnum: value}));
-                    /*this.select_list[i].val = label;
-                    this.select_list[i].valnum = value;*/
-                  }
+          } else if (no_condition_str == 'sn') {
+            this.select_list.push({ name: this.select_title.SN, id: 8, type: 'input', val: this.no_condition, label: 'sn' })
+            this.searchLabelList.forEach((val, ind) => {
+              if (val.id == 8) {
+                this.searchLabelList.splice(ind, 1)
+              }
+            })
+          } else if (no_condition_str == 'id') {
+            this.select_list.push({ name: this.select_title.Policy_ID, id: 1, type: 'input', val: this.no_condition, label: 'id' })
+            this.searchLabelList.forEach((val, ind) => {
+              if (val.id == 1) {
+                this.searchLabelList.splice(ind, 1)
+              }
+            })
+          } else if (no_condition_str == 'logId') { // 日志模块新增判断
+            this.select_list.push({ name: 'Log ID', type: 'input', label: 'Log Id', val: this.no_condition })
+            this.searchLabelList.forEach((val, ind) => {
+              if (val.id == 1) {
+                this.searchLabelList.splice(ind, 1)
+              }
+            })
+          }
+          this.sreach_num++
+        } else {
+          const no_condition_bool = false; let no_condition_str = ''; const route = this.$route.path; let bool = true
+          if (route == '/Log_SesssionRecords' || route == '/Log_EventLogs') {
+            no_condition_str = 'id'
+          } else if (route == '/Device_DeviceList') {
+            no_condition_str = 'sn'
+          } else if (route == '/system_PolicyConfigurationLog' || route == '/system_UserManagement' || route == '/system_LoginLog') {
+            no_condition_str = 'modifyBy'
+          } else {
+            no_condition_str = 'name'
+          }
+          this.select_list.forEach(val => {
+            if (val.label == no_condition_str) {
+              bool = false
+              val.val += ',' + this.no_condition
+            }
+          })
+          if (bool) {
+            this.searchLabelList.forEach((val, ind) => {
+              if (val.label == no_condition_str) {
+                val.val = this.no_condition
+                this.select_list.push(val)
+                this.searchLabelList.splice(ind, 1)
+              }
+            })
+            this.sreach_num++
+          }
+        }
+        this.no_condition = ''
+      }
+      let labelBool = true
+      this.select_list.forEach(val => {
+        if (typeof (val.val) !== 'undefined' && val.val) {
+          if (val.type == 'select') {
+            if (val.label == 'alertType' || val.label == 'promType') {
+              objectInfo.type = val.valnum
+            } else if (val.label == 'assetState') {
+              objectInfo.state = val.valnum
+            } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
+              this.selectInfoList[val.label].forEach(item => {
+                if (item.label == val.val) {
+                  labelBool = false
+                  objectInfo[val.label] = item.value
                 }
-                this.input_sreach = '';
-                this.sreach_num = this.select_list.length;
-                this.change_sreach_show = true;
-                this.input_list = false;
-                var _this = this;
-                setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                setTimeout(function () {
-                  _this.getHeight();
-                });
-            },
-            //点击确认value是string类型的下拉内容, param: 字段对象，选中的选项
-            stringSelectInfo(column, selectItem, e){
-              this.stop_click(e);
-              this.select_list.forEach(val=>{
-                if(val.label == column.label){
-                  val.val = selectItem.value;
-                  val.valString = selectItem.label;
-                }
-              });
-              this.input_sreach = '';
-              this.sreach_num = this.select_list.length;
-              this.change_sreach_show = true;
-              this.input_list = false;
-              var _this = this;
-              setTimeout("document.getElementById(\"one-input\").focus()", 500);
-              setTimeout(function () {
-                _this.getHeight();
-              });
-            },
-            // 点击历史记录图标
-            look_history(e){
-                this.stop_click(e);
-                this.localStorage_display=!this.localStorage_display;
-                this.restructure_historyDate();
-            },
-            backtime(t){
-                let myDate=new Date(t);
-                let nt=myDate.getFullYear()+'-'+(myDate.getMonth()>8?'':0)
-                    +(myDate.getMonth()+1)+'-'+(myDate.getDate()>9?'':0)
-                    + myDate.getDate()+' '
-                    +(myDate.getHours()>9?'':'0')+myDate.getHours()+':'
-                    +(myDate.getMinutes()>9?'':0)+myDate.getMinutes()+':'
-                    +(myDate.getSeconds()>9?'':0)+myDate.getSeconds();
-                return nt;
-            },
-            changeDate(){
-                this.dataBackG = false
-                this.change_sreach_show = true
-                if(this.timeFrame!=[]){
-                    this.select_list[this.sreach_num].val = this.backtime(this.timeFrame[0])+' - '+this.backtime(this.timeFrame[1])
-                    this.input_sreach = ''
-                    this.sreach_num++
-                }
-            },
-            //选择时间计划
-            selectSul(name){
-                this.change_sreach_show = true;
-                this.select_list[this.sreach_num].val = name;
-                this.input_sreach = '';
-                this.sreach_num++;
-                this.getHeight();
-            },
-            //点击搜索
-            select() {
-                let objectInfo = {};
-                this.change_sreach_show = true;
-                this.name = '', this.id = '';
-                if (this.input_sreach != '') {
-                  this.select_list[this.sreach_num].val = this.input_sreach;
-                    this.input_sreach = '';
-                    this.sreach_num=this.select_list.length;
-                }
-                //input有值  默认添加到name中
-                if (this.no_condition != '') {
-                  let no_condition_bool = false,no_condition_str = '',route = this.$route.path
-                    if(this.select_list.length==0){
-                      //日志模块新增路由判断
-                      if(route == '/Log_SecurityEventLogs'||route == '/Log_ProxyEventLogs'||route=='/Log_SesssionRecords'||route=='/Log_RadiusLogs'){
-                        no_condition_str = 'logId';
-                      }else if(route == '/Device_DeviceList'){
-                        no_condition_str = 'sn';
-                      }else if(route=='/system_PolicyConfigurationLog' || route=='/system_LoginLog'){
-                        no_condition_str='modifyBy';
-                      }else {
-                        no_condition_str='name';
-                      }
-                      if(no_condition_str=='name'){
-                        // 处理空白输入时不可作为搜索条件
-                        // this.select_list.push({name: this.select_title.name, id:2, type:'input',val:this.no_condition,label:'name'});
-                        // this.searchLabelList.forEach((val,ind)=>{
-                        //   if(val.id == 2){
-                        //     this.searchLabelList.splice(ind,1);
-                        //   }
-                        // })
-                      }else if(no_condition_str=='modifyBy'){
-                        this.select_list.push({name: this.select_title.Operator, id:6, type:'input',val:this.no_condition,label:'modifyBy'});
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 6){
-                            this.searchLabelList.splice(ind,1);
-                          }
-                        })
-                      }else if(no_condition_str=='sn'){
-                        this.select_list.push({name: this.select_title.SN, id:8, type:'input',val:this.no_condition,label:'sn'});
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 8){
-                            this.searchLabelList.splice(ind,1);
-                          }
-                        })
-                      }else if(no_condition_str=='id'){
-                        this.select_list.push({name: this.select_title.Policy_ID, id:1, type:'input',val:this.no_condition,label:'id'});
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 1){
-                            this.searchLabelList.splice(ind,1);
-                          }
-                        })
-                      }else if(no_condition_str=='logId'){ //日志模块新增判断
-                        this.select_list.push({  name: 'Log ID',  type: 'input', label: 'Log Id', val:this.no_condition,});
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 1){
-                            this.searchLabelList.splice(ind,1);
-                          }
-                        })
-                      }
-                        this.sreach_num++;
-                    }else {
-                      let no_condition_bool = false,no_condition_str = '',route = this.$route.path,bool = true;
-                      if(route == '/Log_SesssionRecords'||route == '/Log_EventLogs'){
-                        no_condition_str = 'id';
-                      }else if(route == '/Device_DeviceList'){
-                        no_condition_str = 'sn';
-                      }else if(route=='/system_PolicyConfigurationLog' || route=='/system_UserManagement' || route=='/system_LoginLog'){
-                        no_condition_str='modifyBy';
-                      }else {
-                        no_condition_str='name';
-                      }
-                        this.select_list.forEach(val => {
-                            if(val.label==no_condition_str){
-                                bool = false;
-                                val.val += ','+this.no_condition;
-                            }
-                        });
-                        if(bool){
-                            this.searchLabelList.forEach((val,ind)=>{
-                                if(val.label == no_condition_str){
-                                  val.val = this.no_condition;
-                                  this.select_list.push(val);
-                                  this.searchLabelList.splice(ind,1);
-                                }
-                            });
-                            this.sreach_num++;
-                        }
-                    }
-                    this.no_condition = '';
-                }
-                let labelBool = true;
-                this.select_list.forEach(val=>{
-                    if (typeof (val.val) !== 'undefined' && val.val) {
-                        if(val.type == 'select'){
-                            if (val.label == 'alertType' || val.label == 'promType') {
-                                objectInfo.type = val.valnum;
-                            } else if (val.label == 'assetState') {
-                                objectInfo.state = val.valnum;
-                            } else if(typeof(val.valnum) == "undefined"||val.valnum == ''){
-                                this.selectInfoList[val.label].forEach(item=>{
-                                    if(item.label == val.val){
-                                        labelBool = false;
-                                        objectInfo[val.label] = item.value;
-                                    }
-                                })
-                                if(labelBool){
-                                    objectInfo[val.label] = val.val;
-                                }
-                            }else {
-                                objectInfo[val.label] = val.valnum;
-                            }
-                        } else if(val.type == 'selectSelf'){
-                          objectInfo[val.label] = val.valnum;
-                        } else if(val.type == 'selectAction'){ //新增日志判断
-                          objectInfo[val.label] = val.valnum;
-                        } else if (val.type == 'dc') {
-                          objectInfo.idcId = val.valnum;
-                        } else if (val.type == 'asset') {
-                          objectInfo.asset = val.val;
-                        } else if (val.type == 'module') {
-                          objectInfo.moduleId = val.valnum;
-                        } else if (val.type == 'project') {
-                          objectInfo.projectId = val.valnum;
-                        }else if (val.type == 'idc') {
-                          objectInfo.dcId = val.valnum;
-                        } else {
-                            objectInfo[val.label] = val.val;
-                        }
-                    }
-                });
-                this.getHeight()
-                //搜索完成后存储在本地历史记录中
-                if(this.select_list.length!=0){
-                    if (JSON.parse(localStorage.getItem('nz-history-'+this.where)) == undefined || JSON.parse(localStorage.getItem('nz-history-'+this.where)) == []) {
-                        this.historyList.unshift(this.select_list);
-                        localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
-                    } else {
-                        this.historyList = JSON.parse(localStorage.getItem('nz-history-'+this.where));
-                        this.historyList.unshift(this.select_list);
-                        if (this.historyList.length > 10) {
-                            this.historyList.length = 10;
-                        }
-                        localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
-                    }
-                }
-                this.input_list = true;
-                this.restructure_historyDate();
+              })
+              if (labelBool) {
+                objectInfo[val.label] = val.val
+              }
+            } else {
+              objectInfo[val.label] = val.valnum
+            }
+          } else if (val.type == 'selectSelf') {
+            objectInfo[val.label] = val.valnum
+          } else if (val.type == 'selectAction') { // 新增日志判断
+            objectInfo[val.label] = val.valnum
+          } else if (val.type == 'dc') {
+            objectInfo.idcId = val.valnum
+          } else if (val.type == 'asset') {
+            objectInfo.asset = val.val
+          } else if (val.type == 'module') {
+            objectInfo.moduleId = val.valnum
+          } else if (val.type == 'project') {
+            objectInfo.projectId = val.valnum
+          } else if (val.type == 'idc') {
+            objectInfo.dcId = val.valnum
+          } else {
+            objectInfo[val.label] = val.val
+          }
+        }
+      })
+      this.getHeight()
+      // 搜索完成后存储在本地历史记录中
+      if (this.select_list.length != 0) {
+        if (JSON.parse(localStorage.getItem('nz-history-' + this.where)) == undefined || JSON.parse(localStorage.getItem('nz-history-' + this.where)) == []) {
+          this.historyList.unshift(this.select_list)
+          localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyList))
+        } else {
+          this.historyList = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+          this.historyList.unshift(this.select_list)
+          if (this.historyList.length > 10) {
+            this.historyList.length = 10
+          }
+          localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyList))
+        }
+      }
+      this.input_list = true
+      this.restructure_historyDate()
 
-                this.$emit("search", objectInfo);
-            },
-            //清空历史记录
-            clear_history() {
-                this.historyList = [];
-                this.history_once = [];
-                localStorage.setItem('nz-history-'+this.where, JSON.stringify(this.historyList));
-            },
-            //再次点击之前的历史记录
-            select_history(ind,e) {
-                this.stop_click(e);
-                this.input_list = true;
-                this.change_sreach_show = true;
-                this.localStorage_display = !this.localStorage_display;
-                this.select_list = [];
-                JSON.parse(localStorage.getItem('nz-history-'+this.where)).splice(ind,1);
-                this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]));
-                this.sreach_num = this.select_list.length;
-                this.select_list.forEach(val => {
-                    this.searchLabelList.forEach((item, index) => {
-                        if (val.id == item.id) {
-                            this.searchLabelList.splice(index, 1);
-                        }
-                    })
-                });
-                this.select()
-            },
-            // 获取历史记录  数据进行处理以便循环展示
-            restructure_historyDate() {
-                if (localStorage.getItem('nz-history-'+this.where) !== undefined && localStorage.getItem('nz-history-'+this.where) !== null) {
-                    this.history_once = JSON.parse(localStorage.getItem('nz-history-'+this.where));
-                }
-            },
-            clear_search_list(e){
-                var keyCode = window.event ? e.keyCode : e.which;
-            },
-            //监听输入框鼠标抬起事件
-            enter_one(e){
-                var keyCode = window.event ? e.keyCode : e.which;
-                if(keyCode == 40){
-                    if(this.searchStyleNum<this.searchLabelList.length-1){
-                      var disabledNum = 0;
-                      this.searchLabelList.forEach(val=>{
-                        if(val.disabled){
-                          disabledNum++;
-                        }
-                      });
-                      this.isSearchNum=this.searchStyleNum;
-                      this.isSearchNum++;
-                      if(!(this.searchLabelList[this.isSearchNum].disabled)){
-                        this.searchStyleNum++;
-                      }else {
-                        this.searchStyleNum+=disabledNum+1;
-                      }
-                    }
-                    if(this.searchStyleNum>=7){
-                      document.getElementById('input_list').scrollTop+=28;
-                    }
-                }
-                if(keyCode == 38){
-                  if(this.searchStyleNum>=0){
-                    var disabledNum = 0;
-                    this.searchLabelList.forEach(val=>{
-                      if(val.disabled){
-                        disabledNum++;
-                      }
-                    })
-                    this.isSearchNum=this.searchStyleNum;
-                    if(this.isSearchNum>0){
-                      this.isSearchNum--
-                    }
-                    if(!(this.searchLabelList[this.isSearchNum].disabled)){
-                      this.searchStyleNum--
-                    }else {
-                      this.searchStyleNum-=disabledNum+1
-                    }
-                  }
-                  if(this.searchStyleNum<=this.searchLabelList.length-8){
-                    document.getElementById('input_list').scrollTop -= 28
-                  }
-                }
-                if(this.no_condition==''){
-                    if(!this.keyBool){
-                        if(keyCode==8){
-                            let arr = this.select_list
-                            if(!this.delBool){
-                                if(this.input_sreach==''){
-                                    for(var i = arr.length-1 ; i>=0 ; i--){
-                                        this.input_list = true
-                                        this.change_sreach_show = false
-                                        this.sreach_num = i
-                                        this.input_sreach = arr[i].val
-                                        setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                                        this.delBool = true
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (keyCode == 13) {
-                    if(this.searchStyleNum<=0){
-                        this.select()
-                    }else {
-                        let val = this.searchLabelList[this.searchStyleNum].name,
-                            ind = this.searchStyleNum,
-                            id= this.searchLabelList[this.searchStyleNum].id,
-                            type= this.searchLabelList[this.searchStyleNum].type,
-                            label= this.searchLabelList[this.searchStyleNum].label,
-                          disabled= this.searchLabelList[this.searchStyleNum].disabled,
-                          readonly= this.searchLabelList[this.searchStyleNum].readonly;
-                        this.searchStyleNum = -1
-                        this.select_name(val, ind, id, type,label,disabled,readonly)
-                    }
-
-                }
-            },
-            // input框监听是按删除还是回车
-            enter(val, e) {
-                //console.log(val);
-              var keyCode = window.event ? e.keyCode : e.which;
-              if(val == 'ID'&&keyCode == 13){
-                let id = /^[0-9]*$/
-                if (!id.test(this.input_sreach) || this.input_sreach > 2147483647) {
-                  //如果有不正确的值 进行删除
-                  this.input_sreach = ''
-                  this.$message.error(this.other.delErrorId)
-                  return false;
+      this.$emit('search', objectInfo)
+    },
+    // 清空历史记录
+    clear_history () {
+      this.historyList = []
+      this.history_once = []
+      localStorage.setItem('nz-history-' + this.where, JSON.stringify(this.historyList))
+    },
+    // 再次点击之前的历史记录
+    select_history (ind, e) {
+      this.stop_click(e)
+      this.input_list = true
+      this.change_sreach_show = true
+      this.localStorage_display = !this.localStorage_display
+      this.select_list = []
+      JSON.parse(localStorage.getItem('nz-history-' + this.where)).splice(ind, 1)
+      this.select_list = JSON.parse(JSON.stringify(this.history_once[ind]))
+      this.sreach_num = this.select_list.length
+      this.select_list.forEach(val => {
+        this.searchLabelList.forEach((item, index) => {
+          if (val.id == item.id) {
+            this.searchLabelList.splice(index, 1)
+          }
+        })
+      })
+      this.select()
+    },
+    // 获取历史记录  数据进行处理以便循环展示
+    restructure_historyDate () {
+      if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
+        this.history_once = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+      }
+    },
+    clear_search_list (e) {
+      const keyCode = window.event ? e.keyCode : e.which
+    },
+    // 监听输入框鼠标抬起事件
+    enter_one (e) {
+      const keyCode = window.event ? e.keyCode : e.which
+      if (keyCode == 40) {
+        if (this.searchStyleNum < this.searchLabelList.length - 1) {
+          var disabledNum = 0
+          this.searchLabelList.forEach(val => {
+            if (val.disabled) {
+              disabledNum++
+            }
+          })
+          this.isSearchNum = this.searchStyleNum
+          this.isSearchNum++
+          if (!(this.searchLabelList[this.isSearchNum].disabled)) {
+            this.searchStyleNum++
+          } else {
+            this.searchStyleNum += disabledNum + 1
+          }
+        }
+        if (this.searchStyleNum >= 7) {
+          document.getElementById('input_list').scrollTop += 28
+        }
+      }
+      if (keyCode == 38) {
+        if (this.searchStyleNum >= 0) {
+          var disabledNum = 0
+          this.searchLabelList.forEach(val => {
+            if (val.disabled) {
+              disabledNum++
+            }
+          })
+          this.isSearchNum = this.searchStyleNum
+          if (this.isSearchNum > 0) {
+            this.isSearchNum--
+          }
+          if (!(this.searchLabelList[this.isSearchNum].disabled)) {
+            this.searchStyleNum--
+          } else {
+            this.searchStyleNum -= disabledNum + 1
+          }
+        }
+        if (this.searchStyleNum <= this.searchLabelList.length - 8) {
+          document.getElementById('input_list').scrollTop -= 28
+        }
+      }
+      if (this.no_condition == '') {
+        if (!this.keyBool) {
+          if (keyCode == 8) {
+            const arr = this.select_list
+            if (!this.delBool) {
+              if (this.input_sreach == '') {
+                for (let i = arr.length - 1; i >= 0; i--) {
+                  this.input_list = true
+                  this.change_sreach_show = false
+                  this.sreach_num = i
+                  this.input_sreach = arr[i].val
+                  setTimeout('document.getElementById("sreach_input").focus()', 500)
+                  this.delBool = true
+                  break
                 }
               }
-              if(keyCode!==8){
-                this.delBool = false
-                this.delcriteriaBool = false
+            }
+          }
+        }
+      }
+      if (keyCode == 13) {
+        if (this.searchStyleNum <= 0) {
+          this.select()
+        } else {
+          const val = this.searchLabelList[this.searchStyleNum].name
+          const ind = this.searchStyleNum
+          const id = this.searchLabelList[this.searchStyleNum].id
+          const type = this.searchLabelList[this.searchStyleNum].type
+          const label = this.searchLabelList[this.searchStyleNum].label
+          const disabled = this.searchLabelList[this.searchStyleNum].disabled
+          const readonly = this.searchLabelList[this.searchStyleNum].readonly
+          this.searchStyleNum = -1
+          this.select_name(val, ind, id, type, label, disabled, readonly)
+        }
+      }
+    },
+    // input框监听是按删除还是回车
+    enter (val, e) {
+      // console.log(val);
+      const keyCode = window.event ? e.keyCode : e.which
+      if (val == 'ID' && keyCode == 13) {
+        const id = /^[0-9]*$/
+        if (!id.test(this.input_sreach) || this.input_sreach > 2147483647) {
+          // 如果有不正确的值 进行删除
+          this.input_sreach = ''
+          this.$message.error(this.other.delErrorId)
+          return false
+        }
+      }
+      if (keyCode !== 8) {
+        this.delBool = false
+        this.delcriteriaBool = false
+      }
+      if (this.delBool) {
+        if (keyCode == 8) {
+          if (this.input_sreach == '') {
+            this.searchMsg.searchLabelList.forEach((val, k) => {
+              if (this.select_list[this.sreach_num].id == val.id) {
+                this.searchLabelList.splice(k + 1, 0, val)
+                this.Iskeywords(this.sreach_num)
               }
-               if(this.delBool){
-                   if(keyCode==8){
-                       if(this.input_sreach==''){
-                           this.searchMsg.searchLabelList.forEach((val, k) => {
-                               if (this.select_list[this.sreach_num].id == val.id) {
-                                   this.searchLabelList.splice(k + 1, 0, val)
-                                 this.Iskeywords(this.sreach_num)
-                               }
-                           })
-                           this.select_list.splice(this.sreach_num, 1)
-                           this.change_sreach_show=true
-                           setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                           this.input_list = false
-                           this.delBool = false
-                       }
-                   }
-               }else {
-                   if(keyCode==8){
-                       if(this.delcriteriaBool){
-                           this.searchMsg.searchLabelList.forEach((val, k) => {
-                               if (this.select_list[this.sreach_num].id == val.id) {
-                                   this.searchLabelList.splice(k + 1, 0, val)
-                                 this.Iskeywords(this.sreach_num)
-                               }
-                           })
-                           this.select_list.splice(this.sreach_num, 1)
-                           this.change_sreach_show=true
-                           setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                           this.input_list = false
-                           this.delcriteriaBool = false
-                       }else {
-                           if(this.input_sreach==''){
-                               this.delcriteriaBool = true
-                           }
-                       }
-                   }
+            })
+            this.select_list.splice(this.sreach_num, 1)
+            this.change_sreach_show = true
+            setTimeout('document.getElementById("one-input").focus()', 500)
+            this.input_list = false
+            this.delBool = false
+          }
+        }
+      } else {
+        if (keyCode == 8) {
+          if (this.delcriteriaBool) {
+            this.searchMsg.searchLabelList.forEach((val, k) => {
+              if (this.select_list[this.sreach_num].id == val.id) {
+                this.searchLabelList.splice(k + 1, 0, val)
+                this.Iskeywords(this.sreach_num)
+              }
+            })
+            this.select_list.splice(this.sreach_num, 1)
+            this.change_sreach_show = true
+            setTimeout('document.getElementById("one-input").focus()', 500)
+            this.input_list = false
+            this.delcriteriaBool = false
+          } else {
+            if (this.input_sreach == '') {
+              this.delcriteriaBool = true
+            }
+          }
+        }
+      }
 
-               }
-
-               if(keyCode == 38||keyCode == 40){
-                   if(this.select_list[this.sreach_num].type !== 'select'){
-                     if(this.input_sreach!==''){
-                       this.zhezhao_click()
-                       setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                       this.input_list = false
-                     }
-                   }else {
-                     if(keyCode == 40){
-                       this.selectInfo = true
-                       if(this.search_select_style_num<this.selectInfoList[this.select_list[this.sreach_num].label].length-1){
-                         this.search_select_style_num++
-                       }
-                     }
-                     if(keyCode == 38){
-                       this.selectInfo = true
-                       if(this.search_select_style_num>=0){
-                         this.search_select_style_num--
-                       }
-                     }
-                   }
-               }else if(keyCode == 13) {
-                 this.searchMsg.zheze_none = true
-                 //回车键
-                 if (!this.selectInfo) {
-                   this.select()
-                 }else {
-                   this.selectInfo  = false
-                   this.tr_selectInfo(this.select_list[this.sreach_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].value, e)
-                 }
-               }
-            },
-            // 清空已输入的搜索条件
-            clear_input(e) {
-                this.stop_click(e)
-                this.no_condition = ''
-                this.input_sreach = ''
-                this.select_list = []
-                this.searchLabelList = []
-                JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
-                    this.searchLabelList.push(val)
-                })
-              this.$nextTick(() => {
-                this.$refs.searchScrollbar.update();
-              });
-            },
-            //修改已有参数
-            update_sreach(ind,e) {
-                //if(this.select_list[ind].id==6||this.select_list[ind].id==28){
-                if(false){
-                    this.sreach_num = ind
-                    this.downBool = false
-                    this.change_sreach_show = false
-                    this.input_list = true
-                }else {
-                    this.input_list = true
-                    this.change_sreach_show = false
-                    this.sreach_num = ind
-                    this.input_sreach = this.select_list[ind].val
-                    if(this.select_list[ind].type=='input'){
-                        this.downBool = true
-                    }else {
-                        this.downBool = false
-                    }
-                    setTimeout("document.getElementById(\"sreach_input\").focus()", 50);
-                    this.getHeight()
-                    this.searchMsg.zheze_none = false
-                }
-            },
-            //删除要搜索的条件
-            close_selcet_list(ind, e){
-                if (e) {
-                  this.stop_click(e)
-                }
-                // 处理alertType--asset联动问题：删除alertType时，将asset也删除
-                /*if (this.select_list[ind].label == 'alertType') {
+      if (keyCode == 38 || keyCode == 40) {
+        if (this.select_list[this.sreach_num].type !== 'select') {
+          if (this.input_sreach !== '') {
+            this.zhezhao_click()
+            setTimeout('document.getElementById("one-input").focus()', 500)
+            this.input_list = false
+          }
+        } else {
+          if (keyCode == 40) {
+            this.selectInfo = true
+            if (this.search_select_style_num < this.selectInfoList[this.select_list[this.sreach_num].label].length - 1) {
+              this.search_select_style_num++
+            }
+          }
+          if (keyCode == 38) {
+            this.selectInfo = true
+            if (this.search_select_style_num >= 0) {
+              this.search_select_style_num--
+            }
+          }
+        }
+      } else if (keyCode == 13) {
+        this.searchMsg.zheze_none = true
+        // 回车键
+        if (!this.selectInfo) {
+          this.select()
+        } else {
+          this.selectInfo = false
+          this.tr_selectInfo(this.select_list[this.sreach_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].label, this.selectInfoList[this.select_list[this.sreach_num].label][this.search_select_style_num].value, e)
+        }
+      }
+    },
+    // 清空已输入的搜索条件
+    clear_input (e) {
+      this.stop_click(e)
+      this.no_condition = ''
+      this.input_sreach = ''
+      this.select_list = []
+      this.searchLabelList = []
+      JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
+        this.searchLabelList.push(val)
+      })
+      this.$nextTick(() => {
+        this.$refs.searchScrollbar.update()
+      })
+    },
+    // 修改已有参数
+    update_sreach (ind, e) {
+      // if(this.select_list[ind].id==6||this.select_list[ind].id==28){
+      if (false) {
+        this.sreach_num = ind
+        this.downBool = false
+        this.change_sreach_show = false
+        this.input_list = true
+      } else {
+        this.input_list = true
+        this.change_sreach_show = false
+        this.sreach_num = ind
+        this.input_sreach = this.select_list[ind].val
+        if (this.select_list[ind].type == 'input') {
+          this.downBool = true
+        } else {
+          this.downBool = false
+        }
+        setTimeout('document.getElementById("sreach_input").focus()', 50)
+        this.getHeight()
+        this.searchMsg.zheze_none = false
+      }
+    },
+    // 删除要搜索的条件
+    close_selcet_list (ind, e) {
+      if (e) {
+        this.stop_click(e)
+      }
+      // 处理alertType--asset联动问题：删除alertType时，将asset也删除
+      /* if (this.select_list[ind].label == 'alertType') {
                   for (let i = 0; i < this.select_list.length; i++) {
                     if (this.select_list[i].label == 'asset') {
                       this.close_selcet_list(i);
@@ -1024,174 +1022,172 @@
                       break;
                     }
                   }
-                }*/
-                this.searchMsg.searchLabelList.forEach((val, key) => {
-                    if (this.select_list[ind].id == val.id) {
-                        this.searchLabelList.splice(key+1 , 0, val);
-                        this.Iskeywords(ind)
-                    }
-                });
-                this.select_list.splice(ind, 1);
-                this.sreach_num--;
-            },
-            //阻止冒泡事件
-            stop_click(e) {
-                if (e) {
-                  e.cancelBubble = true;
-                  e.stopPropagation();
+                } */
+      this.searchMsg.searchLabelList.forEach((val, key) => {
+        if (this.select_list[ind].id == val.id) {
+          this.searchLabelList.splice(key + 1, 0, val)
+          this.Iskeywords(ind)
+        }
+      })
+      this.select_list.splice(ind, 1)
+      this.sreach_num--
+    },
+    // 阻止冒泡事件
+    stop_click (e) {
+      if (e) {
+        e.cancelBubble = true
+        e.stopPropagation()
+      }
+    },
+    // 点击遮罩层
+    zhezhao_click () {
+      if (this.input_sreach != '') {
+        if (!this.searchMsg.zheze_none) {
+          if (this.input_sreach != '') {
+            this.change_sreach_show = true
+            let IDsplit
+            const id = /^[0-9]*$/
+            const bool = true
+            if (this.select_list[this.sreach_num].id == 1) {
+              // id==1  判断是不是搜索ID    如果是ID 会出现搜索多个ID  分割ID
+              IDsplit = this.input_sreach.split(',')
+              // 循环分割出来的ID  判断输入的每个ID是否正确
+              for (let i = IDsplit.length - 1; i >= 0; i--) {
+                if (!id.test(IDsplit[i]) || IDsplit[i] > 2147483647) {
+                  // 如果有不正确的值 进行删除
+                  IDsplit.splice(i, 1)
+                  this.$message.error(this.other.delErrorId)
                 }
-            },
-            //点击遮罩层
-            zhezhao_click() {
-                if(this.input_sreach!=''){
-                  if(!this.searchMsg.zheze_none){
-                    if (this.input_sreach!='') {
-                      this.change_sreach_show = true
-                      let IDsplit,
-                        id = /^[0-9]*$/,
-                        bool = true
-                      if (this.select_list[this.sreach_num].id == 1) {
-                        //id==1  判断是不是搜索ID    如果是ID 会出现搜索多个ID  分割ID
-                        IDsplit = this.input_sreach.split(',')
-                        //循环分割出来的ID  判断输入的每个ID是否正确
-                        for (let i = IDsplit.length - 1; i >= 0; i--) {
-                          if (!id.test(IDsplit[i]) || IDsplit[i] > 2147483647) {
-                            //如果有不正确的值 进行删除
-                            IDsplit.splice(i, 1)
-                            this.$message.error(this.other.delErrorId)
-                          }
-                          if (IDsplit[i] == '') {
-                            IDsplit.splice(i, 1)
-                          }
-                        }
-                        this.input_sreach = ''
-                        //从新拼接ID内容
-                        IDsplit.forEach(val => {
-                          this.input_sreach += val + ','
-                        })
-                        this.input_sreach = this.input_sreach.substr(0, this.input_sreach.length - 1)
-                        if(this.input_sreach!=''){
-                          this.select_list[this.sreach_num].val = this.input_sreach
-                          this.input_sreach = ''
-                          this.sreach_num++
-                          this.sreach_num = this.select_list.length
-                        }else {
-                          this.sreach_num = 0
-                          this.change_sreach_show = false
-                        }
-                      }else {
-                        this.select_list[this.sreach_num].val = this.input_sreach
-                        this.input_sreach = ''
-                        this.sreach_num = this.select_list.length
-                      }
-                    }else {
-                      let Bool = false
-                      this.select_list.forEach(val=>{
-                        if(val.val==''||val.val==undefined){
-                          Bool = true
-                        }
-                      })
-                      if(Bool){
-                        this.sreach_num = this.select_list.length-1
-                      }else {
-                        this.sreach_num = this.select_list.length
-                      }
-
-                    }
-                    if (this.no_condition != '') {
-                      this.change_sreach_show = true
-                      if(this.select_list.length==0){
-                        this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'name'})
-                        this.searchLabelList.forEach((val,ind)=>{
-                          if(val.id == 2){
-                            this.searchLabelList.splice(ind,1)
-                          }
-                        })
-                        this.sreach_num++
-                      }else {
-                        let bool = true
-                        this.select_list.forEach(val => {
-                          if(val.id==2){
-                            bool = false
-                            val.val += ','+this.no_condition
-                          }
-                        })
-                        if(bool){
-                          this.select_list.push({name: 'Name', id:2, type:'input',val:this.no_condition,label:'name'})
-                          this.searchLabelList.forEach((val,ind)=>{
-                            if(val.id == 2){
-                              this.searchLabelList.splice(ind,1)
-                            }
-                          })
-                          this.sreach_num++
-                        }
-                      }
-                      this.no_condition = ''
-                      this.sreach_num = this.select_list.length
-                    }
-                    setTimeout("document.getElementById(\"one-input\").focus()", 500);
-                    this.input_list = !this.input_list
-                    var _this = this
-                    setTimeout(function () {
-                      _this.getHeight()
-                    },)
-                    this.searchMsg.zheze_none = true
-                  }
+                if (IDsplit[i] == '') {
+                  IDsplit.splice(i, 1)
                 }
-
-            },
-            //点击搜索框  显示搜索类型
-            read_input(e) {
-                e.cancelBubble = true;
-                e.stopPropagation();
-                this.getHeight();
-                this.input_list = !this.input_list;
-                this.getSelectPosition(e);
-            },
-            //点击选择 搜索类型
-            select_name(val, ind, id, type,label,disabled,readonly,e ) {
-                // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
-                //     this.select_conditionsName=true
-                // }
-              if(type=='input'){
-                this.downBool = true;
-              }else {
-                this.downBool = false;
               }
-              this.no_condition = '';
-              this.searchMsg.zheze_none = false;
-              if(!disabled){
-                // 下标为0 不再直接执行查询
-                // if (ind == 0) {
-                //   this.select()
-                // } else
-                  if(id == 7){
+              this.input_sreach = ''
+              // 从新拼接ID内容
+              IDsplit.forEach(val => {
+                this.input_sreach += val + ','
+              })
+              this.input_sreach = this.input_sreach.substr(0, this.input_sreach.length - 1)
+              if (this.input_sreach != '') {
+                this.select_list[this.sreach_num].val = this.input_sreach
+                this.input_sreach = ''
+                this.sreach_num++
+                this.sreach_num = this.select_list.length
+              } else {
+                this.sreach_num = 0
+                this.change_sreach_show = false
+              }
+            } else {
+              this.select_list[this.sreach_num].val = this.input_sreach
+              this.input_sreach = ''
+              this.sreach_num = this.select_list.length
+            }
+          } else {
+            let Bool = false
+            this.select_list.forEach(val => {
+              if (val.val == '' || val.val == undefined) {
+                Bool = true
+              }
+            })
+            if (Bool) {
+              this.sreach_num = this.select_list.length - 1
+            } else {
+              this.sreach_num = this.select_list.length
+            }
+          }
+          if (this.no_condition != '') {
+            this.change_sreach_show = true
+            if (this.select_list.length == 0) {
+              this.select_list.push({ name: 'Name', id: 2, type: 'input', val: this.no_condition, label: 'name' })
+              this.searchLabelList.forEach((val, ind) => {
+                if (val.id == 2) {
                   this.searchLabelList.splice(ind, 1)
-                  this.select_list.push({
-                    name: val,
-                    id:id,
-                    type:type,
-                    label:label,
-                    disabled:disabled,
-                    readonly
-                  })
-                  this.change_sreach_show = false
-                  this.input_list = !this.input_list
-                }else if(id==29){
-                  this.searchLabelList.splice(ind, 1)
-                  this.select_list.push({
-                    name: val,
-                    id:id,
-                    type:type,
-                    label:label,
-                    disabled:disabled,
-                    readonly
-                  })
-                  this.change_sreach_show = false
-                  this.sreach_num = this.select_list.length-1
-                  this.input_list = !this.input_list
-                  setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                 /* this.searchLabelList.forEach(val=>{
+                }
+              })
+              this.sreach_num++
+            } else {
+              let bool = true
+              this.select_list.forEach(val => {
+                if (val.id == 2) {
+                  bool = false
+                  val.val += ',' + this.no_condition
+                }
+              })
+              if (bool) {
+                this.select_list.push({ name: 'Name', id: 2, type: 'input', val: this.no_condition, label: 'name' })
+                this.searchLabelList.forEach((val, ind) => {
+                  if (val.id == 2) {
+                    this.searchLabelList.splice(ind, 1)
+                  }
+                })
+                this.sreach_num++
+              }
+            }
+            this.no_condition = ''
+            this.sreach_num = this.select_list.length
+          }
+          setTimeout('document.getElementById("one-input").focus()', 500)
+          this.input_list = !this.input_list
+          const _this = this
+          setTimeout(function () {
+            _this.getHeight()
+          })
+          this.searchMsg.zheze_none = true
+        }
+      }
+    },
+    // 点击搜索框  显示搜索类型
+    read_input (e) {
+      e.cancelBubble = true
+      e.stopPropagation()
+      this.getHeight()
+      this.input_list = !this.input_list
+      this.getSelectPosition(e)
+    },
+    // 点击选择 搜索类型
+    select_name (val, ind, id, type, label, disabled, readonly, e) {
+      // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
+      //     this.select_conditionsName=true
+      // }
+      if (type == 'input') {
+        this.downBool = true
+      } else {
+        this.downBool = false
+      }
+      this.no_condition = ''
+      this.searchMsg.zheze_none = false
+      if (!disabled) {
+        // 下标为0 不再直接执行查询
+        // if (ind == 0) {
+        //   this.select()
+        // } else
+        if (id == 7) {
+          this.searchLabelList.splice(ind, 1)
+          this.select_list.push({
+            name: val,
+            id: id,
+            type: type,
+            label: label,
+            disabled: disabled,
+            readonly
+          })
+          this.change_sreach_show = false
+          this.input_list = !this.input_list
+        } else if (id == 29) {
+          this.searchLabelList.splice(ind, 1)
+          this.select_list.push({
+            name: val,
+            id: id,
+            type: type,
+            label: label,
+            disabled: disabled,
+            readonly
+          })
+          this.change_sreach_show = false
+          this.sreach_num = this.select_list.length - 1
+          this.input_list = !this.input_list
+          setTimeout(document.getElementById('sreach_input').focus(), 500)
+          /* this.searchLabelList.forEach(val=>{
                     if(val.id==30||val.id==31||val.id==32||val.id==33){
                       val.disabled = true
                     }
@@ -1205,145 +1201,143 @@
                     type:type,
                     label:label,
                     disabled:disabled
-                  })*/
-                  this.change_sreach_show = false
-                  this.sreach_num = this.select_list.length-1
-                  this.input_list = !this.input_list
-                  setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                  /*this.searchLabelList.forEach(val=>{
+                  }) */
+          this.change_sreach_show = false
+          this.sreach_num = this.select_list.length - 1
+          this.input_list = !this.input_list
+          setTimeout('document.getElementById("sreach_input").focus()', 500)
+          /* this.searchLabelList.forEach(val=>{
                     if(val.id==29){
                       val.disabled = true
                     }
-                  })*/
-                }else {
-                  this.searchLabelList.splice(ind, 1);
-                  this.select_list.push({
-                    name: val,
-                    id:id,
-                    type:type,
-                    label:label,
-                    disabled:disabled,
-                    readonly
-                  });
-                  this.change_sreach_show = false;
-                  this.sreach_num = this.select_list.length-1;
-                  this.input_list = !this.input_list;
-                   if(id!==6&&id!==28){
-                       setTimeout("document.getElementById(\"sreach_input\").focus()", 500);
-                   }
-                }
-                var _this = this
-                setTimeout(function () {
-                  _this.getHeight()
-                },)
-
-                // console.info(e.target.parentElement.parentElement.parentElement.getBoundingClientRect());
-              }
-            },
-            /*计算select弹框的位置*/
-            getSelectPosition(e) {
-              let inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0);
-              if (inputListDom) {
-                this.$nextTick(() => {
-                  if (this.inTransform) {
-                    //this.selectDom.top = "36px";
-                  } else {
-                    let position = inputListDom.getBoundingClientRect();
-                    this.selectDom.top = position.top+36+'px';
-                  }
-                });
-              }
-            },
-            /*递归向上获取指定class的dom*/
-            getDomFromParents(dom, className, level) {
-              let parentClassNames = dom.parentElement.className;
-              if (parentClassNames.indexOf(className) == -1) {
-                if (level < 20 && dom.parentElement) { //限制20层，避免溢出
-                  return this.getDomFromParents(dom.parentElement, className, ++level);
-                } else {
-                  return false;
-                }
-              } else {
-                return dom.parentElement;
-              }
-            },
-            // 判断输入框的高度
-            getHeight(){
-                if(document.getElementById('search-ul').clientHeight<24||document.getElementById('input-center-box').clientHeight<24){
-                  document.getElementById('input-center-box').style.height = 27+'px'
-                  document.getElementById('search-ul').style.height = 21+"px"
-                }
-          },
-            chlick_sreach(e) {
-                this.stop_click(e)
-                this.searchMsg.zheze_none = false
-            },
-            // 时间计划
-            schelistget(){
-              this.schlist = []
-                this.$get("/schedule", this.schedata).then(data => {
-                    if (data.code == 200) {
-                        this.schlist = data.data.list
-                    }
-                })
-
-            },
-          close_search(e) {
-              this.selectDom.show = false;
-
+                  }) */
+        } else {
+          this.searchLabelList.splice(ind, 1)
+          this.select_list.push({
+            name: val,
+            id: id,
+            type: type,
+            label: label,
+            disabled: disabled,
+            readonly
+          })
+          this.change_sreach_show = false
+          this.sreach_num = this.select_list.length - 1
+          this.input_list = !this.input_list
+          if (id !== 6 && id !== 28) {
+            setTimeout('document.getElementById("sreach_input").focus()', 500)
           }
-        },
-        mounted() {
-            if(this.position){
-              this.where=this.$route.path + this.position
-            }
-            /*this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
-            this.defaultValue != '' ? this.no_condition=this.defaultValue:'';*/
-            this.restructure_historyDate();
-            setTimeout(() => {
-              if(this.$route.path=='/Objects_Objects'){
-                this.schelistget();
-              }
-              if (this.$route.path == '/promServer') {
-                this.getDcData();
-              }
-              if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
-                this.getAssetData();
-              }
-              if (this.$route.path == '/alertList') {
-                this.getProjectData();
-                this.getModuleData();
-              }
-              if (this.$route.path == '/asset') {
-                this.getModelData();
-              }
-              if (this.$route.path == '/exprTemp') {
-                this.getGnameList();
-              }
-            }, 1000);
-            JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
-              if(val.name=='Protocol'){
-                  this.schemaTypeSelect=val.doc.data
-              }
-              if(val.prop=='common_action'){
-                this.actionSelect=val.doc.data
-              }
-              this.actionSelect.forEach((item)=>{
-                  item.id=item.code;
-                  item.label=val.label;
-                  item.name=val.label;
-              });
-              this.searchLabelList.push(val);
-            });
-            var _this = this;
-            document.onkeydown=function(event) {
-                var e = event || window.event || arguments.callee.caller.arguments[0];
-                if(e.keyCode==27){
-                    _this.close_search(e)
-                }
-            }
         }
+        const _this = this
+        setTimeout(function () {
+          _this.getHeight()
+        })
+
+        // console.info(e.target.parentElement.parentElement.parentElement.getBoundingClientRect());
+      }
+    },
+    /* 计算select弹框的位置 */
+    getSelectPosition (e) {
+      const inputListDom = this.getDomFromParents(e.target, 'input-center-box', 0)
+      if (inputListDom) {
+        this.$nextTick(() => {
+          if (this.inTransform) {
+            // this.selectDom.top = "36px";
+          } else {
+            const position = inputListDom.getBoundingClientRect()
+            this.selectDom.top = position.top + 36 + 'px'
+          }
+        })
+      }
+    },
+    /* 递归向上获取指定class的dom */
+    getDomFromParents (dom, className, level) {
+      const parentClassNames = dom.parentElement.className
+      if (parentClassNames.indexOf(className) == -1) {
+        if (level < 20 && dom.parentElement) { // 限制20层，避免溢出
+          return this.getDomFromParents(dom.parentElement, className, ++level)
+        } else {
+          return false
+        }
+      } else {
+        return dom.parentElement
+      }
+    },
+    // 判断输入框的高度
+    getHeight () {
+      if (document.getElementById('search-ul').clientHeight < 24 || document.getElementById('input-center-box').clientHeight < 24) {
+        document.getElementById('input-center-box').style.height = 27 + 'px'
+        document.getElementById('search-ul').style.height = 21 + 'px'
+      }
+    },
+    chlick_sreach (e) {
+      this.stop_click(e)
+      this.searchMsg.zheze_none = false
+    },
+    // 时间计划
+    schelistget () {
+      this.schlist = []
+      this.$get('/schedule', this.schedata).then(data => {
+        if (data.code == 200) {
+          this.schlist = data.data.list
+        }
+      })
+    },
+    close_search (e) {
+      this.selectDom.show = false
     }
+  },
+  mounted () {
+    if (this.position) {
+      this.where = this.$route.path + this.position
+    }
+    /* this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
+            this.defaultValue != '' ? this.no_condition=this.defaultValue:''; */
+    this.restructure_historyDate()
+    setTimeout(() => {
+      if (this.$route.path == '/Objects_Objects') {
+        this.schelistget()
+      }
+      if (this.$route.path == '/promServer') {
+        this.getDcData()
+      }
+      if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
+        this.getAssetData()
+      }
+      if (this.$route.path == '/alertList') {
+        this.getProjectData()
+        this.getModuleData()
+      }
+      if (this.$route.path == '/asset') {
+        this.getModelData()
+      }
+      if (this.$route.path == '/exprTemp') {
+        this.getGnameList()
+      }
+    }, 1000)
+    JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
+      if (val.name == 'Protocol') {
+        this.schemaTypeSelect = val.doc.data
+      }
+      if (val.prop == 'common_action') {
+        this.actionSelect = val.doc.data
+      }
+      this.actionSelect.forEach((item) => {
+        item.id = item.code
+        item.label = val.label
+        item.name = val.label
+      })
+      this.searchLabelList.push(val)
+    })
+    const _this = this
+    document.onkeydown = function (event) {
+      const e = event || window.event || arguments.callee.caller.arguments[0]
+      if (e.keyCode == 27) {
+        _this.close_search(e)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">

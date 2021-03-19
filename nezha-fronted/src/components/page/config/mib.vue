@@ -95,7 +95,7 @@
           </template>
         </el-table-column>
         <el-table-column :resizable="false" width="28">
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
@@ -113,279 +113,279 @@
 
 </template>
 <script>
-  import axios from 'axios'
-  import bus from '../../../libs/bus';
-  import mibBrowser from './mibBrowser';
-  import deleteButton from "../../common/deleteButton";
-  export default {
-    name: "mib",
-    components: {
-      'mib-browser': mibBrowser,
-      'delete-button':deleteButton,
-    },
-    data() {
-      return {
-        showTab: 'file', //file/browser
-        rightBox: {show: false},
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        batchDeleteObjs:[],
-        tableId: 'mibTable', //需要分页的table的id，用于记录每页数量
-        mib: {},
-        blankMib: {
-          id: null,
-          name: '',
-          remark:'',
-          models:'',
-          file:null,
-        },
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t('overall.name'),
-            prop: 'name',
-            show: true,
-          },{
-            label: this.$t('config.mib.fileName'),
-            prop: 'fileName',
-            show: true,
-          },{
-            label: this.$t('config.mib.models'),
-            prop: 'modelsDetail',
-            show: true,
-          },{
-            label: this.$t('config.mib.remark'),
-            prop: 'remark',
-            show: true,
-          },{
-            label: this.$t('config.mib.updateUser'),
-            prop: 'updateUser',
-            show: true,
-          },{
-            label: this.$t('config.mib.updateAt'),
-            prop: 'updateAt',
-            show: true,
-          },{
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
-          }
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: 'ID',
-            type: 'input',
-            label: 'id',
-            disabled: false
-          }, {
-            id: 5,
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          }],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-        delFlag:false,
-      }
-    },
-    methods: {
-      clickOutside() {
-        this.rightBox.show = false;
+import axios from 'axios'
+import bus from '../../../libs/bus'
+import mibBrowser from './mibBrowser'
+import deleteButton from '../../common/deleteButton'
+export default {
+  name: 'mib',
+  components: {
+    'mib-browser': mibBrowser,
+    'delete-button': deleteButton
+  },
+  data () {
+    return {
+      showTab: 'file', // file/browser
+      rightBox: { show: false },
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
       },
-      edit(u) {
-        this.mib = JSON.parse(JSON.stringify(u));
-        this.rightBox.show = true;
+      batchDeleteObjs: [],
+      tableId: 'mibTable', // 需要分页的table的id，用于记录每页数量
+      mib: {},
+      blankMib: {
+        id: null,
+        name: '',
+        remark: '',
+        models: '',
+        file: null
       },
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.getTableData();
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.mib.fileName'),
+          prop: 'fileName',
+          show: true
+        }, {
+          label: this.$t('config.mib.models'),
+          prop: 'modelsDetail',
+          show: true
+        }, {
+          label: this.$t('config.mib.remark'),
+          prop: 'remark',
+          show: true
+        }, {
+          label: this.$t('config.mib.updateUser'),
+          prop: 'updateUser',
+          show: true
+        }, {
+          label: this.$t('config.mib.updateAt'),
+          prop: 'updateAt',
+          show: true
+        }, {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120
         }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 5,
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }]
       },
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("mib?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.delFlag=true;
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      add() {
-        this.mib = this.newMib();
-        this.rightBox.show = true;
-      },
-      newMib() {
-        return JSON.parse(JSON.stringify(this.blankMib));
-      },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      getTableData() {
-        if (!this.hasButton('snmp_file_view')) {
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
-        }
-        this.tableData = [];
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('mib', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.mibTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
-          }
-        })
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      search(searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.pageObj.pageNo = 1;
-        this.searchLabel = {};
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.mibTable&&this.$refs.mibTable.bodyWrapper){
-          this.$refs.mibTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      downloadMib(mib) {
-        if (!this.hasButton("snmp_file_download")) {
-          return;
-        }
-        axios.get('/mib/download?id='+mib.id,{responseType: 'blob'}).then(data=>{
-          let fileName = new Date().getTime()+'.txt';
-          let disposition=data.headers['content-disposition'];
-          if(disposition){
-            fileName=disposition.split(';')[1].split('filename=')[1]
-          }
-          // 由于ie不支持download属性，故需要做兼容判断
-          if (navigator.appVersion.toString().indexOf('.NET') > 0) {
-            // ie独有的msSaveBlob属性，data.data为Blob文件流
-            window.navigator.msSaveBlob(data.data, fileName)
-          } else {
-            // 以下流程即为文章开始的下载流程
-            let url = window.URL.createObjectURL(data.data)
-            let link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = url
-            link.download = fileName
-            document.body.appendChild(link)
-            link.click()
-            window.URL.revokeObjectURL(link.href);
-          }
-        })
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-    },
-    watch: {
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
-          }
-          if(!this.delFlag){ // 不是删除时回到顶部
-            this.$refs.mibTable.bodyWrapper.scrollTop = 0
-          }else{
-            this.delFlag=false;
-          }
-        }
-      }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-
-      this.getTableData();
-    },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      delFlag: false
     }
+  },
+  methods: {
+    clickOutside () {
+      this.rightBox.show = false
+    },
+    edit (u) {
+      this.mib = JSON.parse(JSON.stringify(u))
+      this.rightBox.show = true
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
+    del (u) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('mib?ids=' + u.id).then(response => {
+          if (response.code === 200) {
+            this.delFlag = true
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    add () {
+      this.mib = this.newMib()
+      this.rightBox.show = true
+    },
+    newMib () {
+      return JSON.parse(JSON.stringify(this.blankMib))
+    },
+    jumpTo (data, id) {
+      bus.$emit('menu-change', data)
+      this.$router.push({
+        path: '/' + data,
+        query: {
+          t: +new Date()
+        }
+      })
+    },
+    getTableData () {
+      if (!this.hasButton('snmp_file_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.tableData = []
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('mib', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.mibTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.pageObj.pageNo = 1
+      this.searchLabel = {}
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.mibTable && this.$refs.mibTable.bodyWrapper) {
+        this.$refs.mibTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    downloadMib (mib) {
+      if (!this.hasButton('snmp_file_download')) {
+        return
+      }
+      axios.get('/mib/download?id=' + mib.id, { responseType: 'blob' }).then(data => {
+        let fileName = new Date().getTime() + '.txt'
+        const disposition = data.headers['content-disposition']
+        if (disposition) {
+          fileName = disposition.split(';')[1].split('filename=')[1]
+        }
+        // 由于ie不支持download属性，故需要做兼容判断
+        if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+          // ie独有的msSaveBlob属性，data.data为Blob文件流
+          window.navigator.msSaveBlob(data.data, fileName)
+        } else {
+          // 以下流程即为文章开始的下载流程
+          const url = window.URL.createObjectURL(data.data)
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.download = fileName
+          document.body.appendChild(link)
+          link.click()
+          window.URL.revokeObjectURL(link.href)
+        }
+      })
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    }
+  },
+  watch: {
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.mibTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
+        }
+      }
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+
+    this.getTableData()
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
   }
+}
 </script>
 <style >
   .mib-table .el-divider--horizontal{

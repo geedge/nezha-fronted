@@ -20,7 +20,6 @@
                   </div>
                 </template>
 
-
               </el-cascader-panel>
             </el-dropdown>
           </div>
@@ -56,7 +55,6 @@
                     </div>
                   </template>
 
-
                 </el-cascader-panel>
               </el-dropdown>
             </el-col>
@@ -91,7 +89,6 @@
       <div class="option" style="margin-left: 5px; line-height: 32px;" @click="removeExpression"
            v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
     </div>
-
 
     <el-dialog
       :visible.sync="tempBoxShow"
@@ -149,385 +146,381 @@
       </span>
     </el-dialog>
 
-
   </div>
 </template>
 
 <script>
-  import editor from './editor'
-  import selectAlertSilence from '../../../common/alert/selectAlertSilence'
-  export default {
-    name:"promqlInput",
-    components:{
-      'editor':editor,
-      selectAlertSilence
+import selectAlertSilence from '../../../common/alert/selectAlertSilence'
+export default {
+  name: 'promqlInput',
+  components: {
+    'editor':editor,
+    selectAlertSilence
+  },
+  props: {
+    index: { type: Number },
+    expressionList: {},
+    plugins: { type: Array },
+    styleType: Number,
+    historyParam: { type: Object },
+    showRemove: { type: Boolean, default: true },
+    projectRightBox: { type: Boolean, default: false },
+    metricOptionsParent: { type: Array },
+    inputId: String,
+    required: {
+      type: Boolean, default: false
     },
-    props:{
-      index:{type:Number},
-      expressionList:{},
-      plugins:{type:Array},
-      styleType:Number,
-      historyParam:{type:Object},
-      showRemove:{type:Boolean,default:true},
-      projectRightBox:{type:Boolean,default:false},
-      metricOptionsParent:{type:Array},
-      inputId:String,
-      required:{
-        type:Boolean,default:false
-      },
-      showTemp:{
-        type:Boolean,
-        default:true
-      },
-      typeContentLoading:false,
-      //metricOptions: {type: Array},
-      //metricStore: {type: Array}
+    showTemp: {
+      type: Boolean,
+      default: true
     },
-    data(){
-      return {
-        dropDownVisible:false,
-        //metricStore:[],
-        metricOptions:[],
-        cascaderValue:'',
-        errorMsg:null,
-        appendMsg:null,
-        editorValue:'',
-        firstAddEvent:true,
-        tempBoxShow:false,
-        tempBox:{
-          expression:'',
-          vars:[],
-        },
-        tempBoxShowLoading:false,
-        assetOption:[],
-        moduleOption:[],
-        endpointOption:[],
-        datacenterOption:[],
-        projectOption:[],
-        filterSilence:'',
-        tempBoxId:{},
+    typeContentLoading: {
+      type: Boolean,
+      default: false
+    }
+    // metricOptions: {type: Array},
+    // metricStore: {type: Array}
+  },
+  data () {
+    return {
+      dropDownVisible: false,
+      // metricStore:[],
+      metricOptions: [],
+      cascaderValue: '',
+      errorMsg: null,
+      appendMsg: null,
+      editorValue: '',
+      firstAddEvent: true,
+      tempBoxShow: false,
+      tempBox: {
+        expression: '',
+        vars: []
+      },
+      tempBoxShowLoading: false,
+      assetOption: [],
+      moduleOption: [],
+      endpointOption: [],
+      datacenterOption: [],
+      projectOption: [],
+      filterSilence: '',
+      tempBoxId:{},
+    }
+  },
+  created () {
+    this.queryMetrics()
+  },
+  methods: {
+    closeDropdown () {
+      this.dropDownVisible = false
+    },
+    clearExpression: function () {
+      this.expressionChange()
+      this.cascaderValue = ''
+    },
+    addExpression: function () {
+      this.$emit('addExpression', this.index)
+    },
+    copyExpression () {
+      this.$emit('copyExpression', this.index)
+    },
+    removeExpression: function () {
+      this.$emit('removeExpression', this.index)
+    },
+    toggleDropdown () {
+      this.dropDownVisible = !this.dropDownVisible
+    },
+    queryMetrics: function () {
+      this.$get('prom/api/v1/label/__name__/values').then(response => {
+        if (response.status == 'success') {
+          let metrics = response.data.sort()
+          let metricMap = new Map()
+          metrics.forEach((item) => {
+            let key = ''
+            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
+              key = item.split('_')[0]
+            } else if (/^_\w*/.test(item)) {
+              key = '      '
+            } else {
+              key = item
+            }
+            if (metricMap.get(key)) {
+              let values = metricMap.get(key)
+              values.push({ label: item, value: item })
+            } else {
+              let values = [{ label: item, value: item }]
+              metricMap.set(key, values)
+            }
+            // this.metricStore.push({label:item,value:item,insertText:item})
+          })
+          for (let key of metricMap.keys()) {
+            let option = {
+              label: key,
+              value: key
+            }
+            if (metricMap.get(key) && metricMap.get(key).length > 1) {
+              option.children = metricMap.get(key)
+            }
+            this.metricOptions.push(option)
+          }
+          if (this.showTemp) {
+            this.getExprTemp()
+          }
+        }
+      })
+    },
+    filterInput: function (queryString, cb) {
+      let metrics = Object.assign([], this.metricStore)
+      let result = queryString
+        ? metrics.filter((item) => {
+          return item.value.toLowerCase().indexOf(queryString.toLowerCase()) != -1
+        })
+        : metrics
+      cb(result)
+    },
+    metricChange: function (value) {
+      if (!value) return
+      this.expressionList[this.index] = value
+      // this.$refs.editor.setContent(value)
+      this.dropDownVisible = false
+      this.$emit('change', value)
+    },
+    metricKeyDown (val) {
+      if (this.required) {
+        this.metricChange(val)
       }
     },
-    created(){
-      this.queryMetrics();
+    expressionChange: function () {
+      this.$emit('change')
     },
-    methods:{
-      closeDropdown(){
-        this.dropDownVisible=false;
-      },
-      clearExpression:function(){
-        this.expressionChange();
-        this.cascaderValue='';
-      },
-      addExpression:function(){
-        this.$emit('addExpression',this.index);
-      },
-      copyExpression(){
-        this.$emit('copyExpression',this.index);
-      },
-      removeExpression:function(){
-        this.$emit('removeExpression',this.index);
-      },
-      toggleDropdown(){
-        this.dropDownVisible= !this.dropDownVisible;
-      },
-      queryMetrics:function(){
-        this.$get('prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status=='success'){
-            let metrics=response.data.sort();
-            let metricMap=new Map();
-            metrics.forEach((item)=>{
-              let key='';
-              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
-                key=item.split('_')[0];
-              }else if(/^_\w*/.test(item)){
-                key='      ';
-              }else{
-                key=item;
-              }
-              if(metricMap.get(key)){
-                let values=metricMap.get(key);
-                values.push({label:item,value:item});
-              }else{
-                let values=[{label:item,value:item}];
-                metricMap.set(key,values);
-              }
-              //this.metricStore.push({label:item,value:item,insertText:item})
-            });
-            for(let key of metricMap.keys()){
-              let option={
-                label:key,
-                value:key,
-              };
-              if(metricMap.get(key)&&metricMap.get(key).length>1){
-                option.children=metricMap.get(key);
-              }
-              this.metricOptions.push(option);
-            }
-            if(this.showTemp){
-              this.getExprTemp()
-            }
-          }
-        })
-      },
-      filterInput:function(queryString,cb){
-        let metrics=Object.assign([],this.metricStore);
-        let result=queryString?metrics.filter((item)=>{
-          return item.value.toLowerCase().indexOf(queryString.toLowerCase())!= -1;
-        }):metrics;
-        cb(result)
-      },
-      metricChange:function(value){
-        if(!value) return;
-        this.expressionList[this.index]=value;
-        //this.$refs.editor.setContent(value)
-        this.dropDownVisible=false;
-        this.$emit('change',value)
-      },
-      metricKeyDown(val){
-        if(this.required){
-          this.metricChange(val);
+    setError: function (errMsg) {
+      // console.log(errMsg)
+      this.errorMsg = errMsg
+    },
+    getExprTemp () {
+      this.$get('/expression/tmpl/gname').then(res => {
+        if (res.code === 200) {
+          res.data.list.forEach(item => {
+            this.metricOptions.unshift({
+              label: item,
+              value: item,
+              children: [],
+              temp: true,
+              child: false
+            })
+          })
         }
-      },
-      expressionChange:function(){
-        this.$emit('change')
-      },
-      setError:function(errMsg){
-        //console.log(errMsg)
-        this.errorMsg=errMsg;
-      },
-      getExprTemp(){
-        this.$get('/expression/tmpl/gname').then(res=>{
-          if(res.code===200){
-            res.data.list.forEach(item=>{
-              this.metricOptions.unshift({
-                label:item,
-                value:item,
-                children:[],
-                temp:true,
-                child:false,
-              });
-            })
-          }
-        })
-      },
-      lazyLoad(node,data){
-        if(data.temp){
-          if(!data.child){
-            this.tempBoxShowLoading=true;
-            this.$get('/expression/tmpl?pageSize=-1&gname='+data.value).then(res=>{
-              this.tempBoxShowLoading=false;
-              if(res.code===200){
-                res.data.list.forEach(item=>{
-                  item.label=item.name;
-                  item.value=false;
-                  item.temp=true;
-                  item.child=true;
-                });
-                this.metricOptions.find(item=>item.value===data.value).children=res.data.list;
-              }
-            })
-          }else{
-            this.dropDownVisible=false
-            this.$get('/expression/tmpl/'+data.id).then(res=>{
-              if(res.code===200){
-                res.data.vars.forEach(item=>{
-                  res.data[item]='';
-                  let arr=item.split('.')
-                  let keyword=arr[0].toLowerCase();
-                  this.getAllOptins(keyword,keyword+'Option');
-
-                });
-                this.tempBox={
-                  ...this.tempBox,
-                  ...res.data,
-                };
-
-                setTimeout(()=>{
-                  this.tempBoxShow=true;
-                },100)
-              }
-            })
-          }
-        }
-      },
-      tempBoxShowChange(flag){
-        this.tempBoxShow=flag;
-        if(flag){
-          this.cascaderValue="";
-          let params={};
-          params.expression=this.tempBox.expression;
-          params.varsVal={};
-          let returnFlag=false
-          let errorStr=""
-          this.tempBox.vars.forEach((item)=>{
-            params.varsVal[item]=this.tempBoxId[item]?this.tempBoxId[item]:this.tempBox[item];
-            if(!this.tempBox[item]){
-              errorStr+=item + ","
-              returnFlag=true;
-            }
-          });
-
-
-          if(returnFlag) {
-            this.$message({
-              message:  this.$t('config.exprTemp.errorStr',{errorStr:errorStr}),
-              type: 'error'
-            });
-            return
-          }
-
-          if(this.tempBox.vars.length==0){
-            this.tempBoxShow=false;
-            this.expressionList[this.index]= params.expression;
-            this.$emit('change', params.expression);
-            return
-          }
-
-          this.$post('/expression/tmpl/render',params).then(res=>{
-            if(res.code===200){
-              this.tempBoxShow=false;
-              this.expressionList[this.index]=res.data.expression;
-              this.$emit('change',res.data.expression);
+      })
+    },
+    lazyLoad (node, data) {
+      if (data.temp) {
+        if (!data.child) {
+          this.tempBoxShowLoading = true
+          this.$get('/expression/tmpl?pageSize=-1&gname=' + data.value).then(res => {
+            this.tempBoxShowLoading = false
+            if (res.code === 200) {
+              res.data.list.forEach(item => {
+                item.label = item.name
+                item.value = false
+                item.temp = true
+                item.child = true
+              })
+              this.metricOptions.find(item => item.value === data.value).children = res.data.list
             }
           })
-        } else{
-          this.tempBox={}
-        }
-      },
+        } else {
+          this.dropDownVisible = false
+          this.$get('/expression/tmpl/' + data.id).then(res => {
+            if (res.code === 200) {
+              res.data.vars.forEach(item => {
+                res.data[item] = ''
+                const arr = item.split('.')
+                const keyword = arr[0].toLowerCase()
+                this.getAllOptins(keyword, keyword + 'Option')
+              })
+              this.tempBox = {
+                ...this.tempBox,
+                ...res.data
+              }
 
-      format(str){
-        let arr=str.split('.')
-        let keyword=arr[0].toLowerCase();
-        switch(keyword){
-          case 'asset':
-          case 'module':
-          case 'endpoint':
-          case 'datacenter':
-          case 'project':
-            return {
-              arr:this[keyword+'Option'],
-              key:keyword,
-              value:((keyword=='module'||keyword=='project'||keyword=='datacenter')?'name':'host')
-            };
-          default:
-            return {
-              key:false
+              setTimeout(() => {
+                this.tempBoxShow = true
+              }, 100)
             }
+          })
         }
-      },
-      getAllOptins(key,arr){
-
-
-
-        switch(key){
-          case 'asset':
-            this.$get('asset',{pageNo:1,pageSize:-1}).then(response=>{
-              if(response.code==200){
-                let arr=[];
-                response.data.list.forEach(asset=>{
-                  asset.name=asset.sn;
-                  let idcF=arr.find(idc=>idc.id===asset.idc.id);
-                  if(idcF){
-                    idcF.children.push(asset);
-                  } else{
-                    let idc={...asset.idc};
-                    idc.children=[asset];
-                    arr.push(idc);
-                  }
-                });
-                this.assetOption=arr;
-              }
-            });
-            break;
-          case 'module':
-            this.$get('module',{pageNo:1,pageSize:-1}).then(response=>{
-              if(response.code==200){
-                let arr=[];
-                response.data.list.forEach(module=>{
-                  let projectF=arr.find(project=>project.id===module.project.id)
-                  if(projectF){
-                    projectF.children.push(module);
-                  } else{
-                    let project={...module.project};
-                    project.children=[module];
-                    arr.push(project);
-                  }
-                });
-                this.moduleOption=arr;
-              }
-            });
-            break;
-          case 'endpoint':
-            this.$get('endpoint',{pageNo:1,pageSize:-1}).then(response=>{
-              if(response.code==200){
-                let arr=[];
-                response.data.list.forEach(item=>{
-                  item.name=item.host;
-                  let projectF = arr.find(project=>item.project.id===project.id);
-                  if(projectF){
-                    let moduleF = projectF.children.find(module=>module.id===item.module.id);
-                    if(moduleF){
-                      moduleF.children.push(item)
-                    } else{
-                      projectF.children.push({...item.module,children:[item]});
-                    }
-                  } else {
-                    let project={...item.project};
-                    project.children=[{...item.module,children:[item]}]
-                    arr.push(project);
-                  }
-                });
-                this.endpointOption=arr;
-              }
-            });
-            break;
-          case 'datacenter':
-            this.$get('idc',{pageNo:1,pageSize:-1}).then(response=>{
-              if(response.code==200){
-                this.datacenterOption=response.data.list;
-              }
-            });
-            break;
-          case 'project':
-            this.$get('project',{pageNo:1,pageSize:-1}).then(response=>{
-              if(response.code==200){
-                this.projectOption=response.data.list;
-              }
-            });
-            break;
-          default:
-            break;
-        }
-      },
-      silenceChange(val,key){
-        this.tempBox[key]=val.name;
-        this.tempBoxId[key]=val.id;
-      },
-      clearValue(key){
-        this.tempBox[key]='';
-      },
-      tempBoxClose(){
-        this.cascaderValue="";
-      },
-
-
-
-      /*setMsg:function(){
-        this.appendMsg
-      }*/
+      }
     },
-    watch:{
-      dropDownVisible:function(n,o){
-        if(this.$refs.metricSelector){
-          this.$refs.metricSelector.dropDownVisible=n;
-          if(!this.expressionList[this.index]||this.expressionList[this.index]==''){
-            this.cascaderValue="";
+    tempBoxShowChange (flag) {
+      this.tempBoxShow = flag
+      if (flag) {
+        this.cascaderValue = ''
+        let params = {}
+        params.expression = this.tempBox.expression
+        params.varsVal = {}
+        let returnFlag = false
+        let errorStr = ''
+        this.tempBox.vars.forEach((item) => {
+          params.varsVal[item] = this.tempBox[item]
+          if (!this.tempBox[item]) {
+            errorStr += item + ','
+            returnFlag = true
           }
+        })
+
+        if (returnFlag) {
+          this.$message({
+            message: this.$t('config.exprTemp.errorStr', { errorStr: errorStr }),
+            type: 'error'
+          })
+          return
         }
-      },
+
+        if (this.tempBox.vars.length == 0) {
+          this.tempBoxShow = false
+          this.expressionList[this.index] = params.expression
+          this.$emit('change', params.expression)
+          return
+        }
+
+        this.$post('/expression/tmpl/render', params).then(res => {
+          if (res.code === 200) {
+            this.tempBoxShow = false
+            this.expressionList[this.index] = res.data.expression
+            this.$emit('change', res.data.expression)
+          }
+        })
+      } else {
+        this.tempBox = {}
+      }
     },
+
+    format (str) {
+      let arr = str.split('.')
+      let keyword = arr[0].toLowerCase()
+      switch (keyword) {
+        case 'asset':
+        case 'module':
+        case 'endpoint':
+        case 'datacenter':
+        case 'project':
+          return {
+            arr: this[keyword + 'Option'],
+            key: keyword,
+            value: ((keyword == 'module' || keyword == 'project' || keyword == 'datacenter') ? 'name' : 'host')
+          }
+        default:
+          return {
+            key: false
+          }
+      }
+    },
+    getAllOptins (key, arr) {
+      switch (key) {
+        case 'asset':
+          this.$get('asset', { pageNo: 1, pageSize: -1 }).then(response => {
+            if (response.code == 200) {
+              let arr = []
+              response.data.list.forEach(asset => {
+                asset.name = asset.sn
+                let idcF = arr.find(idc => idc.id === asset.idc.id)
+                if (idcF) {
+                  idcF.children.push(asset)
+                } else {
+                  let idc = { ...asset.idc }
+                  idc.children = [asset]
+                  arr.push(idc)
+                }
+              })
+              this.assetOption = arr
+            }
+          })
+          break
+        case 'module':
+          this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
+            if (response.code == 200) {
+              let arr = []
+              response.data.list.forEach(module => {
+                let projectF = arr.find(project => project.id === module.project.id)
+                if (projectF) {
+                  projectF.children.push(module)
+                } else {
+                  let project = { ...module.project }
+                  project.children = [module]
+                  arr.push(project)
+                }
+              })
+              this.moduleOption = arr
+            }
+          })
+          break
+        case 'endpoint':
+          this.$get('endpoint', { pageNo: 1, pageSize: -1 }).then(response => {
+            if (response.code == 200) {
+              let arr = []
+              response.data.list.forEach(item => {
+                item.name = item.host
+                let projectF = arr.find(project => item.project.id === project.id)
+                if (projectF) {
+                  let moduleF = projectF.children.find(module => module.id === item.module.id)
+                  if (moduleF) {
+                    moduleF.children.push(item)
+                  } else {
+                    projectF.children.push({ ...item.module, children: [item] })
+                  }
+                } else {
+                  let project = { ...item.project }
+                  project.children = [{ ...item.module, children: [item] }]
+                  arr.push(project)
+                }
+              })
+              this.endpointOption = arr
+            }
+          })
+          break
+        case 'datacenter':
+          this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
+            if (response.code == 200) {
+              this.datacenterOption = response.data.list
+            }
+          })
+          break
+        case 'project':
+          this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
+            if (response.code == 200) {
+              this.projectOption = response.data.list
+            }
+          })
+          break
+        default:
+          break
+      }
+    },
+    silenceChange (val, key) {
+      this.tempBox[key] = val.name
+      this.tempBoxId[key]=val.id;
+    },
+    clearValue (key) {
+      this.tempBox[key] = ''
+    },
+    tempBoxClose () {
+      this.cascaderValue = ''
+    }
+
+    /* setMsg:function(){
+        this.appendMsg
+      } */
+  },
+  watch: {
+    dropDownVisible: function (n, o) {
+      if (this.$refs.metricSelector) {
+        this.$refs.metricSelector.dropDownVisible = n
+        if (!this.expressionList[this.index] || this.expressionList[this.index] == '') {
+          this.cascaderValue = ''
+        }
+      }
+    }
   }
+}
 </script>
 
 <style scoped lang="scss">

@@ -19,7 +19,7 @@
                     <el-submenu index="2">
                         <template slot="title">打开</template>
                         <template v-for="(item, index) in enableAsset">
-                            <el-menu-item :index="'2-' + index" @click="createCli(item)">{{item.host}}</el-menu-item>
+                            <el-menu-item :key="index" :index="'2-' + index" @click="createCli(item)">{{item.host}}</el-menu-item>
                         </template>
                     </el-submenu>
                 </el-menu>
@@ -66,7 +66,7 @@ export default {
   components: {
     'my-terminal': Console
   },
-  data() {
+  data () {
     return {
       dialogVisible: false,
       terminal: {
@@ -75,8 +75,8 @@ export default {
         cols: 400,
         rows: 400
       },
-      obj:{
-        id:''
+      obj: {
+        id: ''
       },
       uploadFile: {
         file: '',
@@ -85,81 +85,81 @@ export default {
       },
       pageObj: {
         pageNo: 1,
-        pageSize: 100,
+        pageSize: 100
       },
-      enableAsset:'',
-      host:'',
-      token:'',
-      routeData: this.$route.query,
+      enableAsset: '',
+      host: '',
+      token: '',
+      routeData: this.$route.query
     }
   },
   watch: {
   },
   methods: {
-    createCli(item){
-      let routeData = this.$router.resolve({
-        name: "newChat",
+    createCli (item) {
+      const routeData = this.$router.resolve({
+        name: 'newChat',
         query: {
           host: item.host,
-          accountId:item.accounts[0].id
+          accountId: item.accounts[0].id
         }
-      });
-      window.open(routeData.href);
+      })
+      window.open(routeData.href)
     },
-    cloneChat(){
-      let routeData = this.$router.resolve({
-        name: "cloneChat",
+    cloneChat () {
+      const routeData = this.$router.resolve({
+        name: 'cloneChat',
         query: {
-          host:this.routeData.host,
-          accountId:this.routeData.accountId
+          host: this.routeData.host,
+          accountId: this.routeData.accountId
         }
-      });
-      window.open(routeData.href);
+      })
+      window.open(routeData.href)
     },
-    getConnect(id,token) {
-      this.$get('account/reopen.do?id='+id+"&token="+token).then(res => {
+    getConnect (id, token) {
+      this.$get('account/reopen.do?id=' + id + '&token=' + token).then(res => {
         if (res.code === 200) {
           this.token = res.data.token
-          sessionStorage.setItem("cliToken", this.token);
+          sessionStorage.setItem('cliToken', this.token)
         }
       })
     },
-    handleChange(file) {
+    handleChange (file) {
       this.uploadFile.file = file.raw
     },
-    upload() {
+    upload () {
       this.uploadFile.token = this.token
-      let form = new FormData();
-      form.append("token", this.token);
-      form.append("file", this.uploadFile.file);
-      form.append("path", this.uploadFile.path);
+      const form = new FormData()
+      form.append('token', this.token)
+      form.append('file', this.uploadFile.file)
+      form.append('path', this.uploadFile.path)
       this.$post('account/upload.do', form).then(res => {
         if (res.code === 200) {
           // console.log(res)
         }
       })
     },
-    getAssetData() {
+    getAssetData () {
       this.$get('asset', this.pageObj).then(response => {
         if (response.code === 200) {
-          this.assetData = response.data.list;
+          this.assetData = response.data.list
           this.enableAsset = this.assetData.filter(item => {
             return item.accounts.length > 0
           })
         }
       })
-    },
+    }
   },
-  mounted() {
+  mounted () {
     if (this.routeData) {
       this.host = this.routeData.host
       document.title = this.host
     }
     this.getAssetData()
-    if(sessionStorage.getItem('cliToken')){
-      this.getConnect(this.routeData.accountId,sessionStorage.getItem('cliToken'))
+    if (sessionStorage.getItem('cliToken')) {
+      this.getConnect(this.routeData.accountId, sessionStorage.getItem('cliToken'))
     }
-  },
+  }
 }
 </script>
 

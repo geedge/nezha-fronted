@@ -15,10 +15,10 @@
       <div class="record-container--record">
         <div class="record--title">{{$t('config.terminallog.cmd.history')}}</div>
         <div class="record--list">
-          <template v-for="(record, index) in records">
-            <template v-for="item in record.list">
-              <div class="detail--time"><span>{{calcTime(item.time)}}</span></div>
-              <div class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
+          <template v-for="record in records">
+            <template v-for="(item, index) in record.list">
+              <div :key="index" class="detail--time"><span>{{calcTime(item.time)}}</span></div>
+              <div :key="index" class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
             </template>
           </template>
         </div>
@@ -31,118 +31,118 @@
 </template>
 
 <script>
-  export default {
-    name: "terminalLogRecordTab",
-    components: {
-    },
-    props: {
-      obj: Object, //关联的实体对象
-    },
-    computed: {
-      calcTime() {
-        return function(time) {
-          if (this.obj.startTime) {
-            let startTime = new Date(this.obj.startTime).getTime();
-            if (startTime) {
-              let thisTime = startTime+time;
-              return this.dateFormat(thisTime);
-            }
+export default {
+  name: 'terminalLogRecordTab',
+  components: {
+  },
+  props: {
+    obj: Object // 关联的实体对象
+  },
+  computed: {
+    calcTime () {
+      return function (time) {
+        if (this.obj.startTime) {
+          const startTime = new Date(this.obj.startTime).getTime()
+          if (startTime) {
+            const thisTime = startTime + time
+            return this.dateFormat(thisTime)
           }
-          return "-";
         }
-      },
-      matchBgColor() {
-        return function(cmd) {
-          let className = "";
-          let dangerCmd = this.$CONSTANTS.terminalLog.dangerCmd;
-          let infoCmd = this.$CONSTANTS.terminalLog.infoCmd;
-          let cmdSplit = cmd.split(" ");
-          if (this.intersection(infoCmd, cmdSplit).length > 0) {
-            className = "detail--cmd__green";
-          }
-          if (this.intersection(dangerCmd, cmdSplit).length > 0) {
-            className = "detail--cmd__red";
-          }
-          return className;
-        }
-      },
-      hasNext() {
-        if (this.records.length > 0) {
-          return this.records[this.records.length-1].hasNext;
-        }
-        return false;
+        return '-'
       }
     },
-    data() {
-      return {
-        filter: {
-          uuid: "",
-          cmd: "",
-          time: "",
-          size: 200
-        },
-        records: [ // 加载更多时有多个record，否则只有一个
-
-        ],
+    matchBgColor () {
+      return function (cmd) {
+        let className = ''
+        const dangerCmd = this.$CONSTANTS.terminalLog.dangerCmd
+        const infoCmd = this.$CONSTANTS.terminalLog.infoCmd
+        const cmdSplit = cmd.split(' ')
+        if (this.intersection(infoCmd, cmdSplit).length > 0) {
+          className = 'detail--cmd__green'
+        }
+        if (this.intersection(dangerCmd, cmdSplit).length > 0) {
+          className = 'detail--cmd__red'
+        }
+        return className
       }
     },
-    methods: {
-      initData(filter) {
-        this.$get("/terminal/cmd", filter).then(res => {
-          if (res.code === 200) {
-            this.records.push(res.data);
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
+    hasNext () {
+      if (this.records.length > 0) {
+        return this.records[this.records.length - 1].hasNext
+      }
+      return false
+    }
+  },
+  data () {
+    return {
+      filter: {
+        uuid: '',
+        cmd: '',
+        time: '',
+        size: 200
       },
-      loadMore() {
-        let filter = Object.assign({}, this.filter);
-        filter.time = this.records[this.records.length-1].time;
-        this.initData(filter);
-      },
-      // 切换tab
-      changeTab(tab) {
-        this.$emit('changeTab', tab);
-      },
-      intersection(a, b) {
-        let s = new Set(b);
-        return a.filter(x => s.has(x));
-      },
-      dateFormat(time) {
-        if (!time) {
-          return '-';
-        }
-        let date = new Date(time);
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-        let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      records: [ // 加载更多时有多个record，否则只有一个
 
-        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
-      },
-      formatUpdateTime(date) {
-        let time=new Date(date);
-        let hours=time.getHours()>9?time.getHours():'0'+time.getHours();
-        let minutes=time.getMinutes()>9?time.getMinutes():'0'+time.getMinutes();
-
-        return hours+':'+minutes;
-      },
-    },
-    watch: {
-      obj: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          this.records = [];
-          this.filter.uuid = n.uuid;
-          this.initData(this.filter);
+      ]
+    }
+  },
+  methods: {
+    initData (filter) {
+      this.$get('/terminal/cmd', filter).then(res => {
+        if (res.code === 200) {
+          this.records.push(res.data)
+        } else {
+          this.$message.error(res.msg)
         }
-      },
+      })
     },
+    loadMore () {
+      const filter = Object.assign({}, this.filter)
+      filter.time = this.records[this.records.length - 1].time
+      this.initData(filter)
+    },
+    // 切换tab
+    changeTab (tab) {
+      this.$emit('changeTab', tab)
+    },
+    intersection (a, b) {
+      const s = new Set(b)
+      return a.filter(x => s.has(x))
+    },
+    dateFormat (time) {
+      if (!time) {
+        return '-'
+      }
+      const date = new Date(time)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+
+      return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+    },
+    formatUpdateTime (date) {
+      const time = new Date(date)
+      const hours = time.getHours() > 9 ? time.getHours() : '0' + time.getHours()
+      const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes()
+
+      return hours + ':' + minutes
+    }
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.records = []
+        this.filter.uuid = n.uuid
+        this.initData(this.filter)
+      }
+    }
   }
+}
 </script>
 
 <style lang="scss">

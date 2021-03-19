@@ -38,35 +38,35 @@
 </template>
 
 <script>
-    export default {
-      name: "selectPanel",
-      props:{
-        placement: {type: String},
-        isEdit: {type: Boolean, default: true},
-        panelData: {type: Array},
-        showPanel: {type: Object},
-        panelLock: {type: Boolean, default: true},
-        filterPanel: {type: String},
-      },
-      mounted() {
-        this.$refs.panelTree.setCurrentKey(this.panel);
-      },
-      watch: {
-        filterPanel: {
-          immediate: true,
-          handler(n) {
-            this.$refs.panelTree && this.$refs.panelTree.filter(n);
-          }
-        },
-        showPanel: {
-          immediate: true,
-          handler(n) {
-            if (n) {
-              this.panel = JSON.parse(JSON.stringify(n));
-            }
-          }
-        },
-        /*panel: {
+export default {
+  name: 'selectPanel',
+  props: {
+    placement: { type: String },
+    isEdit: { type: Boolean, default: true },
+    panelData: { type: Array },
+    showPanel: { type: Object },
+    panelLock: { type: Boolean, default: true },
+    filterPanel: { type: String }
+  },
+  mounted () {
+    this.$refs.panelTree.setCurrentKey(this.panel)
+  },
+  watch: {
+    filterPanel: {
+      immediate: true,
+      handler (n) {
+        this.$refs.panelTree && this.$refs.panelTree.filter(n)
+      }
+    },
+    showPanel: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          this.panel = JSON.parse(JSON.stringify(n))
+        }
+      }
+    }
+    /* panel: {
           immediate: true,
           handler(n) {
             if (this.$refs.panelTree) {
@@ -74,75 +74,75 @@
               this.$refs.panelTree.setCurrentKey(n);
             }
           }
-        }*/
-      },
-      data(){
-        return {
-          popBox: {show: false},
-          panel: {id: 0, name: ""},
-        }
-      },
-      methods:{
-        /*
+        } */
+  },
+  data () {
+    return {
+      popBox: { show: false },
+      panel: { id: 0, name: '' }
+    }
+  },
+  methods: {
+    /*
         * node: 被拖的节点
         * relative: 发生关系的节点
         * position: ['before', 'after', 'inner'] 与relative节点的关系
         * */
-        nodeDrop(node, relative, position, event) {
-          if (position === 'inner') {
-            node.data.pid = relative.data.id;
-          } else {
-            node.data.pid = relative.data.pid;
-          }
-          this.updateWeight();
-        },
-        filterNode(value, data) {
-          if (!value) return true;
-          return data.name.indexOf(value) !== -1;
-        },
-        updateWeight() {
-          let toUpdate = [];
-          let count = 0;
-          handler(this.panelData);
+    nodeDrop (node, relative, position, event) {
+      if (position === 'inner') {
+        node.data.pid = relative.data.id
+      } else {
+        node.data.pid = relative.data.pid
+      }
+      this.updateWeight()
+    },
+    filterNode (value, data) {
+      if (!value) return true
+      return data.name.indexOf(value) !== -1
+    },
+    updateWeight () {
+      const toUpdate = []
+      let count = 0
+      handler(this.panelData)
 
-          function handler(panelData) {
-            panelData.forEach(panel => {
-              panel.weight = count++;
-              toUpdate.push({id: panel.id, pid: panel.pid, weight: panel.weight});
-              if (panel.children && panel.children.length > 0) {
-                handler(panel.children);
-              }
-            });
+      function handler (panelData) {
+        panelData.forEach(panel => {
+          panel.weight = count++
+          toUpdate.push({ id: panel.id, pid: panel.pid, weight: panel.weight })
+          if (panel.children && panel.children.length > 0) {
+            handler(panel.children)
           }
+        })
+      }
 
-          this.$put("/panel/tree", toUpdate);
-        },
-        deletePanel(data) {
-          this.$emit("deletePanel", data);
-        },
-        editPanel(data) {
-          this.$emit("editPanel", data);
-        },
-        esc(){
-          this.popBox.show = false;
-        },
-        //确认选择某个节点，与父组件交互
-        selectPanel(data, checked, child) {
-          this.$emit('selectPanel', data);
-          this.$refs.panelTree.setCurrentKey(data);
-          this.esc();
-        },
-        //tree设为单选
-        /*clearOthers(data, checked, child) {
+      this.$put('/panel/tree', toUpdate)
+    },
+    deletePanel (data) {
+      this.$emit('deletePanel', data)
+    },
+    editPanel (data) {
+      this.$emit('editPanel', data)
+    },
+    esc () {
+      this.popBox.show = false
+    },
+    // 确认选择某个节点，与父组件交互
+    selectPanel (data, checked, child) {
+      this.$emit('selectPanel', data)
+      this.$refs.panelTree.setCurrentKey(data)
+      this.esc()
+    }
+    // tree设为单选
+    /* clearOthers(data, checked, child) {
           if (checked) {
             this.panel = data;
             this.$refs.panelTree.setCheckedKeys([data.id]);
           } else {
             this.panel = {id: '', name: ''};
           }
-        }*/
-      },
-    }
+        } */
+  }
+}
 </script>
 
 <style lang="scss">

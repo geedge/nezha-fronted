@@ -12,56 +12,56 @@
 </template>
 
 <script>
-  export default {
-    name:"expressionInfo",
-    props:{
-      chartData:{
+export default {
+  name: 'expressionInfo',
+  props: {
+    chartData: {
 
-      },
-      filterTime:{},
     },
-    watch:{
-      chartData(){
-        this.expressionInfoData=[];
-        if(this.chartData.res.length>0){
-          this.chartData.res.forEach((item,index)=>{
-            if(item.status==='success'){
-              this.expressionInfoData=this.expressionInfoData.concat(item.data.result);
-            }
-          });
-        }
-      }
-    },
-    data(){
-      return{
-        expressionInfoData:[]
-      }
-    },
-    mounted(){
-      if(this.chartData.res.length>0){
-        this.chartData.res.forEach((item,index)=>{
-          if(item.status==='success'){
-            this.expressionInfoData=this.expressionInfoData.concat(item.data.result);
+    filterTime: {}
+  },
+  watch: {
+    chartData () {
+      this.expressionInfoData = []
+      if (this.chartData.res.length > 0) {
+        this.chartData.res.forEach((item, index) => {
+          if (item.status === 'success') {
+            this.expressionInfoData = this.expressionInfoData.concat(item.data.result)
           }
-        });
+        })
       }
-    },
-    methods:{
-      computeData(item){
-        if(item.level){
-          return this.chartData.valueMapping.find((item2)=>item.level===item2.level).color
-        } else {
-          return {
-            fill:'#ffffff',
-            text:'#000000',
-          }
-        }
-      }
-    },
-    beforeDestroy(){
-
     }
+  },
+  data () {
+    return {
+      expressionInfoData: []
+    }
+  },
+  mounted () {
+    if (this.chartData.res.length > 0) {
+      this.chartData.res.forEach((item, index) => {
+        if (item.status === 'success') {
+          this.expressionInfoData = this.expressionInfoData.concat(item.data.result)
+        }
+      })
+    }
+  },
+  methods: {
+    computeData (item) {
+      if (item.level) {
+        return this.chartData.valueMapping.find((item2) => item.level === item2.level).color
+      } else {
+        return {
+          fill: '#ffffff',
+          text: '#000000'
+        }
+      }
+    }
+  },
+  beforeDestroy () {
+
   }
+}
 </script>
 
 <style lang="scss" scoped>

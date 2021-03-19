@@ -44,14 +44,14 @@
         v-if="item.show"
         :key="`col-${index}`"
         :label="item.label"
-        :show-overflow-tooltip="item.prop != 'labels' && item.prop != 'alertRule'"
+        :show-overflow-tooltip="item.prop !== 'labels' && item.prop !== 'alertRule'"
         :min-width="item.minWidth || item.width"
         :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
         :prop="$tableSet.propTitle(item.prop,'alertMessage')"
         :sort-orders="['ascending', 'descending']"
       >
         <template slot-scope="scope" :column="item">
-          <template v-if="item.prop == 'alertRule'">
+          <template v-if="item.prop === 'alertRule'">
             <div v-if="scope.row.alertRule.alertName" >
               <span
                 @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)"
@@ -61,28 +61,28 @@
             </div>
             <template v-else>-</template>
           </template>
-          <template v-else-if="item.prop == 'summary'">
+          <template v-else-if="item.prop === 'summary'">
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
           </template>
-          <template v-else-if="item.prop == 'description'">
+          <template v-else-if="item.prop === 'description'">
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
-          <template v-else-if="item.prop == 'remark'">
+          <template v-else-if="item.prop === 'remark'">
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
-          <span v-else-if="item.prop == 'severity'" class="severity">
-            <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
+          <span v-else-if="item.prop === 'severity'" class="severity">
+            <span v-if="scope.row[item.prop] === 'P1'" class="P1">P1</span>
             <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
-            <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
+            <span v-if="scope.row[item.prop] === 'P2'" class="P2">P2</span>
             <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
-            <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
+            <span v-if="scope.row[item.prop] === 'P3'" class="P3">P3</span>
             <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
           </span>
-          <span v-else-if="item.prop == 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <template v-else-if="item.prop == 'duration'">
+          <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+          <template v-else-if="item.prop === 'duration'">
             <el-tooltip placement="right" effect="light" :disabled="!scope.row.endAt">
               <div slot="content">
                 {{$t('config.terminallog.endTime')}}<br/>
@@ -91,16 +91,16 @@
               <span>{{getDuration(scope.row)}}</span>
             </el-tooltip>
           </template>
-          <template v-else-if="item.prop == 'labels'" class="labels">
-            <span v-for="(item,i) in labelsSort(scope.row.labels)">
+          <template v-else-if="item.prop === 'labels'" class="labels">
+            <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
               <span
                 @mouseenter="labelHover(scope.row, item.label, true, $event)"
                 @mouseleave="labelHover(scope.row, item.label, false)">
                 <nz-alert-tag
                    :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                   :cursor-point="tagType(item.label) == 'info' ? false : true"
+                   v-if="item.label !== 'alertname' && item.label !== 'severity'"
                    :key="item.label"
-                   v-if="item.label != 'alertname' && item.label != 'severity'"
+                   :cursor-point="tagType(item.label) !== 'info'"
                 >
                  {{item.value}}
                 </nz-alert-tag>
@@ -140,11 +140,11 @@
             </el-tooltip>-->
 
           </template>
-          <span v-else-if="item.prop == 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
+          <span v-else-if="item.prop === 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
               {{scope.row['state'] == 1 ? "Pending" : ""}}
               {{scope.row['state'] == 2 ? "Expired" : ""}}
           </span>
-          <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
+          <div v-else-if="item.prop === 'current'" class="too-long-split pointer" @click="detail(scope.row)">
             <span v-if="!scope.row.current || scope.row.alertRule.buildIn == 1">-</span>
             <el-popover v-else placement="right" trigger="hover">
               <div slot="reference">
@@ -154,7 +154,7 @@
               <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
             </el-popover>
           </div>
-          <div v-else-if="item.prop == 'option'" class="content-right-options">
+          <div v-else-if="item.prop === 'option'" class="content-right-options">
             <span :id="'alert-list-delete-'+scope.row.id" :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" v-has="`${from}_delete`"><i  class="nz-icon nz-icon-delete"></i></span>
           </div>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -163,7 +163,7 @@
       </el-table-column>
 
       <el-table-column width="28" :resizable="true">
-        <template slot="header" slot-scope="scope">
+        <template slot="header">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
@@ -224,405 +224,402 @@
 </template>
 
 <script>
-  import bus from '../../../libs/bus';
-  import axios from 'axios';
-  import nzAlertTag from '../../page/alert/nzAlertTag';
-  import chart from '../../page/dashboard/overview/chart'
-  import chartDataFormat from "../../charts/chartDataFormat";
-  import alertRuleInfo from '../../common/alert/alertRuleInfo'
-  import alertLabel from '../../common/alert/alertLabel'
-  import {calcDurationByStringTimeB} from "../../common/js/tools";
-  export default {
-    name:"alertMessageTable",
-    components: {
-      'nz-alert-tag': nzAlertTag,
-      'chart': chart,
-      'alertRuleInfo':alertRuleInfo,
-      'alertLabel':alertLabel,
+import bus from '../../../libs/bus'
+import axios from 'axios'
+import nzAlertTag from '../../page/alert/nzAlertTag'
+import chart from '../../page/dashboard/overview/chart'
+import chartDataFormat from '../../charts/chartDataFormat'
+import alertRuleInfo from '../../common/alert/alertRuleInfo'
+import alertLabel from '../../common/alert/alertLabel'
+import { calcDurationByStringTimeB } from '../js/tools'
+export default {
+  name: 'alertMessageTable',
+  components: {
+    'nz-alert-tag': nzAlertTag,
+    chart: chart,
+    alertRuleInfo: alertRuleInfo,
+    alertLabel: alertLabel
+  },
+  mixins: [bus],
+  props: {
+    tableData: {},
+    loading: {},
+    tableHeight: {},
+    tableId: {},
+    projectAlertId: {},
+    showTopBtn: {
+      type: Boolean,
+      default: true
     },
-    mixins:[bus],
-    props:{
-      id:String,
-      tableData:{},
-      loading:{},
-      tableHeight:{},
-      tableId:{},
-      projectAlertId:{},
-      showTopBtn:{
-        type:Boolean,
-        default:true,
+    from: { type: String },
+    id: String,
+    nowTime: {}
+  },
+  data () {
+    return {
+      /* 二级列表相关 */
+      tabList: [], // 二级列表的标签
+      tabDetailList: [], // 多个详情
+      bottomBox: {
+        tabList: [], // 二级列表的标签
+        tabDetailList: [], // 多个详情
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
       },
-      from: {type: String},
-      id:String,
-      nowTime:{},
-    },
-    data() {
-      vm = this;
-      return {
-        /*二级列表相关*/
-        tabList: [], //二级列表的标签
-        tabDetailList: [], //多个详情
-        bottomBox: {
-          tabList: [], //二级列表的标签
-          tabDetailList: [], //多个详情
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
 
-        //导出相关
-        importBox: {show: false, title:this.$t('overall.exportExcel')},
-        deleteBox: {show: false, ids: "", remark: '', state: 2},
+      // 导出相关
+      importBox: { show: false, title: this.$t('overall.exportExcel') },
+      deleteBox: { show: false, ids: '', remark: '', state: 2 },
 
-        //详情相关
-        graphShow: false,
-        chartDatas: [],
-        sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
-        legend: [],
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
-        currentMsg: {},
-        chartUnit: 5,
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("alert.alertName"),
-            prop: 'alertRule',
-            show: true,
-            width: 180
-          }, {
-            label: this.$t("alert.list.labels"),
-            prop: 'labels',
-            show: true,
-            NotSet:true,
-            minWidth: 250
-          }, {
-            label: this.$t("alert.severity"),
-            prop: 'severity',
-            show: true,
-            width: 110,
-          }, {
-            label: this.$t('alert.summary'),
-            prop: 'summary',
-            show: true,
-            minWidth:200
-          }, {
-            label: this.$t('alert.description'),
-            prop: 'description',
-            show: true,
-            minWidth:200
-          },{
-            label: this.$t('alert.list.remark'),
-            prop: 'remark',
-            show: false,
-            minWidth:200
-          }, {
-            label: this.$t('alert.list.state'),
-            prop: 'state',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t("alert.startAt"),
-            prop: 'startAt',
-            show: true,
-            width: 150
-          }, /*{
+      // 详情相关
+      graphShow: false,
+      chartDatas: [],
+      sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
+      legend: [],
+      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+      currentMsg: {},
+      chartUnit: 5,
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('alert.alertName'),
+          prop: 'alertRule',
+          show: true,
+          width: 180
+        }, {
+          label: this.$t('alert.list.labels'),
+          prop: 'labels',
+          show: true,
+          NotSet: true,
+          minWidth: 250
+        }, {
+          label: this.$t('alert.severity'),
+          prop: 'severity',
+          show: true,
+          width: 110
+        }, {
+          label: this.$t('alert.summary'),
+          prop: 'summary',
+          show: true,
+          minWidth: 200
+        }, {
+          label: this.$t('alert.description'),
+          prop: 'description',
+          show: true,
+          minWidth: 200
+        }, {
+          label: this.$t('alert.list.remark'),
+          prop: 'remark',
+          show: false,
+          minWidth: 200
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('alert.startAt'),
+          prop: 'startAt',
+          show: true,
+          width: 150
+        }, /* {
             label: this.$t('alert.endAt'),
             prop: 'endAt',
             show: true,
             width: 150
-          },*/
-          {
-            label:  this.$t('config.terminallog.duration'),
-            prop: 'duration',
-            show: true,
-            width: 150
-          },{
-            label: this.$t('overall.value'),
-            prop: 'current',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t('overall.option'),
-            prop: 'option',
-            show: true,
-            width: 90
-          }
-        ],
-        viewProjectData: {id: '', name: '', remark: ''},
-        viewModuleData: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []},
-        viewAssetState: false,
+          }, */
+        {
+          label: this.$t('config.terminallog.duration'),
+          prop: 'duration',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('overall.value'),
+          prop: 'current',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('overall.option'),
+          prop: 'option',
+          show: true,
+          width: 90
+        }
+      ],
+      viewProjectData: { id: '', name: '', remark: '' },
+      viewModuleData: { id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [] },
+      viewAssetState: false,
 
-        scrollbarWrap: null,
-        delFlag:false,
-        tableDataInitNum:0,
+      scrollbarWrap: null,
+      delFlag: false,
+      tableDataInitNum: 0
+    }
+  },
+  computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
+        }
       }
     },
-    computed: {
-      tagType() {
-        return (key) => {
-          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "normal";
-          } else {
-            return "info";
+    tagValue () {
+      return (key, value) => {
+        if (key == 'type') {
+          if (value == 1) {
+            value = this.$t('project.project.project')
+          } else if (value == 2) {
+            value = this.$t('module.module.module')
+          } else if (value == 3) {
+            value = this.$t('asset.asset')
           }
         }
-      },
-      tagValue() {
-        return (key, value) => {
-          if (key == 'type') {
-            if (value ==  1) {
-              value = this.$t("project.project.project");
-            } else if (value == 2) {
-              value = this.$t("module.module.module");
-            } else if (value == 3) {
-              value = this.$t("asset.asset");
-            }
-          }
-          return key + "：" + value;
-        }
-      },
-      getDuration() {
-        return function(record) {
-          if (record.endTime) {
-            return calcDurationByStringTimeB(record.startAt, record.endAt);
-          }
-          return calcDurationByStringTimeB(record.startAt, this.nowTime);
-        }
-      },
+        return key + '：' + value
+      }
     },
-    methods: {
-      labelsSort:function(obj){
-        let buildIn=['asset','endpoint','module','project','datacenter']
-        if(typeof obj == "string") obj=JSON.parse(obj)
-        let labels=JSON.parse(JSON.stringify(obj));
-        let result=[];
-        for(let key of buildIn){
-          if(key in labels){
-            result.push({label:key,value:labels[key]})
-            delete labels[key]
-          }
+    getDuration () {
+      return function (record) {
+        if (record.endTime) {
+          return calcDurationByStringTimeB(record.startAt, record.endAt)
         }
-        Object.keys(labels).sort().forEach(key=>{
-          result.push({label:key,value:labels[key]})
-        })
-        return result;
-      },
-      chartUnitChange:function(unit){
-        this.chartUnit=unit;
-        this.$nextTick(()=>{
-          this.queryChartDate()
-        })
-      },
+        return calcDurationByStringTimeB(record.startAt, this.nowTime)
+      }
+    }
+  },
+  methods: {
+    labelsSort: function (obj) {
+      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      if (typeof obj === 'string') obj = JSON.parse(obj)
+      const labels = JSON.parse(JSON.stringify(obj))
+      const result = []
+      for (const key of buildIn) {
+        if (key in labels) {
+          result.push({ label: key, value: labels[key] })
+          delete labels[key]
+        }
+      }
+      Object.keys(labels).sort().forEach(key => {
+        result.push({ label: key, value: labels[key] })
+      })
+      return result
+    },
+    chartUnitChange: function (unit) {
+      this.chartUnit = unit
+      this.$nextTick(() => {
+        this.queryChartDate()
+      })
+    },
 
-      formatThreshold:function(value,unit){
-        let unitMethod=chartDataFormat.getUnit(unit)
-        if(unitMethod&&value){
-          return unitMethod.compute(value,null,2);
-        }else{
-          return value
-        }
-      },
-      queryChartDate() {
-        let $temp = this;
-        let start = this.searchTime[0]?this.searchTime[0]:this.getTime(-1, 'h');
-        let end = this.searchTime[1]?this.searchTime[1]:this.getTime(0, 'h');
-        this.searchTime = [start, end];
-        let timeDiff = (new Date(end).getTime()-new Date(start).getTime())/1000/(24*60*60);
-        let step = '15s';
-        if(timeDiff< 1){
-          step='15s';
-        }else if(timeDiff < 7){
-          step='5m';
-        }else if(timeDiff<30){
-          step='10m';
-        }else{
-          step='30m';
-        }
-       if(this.$refs.messageChart){
-         this.$refs.messageChart.startLoading();
-         let axiosArr=[];
-         let paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg));
-         axiosArr.push(axios.get("/prom/api/v1/query_range?query="+paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")+"&start="+this.$stringTimeParseToUnix(start)+"&end="+this.$stringTimeParseToUnix(end)+"&step="+step));
-         this.legend = [];
-         this.chartDatas = [];
-         axios.all(axiosArr).then(res =>{
-           try {
-             res.forEach((response, promIndex) => {
-               if (response.status == 200) {
-                 if (response.data.status == 'success') {
-                   let queryData = response.data.data.result[0];
-                   if (queryData) {
-                     let chartData = {
-                       type: "line",
-                       symbol: 'none',  //去掉点
-                       smooth: 0.2,  //曲线变平滑
-                       name: '',
-                       lineStyle: {
-                         width: 1,
-                         opacity: 0.9
-                       },
-                       markLine: {
-                         silent: true,
-                         symbol: ['circle', 'circle'],
-                         label: {
-                           distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                           formatter: function (params) {
-                             return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
-                           }
-                         },
-                         lineStyle: {
-                           color:'#d64f40',
-                           width:2,
-                           type:'dotted'
-                         },
-                         data: [{
-                           yAxis: Number(this.currentMsg.alertRule.threshold)
-                         }, ]
-                       },
-                       markArea:{
-                         itemStyle:{
-                           color:'#d64f40',
-                           opacity:0.1
-                         },
-                         data:[this.returnMarkArea()]
-                       }
-                     };
-                     if(this.currentMsg.alertRule.operator=='=='||this.currentMsg.alertRule.operator=='!='){
-                       delete chartData.markArea;
-                     }
-                     chartData.name += "{";
-                     alias += "{";
-                     Object.keys(queryData.metric).forEach((item, index) => {
-                       let label = item;
-                       let value = queryData.metric[label];
-                       chartData.name += label + "='" + value + "',";
-                     });
-                     chartData.name = chartData.name.charAt(chartData.name.length - 1) == "," ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name;
-                     chartData.name += "}";
-                     let alias = chartData.name;
-                     let legend = {
-                       name: chartData.name,
-                       alias: alias,
-                       isGray: false
-                     }
-                     this.legend.push(legend);
-                     chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
-                       return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(2)];
-                     });
-                     this.chartDatas.push(chartData);
-                   }
-                 } else {
-                   this.$message.error(response.data.error)
-                 }
-               }
-             });
-             this.$nextTick(() => {
-               this.$refs.messageChart.setRandomColors(this.chartDatas.length);
-               this.$refs.messageChart.setLegend(this.legend);
-               this.$refs.messageChart.setSeries(this.chartDatas);
-               this.$refs.messageChart.endLoading();
-             });
-           } catch(err) {
-             this.$message.error(err);
-             this.$refs.messageChart.endLoading();
-           }
-         })
-       }
-      },
-      computeDistance:function(str){
-        var width = 0;
-        var html = document.createElement('span');
-        html.innerText = str;
-        html.className = 'getTextWidth';
-        document.querySelector('body').appendChild(html);
-        width = document.querySelector('.getTextWidth').offsetWidth;
-        document.querySelector('.getTextWidth').remove();
-        return Number('-'+(width+5));
-      },
-      returnMarkArea:function(){
-        if(this.currentMsg){
-          if(this.currentMsg.alertRule.operator=='>'||this.currentMsg.alertRule.operator=='>='){
-            return[{yAxis:this.currentMsg.alertRule.threshold},{}]
-          }else{
-            return[{},{yAxis:this.currentMsg.alertRule.threshold}]
-          }
-        }
-      },
-      detail(obj) {
-        if(!obj.current){return}
-        this.chartDatas = [];
-        this.legend = [];
-        this.graphShow = true;
-        this.currentMsg = obj;
-        this.chartUnit=obj.alertRule.unit?obj.alertRule.unit:5;
-        this.$nextTick(() => {
-          this.queryChartDate();
-        });
-      },
-      dialogClose() {
-        this.graphShow = false;
-      },
-      getAlertList() {
-        if (!this.scrollbarWrap) {
-          this.$nextTick(() => {
-            this.scrollbarWrap = this.$refs.alertListTable.bodyWrapper;
-            this.toTopBtnHandler(this.scrollbarWrap);
-          });
-        }
-      },
-      promQueryParamConvert(obj){
-        let r = "(" + obj.alertRule.expr + ")";
-        let intoLabels=false
-        if (Object.keys(obj.labels).length > 0) {
-          r += function(){
-            let group =" and " +  "(group({";
-            let by = " by (";
-
-            for (let k in obj.labels) {
-              if (k != 'alertname' && k != 'severity') {
-                intoLabels=true;
-                group += k;
-                group += "=";
-                group += ("'" + obj.labels[k] + "',");
-                by += k;
-                by += ","
+    formatThreshold: function (value, unit) {
+      const unitMethod = chartDataFormat.getUnit(unit)
+      if (unitMethod && value) {
+        return unitMethod.compute(value, null, 2)
+      } else {
+        return value
+      }
+    },
+    queryChartDate () {
+      const $temp = this
+      const start = this.searchTime[0] ? this.searchTime[0] : this.getTime(-1, 'h')
+      const end = this.searchTime[1] ? this.searchTime[1] : this.getTime(0, 'h')
+      this.searchTime = [start, end]
+      const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
+      let step = '15s'
+      if (timeDiff < 1) {
+        step = '15s'
+      } else if (timeDiff < 7) {
+        step = '5m'
+      } else if (timeDiff < 30) {
+        step = '10m'
+      } else {
+        step = '30m'
+      }
+      if (this.$refs.messageChart) {
+        this.$refs.messageChart.startLoading()
+        const axiosArr = []
+        const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '') + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        this.legend = []
+        this.chartDatas = []
+        axios.all(axiosArr).then(res => {
+          try {
+            res.forEach((response, promIndex) => {
+              if (response.status == 200) {
+                if (response.data.status == 'success') {
+                  const queryData = response.data.data.result[0]
+                  if (queryData) {
+                    const chartData = {
+                      type: 'line',
+                      symbol: 'none', // 去掉点
+                      smooth: 0.2, // 曲线变平滑
+                      name: '',
+                      lineStyle: {
+                        width: 1,
+                        opacity: 0.9
+                      },
+                      markLine: {
+                        silent: true,
+                        symbol: ['circle', 'circle'],
+                        label: {
+                          distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
+                          formatter: function (params) {
+                            return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
+                          }
+                        },
+                        lineStyle: {
+                          color: '#d64f40',
+                          width: 2,
+                          type: 'dotted'
+                        },
+                        data: [{
+                          yAxis: Number(this.currentMsg.alertRule.threshold)
+                        }]
+                      },
+                      markArea: {
+                        itemStyle: {
+                          color: '#d64f40',
+                          opacity: 0.1
+                        },
+                        data: [this.returnMarkArea()]
+                      }
+                    }
+                    if (this.currentMsg.alertRule.operator == '==' || this.currentMsg.alertRule.operator == '!=') {
+                      delete chartData.markArea
+                    }
+                    let alias = chartData.name
+                    chartData.name += '{'
+                    alias += '{'
+                    Object.keys(queryData.metric).forEach((item, index) => {
+                      const label = item
+                      const value = queryData.metric[label]
+                      chartData.name += label + "='" + value + "',"
+                    })
+                    chartData.name = chartData.name.charAt(chartData.name.length - 1) == ',' ? chartData.name.substr(0, chartData.name.length - 1) : chartData.name
+                    chartData.name += '}'
+                    const legend = {
+                      name: chartData.name,
+                      alias: alias,
+                      isGray: false
+                    }
+                    this.legend.push(legend)
+                    chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
+                      return [dpsItem[0] * 1000, parseFloat(dpsItem[1]).toFixed(2)]
+                    })
+                    this.chartDatas.push(chartData)
+                  }
+                } else {
+                  this.$message.error(response.data.error)
+                }
               }
-            }
-            if(intoLabels){
-              group = group.substring(0, group.length-1);
-              by = by.substring(0, by.length-1);
-              group += "})";
-              by += ")";
-              return group + by + ")";
-            }else{
-              return ''
-            }
-
-          }();
+            })
+            this.$nextTick(() => {
+              this.$refs.messageChart.setRandomColors(this.chartDatas.length)
+              this.$refs.messageChart.setLegend(this.legend)
+              this.$refs.messageChart.setSeries(this.chartDatas)
+              this.$refs.messageChart.endLoading()
+            })
+          } catch (err) {
+            this.$message.error(err)
+            this.$refs.messageChart.endLoading()
+          }
+        })
+      }
+    },
+    computeDistance: function (str) {
+      let width = 0
+      const html = document.createElement('span')
+      html.innerText = str
+      html.className = 'getTextWidth'
+      document.querySelector('body').appendChild(html)
+      width = document.querySelector('.getTextWidth').offsetWidth
+      document.querySelector('.getTextWidth').remove()
+      return Number('-' + (width + 5))
+    },
+    returnMarkArea: function () {
+      if (this.currentMsg) {
+        if (this.currentMsg.alertRule.operator == '>' || this.currentMsg.alertRule.operator == '>=') {
+          return [{ yAxis: this.currentMsg.alertRule.threshold }, {}]
+        } else {
+          return [{}, { yAxis: this.currentMsg.alertRule.threshold }]
         }
-        return r;
-        /*let result="(" + obj.alertRule.expr + ")";
+      }
+    },
+    detail (obj) {
+      if (!obj.current) { return }
+      this.chartDatas = []
+      this.legend = []
+      this.graphShow = true
+      this.currentMsg = obj
+      this.chartUnit = obj.alertRule.unit ? obj.alertRule.unit : 5
+      this.$nextTick(() => {
+        this.queryChartDate()
+      })
+    },
+    dialogClose () {
+      this.graphShow = false
+    },
+    getAlertList () {
+      if (!this.scrollbarWrap) {
+        this.$nextTick(() => {
+          this.scrollbarWrap = this.$refs.alertListTable.bodyWrapper
+          this.toTopBtnHandler(this.scrollbarWrap)
+        })
+      }
+    },
+    promQueryParamConvert (obj) {
+      let r = '(' + obj.alertRule.expr + ')'
+      let intoLabels = false
+      if (Object.keys(obj.labels).length > 0) {
+        r += (function () {
+          let group = ' and ' + '(group({'
+          let by = ' by ('
+
+          for (const k in obj.labels) {
+            if (k != 'alertname' && k != 'severity') {
+              intoLabels = true
+              group += k
+              group += '='
+              group += ("'" + obj.labels[k] + "',")
+              by += k
+              by += ','
+            }
+          }
+          if (intoLabels) {
+            group = group.substring(0, group.length - 1)
+            by = by.substring(0, by.length - 1)
+            group += '})'
+            by += ')'
+            return group + by + ')'
+          } else {
+            return ''
+          }
+        }())
+      }
+      return r
+      /* let result="(" + obj.alertRule.expr + ")";
         if(obj.labels){
           if(obj.labels.alertname){
             delete obj.labels.alertname;
@@ -646,219 +643,219 @@
             return q;
           }() + ")";
         }
-        return result;*/
-      },
-      //asset弹框控制
-      tabControl(data) {
-        if (data === 'close') {
-          this.viewAssetState = false
-          this.$refs['assetEditUnit'].tabView = false
+        return result; */
+    },
+    // asset弹框控制
+    tabControl (data) {
+      if (data === 'close') {
+        this.viewAssetState = false
+        this.$refs.assetEditUnit.tabView = false
+      }
+    },
+    toDeleteMessage (obj) {
+      if (obj) {
+        this.deleteBox.ids = obj.id + ''
+      }
+      this.deleteBox.remark = ''
+      this.deleteBox.show = true
+    },
+    deleteMessage () {
+      this.$refs.remarkForm.validate(valid => {
+        if (valid) {
+          this.delFlag = true
+          this.$emit('deleteMessage', this.deleteBox, () => {
+            this.deleteBox.ids = []
+            bus.$emit('alert-message-change')
+          })
+          this.deleteBox.show = false
         }
-      },
-      toDeleteMessage(obj) {
-        if (obj) {
-          this.deleteBox.ids = obj.id + "";
-        }
-        this.deleteBox.remark="";
-        this.deleteBox.show = true;
-      },
-      deleteMessage() {
-        this.$refs.remarkForm.validate(valid => {
-          if (valid) {
-            this.delFlag=true;
-            this.$emit('deleteMessage',this.deleteBox,()=>{
-              this.deleteBox.ids=[];
-              bus.$emit("alert-message-change")
-            });
-            this.deleteBox.show = false;
+      })
+    },
+    selectChange (s) {
+      const ids = []
+      this.deleteBox.ids = ''
+      s.forEach(item => {
+        ids.push(item.id)
+      })
+      this.deleteBox.ids = ids.join(',')
+      this.$emit('select-change', s)
+    },
+    showExportDialog () {
+      this.importBox.show = true
+    },
+    openedDialog () {
+      this.$refs.remarkForm.clearValidate()
+    },
+    closeDialog () {
+      this.importBox.show = false
+      this.deleteBox.show = false
+    },
+    exportCur: function () {
+      const searchLabel = Object.assign({}, this.searchLabel)
+      this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(searchLabel)
+      this.closeDialog()
+    },
+    exportAll: function () {
+      const temp = JSON.parse(JSON.stringify(this.searchLabel))
+      temp.pageSize = -1
+      this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(temp)
+      this.closeDialog()
+    },
+    getTimeString: function () {
+      const split = '-'
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = this.formatNum(date.getMonth() + 1)
+      const day = this.formatNum(date.getDate())
+      const hours = this.formatNum(date.getHours())
+      const minutes = this.formatNum(date.getMinutes())
+      const seconds = this.formatNum(date.getSeconds())
+      return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
+    },
+    formatNum: function (num) {
+      return num > 9 ? num : '0' + num
+    },
+    exportExcel: function (params) {
+      for (const item in params) {
+        if (params[item]) {
+          if (item == 'alertMessageState') {
+            this.$set(params, 'state', params[item])
+          } else {
+            this.$set(params, item, params[item])
           }
-        })
-      },
-      selectChange(s) {
-        let ids = [];
-        this.deleteBox.ids = "";
-        s.forEach(item => {
-          ids.push(item.id);
-        });
-        this.deleteBox.ids = ids.join(",");
-        this.$emit('select-change',s)
-      },
-      showExportDialog() {
-        this.importBox.show = true;
-      },
-      openedDialog(){
-        this.$refs.remarkForm.clearValidate()
-      },
-      closeDialog() {
-        this.importBox.show = false;
-        this.deleteBox.show = false;
-      },
-      exportCur:function(){
-        let searchLabel=Object.assign({},this.searchLabel)
-        this.$set(searchLabel,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
-        this.exportExcel(searchLabel);
-        this.closeDialog();
-      },
-      exportAll:function(){
-        let temp = JSON.parse(JSON.stringify(this.searchLabel));
-        temp.pageSize = -1;
-        this.$set(temp,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
-        this.exportExcel(temp);
-        this.closeDialog();
-      },
-      getTimeString:function(){
-        let split='-';
-        let date=new Date();
-        let year=date.getFullYear();
-        let month=this.formatNum(date.getMonth()+1);
-        let day=this.formatNum(date.getDate());
-        let hours=this.formatNum(date.getHours());
-        let minutes=this.formatNum(date.getMinutes());
-        let seconds=this.formatNum(date.getSeconds());
-        return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
-      },
-      formatNum:function(num){
-        return num>9?num:'0'+num;
-      },
-      exportExcel:function(params){
-        for (let item in params) {
-          if (params[item]) {
-            if (item == "alertMessageState") {
-              this.$set(params, "state", params[item]);
-            } else{
-              this.$set(params, item, params[item]);
-            }
-          }
         }
-        let temp=this;
-        if(!params){
-          params=temp.params;
-        }
-        axios.get("alert/message/export", {responseType:'blob', params: params}).then(res=>{
-          let fileName = 'alert-message-'+temp.getTimeString()+'.xlsx';
-          if(window.navigator.msSaveOrOpenBlob){
-            // 兼容ie11
-            let blobObject = new Blob([res.data]);
-            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
-          }else{
-            let url = URL.createObjectURL(new Blob([res.data]));
-            let a = document.createElement('a');
-            document.body.appendChild(a); //此处增加了将创建的添加到body当中
-            a.href = url;
-            a.download = fileName;
-            a.target = '_blank';
-            a.click();
-            a.remove(); //将a标签移除
-          }
-        })
-      },
-      // 全屏
-      fullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.fullScreen(vm);
-      },
-      // 退出全屏
-      exitFullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.exitFullScreen(vm);
-      },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let vm = this;
-        this.$bottomBoxWindow.listResize(vm, e);
-      },
-      showTagDetail(data, key) {
-        let open = false;
-        if (key == "asset" || key == "project" || key == "module" || key == "endpoint" || key == "datacenter") {
-          open = true;
-        }
-        if (open) {
-          let labelList = [];
-          let detailList = [];
-          for (let item in data) {
-            if (item == "asset" || item == "project" || item == "module" || item == "endpoint" || item == "dc") {
-              labelList.push(item);
-              detailList.push(data[item]);
-            }
-          }
-          this.bottomBox.showSubList = true;
-          this.tabList = labelList;
-        }
-      },
-      labelsClassName(row) {
-        if (row.column.label == this.$t("alert.list.labels")) {
-          return "alert-message-list-labels";
-        } else if (row.column.label == this.$t("alert.list.state")) {
-          if (row.row.state == 1) {
-            return "danger";
-          } else if (row.row.state == 2) {
-            return "success";
-          }
+      }
+      const temp = this
+      if (!params) {
+        params = temp.params
+      }
+      axios.get('alert/message/export', { responseType: 'blob', params: params }).then(res => {
+        const fileName = 'alert-message-' + temp.getTimeString() + '.xlsx'
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
         } else {
-          return "";
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = fileName
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
         }
-      },
-      fillProject: function (module) {
-        this.$get('project', {"id": module.projectId}).then(response => {
-          if (response.code == 200) {
-            module.project = response.data.list[0];
+      })
+    },
+    // 全屏
+    fullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.fullScreen(vm)
+    },
+    // 退出全屏
+    exitFullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.exitFullScreen(vm)
+    },
+    // 鼠标拖动二级列表
+    listResize (e) {
+      const vm = this
+      this.$bottomBoxWindow.listResize(vm, e)
+    },
+    showTagDetail (data, key) {
+      let open = false
+      if (key == 'asset' || key == 'project' || key == 'module' || key == 'endpoint' || key == 'datacenter') {
+        open = true
+      }
+      if (open) {
+        const labelList = []
+        const detailList = []
+        for (const item in data) {
+          if (item == 'asset' || item == 'project' || item == 'module' || item == 'endpoint' || item == 'dc') {
+            labelList.push(item)
+            detailList.push(data[item])
           }
-        })
-      },
-      closeViews: function () {
-        this.$refs.alertConfigBox.show(false, false);
-        this.$refs.projectBox.show(false, false);
-        this.$refs.moduleBox.show(false, false);
-        this.viewAssetState = false;
-      },
-      // 数据排序
-      tableDataSort(item){
-        this.$emit('tableDataSort',item);
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      // label tooltip是否显示
-      labelToolTipDis(labelType){
-        switch(labelType){
-          case 'asset':
-          case 'module':
-          case 'endpoint':
-          case 'project':
-            return false;
-          default: return true;
         }
-      },
-      // alertNmae鼠标划入
-      alertMessagehover(item, loading, e) {
-        if (e) {
-          let dom = e.currentTarget;
-          let position = dom.getBoundingClientRect();
-          this.$set(item, "position", position);
+        this.bottomBox.showSubList = true
+        this.tabList = labelList
+      }
+    },
+    labelsClassName (row) {
+      if (row.column.label == this.$t('alert.list.labels')) {
+        return 'alert-message-list-labels'
+      } else if (row.column.label == this.$t('alert.list.state')) {
+        if (row.row.state == 1) {
+          return 'danger'
+        } else if (row.row.state == 2) {
+          return 'success'
         }
-        this.$set(item, "loading", loading);
-        //item.loading = true;
-       //this.$set(this.tableData,index,item);// 调用父组件
-      },
-      // label 鼠标划入
-      labelHover(item, type, loading, e){
-        if(this.labelToolTipDis(type)){
-          return;
+      } else {
+        return ''
+      }
+    },
+    fillProject: function (module) {
+      this.$get('project', { id: module.projectId }).then(response => {
+        if (response.code == 200) {
+          module.project = response.data.list[0]
         }
-        if (e) {
-          let dom = e.currentTarget;
-          let position = dom.getBoundingClientRect();
-          this.$set(item[type], "position", position);
-        }
-        this.$set(item[type], "loading", loading);
-        //this.$set(this.tableData,index,item);// 调用父组件
-      },
-      // Severity Label
-      returnSeverityLabel(key){
-        return this.$CONSTANTS.alertMessage.severityData.find(s => {return s.value == key}).label
-      },
-      /*plpsscrolly(el,self){
+      })
+    },
+    closeViews: function () {
+      this.$refs.alertConfigBox.show(false, false)
+      this.$refs.projectBox.show(false, false)
+      this.$refs.moduleBox.show(false, false)
+      this.viewAssetState = false
+    },
+    // 数据排序
+    tableDataSort (item) {
+      this.$emit('tableDataSort', item)
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    // label tooltip是否显示
+    labelToolTipDis (labelType) {
+      switch (labelType) {
+        case 'asset':
+        case 'module':
+        case 'endpoint':
+        case 'project':
+          return false
+        default: return true
+      }
+    },
+    // alertNmae鼠标划入
+    alertMessagehover (item, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+      }
+      this.$set(item, 'loading', loading)
+      // item.loading = true;
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    // label 鼠标划入
+    labelHover (item, type, loading, e) {
+      if (this.labelToolTipDis(type)) {
+        return
+      }
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item[type], 'position', position)
+      }
+      this.$set(item[type], 'loading', loading)
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    // Severity Label
+    returnSeverityLabel (key) {
+      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+    }
+    /* plpsscrolly(el,self){
         if (el._ps_.scrollbarYTop > 50) {
           self.tools.showTopBtn = true;
           self.tools.tableHover = true;
@@ -866,51 +863,52 @@
           self.tools.showTopBtn = false;
           self.tools.tableHover = false;
         }
-      },*/
+      }, */
+  },
+  watch: {
+    showSubList (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
     },
-    watch: {
-      showSubList(n) {
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
+    loading: {
+      handler: function (n, o) {
+        this.tools.loading = n
       },
-      loading:{
-        handler:function(n,o){
-          this.tools.loading=n;
-        },
-        immediate: true,
-        deep:true,
-      },
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
-          }
-          if(!this.delFlag){
-            this.$refs.alertListTable.bodyWrapper.scrollTop = 0
-          }
-          this.tableDataInitNum++;//因为异步加载的问题导致该表格加载三次 只有最后一次是稳定 故只有第三次是去除是否删除的标记
-          if(this.tableDataInitNum===2){
-            this.tableDataInitNum=0;
-            this.delFlag=false;
-          }
+      immediate: true,
+      deep: true
+    },
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
         }
-
-      }
-    },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList')
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + '/alertList'))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+        if (!this.delFlag) {
+          this.$refs.alertListTable.bodyWrapper.scrollTop = 0
+        }
+        this.tableDataInitNum++// 因为异步加载的问题导致该表格加载三次 只有最后一次是稳定 故只有第三次是去除是否删除的标记
+        if (this.tableDataInitNum === 2) {
+          this.tableDataInitNum = 0
+          this.delFlag = false
+        }
       }
 
-      this.getAlertList();
-      /*if(this.from=='alertMessage'){
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + '/alertList')
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + '/alertList'))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+
+    this.getAlertList()
+    /* if(this.from=='alertMessage'){
         this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
           ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
           : this.tableTitle;
@@ -927,15 +925,15 @@
           : this.tableTitle;
       }
     */
-    },
-    beforeDestroy(){
-     if(this.scrollbarWrap){
-       if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
-     }
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      if (this.scrollbarWrap) {
+        this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+      }
     }
   }
+}
 
 </script>
 

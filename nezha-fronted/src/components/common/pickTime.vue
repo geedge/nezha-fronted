@@ -22,116 +22,116 @@
 </template>
 
 <script>
-  import bus from "../../libs/bus";
-  import timePicker from "./timePicker";
-  import chartUnit from "./chartUnit";
-  export default {
-    name: "intervalRefresh",
-    components:{
-      'time-picker':timePicker,
-      'chart-unit':chartUnit,
+import bus from '../../libs/bus'
+import timePicker from './timePicker'
+import chartUnit from './chartUnit'
+export default {
+  name: 'intervalRefresh',
+  components: {
+    'time-picker': timePicker,
+    'chart-unit': chartUnit
+  },
+  model: {
+    event: 'change',
+    prop: 'timeRange'
+  },
+  props: {
+    refreshDataFunc: {
+      required: true,
+      type: Function
     },
-    model:{
-      event:'change',
-      prop:'timeRange'
+    timeRange: {
+      type: Array,
+      required: true
     },
-    props:{
-      refreshDataFunc:{
-        required:true,
-        type:Function
-      },
-      timeRange:{
-        type:Array,
-        required: true,
-      },
-      useRefresh:{
-        type:Boolean,
-        default:true,
-      },
-      useChartUnit:{
-        type:Boolean,
-        default:true,
-      },
-      showTimePicker:{
-        type:Boolean,
-        default:true,
-      },
-      defaultPick:Number,
-      showEmpty:{type:Boolean,default:false},
-      id:String
+    useRefresh: {
+      type: Boolean,
+      default: true
     },
-    data(){
-      return{
-        searchTime:[],
-        visible: false,
-        intervalTimer: null,
-        interval: -1,
-        unit:2,
+    useChartUnit: {
+      type: Boolean,
+      default: true
+    },
+    showTimePicker: {
+      type: Boolean,
+      default: true
+    },
+    defaultPick: Number,
+    showEmpty: { type: Boolean, default: false },
+    id: String
+  },
+  data () {
+    return {
+      searchTime: [],
+      visible: false,
+      intervalTimer: null,
+      interval: -1,
+      unit: 2
+    }
+  },
+  created () {
+    this.searchTime = this.timeFormate(this.timeRange)
+    this.$emit('change', this.searchTime)
+  },
+  methods: {
+    selectInterval (val) {
+      this.visible = false
+      clearInterval(this.intervalTimer)
+      this.interval = val
+      if (!this.showTimePicker && val && val.value != -1) {
+        this.intervalTimer = setInterval(() => {
+          this.$emit('change', this.searchTime)
+          this.refreshDataFunc()
+        }, val.value * 1000)
+        return
+      }
+      if (val && val.value != -1) {
+        const start = new Date(this.searchTime[1])
+        const now = bus.getOffsetTimezoneData()
+        const interval = Math.floor((now - start.getTime()) / 1000) // 计算当前结束时间到现在的间隔（秒）
+        if (interval >= 60) { // 如果结束时间到现在超过30s，则
+          this.getIntervalData(interval)
+        }
+        this.intervalTimer = setInterval(() => {
+          this.getIntervalData(this.interval.value)
+        }, val.value * 1000)
       }
     },
-    created(){
-      this.searchTime=this.timeFormate(this.timeRange)
-      this.$emit('change',this.searchTime)
-    },
-    methods:{
-      selectInterval(val) {
-        this.visible = false;
-        clearInterval(this.intervalTimer);
-        this.interval = val;
-        if(!this.showTimePicker&&val && val.value != -1){
-          this.intervalTimer = setInterval(() => {
-            this.$emit('change',this.searchTime)
-            this.refreshDataFunc();
-          }, val.value * 1000);
-          return
-        }
-        if (val && val.value != -1) {
-          const start = new Date(this.searchTime[1]);
-          const now = bus.getOffsetTimezoneData();
-          const interval = Math.floor((now - start.getTime()) / 1000); //计算当前结束时间到现在的间隔（秒）
-          if (interval >= 60) { //如果结束时间到现在超过30s，则
-            this.getIntervalData(interval);
-          }
-          this.intervalTimer = setInterval(() => {
-            this.getIntervalData(this.interval.value);
-          }, val.value * 1000);
-        }
-      },
-      getIntervalData(interval) { //interval:结束时间到现在的秒数
-        const start = new Date(this.searchTime[0]);
-        const end = new Date(this.searchTime[1]);
-        start.setSeconds(start.getSeconds() + interval);
-        end.setSeconds(end.getSeconds() + interval);
+    getIntervalData (interval) { // interval:结束时间到现在的秒数
+      const start = new Date(this.searchTime[0])
+      const end = new Date(this.searchTime[1])
+      start.setSeconds(start.getSeconds() + interval)
+      end.setSeconds(end.getSeconds() + interval)
 
-        this.searchTime = this.timeFormate([start,end])
-        this.$refs.timePicker.setCostomTime(this.searchTime);
-        this.$emit('change',this.searchTime)
-        //刷新数据
-        this.refreshDataFunc();
-      },
-      timeFormate(timeRange){
-        if(timeRange&&timeRange.length<2){
-          return []
-        }
-        const startTime = bus.timeFormate(timeRange[0], 'yyyy-MM-dd hh:mm:ss');
-        const endTime = bus.timeFormate(timeRange[1], 'yyyy-MM-dd hh:mm:ss');
-        return [startTime, endTime];
-      },
-      dateChange(time) {
-        this.searchTime=time;
-        this.$emit('change',this.searchTime)
-        this.refreshDataFunc();
-      },
+      this.searchTime = this.timeFormate([start, end])
+      this.$refs.timePicker.setCostomTime(this.searchTime)
+      this.$emit('change', this.searchTime)
+      // 刷新数据
+      this.refreshDataFunc()
     },
-    watch:{
-      unit:{
-        immediate:true,
-        handler(n,o){
-          this.$emit('unitChange',n);
-        }
+    timeFormate (timeRange) {
+      if (timeRange && timeRange.length < 2) {
+        return []
+      }
+      const startTime = bus.timeFormate(timeRange[0], 'yyyy-MM-dd hh:mm:ss')
+      const endTime = bus.timeFormate(timeRange[1], 'yyyy-MM-dd hh:mm:ss')
+      return [startTime, endTime]
+    },
+    dateChange (time) {
+      this.searchTime = time
+      this.$emit('change', this.searchTime)
+      this.refreshDataFunc()
+    }
+  },
+  watch: {
+    unit: {
+      immediate: true,
+      handler (n, o) {
+        this.$emit('unitChange', n)
       }
     }
   }
+}
 </script>
 
 <style scoped lang="scss">

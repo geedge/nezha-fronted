@@ -65,76 +65,76 @@
 </template>
 
 <script>
-  import chartConfig from '../../../page/dashboard/overview/chartConfig';
-  import * as echarts from "echarts";
-  
-  var endpointChart;
-  var assetChart;
-	export default {
-		name:"popDataMain",
-    props:{
-		  moduleId:{},
-      projectId:{},
-    },
-    watch:{
-      moduleId(n){
-        if(n){
-          this.init();
+import chartConfig from '../../../page/dashboard/overview/chartConfig'
+import * as echarts from 'echarts'
+
+let endpointChart
+let assetChart
+export default {
+  name: 'popDataMain',
+  props: {
+    moduleId: {},
+    projectId: {}
+  },
+  watch: {
+    moduleId (n) {
+      if (n) {
+        this.init()
+      }
+    }
+  },
+  data () {
+    return {
+      moduleInfo: {
+        alertStat: {
+          P1: 0,
+          P3: 0,
+          P2: 0
+        },
+        assetStat: {
+          down: 0,
+          up: 0
+        },
+        endpointStat: {
+          down: 0,
+          up: 0
         }
       }
-    },
-    data(){
-		  return{
-        moduleInfo:{
-          alertStat:{
-            P1:0,
-            P3:0,
-            P2:0,
-          },
-          assetStat:{
-            down:0,
-            up:0,
-          },
-          endpointStat:{
-            down:0,
-            up:0,
-          },
-        }
-      }
-    },
-    mounted(){
-		  this.init()
-    },
-    methods:{
-		  init(){
-        this.$get('/module/stat',{id:this.moduleId}).then(res=>{
-          this.moduleInfo = res.data;
-          //console.info(this.moduleInfo);
-          endpointChart = echarts.init(document.querySelector("#chart--endpoint"));
-          assetChart = echarts.init(document.querySelector("#chart--asset"));
-          let endpointOption = chartConfig.getOption("topoPie"),
-            assetOption = chartConfig.getOption("topoPie");
-          endpointOption.series[0].label.formatter = this.moduleInfo.endpointStat.down+this.moduleInfo.endpointStat.up + "";
-          endpointOption.series[0].data = [
-            {name: this.$t("dashboard.overview.asset.pingUp"), value: this.moduleInfo.endpointStat.up ? this.moduleInfo.endpointStat.up : 0},
-            {name: this.$t("dashboard.overview.asset.pingDown"), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0},
-            {name: this.$t("asset.suspended"), value: this.moduleInfo.endpointStat.suspended ? this.moduleInfo.endpointStat.suspended : 0}
-          ];
-          endpointOption.title.show = false;
-          endpointOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown"), this.$t("asset.suspended")];
-          assetOption.series[0].label.formatter = this.moduleInfo.assetStat.up+this.moduleInfo.assetStat.down + "";
-          assetOption.series[0].data = [
-            {name: this.$t("dashboard.overview.asset.pingUp"), value: this.moduleInfo.assetStat.up ? this.moduleInfo.assetStat.up : 0},
-            {name: this.$t("dashboard.overview.asset.pingDown"), value: this.moduleInfo.assetStat.down ? this.moduleInfo.assetStat.down : 0}
-          ];
-          assetOption.title.show = false;
-          assetOption.legend.data = [this.$t("dashboard.overview.asset.pingUp"), this.$t("dashboard.overview.asset.pingDown")];
-          endpointChart.setOption(endpointOption, true);
-          assetChart.setOption(assetOption, true);
-        })
-      }
-    },
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  methods: {
+    init () {
+      this.$get('/module/stat', { id: this.moduleId }).then(res => {
+        this.moduleInfo = res.data
+        // console.info(this.moduleInfo);
+        endpointChart = echarts.init(document.querySelector('#chart--endpoint'))
+        assetChart = echarts.init(document.querySelector('#chart--asset'))
+        const endpointOption = chartConfig.getOption('topoPie')
+        const assetOption = chartConfig.getOption('topoPie')
+        endpointOption.series[0].label.formatter = this.moduleInfo.endpointStat.down + this.moduleInfo.endpointStat.up + ''
+        endpointOption.series[0].data = [
+          { name: this.$t('dashboard.overview.asset.pingUp'), value: this.moduleInfo.endpointStat.up ? this.moduleInfo.endpointStat.up : 0 },
+          { name: this.$t('dashboard.overview.asset.pingDown'), value: this.moduleInfo.endpointStat.down ? this.moduleInfo.endpointStat.down : 0 },
+          { name: this.$t('asset.suspended'), value: this.moduleInfo.endpointStat.suspended ? this.moduleInfo.endpointStat.suspended : 0 }
+        ]
+        endpointOption.title.show = false
+        endpointOption.legend.data = [this.$t('dashboard.overview.asset.pingUp'), this.$t('dashboard.overview.asset.pingDown'), this.$t('asset.suspended')]
+        assetOption.series[0].label.formatter = this.moduleInfo.assetStat.up + this.moduleInfo.assetStat.down + ''
+        assetOption.series[0].data = [
+          { name: this.$t('dashboard.overview.asset.pingUp'), value: this.moduleInfo.assetStat.up ? this.moduleInfo.assetStat.up : 0 },
+          { name: this.$t('dashboard.overview.asset.pingDown'), value: this.moduleInfo.assetStat.down ? this.moduleInfo.assetStat.down : 0 }
+        ]
+        assetOption.title.show = false
+        assetOption.legend.data = [this.$t('dashboard.overview.asset.pingUp'), this.$t('dashboard.overview.asset.pingDown')]
+        endpointChart.setOption(endpointOption, true)
+        assetChart.setOption(assetOption, true)
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -147,7 +147,7 @@
     .tooltip--row {
       position: relative;
       height: 70px;
-      
+
       .legend-value {
         font-size: 12px;
         color: #333333;

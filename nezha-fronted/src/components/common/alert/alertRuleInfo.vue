@@ -17,13 +17,13 @@
         <div class="alert-rule-title">Level</div>
         <div class="alert-rule-value severity">
           <span v-if="alertRuleData && alertRuleData.severity === 'P1'" class="P1">
-            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P1'}).label}}
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P1'}).label}}
           </span>
           <span v-if="alertRuleData && alertRuleData.severity === 'P2'" class="P2">
-            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P2'}).label}}
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P2'}).label}}
           </span>
           <span v-if="alertRuleData && alertRuleData.severity === 'P3'" class="P3">
-            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value == 'P3'}).label}}
+            {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P3'}).label}}
           </span>
         </div>
       </div>
@@ -32,15 +32,15 @@
 </template>
 
 <script>
-  import chartDataFormat from '../../charts/chartDataFormat'
-	export default {
-		name:"alert-rule-info",
-    props:{
-		  id:{},
-      messageLoad:{},
-      that: {}
-    },
-    /*watch:{
+import chartDataFormat from '../../charts/chartDataFormat'
+export default {
+  name: 'alert-rule-info',
+  props: {
+    id: {},
+    messageLoad: {},
+    that: {}
+  },
+  /* watch:{
       messageLoad:{
         handler:function(){
           this.$get('/alert/rule?id='+this.id).then((res)=>{
@@ -54,73 +54,67 @@
         },
         deep:true
       }
-    },*/
-    data() {
-		  return {
-		    loading:true,
-        alertRuleData:''
-      }
-    },
-    components:{
-
-    },
-    computed: {
-      calcPosition() {
-        let self=this;
-        return function(position) {
-          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=50;
-          if(position.top+elHeight>clientHeight){
-            return {
-              left: `${position.left + position.width + 20}px`,
-              top: `${position.top -elHeight- 20}px`,
-            }
-          }else{
-            return {
-              left: `${position.left + position.width + 20}px`,
-              top: `${position.top - 20}px`,
-            }
-          }
-        }
-      },
-      calcHeight(){
-        let self=this;
-        return function(position) {
-          let clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-          let elHeight=50;
-          if(position.top+elHeight>clientHeight){
-            return 'alert-rule-tip-Up'
-          }else{
-            return 'alert-rule-tip'
-          }
-
-        }
-      }
-    },
-    methods:{
-      formatThreshold(value,unit) {
-        let unitMethod = chartDataFormat.getUnit(unit);
-        if (unitMethod&&value) {
-          return unitMethod.compute(value, null, 2);
-        } else {
-          return value;
-        }
-      },
-    },
-    mounted(){
-      this.$get('/alert/rule?id='+this.id).then((res)=>{
-        if(res.msg === 'success') {
-          this.loading = false;
-          this.alertRuleData=res.data.list[0];
-        } else{
-          this.$message.error(res.msg);
-        }
-      });
-    },
-    beforeDestroy(){
-
+    }, */
+  data () {
+    return {
+      loading: true,
+      alertRuleData: ''
     }
-	}
+  },
+  components: {
+
+  },
+  computed: {
+    calcPosition () {
+      return function (position) {
+        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const elHeight = 50
+        if (position.top + elHeight > clientHeight) {
+          return {
+            left: `${position.left + position.width + 20}px`,
+            top: `${position.top - elHeight - 20}px`
+          }
+        } else {
+          return {
+            left: `${position.left + position.width + 20}px`,
+            top: `${position.top - 20}px`
+          }
+        }
+      }
+    },
+    calcHeight () {
+      return function (position) {
+        const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const elHeight = 50
+        if (position.top + elHeight > clientHeight) {
+          return 'alert-rule-tip-Up'
+        } else {
+          return 'alert-rule-tip'
+        }
+      }
+    }
+  },
+  methods: {
+    formatThreshold (value, unit) {
+      const unitMethod = chartDataFormat.getUnit(unit)
+      if (unitMethod && value) {
+        return unitMethod.compute(value, null, 2)
+      } else {
+        return value
+      }
+    }
+  },
+  mounted () {
+    this.$get('/alert/rule?id=' + this.id).then((res) => {
+      if (res.msg === 'success') {
+        this.loading = false
+        this.alertRuleData = res.data.list[0]
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
+  }
+}
 
 </script>
 

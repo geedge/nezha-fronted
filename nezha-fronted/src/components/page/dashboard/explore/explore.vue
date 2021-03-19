@@ -89,7 +89,7 @@
                   min-width="110px"
                 ></el-table-column>
                 <el-table-column width="28" v-if="tools.customTableTitle.length>0">
-                  <template slot="header" slot-scope="scope" :resizable="false">
+                  <template slot="header" :resizable="false">
                   <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
                     <i class="nz-icon nz-icon-gear"></i>
                   </span>
@@ -207,488 +207,486 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
 </template>
 
 <script>
-  import bus from "../../../../libs/bus";
-  import promqlInput from "./promqlInput";
-  // import promqlInputPlus from "./promqlInputPlus";
-  import chart from "../overview/chart";
-  import axios from 'axios';
-  import chartBox from "../../../page/dashboard/chartBox";
-  import {getUUID} from "../../../common/js/common";
-  import chartDataFormat from "../../../charts/chartDataFormat";
+import bus from '../../../../libs/bus'
+import promqlInput from './promqlInput'
+// import promqlInputPlus from "./promqlInputPlus";
+import chart from '../overview/chart'
+import axios from 'axios'
+import chartBox from '../../../page/dashboard/chartBox'
+import { getUUID } from '../../../common/js/common'
+import chartDataFormat from '../../../charts/chartDataFormat'
 
-  export default {
-    name: "explore",
-    components: {
-      'promql-input': promqlInput,
-      'chart': chart,
-      'chart-box': chartBox,
+export default {
+  name: 'explore',
+  components: {
+    'promql-input': promqlInput,
+    chart: chart,
+    'chart-box': chartBox
+  },
+  data () {
+    return {
+      rightBox: { // 面板弹出框相关
+        show: false
+      },
+      promqlCount: 1,
+      promqlKeys: [],
+      expressions: [''],
+      filterTime: [
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
+        bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      ],
+
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      tableTitle: [],
+      showIntroduce: true,
+      defaultChartVisible: true,
+      defaultTableVisible: true,
+      chartVisible: true,
+      tableVisible: true,
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableData: [],
+      saveDisabled: true,
+      panelData: [],
+      chartUnit: 0,
+      historyParam: { useHistory: true, key: 'expore-history' },
+      chart: {},
+      metricOptions: []
+    }
+  },
+  created () {
+    this.getPanelData()
+    this.queryMetrics()
+    this.promqlKeys.push(getUUID())
+  },
+  methods: {
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
     },
-    data() {
-      return {
-        rightBox: { //面板弹出框相关
-          show: false,
-        },
-        promqlCount: 1,
-        promqlKeys: [],
-        expressions: [''],
-        filterTime: [
-          bus.timeFormate(bus.getOffsetTimezoneData(-1),'yyyy-MM-dd hh:mm:ss'),
-          bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss')
-        ],
-
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        tableTitle: [],
-        showIntroduce: true,
-        defaultChartVisible: true,
-        defaultTableVisible: true,
-        chartVisible: true,
-        tableVisible: true,
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableData: [],
-        saveDisabled: true,
-        panelData: [],
-        chartUnit:0,
-        historyParam:{useHistory:true,key:'expore-history'},
-        chart: {},
-        metricOptions: []
-      }
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
     },
-    created() {
-      this.getPanelData();
-      this.queryMetrics();
-      this.promqlKeys.push(getUUID());
+    filterShowData (source, pageObj) {
+      return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
     },
-    methods: {
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
-      },
-      filterShowData(source, pageObj) {
-        return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
-      },
-      chartUnitChange:function(unit){
-        this.chartUnit=unit;
-        this.$nextTick(()=>{
-          this.expressionChange()
-        })
-      },
-      queryChartData: function () {
-        this.$refs.exploreChart.startLoading();
-        setTimeout(() => {
-          if (this.expressions.length > 0) {
-            let requestArr = [];
-            let promqlInputIndexs=[];
-            let queryExpression=[];
-            this.expressions.forEach((item, index) => {
-              if (item != '') {
-                let step=bus.getStep(this.filterTime[0],this.filterTime[1]);
-                promqlInputIndexs.push(index);
-                queryExpression.push(item)
-                requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step='+step))
-              }
-            })
-            if (requestArr.length > 0) {
-              this.showIntroduce = false;
-              this.saveDisabled = false;
-            }
-            axios.all(requestArr).then(res => {
-              let series = [];
-              let legend = [];
-              if (res.length > 0) {
-                res.forEach((response, index) => {
-                  let promqlIndex=promqlInputIndexs[index];
-                  if (response.data&&response.status == 'success') {
-                    let data = response.data.result;
-                    if((!data||data.length<1)&&response.message){
-                      this.$refs['promql-'+promqlIndex][0].setError(response.message)
-                      return;
-                    }
-                    data.forEach((result, i) => {
-                      let seriesItem = {
-                        name: '',
-                        symbol:'emptyCircle',  //去掉点
-                        symbolSize:[2,2],
-                        showSymbol:false,
-                        smooth: 0.2,  //曲线变平滑
-                        data: [],
-                        lineStyle: {
-                          width: 1,
-                          opacity: 0.9
-                        },
-                        type: 'line',
-                      }
-                      let legendName="";
-                      seriesItem.data = result.values.map((item) => {
-                        return [item[0] * 1000, item[1]];
-                      })
-                      if(result.metric&&Object.keys(result.metric).length>0){
-                        let metric = Object.assign({}, result.metric);
-                        seriesItem.name += metric.__name__?metric.__name__:'';
-                        seriesItem.name +='{'
-                        delete metric.__name__;
-                        for (let key in metric) {
-                          seriesItem.name += key + "=" + '"' + metric[key] + '",';
-                        }
-                        legendName = seriesItem.name.substr(0, seriesItem.name.length - 1);
-                        legendName += "}"
-                      }else{
-                        legendName=queryExpression[index]
-                      }
-                      seriesItem.name=legendName+"-"+index;
-                      series.push(seriesItem);
-                      legend.push({name: seriesItem.name, alias: legendName, isGray: false});
-                    })
-
-                    this.$refs['promql-'+promqlIndex][0].setError('')
-                  }else{
-                    //console.log(response)
-                    this.$refs['promql-'+promqlIndex][0].setError(response.error)
-                  }
-                })
-
-                  this.$refs.exploreChart.setLegend(legend);
-                  this.$refs.exploreChart.setRandomColors(series.length)
-                  this.$refs.exploreChart.setSeries(series)
-                  this.defaultChartVisible = true;
-
-              }
-              this.$refs.exploreChart.endLoading();
-            })
-          }
-        }, 200)
-      },
-      queryTableData: function () {
-        this.tools.loading = true,
-          setTimeout(() => {
-            if (this.expressions.length > 0) {
-              let requestArr = [];
-              this.expressions.forEach((item, index) => {
-                if (item != '') {
-                  requestArr.push(this.$get('/prom/api/v1/query?query=' + item))
-                }
-              })
-              if (requestArr.length > 0) {
-                this.showIntroduce = false;
-              }
-              axios.all(requestArr).then(res => {
-                let tData = [];
-                let tLabels = [];
-                if (res.length > 0) {
-                  this.tableData = [];
-                  this.tableTitle = [];
-                  //console.log(111111111111111111111,res)
-                  res.forEach((response, index) => {
-                    if (response.data&&response.status == 'success') {
-                      let data = response.data.result;
-                      if (data) {
-                        data.forEach((result, i) => {
-                          let metrics = Object.assign({}, result.metric);
-                          this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit).compute(result.value[1],null,2));
-                          for (let key in metrics) {
-                            let label = {
-                              label: key == '__name__' ? 'metric' : key,
-                              prop: key,
-                              show: true,
-                            }
-                            let temp = tLabels.find((item, index) => {
-                              return item.prop == label.prop
-                            });
-                            if (!temp) {
-                              tLabels.push(label)
-                            }
-                          }
-                          tData.push(metrics);
-                        })
-                      }
-                    }
-                    tLabels.sort((a, b) => {
-                      return a.prop.charCodeAt(0) - b.prop.charCodeAt(0);
-                    })
-                  })
-                  if(tData.length>0){
-                    this.storedTableData = Object.assign([], tData);
-                    this.pageObj.total = this.storedTableData.length;
-                    this.tableData = this.filterShowData(this.storedTableData, this.pageObj);
-                    this.tableTitle = Object.assign([], tLabels);
-                    this.tools.customTableTitle = Object.assign([], tLabels);
-                    this.defaultTableVisible = true;
-                  }else{
-                    // this.defaultTableVisible = false;
-                  }
-                }
-                this.tools.loading = false;
-              })
-            }
-          }, 200)
-      },
-      expressionChange: function () {
-        let nowTimeType=this.$refs.pickTime.$refs.timePicker.nowTimeType;
-        //console.log(this.filterTime,nowTimeType);
-        this.setSearchTime(nowTimeType.type,nowTimeType.value);
-        if (this.expressions && this.expressions.length >= 1) {
-          this.queryTableData();
-          this.queryChartData()
-          this.storeHistory();
-        }
-      },
-      setSearchTime(type,val){//设置searchTime
-        if(type==='minute'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.filterTime, 0, startTime);
-          this.$set(this.filterTime, 1, endTime);
-          this.$set(this.filterTime, 2, val + "m");
-        }else if(type==='hour'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.filterTime, 0, startTime);
-          this.$set(this.filterTime, 1, endTime);
-          this.$set(this.filterTime, 2, val + "h");
-        }else if(type==='date'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.filterTime, 0, startTime);
-          this.$set(this.filterTime, 1, endTime);
-          this.$set(this.filterTime, 2, val + "d");
-        }
-        this.$refs.pickTime.$refs.timePicker.searchTime=this.filterTime;
-      },
-      storeHistory:function(){
-        let expire=24;
-        let historyJson=localStorage.getItem(this.historyParam.key);
-        let expressions=this.expressions.filter(item=>{
-          return item&&item != '';
-        })
-        let username=sessionStorage.getItem("nz-username");
-        if(historyJson && historyJson != 'undefined' && historyJson != ''){
-          let historyObj=JSON.parse(historyJson);
-          let history = historyObj[username];
-          if(history){
-            //过滤过期表达式
-            history=history.filter(item=>{
-              return item.time + item.expire >= new Date().getTime();
-            })
-            let repeat=history.filter(item=>{
-              return expressions.includes(item.insertText)
-            })
-            let old=history.filter(item=>{
-              return !expressions.includes(item.insertText)
-            })
-
-            let freshExpression=expressions.filter(item=>{
-              let find=history.find(t=>{return t.insertText == item});
-              return !find
-            })
-
-            repeat=repeat.map(item=>{
-              item.time=new Date().getTime();
-              item.num+=1;
-              item.documentation=this.$t('dashboard.metricPreview.historyTip',{time:item.num,hour:24});
-              return item;
-            })
-
-            let fresh=freshExpression.map(item=>{
-              return{
-                label:item,
-                insertText:item,
-                documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
-                num:1,
-                time:new Date().getTime(),
-                expire:expire * 60 * 60 * 1000
-              }
-            })
-
-            historyObj[username]=fresh.concat(repeat).concat(old);
-          }else{
-            let history=expressions.map(item=>{
-              return {
-                label:item,
-                insertText:item,
-                documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
-                num:1,
-                time:new Date().getTime(),
-                expire:expire * 60 * 60 * 1000
-              }
-            })
-            historyObj[username]=history;
-          }
-          localStorage.setItem(this.historyParam.key,JSON.stringify(historyObj))
-        }else{
-          let history=expressions.map(item=>{
-            return {
-              label:item,
-              insertText:item,
-              documentation:this.$t('dashboard.metricPreview.historyTip',{time:1,hour:24}),
-              num:1,
-              time:new Date().getTime(),
-              expire:expire * 60 * 60 * 1000
+    chartUnitChange: function (unit) {
+      this.chartUnit = unit
+      this.$nextTick(() => {
+        this.expressionChange()
+      })
+    },
+    queryChartData: function () {
+      this.$refs.exploreChart.startLoading()
+      setTimeout(() => {
+        if (this.expressions.length > 0) {
+          const requestArr = []
+          const promqlInputIndexs = []
+          const queryExpression = []
+          this.expressions.forEach((item, index) => {
+            if (item != '') {
+              const step = bus.getStep(this.filterTime[0], this.filterTime[1])
+              promqlInputIndexs.push(index)
+              queryExpression.push(item)
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step))
             }
           })
-          if(history&&history.length>0){
-            let stored={};
-            stored[username]=history;
-            localStorage.setItem(this.historyParam.key,JSON.stringify(stored))
+          if (requestArr.length > 0) {
+            this.showIntroduce = false
+            this.saveDisabled = false
           }
-        }
-      },
-      addExpression(index) {
-        this.expressions.splice(index + 1, 0, '');
-        this.promqlKeys.splice(index + 1, 0, getUUID());
-        this.promqlCount++;
-      },
-      copyExpression(index) {
-        this.expressions.push(this.expressions[index]);
-        this.promqlKeys.push(getUUID());
-        this.promqlCount++;
-      },
-      removeExpression(index) {
-        if (this.promqlCount > 1) {
-          this.expressions.splice(index, 1);
-          this.promqlKeys.splice(index, 1);
-          this.promqlCount--;
-        }
-      },
-      changeChartVisible: function () {
-        this.chartVisible = !this.chartVisible;
-      },
-      changeTableVisible: function () {
-        this.tableVisible = !this.tableVisible;
-      },
-      handleBox(show) {
-        this.rightBox.show = show;
-      },
-      saveChart() {
-        let chart = {
-          title: '',
-          type:'line',
-          span:12,
-          height:'400',
-          unit: this.chartUnit,
-          param:{
-            url:'',
-            threshold:'',
-          },
-          elements:[],
-          panel: '',
-          sync: 0
-        };
-        this.expressions.forEach((exp) => {
-          chart.elements.push({expression: exp, legend: "", type: "expert", id: ""});
-        });
-        this.chart = chart;
-        this.rightBox.show = true;
-      },
-      createSuccess(type, response, param, panel) { //添加chart成功
-        this.$confirm(this.$t("dashboard.metric.goPanelTip"), this.$t("tip.saveSuccess"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'success'
-        }).then(() => {
-          bus.$emit("menu-change", 'panel');
-          this.$store.commit("panelShowPanelChange", panel);
-          this.$router.push({
-            path: "/panel",
-            query: {
-              t: +new Date()
+          axios.all(requestArr).then(res => {
+            const series = []
+            const legend = []
+            if (res.length > 0) {
+              res.forEach((response, index) => {
+                const promqlIndex = promqlInputIndexs[index]
+                if (response.data && response.status == 'success') {
+                  const data = response.data.result
+                  if ((!data || data.length < 1) && response.message) {
+                    this.$refs['promql-' + promqlIndex][0].setError(response.message)
+                    return
+                  }
+                  data.forEach((result, i) => {
+                    const seriesItem = {
+                      name: '',
+                      symbol: 'emptyCircle', // 去掉点
+                      symbolSize: [2, 2],
+                      showSymbol: false,
+                      smooth: 0.2, // 曲线变平滑
+                      data: [],
+                      lineStyle: {
+                        width: 1,
+                        opacity: 0.9
+                      },
+                      type: 'line'
+                    }
+                    let legendName = ''
+                    seriesItem.data = result.values.map((item) => {
+                      return [item[0] * 1000, item[1]]
+                    })
+                    if (result.metric && Object.keys(result.metric).length > 0) {
+                      const metric = Object.assign({}, result.metric)
+                      seriesItem.name += metric.__name__ ? metric.__name__ : ''
+                      seriesItem.name += '{'
+                      delete metric.__name__
+                      for (const key in metric) {
+                        seriesItem.name += key + '=' + '"' + metric[key] + '",'
+                      }
+                      legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
+                      legendName += '}'
+                    } else {
+                      legendName = queryExpression[index]
+                    }
+                    seriesItem.name = legendName + '-' + index
+                    series.push(seriesItem)
+                    legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+                  })
+
+                  this.$refs['promql-' + promqlIndex][0].setError('')
+                } else {
+                  // console.log(response)
+                  this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                }
+              })
+
+              this.$refs.exploreChart.setLegend(legend)
+              this.$refs.exploreChart.setRandomColors(series.length)
+              this.$refs.exploreChart.setSeries(series)
+              this.defaultChartVisible = true
             }
-          });
-        });
-      },
-      getPanelData() { //获取panel数据
-        this.$get('panel?pageNo=1&pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list;
+            this.$refs.exploreChart.endLoading()
+          })
+        }
+      }, 200)
+    },
+    queryTableData () {
+      this.tools.loading = true
+      setTimeout(() => {
+        if (this.expressions.length > 0) {
+          const requestArr = []
+          this.expressions.forEach((item, index) => {
+            if (item !== '') {
+              requestArr.push(this.$get('/prom/api/v1/query?query=' + item))
+            }
+          })
+          if (requestArr.length > 0) {
+            this.showIntroduce = false
           }
-        });
-      },
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
+          axios.all(requestArr).then(res => {
+            const tData = []
+            const tLabels = []
+            if (res.length > 0) {
+              this.tableData = []
+              this.tableTitle = []
+              res.forEach((response, index) => {
+                if (response.data && response.status === 'success') {
+                  const data = response.data.result
+                  if (data) {
+                    data.forEach((result, i) => {
+                      const metrics = Object.assign({}, result.metric)
+                      this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit).compute(result.value[1], null, 2))
+                      for (const key in metrics) {
+                        const label = {
+                          label: key === '__name__' ? 'metric' : key,
+                          prop: key,
+                          show: true
+                        }
+                        const temp = tLabels.find((item, index) => {
+                          return item.prop == label.prop
+                        })
+                        if (!temp) {
+                          tLabels.push(label)
+                        }
+                      }
+                      tData.push(metrics)
+                    })
+                  }
+                }
+                tLabels.sort((a, b) => {
+                  return a.prop.charCodeAt(0) - b.prop.charCodeAt(0)
+                })
+              })
+              if (tData.length > 0) {
+                this.storedTableData = Object.assign([], tData)
+                this.pageObj.total = this.storedTableData.length
+                this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
+                this.tableTitle = Object.assign([], tLabels)
+                this.tools.customTableTitle = Object.assign([], tLabels)
+                this.defaultTableVisible = true
+              } else {
+                // this.defaultTableVisible = false;
+              }
+            }
+            this.tools.loading = false
+          })
+        }
+      }, 200)
+    },
+    expressionChange: function () {
+      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      // console.log(this.filterTime,nowTimeType);
+      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      if (this.expressions && this.expressions.length >= 1) {
+        this.queryTableData()
+        this.queryChartData()
+        this.storeHistory()
+      }
+    },
+    setSearchTime (type, val) { // 设置searchTime
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.filterTime, 0, startTime)
+        this.$set(this.filterTime, 1, endTime)
+        this.$set(this.filterTime, 2, val + 'd')
+      }
+      this.$refs.pickTime.$refs.timePicker.searchTime = this.filterTime
+    },
+    storeHistory: function () {
+      const expire = 24
+      const historyJson = localStorage.getItem(this.historyParam.key)
+      const expressions = this.expressions.filter(item => {
+        return item && item != ''
+      })
+      const username = sessionStorage.getItem('nz-username')
+      if (historyJson && historyJson != 'undefined' && historyJson != '') {
+        const historyObj = JSON.parse(historyJson)
+        let history = historyObj[username]
+        if (history) {
+          // 过滤过期表达式
+          history = history.filter(item => {
+            return item.time + item.expire >= new Date().getTime()
+          })
+          let repeat = history.filter(item => {
+            return expressions.includes(item.insertText)
+          })
+          const old = history.filter(item => {
+            return !expressions.includes(item.insertText)
+          })
+
+          const freshExpression = expressions.filter(item => {
+            const find = history.find(t => { return t.insertText == item })
+            return !find
+          })
+
+          repeat = repeat.map(item => {
+            item.time = new Date().getTime()
+            item.num += 1
+            item.documentation = this.$t('dashboard.metricPreview.historyTip', { time: item.num, hour: 24 })
+            return item
+          })
+
+          const fresh = freshExpression.map(item => {
+            return {
+              label: item,
+              insertText: item,
+              documentation: this.$t('dashboard.metricPreview.historyTip', { time: 1, hour: 24 }),
+              num: 1,
+              time: new Date().getTime(),
+              expire: expire * 60 * 60 * 1000
+            }
+          })
+
+          historyObj[username] = fresh.concat(repeat).concat(old)
+        } else {
+          const history = expressions.map(item => {
+            return {
+              label: item,
+              insertText: item,
+              documentation: this.$t('dashboard.metricPreview.historyTip', { time: 1, hour: 24 }),
+              num: 1,
+              time: new Date().getTime(),
+              expire: expire * 60 * 60 * 1000
+            }
+          })
+          historyObj[username] = history
+        }
+        localStorage.setItem(this.historyParam.key, JSON.stringify(historyObj))
+      } else {
+        const history = expressions.map(item => {
+          return {
+            label: item,
+            insertText: item,
+            documentation: this.$t('dashboard.metricPreview.historyTip', { time: 1, hour: 24 }),
+            num: 1,
+            time: new Date().getTime(),
+            expire: expire * 60 * 60 * 1000
+          }
+        })
+        if (history && history.length > 0) {
+          const stored = {}
+          stored[username] = history
+          localStorage.setItem(this.historyParam.key, JSON.stringify(stored))
+        }
+      }
+    },
+    addExpression (index) {
+      this.expressions.splice(index + 1, 0, '')
+      this.promqlKeys.splice(index + 1, 0, getUUID())
+      this.promqlCount++
+    },
+    copyExpression (index) {
+      this.expressions.push(this.expressions[index])
+      this.promqlKeys.push(getUUID())
+      this.promqlCount++
+    },
+    removeExpression (index) {
+      if (this.promqlCount > 1) {
+        this.expressions.splice(index, 1)
+        this.promqlKeys.splice(index, 1)
+        this.promqlCount--
+      }
+    },
+    changeChartVisible: function () {
+      this.chartVisible = !this.chartVisible
+    },
+    changeTableVisible: function () {
+      this.tableVisible = !this.tableVisible
+    },
+    handleBox (show) {
+      this.rightBox.show = show
+    },
+    saveChart () {
+      const chart = {
+        title: '',
+        type: 'line',
+        span: 12,
+        height: '400',
+        unit: this.chartUnit,
+        param: {
+          url: '',
+          threshold: ''
+        },
+        elements: [],
+        panel: '',
+        sync: 0
+      }
+      this.expressions.forEach((exp) => {
+        chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '' })
+      })
+      this.chart = chart
+      this.rightBox.show = true
+    },
+    createSuccess (type, response, param, panel) { // 添加chart成功
+      this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'success'
+      }).then(() => {
+        bus.$emit('menu-change', 'panel')
+        this.$store.commit('panelShowPanelChange', panel)
         this.$router.push({
-          path: "/" + data,
+          path: '/panel',
           query: {
             t: +new Date()
           }
-        });
-      },
-      queryMetrics() {
-        this.metricOptions = [];
-        this.$get('prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status == 'success'){
-            let metrics = response.data.sort();
-            let metricMap=new Map();
-            metrics.forEach((item)=>{
-              let key='';
-              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
-                key=item.split('_')[0];
-              }else if(/^_\w*/.test(item)){
-                key='      ';
-              }else{
-                key=item;
-              }
-              if(metricMap.get(key)){
-                let values=metricMap.get(key);
-                values.push({label:item,value:item});
-              }else{
-                let values=[{label:item,value:item}];
-                metricMap.set(key,values);
-              }
-              //this.metricStore.push({label:item,value:item,insertText:item})
-            });
-            for(let key of metricMap.keys()){
-              let option={
-                label:key,
-                value:key,
-              }
-              if(metricMap.get(key) && metricMap.get(key).length>1){
-                option.children=metricMap.get(key);
-              }
-              this.metricOptions.push(option);
-            }
-          }
         })
-      },
-      getMetricOptions() {
-        return this.metricOptions;
-      }
+      })
     },
-    watch: {
-      promqlCount: function (n, o) {
-        this.expressionChange();
-      },
-      expressions: {
-        immediate: true,
-        handler: function (n, o) {
-          if (n.length == 1 && (!n[0] || n[0] == '')) {
-            this.showIntroduce = true
-          } else if (n.length > 1) {
-            let temp = n.find((item, index) => {
-              return item != ''
-            });
-            if (!temp) {
-              this.showIntroduce = true;
+    getPanelData () { // 获取panel数据
+      this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+        }
+      })
+    },
+    jumpTo (data, id) {
+      bus.$emit('menu-change', data)
+      this.$router.push({
+        path: '/' + data,
+        query: {
+          t: +new Date()
+        }
+      })
+    },
+    queryMetrics () {
+      this.metricOptions = []
+      this.$get('prom/api/v1/label/__name__/values').then(response => {
+        if (response.status == 'success') {
+          const metrics = response.data.sort()
+          const metricMap = new Map()
+          metrics.forEach((item) => {
+            let key = ''
+            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
+              key = item.split('_')[0]
+            } else if (/^_\w*/.test(item)) {
+              key = '      '
             } else {
-              this.showIntroduce = false;
+              key = item
             }
-          } else {
-            this.showIntroduce = false;
+            if (metricMap.get(key)) {
+              const values = metricMap.get(key)
+              values.push({ label: item, value: item })
+            } else {
+              const values = [{ label: item, value: item }]
+              metricMap.set(key, values)
+            }
+            // this.metricStore.push({label:item,value:item,insertText:item})
+          })
+          for (const key of metricMap.keys()) {
+            const option = {
+              label: key,
+              value: key
+            }
+            if (metricMap.get(key) && metricMap.get(key).length > 1) {
+              option.children = metricMap.get(key)
+            }
+            this.metricOptions.push(option)
           }
+        }
+      })
+    },
+    getMetricOptions () {
+      return this.metricOptions
+    }
+  },
+  watch: {
+    promqlCount: function (n, o) {
+      this.expressionChange()
+    },
+    expressions: {
+      immediate: true,
+      handler: function (n, o) {
+        if (n.length == 1 && (!n[0] || n[0] == '')) {
+          this.showIntroduce = true
+        } else if (n.length > 1) {
+          const temp = n.find((item, index) => {
+            return item != ''
+          })
+          if (!temp) {
+            this.showIntroduce = true
+          } else {
+            this.showIntroduce = false
+          }
+        } else {
+          this.showIntroduce = false
         }
       }
     }
   }
+}
 </script>
 
 <style scoped lang="scss">
@@ -834,7 +832,6 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
     color: gray;
     text-decoration: none;
   }
-
 
   .doc-content a.header-anchor:link,
   .doc-content a.header-anchor:visited {

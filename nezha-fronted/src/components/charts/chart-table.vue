@@ -53,16 +53,16 @@
           <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
                     :data="seriesItem" border tooltip-effect="light" v-cloak
                     @sort-change="tableDataSort" >
-            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100"
+            <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
-            <el-table-column sortable prop="element" :show-overflow-tooltip="true"
+            <el-table-column :show-overflow-tooltip="true" prop="element"
                              :label="$t('dashboard.panel.chartTableColumn.element')" min-width="260"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" class-name="costom-value"
+            <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
@@ -88,16 +88,16 @@
           </div>
           <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
-            <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100"
+            <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
-            <el-table-column sortable prop="element" :show-overflow-tooltip="true"
+            <el-table-column :show-overflow-tooltip="true" prop="element"
                              :label="$t('dashboard.panel.chartTableColumn.element')" min-width="420"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
               </template>
             </el-table-column>
-            <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" min-width="90" class-name="costom-value"
+            <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" >
@@ -117,488 +117,488 @@
 </template>
 
 <script>
-  import bus from '../../libs/bus';
-  import {Loading} from 'element-ui';
-  import chartDataFormat from './chartDataFormat'
-  import loading from "../common/loading";
-  import timePicker from '../common/timePicker'
+import bus from '../../libs/bus'
+import chartDataFormat from './chartDataFormat'
 
-  export default {
-    name: 'chartTable',
-    components: {
-      'loading': loading,
-      'time-picker': timePicker
+export default {
+  name: 'chartTable',
+  props: {
+    chartData: {
+      type: Object
     },
-    props: {
-      chartData: {
-        type: Object
-      },
-      // 看板id
-      panelId: {
-        type: Number,
-        default: 0,
-      },
-      editChartId: {
-        type: String,
-        default: 'editChartId',
-      },
-      chartIndex: {
-        type: Number,
-        default: 0,
-      },
-      from: {type: String},
-      isLock:{type:Boolean,default:false}
+    // 看板id
+    panelId: {
+      type: Number,
+      default: 0
     },
-    data() {
-      return {
-        tableHeight: 0,
-        data: {}, // 该图表信息,chartItem
-        unit: {},
-        isError: false,
-        errorContent: '',
-        pageSizes: [20, 50, 100],
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        screenPageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        storedTableDataOld: [],//原始信息
-        storedTableDataScreenOld: [],//全屏原始信息
-        storedTableData: [],
-        storedScreanTableData: [],
-        seriesItem: [], // 保存信息
-        seriesItemScreen: [],//全屏数据,
-        orderBy: null,//排序非全屏
-        orderByScreen: null,//排序全屏
-        images: '',
-        loading: Object,
-        items: {
-          metric_name: [], // 每条数据列名称
-          xAxis: [],
-          theData: [], // series数据组
-        },
-        panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
-        firstLoad: false, // 是否第一次加载
-        chartType: 'table', // 图表类型
-        screenModal: false,
-        // 查询数据使用
-        filter: {
-          start_time: '',
-          end_time: '',
-        },
-        stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
-        firstShow: false, // 默认不显示操作按钮,
-        caretShow: false,
-        dragTitleShow: false,
-        dropdownMenuShow: false,
-        divFirstShow: false,
-        columns: [
-          {
-            title: 'Element',
-            key: 'element',
-            sortable: true
-          }
-          , {
-            title: '采集时间',
-            key: 'time',
-            width: 160,
-            render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss')),
-          }, {
-            title: '数值',
-            key: 'value',
-            width: 160,
-            sortable: true,
-            render: (h, params) => h('span', this.getNumStr(params.row.value)),
-          }],
-        searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],//全屏显示的时间
-        oldSearchTime: [],
-        mapping:{},
-      };
+    editChartId: {
+      type: String,
+      default: 'editChartId'
     },
-    created() {
-      this.pageObj.pageSize = this.pageSizes[0];
-      this.screenPageObj.pageSize = this.pageSizes[0];
+    chartIndex: {
+      type: Number,
+      default: 0
     },
-    computed: {},
-    watch: {
-      dropdownMenuShow(n) {
-        this.$emit("dropmenu-change", n);
+    from: { type: String },
+    isLock: { type: Boolean, default: false }
+  },
+  data () {
+    return {
+      tableHeight: 0,
+      data: {}, // 该图表信息,chartItem
+      unit: {},
+      isError: false,
+      errorContent: '',
+      pageSizes: [20, 50, 100],
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      screenPageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      storedTableDataOld: [], // 原始信息
+      storedTableDataScreenOld: [], // 全屏原始信息
+      storedTableData: [],
+      storedScreanTableData: [],
+      seriesItem: [], // 保存信息
+      seriesItemScreen: [], // 全屏数据,
+      orderBy: null, // 排序非全屏
+      orderByScreen: null, // 排序全屏
+      images: '',
+      loading: Object,
+      items: {
+        metric_name: [], // 每条数据列名称
+        xAxis: [],
+        theData: [] // series数据组
+      },
+      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+      firstLoad: false, // 是否第一次加载
+      chartType: 'table', // 图表类型
+      screenModal: false,
+      // 查询数据使用
+      filter: {
+        start_time: '',
+        end_time: ''
+      },
+      stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
+      firstShow: false, // 默认不显示操作按钮,
+      caretShow: false,
+      dragTitleShow: false,
+      dropdownMenuShow: false,
+      divFirstShow: false,
+      columns: [
+        {
+          title: 'Element',
+          key: 'element',
+          sortable: true
+        },
+        {
+          title: '采集时间',
+          key: 'time',
+          width: 160,
+          render: (h, params) => h('span', bus.timeFormate(params.row.time, 'yyyy-MM-dd hh:mm:ss'))
+        }, {
+          title: '数值',
+          key: 'value',
+          width: 160,
+          sortable: true,
+          render: (h, params) => h('span', this.getNumStr(params.row.value))
+        }],
+      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()], // 全屏显示的时间
+      oldSearchTime: [],
+      mapping: {}
+    }
+  },
+  created () {
+    this.pageObj.pageSize = this.pageSizes[0]
+    this.screenPageObj.pageSize = this.pageSizes[0]
+  },
+  computed: {},
+  watch: {
+    dropdownMenuShow (n) {
+      this.$emit('dropmenu-change', n)
+    }
+  },
+  methods: {
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
+    },
+    filterShowData (source, pageObj, from) {
+      let orderBy = null
+      let sourceData = null
+      if (from === 'series') {
+        sourceData = this.storedTableDataOld
+        orderBy = this.orderBy
+      }
+      if (from === 'seriesScreen') {
+        sourceData = this.storedTableDataScreenOld
+        orderBy = this.orderByScreen
+      }
+      if (!orderBy || !orderBy.order) { // 没有排序 恢复默认值
+        source = Object.assign([], sourceData)
+      } else { // 排序之后的顺序
+        if (orderBy.order === 'ascending') {
+          source = source.sort(this.$tableSet.asce(orderBy.prop))
+        }
+        if (orderBy.order === 'descending') {
+          source = source.sort(this.$tableSet.desc(orderBy.prop))
+        }
+      }
+      return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
+    },
+    startResize (e) {
+      const vm = this
+      this.$chartResizeTool.start(vm, this.data, e)
+    },
+    screenPageNo (val) {
+      this.screenPageObj.pageNo = val
+      this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
+    },
+    screenPageSize (val) {
+      this.screenPageObj.pageSize = val
+      this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
+    },
+    startLoading (area) {
+      if (area === 'screen') {
+        this.$refs['localLoadingScreen' + this.chartIndex].startLoading()
+      } else {
+        this.$refs['localLoading' + this.chartIndex].startLoading()
       }
     },
-    methods: {
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
-      },
-      filterShowData(source, pageObj, from) {
-        let orderBy = null;
-        let sourceData = null;
-        if (from === 'series') {
-          sourceData = this.storedTableDataOld;
-          orderBy = this.orderBy;
-        }
-        if (from === 'seriesScreen') {
-          sourceData = this.storedTableDataScreenOld;
-          orderBy = this.orderByScreen;
-        }
-        if (!orderBy || !orderBy.order) {//没有排序 恢复默认值
-          source = Object.assign([], sourceData);
-        } else {//排序之后的顺序
-          if (orderBy.order === 'ascending') {
-            source = source.sort(this.$tableSet.asce(orderBy.prop));
-          }
-          if (orderBy.order === 'descending') {
-            source = source.sort(this.$tableSet.desc(orderBy.prop));
-          }
-        }
-        return source.slice((pageObj.pageNo - 1) * pageObj.pageSize, pageObj.pageNo * pageObj.pageSize)
-
-      },
-      startResize(e) {
-        let vm = this;
-        this.$chartResizeTool.start(vm, this.data, e);
-      },
-      screenPageNo(val) {
-        this.screenPageObj.pageNo = val;
-        this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
-      },
-      screenPageSize(val) {
-        this.screenPageObj.pageSize = val;
-        this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
-      },
-      startLoading(area) {
-        if (area === 'screen') {
-          this.$refs['localLoadingScreen' + this.chartIndex].startLoading();
-        } else {
-          this.$refs['localLoading' + this.chartIndex].startLoading();
-        }
-      },
-      endLoading(area) {
-        if (area === 'screen') {
-          this.$refs['localLoadingScreen' + this.chartIndex].endLoading();
-        } else {
-          this.$refs['localLoading' + this.chartIndex].endLoading();
-        }
-      },
-      resize(chartItem) {
-        let deHeight = this.$chartResizeTool.titleHeight + this.$chartResizeTool.chartTableBlankHeight;
-        let container = document.querySelector('#chartTableDiv' + this.chartIndex + " .table-container");
-        container.style.height = `calc(100% - ${deHeight * 2}px)`;
-        this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`;
-      },
-      showLoad(chartItem) {
-        //设置高度 chart-table
-        this.$nextTick(() => {
-          this.resize(chartItem);
-        });
-        this.startLoading();
-        this.divFirstShow = true;
-      },
-      screenRefreshChart(){
-        this.$refs['calendarPanel'].timeChange(this.$refs['calendarPanel'].nowTimeType,'chart')
-      },
-      // 重新请求数据 刷新操作-local
-      refreshChart() {
-        this.dropdownMenuShow = false;
-        this.startLoading();
-        this.firstShow = false;
-        this.$emit('on-refresh-data', this.data.id);
-      },
-      // 编辑图表
-      editChart() {
-        this.dropdownMenuShow = false;
-        this.$emit('on-edit-chart-block', this.data.id);
-      },
-      // 删除该图表
-      removeChart() {
-        this.dropdownMenuShow = false;
-        this.$emit('on-remove-chart-block', this.data.id);
-      },
-      //全屏时间条件查询
-      dateChange(time) {
-        this.seriesItemScreen = [];
-        for (let i = 0; i < 8; i++) {
-          this.seriesItemScreen.push({//表格数据
-            element: '',
-            time: '',//采集时间
-            value: '',//数值
-          });
-        }
-        this.startLoading('screen');
-        this.$emit('on-search-data', this.data.id, this.searchTime);
-      },
-      clickos() {
-        this.dropdownMenuShow = false;
-      },
-      clearChart() {
-        this.data = {};
-      },
-      duplicate(){
-        this.dropdownMenuShow=false;
-        this.$confirm(this.$t("tip.confirmDuplicate"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'info'
-        }).then(() => {
-          const param = {id:this.data.id};
-          this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
-            if (response.code === 200) {
-              this.$message({
-                duration: 2000,
-                type: 'success',
-                message: this.$t("tip.duplicateSuccess")
-              });
-              this.$emit('on-duplicate-chart-block', this.data.id,response.data);
-            }else {
-              if(response.msg){
-                this.$message.error(response.msg);
-              }else if(response.error){
-                this.$message.error(response.error);
-              }else {
-                this.$message.error(response);
-              }
-            }
-          });
-        });
-      },
-      // 全屏查看
-      showAllScreen() {
-        this.dropdownMenuShow = false;
-        // 初始化同步时间
-        this.searchTime = [];
-        this.$set(this.searchTime, 0, this.oldSearchTime[0]);
-        this.$set(this.searchTime, 1, this.oldSearchTime[1]);
-        // this.$refs.calendarPanel.setCustomTime(this.searchTime);
-
-        this.seriesItemScreen = this.seriesItem;
-        this.screenModal = true;
-      },
-      // 设置数据, filter区分
-      setData(chartItem, seriesItem, panelId, filter, area, errorMsg) {
-        if (errorMsg && errorMsg !== '') {
-          this.isError = true;
-          this.errorContent = errorMsg;
-        } else {
-          this.isError = false;
-          this.errorContent = '';
-        }
-        this.data = chartItem;
-        this.unit = chartDataFormat.getUnit(this.data.unit);
-        let statistics = chartItem.param.statistics;
-        seriesItem = this.getStatisticsResult(statistics,seriesItem)
-        seriesItem && (seriesItem = seriesItem.map(item=>{
-          if(chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type){
-            let type=chartItem.param.valueMapping.type;
-            let mappings=chartItem.param.valueMapping.mapping?chartItem.param.valueMapping.mapping:[];
-            let value = Number(item.value);
-
-            let mapping;
-            if(type == 'value'){
-              mapping=mappings.find(t=>{return Number(t.value) == value})
-            }else{
-              mapping=mappings.find(t=>{return Number(t.from) <= value&& Number(t.to) >= value});
-            }
-            this.mapping=mapping;
-            item.mapping=mapping;
-            item.value = mapping?mapping.text.replace('{{value}}', item.value).replace('{{name}}', item.element.alias):chartDataFormat.getUnit(chartItem.unit?chartItem.unit:2).compute(value,null,2);
-          }
-          return item;
-        }));
-        if (area === 'showFullScreen') {//全屏按时间查询
-
-          this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-          this.searchTime[1] = filter.end_time;
-          // this.seriesItemScreen = seriesItem;
-          this.storedScreanTableData = seriesItem;
-          this.storedScreanTableData = Object.assign([], this.storedScreanTableData.reverse());
-          this.storedTableDataScreenOld = Object.assign([], this.storedScreanTableData);
-          this.screenPageObj.total = this.storedScreanTableData.length;
-          this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen');
-          this.endLoading('screen');
-        } else {
-          //设置高度 chart-table
-          this.divFirstShow = true;
-          this.$nextTick(() => {
-            this.resize(chartItem);
-          });
-          this.firstShow = true; // 展示操作按键
-
-          this.panelIdInner = panelId;
-          this.storedTableData = seriesItem;
-          this.storedScreanTableData = seriesItem;
-          this.storedTableData = Object.assign([], this.storedTableData.reverse());
-          this.storedScreanTableData = Object.assign([], this.storedScreanTableData.reverse());
-          this.storedTableDataOld = Object.assign([], this.storedTableData);
-          this.storedTableDataScreenOld = Object.assign([], this.storedScreanTableData);
-          this.pageObj.total = this.storedTableData.length;
-          this.screenPageObj.total = this.storedScreanTableData.length;
-          this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series');
-          this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
-          if (filter) { // 保存数据,用于同步时间
-            this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-            this.searchTime[1] = filter.end_time;
-            this.oldSearchTime[0] = this.searchTime[0];
-            this.oldSearchTime[1] = this.searchTime[1];
-          }
-          this.endLoading();
-        }
-      },
-      getStatisticsResult(statistics,seriesItem){
-        if(!seriesItem||!seriesItem.length>0) return [];
-        if (!statistics) return seriesItem;
-        let copy=JSON.parse(JSON.stringify(seriesItem));
-        let last,result;
-        last=copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[0];
-        switch (statistics) {
-          case 'null':
-            return copy.map(item=>{
-              return {
-                element:item.element,
-                time:bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-                value:item.data[1]
-              }
+    endLoading (area) {
+      if (area === 'screen') {
+        this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
+      } else {
+        this.$refs['localLoading' + this.chartIndex].endLoading()
+      }
+    },
+    resize (chartItem) {
+      const deHeight = this.$chartResizeTool.titleHeight + this.$chartResizeTool.chartTableBlankHeight
+      const container = document.querySelector('#chartTableDiv' + this.chartIndex + ' .table-container')
+      container.style.height = `calc(100% - ${deHeight * 2}px)`
+      this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`
+    },
+    showLoad (chartItem) {
+      // 设置高度 chart-table
+      this.$nextTick(() => {
+        this.resize(chartItem)
+      })
+      this.startLoading()
+      this.divFirstShow = true
+    },
+    screenRefreshChart () {
+      this.$refs.calendarPanel.timeChange(this.$refs.calendarPanel.nowTimeType, 'chart')
+    },
+    // 重新请求数据 刷新操作-local
+    refreshChart () {
+      this.dropdownMenuShow = false
+      this.startLoading()
+      this.firstShow = false
+      this.$emit('on-refresh-data', this.data.id)
+    },
+    // 编辑图表
+    editChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-edit-chart-block', this.data.id)
+    },
+    // 删除该图表
+    removeChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-remove-chart-block', this.data.id)
+    },
+    // 全屏时间条件查询
+    dateChange (time) {
+      this.seriesItemScreen = []
+      for (let i = 0; i < 8; i++) {
+        this.seriesItemScreen.push({ // 表格数据
+          element: '',
+          time: '', // 采集时间
+          value: ''// 数值
+        })
+      }
+      this.startLoading('screen')
+      this.$emit('on-search-data', this.data.id, this.searchTime)
+    },
+    clickos () {
+      this.dropdownMenuShow = false
+    },
+    clearChart () {
+      this.data = {}
+    },
+    duplicate () {
+      this.dropdownMenuShow = false
+      this.$confirm(this.$t('tip.confirmDuplicate'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'info'
+      }).then(() => {
+        const param = { id: this.data.id }
+        this.$post('panel/' + this.data.panelId + '/charts/duplicate', (param)).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 2000,
+              type: 'success',
+              message: this.$t('tip.duplicateSuccess')
             })
-          case 'min':
-            result= copy.sort((x,y)=>{return parseFloat(x.data[1]) - parseFloat(y.data[1])})[0];
-            result = [{
-              element:result.element,
-              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:result.data[1],
-            }]
-            break;
-          case 'max':
-            result= copy.sort((x,y)=>{return parseFloat(y.data[1]) - parseFloat(x.data[1])})[0];
-            result = [{
-              element:result.element,
-              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:result.data[1],
-            }]
-            break;
-          case 'average':
-            copy = copy.map(t=>parseFloat(t.data[1]));
-            let sum = eval(copy.join('+'));
-            let avg = sum / copy.length;
-            result=[{
-              element:last.element,
-              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:avg
-            }]
-            break;
-          case 'total':
-            copy = copy.map(t=>parseFloat(t.data[1]));
-            let total = eval(copy.join('+'));
-            result=[{
-              element:last.element,
-              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:total
-            }]
-            break;
-          case 'first':
-            result=copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[copy.length-1]
-            result = [{
-              element:result.element,
-              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:result.data[1],
-            }]
-            break;
-          case 'last':
-            result=last;
-            result = [{
-              element:result.element,
-              time:bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:result.data[1],
-            }]
-            break;
-          case 'range':
-            let sort = copy.sort((x,y)=>{return parseFloat(y.data[1]) - parseFloat(x.data[1])})
-            let max = sort[0]
-            let min = sort[sort.length-1]
-            result=[{
-              element:last.element,
-              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:max.data[1] - min.data[1]
-            }]
-            break;
-          case 'different':
-            let first = copy.sort((x,y)=>{return parseFloat(y.data[0]) - parseFloat(x.data[0])})[copy.length-1];
-            result = [{
-              element:last.element,
-              time:bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-              value:last.data[1] - first.data[1]
-            }]
-            break;
-        }
-        return result;
-      },
-      // 数据排序
-      tableDataSort(item) {
-        this.orderBy = {order: item.order, prop: item.prop};
-        this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series');
-      },
-      // 全屏数据排序
-      tableDataSortScreen(item) {
-        this.orderByScreen = {order: item.order, prop: item.prop};
-        this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
-      },
-      dealLegendAlias: function (legend, expression) {
-        if (/\{\{.+\}\}/.test(expression)) {
-          let labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-            let label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-            let reg = new RegExp(label + '=".+?"')
-            let value = null;
-            if (reg.test(legend)) {
-              let find = legend.match(reg)[0];
-              value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1);
+            this.$emit('on-duplicate-chart-block', this.data.id, response.data)
+          } else {
+            if (response.msg) {
+              this.$message.error(response.msg)
+            } else if (response.error) {
+              this.$message.error(response.error)
+            } else {
+              this.$message.error(response)
             }
-            return value ? value : label;
-          })
-          return labelValue
-        } else {
-          return expression;
-        }
-      },
-      // 获取格式
-      getNumStr(num) {
-        if (num) {
-          if (num >= 1000) {
-            const kbNum = num / 1000;
-            if (kbNum >= 1000) {
-              const mbNum = kbNum / 1000;
-              if (mbNum >= 1000) {
-                const gbNum = mbNum / 1000;
-                if (gbNum >= 1000) {
-                  const tbNum = gbNum / 1000;
-                  if (tbNum >= 1000) {
-                    const pbNum = tbNum / 1000;
-                    return `${pbNum.toFixed(2)}PB`;
-                  }
-                  return `${tbNum.toFixed(2)}TB`;
-                }
-                return `${gbNum.toFixed(2)}GB`;
-              }
-              return `${mbNum.toFixed(2)}MB`;
-            }
-            return `${kbNum.toFixed(2)}KB`;
           }
-          return num.toFixed(2);
+        })
+      })
+    },
+    // 全屏查看
+    showAllScreen () {
+      this.dropdownMenuShow = false
+      // 初始化同步时间
+      this.searchTime = []
+      this.$set(this.searchTime, 0, this.oldSearchTime[0])
+      this.$set(this.searchTime, 1, this.oldSearchTime[1])
+      // this.$refs.calendarPanel.setCustomTime(this.searchTime);
+
+      this.seriesItemScreen = this.seriesItem
+      this.screenModal = true
+    },
+    // 设置数据, filter区分
+    setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
+      if (errorMsg && errorMsg !== '') {
+        this.isError = true
+        this.errorContent = errorMsg
+      } else {
+        this.isError = false
+        this.errorContent = ''
+      }
+      this.data = chartItem
+      this.unit = chartDataFormat.getUnit(this.data.unit)
+      const statistics = chartItem.param.statistics
+      seriesItem = this.getStatisticsResult(statistics, seriesItem)
+      seriesItem && (seriesItem = seriesItem.map(item => {
+        if (chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type) {
+          const type = chartItem.param.valueMapping.type
+          const mappings = chartItem.param.valueMapping.mapping ? chartItem.param.valueMapping.mapping : []
+          const value = Number(item.value)
+
+          let mapping
+          if (type == 'value') {
+            mapping = mappings.find(t => { return Number(t.value) == value })
+          } else {
+            mapping = mappings.find(t => { return Number(t.from) <= value && Number(t.to) >= value })
+          }
+          this.mapping = mapping
+          item.mapping = mapping
+          item.value = mapping ? mapping.text.replace('{{value}}', item.value).replace('{{name}}', item.element.alias) : chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(value, null, 2)
         }
-        return num;
-      },
+        return item
+      }))
+      if (area === 'showFullScreen') { // 全屏按时间查询
+        this.searchTime[0] = filter.start_time// 将列表的查询时间复制给全屏的查询时间
+        this.searchTime[1] = filter.end_time
+        // this.seriesItemScreen = seriesItem;
+        this.storedScreanTableData = seriesItem
+        this.storedScreanTableData = Object.assign([], this.storedScreanTableData.reverse())
+        this.storedTableDataScreenOld = Object.assign([], this.storedScreanTableData)
+        this.screenPageObj.total = this.storedScreanTableData.length
+        this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
+        this.endLoading('screen')
+      } else {
+        // 设置高度 chart-table
+        this.divFirstShow = true
+        this.$nextTick(() => {
+          this.resize(chartItem)
+        })
+        this.firstShow = true // 展示操作按键
+
+        this.panelIdInner = panelId
+        this.storedTableData = seriesItem
+        this.storedScreanTableData = seriesItem
+        this.storedTableData = Object.assign([], this.storedTableData.reverse())
+        this.storedScreanTableData = Object.assign([], this.storedScreanTableData.reverse())
+        this.storedTableDataOld = Object.assign([], this.storedTableData)
+        this.storedTableDataScreenOld = Object.assign([], this.storedScreanTableData)
+        this.pageObj.total = this.storedTableData.length
+        this.screenPageObj.total = this.storedScreanTableData.length
+        this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
+        this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
+        if (filter) { // 保存数据,用于同步时间
+          this.searchTime[0] = filter.start_time// 将列表的查询时间复制给全屏的查询时间
+          this.searchTime[1] = filter.end_time
+          this.oldSearchTime[0] = this.searchTime[0]
+          this.oldSearchTime[1] = this.searchTime[1]
+        }
+        this.endLoading()
+      }
     },
-    mounted() {
-      this.firstLoad = false;
+    getStatisticsResult (statistics, seriesItem) {
+      if (!seriesItem || !seriesItem.length > 0) return []
+      if (!statistics) return seriesItem
+      let copy = JSON.parse(JSON.stringify(seriesItem))
+      const last = copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })[0]
+      let result
+      switch (statistics) {
+        case 'null': {
+          return copy.map(item => {
+            return {
+              element: item.element,
+              time: bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value: item.data[1]
+            }
+          })
+        }
+        case 'min': {
+          result = copy.sort((x, y) => { return parseFloat(x.data[1]) - parseFloat(y.data[1]) })[0]
+          result = [{
+            element: result.element,
+            time: bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: result.data[1]
+          }]
+          break
+        }
+        case 'max': {
+          result = copy.sort((x, y) => { return parseFloat(y.data[1]) - parseFloat(x.data[1]) })[0]
+          result = [{
+            element: result.element,
+            time: bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: result.data[1]
+          }]
+          break
+        }
+        case 'average': {
+          copy = copy.map(t => parseFloat(t.data[1]))
+          const sum = eval(copy.join('+'))
+          const avg = sum / copy.length
+          result = [{
+            element: last.element,
+            time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: avg
+          }]
+          break
+        }
+        case 'total': {
+          copy = copy.map(t => parseFloat(t.data[1]))
+          const total = eval(copy.join('+'))
+          result = [{
+            element: last.element,
+            time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: total
+          }]
+          break
+        }
+        case 'first': {
+          result = copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })[copy.length - 1]
+          result = [{
+            element: result.element,
+            time: bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: result.data[1]
+          }]
+          break
+        }
+        case 'last': {
+          result = last
+          result = [{
+            element: result.element,
+            time: bus.timeFormate(new Date(result.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: result.data[1]
+          }]
+          break
+        }
+        case 'range': {
+          const sort = copy.sort((x, y) => { return parseFloat(y.data[1]) - parseFloat(x.data[1]) })
+          const max = sort[0]
+          const min = sort[sort.length - 1]
+          result = [{
+            element: last.element,
+            time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: max.data[1] - min.data[1]
+          }]
+          break
+        }
+        case 'different': {
+          const first = copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })[copy.length - 1]
+          result = [{
+            element: last.element,
+            time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+            value: last.data[1] - first.data[1]
+          }]
+          break
+        }
+      }
+      return result
     },
-    beforeDestroy() {
-      this.clearChart();
+    // 数据排序
+    tableDataSort (item) {
+      this.orderBy = { order: item.order, prop: item.prop }
+      this.seriesItem = this.filterShowData(this.storedTableData, this.pageObj, 'series')
     },
-  };
+    // 全屏数据排序
+    tableDataSortScreen (item) {
+      this.orderByScreen = { order: item.order, prop: item.prop }
+      this.seriesItemScreen = this.filterShowData(this.storedScreanTableData, this.screenPageObj, 'seriesScreen')
+    },
+    dealLegendAlias: function (legend, expression) {
+      if (/\{\{.+\}\}/.test(expression)) {
+        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          const reg = new RegExp(label + '=".+?"')
+          let value = null
+          if (reg.test(legend)) {
+            const find = legend.match(reg)[0]
+            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+          }
+          return value || label
+        })
+        return labelValue
+      } else {
+        return expression
+      }
+    },
+    // 获取格式
+    getNumStr (num) {
+      if (num) {
+        if (num >= 1000) {
+          const kbNum = num / 1000
+          if (kbNum >= 1000) {
+            const mbNum = kbNum / 1000
+            if (mbNum >= 1000) {
+              const gbNum = mbNum / 1000
+              if (gbNum >= 1000) {
+                const tbNum = gbNum / 1000
+                if (tbNum >= 1000) {
+                  const pbNum = tbNum / 1000
+                  return `${pbNum.toFixed(2)}PB`
+                }
+                return `${tbNum.toFixed(2)}TB`
+              }
+              return `${gbNum.toFixed(2)}GB`
+            }
+            return `${mbNum.toFixed(2)}MB`
+          }
+          return `${kbNum.toFixed(2)}KB`
+        }
+        return num.toFixed(2)
+      }
+      return num
+    }
+  },
+  mounted () {
+    this.firstLoad = false
+  },
+  beforeDestroy () {
+    this.clearChart()
+  }
+}
 </script>

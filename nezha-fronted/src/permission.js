@@ -1,125 +1,126 @@
-import router from './router';
-import store from './store';
-import {post} from './http';
-import ElementUI from 'element-ui';
-import Vue from 'vue';
-import i18n from './components/common/i18n';
+import router from './router'
+import store from './store'
+import { post } from './http'
+import ElementUI from 'element-ui'
+import Vue from 'vue'
+import i18n from './components/common/i18n'
 import VueResource from 'vue-resource'
 
-Vue.use(VueResource);
+Vue.use(VueResource)
 
-const loginWhiteList = ['/login','/setup']; // 免登陆白名单
-const permissionWhiteList = ['/menu', ...loginWhiteList]; // 权限白名单
+const loginWhiteList = ['/login', '/setup'] // 免登陆白名单
+const permissionWhiteList = ['/menu', ...loginWhiteList] // 权限白名单
 
 router.beforeEach((to, from, next) => {
   if (sessionStorage.getItem('nz-token')) {
     if (permissionWhiteList.indexOf(to.path) !== -1) {
-      next();
+      next()
     } else {
       new Promise(resolve => {
         if (store.getters.menuList.length === 0) {
-          let configUrl = "static/config.json?Timestamp=" + new Date().getTime();
+          const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
           Vue.http.get(configUrl).then(res => {
-            post(res.body.baseUrl + "sys/user/permissions", {token: sessionStorage.getItem("nz-token")}).then(res => {
-              store.commit("setMenuList", sortByOrderNum(res.data.menus));
-              store.commit("setButtonList", res.data.buttons);
-              store.commit("setRoleList", res.data.roles);
-              resolve();
-            });
-          });
+            post(res.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
+              store.commit('setMenuList', sortByOrderNum(res.data.menus))
+              store.commit('setButtonList', res.data.buttons)
+              store.commit('setRoleList', res.data.roles)
+              resolve()
+            })
+          })
         } else {
-          resolve();
+          resolve()
         }
       }).then(res => {
         if (to.path) {
           if (hasMenu(store.getters.menuList, to.path)) {
-            next();
+            next()
           } else {
-            ElementUI.Message.error(i18n.t("tip.noAccess"));
+            ElementUI.Message.error(i18n.t('tip.noAccess'))
           }
         }
-      });
+      })
     }
   } else {
     if (loginWhiteList.indexOf(to.path) !== -1) {
-      next();
+      next()
     } else {
-      next({path: '/login'})
+      next({ path: '/login' })
     }
   }
-});
+})
 
-//menuList中是否包含route权限
-export function hasMenu(menuList, route) {
+// menuList中是否包含route权限
+export function hasMenu (menuList, route) {
   return menuList.some(menu => {
     if (menu.route == route) {
-      return true;
+      return true
     } else {
       if (menu.children) {
         if (hasMenu(menu.children, route)) {
-          return true;
+          return true
         }
       }
     }
-  });
+    return false
+  })
 }
 
-export function hasButton(buttonList, code) {
-  return buttonList.some(button => button == code);
+export function hasButton (buttonList, code) {
+  return buttonList.some(button => button == code)
 }
 
-//用法 v-has="code" | v-has="[code...]" 任意匹配一个 | v-has:all="[code...]" 全匹配
+// 用法 v-has="code" | v-has="[code...]" 任意匹配一个 | v-has:all="[code...]" 全匹配
 export const hasPermission = {
   install (Vue, options) {
     Vue.directive('has', {
-      inserted: (el, binding, vnode)=>{
-        //节点权限处理
-        let buttonCode = binding.value;
-        let arg = binding.arg;
+      inserted: (el, binding, vnode) => {
+        // 节点权限处理
+        const buttonCode = binding.value
+        const arg = binding.arg
         if (buttonCode) {
           if (buttonCode instanceof Array) {
-            let has = true;
-            if (arg && arg === 'all') { //全匹配
+            let has = true
+            if (arg && arg === 'all') { // 全匹配
               buttonCode.forEach(button => {
                 if (has) {
-                  has = hasButton(store.getters.buttonList, button);
+                  has = hasButton(store.getters.buttonList, button)
                 }
-              });
-            } else { //任意匹配
+              })
+            } else { // 任意匹配
               has = buttonCode.some(button => {
-                return hasButton(store.getters.buttonList, button);
-              });
+                return hasButton(store.getters.buttonList, button)
+              })
             }
             if (!has) {
-              el.parentNode.removeChild(el);
+              el.parentNode.removeChild(el)
             }
-          } else { //单个匹配
+          } else { // 单个匹配
             if (!hasButton(store.getters.buttonList, buttonCode)) {
-              el.parentNode.removeChild(el);
+              el.parentNode.removeChild(el)
             }
           }
         }
       }
-    });
+    })
   }
-};
+}
 
-//根据orderNum排序
-export function sortByOrderNum(menuList) {
-  let r = menuList.sort((a, b) => {
-    return a.orderNum - b.orderNum;
-  });
+// 根据orderNum排序
+export function sortByOrderNum (menuList) {
+  const r = menuList.sort((a, b) => {
+    return a.orderNum - b.orderNum
+  })
   r.forEach(menu => {
     if (menu.children && getChildMenu(menu).length > 0) {
       menu.children = menu.children.sort((a, b) => {
-        return a.orderNum - b.orderNum;
-      });
-      menu.route = menu.children[0].route;
+        return a.orderNum - b.orderNum
+      })
+      menu.route = menu.children[0].route
     }
-  });
-  return r;
+  })
+  return r
 }
 
-function getChildMenu(menu) {
-  return menu.children.filter(m => m.type == 1);
+function getChildMenu (menu) {
+  return menu.children.filter(m => m.type == 1)
 }

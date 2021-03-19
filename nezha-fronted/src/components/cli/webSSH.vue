@@ -175,344 +175,342 @@
 </template>
 
 <script>
-  import Console from './console'
-  import uuidv1 from "uuid/v1";
-  import axios from 'axios'
+import Console from './console'
+import uuidv1 from 'uuid/v1'
+import axios from 'axios'
 
-  export default {
-    name: 'webSSH',
-    components: {
-      'my-console': Console
+export default {
+  name: 'webSSH',
+  components: {
+    'my-console': Console
+  },
+
+  data () {
+    const termFontSize = parseInt(localStorage.getItem('termFontSize'))
+    return {
+      consoleShow: false,
+      isFullScreen: false,
+      closeConfirmShow: false,
+      closeRemember: false,
+      initConsoleHeight: 300, // 只读,初始化高度
+      consoleHeight: 250, // console高度
+      resizeConsoleHeight: 250, // resize后的高度，用于记录最大化、最小化前的高度
+      currentTransform: 0,
+      editableTabsValue: '-1', // 当前显示的console
+      currentIndex: '-1',
+      editableTabs: [],
+      tabIndex: -1, // 添加tab的时候使用
+      // upoload-download
+
+      currentUuid: '',
+      uploadBox: { showUpload: false, title: this.$t('webshell.uploadTitle') },
+      uploadFile: { file: '', path: '', uuid: '' },
+      uploadFileList: [],
+      uploadResult: null,
+      downloadBox: { showDownload: false, title: this.$t('webshell.downloadTitle') },
+      downloadFile: { path: '', uuid: '' },
+      downloadFileList: [],
+      downloadResult: null,
+      // 字体大小
+      fontSize: termFontSize || 15,
+      webSSHHeight: ''// 最小化之前的高度
+    }
+  },
+  methods: {
+    getUuid () {
+      let uuid = uuidv1()
+      const now = new Date().getTime()
+      uuid = uuid + '-' + now + '-' + now
+      this.currentUuid = uuid
+      return uuid
+    },
+    addConsole (id, host, accountId, port) {
+      if (!id) { id = '' }
+      if (!host) { host = '' }
+      if (!accountId) { accountId = '' }
+      if (!port) { port = '' }
+      const uuid = this.getUuid()
+      const newTabName = ++this.tabIndex + ''
+      let title = host
+      if (port) {
+        title = title + ':' + port
+      }
+      if (!title) {
+        title = this.$t('webshell.shellTitle')
+      }
+      const width = document.body.clientWidth// 可视宽度
+      const console = {
+        title: title,
+        name: newTabName,
+        circleColor: 1, // 1 grey,2 green, 3 red
+        terminal: {
+          name: newTabName,
+          cols: 225,
+          rows: 200,
+          width: width,
+          height: this.consoleHeight,
+          assetId: id,
+          accountId: accountId,
+          uuid: uuid
+        }
+      }
+      this.editableTabsValue = newTabName
+      this.editableTabs.push(console)
+
+      setTimeout(function () {
+        const tabScroll = document.getElementsByClassName('el-tabs__nav is-top')
+        const tabViewWidth = document.getElementsByClassName('el-tabs__nav-scroll')
+        const scrollWidth = tabScroll[0].clientWidth
+        const viewWidth = tabViewWidth[0].clientWidth// 可视宽度
+
+        if (viewWidth < scrollWidth) {
+          tabScroll[0].style.transform = 'translateX(' + (viewWidth - scrollWidth) + 'px) '// 71(
+        }
+      }, 10)
+
+      // this.$store.commit('addConsole');
+    },
+    show (id, host, accountId, port) {
+      this.addConsole(id, host, accountId, port)
+      this.consoleShow = true
+    },
+    initDialog () {
+
     },
 
-    data() {
-      let termFontSize=parseInt(localStorage.getItem("termFontSize"));
-      return {
-        consoleShow:false,
-        isFullScreen:false,
-        closeConfirmShow:false,
-        closeRemember:false,
-        initConsoleHeight:300,//只读,初始化高度
-        consoleHeight:250,//console高度
-        resizeConsoleHeight: 250, //resize后的高度，用于记录最大化、最小化前的高度
-        currentTransform:0,
-        editableTabsValue: '-1',//当前显示的console
-        currentIndex:'-1',
-        editableTabs: [ ],
-        tabIndex: -1,//添加tab的时候使用
-        //upoload-download
+    // 可以做最小化的处理，点击窗口外的空白处会调用此方法
+    closeConsole () {
+      // 弹窗询问是否关闭所有链接，关闭窗口？复选框：记住我的选择（用户勾选且选择yes 后，保存到localstorage，之后关闭不再提醒）
+      if (this.editableTabs.length <= 1) {
+        this.closeShellWindow()
+      } else {
+        const remember = localStorage.getItem('close-shell-remember') ? localStorage.getItem('close-shell-remember') : false
+        if (remember) {
+          this.closeShellWindow()
+        } else {
+          this.closeConfirmShow = true
+        }
+      }
+      document.querySelector('.sub-list').style.height = ''
+    },
+    cancleConfirm () {
+      this.closeConfirmShow = false
+    },
+    closeShellWindow () {
+      if (this.closeRemember) { // remember me
+        localStorage.setItem('close-shell-remember', this.closeRemember)
+      }
+      // 关闭所有连接
+      this.editableTabs.forEach((tab, index) => {
+        this.$refs['console' + index][0].closeSocket()
+      })
+      this.editableTabs = []
+      this.editableTabsValue = '-1' // 当前显示的consol
+      this.tabIndex = -1
 
-        currentUuid:'',
-        uploadBox:{showUpload:false,title:this.$t('webshell.uploadTitle')},
-        uploadFile: {file: '',path: '',uuid: ''},
-        uploadFileList:[],
-        uploadResult:null,
-        downloadBox:{showDownload:false,title:this.$t('webshell.downloadTitle')},
-        downloadFile:{path: '',uuid: ''},
-        downloadFileList:[],
-        downloadResult:null,
-        // 字体大小
-        fontSize:termFontSize?termFontSize:15,
-        webSSHHeight:'',//最小化之前的高度
+      this.consoleShow = false
+      this.isFullScreen = false
+
+      const targetDiv = document.getElementById('shell-service')
+      targetDiv.style.height = 0 + 'px'
+      this.consoleHeight = this.initConsoleHeight - 50
+
+      this.$store.commit('closeConsole')
+
+      window.removeEventListener('resize', this.windowChange)
+      this.closeConfirmShow = false
+      const subListDom = document.querySelector('#shell-service .sub-list') // 副列表
+      subListDom.style.height = '250px'
+    },
+    handleClick () {
+
+    },
+    refreshTabTitle (connectResult) {
+      if (this.editableTabs && this.editableTabs.length > 0) {
+        this.editableTabs.forEach((tab, index) => {
+          if (tab.name === this.editableTabsValue) {
+            if (connectResult.title && connectResult.title != '') {
+              tab.title = connectResult.title
+            }
+            tab.circleColor = connectResult.color
+          }
+        })
       }
     },
-    methods: {
-      getUuid(){
-        let uuid = uuidv1();
-        let now = new Date().getTime();
-        uuid = uuid+"-"+now+"-"+now;
-        this.currentUuid = uuid;
-        return uuid;
-      },
-      addConsole(id,host,accountId,port){
-        if(!id){id=''}
-        if(!host){host=''}
-        if(!accountId){accountId=''}
-        if(!port){port=''}
-        let uuid = this.getUuid();
-        let newTabName = ++this.tabIndex + '';
-        let title = host;
-        if(port){
-          title = title+":"+port;
-        }
-        if(!title){
-          title=this.$t("webshell.shellTitle");
-        }
-        let width = document.body.clientWidth;//可视宽度
-        const console = {
-          title:title,
-          name:newTabName,
-          circleColor:1,//1 grey,2 green, 3 red
-          terminal: {
-            name:newTabName,
-            cols: 225,
-            rows: 200,
-            width:width,
-            height:this.consoleHeight,
-            assetId:id,
-            accountId:accountId,
-            uuid:uuid,
-          },
-        };
-        this.editableTabsValue = newTabName;
-        this.editableTabs.push(console);
-
-        setTimeout(function(){
-          let tabScroll = document.getElementsByClassName("el-tabs__nav is-top");
-          let tabViewWidth = document.getElementsByClassName("el-tabs__nav-scroll");
-          let scrollWidth = tabScroll[0].clientWidth;
-          let viewWidth = tabViewWidth[0].clientWidth;//可视宽度
-
-          if(viewWidth<scrollWidth){
-            tabScroll[0].style.transform = "translateX(" + (viewWidth-scrollWidth) + "px) ";//71(
+    removeTab (targetName) {
+      const tabs = this.editableTabs
+      let activeName = this.editableTabsValue
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            const nextTab = tabs[index + 1] || tabs[index - 1]
+            if (nextTab) {
+              activeName = nextTab.name
+            }
           }
-        },10)
+        })
+      }
+      this.editableTabsValue = activeName
+      this.editableTabs = tabs.filter(tab => tab.name !== targetName)
+      this.$store.commit('removeConsole')
 
-        //this.$store.commit('addConsole');
-
-      },
-      show(id,host,accountId,port){
-        this.addConsole(id,host,accountId,port);
-        this.consoleShow = true;
-      },
-      initDialog(){
-
-      },
-
-      //可以做最小化的处理，点击窗口外的空白处会调用此方法
-      closeConsole(){
-        //弹窗询问是否关闭所有链接，关闭窗口？复选框：记住我的选择（用户勾选且选择yes 后，保存到localstorage，之后关闭不再提醒）
-        if(this.editableTabs.length<=1){
-          this.closeShellWindow();
-        }else {
-          let remember = localStorage.getItem('close-shell-remember') ? localStorage.getItem('close-shell-remember') : false;
-          if(remember){
-            this.closeShellWindow();
-          }else {
-            this.closeConfirmShow = true;
-          }
-        }
-        document.querySelector(".sub-list").style.height = "";
-      },
-      cancleConfirm(){
-        this.closeConfirmShow = false;
-      },
-      closeShellWindow(){
-        if(this.closeRemember){// remember me
-          localStorage.setItem('close-shell-remember', this.closeRemember);
-        }
-        //关闭所有连接
-        this.editableTabs.forEach((tab, index) => {
-          this.$refs['console' + index][0].closeSocket();
-        });
-        this.editableTabs = [];
-        this.editableTabsValue= '-1',//当前显示的consol
-          this.tabIndex = -1
-
-        this.consoleShow = false;
-        this.isFullScreen = false;
-
-        let targetDiv= document.getElementById('shell-service');
-        targetDiv.style.height=0+'px';
-        this.consoleHeight = this.initConsoleHeight-50;
-
-        this.$store.commit('closeConsole');
-
-        window.removeEventListener('resize',this.windowChange);
-        this.closeConfirmShow = false;
-        let subListDom = document.querySelector("#shell-service .sub-list"); //副列表
-        subListDom.style.height = "250px";
-      },
-      handleClick(){
-
-      },
-      refreshTabTitle(connectResult){
+      if (this.editableTabs.length <= 0) {
+        this.closeConsole()
+      }
+    },
+    /* 活动标签切换时触发 */
+    beforeLeave (currentName, oldName) {
+      // 重点，如果name是add，则什么都不触发
+      if (currentName === 'add') {
+        this.addTab()
+        return false
+      } else {
+        // 切换tab
+        this.$nextTick(() => {
           if (this.editableTabs && this.editableTabs.length > 0) {
             this.editableTabs.forEach((tab, index) => {
-              if (tab.name === this.editableTabsValue) {
-                if(connectResult.title && connectResult.title!=''){
-                  tab.title = connectResult.title;
-                }
-                tab.circleColor = connectResult.color;
+              if (tab.name === currentName) {
+                this.$refs['console' + index][0].focusConsole()
+                this.currentUuid = tab.terminal.uuid
               }
-            });
+            })
           }
-      },
-      removeTab(targetName) {
-        let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              let nextTab = tabs[index + 1] || tabs[index - 1];
-              if (nextTab) {
-                activeName = nextTab.name;
-              }
-            }
-          });
-        }
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-        this.$store.commit('removeConsole');
-
-        if(this.editableTabs.length<=0){
-          this.closeConsole();
-        }
-      },
-      /* 活动标签切换时触发 */
-      beforeLeave(currentName,oldName) {
-        var self=this;
-        //重点，如果name是add，则什么都不触发
-        if(currentName=="add"){
-          this.addTab()
-          return false
-        }else{
-          //切换tab
-          this.$nextTick(() => {
-            if (this.editableTabs && this.editableTabs.length > 0) {
-              this.editableTabs.forEach((tab, index) => {
-                if (tab.name === currentName) {
-                  this.$refs['console' + index][0].focusConsole();
-                  this.currentUuid = tab.terminal.uuid;
-                }
-              });
-            }
-          });
-          this.currentIndex=currentName;
-        }
-      },
-      addTab(targetName) {
-        this.$store.commit('addConsoleNum');
-        this.addConsole();
-      },
-      handleSelect(key, keyPath) {
-        //alert(keyPath);
-      },
-
-      /*upload--download  start*/
-      closeDialog:function(){
-        this.uploadBox.showUpload=false;
-        this.uploadResult=null;
-        this.uploadFileList=[];
-        this.uploadFile={file: '',path: '',uuid: ''};
-      },
-      closeDownloadDialog(){
-        this.downloadBox.showDownload=false;
-        this.downloadResult=null;
-        this.downloadFileList=[];
-        this.downloadFile={path: '',uuid: ''};
-      },
-      showUploadBox(){
-        this.uploadBox.showUpload=true;
-      },
-      handleChange:function(file,fileList){
-        if (fileList.length > 0) {
-          this.uploadFileList = [fileList[fileList.length - 1]]
-        }
-        this.uploadFile.file = this.uploadFileList[0];
-      },
-      upload() {
-          let form = new FormData();
-          form.append("uuid", this.currentUuid);
-          form.append("file", this.uploadFile.file.raw);
-          form.append("path", this.uploadFile.path);
-          this.$post('terminal/upload', form,{'Content-Type': 'multipart/form-data'}).then(res => {
-            if(res.code ==  200 ){
-              this.closeDialog();
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.saveSuccess")});
-            }else{
-              this.$message.error(res.msg);
-            }
-          })
-      },
-      showDownloadBox(){
-        this.downloadBox.showDownload=true;
-      },
-      download(){
-        this.downloadFile.uuid = this.currentUuid;
-        axios.post('terminal/download',this.downloadFile,{responseType:'blob'}).then(res => {
-          let fileName= this.downloadFile.path.substring(this.downloadFile.path.lastIndexOf('/')+1);
-          if(window.navigator.msSaveOrOpenBlob){
-            // 兼容ie11
-            let blobObject = new Blob([res.data]);
-            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
-          }else{
-            let url = URL.createObjectURL(new Blob([res.data]));
-            let a = document.createElement('a');
-            document.body.appendChild(a); //此处增加了将创建的添加到body当中
-            a.href = url;
-            a.download = fileName;
-            a.target = '_blank';
-            a.click();
-            a.remove(); //将a标签移除
-          }
-          this.closeDownloadDialog();
         })
-      },
-      /*upload--download  end*/
-      minScreen(){
-        this.consoleShow = false;
-        this.$store.commit('minConsole');
-        let targetDiv= document.getElementById('shell-service');
-        this.webSSHHeight=targetDiv.style.height;
-        targetDiv.style.height=0+'px';
-      },
-      fullScreen(isChange){
-        this.resizeConsoleHeight = document.querySelector("#shell-service").offsetHeight; //记录全屏前主列表的高度
-        //dialog全屏
-        this.isFullScreen = !this.isFullScreen;
+        this.currentIndex = currentName
+      }
+    },
+    addTab (targetName) {
+      this.$store.commit('addConsoleNum')
+      this.addConsole()
+    },
+    handleSelect (key, keyPath) {
+      // alert(keyPath);
+    },
 
-        //所有的console全屏
+    /* upload--download  start */
+    closeDialog: function () {
+      this.uploadBox.showUpload = false
+      this.uploadResult = null
+      this.uploadFileList = []
+      this.uploadFile = { file: '', path: '', uuid: '' }
+    },
+    closeDownloadDialog () {
+      this.downloadBox.showDownload = false
+      this.downloadResult = null
+      this.downloadFileList = []
+      this.downloadFile = { path: '', uuid: '' }
+    },
+    showUploadBox () {
+      this.uploadBox.showUpload = true
+    },
+    handleChange: function (file, fileList) {
+      if (fileList.length > 0) {
+        this.uploadFileList = [fileList[fileList.length - 1]]
+      }
+      this.uploadFile.file = this.uploadFileList[0]
+    },
+    upload () {
+      const form = new FormData()
+      form.append('uuid', this.currentUuid)
+      form.append('file', this.uploadFile.file.raw)
+      form.append('path', this.uploadFile.path)
+      this.$post('terminal/upload', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+        if (res.code == 200) {
+          this.closeDialog()
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    showDownloadBox () {
+      this.downloadBox.showDownload = true
+    },
+    download () {
+      this.downloadFile.uuid = this.currentUuid
+      axios.post('terminal/download', this.downloadFile, { responseType: 'blob' }).then(res => {
+        const fileName = this.downloadFile.path.substring(this.downloadFile.path.lastIndexOf('/') + 1)
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = fileName
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+        this.closeDownloadDialog()
+      })
+    },
+    /* upload--download  end */
+    minScreen () {
+      this.consoleShow = false
+      this.$store.commit('minConsole')
+      const targetDiv = document.getElementById('shell-service')
+      this.webSSHHeight = targetDiv.style.height
+      targetDiv.style.height = 0 + 'px'
+    },
+    fullScreen (isChange) {
+      this.resizeConsoleHeight = document.querySelector('#shell-service').offsetHeight // 记录全屏前主列表的高度
+      // dialog全屏
+      this.isFullScreen = !this.isFullScreen
+
+      // 所有的console全屏
+      this.editableTabs.forEach((tab, index) => {
+        this.$refs['console' + index][0].fullScreenConsole(this.isFullScreen)
+      })
+
+      if (!this.isFullScreen) {
+        const targetDiv = document.getElementById('shell-service')
+        targetDiv.style.height = this.initConsoleHeight + 'px'
+        this.consoleHeight = this.initConsoleHeight
+      } else {
+        const targetDiv = document.getElementById('shell-service')
+        targetDiv.style.height = `${100}%`
+        const height = document.body.clientHeight// 可视高度
+        this.consoleHeight = height
+      }
+
+      if (this.editableTabs && this.editableTabs.length > 0) {
         this.editableTabs.forEach((tab, index) => {
-          this.$refs['console'+index][0].fullScreenConsole(this.isFullScreen);
-        });
+          if (tab.name === this.editableTabsValue) {
+            this.$refs['console' + index][0].focusConsole()
+          }
+        })
+      }
+    },
+    exitFullScreen () {
+      this.isFullScreen = !this.isFullScreen
+      // 所有的console全屏
+      this.editableTabs.forEach((tab, index) => {
+        this.$refs['console' + index][0].fullScreenConsole(this.isFullScreen, this.resizeConsoleHeight - 30)
+      })
 
-        if(!this.isFullScreen){
-          let targetDiv= document.getElementById('shell-service');
-          targetDiv.style.height=this.initConsoleHeight+'px';
-          this.consoleHeight=this.initConsoleHeight;
-        }else {
-          let targetDiv= document.getElementById('shell-service');
-          targetDiv.style.height=`${100}%`;
-          let height = document.body.clientHeight;//可视高度
-          this.consoleHeight=height;
-        }
+      if (!this.isFullScreen) {
+        const targetDiv = document.getElementById('shell-service')
+        targetDiv.style.height = this.resizeConsoleHeight + 'px'
+        this.consoleHeight = this.resizeConsoleHeight
+      } else {
+        const targetDiv = document.getElementById('shell-service')
+        targetDiv.style.height = `${100}%`
+        const height = document.body.clientHeight// 可视高度
+        this.consoleHeight = height
+      }
 
-        if (this.editableTabs && this.editableTabs.length > 0) {
-          this.editableTabs.forEach((tab, index) => {
-            if (tab.name === this.editableTabsValue) {
-              this.$refs['console' + index][0].focusConsole();
-            }
-          });
-        }
-      },
-      exitFullScreen() {
-        this.isFullScreen = !this.isFullScreen;
-        //所有的console全屏
+      if (this.editableTabs && this.editableTabs.length > 0) {
         this.editableTabs.forEach((tab, index) => {
-          this.$refs['console'+index][0].fullScreenConsole(this.isFullScreen, this.resizeConsoleHeight-30);
-        });
-
-        if(!this.isFullScreen){
-          let targetDiv= document.getElementById('shell-service');
-          targetDiv.style.height=this.resizeConsoleHeight+'px';
-          this.consoleHeight=this.resizeConsoleHeight;
-        }else {
-          let targetDiv= document.getElementById('shell-service');
-          targetDiv.style.height=`${100}%`;
-          let height = document.body.clientHeight;//可视高度
-          this.consoleHeight=height;
-        }
-
-        if (this.editableTabs && this.editableTabs.length > 0) {
-          this.editableTabs.forEach((tab, index) => {
-            if (tab.name === this.editableTabsValue) {
-              this.$refs['console' + index][0].focusConsole();
-            }
-          });
-        }
-      },
-      /*dragEagle:function(e){
+          if (tab.name === this.editableTabsValue) {
+            this.$refs['console' + index][0].focusConsole()
+          }
+        })
+      }
+    },
+    /* dragEagle:function(e){
         var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
 
         //得到点击时该容器的宽高：
@@ -556,151 +554,151 @@
           _this.consoleHeight = parseInt(targetDiv.style.height);
           if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
         }
-      },*/
-      dragEagle(e) {
-        //let mainListDom = document.querySelector(".main-list"); //主列表
-        let subBoxDom = document.querySelector("#shell-service.sub-box"); //副列表
-        let subListDom = document.querySelector("#shell-service .sub-list"); //副列表
-        let contentRightDom = document.querySelector(".content-right"); //右侧内容区
-        let resizeBarHeight = 9; //resize横条高度
-        let minHeight = 15; //terminal最小高度限制为15
-        //let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
-        //let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
-        let resizeModalDom = document.querySelector("#shell-service .resize-modal"); //副列表遮罩
-        let resizeBarDom = document.querySelector("#shell-service .sub-list-resize"); //拖动条
+      }, */
+    dragEagle (e) {
+      // let mainListDom = document.querySelector(".main-list"); //主列表
+      const subBoxDom = document.querySelector('#shell-service.sub-box') // 副列表
+      const subListDom = document.querySelector('#shell-service .sub-list') // 副列表
+      const contentRightDom = document.querySelector('.content-right') // 右侧内容区
+      const resizeBarHeight = 9 // resize横条高度
+      const minHeight = 15 // terminal最小高度限制为15
+      // let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
+      // let mainModalDom = document.querySelector(".main-modal"); //主列表遮罩
+      const resizeModalDom = document.querySelector('#shell-service .resize-modal') // 副列表遮罩
+      const resizeBarDom = document.querySelector('#shell-service .sub-list-resize') // 拖动条
 
-        let contentRightHeight = contentRightDom.offsetHeight;//可视高度
-        //点击时俩dom的初始高度：
-        let subInitialHeight = subListDom.offsetHeight+resizeBarHeight;
-        //mainModalDom.style.display = "block";
-        resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`;
-        resizeBarDom.style.display = "none";
-        let resizeModalEndHeight;
-        //点击时鼠标的Y轴位置
-        let mouseInitialY = e.clientY;
+      const contentRightHeight = contentRightDom.offsetHeight// 可视高度
+      // 点击时俩dom的初始高度：
+      const subInitialHeight = subListDom.offsetHeight + resizeBarHeight
+      // mainModalDom.style.display = "block";
+      resizeModalDom.style.cssText = `height: ${subInitialHeight}px; display: block;`
+      resizeBarDom.style.display = 'none'
+      let resizeModalEndHeight
+      // 点击时鼠标的Y轴位置
+      const mouseInitialY = e.clientY
 
-        document.onmousemove = (e) => {
-          window.resizing = true;
-          e.preventDefault();
-          //得到鼠标拖动的距离
-          let mouseMoveY = e.clientY-mouseInitialY;
-          resizeModalEndHeight = subInitialHeight-mouseMoveY;
-          resizeModalDom.style.height = `${resizeModalEndHeight}px`;
+      document.onmousemove = (e) => {
+        window.resizing = true
+        e.preventDefault()
+        // 得到鼠标拖动的距离
+        const mouseMoveY = e.clientY - mouseInitialY
+        resizeModalEndHeight = subInitialHeight - mouseMoveY
+        resizeModalDom.style.height = `${resizeModalEndHeight}px`
 
-          // 主、副列表最大、最小高度限制
-          if(resizeModalEndHeight > contentRightHeight-minHeight){
-            resizeModalEndHeight = contentRightHeight-minHeight;
-          }
-          if(resizeModalEndHeight < minHeight){
-            resizeModalEndHeight = minHeight;
-          }
-          resizeModalDom.style.height = `${resizeModalEndHeight}px`;
-        };
-        let vm = this;
-        document.onmouseup = () => {
-          window.resizing = false;
-          //mainListDom.style.height = `${contentRightHeight-resizeModalEndHeight}px`;
-          subBoxDom.style.height = `${resizeModalEndHeight}px`;
-          subListDom.style.height = `${resizeModalEndHeight-resizeBarHeight}px`;
-          resizeModalDom.style.display = "none";
-          //mainModalDom.style.display = "none";
-          resizeBarDom.style.display = "";
-
-          vm.consoleHeight = resizeModalEndHeight;
-          vm.editableTabs.forEach((tab, index) => {
-            vm.$refs['console'+index][0].resizeConsole(resizeModalEndHeight);
-            vm.$refs['console'+index][0].resizeServiceConsole(resizeModalEndHeight);
-          });
-
-          document.onmousemove = null;
-          document.onmouseup = null;
+        // 主、副列表最大、最小高度限制
+        if (resizeModalEndHeight > contentRightHeight - minHeight) {
+          resizeModalEndHeight = contentRightHeight - minHeight
         }
-      },
+        if (resizeModalEndHeight < minHeight) {
+          resizeModalEndHeight = minHeight
+        }
+        resizeModalDom.style.height = `${resizeModalEndHeight}px`
+      }
+      const vm = this
+      document.onmouseup = () => {
+        window.resizing = false
+        // mainListDom.style.height = `${contentRightHeight-resizeModalEndHeight}px`;
+        subBoxDom.style.height = `${resizeModalEndHeight}px`
+        subListDom.style.height = `${resizeModalEndHeight - resizeBarHeight}px`
+        resizeModalDom.style.display = 'none'
+        // mainModalDom.style.display = "none";
+        resizeBarDom.style.display = ''
 
-      debounce(operate, delay) {
-        let time = null
-        let timer = null
-        let newTime = null
-        function task() {
-          newTime = +new Date()
-          if(newTime - time < delay){
-            timer = setTimeout(task, delay)
-          }else {
-            operate()
-            timer = null
-          }
-          time = newTime
-        }
-        return function () {
-          // 更新时间戳
-          time = +new Date()
-          if(!timer){
-            timer = setTimeout(task, delay)
-          }
-        }
-      },
-      windowChange(){
-        //alert('winChange');
-        if(this.editableTabs&&this.editableTabs.length>0){
-          let width = document.body.clientWidth;//可视宽度
-          var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
-          var targetDivHeight=targetDiv.offsetHeight;
-          this.editableTabs.forEach((tab, index) => {
-            this.$refs['console'+index][0].resize(targetDivHeight,width);
-          });
-        }
-      },
-      //改变黑窗口字体大小
-      changeFontSize(fontSize){
-        // this.$refs['console'+this.index].setFontSize(fontSize);
-        this.fontSize=fontSize;
-        localStorage.setItem("termFontSize", fontSize);
-        this.editableTabs.forEach((tab, index) => {
-          this.$refs['console'+index][0].setFontSize(fontSize);
-        });
-      },
+        vm.consoleHeight = resizeModalEndHeight
+        vm.editableTabs.forEach((tab, index) => {
+          vm.$refs['console' + index][0].resizeConsole(resizeModalEndHeight)
+          vm.$refs['console' + index][0].resizeServiceConsole(resizeModalEndHeight)
+        })
+
+        document.onmousemove = null
+        document.onmouseup = null
+      }
     },
-    watch: {
-      '$store.state.consoleShow':function(val){
-        if(val){
-          if(this.$store.state.isAddConsole){
-            let id = this.$store.state.consoleParam.id;
-            let host = this.$store.state.consoleParam.host;
-            let accountId = this.$store.state.consoleParam.accountId;
-            let port = this.$store.state.consoleParam.port;
-            let targetDiv= document.getElementById('shell-service');
-            targetDiv.style.height=this.initConsoleHeight+'px';
-            this.show(id,host,accountId,port);
-          }else {
-            this.consoleShow = true;
-            //min后，从header区域打开，获得焦点
-            this.$nextTick(() => {
-              if (this.editableTabs && this.editableTabs.length > 0) {
-                this.editableTabs.forEach((tab, index) => {
-                  if (tab.name === this.editableTabsValue ) {
-                    this.$refs['console' + index][0].focusConsole();
-                  }
-                });
-              }
-            });
-            let targetDiv= document.getElementById('shell-service');
-            targetDiv.style.height=this.webSSHHeight;
-          }
-          this.$store.state.consoleShow = false;
+
+    debounce (operate, delay) {
+      let time = null
+      let timer = null
+      let newTime = null
+      function task () {
+        newTime = +new Date()
+        if (newTime - time < delay) {
+          timer = setTimeout(task, delay)
+        } else {
+          operate()
+          timer = null
+        }
+        time = newTime
+      }
+      return function () {
+        // 更新时间戳
+        time = +new Date()
+        if (!timer) {
+          timer = setTimeout(task, delay)
         }
       }
     },
-    created() {
-      //window.addEventListener('resize',this.windowChange);
-      window.addEventListener('resize',this.debounce(this.windowChange, 1000),false);
+    windowChange () {
+      // alert('winChange');
+      if (this.editableTabs && this.editableTabs.length > 0) {
+        const width = document.body.clientWidth// 可视宽度
+        const targetDiv = document.getElementById('shell-service') // e.target.parentNode.parentNode;.children[0]
+        const targetDivHeight = targetDiv.offsetHeight
+        this.editableTabs.forEach((tab, index) => {
+          this.$refs['console' + index][0].resize(targetDivHeight, width)
+        })
+      }
     },
-    mounted() {
-
-    },
-    beforeDestroy(){
-      window.removeEventListener('resize',this.debounce(this.windowChange, 1000),false);
+    // 改变黑窗口字体大小
+    changeFontSize (fontSize) {
+      // this.$refs['console'+this.index].setFontSize(fontSize);
+      this.fontSize = fontSize
+      localStorage.setItem('termFontSize', fontSize)
+      this.editableTabs.forEach((tab, index) => {
+        this.$refs['console' + index][0].setFontSize(fontSize)
+      })
     }
+  },
+  watch: {
+    '$store.state.consoleShow': function (val) {
+      if (val) {
+        if (this.$store.state.isAddConsole) {
+          const id = this.$store.state.consoleParam.id
+          const host = this.$store.state.consoleParam.host
+          const accountId = this.$store.state.consoleParam.accountId
+          const port = this.$store.state.consoleParam.port
+          const targetDiv = document.getElementById('shell-service')
+          targetDiv.style.height = this.initConsoleHeight + 'px'
+          this.show(id, host, accountId, port)
+        } else {
+          this.consoleShow = true
+          // min后，从header区域打开，获得焦点
+          this.$nextTick(() => {
+            if (this.editableTabs && this.editableTabs.length > 0) {
+              this.editableTabs.forEach((tab, index) => {
+                if (tab.name === this.editableTabsValue) {
+                  this.$refs['console' + index][0].focusConsole()
+                }
+              })
+            }
+          })
+          const targetDiv = document.getElementById('shell-service')
+          targetDiv.style.height = this.webSSHHeight
+        }
+        this.$store.state.consoleShow = false
+      }
+    }
+  },
+  created () {
+    // window.addEventListener('resize',this.windowChange);
+    window.addEventListener('resize', this.debounce(this.windowChange, 1000), false)
+  },
+  mounted () {
+
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.debounce(this.windowChange, 1000), false)
   }
+}
 </script>
 <style scoped>
   .ani-webSHH-height{

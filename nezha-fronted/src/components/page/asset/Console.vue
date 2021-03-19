@@ -4,41 +4,40 @@
     </div>
 </template>
 
-
 <script>
 import Terminal from '../../common/js/Xterm'
 export default {
   name: 'Console',
-  props:['terminal','token'],
+  props: ['terminal', 'token'],
   data () {
     return {
       term: null,
       terminalSocket: null,
-      obj:{
-        id:2
-      },
+      obj: {
+        id: 2
+      }
     }
   },
-  watch:{
+  watch: {
     token: {
-      immediate:true,
-      handler(val){
-        if(val){
+      immediate: true,
+      handler (val) {
+        if (val) {
           this.create()
         }
       }
-    },
+    }
   },
   methods: {
-    create(){
-      let terminalContainer = document.getElementById('terminal')
+    create () {
+      const terminalContainer = document.getElementById('terminal')
       this.term = new Terminal()
       this.term.open(terminalContainer)
-      this.terminalSocket = new WebSocket("ws://192.168.40.247:8080/nz-admin/terminal.ws?width=1&height=1&cols=225&rows=200&token="+this.token);
+      this.terminalSocket = new WebSocket('ws://192.168.40.247:8080/nz-admin/terminal.ws?width=1&height=1&cols=225&rows=200&token=' + this.token)
       // this.terminalSocket = new WebSocket("ws://192.168.41.101:8088/nz-admin/terminal.ws?width=1600&height=1005&cols=225&rows=58&token="+this.token);
       this.term.attach(this.terminalSocket)
       this.term._initialized = true
-    },
+    }
   },
   mounted () {
 

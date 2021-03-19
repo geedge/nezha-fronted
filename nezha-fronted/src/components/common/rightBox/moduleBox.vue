@@ -53,7 +53,7 @@
                       </div>
                       <div class="el-cascader__tags">
                         <div ref="walkScrollbar" style="height: 100%; overflow: auto;">
-                          <span class="el-tag el-tag--info el-tag--small el-tag--light" v-for="item in editModule.walk">
+                          <span v-for="(item, index) in editModule.walk" :key="index" class="el-tag el-tag--info el-tag--small el-tag--light">
                             <span v-html="mibName(item)"></span>
                             <div class="walk-close-box" @click.stop="removeWalk(item)">
                               <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
@@ -254,7 +254,7 @@
 
           <div class="param-box param-box-module">
             <div style="height: 100%; overflow: auto;" id="module-box-params">
-              <div class="param-box-row" v-for="(item, index) in editModule.paramObj">
+              <div v-for="(item, index) in editModule.paramObj" :key="index" class="param-box-row">
                 <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
                 </el-form-item>
@@ -282,7 +282,7 @@
 
           <div class="param-box param-box-module">
             <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
-              <div class="param-box-row" v-for="(item, index) in editModule.labelModule">
+              <div v-for="(item, index) in editModule.labelModule" :key="index" class="param-box-row">
                 <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
                   <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
                 </el-form-item>
@@ -316,376 +316,376 @@
 </template>
 
 <script>
-  import {noSpecialChar, port, nzNumber} from "../js/validate";
-  import selectWalk from "../popBox/selectWalk";
+import { noSpecialChar, port, nzNumber } from '../js/validate'
+import selectWalk from '../popBox/selectWalk'
 
-  export default {
-    name: "moduleBox",
-    props: {
-      module: Object,
-      currentProject: Object
-    },
-    components: {
-      'select-walk': selectWalk
-    },
-    data() {
-      return {
-        walkData: [],
-        expandedWalkData: [],
-        editModule: {},
-        rules: {
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {validator:noSpecialChar,trigger: "change"}
-          ],
-          project: [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          walk: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-          ],
-          port: [
-            {validator:port, trigger: 'blur'},
-          ],
-          username: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          password: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          priv_password: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          max_repetitions: [
-            {validator:nzNumber, trigger: 'blur'},
-          ],
-          retries: [
-            {validator:nzNumber, trigger: 'blur'},
-          ],
-          timeout: [
-            {validator:nzNumber, trigger: 'blur'},
-          ],
-        },
-        projectList: [],
+export default {
+  name: 'moduleBox',
+  props: {
+    module: Object,
+    currentProject: Object
+  },
+  components: {
+    'select-walk': selectWalk
+  },
+  data () {
+    return {
+      walkData: [],
+      expandedWalkData: [],
+      editModule: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'change' }
+        ],
+        project: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        walk: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        port: [
+          { validator: port, trigger: 'blur' }
+        ],
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        priv_password: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        max_repetitions: [
+          { validator: nzNumber, trigger: 'blur' }
+        ],
+        retries: [
+          { validator: nzNumber, trigger: 'blur' }
+        ],
+        timeout: [
+          { validator: nzNumber, trigger: 'blur' }
+        ]
+      },
+      projectList: []
+    }
+  },
+  methods: {
+    selectWalk (walk) {
+      if (this.editModule.walk.indexOf(walk) != -1) {
+        this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
+      } else {
+        this.editModule.walk.push(walk)
       }
     },
-    methods: {
-      selectWalk(walk) {
-        if (this.editModule.walk.indexOf(walk) != -1) {
-          this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1);
-        } else {
-          this.editModule.walk.push(walk);
-        }
-      },
-      //从mibData里取得oid对应的mib名称
-      getMibName(walkData, walk) {
-        let mibName = "";
-        let objectName = "";
-        walkData.forEach((item, index) => {
-          if (!mibName && item.subTree && item.subTree.length > 0) {
-            item.subTree.forEach((item2, index2) => {
-              if (!mibName && getMibName(item2, walk)) {
-                mibName = item.name;
-              }
-            });
-          }
-        });
-        function getMibName(tree, oid) {
-          if (oid.indexOf(tree.objectID) > -1) {
-            if (tree.objectID == oid) {
-              objectName = tree.name;
-              return true;
-            } else {
-              if (tree.subTree && tree.subTree.length > 0) {
-                let result = false;
-                for (let i = 0; i < tree.subTree.length; i++) {
-                  if (getMibName(tree.subTree[i], oid)) {
-                    result = true;
-                    break;
-                  }
-                }
-                return result;
-              } else {
-                return false;
-              }
+    // 从mibData里取得oid对应的mib名称
+    getMibName (walkData, walk) {
+      let mibName = ''
+      let objectName = ''
+      walkData.forEach((item, index) => {
+        if (!mibName && item.subTree && item.subTree.length > 0) {
+          item.subTree.forEach((item2, index2) => {
+            if (!mibName && getMibName(item2, walk)) {
+              mibName = item.name
             }
+          })
+        }
+      })
+      function getMibName (tree, oid) {
+        if (oid.indexOf(tree.objectID) > -1) {
+          if (tree.objectID == oid) {
+            objectName = tree.name
+            return true
           } else {
-            return false;
+            if (tree.subTree && tree.subTree.length > 0) {
+              let result = false
+              for (let i = 0; i < tree.subTree.length; i++) {
+                if (getMibName(tree.subTree[i], oid)) {
+                  result = true
+                  break
+                }
+              }
+              return result
+            } else {
+              return false
+            }
+          }
+        } else {
+          return false
+        }
+      }
+      if (!objectName) {
+        objectName = walk
+      }
+      objectName = "<span style='font-weight:bold'>" + objectName + '</span>'
+      return mibName ? mibName + '：' + objectName : objectName
+    },
+
+    removeWalk (walk) {
+      this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
+      this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false)
+    },
+
+    initWalk () {
+      this.$nextTick(() => {
+        if (this.$refs.selectWalk) {
+          this.$refs.selectWalk.show()
+        }
+      })
+    },
+
+    getWalkData () {
+      this.$get('mib/tree', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          const obj = JSON.parse(response.data)
+          this.walkData = []
+          for (const item in obj) {
+            setAttr(obj[item], 'detailShow', false)
+            this.walkData.push({ name: item, detailShow: false, subTree: obj[item] })
           }
         }
-        if (!objectName) {
-          objectName = walk;
+      })
+      function setAttr (tree, name, value) {
+        if (tree && tree.length > 0) {
+          for (let i = 0; i < tree.length; i++) {
+            tree[i][name] = value
+            if (tree[i].subTree && tree[i].subTree.length > 0) {
+              setAttr(tree[i].subTree, name, value)
+            }
+          }
         }
-        objectName = "<span style='font-weight:bold'>" + objectName + "</span>";
-        return mibName ? mibName + "：" + objectName : objectName;
-      },
+      }
+    },
 
-      removeWalk(walk) {
-        this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1);
-        this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false);
-      },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
 
-      initWalk() {
+    clickOutside () {
+      this.esc(false)
+    },
+    changeType (type) {
+      if (this.editModule.id) {
+        return
+      }
+      this.editModule.type = type
+      if (type == 'http') {
+        this.editModule.port = 9100
+      } else {
         this.$nextTick(() => {
-          if (this.$refs.selectWalk) {
-            this.$refs.selectWalk.show();
+          this.$refs.selectWalk.show()
+        })
+        this.editModule.port = 161
+      }
+    },
+    // 转化snmpParam属性
+    parseSnmpParam (module) {
+      const snmpObj = { // 下划线命名是因为业务需求
+        walk: module.walk,
+        version: module.version, // 2/3
+        max_repetitions: module.max_repetitions ? module.max_repetitions : 25,
+        retries: module.retries ? module.retries : 3,
+        timeout: module.timeout ? module.timeout + 's' : '10s', // s
+        auth: {
+          community: module.community
+        }
+      }
+      if (module.version == 3) {
+        snmpObj.auth.username = module.username
+        snmpObj.auth.security_level = module.security_level
+        snmpObj.auth.context_name = module.context_name
+      }
+      if (module.security_level == 'authNoPriv' || module.security_level == 'authPriv') {
+        snmpObj.auth.password = module.password
+        snmpObj.auth.auth_protocol = module.auth_protocol
+        if (module.security_level != 'authNoPriv') {
+          snmpObj.auth.priv_password = module.priv_password
+          snmpObj.auth.priv_protocol = module.priv_protocol
+        }
+      }
+      module.snmpParam = JSON.stringify(snmpObj)
+    },
+    // 回显时解析snmpParam
+    reparseSnmpParam (module) {
+      if (!module.snmpParam) {
+        return
+      }
+      const snmpObj = JSON.parse(module.snmpParam)
+      module.walk = snmpObj.walk
+      module.version = snmpObj.version
+      module.max_repetitions = snmpObj.max_repetitions
+      module.retries = snmpObj.retries
+      module.timeout = parseInt(snmpObj.timeout.replace('s', ''))
+      module.community = snmpObj.auth.community
+      if (snmpObj.version == 3) {
+        module.username = snmpObj.auth.username
+        module.security_level = snmpObj.auth.security_level
+        module.context_name = snmpObj.auth.context_name
+      }
+      if (snmpObj.auth.security_level == 'authNoPriv' || snmpObj.auth.security_level == 'authPriv') {
+        module.password = snmpObj.auth.password
+        module.auth_protocol = snmpObj.auth.auth_protocol
+        if (snmpObj.auth.security_level != 'authNoPriv') {
+          module.priv_password = snmpObj.auth.priv_password
+          module.priv_protocol = snmpObj.auth.priv_protocol
+        }
+      }
+    },
+    /* 保存 */
+    save () {
+      if (this.editModule.type.toLowerCase() == 'snmp') {
+        this.editModule.paramObj = []// 处理snmp可能会带有param的问题
+      }
+      this.editModule.param = this.paramToJson(this.editModule.paramObj)
+      this.editModule.labels = this.labelsToJson(this.editModule.labelModule)
+      this.$refs.moduleForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (this.editModule.type.toLowerCase() == 'snmp') {
+            this.parseSnmpParam(this.editModule)
+          } else {
+            if (this.editModule.snmpParam) {
+              this.editModule.snmpParam = ''
+            }
+          }
+          this.editModule.projectId = this.editModule.project.id
+          if (this.editModule.id) {
+            this.$put('module', this.editModule).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$store.commit('setReloadFacade')
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            this.$post('module', this.editModule).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$store.commit('setReloadFacade')
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('module?ids=' + this.editModule.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.$store.commit('setReloadFacade')
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
           }
         })
-      },
-
-      getWalkData() {
-        this.$get('mib/tree', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            let obj = JSON.parse(response.data);
-            this.walkData = [];
-            for (let item in obj) {
-              setAttr(obj[item], "detailShow", false);
-              this.walkData.push({name: item, detailShow: false, subTree: obj[item]});
-            }
-          }
-        });
-        function setAttr(tree, name, value) {
-          if (tree && tree.length > 0) {
-            for (let i = 0; i < tree.length; i++) {
-              tree[i][name] = value;
-              if (tree[i].subTree && tree[i].subTree.length > 0) {
-                setAttr(tree[i].subTree, name, value);
-              }
-            }
-          }
-        }
-      },
-
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-
-      clickOutside() {
-        this.esc(false);
-      },
-      changeType(type) {
-        if (this.editModule.id) {
-          return;
-        }
-        this.editModule.type = type;
-        if(type == 'http'){
-          this.editModule.port = 9100
-        }else{
-          this.$nextTick(()=>{
-            this.$refs.selectWalk.show();
-          })
-          this.editModule.port= 161;
-        }
-      },
-      //转化snmpParam属性
-      parseSnmpParam(module) {
-        let snmpObj = { //下划线命名是因为业务需求
-          walk: module.walk,
-          version: module.version, //2/3
-          max_repetitions: module.max_repetitions ? module.max_repetitions : 25,
-          retries: module.retries ? module.retries : 3,
-          timeout: module.timeout ? module.timeout + "s" : "10s", //s
-          auth: {
-            community: module.community,
-          }
-        };
-        if (module.version == 3) {
-          snmpObj.auth.username = module.username;
-          snmpObj.auth.security_level = module.security_level;
-          snmpObj.auth.context_name = module.context_name;
-        }
-        if (module.security_level == "authNoPriv" || module.security_level == "authPriv") {
-          snmpObj.auth.password = module.password;
-          snmpObj.auth.auth_protocol = module.auth_protocol;
-          if (module.security_level != "authNoPriv") {
-            snmpObj.auth.priv_password = module.priv_password;
-            snmpObj.auth.priv_protocol = module.priv_protocol;
-          }
-        }
-        module.snmpParam = JSON.stringify(snmpObj);
-      },
-      //回显时解析snmpParam
-      reparseSnmpParam(module) {
-        if(!module.snmpParam){
-          return;
-        }
-        let snmpObj = JSON.parse(module.snmpParam);
-        module.walk = snmpObj.walk;
-        module.version = snmpObj.version;
-        module.max_repetitions = snmpObj.max_repetitions;
-        module.retries = snmpObj.retries;
-        module.timeout = parseInt(snmpObj.timeout.replace("s", ""));
-        module.community = snmpObj.auth.community;
-        if (snmpObj.version == 3) {
-          module.username = snmpObj.auth.username;
-          module.security_level = snmpObj.auth.security_level;
-          module.context_name = snmpObj.auth.context_name;
-        }
-        if (snmpObj.auth.security_level == "authNoPriv" || snmpObj.auth.security_level == "authPriv") {
-          module.password = snmpObj.auth.password;
-          module.auth_protocol = snmpObj.auth.auth_protocol;
-          if (snmpObj.auth.security_level != "authNoPriv") {
-            module.priv_password = snmpObj.auth.priv_password;
-            module.priv_protocol = snmpObj.auth.priv_protocol;
-          }
-        }
-      },
-      /*保存*/
-      save() {
-        if(this.editModule.type.toLowerCase() == 'snmp'){
-          this.editModule.paramObj=[];//处理snmp可能会带有param的问题
-        }
-        this.editModule.param = this.paramToJson(this.editModule.paramObj);
-        this.editModule.labels = this.labelsToJson(this.editModule.labelModule);
-        this.$refs.moduleForm.validate((valid) => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            if (this.editModule.type.toLowerCase() == 'snmp') {
-              this.parseSnmpParam(this.editModule);
-            } else {
-              if (this.editModule.snmpParam) {
-                this.editModule.snmpParam = "";
-              }
-            }
-            this.editModule.projectId = this.editModule.project.id;
-            if (this.editModule.id) {
-              this.$put('module', this.editModule).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('setReloadFacade');
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            } else {
-              this.$post('module', this.editModule).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('setReloadFacade');
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            }
-          } else {
-            return false;
-          }
-        });
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("module?ids=" + this.editModule.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$store.commit('setReloadFacade');
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-
-      /*获取project列表*/
-      getProjectList() {
-        this.$get('project', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            this.projectList = response.data.list;
-          }
-        });
-      },
-
-      // 清除param
-      clearAllParam() {
-        this.editModule.paramObj = [];
-      },
-
-      // 新增param
-      addParam() {
-        this.editModule.paramObj.push({key: '', value: ''});
-      },
-      // 移除单个param
-      removeParam(index) {
-        this.editModule.paramObj.splice(index, 1);
-      },
-      // 新增label
-      addLabel() {
-        this.editModule.labelModule.push({key: '', value: ''});
-      },
-      // 移除单个Label
-      removeLabel(index) {
-        this.editModule.labelModule.splice(index, 1);
-      },
-      //将param转为json字符串格式
-      paramToJson(param) {
-        let tempParam = {};
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
-        }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
-        }
-      },
-      //将labels转为json字符串格式
-      labelsToJson(param) {
-        let tempParam = {};
-        for (let i = 0; i < param.length; i++) {
-          eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"');
-        }
-        let jsonString = JSON.stringify(tempParam);
-        if (jsonString == '{}') {
-          return "";
-        } else {
-          return jsonString;
-        }
-      },
+      })
     },
-    mounted() {
-      this.getWalkData();
-    },
-    created() {
-      this.getProjectList();
-    },
-    computed: {
-      mibName() {
-        return (value) => {
-          return this.getMibName(this.walkData, value);
+
+    /* 获取project列表 */
+    getProjectList () {
+      this.$get('project', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          this.projectList = response.data.list
         }
+      })
+    },
+
+    // 清除param
+    clearAllParam () {
+      this.editModule.paramObj = []
+    },
+
+    // 新增param
+    addParam () {
+      this.editModule.paramObj.push({ key: '', value: '' })
+    },
+    // 移除单个param
+    removeParam (index) {
+      this.editModule.paramObj.splice(index, 1)
+    },
+    // 新增label
+    addLabel () {
+      this.editModule.labelModule.push({ key: '', value: '' })
+    },
+    // 移除单个Label
+    removeLabel (index) {
+      this.editModule.labelModule.splice(index, 1)
+    },
+    // 将param转为json字符串格式
+    paramToJson (param) {
+      const tempParam = {}
+      for (let i = 0; i < param.length; i++) {
+        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
+      }
+      const jsonString = JSON.stringify(tempParam)
+      if (jsonString == '{}') {
+        return ''
+      } else {
+        return jsonString
       }
     },
-    watch: {
-      module: {
-        immediate: true,
-        deep: true,
-        handler(n, o) {
-          this.editModule = JSON.parse(JSON.stringify(n));
-          if(n.id){
-            this.reparseSnmpParam(this.editModule)
-          }else{
-            if(n.type&&n.type.toLowerCase() == 'snmp'){
-              this.$refs.selectWalk.show();
-              for (let i = 0; i < this.editModule.walk.length; i++) {
-                this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf(".")));
-              }
+    // 将labels转为json字符串格式
+    labelsToJson (param) {
+      const tempParam = {}
+      for (let i = 0; i < param.length; i++) {
+        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
+      }
+      const jsonString = JSON.stringify(tempParam)
+      if (jsonString == '{}') {
+        return ''
+      } else {
+        return jsonString
+      }
+    }
+  },
+  mounted () {
+    this.getWalkData()
+  },
+  created () {
+    this.getProjectList()
+  },
+  computed: {
+    mibName () {
+      return (value) => {
+        return this.getMibName(this.walkData, value)
+      }
+    }
+  },
+  watch: {
+    module: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.editModule = JSON.parse(JSON.stringify(n))
+        if (n.id) {
+          this.reparseSnmpParam(this.editModule)
+        } else {
+          if (n.type && n.type.toLowerCase() == 'snmp') {
+            this.$refs.selectWalk.show()
+            for (let i = 0; i < this.editModule.walk.length; i++) {
+              this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf('.')))
             }
           }
         }
-      },
+      }
     }
   }
+}
 </script>
 <style scoped>
   .module-walk-box {

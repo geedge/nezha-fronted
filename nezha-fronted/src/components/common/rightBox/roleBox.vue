@@ -33,10 +33,10 @@
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
           </div>-->
           <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}"  @check-change="selectChange" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
-            <div slot-scope="{node, data}" >
+            <div slot-scope="data">
               <span>
-                <i class="el-icon-menu" v-if="data.type == '1'"></i>
-                <i class="el-icon-edit" v-if="data.type == '2'"></i>
+                <i v-if="data.data.type == '1'" class="el-icon-menu"></i>
+                <i v-if="data.data.type == '2'" class="el-icon-edit"></i>
               </span>
               {{$t(data.i18n)}}
             </div>
@@ -59,142 +59,141 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "roleBox",
-    props: {
-      role: Object,
-      detail:Boolean,
-    },
-    computed: {
-    },
-    data() {
-      return {
-        rules: { //表单校验规则
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-        },
-        editRole: {},
-        menus:[],
-        selectAllFlag:false,
-        expandAllFlag:true,
-      }
-    },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
+export default {
+  name: 'roleBox',
+  props: {
+    role: Object,
+    detail: Boolean
+  },
+  computed: {
+  },
+  data () {
+    return {
+      rules: { // 表单校验规则
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
       },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*保存*/
-      save() {
-        this.$refs.roleForm.validate(valid => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            if (this.editRole.id) {
-              this.$put('sys/role', this.editRole).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            } else {
-              this.$post('sys/role', this.editRole).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            }
+      editRole: {},
+      menus: [],
+      selectAllFlag: false,
+      expandAllFlag: true
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.roleForm.validate(valid => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (this.editRole.id) {
+            this.$put('sys/role', this.editRole).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
           } else {
-            return false;
+            this.$post('sys/role', this.editRole).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('sys/role/?ids=' + this.editRole.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
           }
         })
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/role/?ids=" + this.editRole.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-      getMenus:function(){
-        this.menus = [];
+      })
+    },
+    getMenus: function () {
+      this.menus = []
 
-        this.$get("sys/menu").then(response=>{
-          if (response.code  == 200){
-            this.menus = response.data.list;
-          }else{
-            this.$message.error("load menu faild")
-          }
+      this.$get('sys/menu').then(response => {
+        if (response.code == 200) {
+          this.menus = response.data.list
+        } else {
+          this.$message.error('load menu faild')
+        }
+      })
+    },
+    labelFormatter: function (data, node) {
+      return data && data.i18n ? this.$t(data.i18n) : data.name
+    },
+    selectChange: function (data, isCheck, childIsCheck) {
+      if (this.$refs.menuTree) {
+        this.editRole.menuIds = this.$refs.menuTree.getCheckedKeys(true)
+      }
+    },
+    selectAllOrNone: function () {
+      if (this.$refs.menuTree) {
+        if (!this.selectAllFlag) {
+          this.$refs.menuTree.setCheckedNodes(this.menus)
+        } else {
+          this.$refs.menuTree.setCheckedNodes([])
+        }
+        this.selectAllFlag = !this.selectAllFlag
+      }
+    },
+    expandAllOrNone: function () {
+      this.expandAllFlag = !this.expandAllFlag
+      const $self = this
+      if (this.$refs.menuTree) {
+        this.menus.forEach(t => {
+          $self.$refs.menuTree.store.nodesMap[t.id].expanded = $self.expandAllFlag
         })
-
-      },
-      labelFormatter:function(data,node){
-        return data&&data.i18n?this.$t(data.i18n):data.name;
-      },
-      selectChange:function(data,isCheck,childIsCheck){
-        if(this.$refs.menuTree){
-          this.editRole.menuIds=this.$refs.menuTree.getCheckedKeys(true);
-        }
-      },
-      selectAllOrNone:function(){
-        if(this.$refs.menuTree){
-          if(!this.selectAllFlag){
-            this.$refs.menuTree.setCheckedNodes(this.menus);
-          }else{
-            this.$refs.menuTree.setCheckedNodes([]);
-          }
-          this.selectAllFlag = !this.selectAllFlag;
-        }
-      },
-      expandAllOrNone:function(){
-        this.expandAllFlag = !this.expandAllFlag;
-        let $self=this;
-        if(this.$refs.menuTree){
-          this.menus.forEach(t=>{
-            $self.$refs.menuTree.store.nodesMap[t.id].expanded = $self.expandAllFlag;
-          })
-        }
       }
-    },
-    created() {
-      this.getMenus();
-    },
-    mounted() {
-      if(this.$refs.menuTree&&this.editRole.menuIds&&this.editRole.menuIds.length>0){
-        this.$refs.menuTree.setCheckedKeys(this.editRole.menuIds,true);
+    }
+  },
+  created () {
+    this.getMenus()
+  },
+  mounted () {
+    if (this.$refs.menuTree && this.editRole.menuIds && this.editRole.menuIds.length > 0) {
+      this.$refs.menuTree.setCheckedKeys(this.editRole.menuIds, true)
+    }
+  },
+  watch: {
+    // 将prop里的user转为组件内部对象
+    role: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.editRole = JSON.parse(JSON.stringify(n))
       }
-    },
-    watch: {
-      //将prop里的user转为组件内部对象
-      role: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          this.editRole = JSON.parse(JSON.stringify(n));
-        }
-      },
-    },
+    }
   }
+}
 </script>
 <style lang="scss">
   .right-box-role .tree-border{

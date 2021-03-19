@@ -50,170 +50,168 @@
 
 <script>
 export default {
-  name: "cabinetConfig",
-  props:{
-    postCabinet:{type:Object},
-    placement:{type:String},
-    buttonClass:{type:String},
-    isEdit:{type:Boolean,default:true},
-    postIdcDatas:{type:Array}
+  name: 'cabinetConfig',
+  props: {
+    postCabinet: { type: Object },
+    placement: { type: String },
+    buttonClass: { type: String },
+    isEdit: { type: Boolean, default: true },
+    postIdcDatas: { type: Array }
   },
-  created() {
-    this.init();
+  created () {
+    this.init()
   },
-  data(){
+  data () {
     return {
-      title:"",
-      rules:{
+      title: '',
+      rules: {
         name: [
-          {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         uSize: [
-          {required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur'}
+          { required: true, type: 'number', min: 1, max: 47, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         idcId: [
-          {required: true, message: this.$t('validate.required'), trigger: 'blur'}
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
-      cabinet:{},
-      popBox:{isEdit:false,show:false},
-      idcDatas:[],
-      idc:null
+      cabinet: {},
+      popBox: { isEdit: false, show: false },
+      idcDatas: [],
+      idc: null
     }
   },
-  methods:{
-    init:function(){
-      this.getIdcDatas();
+  methods: {
+    init () {
+      this.getIdcDatas()
     },
-    resetData:function(){
-      let temp=this;
-      temp.cabinet={
-        name:'',
-        uSize:0,
-        idcId:null,
-        remark:''
+    resetData () {
+      const temp = this
+      temp.cabinet = {
+        name: '',
+        uSize: 0,
+        idcId: null,
+        remark: ''
       }
     },
-    saveOrToEdit(){
+    saveOrToEdit () {
       if (!this.popBox.isEdit) {
-        this.toEdit(this.cabinet);
+        this.toEdit(this.cabinet)
       } else {
-        this.save();
+        this.save()
       }
     },
-    save:function(){
-      let temp=this;
-      temp.$refs.cabinetForm.validate((valid => {
-        if(valid){
+    save () {
+      const temp = this
+      temp.$refs.cabinetForm.validate(valid => {
+        if (valid) {
           if (temp.cabinet.id) {
             this.$put('cabinet', temp.cabinet).then(res => {
-              const h = temp.$createElement;
               if (res.code === 200) {
-                temp.$message({duration: 2000, type: 'success', message: temp.$t("tip.saveSuccess")});
-                temp.$emit("after",temp.cabinet.idcId);
-                temp.esc();
+                temp.$message({ duration: 2000, type: 'success', message: temp.$t('tip.saveSuccess') })
+                temp.$emit('after', temp.cabinet.idcId)
+                temp.esc()
               } else {
-                temp.$message.error(res.msg);
+                temp.$message.error(res.msg)
               }
             })
           } else {
             temp.$post('cabinet', temp.cabinet).then(res => {
-              const h = temp.$createElement;
               if (res.code === 200) {
-                temp.$message({duration: 2000, type: 'success', message: temp.$t("tip.saveSuccess")});
-                temp.$emit("after",temp.cabinet.idcId);
-                temp.esc();
+                temp.$message({ duration: 2000, type: 'success', message: temp.$t('tip.saveSuccess') })
+                temp.$emit('after', temp.cabinet.idcId)
+                temp.esc()
               } else {
-                temp.$message.error(res.msg);
+                temp.$message.error(res.msg)
               }
             })
           }
-        }else{
-          return false;
+        } else {
+          return false
         }
-      }))
+      })
     },
-    show:function(isShow,isEdit){
-      this.popBox.show=isShow;
-      this.popBox.isEdit=isEdit;
+    show (isShow, isEdit) {
+      this.popBox.show = isShow
+      this.popBox.isEdit = isEdit
     },
-    afterShow:function(){
-      if(!this.popBox.isEdit){
-        this.popBox.isEdit=this.isEdit;
+    afterShow () {
+      if (!this.popBox.isEdit) {
+        this.popBox.isEdit = this.isEdit
       }
     },
-    toEdit:function(u){
-      this.cabinet = Object.assign({}, u);
-      this.popBox.isEdit = true;
-      this.title = this.$t('asset.editCabinetTab.title') + "  ID：" + this.cabinet.id;
-      this.popBox.show = true;
+    toEdit (u) {
+      this.cabinet = Object.assign({}, u)
+      this.popBox.isEdit = true
+      this.title = this.$t('asset.editCabinetTab.title') + '  ID：' + this.cabinet.id
+      this.popBox.show = true
     },
-    getIdcDatas:function(){
-      let temp=this;
-      if(temp.postIdcDatas&&temp.postIdcDatas.length>0){
-        temp.idcDatas=temp.postIdcDatas;
-        for (let i in temp.idcDatas){
-          let item=temp.idcDatas[i];
-          if(item.id==temp.cabinet.idcId){
-            temp.idc=item;
-            break;
+    getIdcDatas () {
+      const temp = this
+      if (temp.postIdcDatas && temp.postIdcDatas.length > 0) {
+        temp.idcDatas = temp.postIdcDatas
+        for (const i in temp.idcDatas) {
+          const item = temp.idcDatas[i]
+          if (item.id == temp.cabinet.idcId) {
+            temp.idc = item
+            break
           }
         }
-        return;
+        return
       }
       temp.$get('idc').then(response => {
         if (response.code === 200) {
-          temp.idcDatas = response.data.list;
-          for (let i in temp.idcDatas){
-            let item=temp.idcDatas[i];
-            if(item.id==temp.cabinet.idcId){
-             temp.idc=item;
-              break;
+          temp.idcDatas = response.data.list
+          for (const i in temp.idcDatas) {
+            const item = temp.idcDatas[i]
+            if (item.id == temp.cabinet.idcId) {
+              temp.idc = item
+              break
             }
           }
         }
       })
     },
-    openBox:function(){
-      this.popBox.show=true;
+    openBox () {
+      this.popBox.show = true
     },
-    esc:function(){
-      this.popBox.show=false;
+    esc () {
+      this.popBox.show = false
     },
-    hidePop:function(){//隐藏事件触发方法
-      if(this.postCabinet&&this.postCabinet.id){
-        this.cabinet=this.postCabinet;
-      }else{
-        this.resetData();
+    hidePop () { // 隐藏事件触发方法
+      if (this.postCabinet && this.postCabinet.id) {
+        this.cabinet = this.postCabinet
+      } else {
+        this.resetData()
       }
-      this.clearValidate();
+      this.clearValidate()
     },
-    clearValidate:function(){
-      this.$refs.cabinetForm.clearValidate();
+    clearValidate () {
+      this.$refs.cabinetForm.clearValidate()
     }
   },
-  watch:{
+  watch: {
     postCabinet: {
       immediate: true,
       deep: true,
-      handler(n, o) {
+      handler (n, o) {
         if (n && n.id) {
-          this.title =this.popBox.isEdit? this.$t('asset.editCabinetTab.title') + "  ID：" + n.id : this.$t('asset.cabinet') + "  ID：" + n.id;
-          this.cabinet=n;
+          this.title = this.popBox.isEdit ? this.$t('asset.editCabinetTab.title') + '  ID：' + n.id : this.$t('asset.cabinet') + '  ID：' + n.id
+          this.cabinet = n
         } else {
-          this.title = this.$t('asset.title');
-          this.resetData();
+          this.title = this.$t('asset.title')
+          this.resetData()
         }
       }
     },
-    isEdit:{
+    isEdit: {
       immediate: true,
-      handler(n, o) {
-        this.popBox.isEdit=n;
+      handler (n, o) {
+        this.popBox.isEdit = n
       }
     }
   },
-  beforeDestroy(){
+  beforeDestroy () {
 
   }
 }

@@ -239,7 +239,6 @@
             <el-input v-model="selection.pen.data.url" class="input" size="small"></el-input>
           </el-form-item>
 
-
         </el-form>
       </el-tab-pane>
       <el-tab-pane :label="$t('project.topology.style')" name="4">
@@ -247,7 +246,6 @@
           <!--&lt;!&ndash;位置大小&ndash;&gt;-->
           <!--<el-collapse-item :label="$t('project.topology.positionAndSize')" name="3" v-if="selection.pen&&!selection.pen.type">-->
           <!--<div class="flex flex-warp">-->
-
 
           <!--</div>-->
           <!--</el-collapse-item>-->
@@ -307,7 +305,6 @@
                     <div slot="prefix">
                       <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
                     </div>
-
 
                     <el-option v-for="(item,index) in bkTypeOption" :value="item.id" :key="index">
                       <i :class="['nz-icon',item.label,item.fontSize]" ></i>
@@ -577,7 +574,6 @@
                 <nezhaColor :value-arr="[{name:'animateColor',value:selection.pen.animateColor}]" @colorChange="colorChange"/>
               </div>
             </div>
-
 
           </div>
         </div>
@@ -852,673 +848,661 @@
 </template>
 
 <script>
-  import {alignNodes,spaceBetween,layout} from '@topology/layout';
-  import {getTopology} from "../../js/common";
-  // import ChartMetric from "./chartMetric";
-  import chartDataFormat from '../../../charts/chartDataFormat';
-  import promqlInput from "../../../page/dashboard/explore/promqlInput";
-  import {getUUID,resetZIndex} from "../../../common/js/common";
-  import nezhaColor from '../../nezhaColor'
-  var rz={
-    methods:{
-      rz(e){
-        resetZIndex(e);
-      }
+import { alignNodes, spaceBetween, layout } from '@topology/layout'
+import { getTopology, resetZIndex } from '../../js/common'
+import chartDataFormat from '../../../charts/chartDataFormat'
+import promqlInput from '../../../page/dashboard/explore/promqlInput'
+import nezhaColor from '../../nezhaColor'
+const rz = {
+  methods: {
+    rz (e) {
+      resetZIndex(e)
     }
-  };
-  export default {
-    //pen.type 0为node 1位line
-    data(){
-      return {
-        expressions:[],
-        chartTypeList:[
-          {
-            id:"line",
-            name:this.$t("dashboard.panel.chartForm.typeVal.line.label")
-          },
-          {
-            id:'stackArea',
-            name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
-          },
-          {
-            id:"bar",
-            name:this.$t("dashboard.panel.chartForm.typeVal.bar.label")
-          },
-          {
-            id:"table",
-            name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
-          },
-        ],
-        aggregationList:[
-          {
-            id:"last",
-            name:'last'
-          },{
-            id:"first",
-            name:'first'
-          },{
-            id:"min",
-            name:'min'
-          },{
-            id:"max",
-            name:'max'
-          },{
-            id:"avg",
-            name:'avg'
-          },{
-            id:"total",
-            name:'total'
-          }
-        ],
-        metricList:[], // metric列表
-        metricCascaderList:[],//metric级联列表
-        metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
-        metricOptions:[],
-        unitOptions:chartDataFormat.unitOptions(),
-        lineId:null,
-        lineIsJson:false,
-        lineData:'',
-        penId:null,
-        penIsJson:false,
-        penData:'',
-        tab:'1',
-        drowdown:0,
-        readonly:false,
-        topologyData:{
-          data:{
-            name:'',
-            bkColor:'#FFFFFF',
-            bkImage:'',
-            lineName:'curve',
-            lineWidth:1,
-            fromArrow:'',
-            toArrow:'triangleSolid',
-            projectInfo:true,
-            alertInfo:true,
-            url:'',
-            fontSize:14,
-            align:'left',
-            fontColor:"#000000",
-            opacity:1,
-          }
+  }
+}
+export default {
+  // pen.type 0为node 1位line
+  data () {
+    return {
+      expressions: [],
+      chartTypeList: [
+        {
+          id: 'line',
+          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
-        pen:{
-          dash:'',
-          font:'',
-          lineWidth:'',
-          strokeStyle:'',
-          textMaxLine:'',
-          textOffsetX:'',
-          textOffsetY:'',
-          globalAlpha:'',
+        {
+          id: 'stackArea',
+          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
-        penNumber:'',
-        nodesAlign:[//对齐方式
-          {
-            value:'left',
-            desc:'左对齐'
-          },{
-            value:'right',
-            desc:'右对齐'
-          },{
-            value:'top',
-            desc:'顶部对齐'
-          },{
-            value:'bottom',
-            desc:'底部对齐'
-          },{
-            value:'center',
-            desc:'垂直居中'
-          },{
-            value:'middle',
-            desc:'水平居中'
-          }],
-        layout:{//显示对应属性
-          maxWidth:1000,
-          nodeWidth:0,
-          nodeHeight:0,
-          maxCount:0,
-          spaceWidth:30,
-          spaceHeight:30
+        {
+          id: 'bar',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         },
-        activeNames:['1','2','3','4','5'],
-        show:{//显示对应属性
-          pos:true,
-          layout:true,
-          looks:true,
+        {
+          id: 'table',
+          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+        }
+      ],
+      aggregationList: [
+        {
+          id: 'last',
+          name: 'last'
+        }, {
+          id: 'first',
+          name: 'first'
+        }, {
+          id: 'min',
+          name: 'min'
+        }, {
+          id: 'max',
+          name: 'max'
+        }, {
+          id: 'avg',
+          name: 'avg'
+        }, {
+          id: 'total',
+          name: 'total'
+        }
+      ],
+      metricList: [], // metric列表
+      metricCascaderList: [], // metric级联列表
+      metricAllData: new Map(), // 存放所有的project-module-metric-labelValue，避免重复加载
+      metricOptions: [],
+      unitOptions: chartDataFormat.unitOptions(),
+      lineId: null,
+      lineIsJson: false,
+      lineData: '',
+      penId: null,
+      penIsJson: false,
+      penData: '',
+      tab: '1',
+      drowdown: 0,
+      readonly: false,
+      topologyData: {
+        data: {
+          name: '',
+          bkColor: '#FFFFFF',
+          bkImage: '',
+          lineName: 'curve',
+          lineWidth: 1,
+          fromArrow: '',
+          toArrow: 'triangleSolid',
+          projectInfo: true,
+          alertInfo: true,
+          url: '',
+          fontSize: 14,
+          align: 'left',
+          fontColor: '#000000',
+          opacity: 1
+        }
+      },
+      pen: {
+        dash: '',
+        font: '',
+        lineWidth: '',
+        strokeStyle: '',
+        textMaxLine: '',
+        textOffsetX: '',
+        textOffsetY: '',
+        globalAlpha: ''
+      },
+      penNumber: '',
+      nodesAlign: [// 对齐方式
+        {
+          value: 'left',
+          desc: '左对齐'
+        }, {
+          value: 'right',
+          desc: '右对齐'
+        }, {
+          value: 'top',
+          desc: '顶部对齐'
+        }, {
+          value: 'bottom',
+          desc: '底部对齐'
+        }, {
+          value: 'center',
+          desc: '垂直居中'
+        }, {
+          value: 'middle',
+          desc: '水平居中'
+        }],
+      layout: { // 显示对应属性
+        maxWidth: 1000,
+        nodeWidth: 0,
+        nodeHeight: 0,
+        maxCount: 0,
+        spaceWidth: 30,
+        spaceHeight: 30
+      },
+      activeNames: ['1', '2', '3', '4', '5'],
+      show: { // 显示对应属性
+        pos: true,
+        layout: true,
+        looks: true
+      },
+      data: {},
+      bkTypeOption: [
+        {
+          id: 0,
+          name: 'X',
+          label: 'nz-icon-close',
+          fontSize: 'font12 v-sub'
         },
-        data:{},
-        bkTypeOption:[
-          {
-            id:0,
-            name:'X',
-            label:'nz-icon-close',
-            fontSize:'font12 v-sub',
-          },
-          {
-            id:2,
-            name:'↑',
-            label:'nz-icon-arrow-up1',
-            fontSize:'font20',
-          },
-          {
-            id:4,
-            name:'↓',
-            label:'nz-icon-arrow-down2',
-            fontSize:'font20',
-          },
-          {
-            id:1,
-            name:'→',
-            label:'nz-icon-arrow-right1',
-            fontSize:'font12 v-sub',
-          },
-          {
-            id:3,
-            name:'←',
-            label:'nz-icon-arrow-left1',
-            fontSize:'font12 v-sub',
+        {
+          id: 2,
+          name: '↑',
+          label: 'nz-icon-arrow-up1',
+          fontSize: 'font20'
+        },
+        {
+          id: 4,
+          name: '↓',
+          label: 'nz-icon-arrow-down2',
+          fontSize: 'font20'
+        },
+        {
+          id: 1,
+          name: '→',
+          label: 'nz-icon-arrow-right1',
+          fontSize: 'font12 v-sub'
+        },
+        {
+          id: 3,
+          name: '←',
+          label: 'nz-icon-arrow-left1',
+          fontSize: 'font12 v-sub'
+        }
+      ],
+      penDash: [
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '5,5' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10,2,10' }
+      ],
+      penLineType: [
+        { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve' },
+        { d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line' }
+        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+      ],
+      penLineFromTOArrow: [
+        { d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: '' },
+        { d: 'M5 14 l85 0', points: '5 14,20 9,20 19', fill: '#000000', stroke: '', 'stroke-width': '', name: 'triangleSolid' },
+        {
+          d: 'M5 14 l85 0',
+          points: '5 14,20 9,20 19',
+          fill: '#ffffff',
+          stroke: '#000000',
+          'stroke-width': '1',
+          name: 'triangle'
+        },
+        { d: 'M5 14 l85 0', fill: '#000000', stroke: '', 'stroke-width': '', cx: '10', cy: '14', r: '5', name: 'circleSolid' },
+        { d: 'M5 14 l85 0', fill: '#ffffff', stroke: '#000000', 'stroke-width': '1', cx: '10', cy: '14', r: '5', name: 'circle' }
+      ],
+      lineAnimateOptions: [
+        { id: 1, name: this.$t('project.topology.flow') },
+        { id: 'beads', name: this.$t('project.topology.beads') },
+        { id: 'dot', name: this.$t('project.topology.dot') },
+        { id: 'comet', name: this.$t('project.topology.comet') }
+      ],
+      nodeAnimateOptions: [
+        {
+          id: 'upDown',
+          name: this.$t('project.topology.bounce')
+        },
+        {
+          id: 'leftRight',
+          name: this.$t('project.topology.shakeX')
+        },
+        {
+          id: 'heart',
+          name: this.$t('project.topology.heartBeat')
+        },
+        {
+          id: 'warning',
+          name: this.$t('project.topology.flash')
+        },
+        {
+          id: 'show',
+          name: this.$t('project.topology.swing')
+        },
+        {
+          id: 'fade',
+          name: this.$t('project.topology.fade')
+        }
+      ],
+      predefineColors: [
+        '#19730E', '#37872D', '#73BF69',
+        '#CC9D00', '#E0B400', '#FADE2A',
+        '#AD0317', '#C4162A', '#F2495C',
+        '#1250B0', '#1F60C4', '#5794F2',
+        '#E55400', '#FA6400', '#FF9830',
+        '#7C2EA3', '#8F3BB8', '#B877D9'
+      ]
+    }
+  },
+  mixins: [rz],
+  components: {
+    promqlInput,
+    nezhaColor
+  },
+  computed: {},
+  props: {
+    selection: {
+      type: Object,
+      require: true
+    },
+    index: {
+      type: Number,
+      require: true
+    },
+    modules: {}
+  },
+  watch: {
+    // 'topologyData.data':{
+    //   handler(n){
+    //     setTimeout(()=>{
+    //       let dataOption=getTopology(this.index).data;
+    //       Object.keys(this.topologyData.data).forEach((key)=>{
+    //         dataOption[key]=this.topologyData.data[key];
+    //       });
+    //       getTopology(this.index).render();
+    //     })
+    //   },
+    //   deep:true,
+    //   immediate:false,
+    // }
+  },
+  created () {
+    const dataOption = getTopology(this.index).data
+    if (!dataOption.data) {
+      dataOption.data = {}
+    }
+    Object.keys(this.topologyData.data).forEach((key) => {
+      if (key === 'projectInfo' || key === 'alertInfo' || key === 'fontSize' || key === 'align' || key === 'fontColor' || key === 'opacity') {
+        this.topologyData.data[key] = (JSON.stringify(dataOption.data[key]) ? dataOption.data[key] : this.topologyData.data[key])
+      } else {
+        this.topologyData.data[key] = (JSON.stringify(dataOption[key]) ? dataOption[key] : this.topologyData.data[key])
+      }
+    })
+  },
+  mounted () {
+    this.queryMetrics()
+    // this.topologyData.data.grid= !!dataOption.grid;
+    // this.topologyData.data.rule= !!dataOption.rule;
+    // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
+    // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
+  },
+  updated (n, o) {
+    if (!this.selection.pen) { // 没选中node line返回
+      return
+    }
+    if (this.penId === this.selection.pen.id) {
+      return
+    }
+    if (this.selection.pen.id) {
+      this.selection.expand = false
+      this.penId = this.selection.pen.id
+      const originData = this.selection.pen.data
+      this.penIsJson = this.isJson(originData)
+      this.penData = this.penIsJson
+        ? JSON.stringify(originData, null, 4)
+        : this.penData = originData
+    }
+  },
+  methods: {
+    queryMetrics () {
+      this.metricOptions = []
+      this.$get('prom/api/v1/label/__name__/values').then(response => {
+        if (response.status == 'success') {
+          const metrics = response.data.sort()
+          const metricMap = new Map()
+          metrics.forEach((item) => {
+            let key = ''
+            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
+              key = item.split('_')[0]
+            } else if (/^_\w*/.test(item)) {
+              key = '      '
+            } else {
+              key = item
+            }
+            if (metricMap.get(key)) {
+              const values = metricMap.get(key)
+              values.push({ label: item, value: item })
+            } else {
+              const values = [{ label: item, value: item }]
+              metricMap.set(key, values)
+            }
+            // this.metricStore.push({label:item,value:item,insertText:item})
+          })
+          for (const key of metricMap.keys()) {
+            const option = {
+              label: key,
+              value: key
+            }
+            if (metricMap.get(key) && metricMap.get(key).length > 1) {
+              option.children = metricMap.get(key)
+            }
+            this.metricOptions.push(option)
           }
-        ],
-        penDash:[
-          {d:'M5 14 l85 0',"stroke-dasharray":""},
-          {d:'M5 14 l85 0',"stroke-dasharray":"5,5"},
-          {d:'M5 14 l85 0',"stroke-dasharray":"10,10"},
-          {d:'M5 14 l85 0',"stroke-dasharray":"10,10,2,10"},
-        ],
-        penLineType:[
-          {d:'M5 14 a100,50 0 0,1 85,0',"stroke-dasharray":"",name:'curve'},
-          {d:'M5 8 l40 0 l0 12 l40 0',"stroke-dasharray":"",name:'polyline'},
-          {d:'M5 14 l85 0',"stroke-dasharray":"",name:'line'},
-          // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
-        ],
-        penLineFromTOArrow:[
-          {d:'M5 14 l85 0',"points":"",fill:'',stroke:"",'stroke-width':"",name:''},
-          {d:'M5 14 l85 0',"points":"5 14,20 9,20 19",fill:'#000000',stroke:"",'stroke-width':"",name:'triangleSolid'},
-          {
-            d:'M5 14 l85 0',
-            "points":"5 14,20 9,20 19",
-            fill:'#ffffff',
-            stroke:"#000000",
-            'stroke-width':"1",
-            name:'triangle'
-          },
-          {d:'M5 14 l85 0',fill:'#000000',stroke:"",'stroke-width':"",cx:"10",cy:"14",r:"5",name:'circleSolid'},
-          {d:'M5 14 l85 0',fill:'#ffffff',stroke:"#000000",'stroke-width':"1",cx:"10",cy:"14",r:"5",name:'circle'},
-        ],
-        lineAnimateOptions:[
-          {id:1,name:this.$t("project.topology.flow")},
-          {id:'beads',name:this.$t("project.topology.beads")},
-          {id:'dot',name:this.$t("project.topology.dot")},
-          {id:'comet',name:this.$t("project.topology.comet")},
-        ],
-        nodeAnimateOptions:[
-          {
-            id:'upDown',
-            name:this.$t("project.topology.bounce")
-          },
-          {
-            id:'leftRight',
-            name:this.$t("project.topology.shakeX")
-          },
-          {
-            id:'heart',
-            name:this.$t("project.topology.heartBeat")
-          },
-          {
-            id:'warning',
-            name:this.$t("project.topology.flash")
-          },
-          {
-            id:'show',
-            name:this.$t("project.topology.swing")
-          },
-          {
-            id:'fade',
-            name:this.$t("project.topology.fade")
-          }
-        ],
-        predefineColors:[
-          '#19730E','#37872D','#73BF69',
-          '#CC9D00','#E0B400','#FADE2A',
-          '#AD0317','#C4162A','#F2495C',
-          '#1250B0','#1F60C4','#5794F2',
-          '#E55400','#FA6400','#FF9830',
-          '#7C2EA3','#8F3BB8','#B877D9',
-        ]
+        }
+      })
+    },
+    tabClick (n) {
+      if (this.selection.pen && this.tab == '1') {
+
       }
     },
-    mixins:[rz],
-    components:{
-      promqlInput,
-      nezhaColor
+    moduleIdChange (n) {
+      this.selection.pen.data.moduleName = this.modules.find(item => item.id === n).name
+      if (!this.selection.pen.data.title) {
+        this.selection.pen.data.title = this.selection.pen.data.moduleName
+        this.selection.pen.text = this.selection.pen.data.title
+        this.onChange()
+        this.$emit('notModuleIDArrChange', this.selection.pen.id)
+      }
     },
-    computed:{},
-    props:{
-      selection:{
-        type:Object,
-        require:true
-      },
-      index:{
-        type:Number,
-        require:true,
-      },
-      modules:{}
+    changeTitle (val) {
+      this.selection.pen.text = val
+      this.onChange()
     },
-    watch:{
-      selection:{
-        handler(n){
-          if(n){
-          }
-        },
-        deep:true,
-        immediate:true,
-      },
-      // 'topologyData.data':{
-      //   handler(n){
-      //     setTimeout(()=>{
-      //       let dataOption=getTopology(this.index).data;
-      //       Object.keys(this.topologyData.data).forEach((key)=>{
-      //         dataOption[key]=this.topologyData.data[key];
-      //       });
-      //       getTopology(this.index).render();
-      //     })
-      //   },
-      //   deep:true,
-      //   immediate:false,
+    onChange (value) {
+      if (value === 'lineWidth') {
+        this.selection.pen.lineWidth = this.selection.pen.data.lineWidth
+      }
+      this.$emit('change', this.selection.pen)
+      // if(!this.selection.pen.type||this.selection.pens){
+      //   this.$emit('change',this.selection.pen||this.selection.pens);
+      // }else{// 线更新
+      //   this.$emit('change');
       // }
     },
-    created(){
-      let dataOption=getTopology(this.index).data;
-      if(!dataOption.data){
-        dataOption.data={}
+    changeExpand () {
+      this.selection.expand = !this.selection.expand
+    },
+    isJson (obj) {
+      return typeof (obj) === 'object' && Object.prototype.toString.call(obj).toLowerCase() == '[object object]' && !obj.length
+    },
+
+    // 组件事件
+    onNodesAlign (align) { // 对齐node
+      alignNodes(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect, align)
+      getTopology(this.index).updateProps()
+    },
+    onSpaceBetween () {
+      spaceBetween(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect.width)
+      getTopology(this.index).updateProps()
+    },
+    onLayout () { // 改变布局
+      layout(getTopology(this.index).activeLayer.pens, this.layout)
+      getTopology(this.index).updateProps()
+    },
+    onClickDash (number) { // 改变线型
+      this.pen.dash = number
+      this.drowdown = 0
+      if (this.selection.pen) {
+        this.selection.pen.dash = number
       }
-      Object.keys(this.topologyData.data).forEach((key)=>{
-        if(key === 'projectInfo' || key === 'alertInfo' || key==='fontSize' || key === 'align' || key === 'fontColor' || key === 'opacity'){
-          this.topologyData.data[key]=(JSON.stringify(dataOption.data[key])?dataOption.data[key]:this.topologyData.data[key]);
+
+      this.onChange()
+    },
+    onClickName (name) {
+      this.pen.name = name
+      this.drowdown = 0
+      if (this.selection.pen) {
+        this.selection.pen.name = name
+      }
+      this.onChange()
+    },
+    bkTypeChange (val) {
+      // console.log(val);
+      this.selection.pen.data.gradientType = val
+      this.$forceUpdate()
+      if (val === 0) {
+        this.selection.pen.bkType = 0
+      }
+
+      if (val === 1 || val === 3) {
+        this.selection.pen.bkType = 1
+        this.selection.pen.gradientAngle = 0
+      }
+      if (val === 2 || val === 4) {
+        this.selection.pen.bkType = 1
+        this.selection.pen.gradientAngle = 90
+      }
+
+      if (val === 1 || val === 2) {
+        this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
+        this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+      }
+      if (val === 3 || val === 4) {
+        this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
+        this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+      }
+      this.onChange()
+    },
+    colorPickerClick (ref) {
+      this.$refs[ref].showPicker = true
+    },
+    colorPickerClickTable (ref, row) {
+      row.showColor = row.color.fill
+      row.showType = 'fill'
+      this.$nextTick(() => {
+        this.$refs[ref][0].showPicker = true
+      })
+    },
+    colorChange (val, name) { // 改变颜色
+      const bktype = this.selection.pen.data.gradientType
+      if (name === 'toArrowColor') {
+        this.selection.pen.fromArrowColor = this.colorRGBtoHex(val)
+        this.selection.pen.toArrowColor = this.colorRGBtoHex(val)
+        this.selection.pen.data.fromArrowColor = this.colorRGBtoHex(val)
+        this.selection.pen.data.toArrowColor = this.colorRGBtoHex(val)
+        this.selection.pen.data.arrowColor = this.colorRGBtoHex(val)
+      } else {
+        this.selection.pen[name] = this.colorRGBtoHex(val)
+      }
+      if (name === 'gradientColor') {
+        this.selection.pen.data.gradientColor = this.colorRGBtoHex(val)
+        if (bktype === 1 || bktype === 2) {
+          this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
+          this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        }
+        if (bktype === 3 || bktype === 4) {
+          this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
+          this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        }
+      }
+
+      if (name === 'fillStyle') {
+        if (bktype === 1 || bktype === 2) {
+          this.selection.pen.gradientToColor = this.selection.pen.data.gradientColor
+          this.selection.pen.gradientFromColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        }
+        if (bktype === 3 || bktype === 4) {
+          this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
+          this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
+        }
+      }
+      this.selection.pen.data[name] = this.colorRGBtoHex(val)
+      this.onChange()
+    },
+    colorChangeTable (item, val, key) { // 改变颜色
+      item.color[key] = this.colorRGBtoHex(val)
+    },
+    changeShowPicker (item, type) {
+      this.$refs['colorPickerBac' + item.level][0].showPicker = true
+      item.showType = type
+      item.showColor = item.color[type]
+    },
+    colorOut (obj, e) {
+      let flag = false
+      e.path.forEach((item) => {
+        if (item.className === 'el-color-dropdown el-color-picker__panel' || item.className === 'color-tab') {
+          flag = true
+        }
+      })
+      if (flag) {
+        return
+      }
+      obj.showType = ''
+      obj.showColor = undefined
+    },
+    changeTopologyOpt (val, key, isColor) {
+      //
+      // getTopology(this.index).data[key]=val;
+      // getTopology(this.index).render();
+      if (isColor) {
+        this.topologyData.data[key] = this.colorRGBtoHex(val)
+      } else {
+        this.topologyData.data[key] = val
+      }
+      Object.keys(this.topologyData.data).forEach((key1) => {
+        if (key1 === 'projectInfo' || key1 === 'alertInfo' || key1 === 'fontSize' || key1 === 'align' || key1 === 'fontColor' || key1 === 'opacity') {
+          getTopology(this.index).data.data[key1] = this.topologyData.data[key1]
         } else {
-          this.topologyData.data[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.topologyData.data[key]);
+          getTopology(this.index).data[key1] = this.topologyData.data[key1]
         }
-      });
+      })
+      getTopology(this.index).render()
+      this.$emit('changeProjectTitle')
     },
-    mounted(){
-      this.queryMetrics();
-      // this.topologyData.data.grid= !!dataOption.grid;
-      // this.topologyData.data.rule= !!dataOption.rule;
-      // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
-      // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
+    colorRGBtoHex (color) { // 获取颜色16进制数
+      if (!color) {
+        return ''
+      };
+      if (color.length <= 7) { return color }
+      const rgb = color.split(',')
+      const r = parseInt(rgb[0].split('(')[1])
+      const g = parseInt(rgb[1])
+      const b = parseInt(rgb[2].split(')')[0])
+      const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+      return hex
     },
-    updated(n,o){
-      if(!this.selection.pen){//没选中node line返回
-        return;
-      }
-      if(this.penId===this.selection.pen.id){
-        return;
-      }
-      if(this.selection.pen.id){
-        this.selection.expand=false;
-        this.penId=this.selection.pen.id;
-        let originData=this.selection.pen.data;
-        this.penIsJson=this.isJson(originData);
-        this.penData=this.penIsJson?
-          JSON.stringify(originData,null,4):
-          this.penData=originData;
-      }
+    onClickToArrow (arrow) {
+      this.selection.pen.toArrow = arrow
+      this.drowdown = 0
+      this.onChange()
     },
-    methods:{
-      queryMetrics(){
-        this.metricOptions=[];
-        this.$get('prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status=='success'){
-            let metrics=response.data.sort();
-            let metricMap=new Map();
-            metrics.forEach((item)=>{
-              let key='';
-              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
-                key=item.split('_')[0];
-              }else if(/^_\w*/.test(item)){
-                key='      ';
-              }else{
-                key=item;
-              }
-              if(metricMap.get(key)){
-                let values=metricMap.get(key);
-                values.push({label:item,value:item});
-              }else{
-                let values=[{label:item,value:item}];
-                metricMap.set(key,values);
-              }
-              //this.metricStore.push({label:item,value:item,insertText:item})
-            });
-            for(let key of metricMap.keys()){
-              let option={
-                label:key,
-                value:key,
-              };
-              if(metricMap.get(key)&&metricMap.get(key).length>1){
-                option.children=metricMap.get(key);
-              }
-              this.metricOptions.push(option);
-            }
-          }
-        })
-      },
-      tabClick(n){
-        if(this.selection.pen&&this.tab=='1'){
+    onClickFromArrow (arrow) {
+      this.selection.pen.fromArrow = arrow
+      this.drowdown = 0
+      this.onChange()
+    },
+    onAnimate (val) {
+      // this.selection.pen.animateStart=this.selection.pen.animateStart?Date.now():0;
+      // this.selection.pen.data.animatePlay=this.selection.pen.animatePlay;
+      this.onChange()
+      // this.$emit('animate');
+    },
+    delTopologyPen () {
+      const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
+      this.$emit('del', delObj)
+    },
+    getMetricOptions () {
+      return this.metricOptions
+    },
+    addExpression () {
+      this.selection.pen.data.expressArr.push('')
+      this.selection.pen.data.legends.push('')
+    },
+    expressionChange (item) {
 
-        }
-      },
-      moduleIdChange(n){
-        this.selection.pen.data.moduleName=this.modules.find(item=>item.id===n).name;
-        if(!this.selection.pen.data.title){
-          this.selection.pen.data.title=this.selection.pen.data.moduleName
-          this.selection.pen.text=this.selection.pen.data.title;
-          this.onChange();
-          this.$emit('notModuleIDArrChange',this.selection.pen.id);
-        }
-      },
-      changeTitle(val){
-        this.selection.pen.text=val;
-        this.onChange()
-      },
-      onChange(value){
-        if(value==='lineWidth'){
-          this.selection.pen.lineWidth=this.selection.pen.data.lineWidth;
-        }
-        this.$emit('change',this.selection.pen);
-        // if(!this.selection.pen.type||this.selection.pens){
-        //   this.$emit('change',this.selection.pen||this.selection.pens);
-        // }else{// 线更新
-        //   this.$emit('change');
-        // }
-      },
-      changeExpand(){
-        this.selection.expand= !this.selection.expand;
-      },
-      isJson(obj){
-        return typeof (obj)=="object"&&Object.prototype.toString.call(obj).toLowerCase()=="[object object]"&& !obj.length;
-      },
-
-      //组件事件
-      onNodesAlign(align){//对齐node
-        alignNodes(getTopology(this.index).activeLayer.pens,getTopology(this.index).activeLayer.rect,align);
-        getTopology(this.index).updateProps();
-      },
-      onSpaceBetween(){
-        spaceBetween(getTopology(this.index).activeLayer.pens,getTopology(this.index).activeLayer.rect.width);
-        getTopology(this.index).updateProps();
-      },
-      onLayout(){//改变布局
-        layout(getTopology(this.index).activeLayer.pens,this.layout);
-        getTopology(this.index).updateProps();
-      },
-      onClickDash(number){//改变线型
-        this.pen.dash=number;
-        this.drowdown=0;
-        if(this.selection.pen){
-          this.selection.pen.dash=number;
-        }
-
-        this.onChange();
-      },
-      onClickName(name){
-        this.pen.name=name;
-        this.drowdown=0;
-        if(this.selection.pen){
-          this.selection.pen.name=name;
-        }
-        this.onChange();
-      },
-      bkTypeChange(val){
-        // console.log(val);
-        this.selection.pen.data.gradientType=val;
-        this.$forceUpdate()
-        if(val===0){
-          this.selection.pen.bkType=0;
-        }
-
-        if(val===1 || val===3){
-          this.selection.pen.bkType=1;
-          this.selection.pen.gradientAngle=0;
-        }
-        if(val===2 || val===4){
-          this.selection.pen.bkType=1;
-          this.selection.pen.gradientAngle=90;
-        }
-
-        if(val===1 || val===2){
-          this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
-          this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-        }
-        if(val===3 || val===4){
-          this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
-          this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-        }
-        this.onChange()
-      },
-      colorPickerClick(ref){
-        this.$refs[ref].showPicker=true;
-      },
-      colorPickerClickTable(ref,row){
-        row.showColor=row.color.fill;
-        row.showType='fill';
-        this.$nextTick(()=>{
-          this.$refs[ref][0].showPicker=true;
-        })
-
-      },
-      colorChange(val,name){//改变颜色
-        let bktype= this.selection.pen.data.gradientType;
-        if(name==='toArrowColor'){
-          this.selection.pen.fromArrowColor=this.colorRGBtoHex(val);
-          this.selection.pen.toArrowColor=this.colorRGBtoHex(val);
-          this.selection.pen.data['fromArrowColor']=this.colorRGBtoHex(val);
-          this.selection.pen.data['toArrowColor']=this.colorRGBtoHex(val);
-          this.selection.pen.data['arrowColor']=this.colorRGBtoHex(val);
-        }else{
-          this.selection.pen[name]=this.colorRGBtoHex(val);
-        }
-        if(name==='gradientColor'){
-          this.selection.pen.data['gradientColor']=this.colorRGBtoHex(val);
-          if(bktype===1 || bktype===2){
-            this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
-            this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-          }
-          if(bktype===3 || bktype===4){
-            this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
-            this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-          }
-        }
-
-        if(name==='fillStyle'){
-          if(bktype===1 || bktype===2){
-            this.selection.pen.gradientToColor=this.selection.pen.data.gradientColor;
-            this.selection.pen.gradientFromColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-          }
-          if(bktype===3 || bktype===4){
-            this.selection.pen.gradientFromColor=this.selection.pen.data.gradientColor;
-            this.selection.pen.gradientToColor=this.selection.pen.fillStyle?this.selection.pen.fillStyle:'#fff';
-          }
-        }
-        this.selection.pen.data[name]=this.colorRGBtoHex(val);
-        this.onChange();
-      },
-      colorChangeTable(item,val,key){//改变颜色
-        item.color[key]=this.colorRGBtoHex(val);
-      },
-      changeShowPicker(item,type){
-        this.$refs['colorPickerBac'  + item.level][0].showPicker=true;
-        item.showType=type;
-        item.showColor=item.color[type];
-      },
-      colorOut(obj,e){
-
-        let flag=false;
-        e.path.forEach((item)=>{
-          if(item.className==='el-color-dropdown el-color-picker__panel' || item.className==='color-tab'){
-            flag=true
-          }
-        })
-        if(flag){
-          return
-        }
-        obj.showType='';
-        obj.showColor=undefined;
-      },
-      changeTopologyOpt(val,key,isColor){
-        //
-        // getTopology(this.index).data[key]=val;
-        // getTopology(this.index).render();
-        if(isColor){
-          this.topologyData.data[key]=this.colorRGBtoHex(val);
-        }else{
-          this.topologyData.data[key]=val;
-        }
-        Object.keys(this.topologyData.data).forEach((key1)=>{
-          if(key1 === 'projectInfo' || key1 === 'alertInfo' || key1==='fontSize' || key1 === 'align' || key1 === 'fontColor' || key1 === 'opacity'){
-            getTopology(this.index).data.data[key1]=this.topologyData.data[key1];
-          } else {
-            getTopology(this.index).data[key1]=this.topologyData.data[key1];
-          }
-        });
-        getTopology(this.index).render();
-        this.$emit('changeProjectTitle')
-      },
-      colorRGBtoHex(color){//获取颜色16进制数
-        if(!color){
-          return ""
-        };
-        if(color.length<=7){return color}
-        let rgb=color.split(',');
-        let r=parseInt(rgb[0].split('(')[1]);
-        let g=parseInt(rgb[1]);
-        let b=parseInt(rgb[2].split(')')[0]);
-        let hex="#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-        return hex;
-      },
-      onClickToArrow(arrow){
-        this.selection.pen.toArrow=arrow;
-        this.drowdown=0;
-        this.onChange();
-      },
-      onClickFromArrow(arrow){
-        this.selection.pen.fromArrow=arrow;
-        this.drowdown=0;
-        this.onChange();
-      },
-      onAnimate(val){
-        // this.selection.pen.animateStart=this.selection.pen.animateStart?Date.now():0;
-        // this.selection.pen.data.animatePlay=this.selection.pen.animatePlay;
-        this.onChange();
-        // this.$emit('animate');
-      },
-      delTopologyPen(){
-        let delObj=this.selection.pen?this.selection.pen.id:this.selection.pens
-        this.$emit('del',delObj);
-      },
-      getMetricOptions(){
-        return this.metricOptions;
-      },
-      addExpression(){
-        this.selection.pen.data.expressArr.push('');
-        this.selection.pen.data.legends.push('');
-      },
-      expressionChange(item){
-
-      },
-      removeExpression(index){
-        if(this.selection.pen.data.expressArr.length>1){
-          this.selection.pen.data.expressArr.splice(index,1);
-          this.selection.pen.data.legends.splice(index,1);
-          this.$nextTick(()=>{
-            this.expressions.forEach((ex,index)=>{
-              if(ex){
-                this.$refs[`promql-${index}`][0].metricChange(ex);
-              }
-            });
-          });
-        }
-      },
-      copyExpression(index) {
-        this.selection.pen.data.expressArr.push(this.selection.pen.data.expressArr[index]);
-        this.selection.pen.data.legends.push(this.selection.pen.data.legends[index]);
+    },
+    removeExpression (index) {
+      if (this.selection.pen.data.expressArr.length > 1) {
+        this.selection.pen.data.expressArr.splice(index, 1)
+        this.selection.pen.data.legends.splice(index, 1)
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex);
+              this.$refs[`promql-${index}`][0].metricChange(ex)
             }
-          });
-        });
-      },
-      valueMappingAdd(){
-        if(this.selection.pen.data.valueMappingSort==='desc'){
-          this.selection.pen.data.valueMapping.push({
-            color:{
-              line:'#000000',
-              fill:'#ffffff',
-              text:'#000000',
-            },
-            showColor:undefined,
-            animateType:this.selection.pen.type?1:'upDown',
-            value:0,
-            level:1,
-            showType:'fill',//bac text border
-          });
-          this.selection.pen.data.valueMapping.forEach((item,index)=>{
-            if(index===0){
-              return
-            }
-            item.level=this.selection.pen.data.valueMapping.length-index;
           })
-        }else{
-          this.selection.pen.data.valueMapping.push({
-            color:{
-              line:'#000000',
-              fill:'#ffffff',
-              text:'#000000',
-            },
-            showColor:undefined,
-            animateType:this.selection.pen.type?1:'upDown',
-            value:0,
-            level:this.selection.pen.data.valueMapping.length,
-            showType:'fill',//bac text border
-          });
-        }
-      },
-      valueMappingValueChange(index,row){
+        })
+      }
+    },
+    copyExpression (index) {
+      this.selection.pen.data.expressArr.push(this.selection.pen.data.expressArr[index])
+      this.selection.pen.data.legends.push(this.selection.pen.data.legends[index])
+      this.$nextTick(() => {
+        this.expressions.forEach((ex, index) => {
+          if (ex) {
+            this.$refs[`promql-${index}`][0].metricChange(ex)
+          }
+        })
+      })
+    },
+    valueMappingAdd () {
+      if (this.selection.pen.data.valueMappingSort === 'desc') {
+        this.selection.pen.data.valueMapping.push({
+          color: {
+            line: '#000000',
+            fill: '#ffffff',
+            text: '#000000'
+          },
+          showColor: undefined,
+          animateType: this.selection.pen.type ? 1 : 'upDown',
+          value: 0,
+          level: 1,
+          showType: 'fill'// bac text border
+        })
+        this.selection.pen.data.valueMapping.forEach((item, index) => {
+          if (index === 0) {
+            return
+          }
+          item.level = this.selection.pen.data.valueMapping.length - index
+        })
+      } else {
+        this.selection.pen.data.valueMapping.push({
+          color: {
+            line: '#000000',
+            fill: '#ffffff',
+            text: '#000000'
+          },
+          showColor: undefined,
+          animateType: this.selection.pen.type ? 1 : 'upDown',
+          value: 0,
+          level: this.selection.pen.data.valueMapping.length,
+          showType: 'fill'// bac text border
+        })
+      }
+    },
+    valueMappingValueChange (index, row) {
 
-      },
-      changeValueMappingSort(){
-        if(this.selection.pen.data.valueMappingSort==='desc'){
-          this.selection.pen.data.valueMappingSort='asc';
-          let arr=JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping));
-          let a=arr.splice(0,1);
-          arr.reverse();
-          arr.unshift(a[0]);
-          this.selection.pen.data.valueMapping=arr;
-        } else{
-          this.selection.pen.data.valueMappingSort='desc';
-          let arr=JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping));
-          let a=arr.splice(0,1);
-          arr.reverse();
-          arr.unshift(a[0]);
-          this.selection.pen.data.valueMapping=arr;
-        }
-      },
-      valueMappingDel(index,row){
-        this.selection.pen.data.valueMapping.splice(index,1);
-        this.selection.pen.data.valueMapping.forEach((item,index)=>{
-          item.level=index
-        });
-      },
-      inputFocus(e){
-        e.path[2].children[0].setAttribute("tabindex","0");
-        e.path[2].children[1].setAttribute("tabindex","1");
-      },
-      inputBlur(e){
-      },
+    },
+    changeValueMappingSort () {
+      if (this.selection.pen.data.valueMappingSort === 'desc') {
+        this.selection.pen.data.valueMappingSort = 'asc'
+        const arr = JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping))
+        const a = arr.splice(0, 1)
+        arr.reverse()
+        arr.unshift(a[0])
+        this.selection.pen.data.valueMapping = arr
+      } else {
+        this.selection.pen.data.valueMappingSort = 'desc'
+        const arr = JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping))
+        const a = arr.splice(0, 1)
+        arr.reverse()
+        arr.unshift(a[0])
+        this.selection.pen.data.valueMapping = arr
+      }
+    },
+    valueMappingDel (index, row) {
+      this.selection.pen.data.valueMapping.splice(index, 1)
+      this.selection.pen.data.valueMapping.forEach((item, index) => {
+        item.level = index
+      })
+    },
+    inputFocus (e) {
+      e.path[2].children[0].setAttribute('tabindex', '0')
+      e.path[2].children[1].setAttribute('tabindex', '1')
+    },
+    inputBlur (e) {
     }
   }
+}
 </script>
 <style scoped>
   .props-box label {
@@ -1794,7 +1778,6 @@
     /deep/ .el-collapse-item__content {
       padding: 12px 0px;
     }
-
 
     /deep/ .el-input-number__decrease, /deep/ .el-input-number__increase {
       visibility: hidden;

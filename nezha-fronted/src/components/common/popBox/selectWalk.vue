@@ -21,15 +21,15 @@
           @node-click="hideDetail"
           :default-checked-keys="currentWalk"
         >
-          <div slot-scope="{node, data}" class="walk-tree-item" :class="getClass(data.objectID)">
-            <span v-if="!data.type"><i class="nz-icon nz-icon-reading"></i></span>
+          <div slot-scope="data" :class="getClass(data.data.objectID)" class="walk-tree-item">
+            <span v-if="!data.data.type"><i class="nz-icon nz-icon-reading"></i></span>
             <span v-else>
-              <i v-if="data.type.toUpperCase() == 'IDENTIFIER'" class="el-icon-folder-opened"></i>
-              <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length > 0" class="el-icon-folder-opened"></i>
-              <i v-if="data.type.toUpperCase() == 'OBJECT' && data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
-              <i v-if="data.type.toUpperCase() == 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
-              <i v-if="data.type.toUpperCase() == 'TABLE'" class="nz-icon nz-icon-table"></i>
-              <span @click.stop="showDetail(data, $event)" style="position: relative;">
+              <i v-if="data.data.type.toUpperCase() === 'IDENTIFIER'" class="el-icon-folder-opened"></i>
+              <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length > 0" class="el-icon-folder-opened"></i>
+              <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
+              <i v-if="data.data.type.toUpperCase() === 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
+              <i v-if="data.data.type.toUpperCase() === 'TABLE'" class="nz-icon nz-icon-table"></i>
+              <span style="position: relative;" @click.stop="showDetail(data.data, $event)">
                 <i class="nz-icon nz-icon-info-normal metric-tip-icon"></i>
               </span>
             </span>
@@ -46,84 +46,84 @@
 </template>
 
 <script>
-    export default {
-      name: "selectWalk",
-      props:{
-        placement: {type: String},
-        walkData: {type: Array},
-        currentWalk: {type: Array},
-        expandedWalk: {type: Array}
-      },
-      data() {
-        return {
-          popBox: {show: true},
-          tempWalk: {detailShow: false, objectID: ''},
-          detailPopPosition: {top: "0", left: "0"}
-        }
-      },
-      computed: {
-        getClass() {
-          return (value) => {
-            return this.currentWalk.indexOf(value) == -1 ? '' : 'walk-active';
-          }
-        },
-        mibName() {
-          return (value) => {
-            return value ? this.getMibName(value) : "";
-          }
-        }
-      },
-      methods:{
-        getMibName(oid) {
-          let node = this.$refs.walkTree.getNode(oid);
-          let mibName = getMibName(node);
-          function getMibName(n) {
-            if (n.parent && n.parent.parent) {
-              return getMibName(n.parent);
-            } else if (n.parent) {
-              return n.data.name;
-            } else {
-              return "";
-            }
-          }
-          if (mibName) {
-            return mibName;
-          } else {
-            return "";
-          }
-        },
-        change(data, tree) {
-          this.$emit("selectWalk", data.objectID);
-        },
-        show() {
-          this.popBox.show = true;
-        },
-        hideDetail() {
-          this.tempWalk.detailShow = false;
-        },
-        showDetail(data, e) {
-          if (this.tempWalk.objectID != data.objectID) {
-            this.tempWalk.detailShow = false;
-            data.detailShow = !data.detailShow;
-            this.tempWalk = data;
-          } else {
-            data.detailShow = !data.detailShow;
-          }
-
-          this.detailPopPosition.top = e.screenY-23 + "px";
-          this.detailPopPosition.left = e.screenX-16 + "px";
-        },
-        disabledNode(data) {
-          if (data.objectID) {
-            return false;
-          }
-          return true;
-        }
-      },
-      beforeDestroy(){
-
+export default {
+  name: 'selectWalk',
+  props: {
+    placement: { type: String },
+    walkData: { type: Array },
+    currentWalk: { type: Array },
+    expandedWalk: { type: Array }
+  },
+  data () {
+    return {
+      popBox: { show: true },
+      tempWalk: { detailShow: false, objectID: '' },
+      detailPopPosition: { top: '0', left: '0' }
+    }
+  },
+  computed: {
+    getClass () {
+      return (value) => {
+        return this.currentWalk.indexOf(value) == -1 ? '' : 'walk-active'
+      }
+    },
+    mibName () {
+      return (value) => {
+        return value ? this.getMibName(value) : ''
       }
     }
+  },
+  methods: {
+    getMibName (oid) {
+      const node = this.$refs.walkTree.getNode(oid)
+      const mibName = getMibName(node)
+      function getMibName (n) {
+        if (n.parent && n.parent.parent) {
+          return getMibName(n.parent)
+        } else if (n.parent) {
+          return n.data.name
+        } else {
+          return ''
+        }
+      }
+      if (mibName) {
+        return mibName
+      } else {
+        return ''
+      }
+    },
+    change (data, tree) {
+      this.$emit('selectWalk', data.objectID)
+    },
+    show () {
+      this.popBox.show = true
+    },
+    hideDetail () {
+      this.tempWalk.detailShow = false
+    },
+    showDetail (data, e) {
+      if (this.tempWalk.objectID != data.objectID) {
+        this.tempWalk.detailShow = false
+        data.detailShow = !data.detailShow
+        this.tempWalk = data
+      } else {
+        data.detailShow = !data.detailShow
+      }
+
+      this.detailPopPosition.top = e.screenY - 23 + 'px'
+      this.detailPopPosition.left = e.screenX - 16 + 'px'
+    },
+    disabledNode (data) {
+      if (data.objectID) {
+        return false
+      }
+      return true
+    }
+  },
+  beforeDestroy () {
+
+  }
+}
 </script>
 
 <style lang="scss">

@@ -116,474 +116,468 @@
 </template>
 
 <script>
-  import ChartBox from "./chartBox";
-  import ChartList from '../../charts/chart-list';
-  import bus from '../../../libs/bus';
-  import timePicker from '../../common/timePicker'
-  import draggable from 'vuedraggable'
-  import pickTime from "../../common/pickTime";
-  import exportXLSX from "../../common/exportXLSX";
-  import selectPanel from "../../common/popBox/selectPanel";
+import ChartBox from './chartBox'
+import ChartList from '../../charts/chart-list'
+import bus from '../../../libs/bus'
+import pickTime from '../../common/pickTime'
+import exportXLSX from '../../common/exportXLSX'
+import selectPanel from '../../common/popBox/selectPanel'
 
-  export default {
-    name: "panel",
-    data() {
-      return {
-        panelLock:true,
-        showTopBtn: false, //top按钮
-        visible: false,
-        rightBox: { //面板弹出框相关
-          chart: {show: false},
-          panel: {show: false},
+export default {
+  name: 'panel',
+  data () {
+    return {
+      panelLock: true,
+      showTopBtn: false, // top按钮
+      visible: false,
+      rightBox: { // 面板弹出框相关
+        chart: { show: false },
+        panel: { show: false }
+      },
+      tableHover: false,
+      searchTime: bus.getTimezontDateRange(),
+      intervalTimer: null,
+      interval: 0,
+      showPanel: { // panel下拉列表
+        id: '',
+        name: ''
+      },
+      panel: { // 新增panel
+        id: '',
+        name: ''
+      },
+      chart: {},
+      blankChart: {
+        id: '',
+        title: '',
+        type: 'line',
+        span: 12,
+        height: '400',
+        unit: 2,
+        param: {
+          url: '',
+          threshold: ''
         },
-        tableHover: false,
-        searchTime: bus.getTimezontDateRange(),
-        intervalTimer: null,
-        interval: 0,
-        showPanel: { //panel下拉列表
-          id: '',
-          name: ''
-        },
-        panel: { //新增panel
-          id: '',
-          name: ''
-        },
-        chart: {},
-        blankChart: {
-          id:'',
-          title: '',
-          type:'line',
-          span:12,
-          height:'400',
-          unit:2,
-          param:{
-            url:'',
-            threshold:'',
-          },
-          elements:[{expression: "", legend: "", type: "expert", id: ""}],
-          panel: '',
-          sync: 0
-        },
-        pageObj: {
-          pageNo: 1,
-          pageSize: -1, //此处获取所有数据，所以设置一个较大的值
-          total: 0
-        },
-        chartsData: [], //中间部分图表相关数据
-        panelData: [],
-        panelDataDragTmp:[],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [
-            /*
+        elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
+        panel: '',
+        sync: 0
+      },
+      pageObj: {
+        pageNo: 1,
+        pageSize: -1, // 此处获取所有数据，所以设置一个较大的值
+        total: 0
+      },
+      chartsData: [], // 中间部分图表相关数据
+      panelData: [],
+      panelDataDragTmp: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [
+          /*
                         {
                         id: 1,
                         name: this.$t("dashboard.panel.searchItem.name"),
                         type: 'input',
                         label: 'name',
                         disabled: false
-                      }*/
-          ],
-        },
-        searchLabel: {}, //搜索参数
-        //---图表相关参数--start
-        dataList: [], // 数据列表
-        filter: { // 过滤条件
-          panelId: 0,
-          start_time: '',
-          end_time: '',
-          searchName: '',
-        },
+                      } */
+        ]
+      },
+      searchLabel: {}, // 搜索参数
+      // ---图表相关参数--start
+      dataList: [], // 数据列表
+      filter: { // 过滤条件
         panelId: 0,
-        filterPanel:'',
-        //---图表相关参数--end
-        scrollbarWrap: null,
+        start_time: '',
+        end_time: '',
+        searchName: ''
+      },
+      panelId: 0,
+      filterPanel: '',
+      // ---图表相关参数--end
+      scrollbarWrap: null
+    }
+  },
+  components: {
+    'chart-box': ChartBox,
+    'chart-list': ChartList,
+    'pick-time': pickTime,
+    'export-excel': exportXLSX,
+    selectPanel
+  },
+  methods: {
+    // 刷新
+    Refresh () {
+      const curTime = this.$refs.calendarPanel.getCurrentTime()
+      this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.getTableData()
+    },
+    // 面板相关操作
+    panelChange (val) {
+      if (!val) {
+        return false
+      }
+      this.filter.searchName = ''
+      // this.$refs.searchInput.select();
+      this.showPanel = val
+      this.filter.panelId = this.showPanel.id
+      // let curTime = this.$refs.calendarPanel.getCurrentTime();
+      const curTime = this.searchTime
+      this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
+      // this.$refs.chartList.initCurrentRecordNum();
+      this.$refs.chartList.cleanData()
+      this.getData(this.filter)
+    },
+
+    del (u) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('panel?ids=' + u.id).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 1000,
+              type: 'success',
+              message: this.$t('tip.deleteSuccess')
+            })
+            this.getTableData(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    edit (u) {
+      this.panel = Object.assign({}, u)
+      this.$refs.panelBox.setTitle(this.$t('dashboard.panel.editPanelTitle'))
+      this.$refs.panelBox.show(true)
+    },
+    toAdd () {
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      this.$refs.panelBox.show(true)
+      this.panel = {
+        id: '',
+        name: ''
+      }
+      this.$refs.panelBox.setTitle(this.$t('dashboard.panel.createPanelTitle'))
+    },
+    panelReload (clearShowPanel) {
+      this.getTableData(clearShowPanel)
+    },
+    refreshTime (st, et) {
+      const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
+      const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm')
+      this.searchTime = [startTime, endTime]
+    },
+    panelReloadForDel: function () {
+      if (this.showPanel.id === this.panel.id) {
+        this.showPanel.id = ''
+      }
+      this.getTableData()
+    },
+    /* 图表相关操作--start */
+    addChart () {
+      this.chart = this.newChart()
+      this.rightBox.chart.show = true
+    },
+    newChart () {
+      return JSON.parse(JSON.stringify(this.blankChart))
+    },
+    // 编辑图表信息,打开编辑弹窗
+    editChart (data) {
+      if (!data.param) {
+        data.param = { url: '', threshold: '' }
+      }
+      this.chart = JSON.parse(JSON.stringify(data))
+      this.rightBox.chart.show = true
+    },
+    closeChartBox (refresh) {
+      this.rightBox.chart.show = false
+      /* if (refresh) {
+
+      } */
+    },
+    closePanelBox (refresh) {
+      this.rightBox.panel.show = false
+      /* if (refresh) {
+
+      } */
+    },
+    // 移除图表:弹出确认框询问
+    delChart (data, from) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('panel/' + data.panelId + '/charts?ids=' + data.id).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 2000,
+              type: 'success',
+              message: this.$t('tip.deleteSuccess')
+            })
+            this.rightBox.chart.show = false
+            const chartList = this.$refs.chartList.dataList
+            for (let i = 0; i < chartList.length; i++) {
+              if (chartList[i].id === data.id) {
+                chartList.splice(i, 1)
+              }
+              // if(data.next != -1){
+              //   if(chartList[i].id === data.next){
+              //     nextChart = chartList[i]
+              //   }
+              // }
+              // if(data.prev != 0){
+              //   if(chartList[i].id === data.prev){
+              //     prevChart = chartList[i]
+              //   }
+              // }
+            }
+            this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
+            // if(nextChart&&prevChart){ //删除图表为中间位置
+            //   prevChart.next = nextChart.id;
+            //   nextChart.prev = prevChart.id;
+            // }else{
+            //   if(!nextChart) prevChart.next = -1;
+            //   if(!prevChart) nextChart.prev = 0;
+            // }
+            // this.getTableData(); //删除相关图表后，刷新面板数据
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    delChartOk () {
+      this.filter.panelId = this.showPanel.id
+      this.getData(this.filter)
+    },
+    // 图表创建成功，回调panel页面，进行图表的刷新
+    createSuccess (msg, data, params, panel) {
+      this.filter.panelId = this.showPanel.id
+      this.getData(this.filter)
+    },
+    // 获取数据,用在子页面
+    getData (params) {
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      if (params.start_time === '' || params.end_time === '') {
+        const now = bus.getTimezontDateRange()
+        const endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss')
+        const startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss')
+        params.start_time = startTimeTmp
+        params.end_time = endTimeTmp
+      }
+      if (this.$refs.chartList) {
+        this.$refs.chartList.initData(params)
+      }
+      // this.panelReloadOnlyPanel();
+    },
+
+    /* 图表相关操作--end */
+    /* 时间条件查询--start */
+    // 选择日期变化
+    dateChange (val) {
+      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.panelId = this.showPanel.id
+      this.getTableData()
+      this.getData(this.filter)
+    },
+    setSearchTime (type, val) { // 设置searchTime
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'd')
+      }
+      this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
+    },
+    /* 时间条件查询--end */
+    // 公用操作
+    jumpTo (data, id) {
+      bus.$emit('menu-change', data)
+      this.$router.push({
+        path: '/' + data,
+        query: {
+          t: +new Date()
+        }
+      })
+    },
+    panelReloadOnlyPanel () { // 仅刷新panel数据
+      if (!this.hasButton('panel_view')) {
+        return
+      }
+      this.$get('panel').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+          for (let i = 0; i < this.panelData.length; i++) {
+            if (this.panelData[i].id == this.showPanel.id) {
+              this.showPanel.name = this.panelData[i].name
+              break
+            }
+          }
+        }
+      })
+    },
+
+    getTableData (clearShowPanel) {
+      const vm = this
+
+      this.$get('panel?type=dashboard').then(response => {
+        if (response.code === 200) {
+          this.panelData = response.data.list
+          let isInitData = false
+          if (response.data.list.length > 0) {
+            if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
+              this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel))
+            }
+            if (clearShowPanel) {
+              this.showPanel.id = ''
+            }
+            if (!this.showPanel.id) {
+              this.showPanel = response.data.list[0]
+              this.filter.panelId = this.showPanel.id
+              this.getData(this.filter)
+              isInitData = true
+            } else {
+              handler(response.data.list)
+              this.filter.panelId = this.showPanel.id
+            }
+            this.$nextTick(() => {
+              this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+            })
+          } else {
+            this.showPanel.id = ''
+            this.filter.panelId = ''
+          }
+          this.pageObj.total = response.data.total
+          if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
+            this.getData(this.filter)
+          }
+          this.$store.state.showPanel.id = 0
+          this.$store.state.showPanel.name = ''
+          this.$store.state.showPanel.type = 'dashboard'
+        } else {
+          if (response.msg) {
+            this.$message.error(response.msg)
+          } else if (response.error) {
+            this.$message.error(response.error)
+          } else {
+            this.$message.error(response)
+          }
+        }
+      }).catch((error) => {
+        // console.log('error................'+JSON.stringify(error));
+        if (error) {
+          console.error(error)
+          this.$message.error(error.toString())
+        }
+      })
+
+      function handler (panelData) {
+        panelData.forEach(panel => {
+          if (panel.id == vm.showPanel.id) {
+            vm.showPanel = panel
+          } else {
+            if (panel.children && panel.children.length > 0) {
+              handler(panel.children)
+            }
+          }
+        })
       }
     },
-    components: {
-      'chart-box': ChartBox,
-      'chart-list': ChartList,
-      'time-picker':timePicker,
-      draggable,
-      'pick-time':pickTime,
-      'export-excel':exportXLSX,
-      selectPanel,
+    // 定期刷新
+    selectInterval (val) {
+      this.visible = false
+      clearInterval(this.intervalTimer)
+      if (val) {
+        this.interval = val
+        const start = new Date(this.searchTime[1])
+        const now = new Date()
+        const interval = Math.floor((now.getTime() - start.getTime()) / 1000) // 计算当前结束时间到现在的间隔（秒）
+        if (interval >= 60) { // 如果结束时间到现在超过1分钟，则
+          this.getIntervalData(interval)
+        }
+        this.intervalTimer = setInterval(() => {
+          this.getIntervalData(this.interval)
+        }, val * 1000)
+      }
     },
-    methods: {
-      //刷新
-      Refresh() {
-        let curTime = this.$refs.calendarPanel.getCurrentTime();
-        this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss');
-        this.getTableData();
-      },
-      //面板相关操作
-      panelChange(val) {
-        if (!val) {
-          return false;
-        }
-        this.filter.searchName='';
-        //this.$refs.searchInput.select();
-        this.showPanel = val;
-        this.filter.panelId = this.showPanel.id;
-        // let curTime = this.$refs.calendarPanel.getCurrentTime();
-        let curTime=this.searchTime;
-        this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss');
-        //this.$refs.chartList.initCurrentRecordNum();
-        this.$refs.chartList.cleanData();
-        this.getData(this.filter);
-      },
-
-      del(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.$message({
-                duration: 1000,
-                type: 'success',
-                message: this.$t("tip.deleteSuccess")
-              });
-              this.getTableData(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      edit(u) {
-        this.panel = Object.assign({}, u);
-        this.$refs.panelBox.setTitle(this.$t("dashboard.panel.editPanelTitle"));
-        this.$refs.panelBox.show(true);
-      },
-      toAdd() {
-        if (!this.hasButton('panel_view')) {
-          return;
-        }
-        this.$refs.panelBox.show(true);
-        this.panel = {
-          id: '',
-          name: ''
-        };
-        this.$refs.panelBox.setTitle(this.$t("dashboard.panel.createPanelTitle"));
-      },
-      panelReload(clearShowPanel) {
-        this.getTableData(clearShowPanel);
-      },
-      refreshTime(st, et) {
-        const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm');
-        const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm');
-        this.searchTime = [startTime, endTime];
-      },
-      panelReloadForDel: function () {
-        if (this.showPanel.id === this.panel.id) {
-          this.showPanel.id = '';
-        }
-        this.getTableData();
-      },
-      /*图表相关操作--start*/
-      addChart() {
-        this.chart = this.newChart();
-        this.rightBox.chart.show = true;
-      },
-      newChart() {
-        return JSON.parse(JSON.stringify(this.blankChart));
-      },
-      // 编辑图表信息,打开编辑弹窗
-      editChart(data) {
-        if (!data.param) {
-          data.param = {url: '', threshold: '',};
-        }
-        this.chart = JSON.parse(JSON.stringify(data));
-        this.rightBox.chart.show = true;
-      },
-      closeChartBox(refresh) {
-        this.rightBox.chart.show = false;
-        if (refresh) {
-
-        }
-      },
-      closePanelBox(refresh) {
-        this.rightBox.panel.show = false;
-        if (refresh) {
-
-        }
-      },
-      // 移除图表:弹出确认框询问
-      delChart(data,from) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel/" + data.panelId + "/charts?ids=" + data.id).then(response => {
-            if (response.code === 200) {
-              this.$message({
-                duration: 2000,
-                type: 'success',
-                message: this.$t("tip.deleteSuccess")
-              });
-              this.rightBox.chart.show = false;
-              let chartList=this.$refs.chartList.dataList;
-              let nextChart=null,prevChart=null
-              for (let i =0;i< chartList.length;i++){
-                if(chartList[i].id === data.id){
-                  chartList.splice(i,1);
-                }
-                // if(data.next != -1){
-                //   if(chartList[i].id === data.next){
-                //     nextChart = chartList[i]
-                //   }
-                // }
-                // if(data.prev != 0){
-                //   if(chartList[i].id === data.prev){
-                //     prevChart = chartList[i]
-                //   }
-                // }
-              }
-              this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop);
-              // if(nextChart&&prevChart){ //删除图表为中间位置
-              //   prevChart.next = nextChart.id;
-              //   nextChart.prev = prevChart.id;
-              // }else{
-              //   if(!nextChart) prevChart.next = -1;
-              //   if(!prevChart) nextChart.prev = 0;
-              // }
-              // this.getTableData(); //删除相关图表后，刷新面板数据
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      delChartOk() {
-        this.filter.panelId = this.showPanel.id;
-        this.getData(this.filter);
-      },
-      // 图表创建成功，回调panel页面，进行图表的刷新
-      createSuccess(msg, data, params, panel) {
-        this.filter.panelId = this.showPanel.id;
-        this.getData(this.filter);
-      },
-      // 获取数据,用在子页面
-      getData(params) {
-        if (!this.hasButton('panel_view')) {
-          return;
-        }
-        if (params.start_time === '' || params.end_time === '') {
-          let now = bus.getTimezontDateRange();
-          let endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss');
-          let startTimeTmp = bus.timeFormate(now[0].getTime(), 'yyyy-MM-dd hh:mm:ss');
-          params.start_time = startTimeTmp;
-          params.end_time = endTimeTmp;
-        }
-        if(this.$refs.chartList){
-          this.$refs.chartList.initData(params);
-        }
-        //this.panelReloadOnlyPanel();
-      },
-
-      /*图表相关操作--end*/
-      /*时间条件查询--start*/
-      // 选择日期变化
-      dateChange(val) {
-        let nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType;
-        this.setSearchTime(nowTimeType.type,nowTimeType.value);
-        this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss');
-        this.filter.panelId = this.showPanel.id;
-        this.getTableData();
-        this.getData(this.filter);
-      },
-      setSearchTime(type,val){//设置searchTime
-        if(type==='minute'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.searchTime, 0, startTime);
-          this.$set(this.searchTime, 1, endTime);
-          this.$set(this.searchTime, 2, val + "m");
-        }else if(type==='hour'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.searchTime, 0, startTime);
-          this.$set(this.searchTime, 1, endTime);
-          this.$set(this.searchTime, 2, val + "h");
-        }else if(type==='date'){
-          let startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val),'yyyy-MM-dd hh:mm:ss');
-          let endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())),'yyyy-MM-dd hh:mm:ss');
-          this.$set(this.searchTime, 0, startTime);
-          this.$set(this.searchTime, 1, endTime);
-          this.$set(this.searchTime, 2, val + "d");
-        }
-        this.$refs.pickTime.$refs.timePicker.searchTime=this.searchTime;
-      },
-      /*时间条件查询--end*/
-      //公用操作
-      jumpTo(data, id) {
-        bus.$emit("menu-change", data);
-        this.$router.push({
-          path: "/" + data,
-          query: {
-            t: +new Date()
-          }
-        });
-      },
-      panelReloadOnlyPanel() { //仅刷新panel数据
-        if (!this.hasButton('panel_view')) {
-          return;
-        }
-        this.$get('panel').then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list;
-            for (let i = 0; i < this.panelData.length; i++) {
-              if (this.panelData[i].id == this.showPanel.id) {
-                this.showPanel.name = this.panelData[i].name;
-                break;
-              }
-            }
-          }
-        });
-      },
-
-      getTableData(clearShowPanel) {
-        let vm = this;
-
-        this.$get('panel?type=dashboard').then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list;
-            let isInitData = false;
-            if (response.data.list.length > 0) {
-              if (this.$store.state.showPanel.id > 0 && this.$store.state.showPanel.name) {
-                this.showPanel = JSON.parse(JSON.stringify(this.$store.state.showPanel));
-              }
-              if (clearShowPanel) {
-                this.showPanel.id = '';
-              }
-              if (!this.showPanel.id) {
-                this.showPanel = response.data.list[0];
-                this.filter.panelId = this.showPanel.id;
-                this.getData(this.filter);
-                isInitData = true;
-              }else{
-                handler(response.data.list);
-                this.filter.panelId = this.showPanel.id;
-              }
-              this.$nextTick(() => {
-                this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel);
-              });
-            } else {
-              this.showPanel.id = '';
-              this.filter.panelId = '';
-            }
-            this.pageObj.total = response.data.total;
-            if (!isInitData &&(this.panel.id === '' || this.panel.id === this.showPanel.id)) {
-              this.getData(this.filter);
-            }
-            this.$store.state.showPanel.id = 0;
-            this.$store.state.showPanel.name = '';
-            this.$store.state.showPanel.type = 'dashboard';
-          }else {
-            if(response.msg){
-              this.$message.error(response.msg);
-            }else if(response.error){
-              this.$message.error(response.error);
-            }else {
-              this.$message.error(response);
-            }
-          }
-        }).catch((error) => {
-          //console.log('error................'+JSON.stringify(error));
-          if (error) {
-            console.error(error);
-            this.$message.error(error.toString());
-          }
-        });
-
-        function handler(panelData) {
-          panelData.forEach(panel => {
-            if (panel.id == vm.showPanel.id) {
-              vm.showPanel = panel;
-            } else {
-              if (panel.children && panel.children.length > 0) {
-                handler(panel.children)
-              }
-            }
-          });
-        }
-      },
-      //定期刷新
-      selectInterval(val) {
-
-        this.visible = false;
-        clearInterval(this.intervalTimer);
-        if (val) {
-          this.interval = val;
-          const start = new Date(this.searchTime[1]);
-          const now = new Date();
-          const interval = Math.floor((now.getTime() - start.getTime()) / 1000); //计算当前结束时间到现在的间隔（秒）
-          if (interval >= 60) { //如果结束时间到现在超过1分钟，则
-            this.getIntervalData(interval);
-          }
-          this.intervalTimer = setInterval(() => {
-            this.getIntervalData(this.interval);
-          }, val * 1000);
-        }
-      },
-      getIntervalData(interval) { //interval:结束时间到现在的秒数
-        const start = new Date(this.searchTime[0]);
-        const end = new Date(this.searchTime[1]);
-        start.setSeconds(start.getSeconds() + interval);
-        end.setSeconds(end.getSeconds() + interval);
-        const startTime = bus.timeFormate(start, 'yyyy-MM-dd hh:mm');
-        const endTime = bus.timeFormate(end, 'yyyy-MM-dd hh:mm');
-        this.searchTime = [startTime, endTime];
-        //刷新数据
-        this.dateChange();
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        this.getTableData();
-      },
-      search:function(){
-        if(this.$refs.chartList){
-          this.$refs.chartList.searchCharts(this.filter.searchName);
-        }
-      },
-      // 滚动事件触发下拉加载
-      onScroll() {
-        let _self = this;
-        this.scrollbarWrap.addEventListener('scroll', bus.debounce(function() {
-          _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50;
-          _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop);
-        }, 300));
-      },
-      focusInput() {
-        let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
-        classVal=classVal.replace('query-input-inactive','query-input-active');
-        document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
-        this.$refs.queryPanel.focus();
-      },
-      blurInput() {
-        if(!this.filter.searchName || this.filter.searchName == ''){
-          setTimeout(function(){
-            let classVal=document.getElementById('queryPanel').parentElement.getAttribute("class");
-            classVal=classVal.replace('query-input-active','query-input-inactive');
-            document.getElementById('queryPanel').parentElement.setAttribute("class",classVal );
-          },100)
-        }
-      },
-      clearInput() {
-        this.$refs.queryPanel.focus();
-      },
-      /*start (event) {
+    getIntervalData (interval) { // interval:结束时间到现在的秒数
+      const start = new Date(this.searchTime[0])
+      const end = new Date(this.searchTime[1])
+      start.setSeconds(start.getSeconds() + interval)
+      end.setSeconds(end.getSeconds() + interval)
+      const startTime = bus.timeFormate(start, 'yyyy-MM-dd hh:mm')
+      const endTime = bus.timeFormate(end, 'yyyy-MM-dd hh:mm')
+      this.searchTime = [startTime, endTime]
+      // 刷新数据
+      this.dateChange()
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      this.getTableData()
+    },
+    search: function () {
+      if (this.$refs.chartList) {
+        this.$refs.chartList.searchCharts(this.filter.searchName)
+      }
+    },
+    // 滚动事件触发下拉加载
+    onScroll () {
+      const _self = this
+      this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
+        _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
+        _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+      }, 300))
+    },
+    focusInput () {
+      let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
+      classVal = classVal.replace('query-input-inactive', 'query-input-active')
+      document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
+      this.$refs.queryPanel.focus()
+    },
+    blurInput () {
+      if (!this.filter.searchName || this.filter.searchName == '') {
+        setTimeout(function () {
+          let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
+          classVal = classVal.replace('query-input-active', 'query-input-inactive')
+          document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
+        }, 100)
+      }
+    },
+    clearInput () {
+      this.$refs.queryPanel.focus()
+    },
+    /* start (event) {
         // console.log('start', event, this.panelData);
 
         event.item.querySelector('.panelContent').style.background = '#d8dce1';
@@ -725,8 +719,8 @@
         let panelContent = dragClass.querySelector('.panelContent');
         panelContent.style.background = '#d8dce1';
 
-      },*/
-      /*filterPanelFocus:function(e){
+      }, */
+    /* filterPanelFocus:function(e){
         e.stopPropagation();
       },
       filterPanelFunc:function(){
@@ -736,42 +730,42 @@
         }else{
           this.showPanelList = this.panelData;
         }
-      },*/
-      tableListEnter(){
-        this.tableHover = true;
-      },
-      tableListLeave(){
-        this.tableHover = false;
-      },
-
+      }, */
+    tableListEnter () {
+      this.tableHover = true
     },
-    created() {
-      this.getTableData();
-    },
-    mounted() {
-      this.scrollbarWrap = this.$refs.dashboardScrollbar;
-      this.onScroll();
-      document.querySelector("#tableList").addEventListener("mouseenter", this.tableListEnter);
-      document.querySelector("#tableList").addEventListener("mouseleave", this.tableListLeave);
-    },
-    watch: {
-      'filter.searchName': function(n,o){
-        let temp=this;
-        setTimeout(function(){
-          temp.search();
-        },1000)
-      },
-    },
-    beforeDestroy(){
-      if(document.querySelector("#tableList")){
-        document.querySelector("#tableList").removeEventListener("mouseenter", this.tableListEnter);
-        document.querySelector("#tableList").removeEventListener("mouseleave", this.tableListLeave);
-      }
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+    tableListLeave () {
+      this.tableHover = false
     }
+
+  },
+  created () {
+    this.getTableData()
+  },
+  mounted () {
+    this.scrollbarWrap = this.$refs.dashboardScrollbar
+    this.onScroll()
+    document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
+    document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
+  },
+  watch: {
+    'filter.searchName': function (n, o) {
+      const temp = this
+      setTimeout(function () {
+        temp.search()
+      }, 1000)
+    }
+  },
+  beforeDestroy () {
+    if (document.querySelector('#tableList')) {
+      document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
+      document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
+    }
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
   }
+}
 </script>
 <style scoped lang="scss">
   .panel {

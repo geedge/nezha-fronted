@@ -120,181 +120,181 @@
 </template>
 
 <script>
-  import chartDataFormat from "../../charts/chartDataFormat";
-  import promqlInput from "../../page/dashboard/explore/promqlInput";
-  import { nzNumber} from "../js/validate";
-  export default {
-    name: "alertConfigBox",
-    props: {
-      alertRule: Object
-    },
-    components: {
-      'promql-input': promqlInput,
-    },
-    data() {
-      return {
-        promqlCount: 1,
-        promqlKeys: [0],
-        expressions: [''],
-        legends: [''],
+import chartDataFormat from '../../charts/chartDataFormat'
+import promqlInput from '../../page/dashboard/explore/promqlInput'
+import { nzNumber } from '../js/validate'
+export default {
+  name: 'alertConfigBox',
+  props: {
+    alertRule: Object
+  },
+  components: {
+    'promql-input': promqlInput
+  },
+  data () {
+    return {
+      promqlCount: 1,
+      promqlKeys: [0],
+      expressions: [''],
+      legends: [''],
 
-        editAlertRule: {},
-        rules:{
-          alertName:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'}
-          ],
-          expr:[
-            {required:true,message:this.$t('validate.required'),trigger:'change'}
-          ],
-          last:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-            {type:'number',message:this.$t('validate.number')}
-          ],
-          severity:[
-            {required:true,message:this.$t('validate.required'),trigger:'change'},
-          ],
-          summary:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-          ],
-          operator:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-          ],
-          unit:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-          ],
-          threshold:[
-            {required:true,message:this.$t('validate.required'),trigger:'blur'},
-            {validator:nzNumber,trigger: 'blur'}
-          ],
-        },
-        operators:[
-          {
-            label:'==',
-            value:'=='
-          },
-          {
-            label:'!=',
-            value:'!='
-          },
-          {
-            label:'>',
-            value:'>'
-          },
-          {
-            label:'<',
-            value:'<'
-          },
-          {
-            label:'>=',
-            value:'>='
-          },
-          {
-            label:'<=',
-            value:'<='
-          },
+      editAlertRule: {},
+      rules: {
+        alertName: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        unitOptions: chartDataFormat.unitOptions(),
+        expr: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        last: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { type: 'number', message: this.$t('validate.number') }
+        ],
+        severity: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        summary: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        operator: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        unit: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        threshold: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: nzNumber, trigger: 'blur' }
+        ]
+      },
+      operators: [
+        {
+          label: '==',
+          value: '=='
+        },
+        {
+          label: '!=',
+          value: '!='
+        },
+        {
+          label: '>',
+          value: '>'
+        },
+        {
+          label: '<',
+          value: '<'
+        },
+        {
+          label: '>=',
+          value: '>='
+        },
+        {
+          label: '<=',
+          value: '<='
+        }
+      ],
+      unitOptions: chartDataFormat.unitOptions(),
 
-        userData: [],
-      }
+      userData: []
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
     },
-    methods: {
-      clickOutside() {
-        this.esc(false);
-      },
-      esc(refresh) {
-        this.prevent_opt.save=false;
-        this.$emit("close", refresh);
-      },
-      save() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.editAlertRule.expr = this.expressions[0];
-        this.$refs.alertRuleForm.validate((valid) => {
-          if (valid) {
-            this.editAlertRule.receiver = this.editAlertRule.receiverShow.join(",");
-            if (this.editAlertRule.id) {
-              this.$put('alert/rule', this.editAlertRule).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('alert/rule', this.editAlertRule).then(response => {
-                this.prevent_opt.save=false;
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            this.prevent_opt.save=false;
-            return false;
-          }
-        })
-      },
-      del() {
-        if(this.prevent_opt.save){ return } ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("alert/rule?ids=" + this.editAlertRule.id).then(response => {
-            this.prevent_opt.save=false;
-            if (response.code === 200) {
-              this.$message({type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      getUserList() {
-        this.$get('sys/user/list', {pageNo: 1, pageSize: -1}).then(response => {
-          if (response.code == 200) {
-            this.userData = response.data.list;
-          }
-        })
-      },
-      metricChange(val){
-        this.editAlertRule.expr=val;
-      }
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
     },
-    mounted() {
-      this.getUserList();
-    },
-    watch: {
-      alertRule: {
-        deep: true,
-        immediate: true,
-        handler(n, o) {
-          this.editAlertRule = JSON.parse(JSON.stringify(n));
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.editAlertRule.expr = this.expressions[0]
+      this.$refs.alertRuleForm.validate((valid) => {
+        if (valid) {
+          this.editAlertRule.receiver = this.editAlertRule.receiverShow.join(',')
           if (this.editAlertRule.id) {
-            this.expressions = [this.editAlertRule.expr];
-            this.$nextTick(() => {
-              this.expressions.forEach((ex, index) => {
-                if (ex) {
-                  this.$refs.promql.metricChange(ex);
-                }
-              });
-            });
+            this.$put('alert/rule', this.editAlertRule).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          } else {
+            this.$post('alert/rule', this.editAlertRule).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    del () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('alert/rule?ids=' + this.editAlertRule.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    getUserList () {
+      this.$get('sys/user/list', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.userData = response.data.list
+        }
+      })
+    },
+    metricChange (val) {
+      this.editAlertRule.expr = val
+    }
+  },
+  mounted () {
+    this.getUserList()
+  },
+  watch: {
+    alertRule: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        this.editAlertRule = JSON.parse(JSON.stringify(n))
+        if (this.editAlertRule.id) {
+          this.expressions = [this.editAlertRule.expr]
+          this.$nextTick(() => {
+            this.expressions.forEach((ex, index) => {
+              if (ex) {
+                this.$refs.promql.metricChange(ex)
+              }
+            })
+          })
         }
       }
     }
   }
+}
 </script>
 <style>
   .unit-popper-class{

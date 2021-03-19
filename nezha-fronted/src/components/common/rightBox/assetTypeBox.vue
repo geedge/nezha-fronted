@@ -79,128 +79,129 @@
   </div>
 </template>
 <script>
-  import selectAssetType from '../popBox/selectAssetType';
-  export default {
-    name: "asset-type-right-box",
-    props: {
-      assetType: Object,
-      assetTypeData: Array, // 所有数据，用于选择下拉框显示内容
-    },
-    components: {
-      selectAssetType
-    },
-    mounted() {
-      this.assetTypeData2 = [...this.assetTypeData];
-      this.setDisabled(this.assetTypeData2);
-    },
-    data() {
-      return {
-        rules: { //表单校验规则
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-        },
-        assetTypeData2: [],
-        editAssetType: {},
-        showParentAssetType: {},
-      }
-    },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
+import selectAssetType from '../popBox/selectAssetType'
+export default {
+  name: 'asset-type-right-box',
+  props: {
+    assetType: Object,
+    assetTypeData: Array // 所有数据，用于选择下拉框显示内容
+  },
+  components: {
+    selectAssetType
+  },
+  mounted () {
+    this.assetTypeData2 = [...this.assetTypeData]
+    this.setDisabled(this.assetTypeData2)
+  },
+  data () {
+    return {
+      rules: { // 表单校验规则
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
       },
-      clickOutside() {
-        this.esc(false);
-      },
-      setDisabled(data, flag) {
-        data.forEach(t => {
-          if (t.id == this.assetType.id || flag) {
-            this.$set(t, "disabled", true);
-            this.setDisabled(t.children, true);
+      assetTypeData2: [],
+      editAssetType: {},
+      showParentAssetType: {}
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    setDisabled (data, flag) {
+      data.forEach(t => {
+        if (t.id == this.assetType.id || flag) {
+          this.$set(t, 'disabled', true)
+          this.setDisabled(t.children, true)
+        } else {
+          this.$set(t, 'disabled', false)
+          this.setDisabled(t.children)
+        }
+      })
+    },
+    clearParent () {
+      this.showParentAssetType = { name: '', id: '' }
+    },
+    /* 保存 */
+    save () {
+      this.$refs.assetTypeForm.validate((valid) => {
+        if (valid) {
+          this.showParentAssetType.id && (this.editAssetType.pid = this.showParentAssetType.id)
+          if (this.assetType.id) {
+            this.$put('/asset/typeConf', this.editAssetType).then(response => {
+              if (response.code === 200) {
+                this.esc(true)
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           } else {
-            this.$set(t, "disabled", false);
-            this.setDisabled(t.children);
+            this.$post('/asset/typeConf', this.editAssetType).then(response => {
+              if (response.code === 200) {
+                this.esc(true)
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
           }
-        });
-      },
-      clearParent() {
-        this.showParentAssetType = {name: "", id: ""};
-      },
-      /*保存*/
-      save() {
-        this.$refs.assetTypeForm.validate((valid) => {
-          if (valid) {
-            this.showParentAssetType.id && (this.editAssetType.pid = this.showParentAssetType.id);
-            if (this.assetType.id) {
-              this.$put('/asset/typeConf', this.editAssetType).then(response => {
-                if (response.code === 200) {
-                  this.esc(true);
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {
-              this.$post('/asset/typeConf', this.editAssetType).then(response => {
-                if (response.code === 200) {
-                  this.esc(true);
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            return false;
-          }
-        });
-      },
-      selectParent(val) {
-        if (!val) {
-          return false;
+        } else {
+          return false
         }
-        this.showParentAssetType = val;
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("/asset/typeConf?ids=" + this.editAssetType.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }).catch(()=>{
-        });
-      },
-      findParent(data, pid) {
-        for (let i = 0; i < data.length; i++) {
-          return data[i].id == pid ? {...data[i]} : this.findParent(data[i].children, pid);
+      })
+    },
+    selectParent (val) {
+      if (!val) {
+        return false
+      }
+      this.showParentAssetType = val
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/asset/typeConf?ids=' + this.editAssetType.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+      })
+    },
+    findParent (data, pid) {
+      // eslint-disable-next-line no-unreachable-loop
+      for (let i = 0; i < data.length; i++) {
+        return data[i].id == pid ? { ...data[i] } : this.findParent(data[i].children, pid)
+      }
+    }
+  },
+  watch: {
+    assetType: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.editAssetType = JSON.parse(JSON.stringify(n))
+          if (this.editAssetType.pid != 0) {
+            this.showParentAssetType = this.findParent(this.assetTypeData, this.editAssetType.pid)
+          }
         }
       }
-    },
-    watch: {
-      assetType: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          if (n) {
-            this.editAssetType = JSON.parse(JSON.stringify(n));
-            if (this.editAssetType.pid != 0) {
-              this.showParentAssetType = this.findParent(this.assetTypeData, this.editAssetType.pid);
-            }
-          }
-        }
-      },
-    },
+    }
   }
+}
 </script>
 <style lang="scss">
   .right-box-asset-type {

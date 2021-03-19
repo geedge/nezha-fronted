@@ -152,7 +152,7 @@
                   <el-tooltip placement="top" effect="light" popper-class="tags-pop transparent-pop">
                     <div slot="content">
                       <template v-if="scope.row[item.prop]">
-                        <div class="tab-tags-item" v-for="(value, key, index) in scope.row[item.prop]">
+                        <div v-for="(value, key, index) in scope.row[item.prop]" :key="index" class="tab-tags-item">
                           <div class="tag-item-key">{{key}}</div>
                           <div class="tag-item-value">{{value}}</div>
                         </div>
@@ -219,369 +219,365 @@
 </template>
 
 <script>
-  import subBox from "./subBox";
-  import loading from "../../loading";
-  import vm from "../../../../main";
-  export default {
-    name: "assetConfigTab",
-    components:{
-      'sub-box':subBox,
-      'loading':loading,
+import subBox from './subBox'
+import loading from '../../loading'
+export default {
+  name: 'assetConfigTab',
+  components: {
+    'sub-box': subBox,
+    loading: loading
+  },
+  props: {
+    index: {},
+    postAssetList: { type: Array, required: true },
+    assetSetting: { type: Object },
+    validateRepeatFunc: { type: Function }
+  },
+  data () {
+    return {
+      assetList: [],
+      assetValidate: false,
+      hostRepeat: false,
+      hostInvalid: false,
+      hostEmpty: false,
+      refreshTab: true,
+      tableLabels: [
+        {
+          label: 'ifIndex',
+          prop: 'ifindex',
+          width: 100,
+          required: true,
+          errRows: []
+        },
+        {
+          label: 'ifDescr',
+          prop: 'ifdescr',
+          width: 150,
+          required: false,
+          errRows: []
+        },
+        {
+          label: this.$t('config.dc.traffic.direction'),
+          prop: 'direction',
+          width: 200,
+          required: true,
+          errRows: []
+        },
+        {
+          label: this.$t('config.dc.traffic.tags'),
+          prop: 'tags',
+          required: false,
+          errRows: []
+        }
+      ],
+      ifIndexList: [],
+      ifDescMap: new Map(),
+      editTagsBox: { show: false, top: 0, left: 0 }, // param编辑弹框
+      tempTagsObj: [],
+      showTags: [],
+      showTagInput: false,
+      newTag: { key: '', value: '' },
+      hostTimer: null,
+      ifIndexError: false
+    }
+  },
+  created () {
+    this.assetList = Object.assign([], this.postAssetList)
+    this.showTags = Object.assign([], this.assetSetting.tags)
+  },
+  methods: {
+    clearAssetInput () {
+      this.resetComponet()
     },
-    props:{
-      index:{},
-      postAssetList:{type:Array,required:true},
-      assetSetting:{type:Object},
-      validateRepeatFunc:{type:Function},
+    refreshTabFunc () {
+      this.refreshTab = false
+      this.$nextTick(() => {
+        this.refreshTab = true
+      })
     },
-    data(){
-      return {
-        assetList:[],
-        assetValidate:false,
-        hostRepeat:false,
-        hostInvalid:false,
-        hostEmpty:false,
-        refreshTab:true,
-        tableLabels:[
-          {
-            label:'ifIndex',
-            prop:'ifindex',
-            width:100,
-            required:true,
-            errRows:[],
-          },
-          {
-            label:'ifDescr',
-            prop:'ifdescr',
-            width:150,
-            required:false,
-            errRows:[],
-          },
-          {
-            label:this.$t('config.dc.traffic.direction'),
-            prop:'direction',
-            width:200,
-            required:true,
-            errRows:[],
-          },
-          {
-            label:this.$t('config.dc.traffic.tags'),
-            prop:'tags',
-            required:false,
-            errRows:[],
-          },
-        ],
-        ifIndexList:[],
-        ifDescMap:new Map(),
-        editTagsBox: {show: false, top: 0, left: 0,}, //param编辑弹框
-        tempTagsObj:[],
-        showTags:[],
-        showTagInput:false,
-        newTag:{key:'',value:''},
-        hostTimer:null,
-        ifIndexError:false,
+    resetComponet () {
+      this.ifIndexList = []
+      this.assetSetting.assetId = null
+      this.assetSetting.configs = []
+      this.assetSetting.configs.push({
+        direction: [],
+        ifindex: null,
+        ifdescr: ' ',
+        tags: {},
+        edit: true
+      })
+      this.tableLabels = this.tableLabels.map(item => {
+        item.errRows = []
+        return item
+      })
+    },
+    ifIndexChange (ifIndex, row) {
+      this.$set(row, 'ifdescr', this.ifDescMap.get('ifDescr.' + ifIndex))
+    },
+    assetChanged () {
+      if (!this.assetSetting || this.assetSetting.assetId == null) {
+        return
+      }
+      this.assetValidate = false
+      this.assetSetting.configs = [
+        {
+          direction: [],
+          ifindex: null,
+          ifdescr: ' ',
+          tags: {},
+          edit: true
+        }
+      ]
+      this.queryInterfaceInfos(this.assetSetting.assetId, true)
+    },
+    queryInterfaceInfos (skipCommit = false) {
+      // this.$refs.loading.startLoading();
+      const queryParams = {
+        operation: 'walk',
+        host: this.assetSetting.host,
+        port: this.assetSetting.port,
+        version: this.assetSetting.version,
+        community: this.assetSetting.community,
+        oid: '1.3.6.1.2.1.2.2.1',
+        auth: this.assetSetting.auth
+      }
+      this.$post('/mib/browser', queryParams).then(response => {
+        this.ifIndexList = []
+        this.ifDescMap.clear()
+        if (response.code == 200) {
+          const resultList = response.data.list
+          const ifIndexList = resultList.filter(item => {
+            return /if(?:Index)\.\d+/.test(item.name)
+          })
+
+          this.ifIndexList = ifIndexList.map(item => {
+            return { label: item.value, value: item.value, isOccupy: false }
+          })
+
+          const ifDescrList = resultList.filter(item => {
+            return /if(?:Descr)\.\d+/.test(item.name)
+          })
+          this.ifDescrList = ifDescrList.filter(item => {
+            return this.ifDescMap.set(item.name, item.value)
+          })
+          this.commitAdd(skipCommit)
+          // this.$refs.loading.endLoading();
+        } else {
+          // this.$refs.loading.endLoading();
+          console.error(response)
+          // this.$message.error(response.msg)
+        }
+      })
+    },
+    loadIfIndex (queryString, cb) {
+      let result = Object.assign([], this.ifIndexList)
+      result = result.filter(item => {
+        const temp = this.assetSetting.configs.find(c => {
+          return c.ifindex == item.value
+        })
+        return typeof temp === 'undefined'
+      })
+      cb(result)
+    },
+    queryAssetHosts (queryString, cb) {
+      const param = {
+        pageSize: -1,
+        host: queryString
+      }
+      this.$get('/asset', param).then(response => {
+        if (response.code == 200) {
+          const data = response.data.list
+          const result = data.map(item => {
+            return { label: item.host, value: item.host }
+          })
+          cb(result)
+        } else {
+          cb()
+          console.error(response)
+        }
+      })
+    },
+    popShow () {
+
+    },
+    popHide () {
+      this.queryInterfaceInfos(true)
+    },
+    showInput () {
+      this.showTagInput = true
+    },
+    handleInputConfirm () {
+
+    },
+    ifIndexInputChange (ifindex, row, index) {
+      if (this.ifIndexList && this.ifIndexList.length > 0) {
+        // let temp=this.ifIndexList.find(item=>{
+        //   return item.value == ifindex;
+        // })
+        // if(!temp){
+        //   this.ifIndexError=true;
+        //   return ;
+        // }else{
+        //   this.ifIndexError=false;
+        // }
+        this.ifIndexChange(ifindex, row)
+        const tmp = this.assetSetting.configs.find((item, i) => {
+          return i != index && item.ifindex == ifindex
+        })
+        if (tmp) {
+          this.ifIndexError = true
+        } else {
+          this.ifIndexError = false
+        }
+      } else {
+        this.ifIndexError = false
       }
     },
-    created() {
-      this.assetList=Object.assign([],this.postAssetList);
-      this.showTags=Object.assign([],this.assetSetting.tags)
+    hostInputChange (value) {
+      if (this.hostTimer) {
+        clearTimeout(this.hostTimer)
+      }
+      this.hostTimer = setTimeout(() => {
+        this.validateHostRepeat(value)
+        this.validateHostValid(value)
+        if (!this.hostEmpty && !this.hostRepeat && !this.hostInvalid) {
+          this.queryInterfaceInfos(true)
+        }
+      }, 500)
     },
-    methods:{
-      clearAssetInput:function(){
-        this.resetComponet();
-      },
-      refreshTabFunc:function(){
-        this.refreshTab=false;
-        this.$nextTick(()=>{
-          this.refreshTab=true;
-        });
-      },
-      resetComponet:function(){
-        this.ifIndexList=[];
-        this.assetSetting.assetId=null;
-        this.assetSetting.configs=[];
-        this.assetSetting.configs.push({
-          direction:[],
-          ifindex:null,
-          ifdescr:' ',
-          tags:{},
-          edit:true,
-        })
-        this.tableLabels=this.tableLabels.map(item=>{
-          item.errRows=[];
-          return item;
-        })
-      },
-      ifIndexChange:function(ifIndex,row){
-        this.$set(row,'ifdescr',this.ifDescMap.get('ifDescr.'+ifIndex))
-      },
-      assetChanged:function(){
-        if(!this.assetSetting||this.assetSetting.assetId == null){
-          return ;
-        }
-        this.assetValidate=false;
-        this.assetSetting.configs=[
-          {
-            direction:[],
-            ifindex:null,
-            ifdescr:' ',
-            tags:{},
-            edit:true,
-          }
-        ]
-        this.queryInterfaceInfos(this.assetSetting.assetId,true);
-      },
-      queryInterfaceInfos:function(skipCommit=false){
-        // this.$refs.loading.startLoading();
-        let queryParams={
-          operation:'walk',
-          host:this.assetSetting.host,
-          port:this.assetSetting.port,
-          version:this.assetSetting.version,
-          community:this.assetSetting.community,
-          oid:'1.3.6.1.2.1.2.2.1',
-          auth:this.assetSetting.auth,
-        }
-        this.$post('/mib/browser',queryParams).then(response=>{
-          this.ifIndexList=[];
-          this.ifDescMap.clear();
-          if(response.code == 200){
-            let resultList=response.data.list;
-            let ifIndexList=resultList.filter(item=>{
-              return /if(?:Index)\.\d+/.test(item.name);
-            })
-
-            this.ifIndexList=ifIndexList.map(item=>{
-              return {label:item.value,value:item.value,isOccupy:false};
-            })
-
-            let ifDescrList=resultList.filter(item=>{
-              return /if(?:Descr)\.\d+/.test(item.name);
-            })
-            this.ifDescrList=ifDescrList.filter(item=>{
-              this.ifDescMap.set(item.name,item.value)
-            })
-            this.commitAdd(skipCommit);
-            // this.$refs.loading.endLoading();
-          }else{
-            // this.$refs.loading.endLoading();
-            console.error(response);
-            // this.$message.error(response.msg)
-          }
-        })
-
-      },
-      loadIfIndex:function(queryString,cb){
-        let result=Object.assign([],this.ifIndexList);
-        result=result.filter(item=>{
-          let temp=this.assetSetting.configs.find(c=>{
-            return c.ifindex == item.value;
-          })
-          return typeof temp == "undefined";
-        })
-        cb(result)
-      },
-      queryAssetHosts:function(queryString,cb){
-        let param={
-          pageSize:-1,
-          host:queryString,
-        }
-        this.$get('/asset',param).then(response=>{
-          if(response.code == 200){
-            let data=response.data.list;
-            let result=data.map(item=>{
-              return {label:item.host,value:item.host}
-            })
-            cb(result)
-          }else{
-            cb([]);
-            console.error(response)
-          }
-        })
-      },
-      popShow() {
-
-      },
-      popHide() {
-        this.queryInterfaceInfos(true);
-      },
-      showInput:function(){
-        this.showTagInput=true;
-      },
-      handleInputConfirm:function(){
-
-      },
-      ifIndexInputChange:function(ifindex,row,index){
-        if(this.ifIndexList && this.ifIndexList.length>0){
-          // let temp=this.ifIndexList.find(item=>{
-          //   return item.value == ifindex;
-          // })
-          // if(!temp){
-          //   this.ifIndexError=true;
-          //   return ;
-          // }else{
-          //   this.ifIndexError=false;
-          // }
-          this.ifIndexChange(ifindex,row)
-          let tmp=this.assetSetting.configs.find((item,i)=>{
-            return i != index && item.ifindex == ifindex;
-          })
-          if(tmp){
-            this.ifIndexError=true;
-            return ;
-          }else{
-            this.ifIndexError=false;
-          }
-        }else{
-          this.ifIndexError=false;
-        }
-      },
-      hostInputChange:function(value){
-        if(this.hostTimer){
-          clearTimeout(this.hostTimer);
-        }
-        this.hostTimer=setTimeout(()=>{
-          this.validateHostRepeat(value);
-          this.validateHostValid(value);
-          if(!this.hostEmpty&&!this.hostRepeat&&!this.hostInvalid){
-            this.queryInterfaceInfos(true);
-          }
-        },500)
-      },
-      validateHostEmpty:function(){
-        this.hostEmpty=!this.assetSetting.host||this.assetSetting.host == '';
-      },
-      validateHostValid:function(host){
-        if(host==''){
-          return false
-        }
-        const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
-        if (hostReg.test(host)) {
-          this.hostInvalid=false;
+    validateHostEmpty () {
+      this.hostEmpty = !this.assetSetting.host || this.assetSetting.host == ''
+    },
+    validateHostValid (host) {
+      if (host == '') {
+        return false
+      }
+      const hostReg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\:\d{0,5})?$/
+      if (hostReg.test(host)) {
+        this.hostInvalid = false
+      } else {
+        this.hostInvalid = true
+      }
+    },
+    validateHostRepeat (host) {
+      if (!this.validateRepeatFunc(host, this.index)) {
+        this.hostRepeat = true
+      } else {
+        this.hostRepeat = false
+      }
+    },
+    changeRowEditState (row, column, event) {
+      if (this.validateRows()) {
+        this.commitAdd(false)
+        if (row.edit == true) {
+          this.$set(row, 'edit', false)
         } else {
-          this.hostInvalid=true;
+          this.$set(row, 'edit', true)
         }
-      },
-      validateHostRepeat:function(host){
-        if(!this.validateRepeatFunc(host,this.index)){
-          this.hostRepeat=true;
-        }else{
-          this.hostRepeat=false;
-        }
-      },
-      changeRowEditState:function(row,column,event){
-        if(this.validateRows()){
-          this.commitAdd(false);
-          if(row.edit == true){
-            this.$set(row,'edit',false)
-          }else{
-            this.$set(row,'edit',true)
-          }
-
-        }
-      },
-      validateRows:function(){
-        let validateFlag=true;
-        validateFlag=this.assetSetting && this.assetSetting.host != '' ;
-        if(!validateFlag){
-          this.assetValidate=true;
-          return validateFlag;
-        }
-        this.assetValidate=false
-        this.tableLabels.forEach(item=>{
-          item.errRows=[];
-        })
-        this.assetSetting.configs.forEach((config,index)=>{
-          this.tableLabels.forEach(label=>{
-            let value=config[label.prop]
-            let required=label.required
-            if(required &&(!value || (typeof value =='string' && value == '')||(value instanceof Array && value.length<1))){
-              validateFlag=false
-              label.errRows.push(index) //保存有错误的行的index，通过行列唯一定位有错误的输入框
-            }else{
-              if(label.prop == 'ifindex'){
-                if(this.ifIndexList && this.ifIndexList.length>0) {
-                  let temp = this.ifIndexList.find(item => {
-                    return item.value == value;
-                  })
-                  if(!temp){
-                    validateFlag=false
-                    label.errRows.push(index) //保存有错误的行的index，通过行列唯一定位有错误的输入框
-                  }
+      }
+    },
+    validateRows () {
+      let validateFlag = true
+      validateFlag = this.assetSetting && this.assetSetting.host != ''
+      if (!validateFlag) {
+        this.assetValidate = true
+        return validateFlag
+      }
+      this.assetValidate = false
+      this.tableLabels.forEach(item => {
+        item.errRows = []
+      })
+      this.assetSetting.configs.forEach((config, index) => {
+        this.tableLabels.forEach(label => {
+          const value = config[label.prop]
+          const required = label.required
+          if (required && (!value || (typeof value === 'string' && value == '') || (value instanceof Array && value.length < 1))) {
+            validateFlag = false
+            label.errRows.push(index) // 保存有错误的行的index，通过行列唯一定位有错误的输入框
+          } else {
+            if (label.prop == 'ifindex') {
+              if (this.ifIndexList && this.ifIndexList.length > 0) {
+                const temp = this.ifIndexList.find(item => {
+                  return item.value == value
+                })
+                if (!temp) {
+                  validateFlag = false
+                  label.errRows.push(index) // 保存有错误的行的index，通过行列唯一定位有错误的输入框
                 }
               }
             }
-          })
-        })
-        if(this.ifIndexError){
-          validateFlag=false;
-        }
-        return validateFlag;
-      },
-      isError:function(columnErrRows,rowIndex){
-        return columnErrRows.includes(rowIndex);
-      },
-      commitAdd:function(skipChangeEditState=false){
-        this.resetIfIndexOccupyState();
-        this.assetSetting.configs=this.assetSetting.configs.map((config)=>{
-          if(!skipChangeEditState){
-            this.$set(config,'edit',false)
           }
-          this.changeIfIndexOccupyState(config.ifindex,true);
-          return config
         })
-      },
-      addTabRow:function(){
-        let validateFlag=this.validateRows();
-        if(validateFlag){
-          this.commitAdd();
-          this.assetSetting.configs.push({
-            direction:[],
-            ifindex:null,
-            ifdescr:' ',
-            tags:{},
-            edit:true,
-          })
-        }
-      },
-      delTabRow:function(index,row){
-        if(this.assetSetting.configs.length>1){
-          this.assetSetting.configs.splice(index,1);
-          if(row.edit == true && this.ifIndexError == true){
-            this.ifIndexError=false;
-          }
-          this.changeIfIndexOccupyState(row.ifindex,false)
-        }
-      },
-      resetIfIndexOccupyState:function(){
-        this.ifIndexList=this.ifIndexList.map(item=>{
-          item.isOccupy=false;
-          return item;
-        })
-      },
-      changeIfIndexOccupyState:function(ifindex,state){
-        this.ifIndexList=this.ifIndexList.map(item=>{
-          if(item.value == ifindex){
-            item.isOccupy=state;
-          }
-          return item;
-        })
-      },
-      delSelf:function(){
-        this.$emit('delSelf',this.index)
-      },
-      showEditTagsBox:function(show,index,row,e){
-        if(this.assetSetting.host != '' && row.edit == true){
-          this.$refs.subBox.showEditTagsBox(show,this.assetSetting.configs,index,e);
-        }
-      },
+      })
+      if (this.ifIndexError) {
+        validateFlag = false
+      }
+      return validateFlag
     },
-    mounted() {
-      if(this.assetSetting&&this.assetSetting.host&&this.assetSetting.host != ''){
-        this.queryInterfaceInfos(true);
+    isError (columnErrRows, rowIndex) {
+      return columnErrRows.includes(rowIndex)
+    },
+    commitAdd (skipChangeEditState = false) {
+      this.resetIfIndexOccupyState()
+      this.assetSetting.configs = this.assetSetting.configs.map((config) => {
+        if (!skipChangeEditState) {
+          this.$set(config, 'edit', false)
+        }
+        this.changeIfIndexOccupyState(config.ifindex, true)
+        return config
+      })
+    },
+    addTabRow () {
+      const validateFlag = this.validateRows()
+      if (validateFlag) {
+        this.commitAdd()
+        this.assetSetting.configs.push({
+          direction: [],
+          ifindex: null,
+          ifdescr: ' ',
+          tags: {},
+          edit: true
+        })
+      }
+    },
+    delTabRow (index, row) {
+      if (this.assetSetting.configs.length > 1) {
+        this.assetSetting.configs.splice(index, 1)
+        if (row.edit == true && this.ifIndexError == true) {
+          this.ifIndexError = false
+        }
+        this.changeIfIndexOccupyState(row.ifindex, false)
+      }
+    },
+    resetIfIndexOccupyState () {
+      this.ifIndexList = this.ifIndexList.map(item => {
+        item.isOccupy = false
+        return item
+      })
+    },
+    changeIfIndexOccupyState (ifindex, state) {
+      this.ifIndexList = this.ifIndexList.map(item => {
+        if (item.value == ifindex) {
+          item.isOccupy = state
+        }
+        return item
+      })
+    },
+    delSelf () {
+      this.$emit('delSelf', this.index)
+    },
+    showEditTagsBox (show, index, row, e) {
+      if (this.assetSetting.host != '' && row.edit == true) {
+        this.$refs.subBox.showEditTagsBox(show, this.assetSetting.configs, index, e)
       }
     }
+  },
+  mounted () {
+    if (this.assetSetting && this.assetSetting.host && this.assetSetting.host != '') {
+      this.queryInterfaceInfos(true)
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>

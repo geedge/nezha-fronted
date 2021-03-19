@@ -19,27 +19,27 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "about",
-    data() {
-      return {
-        version: {
-          nezha: {name: "", version: ""},
-          components: [{name: "", version: ""}]
-        }
+export default {
+  name: 'about',
+  data () {
+    return {
+      version: {
+        nezha: { name: '', version: '' },
+        components: [{ name: '', version: '' }]
       }
-    },
-    methods: {
-      getVersion() {
-        this.$get("/about").then(response => {
-          this.version = response.data;
-        });
-      }
-    },
-    mounted() {
-      this.getVersion();
-    },
+    }
+  },
+  methods: {
+    getVersion () {
+      this.$get('/about').then(response => {
+        this.version = response.data
+      })
+    }
+  },
+  mounted () {
+    this.getVersion()
   }
+}
 </script>
 <style scoped lang="scss">
   .about {

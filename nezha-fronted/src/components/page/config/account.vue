@@ -74,7 +74,7 @@
           :prop="item.prop"
           :sort-orders="['ascending', 'descending']"
         >
-          <template slot-scope="scope" slot="header">
+          <template slot="header">
             <span v-if="item.type == 'tag'" class="tag-header" :title="item.label"><span class="tag-value">{{item.label}}</span><span style="color:orange;">&nbsp;[Notification]</span></span>
             <span v-else><span>{{item.label}}</span></span>
           </template>
@@ -86,8 +86,8 @@
             </div>
             <template v-if="item.prop == 'roles'">
               <template v-if="scope.row[item.prop]">
-                <template  v-for="role in scope.row[item.prop]">
-                  <span class="account-role-item" v-if="role">{{role.i18n?$t(role.i18n):role.name}}</span>
+                <template v-for="(role, index) in scope.row[item.prop]">
+                  <span v-if="role" :key="index" class="account-role-item">{{role.i18n?$t(role.i18n):role.name}}</span>
                 </template>
               </template>
               <template v-else>
@@ -110,7 +110,7 @@
           </template>
         </el-table-column>
         <el-table-column width="28" fixed="right">
-          <template slot="header" slot-scope="scope" :resizable="false">
+          <template slot="header" :resizable="false">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
@@ -133,371 +133,370 @@
   </div>
 </template>
 <script>
-  import deleteButton from "../../common/deleteButton";
-  import accountBox from '../../common/rightBox/accountBox';
-  import bus from "../../../libs/bus";
+import deleteButton from '../../common/deleteButton'
+import accountBox from '../../common/rightBox/accountBox'
+import bus from '../../../libs/bus'
 
-  export default {
-    name: "account",
-    components: {
-      'account-box': accountBox,
-      'delete-button':deleteButton,
-    },
-    data() {
-      return {
-        //侧滑
-        rightBox: {
-          show: false,
-        },
-        /*二级页面相关*/
-        bottomBox: {
-          userDetail: {},
-          user: {},
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        batchDeleteObjs:[],
+export default {
+  name: 'account',
+  components: {
+    'account-box': accountBox,
+    'delete-button': deleteButton
+  },
+  data () {
+    return {
+      // 侧滑
+      rightBox: {
+        show: false
+      },
+      /* 二级页面相关 */
+      bottomBox: {
+        userDetail: {},
         user: {},
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
 
-        tableId: 'accountTable', //需要分页的table的id，用于记录每页数量
-        blankUser: { //空白对象
-          userId: '',
-          username: '',
-          email: '',
-          status: '1',
-          createTime: '',
-          receiver: [],
-          roleIds:0,
-          roles:[],
-          lang: '',
-          notifications: []
-        },
-        pageObj: { //分页对象
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [ //原table列
-          {
-            label: 'ID',
-            prop: 'userId',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("config.account.account"),
-            prop: 'username',
-            show: true,
-          }, {
-            label: this.$t("config.account.roles"),
-            prop: 'roles',
-            show: true,
-          }, {
-            label: 'E-mail',
-            prop: 'email',
-            show: true,
-          }, {
-            label: this.$t('config.account.createTime'),
-            prop: 'createTime',
-            show: true,
-          }, {
-            label: this.$t('config.account.enable'),
-            prop: 'status',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120,
-            fixed: "right"
-          }
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 10,
-            name: this.$t('config.account.account'),
-            type: 'input',
-            label: 'username',
-            disabled: false
-          }],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-        delFlag:false,
-        roles:[],
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      batchDeleteObjs: [],
+      user: {},
+
+      tableId: 'accountTable', // 需要分页的table的id，用于记录每页数量
+      blankUser: { // 空白对象
+        userId: '',
+        username: '',
+        email: '',
+        status: '1',
+        createTime: '',
+        receiver: [],
+        roleIds: 0,
+        roles: [],
+        lang: '',
+        notifications: []
+      },
+      pageObj: { // 分页对象
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [ // 原table列
+        {
+          label: 'ID',
+          prop: 'userId',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('config.account.account'),
+          prop: 'username',
+          show: true
+        }, {
+          label: this.$t('config.account.roles'),
+          prop: 'roles',
+          show: true
+        }, {
+          label: 'E-mail',
+          prop: 'email',
+          show: true
+        }, {
+          label: this.$t('config.account.createTime'),
+          prop: 'createTime',
+          show: true
+        }, {
+          label: this.$t('config.account.enable'),
+          prop: 'status',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120,
+          fixed: 'right'
+        }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 10,
+          name: this.$t('config.account.account'),
+          type: 'input',
+          label: 'username',
+          disabled: false
+        }]
+      },
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      delFlag: false,
+      roles: []
+    }
+  },
+  methods: {
+    // 全屏
+    fullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.fullScreen(vm)
+    },
+    // 退出全屏
+    exitFullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.exitFullScreen(vm)
+    },
+    // 鼠标拖动二级列表
+    listResize (e) {
+      const vm = this
+      this.$bottomBoxWindow.listResize(vm, e)
+    },
+    convertToDetail (obj) {
+      const detail = []
+      detail.push({ label: this.$t('config.account.account'), value: obj.username })
+      detail.push({ label: 'E-mail', value: obj.email })
+      const available = obj.status == 1 ? this.$t('tip.yes') : this.$t('tip.no')
+      detail.push({ label: this.$t('config.account.enable'), value: available })
+      detail.push({ label: this.$t('config.account.createTime'), value: obj.createTime })
+      return detail
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.delFlag = true
+        this.getTableData()
       }
     },
-    methods: {
-      // 全屏
-      fullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.fullScreen(vm);
-      },
-      // 退出全屏
-      exitFullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.exitFullScreen(vm);
-      },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let vm = this;
-        this.$bottomBoxWindow.listResize(vm, e);
-      },
-      convertToDetail(obj) {
-        let detail = [];
-        detail.push({label: this.$t("config.account.account"), value: obj.username});
-        detail.push({label: "E-mail", value: obj.email});
-        let available = obj.status == 1 ? this.$t("tip.yes") : this.$t("tip.no");
-        detail.push({label: this.$t("config.account.enable"), value: available});
-        detail.push({label: this.$t("config.account.createTime"), value: obj.createTime});
-        return detail;
-      },
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.delFlag=true;
-          this.getTableData();
-        }
-      },
-      edit(u) {
-        this.user = JSON.parse(JSON.stringify(u));
-        if(!this.user.userId){
-          this.user.roleIds = this.roles.find(t=>t.name == 'common').id;
-        }
-        this.rightBox.show = true;
-      },
-      detail(u) {
-        this.bottomBox.user = JSON.parse(JSON.stringify(u));
-        this.bottomBox.targetTab = "detail";
-        this.bottomBox.showSubList = true;
-      },
-      del(u) {
-        if(u.userId==1&&u.username==='admin'){return}
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/user/delete?userIds=" + u.userId).then(response => {
-            if (response.code === 200) {
-              this.delFlag=true;
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      getTableData() {
-        if (!this.hasButton('account_view')) {
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
-        }
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('sys/user/list', this.searchLabel).then(response => {
-          this.tools.loading = false;
+    edit (u) {
+      this.user = JSON.parse(JSON.stringify(u))
+      if (!this.user.userId) {
+        this.user.roleIds = this.roles.find(t => t.name == 'common').id
+      }
+      this.rightBox.show = true
+    },
+    detail (u) {
+      this.bottomBox.user = JSON.parse(JSON.stringify(u))
+      this.bottomBox.targetTab = 'detail'
+      this.bottomBox.showSubList = true
+    },
+    del (u) {
+      if (u.userId == 1 && u.username === 'admin') { return }
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('sys/user/delete?userIds=' + u.userId).then(response => {
           if (response.code === 200) {
-            for (let i = 0; i < response.data.list.length; i++) {
-              response.data.list[i].status = response.data.list[i].status + "";
-            }
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.accountTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
-          }
-        })
-      },
-      add() {
-        this.user = this.newUser();
-        if(!this.user.userId){
-          this.user.roleIds = this.roles.find(t=>t.name == 'common').id;
-        }
-        this.rightBox.show = true;
-      },
-      statusChange(user) {
-        if(user.roles){
-          user.roleIds=user.roles.map(t=>t.id)
-        }
-        this.$put('sys/user/update', user).then(response => {
-          if (response.code === 200) {
-            this.rightBox.show = false;
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
           } else {
-            this.$message.error(response.msg);
-          }
-          this.getTableData();
-        });
-      },
-      esc() {
-        this.rightBox.show = false;
-      },
-      newUser() {
-        return JSON.parse(JSON.stringify(this.blankUser));
-      },
-      getRoles:function(){
-        this.roles = [];
-        this.$get("sys/role?pageSize=-1").then(response=>{
-          if (response.code  == 200){
-            this.roles = response.data.list;
-          }else{
-            this.$message.error("load roles faild")
+            this.$message.error(response.msg)
           }
         })
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      search(searchObj) {
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
+      })
+    },
+    getTableData () {
+      if (!this.hasButton('account_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('sys/user/list', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.accountTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
           }
         }
-        if(this.$refs.accountTable){
-          this.$refs.accountTable.bodyWrapper.scrollTop = 0;
+      })
+    },
+    add () {
+      this.user = this.newUser()
+      if (!this.user.userId) {
+        this.user.roleIds = this.roles.find(t => t.name == 'common').id
+      }
+      this.rightBox.show = true
+    },
+    statusChange (user) {
+      if (user.roles) {
+        user.roleIds = user.roles.map(t => t.id)
+      }
+      this.$put('sys/user/update', user).then(response => {
+        if (response.code === 200) {
+          this.rightBox.show = false
+          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+        } else {
+          this.$message.error(response.msg)
         }
-        this.getTableData();
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy = '';
-        if(item.order === 'ascending') {
-          orderBy = item.prop;
+        this.getTableData()
+      })
+    },
+    esc () {
+      this.rightBox.show = false
+    },
+    newUser () {
+      return JSON.parse(JSON.stringify(this.blankUser))
+    },
+    getRoles: function () {
+      this.roles = []
+      this.$get('sys/role?pageSize=-1').then(response => {
+        if (response.code == 200) {
+          this.roles = response.data.list
+        } else {
+          this.$message.error('load roles faild')
         }
-        if(item.order === 'descending') {
-          orderBy = '-' + item.prop;
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    search (searchObj) {
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
         }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-      resetTableTitle:function(){
-        let title = this.tools.customTableTitle;
-        let tableTitle = title.slice(0, this.tableTitle.length);
-        let tagTitle = title.slice(this.tableTitle.length, title.length);
-        this.$get("/alert/script?pageNo=1&pageSize=-1").then(response => {
-          let scripts = response.data.list;
-          scripts = scripts.map(item => {
-            return {label: item.name, prop: 'tags', show: false, allowed: true, scriptId: item.id, type: "tag"};
-          });
-          let newTags = scripts.filter(item=>{ return !tagTitle.find(t =>{return item.label == t.label})});
-          let keepTags = tagTitle.filter(item=>{ return scripts.find(t =>{return item.label == t.label})});
-          keepTags.forEach(item => {
-            let script = scripts.find(t =>{return item.label == t.label});
-            item.scriptId = script.scriptId;
-          });
-          let result = tableTitle.concat([{label: this.$t("config.account.notification"), show: false, NotSet: true, type: 'title', prop:'table-tag'}]);
+      }
+      if (this.$refs.accountTable) {
+        this.$refs.accountTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    },
+    resetTableTitle: function () {
+      const title = this.tools.customTableTitle
+      const tableTitle = title.slice(0, this.tableTitle.length)
+      const tagTitle = title.slice(this.tableTitle.length, title.length)
+      this.$get('/alert/script?pageNo=1&pageSize=-1').then(response => {
+        let scripts = response.data.list
+        scripts = scripts.map(item => {
+          return { label: item.name, prop: 'tags', show: false, allowed: true, scriptId: item.id, type: 'tag' }
+        })
+        const newTags = scripts.filter(item => { return !tagTitle.find(t => { return item.label == t.label }) })
+        const keepTags = tagTitle.filter(item => { return scripts.find(t => { return item.label == t.label }) })
+        keepTags.forEach(item => {
+          const script = scripts.find(t => { return item.label == t.label })
+          item.scriptId = script.scriptId
+        })
+        let result = tableTitle.concat([{ label: this.$t('config.account.notification'), show: false, NotSet: true, type: 'title', prop: 'table-tag' }])
 
-          result = result.concat(keepTags).concat(newTags);
-          this.tools.customTableTitle = JSON.parse(JSON.stringify(result));
-        });
-        /*let scripts = [
+        result = result.concat(keepTags).concat(newTags)
+        this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
+      })
+      /* let scripts = [
           {id: 1, name: "DOLBY"},
           {id: 2, name: "IMAX"},
           {id: 3, name: "CGS"},
           {id: 4, name: "LUXE"},
           {id: 5, name: "DST:X"},
-        ];*/
-      },
-      filterTags(head, scope) {
-        if (scope.row.notifications) {
-          let notification = scope.row.notifications.find(item => {
-            return head.scriptId === item.scriptId;
-          });
-          if (notification) {
-            return notification.account;
-          }
+        ]; */
+    },
+    filterTags (head, scope) {
+      if (scope.row.notifications) {
+        const notification = scope.row.notifications.find(item => {
+          return head.scriptId === item.scriptId
+        })
+        if (notification) {
+          return notification.account
         }
       }
-    },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
-    },
-    computed: {
-      isCurrentUser() {
-        return function(username) {
-          return localStorage.getItem('nz-username') == username;
-        }
+    }
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    }
+  },
+  computed: {
+    isCurrentUser () {
+      return function (username) {
+        return localStorage.getItem('nz-username') == username
+      }
+    }
+  },
+  watch: {
+    'bottomBox.user': {
+      deep: true,
+      handler (n) {
+        this.bottomBox.userDetail = this.convertToDetail(n)
       }
     },
-    watch: {
-      'bottomBox.user': {
-        deep: true,
-        handler(n) {
-          this.bottomBox.userDetail = this.convertToDetail(n);
+    'bottomBox.showSubList': function (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
+    },
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
         }
-      },
-      'bottomBox.showSubList': function(n) {
-        let vm = this;
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
-          }
 
-          if(!this.delFlag){ // 不是删除时回到顶部
-            this.$refs.accountTable.bodyWrapper.scrollTop = 0
-          }else{
-            this.delFlag=false;
-          }
-
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.accountTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
         }
       }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-      this.getRoles();
-    },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+    this.getRoles()
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
 
-      this.resetTableTitle();
-      this.getTableData();
-    },
+    this.resetTableTitle()
+    this.getTableData()
   }
+}
 </script>

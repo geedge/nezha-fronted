@@ -78,154 +78,153 @@
 </template>
 
 <script>
-  import bus from '../../../libs/bus';
-  import promqlInput from "../../page/dashboard/explore/promqlInput";
-  export default {
-    name:"exprTempBox",
-    components:{
-      'promql-input': promqlInput,
-    },
-    props:{
-      exprTemp:Object
-    },
-    watch:{
-      exprTemp:{
-        deep:true,
-        immediate:true,
-        handler(n,o){
-          let obj={...n};
-          obj.expression=[obj.expression]
-          this.editExprTemp=Object.assign(this.editExprTemp,obj);
-        }
+import promqlInput from '../../page/dashboard/explore/promqlInput'
+export default {
+  name: 'exprTempBox',
+  components: {
+    'promql-input': promqlInput
+  },
+  props: {
+    exprTemp: Object
+  },
+  watch: {
+    exprTemp: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        const obj = { ...n }
+        obj.expression = [obj.expression]
+        this.editExprTemp = Object.assign(this.editExprTemp, obj)
       }
-    },
-    data(){
-      return {
-        editExprTemp:{
-          id:'',
-          name:'',
-          gname:'',
-          "expression": "",
-          "remark": "",
-        },
-        gnameList:[],
-        rules:{
-          name:[
-            { required: true,message: this.$t('validate.required'), trigger: 'change'},
-          ],
-          gname:[
-            { required: true,message: this.$t('validate.required'), trigger: 'change'},
-          ],
-          // remark:[
-          //   { required: true,message: this.$t('validate.required'), trigger: 'change'},
-          // ]
-        },
+    }
+  },
+  data () {
+    return {
+      editExprTemp: {
+        id: '',
+        name: '',
+        gname: '',
+        expression: '',
+        remark: ''
+      },
+      gnameList: [],
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        gname: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
+        // remark:[
+        //   { required: true,message: this.$t('validate.required'), trigger: 'change'},
+        // ]
       }
+    }
+  },
+  mounted () {
+    this.getGnameList()
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
     },
-    mounted(){
-      this.getGnameList()
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
     },
-    methods:{
-      clickOutside(){
-        this.esc(false);
-      },
-      esc(refresh){
-        this.prevent_opt.save=false;
-        this.$emit("close",refresh);
-      },
-      save(){
-        if(this.prevent_opt.save){
+    save () {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.$refs.ExprTempForm.validate((valid) => {
+        const params = { ...this.editExprTemp }
+        params.expression = params.expression[0]
+        if (!params.expression[0]) {
+          this.prevent_opt.save = false
+          this.$message.error(this.$t('config.exprTemp.expressionError'))
           return
         }
-        ;
-        this.prevent_opt.save=true;
-        this.$refs.ExprTempForm.validate((valid)=>{
-          let params={...this.editExprTemp};
-          params.expression=params.expression[0];
-          if(!params.expression[0]) {
-            this.prevent_opt.save=false;
-            this.$message.error(this.$t('config.exprTemp.expressionError'));
-            return
-          }
-          if(valid){
-            if(this.editExprTemp.id){
-              this.$put('expression/tmpl',params).then(response=>{
-                this.prevent_opt.save=false;
-                if(response.code===200){
-                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-              });
-            }else{
-              this.$post('expression/tmpl',params).then(response=>{
-                this.prevent_opt.save=false;
-                if(response.code===200){
-                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          }else{
-            this.prevent_opt.save=false;
-            return false;
-          }
-        })
-      },
-      del(){
-        if(this.prevent_opt.save){
-          return
-        }
-        ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$delete("/alert/silence?ids="+this.editExprTemp.id).then(response=>{
-            this.prevent_opt.save=false;
-            if(response.code===200){
-              this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      getGnameList(){
-        this.$get('/expression/tmpl/gname').then(res=>{
-          if(res.code===200){
-            this.gnameList=res.data.list.map(item=>{
-              return {
-                value:item
+        if (valid) {
+          if (this.editExprTemp.id) {
+            this.$put('expression/tmpl', params).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          } else {
+            this.$post('expression/tmpl', params).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
               }
             })
           }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    del () {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/alert/silence?ids=' + this.editExprTemp.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
         })
-      },
-      querySearch(queryString, cb) {
-        var restaurants = this.gnameList;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      expressionChange(val){
-        this.editExprTemp.expression[0]=val;
-      },
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    getGnameList () {
+      this.$get('/expression/tmpl/gname').then(res => {
+        if (res.code === 200) {
+          this.gnameList = res.data.list.map(item => {
+            return {
+              value: item
+            }
+          })
+        }
+      })
+    },
+    querySearch (queryString, cb) {
+      const restaurants = this.gnameList
+      const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    expressionChange (val) {
+      this.editExprTemp.expression[0] = val
     }
   }
+}
 </script>
 
 <style scoped lang="scss">

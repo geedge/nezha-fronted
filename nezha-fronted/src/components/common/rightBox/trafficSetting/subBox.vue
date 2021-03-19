@@ -21,77 +21,77 @@
 </template>
 
 <script>
-  export default {
-    name: "subBox",
-    data(){
-      return{
-        editTagsBox: {show: false, top: 0, left: 0,},
-        tempTagsObj:[],
-        rowIndex:0,
-        curConfigs:null,
-        inputKeyErr:[],
-      }
-    },
-    methods:{
-      showEditTagsBox:function(show,configs,index,e){
-        if (show) {
-          this.rowIndex=index;
-          this.curConfigs=configs;
-          let position = e.target.getBoundingClientRect();
-          this.editTagsBox.top = position.top + 25;
-          this.editTagsBox.left = position.left + 80;
-          this.tempTagsObj=[];
-          this.inputKeyErr=[];
-          let obj=null;
-          try{
-            obj=configs[index]['tags']
-          }catch (e) {
+export default {
+  name: 'subBox',
+  data () {
+    return {
+      editTagsBox: { show: false, top: 0, left: 0 },
+      tempTagsObj: [],
+      rowIndex: 0,
+      curConfigs: null,
+      inputKeyErr: []
+    }
+  },
+  methods: {
+    showEditTagsBox: function (show, configs, index, e) {
+      if (show) {
+        this.rowIndex = index
+        this.curConfigs = configs
+        const position = e.target.getBoundingClientRect()
+        this.editTagsBox.top = position.top + 25
+        this.editTagsBox.left = position.left + 80
+        this.tempTagsObj = []
+        this.inputKeyErr = []
+        let obj = null
+        try {
+          obj = configs[index].tags
+        } catch (e) {
 
-          }
-          if(obj){
-            for(let key in obj){
-              this.tempTagsObj.push({key:key,value:obj[key]})
-              this.inputKeyErr.push(false);
-            }
-          }
-        } else {
-          if (!this.editTagsBox.show) {
-            return;
-          }
-          let temp=this.inputKeyErr.find(item=>{
-            return item == true;
-          })
-          if(typeof temp != "undefined"){
-            return ;
-          }
-          let tempObj={};
-          for(let i=0;i<this.tempTagsObj.length;i++){
-            let obj=this.tempTagsObj[i];
-            if(obj.key && obj.value){
-              tempObj[obj.key]=obj.value;
-            }
-          }
-          this.curConfigs[this.rowIndex]['tags']=Object.assign({},tempObj)
         }
-        this.$emit('after')
-        this.editTagsBox.show = show;
-      },
-      addTags:function(){
-        this.tempTagsObj.push({key:'',value:''})
-        this.inputKeyErr.push(false);
-      },
-      validateInput:function(value,index){
-        if(!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)){
-          this.inputKeyErr.splice(index,1,true)
-        }else{
-          this.inputKeyErr.splice(index,1,false)
+        if (obj) {
+          for (const key in obj) {
+            this.tempTagsObj.push({ key: key, value: obj[key] })
+            this.inputKeyErr.push(false)
+          }
         }
-      },
-      removeTags:function(index){
-        this.tempTagsObj.splice(index,1)
+      } else {
+        if (!this.editTagsBox.show) {
+          return
+        }
+        const temp = this.inputKeyErr.find(item => {
+          return item == true
+        })
+        if (typeof temp !== 'undefined') {
+          return
+        }
+        const tempObj = {}
+        for (let i = 0; i < this.tempTagsObj.length; i++) {
+          const obj = this.tempTagsObj[i]
+          if (obj.key && obj.value) {
+            tempObj[obj.key] = obj.value
+          }
+        }
+        this.curConfigs[this.rowIndex].tags = Object.assign({}, tempObj)
+      }
+      this.$emit('after')
+      this.editTagsBox.show = show
+    },
+    addTags: function () {
+      this.tempTagsObj.push({ key: '', value: '' })
+      this.inputKeyErr.push(false)
+    },
+    validateInput: function (value, index) {
+      if (!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)) {
+        this.inputKeyErr.splice(index, 1, true)
+      } else {
+        this.inputKeyErr.splice(index, 1, false)
       }
     },
+    removeTags: function (index) {
+      this.tempTagsObj.splice(index, 1)
+    }
   }
+}
 </script>
 
 <style scoped>

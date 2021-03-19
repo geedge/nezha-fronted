@@ -16,37 +16,37 @@
 </template>
 
 <script>
-  import chartDataFormat from "../charts/chartDataFormat";
-  export default {
-    name: "chartUnit",
-    model:{
-      event:'change',
-      prop:'postUnit'
+import chartDataFormat from '../charts/chartDataFormat'
+export default {
+  name: 'chartUnit',
+  model: {
+    event: 'change',
+    prop: 'postUnit'
+  },
+  props: {
+    postUnit: {},
+    id: { type: String, default: 'chart-unit' }
+  },
+  data () {
+    return {
+      chartUnits: chartDataFormat.unitOptions(),
+      visibel: false,
+      unit: 0
+    }
+  },
+  created () {
+    this.unit = this.postUnit
+  },
+  methods: {
+    unitSelected: function (value) {
+      this.unit = value
+      this.$emit('change', this.unit)
     },
-    props:{
-      postUnit:{},
-      id:{type:String,default:'chart-unit'}
-    },
-    data(){
-      return{
-        chartUnits:chartDataFormat.unitOptions(),
-        visibel:false,
-        unit:0,
-      }
-    },
-    created() {
-      this.unit=this.postUnit;
-    },
-    methods:{
-      unitSelected:function(value){
-        this.unit=value;
-        this.$emit('change',this.unit);
-      },
-      openSeletor:function(){
-        this.$refs.unitSelector.toggleDropDownVisible(!this.$refs.unitSelector.dropDownVisible);
-      }
+    openSeletor: function () {
+      this.$refs.unitSelector.toggleDropDownVisible(!this.$refs.unitSelector.dropDownVisible)
     }
   }
+}
 </script>
 
 <style >

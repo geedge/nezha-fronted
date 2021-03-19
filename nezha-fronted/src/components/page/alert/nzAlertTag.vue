@@ -6,18 +6,18 @@
 </template>
 
 <script>
-  export default {
-    name: "nzAlertTag",
-    props: {
-      label: String, //标题
-      type: {type: String, default: "normal"}, //normal:blue; success:green; info:gray; danger:red; warning:orange;
-      cursorPoint: {type: Boolean, default: true}, //是否鼠标悬停变手指
-    },
-    methods: {
-    },
-    computed: {
-    }
+export default {
+  name: 'nzAlertTag',
+  props: {
+    label: String, // 标题
+    type: { type: String, default: 'normal' }, // normal:blue; success:green; info:gray; danger:red; warning:orange;
+    cursorPoint: { type: Boolean, default: true } // 是否鼠标悬停变手指
+  },
+  methods: {
+  },
+  computed: {
   }
+}
 </script>
 
 <style scoped lang="scss">

@@ -17,8 +17,6 @@
           <span>{{item.label}}</span>
         </div>
 
-
-
       </div>
     </div>
     <div class="custom-bottom-btns">
@@ -42,90 +40,89 @@
 
 <script>
 export default {
-  props:{
-    customTableTitle: Array, //自定义的title
-    originalTableTitle: Array, //原始title
+  props: {
+    customTableTitle: Array, // 自定义的title
+    originalTableTitle: Array, // 原始title
     path: String,
-    allowedAll: {default: false},
-    id:{type:String,default:'table'}
+    allowedAll: { default: false },
+    id: { type: String, default: 'table' }
   },
-  data() {
+  data () {
     return {
-      custom: [],
-    };
+      custom: []
+    }
   },
-  created() {
-    let localStorageTitle = JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path));
-    if (localStorageTitle ){
-      for (let title of this.originalTableTitle) {
-        for (let lsTitle of localStorageTitle) {
-          if (lsTitle.prop === title.prop){
-            lsTitle.label = title.label;
+  created () {
+    const localStorageTitle = JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+    if (localStorageTitle) {
+      for (const title of this.originalTableTitle) {
+        for (const lsTitle of localStorageTitle) {
+          if (lsTitle.prop === title.prop) {
+            lsTitle.label = title.label
           }
         }
       }
-      localStorage.setItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path, JSON.stringify(localStorageTitle))
+      localStorage.setItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path, JSON.stringify(localStorageTitle))
     }
-
   },
   watch: {
     customTableTitle: {
       immediate: true,
       deep: true,
-      handler(n) {
-        this.custom = JSON.parse(JSON.stringify(n));
-      },
-    },
+      handler (n) {
+        this.custom = JSON.parse(JSON.stringify(n))
+      }
+    }
   },
   methods: {
-    //悬浮点击空白隐藏
-    esc() {
-      this.$emit('close');
+    // 悬浮点击空白隐藏
+    esc () {
+      this.$emit('close')
     },
-    //全选all true 或者全取消cancel false按钮
-    batchHandler(state) {
+    // 全选all true 或者全取消cancel false按钮
+    batchHandler (state) {
       for (let index = 0; index < this.custom.length; index++) {
-        if(this.custom[index].type != 'title'){
+        if (this.custom[index].type != 'title') {
           if ((index == 0 || index == 1 || this.custom[index].NotSet)) {
-            this.custom[index].show = true;
+            this.custom[index].show = true
           } else {
-            this.custom[index].show = state;
+            this.custom[index].show = state
           }
         }
       }
     },
-    //单选
-    handler(val, index) {
-      if (!this.allowedAll&&!val.allowed && (index == 0 || index == 1 || val.NotSet)) {
+    // 单选
+    handler (val, index) {
+      if (!this.allowedAll && !val.allowed && (index == 0 || index == 1 || val.NotSet)) {
         // this.custom[index].show = true;
       } else {
-        this.custom[index].show = !this.custom[index].show;
+        this.custom[index].show = !this.custom[index].show
       }
     },
-    //点击第二个cancel
-    save() {
-      this.$emit('update:customTableTitle', this.custom);
+    // 点击第二个cancel
+    save () {
+      this.$emit('update:customTableTitle', this.custom)
       localStorage.setItem(
-        "nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + ((typeof this.path != 'undefined') ? this.path : this.$route.path),
+        'nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + ((typeof this.path !== 'undefined') ? this.path : this.$route.path),
         JSON.stringify(this.custom)
-      );
-      this.esc();
-    },
+      )
+      this.esc()
+    }
   },
   computed: {
-    //点击all是否是全部取消选中，true为是
-    isCancel() {
-      let isCancel = true;
+    // 点击all是否是全部取消选中，true为是
+    isCancel () {
+      let isCancel = true
       for (let i = 0; i < this.custom.length; i++) {
-        if (!this.custom[i].show&&this.custom[i].type != 'title') {
-          isCancel = false;
-          break;
+        if (!this.custom[i].show && this.custom[i].type != 'title') {
+          isCancel = false
+          break
         }
       }
-      return isCancel;
+      return isCancel
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

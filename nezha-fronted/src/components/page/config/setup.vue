@@ -158,256 +158,256 @@
 </template>
 
 <script>
-    import {getUUID} from "../../common/js/common";
-    import {host, port} from "../../common/js/validate";
+import { getUUID } from '../../common/js/common'
+import { host, port } from '../../common/js/validate'
 
-    export default {
-      name: "setup",
-      data(){
-        return{
-          validateCode:"",
-          language:"en",
-          step:0,
-          activeStep:0,
-          database:{
-            host:"",
-            port:3306,
-            name:'nz',
-            username:"",
-            password:"",
-          },
-          dbRules:{
-            host:[
-              {required:true,message:this.$t('validate.required'),trigger: 'blur'},
-              {validator:host, trigger: 'blur'}
-            ],
-            port:[{validator:port,trigger:'blur'}],
-            name:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-            username:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-            password:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-          },
-          redis:{
-            host:"",
-            port:6379,
-            password:"",
-          },
-          redisRules:{
-            host:[
-              {required:true,message:this.$t('validate.required'),trigger: 'blur'},
-              {validator:host, trigger: 'blur'}
-            ],
-            port:[{validator:port,trigger:'blur'}],
-          },
-          system:{
-            username:"",
-            password:"",
-            alertPath:"",
-            alertPrefix:"",
-            haMode:1,
-            haVip:"",
-          },
-          sysRules:{
-            username:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-            password:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-            alertPath:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-            haVip:[{required:true,message:this.$t('validate.required'),trigger: 'blur'}],
-          },
-          reloadTime:5000,
-          reloadTimeout:null,
-          reloadTimeCount:0,
-          prevent_next:false,
-          prevent_finish:false,
-        }
+export default {
+  name: 'setup',
+  data () {
+    return {
+      validateCode: '',
+      language: 'en',
+      step: 0,
+      activeStep: 0,
+      database: {
+        host: '',
+        port: 3306,
+        name: 'nz',
+        username: '',
+        password: ''
       },
-      created() {
-        this.getValidateCode();
+      dbRules: {
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: host, trigger: 'blur' }
+        ],
+        port: [{ validator: port, trigger: 'blur' }],
+        name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
-      methods:{
-        changeStep:function(step){
-          switch (step) {
-            case 0:
-                this.activeStep = 0;
-              break;
-            case 1:
-                if(this.prevent_next){return}
-                this.prevent_next=true
-                if(this.activeStep > 1){
-                  this.activeStep = 1;
-                  this.prevent_next=false;
-                }else{
-                  this.getValidateCode();
-                  this.$get("setup/checkCode?code="+this.validateCode).then(response=>{
-                    if(response.code == 200 ){
-                      this.activeStep = 1;
-                      this.step = 1;
-                    }else{
-                      this.activeStep = 0;
-                      this.step = 0;
-                      if(response.code == 574012){
-                        this.$alert(this.$t('setup.hadConfig'),{type:"warning"})
-                      }else{
-                        this.$alert(this.$t('setup.invalidCode',{page:''}),{type:"warning"})
-                      }
-                    }
-                    this.prevent_next=false;
-                  })
+      redis: {
+        host: '',
+        port: 6379,
+        password: ''
+      },
+      redisRules: {
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: host, trigger: 'blur' }
+        ],
+        port: [{ validator: port, trigger: 'blur' }]
+      },
+      system: {
+        username: '',
+        password: '',
+        alertPath: '',
+        alertPrefix: '',
+        haMode: 1,
+        haVip: ''
+      },
+      sysRules: {
+        username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
+      reloadTime: 5000,
+      reloadTimeout: null,
+      reloadTimeCount: 0,
+      prevent_next: false,
+      prevent_finish: false
+    }
+  },
+  created () {
+    this.getValidateCode()
+  },
+  methods: {
+    changeStep: function (step) {
+      switch (step) {
+        case 0:
+          this.activeStep = 0
+          break
+        case 1:
+          if (this.prevent_next) { return }
+          this.prevent_next = true
+          if (this.activeStep > 1) {
+            this.activeStep = 1
+            this.prevent_next = false
+          } else {
+            this.getValidateCode()
+            this.$get('setup/checkCode?code=' + this.validateCode).then(response => {
+              if (response.code == 200) {
+                this.activeStep = 1
+                this.step = 1
+              } else {
+                this.activeStep = 0
+                this.step = 0
+                if (response.code == 574012) {
+                  this.$alert(this.$t('setup.hadConfig'), { type: 'warning' })
+                } else {
+                  this.$alert(this.$t('setup.invalidCode', { page: '' }), { type: 'warning' })
                 }
-              break;
-            case 2:
-              if(this.prevent_next){return}
-              this.prevent_next=true
-              if(this.activeStep > 2){
-                this.activeStep = 2
-                this.prevent_next=false;
-              }else {
-                this.$refs['db-form'].validate((valid) => {
-                  if (valid) {
-                    this.getValidateCode();
-                    this.$post("setup/checkDb", {database:this.database,code:this.validateCode}).then(response => {
-                      if (response.code == 200) {
-                        this.activeStep = 2;
-                        this.step = 2;
-                      } else {
-                        this.activeStep = 1;
-                        this.step = 1;
-                        if(response.code == 574002){
-                          this.$alert(this.$t('setup.invalidCode',{page:this.$t('setup.welcomePage')}),{type:"warning"})
-                        }else{
-                          this.$alert(this.$t('setup.invalidDb'),{type:"warning"})
-                        }
-                      }
-                      this.prevent_next=false;
-                    })
-                  }else{
-                    this.prevent_next=false;
-                  }
-                })
               }
-              break;
-            case 3:
-              if(this.prevent_next){return}
-              this.prevent_next=true
-              if(this.activeStep > 3){
-                this.activeStep =3
-                this.prevent_next=false;
-              }else{
-                this.$refs['redis-form'].validate((valid) => {
-                  if (valid) {
-                    this.getValidateCode();
-                    this.$post("setup/checkRedis",{redis:this.redis,code:this.validateCode}).then(response=>{
-                      if(response.code == 200 ){
-                        this.activeStep = 3;
-                        this.step = 3;
-                      }else{
-                        this.activeStep = 2;
-                        this.step = 2;
-                        if(response.code == 574004 ){ //密码无效
-                          this.$alert(this.$t('setup.invalidPassword'),{type:"warning"})
-                        }else if(response.code == 574005){
-                          this.$alert(this.$t('setup.requirePassword'),{type:"warning"})
-                        }else if(response.code == 574002){
-                          this.$alert(this.$t('setup.invalidCode',{page:this.$t('setup.welcomePage')}),{type:"warning"})
-                        }else{
-                          this.$alert(this.$t('setup.invalidRedis'),{type:"warning"})
-                        }
-                      }
-                      this.prevent_next=false;
-                    })
-                  }else{
-                    this.prevent_next=false;
-                  }
-                })
-              }
-              break;
-            case 4:
-              if(this.prevent_finish){return}
-              this.prevent_next=true
-              this.$refs['sys-form'].validate((valid) => {
-                if (valid) {
-                  this.getValidateCode();
-                  let params={
-                    database:this.database,
-                    redis:this.redis,
-                    system:this.system,
-                    code:this.validateCode
-                  }
-                  this.$post("setup/config",params).then(response=>{
-                    if(response.code == 200 ){
-                      this.activeStep = 3;
-                      this.step = 4;
-                      this.$alert(this.$t('setup.wait'),{type:"success"})
-                      this.reloadTimeout = setTimeout(this.jumpToLogin,this.reloadTime)
-                    }else{
-                      this.activeStep = 3;
-                      this.step = 3;
-                      if(response.code == 574002){
-                        this.$alert(this.$t('setup.invalidCode',{page:this.$t('setup.welcomePage')}),{type:"warning"})
-                      }
+              this.prevent_next = false
+            })
+          }
+          break
+        case 2:
+          if (this.prevent_next) { return }
+          this.prevent_next = true
+          if (this.activeStep > 2) {
+            this.activeStep = 2
+            this.prevent_next = false
+          } else {
+            this.$refs['db-form'].validate((valid) => {
+              if (valid) {
+                this.getValidateCode()
+                this.$post('setup/checkDb', { database: this.database, code: this.validateCode }).then(response => {
+                  if (response.code == 200) {
+                    this.activeStep = 2
+                    this.step = 2
+                  } else {
+                    this.activeStep = 1
+                    this.step = 1
+                    if (response.code == 574002) {
+                      this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
+                    } else {
+                      this.$alert(this.$t('setup.invalidDb'), { type: 'warning' })
                     }
-                  })
-                }else{
-                  this.prevent_next=false;
+                  }
+                  this.prevent_next = false
+                })
+              } else {
+                this.prevent_next = false
+              }
+            })
+          }
+          break
+        case 3:
+          if (this.prevent_next) { return }
+          this.prevent_next = true
+          if (this.activeStep > 3) {
+            this.activeStep = 3
+            this.prevent_next = false
+          } else {
+            this.$refs['redis-form'].validate((valid) => {
+              if (valid) {
+                this.getValidateCode()
+                this.$post('setup/checkRedis', { redis: this.redis, code: this.validateCode }).then(response => {
+                  if (response.code == 200) {
+                    this.activeStep = 3
+                    this.step = 3
+                  } else {
+                    this.activeStep = 2
+                    this.step = 2
+                    if (response.code == 574004) { // 密码无效
+                      this.$alert(this.$t('setup.invalidPassword'), { type: 'warning' })
+                    } else if (response.code == 574005) {
+                      this.$alert(this.$t('setup.requirePassword'), { type: 'warning' })
+                    } else if (response.code == 574002) {
+                      this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
+                    } else {
+                      this.$alert(this.$t('setup.invalidRedis'), { type: 'warning' })
+                    }
+                  }
+                  this.prevent_next = false
+                })
+              } else {
+                this.prevent_next = false
+              }
+            })
+          }
+          break
+        case 4:
+          if (this.prevent_finish) { return }
+          this.prevent_next = true
+          this.$refs['sys-form'].validate((valid) => {
+            if (valid) {
+              this.getValidateCode()
+              const params = {
+                database: this.database,
+                redis: this.redis,
+                system: this.system,
+                code: this.validateCode
+              }
+              this.$post('setup/config', params).then(response => {
+                if (response.code == 200) {
+                  this.activeStep = 3
+                  this.step = 4
+                  this.$alert(this.$t('setup.wait'), { type: 'success' })
+                  this.reloadTimeout = setTimeout(this.jumpToLogin, this.reloadTime)
+                } else {
+                  this.activeStep = 3
+                  this.step = 3
+                  if (response.code == 574002) {
+                    this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
+                  }
                 }
               })
-              break;
-          }
-        },
-        jumpToLogin:function(){
-          this.reloadTimeCount+=this.reloadTime;
-          if(this.reloadTimeCount > 5*60*1000){
-            clearTimeout(this.reloadTimeout)
-            this.$alert(this.$t('setup.reloadTimeout'),{type:"warning"})
-            return;
-          }
-          this.$get("healthy").then(response=>{
-            if(response.code == 200){
-              this.$router.push({
-                path:"/"
-              })
-              clearTimeout(this.reloadTimeout)
-            }else{
-              this.reloadTimeout = setTimeout(this.jumpToLogin,this.reloadTime)
+            } else {
+              this.prevent_next = false
             }
           })
-        },
-        nextStep:function(){
-          this.changeStep(this.activeStep+1);
-          },
-        preStep:function(){
-          this.changeStep(this.activeStep-1);
-        },
-        finishStep:function(){
-          this.changeStep(4);
-        },
-        getValidateCode:function(){
-          const saveValidateCodeFunc = function (validateCode){
-            let saveItem = {
-              code:validateCode,
-              time:Date.now(),
-              expire:30*60*1000
-            }
-            localStorage.setItem("setup-validate-code",JSON.stringify(saveItem))
-          }
-          let validateCodeJSON = localStorage.getItem("setup-validate-code");
-          if(validateCodeJSON != 'undefined' && validateCodeJSON != null){
-            let validateCode = JSON.parse(validateCodeJSON);
-            if(Date.now() - validateCode.time > validateCode.expire){
-              this.validateCode = getUUID();
-              saveValidateCodeFunc(this.validateCode)
-            }else{
-              this.validateCode = validateCode.code;
-            }
-          }else{
-            this.validateCode = getUUID();
-            saveValidateCodeFunc(this.validateCode)
-          }
-        },
-        changeLocal:function(local){
-          this.language = local;
-          this.$i18n.locale = local;
+          break
+      }
+    },
+    jumpToLogin: function () {
+      this.reloadTimeCount += this.reloadTime
+      if (this.reloadTimeCount > 5 * 60 * 1000) {
+        clearTimeout(this.reloadTimeout)
+        this.$alert(this.$t('setup.reloadTimeout'), { type: 'warning' })
+        return
+      }
+      this.$get('healthy').then(response => {
+        if (response.code == 200) {
+          this.$router.push({
+            path: '/'
+          })
+          clearTimeout(this.reloadTimeout)
+        } else {
+          this.reloadTimeout = setTimeout(this.jumpToLogin, this.reloadTime)
         }
-      },
+      })
+    },
+    nextStep: function () {
+      this.changeStep(this.activeStep + 1)
+    },
+    preStep: function () {
+      this.changeStep(this.activeStep - 1)
+    },
+    finishStep: function () {
+      this.changeStep(4)
+    },
+    getValidateCode: function () {
+      const saveValidateCodeFunc = function (validateCode) {
+        const saveItem = {
+          code: validateCode,
+          time: Date.now(),
+          expire: 30 * 60 * 1000
+        }
+        localStorage.setItem('setup-validate-code', JSON.stringify(saveItem))
+      }
+      const validateCodeJSON = localStorage.getItem('setup-validate-code')
+      if (validateCodeJSON != 'undefined' && validateCodeJSON != null) {
+        const validateCode = JSON.parse(validateCodeJSON)
+        if (Date.now() - validateCode.time > validateCode.expire) {
+          this.validateCode = getUUID()
+          saveValidateCodeFunc(this.validateCode)
+        } else {
+          this.validateCode = validateCode.code
+        }
+      } else {
+        this.validateCode = getUUID()
+        saveValidateCodeFunc(this.validateCode)
+      }
+    },
+    changeLocal: function (local) {
+      this.language = local
+      this.$i18n.locale = local
     }
+  }
+}
 </script>
 
 <style scoped>

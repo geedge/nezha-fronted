@@ -23,7 +23,7 @@
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
           <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
           <div class="top-tool-search margin-r-20">
-            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="bottomBox.inTransform"></search-input>
+            <search-input :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
           <button :title="$t('overall.exportExcelLower')" @click="showExportDialog" type="button" v-has="'message_export'"
                   class="nz-btn nz-btn-size-normal nz-btn-style-light" id="alert-list-export">
@@ -99,332 +99,322 @@
 
 </template>
 <script>
-  import bus from '../../../libs/bus';
-  import axios from 'axios';
-  import nzAlertTag from './nzAlertTag';
-  import chart from '../../page/dashboard/overview/chart'
-  import pickTime from "../../common/pickTime";
-  import chartDataFormat from "../../charts/chartDataFormat";
-  import alertRuleInfo from '../../common/alert/alertRuleInfo'
-  import alertLabel from '../../common/alert/alertLabel'
-  import alertMessageTable from '../../common/alert/alertMessageTable.vue'
-  import deleteButton from "../../common/deleteButton";
-  export default {
-    name: "alertList",
-    components: {
-      'nz-alert-tag': nzAlertTag,
-      'chart': chart,
-      'alertRuleInfo':alertRuleInfo,
-      'alertLabel':alertLabel,
-      'alertMessageTable':alertMessageTable,
-      'pick-time':pickTime,
-      'delete-button':deleteButton,
-    },
-    data() {
-      return {
-        /*二级列表相关*/
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        /*二级页面相关*/
-        bottomBox: {
-          tabList: [], //二级列表的标签
-          tabDetailList: [], //多个详情
-          mainResizeShow: true, //dom高度改变时是否展示|隐藏
-          subResizeShow: true,
-          isFullScreen: false, //全屏状态
-          showSubList: false, //是否显示二级列表
-          targetTab: '', //显示二级列表中的哪个页签
-          inTransform: false, //搜索框相关，搜索条件下拉框是否在transform里
-        },
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
+import bus from '../../../libs/bus'
+import axios from 'axios'
+import pickTime from '../../common/pickTime'
+import alertMessageTable from '../../common/alert/alertMessageTable.vue'
+import deleteButton from '../../common/deleteButton'
+export default {
+  name: 'alertList',
+  components: {
+    alertMessageTable: alertMessageTable,
+    'pick-time': pickTime,
+    'delete-button': deleteButton
+  },
+  data () {
+    return {
+      /* 二级列表相关 */
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      /* 二级页面相关 */
+      bottomBox: {
+        tabList: [], // 二级列表的标签
+        tabDetailList: [], // 多个详情
+        mainResizeShow: true, // dom高度改变时是否展示|隐藏
+        subResizeShow: true,
+        isFullScreen: false, // 全屏状态
+        showSubList: false, // 是否显示二级列表
+        targetTab: '', // 显示二级列表中的哪个页签
+        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
+      },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
 
-        //导出相关
-        importBox: {show: false, title:this.$t('overall.exportExcel')},
-        deleteBox: {show: false, ids: "", remark: '', state: 2},
-        batchDeleteObjs:[],
-        //详情相关
-        graphShow: false,
-        chartDatas: [],
-        sameLabels: ['instance','module','project','asset','endpoint','datacenter'],
-        legend: [],
-        searchTime: [],
-        searchTimeSelect: bus.getTimezontDateRange(),
-        currentMsg: {},
-        chartUnit: 5,
+      // 导出相关
+      importBox: { show: false, title: this.$t('overall.exportExcel') },
+      deleteBox: { show: false, ids: '', remark: '', state: 2 },
+      batchDeleteObjs: [],
+      // 详情相关
+      graphShow: false,
+      chartDatas: [],
+      sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
+      legend: [],
+      searchTime: [],
+      searchTimeSelect: bus.getTimezontDateRange(),
+      currentMsg: {},
+      chartUnit: 5,
 
-        tableId: 'alertListTable', //需要分页的table的id，用于记录每页数量
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        tableTitle: [
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("alert.alertName"),
-            prop: 'alertRule',
-            show: true,
-            width: 180
-          }, {
-            label: this.$t("alert.list.labels"),
-            prop: 'labels',
-            show: true,
-            width:350,
-          }, {
-            label: this.$t("alert.severity"),
-            prop: 'severity',
-            show: true,
-            width: 100,
-          }, {
-            label: this.$t('alert.summary'),
-            prop: 'summary',
-            show: true,
-          }, {
-            label: this.$t('alert.description'),
-            prop: 'description',
-            show: true,
-          }, {
-            label: this.$t('alert.list.state'),
-            prop: 'state',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t("alert.startAt"),
-            prop: 'startAt',
-            show: true,
-            width: 150
-          }, {
-            label: this.$t('alert.endAt'),
-            prop: 'endAt',
-            show: true,
-            width: 150
-          }, {
-            label: this.$t('overall.value'),
-            prop: 'current',
-            show: true,
-            width: 100
-          }, {
-            label: this.$t('overall.option'),
-            prop: 'option',
-            show: true,
-            width: 90
-          }
-        ],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: this.$t('alert.alertName'),
-            type: 'input',
-            label: 'alertName',
-            disabled: false
-          }, /*{
+      tableId: 'alertListTable', // 需要分页的table的id，用于记录每页数量
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('alert.alertName'),
+          prop: 'alertRule',
+          show: true,
+          width: 180
+        }, {
+          label: this.$t('alert.list.labels'),
+          prop: 'labels',
+          show: true,
+          width: 350
+        }, {
+          label: this.$t('alert.severity'),
+          prop: 'severity',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('alert.summary'),
+          prop: 'summary',
+          show: true
+        }, {
+          label: this.$t('alert.description'),
+          prop: 'description',
+          show: true
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('alert.startAt'),
+          prop: 'startAt',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('alert.endAt'),
+          prop: 'endAt',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('overall.value'),
+          prop: 'current',
+          show: true,
+          width: 100
+        }, {
+          label: this.$t('overall.option'),
+          prop: 'option',
+          show: true,
+          width: 90
+        }
+      ],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: this.$t('alert.alertName'),
+          type: 'input',
+          label: 'alertName',
+          disabled: false
+        }, /* {
             id: 3,
             name: this.$t('alert.list.type'),
             type: 'select',
             label: 'alertType',
             disabled: false
           }, */{
-            id: 20,
-            name: this.$t('alert.severity'),
-            type: 'selectString',
-            label: 'severity',
-            disabled: false
-          }, {
-            id: 21,
-            name: this.$t('asset.asset'),
-            type: 'asset',
-            label: 'asset',
-            disabled: false
-          }, {
-            id:22,
-            name: this.$t('project.project.project'),
-            type: 'project',
-            label: 'project',
-            disabled: false
-          }, {
-            id:23,
-            name: this.$t('project.module.module'),
-            type: 'module',
-            label: 'module',
-            disabled: false
-          }, {
-            id:24,
-            name: this.$t('project.endpoint.endpoint'),
-            type: 'input',
-            label: 'endpointId',
-            disabled: false
-          }, {
-            id:25,
-            name: this.$t('alert.list.state'),
-            type: 'select',
-            label: 'alertMessageState',
-            disabled: false
-          },{
-            id:26,
-            name: this.$t('alert.list.id'),
-            type: 'id',
-            label: 'id',
-            disabled: false
-          },{
-            id:27,
-            name: this.$t('config.dc.dc'),
-            type: 'idc',
-            label: 'idcId',
-            disabled: false,
-            readonly: true,
-          }],
-        },
-        searchLabel: { //搜索参数
-
-        },
-        tableData: [],
-        requestIndex:0,
-        viewAssetState: false,
-        nowTime:'',
-      }
-    },
-    computed: {
-      tagType() {
-        return (key) => {
-          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "normal";
-          } else {
-            return "info";
-          }
-        }
+          id: 20,
+          name: this.$t('alert.severity'),
+          type: 'selectString',
+          label: 'severity',
+          disabled: false
+        }, {
+          id: 21,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: false
+        }, {
+          id: 22,
+          name: this.$t('project.project.project'),
+          type: 'project',
+          label: 'project',
+          disabled: false
+        }, {
+          id: 23,
+          name: this.$t('project.module.module'),
+          type: 'module',
+          label: 'module',
+          disabled: false
+        }, {
+          id: 24,
+          name: this.$t('project.endpoint.endpoint'),
+          type: 'input',
+          label: 'endpointId',
+          disabled: false
+        }, {
+          id: 25,
+          name: this.$t('alert.list.state'),
+          type: 'select',
+          label: 'alertMessageState',
+          disabled: false
+        }, {
+          id: 26,
+          name: this.$t('alert.list.id'),
+          type: 'id',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 27,
+          name: this.$t('config.dc.dc'),
+          type: 'idc',
+          label: 'idcId',
+          disabled: false,
+          readonly: true
+        }]
       },
-      tagValue() {
-        return (key, value) => {
-          if (key == 'type') {
-            if (value ==  1) {
-              value = this.$t("project.project.project");
-            } else if (value == 2) {
-              value = this.$t("module.module.module");
-            } else if (value == 3) {
-              value = this.$t("asset.asset");
-            }
-          }
-          return key + "：" + value;
+      searchLabel: { // 搜索参数
+
+      },
+      tableData: [],
+      requestIndex: 0,
+      viewAssetState: false,
+      nowTime: ''
+    }
+  },
+  computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
         }
       }
     },
-    methods: {
-      labelsSort:function(obj){
-        let buildIn=['asset','endpoint','module','project','datacenter']
-        let labels=JSON.parse(JSON.stringify(obj));
-        let result=[];
-        for(let key of buildIn){
-          if(key in labels){
-            result.push({label:key,value:labels[key]})
-            delete labels[key]
+    tagValue () {
+      return (key, value) => {
+        if (key == 'type') {
+          if (value == 1) {
+            value = this.$t('project.project.project')
+          } else if (value == 2) {
+            value = this.$t('module.module.module')
+          } else if (value == 3) {
+            value = this.$t('asset.asset')
           }
         }
-        Object.keys(labels).sort().forEach(key=>{
-          result.push({label:key,value:labels[key]})
-        })
-        return result;
-      },
-
-      getAlertList() {
-        if (!this.hasButton('message_view')) {
-          this.$message.error(this.$t("tip.noAccess"));
-          return;
+        return key + '：' + value
+      }
+    }
+  },
+  methods: {
+    labelsSort: function (obj) {
+      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      const labels = JSON.parse(JSON.stringify(obj))
+      const result = []
+      for (const key of buildIn) {
+        if (key in labels) {
+          result.push({ label: key, value: labels[key] })
+          delete labels[key]
         }
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        if(this.searchTime&& this.searchTime.length>1){
-          this.$set(this.searchLabel, "startAt", this.timezoneToUtcTimeStr(this.searchTime[0]));
-          this.$set(this.searchLabel, "endAt", this.timezoneToUtcTimeStr(this.searchTime[1]));
-        }else{
-          delete this.searchLabel.startAt
-          delete this.searchLabel.endAt
-        }
-        this.tools.loading = true;
-        this.$get('alert/message', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          if (response.code == 200) {
-            this.nowTime=this.utcTimeToTimezoneStr(response.time);
-            this.tableData = response.data.list;
-            let axiosAll=[]
-            this.$nextTick(() => {
-              this.tableData.forEach((item) => {
-                item.labels = JSON.parse(item.labels);
-                if(item.alertRule.buildIn != 1){
-                  let paramStr = JSON.stringify(this.promQueryParamConvert(item));
-                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length-1).replace(/\+/g, "%2B").replace(/ /g, "%20").replace(/\\/g, "")))
-                }else{
-                  axiosAll.push('')
-                }
-              });
-              axios.all(axiosAll).then(res=>{
-                res.forEach((item,index)=>{
-                  let current = [];
-                  let response2 = item.data;
-                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                    current = response2.data.result[0].value.map((item, i) => {
-                      if (i == 0) {
-                        return bus.computeTimezone(item);
-                      } else {
-                        return parseFloat(item).toFixed(2);
-                      }
-                    });
-                  }else{
-                    current=[null,null]
-                  }
-                  this.tableData[index].current=current;
-                })
-                this.$set(this.tableData,[...this.tableData])
-              })
-            });
-            this.deleteBox.ids='';
-            this.pageObj.total = response.data.total;
-          }
-        });
-      },
-      promQueryParamConvert(obj){
-        let r = "(" + obj.alertRule.expr + ")";
-        let intoLabels=false
-        if (Object.keys(obj.labels).length > 0) {
-          r += function(){
-            let group =" and " +  "(group({";
-            let by = " by (";
+      }
+      Object.keys(labels).sort().forEach(key => {
+        result.push({ label: key, value: labels[key] })
+      })
+      return result
+    },
 
-            for (let k in obj.labels) {
-              if (k != 'alertname' && k != 'severity') {
-                intoLabels=true;
-                group += k;
-                group += "=";
-                group += ("'" + obj.labels[k] + "',");
-                by += k;
-                by += ","
+    getAlertList () {
+      if (!this.hasButton('message_view')) {
+        this.$message.error(this.$t('tip.noAccess'))
+        return
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.searchTime && this.searchTime.length > 1) {
+        this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTime[0]))
+        this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTime[1]))
+      } else {
+        delete this.searchLabel.startAt
+        delete this.searchLabel.endAt
+      }
+      this.tools.loading = true
+      this.$get('alert/message', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code == 200) {
+          this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.tableData = response.data.list
+          const axiosAll = []
+          this.$nextTick(() => {
+            this.tableData.forEach((item) => {
+              item.labels = JSON.parse(item.labels)
+              if (item.alertRule.buildIn != 1) {
+                const paramStr = JSON.stringify(this.promQueryParamConvert(item))
+                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
+              } else {
+                axiosAll.push('')
               }
-            }
-            if(intoLabels){
-              group = group.substring(0, group.length-1);
-              by = by.substring(0, by.length-1);
-              group += "})";
-              by += ")";
-              return group + by + ")";
-            }else{
-              return ''
-            }
-
-          }();
+            })
+            axios.all(axiosAll).then(res => {
+              res.forEach((item, index) => {
+                let current = []
+                const response2 = item.data
+                if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                  current = response2.data.result[0].value.map((item, i) => {
+                    if (i == 0) {
+                      return bus.computeTimezone(item)
+                    } else {
+                      return parseFloat(item).toFixed(2)
+                    }
+                  })
+                } else {
+                  current = [null, null]
+                }
+                this.tableData[index].current = current
+              })
+              this.$set(this.tableData, [...this.tableData])
+            })
+          })
+          this.deleteBox.ids = ''
+          this.pageObj.total = response.data.total
         }
-        return r;
-        /*let result="(" + obj.alertRule.expr + ")";
+      })
+    },
+    promQueryParamConvert (obj) {
+      let r = '(' + obj.alertRule.expr + ')'
+      let intoLabels = false
+      if (Object.keys(obj.labels).length > 0) {
+        r += (function () {
+          let group = ' and ' + '(group({'
+          let by = ' by ('
+
+          for (const k in obj.labels) {
+            if (k != 'alertname' && k != 'severity') {
+              intoLabels = true
+              group += k
+              group += '='
+              group += ("'" + obj.labels[k] + "',")
+              by += k
+              by += ','
+            }
+          }
+          if (intoLabels) {
+            group = group.substring(0, group.length - 1)
+            by = by.substring(0, by.length - 1)
+            group += '})'
+            by += ')'
+            return group + by + ')'
+          } else {
+            return ''
+          }
+        }())
+      }
+      return r
+      /* let result="(" + obj.alertRule.expr + ")";
         if(obj.labels){
           if(obj.labels.alertname){
             delete obj.labels.alertname;
@@ -448,281 +438,282 @@
             return q;
           }() + ")";
         }
-        return result;*/
-      },
-      //asset弹框控制
-      tabControl(data) {
-        if (data === 'close') {
-          this.viewAssetState = false
-          this.$refs['assetEditUnit'].tabView = false
-        }
-      },
-      openDelMessageBox:function(){
-        if(this.batchDeleteObjs.length<1) return;
-        if(this.$refs.alertMessageTable){
-          this.$refs.alertMessageTable.toDeleteMessage(false);
-        }
-      },
-      toDeleteMessage(obj) {
-        if (obj) {
-          this.deleteBox.ids = obj.id + "";
-        }
-        this.deleteBox.show = true;
-      },
-      deleteMessage(deleteBox,cb) {
-        this.$put("alert/message", deleteBox).then(res => {
-          if (res.code === 200) {
-            this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-            this.getAlertList();
-            cb();
-          } else {
-            this.$message.error(res.msg);
-          }
-        })
-      },
-      selectChange(s) {
-        let ids = [];
-        this.deleteBox.ids = "";
-        s.forEach(item => {
-          ids.push(item.id);
-        });
-        this.deleteBox.ids = ids.join(",");
-      },
-      showExportDialog() {
-        this.importBox.show = true;
-      },
-      closeDialog() {
-        this.importBox.show = false;
-        this.deleteBox.show = false;
-      },
-      exportCur:function(){
-        let searchLabel=Object.assign({},this.searchLabel)
-        this.$set(searchLabel,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
-        this.exportExcel(searchLabel);
-        this.closeDialog();
-      },
-      exportAll:function(){
-        let temp = JSON.parse(JSON.stringify(this.searchLabel));
-        temp.pageSize = -1;
-        this.$set(temp,'language',localStorage.getItem("nz-language") ? localStorage.getItem("nz-language") : 'en')
-        this.exportExcel(temp);
-        this.closeDialog();
-      },
-      getTimeString:function(){
-        let split='-';
-        let date=new Date();
-        let year=date.getFullYear();
-        let month=this.formatNum(date.getMonth()+1);
-        let day=this.formatNum(date.getDate());
-        let hours=this.formatNum(date.getHours());
-        let minutes=this.formatNum(date.getMinutes());
-        let seconds=this.formatNum(date.getSeconds());
-        return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds;
-      },
-      formatNum:function(num){
-        return num>9?num:'0'+num;
-      },
-      exportExcel:function(params){
-        for (let item in params) {
-          if (params[item]) {
-            if (item == "alertMessageState") {
-              this.$set(params, "state", params[item]);
-            } else{
-              this.$set(params, item, params[item]);
-            }
-          }
-        }
-        let temp=this;
-        if(!params){
-          params=temp.params;
-        }
-        axios.get("alert/message/export", {responseType:'blob', params: params}).then(res=>{
-          let fileName = 'alert-message-'+temp.getTimeString()+'.xlsx';
-          if(window.navigator.msSaveOrOpenBlob){
-            // 兼容ie11
-            let blobObject = new Blob([res.data]);
-            window.navigator.msSaveOrOpenBlob(blobObject, fileName);
-          }else{
-            let url = URL.createObjectURL(new Blob([res.data]));
-            let a = document.createElement('a');
-            document.body.appendChild(a); //此处增加了将创建的添加到body当中
-            a.href = url;
-            a.download = fileName;
-            a.target = '_blank';
-            a.click();
-            a.remove(); //将a标签移除
-          }
-        },error=>{
-          let $self=this;
-          let reader = new FileReader();
-          reader.onload = function(event){
-            let responseText = reader.result;
-            let exception = JSON.parse(responseText);
-            if(exception.message){
-              $self.$message.error(exception.message)
-            }else{
-              console.error(error)
-            }
-          };
-          reader.readAsText(error.response.data);
-        })
-      },
-      // 全屏
-      fullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.fullScreen(vm);
-      },
-      // 退出全屏
-      exitFullScreen() {
-        let vm = this;
-        this.$bottomBoxWindow.exitFullScreen(vm);
-      },
-      // 鼠标拖动二级列表
-      listResize(e) {
-        let vm = this;
-        this.$bottomBoxWindow.listResize(vm, e);
-      },
-      showTagDetail(data, key) {
-        let open = false;
-        if (key == "asset" || key == "project" || key == "module" || key == "endpoint" || key == "datacenter") {
-          open = true;
-        }
-        if (open) {
-          let labelList = [];
-          let detailList = [];
-          for (let item in data) {
-            if (item == "asset" || item == "project" || item == "module" || item == "endpoint" || item == "dc") {
-              labelList.push(item);
-              detailList.push(data[item]);
-            }
-          }
-          this.bottomBox.showSubList = true;
-          this.tabList = labelList;
-          /*this.tabDetailList = detailList;
-          this.bottomBox.targetTab = key;*/
-        }
-      },
-      labelsClassName(row) {
-        if (row.column.label == this.$t("alert.list.labels")) {
-          return "alert-message-list-labels";
+        return result; */
+    },
+    // asset弹框控制
+    tabControl (data) {
+      if (data === 'close') {
+        this.viewAssetState = false
+        this.$refs.assetEditUnit.tabView = false
+      }
+    },
+    openDelMessageBox: function () {
+      if (this.batchDeleteObjs.length < 1) return
+      if (this.$refs.alertMessageTable) {
+        this.$refs.alertMessageTable.toDeleteMessage(false)
+      }
+    },
+    toDeleteMessage (obj) {
+      if (obj) {
+        this.deleteBox.ids = obj.id + ''
+      }
+      this.deleteBox.show = true
+    },
+    deleteMessage (deleteBox, cb) {
+      this.$put('alert/message', deleteBox).then(res => {
+        if (res.code === 200) {
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+          this.getAlertList()
+          cb()
         } else {
-          return "";
+          this.$message.error(res.msg)
         }
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getAlertList();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getAlertList();
-      },
-      search(searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            if (item == "alertMessageState") {
-              this.$set(this.searchLabel, "state", searchObj[item]);
-            } else{
-              this.$set(this.searchLabel, item, searchObj[item]);
-            }
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0;
-        this.getAlertList();
-      },
-      fillProject: function (module) {
-        this.$get('project', {"id": module.projectId}).then(response => {
-          if (response.code == 200) {
-            module.project = response.data.list[0];
-          }
-        })
-      },
-      closeViews: function () {
-        this.$refs.alertConfigBox.show(false, false);
-        this.$refs.projectBox.show(false, false);
-        this.$refs.moduleBox.show(false, false);
-        this.viewAssetState = false;
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.pageObj.orderBy=orderBy;
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getAlertList();
-      },
-      // label tooltip是否显示
-      labelToolTipDis(labelType){
-        switch(labelType){
-          case 'asset':
-          case 'module':
-          case 'project':
-            return false;
-          default: return true;
-        }
-      },
-      // alertNmae鼠标划入
-      alertMessagehover(item,index){
-        item.loading=true;
-        this.$set(this.tableData,index,item);
-      },
-      // label 鼠标划入
-      labelHover(item,index,type){
-        if(this.labelToolTipDis(type)){
-          return
-        }
-        item[type].loading=true;
-        this.$set(this.tableData,index,item);
-      }
+      })
     },
-    watch: {
-      showSubList(n) {
-        this.$bottomBoxWindow.showSubListWatch(vm, n);
-      },
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
+    selectChange (s) {
+      const ids = []
+      this.deleteBox.ids = ''
+      s.forEach(item => {
+        ids.push(item.id)
+      })
+      this.deleteBox.ids = ids.join(',')
+    },
+    showExportDialog () {
+      this.importBox.show = true
+    },
+    closeDialog () {
+      this.importBox.show = false
+      this.deleteBox.show = false
+    },
+    exportCur: function () {
+      const searchLabel = Object.assign({}, this.searchLabel)
+      this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(searchLabel)
+      this.closeDialog()
+    },
+    exportAll: function () {
+      const temp = JSON.parse(JSON.stringify(this.searchLabel))
+      temp.pageSize = -1
+      this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+      this.exportExcel(temp)
+      this.closeDialog()
+    },
+    getTimeString: function () {
+      const split = '-'
+      const date = new Date()
+      const year = date.getFullYear()
+      const month = this.formatNum(date.getMonth() + 1)
+      const day = this.formatNum(date.getDate())
+      const hours = this.formatNum(date.getHours())
+      const minutes = this.formatNum(date.getMinutes())
+      const seconds = this.formatNum(date.getSeconds())
+      return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
+    },
+    formatNum: function (num) {
+      return num > 9 ? num : '0' + num
+    },
+    exportExcel: function (params) {
+      for (const item in params) {
+        if (params[item]) {
+          if (item == 'alertMessageState') {
+            this.$set(params, 'state', params[item])
+          } else {
+            this.$set(params, item, params[item])
           }
         }
       }
+      const temp = this
+      if (!params) {
+        params = temp.params
+      }
+      axios.get('alert/message/export', { responseType: 'blob', params: params }).then(res => {
+        const fileName = 'alert-message-' + temp.getTimeString() + '.xlsx'
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = fileName
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+      })
     },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+    // 全屏
+    fullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.fullScreen(vm)
+    },
+    // 退出全屏
+    exitFullScreen () {
+      const vm = this
+      this.$bottomBoxWindow.exitFullScreen(vm)
+    },
+    // 鼠标拖动二级列表
+    listResize (e) {
+      const vm = this
+      this.$bottomBoxWindow.listResize(vm, e)
+    },
+    showTagDetail (data, key) {
+      let open = false
+      if (key == 'asset' || key == 'project' || key == 'module' || key == 'endpoint' || key == 'datacenter') {
+        open = true
+      }
+      if (open) {
+        const labelList = []
+        const detailList = []
+        for (const item in data) {
+          if (item == 'asset' || item == 'project' || item == 'module' || item == 'endpoint' || item == 'dc') {
+            labelList.push(item)
+            detailList.push(data[item])
+          }
+        }
+        this.bottomBox.showSubList = true
+        this.tabList = labelList
+        /* this.tabDetailList = detailList;
+          this.bottomBox.targetTab = key; */
       }
     },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+    labelsClassName (row) {
+      if (row.column.label == this.$t('alert.list.labels')) {
+        return 'alert-message-list-labels'
+      } else {
+        return ''
       }
-
-      this.getAlertList();
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getAlertList()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getAlertList()
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          if (item == 'alertMessageState') {
+            this.$set(this.searchLabel, 'state', searchObj[item])
+          } else {
+            this.$set(this.searchLabel, item, searchObj[item])
+          }
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0
+      this.getAlertList()
+    },
+    fillProject: function (module) {
+      this.$get('project', { id: module.projectId }).then(response => {
+        if (response.code == 200) {
+          module.project = response.data.list[0]
+        }
+      })
+    },
+    closeViews: function () {
+      this.$refs.alertConfigBox.show(false, false)
+      this.$refs.projectBox.show(false, false)
+      this.$refs.moduleBox.show(false, false)
+      this.viewAssetState = false
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.pageObj.orderBy = orderBy
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getAlertList()
+    },
+    // label tooltip是否显示
+    labelToolTipDis (labelType) {
+      switch (labelType) {
+        case 'asset':
+        case 'module':
+        case 'project':
+          return false
+        default: return true
+      }
+    },
+    // alertNmae鼠标划入
+    alertMessagehover (item, index) {
+      item.loading = true
+      this.$set(this.tableData, index, item)
+    },
+    // label 鼠标划入
+    labelHover (item, index, type) {
+      if (this.labelToolTipDis(type)) {
+        return
+      }
+      item[type].loading = true
+      this.$set(this.tableData, index, item)
     }
+  },
+  watch: {
+    showSubList (n) {
+      const vm = this
+      this.$bottomBoxWindow.showSubListWatch(vm, n)
+    },
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
+      }
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+
+    this.getAlertList()
   }
+}
 </script>

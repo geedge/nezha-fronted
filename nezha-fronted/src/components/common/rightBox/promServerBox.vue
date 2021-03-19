@@ -66,116 +66,115 @@
   </div>
 </template>
 <script>
-  import {host} from '../../common/js/validate';
-  import {port} from '../../common/js/validate';
+import { host, port } from '../../common/js/validate'
 
-  export default {
-    name: "promServerBox",
-    props: {
-      promServer: Object
+export default {
+  name: 'promServerBox',
+  props: {
+    promServer: Object
+  },
+  data () {
+    return {
+      rules: {
+        'idc.name': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: host, trigger: 'blur' }
+        ],
+        port: [
+          { validator: port, trigger: 'blur' },
+          { required: true, message: this.$t('validate.required') }
+        ],
+        type: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
+      },
+      editPromServer: {},
+      dcData: [] // data center数据
+    }
+  },
+  methods: {
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
     },
-    data() {
-      return {
-        rules: {
-          'idc.name': [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'}
-          ],
-          host: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {validator: host, trigger: 'blur'}
-          ],
-          port: [
-            {validator: port, trigger: 'blur'},
-            {required: true, message: this.$t('validate.required')}
-          ],
-          type: [
-            {required: true, message: this.$t('validate.required'), trigger: 'change'},
-          ]
-        },
-        editPromServer: {},
-        dcData: [], //data center数据
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 保存 */
+    save () {
+      this.$refs.promServerForm.validate(valid => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (this.editPromServer.id) {
+            this.$put('promServer', this.editPromServer).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            this.$post('promServer', this.editPromServer).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('promServer?ids=' + this.editPromServer.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    // 获取dc下拉列表数据
+    getDcData () {
+      this.$get('idc', { pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.dcData = response.data.list
+        }
+      })
+    }
+  },
+  watch: {
+    // 将prop里的user转为组件内部对象
+    promServer: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.editPromServer = JSON.parse(JSON.stringify(n))
       }
     },
-    methods: {
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      /*保存*/
-      save() {
-        this.$refs.promServerForm.validate(valid => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            if (this.editPromServer.id) {
-              this.$put('promServer', this.editPromServer).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            } else {
-              this.$post('promServer', this.editPromServer).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            }
-          } else {
-            return false;
-          }
-        })
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("promServer?ids=" + this.editPromServer.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-      //获取dc下拉列表数据
-      getDcData() {
-        this.$get('idc',{pageSize:-1}).then(response => {
-          if (response.code === 200) {
-            this.dcData = response.data.list;
-          }
-        })
-      },
-    },
-    watch: {
-      //将prop里的user转为组件内部对象
-      promServer: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          this.editPromServer = JSON.parse(JSON.stringify(n));
-        }
-      },
-      'editPromServer.idc': function (n, o) {
-        this.editPromServer.idcId = n.id;
-      },
-    },
-    mounted() {
-      this.getDcData();
+    'editPromServer.idc': function (n, o) {
+      this.editPromServer.idcId = n.id
     }
+  },
+  mounted () {
+    this.getDcData()
   }
+}
 </script>

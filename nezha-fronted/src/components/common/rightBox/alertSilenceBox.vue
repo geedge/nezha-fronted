@@ -115,7 +115,6 @@
           </el-input>
         </el-form-item>
 
-
       </el-form>
 
     </div>
@@ -136,370 +135,363 @@
 </template>
 
 <script>
-  import bus from '../../../libs/bus';
-  import selectAlertSilence from '../alert/selectAlertSilence'
-  export default {
-    name:"alertSilenceBox",
-    components:{
-      selectAlertSilence,
-    },
+import bus from '../../../libs/bus'
+import selectAlertSilence from '../alert/selectAlertSilence'
+export default {
+  name: 'alertSilenceBox',
+  components: {
+    selectAlertSilence
+  },
 
-    props:{
-      alertSilence:Object
-    },
-    watch:{
-      alertSilence:{
-        deep:true,
-        immediate:true,
-        handler(n,o){
-          let obj=JSON.parse(JSON.stringify(n))
-          if(obj.ruleId==-1){
-            obj.ruleId=null;
-          }
-          if(obj.linkId==-1){
-            obj.linkId=null;
-          }
-          this.editAlertSilence=Object.assign(this.editAlertSilence,obj);
-          this.startAtTamp=new Date(this.editAlertSilence.startAt).getTime();
-          this.endAtTamp=new Date(this.editAlertSilence.endAt).getTime();
-          this.editAlertSilence.time=this.startAtTamp;
-          this.rangeTimeCallback();
-          this.typeChange(this.editAlertSilence.type,obj.linkId);
-          if(obj.linkId || obj.ruleId){
-            this.matcherChange()
-          }
+  props: {
+    alertSilence: Object
+  },
+  watch: {
+    alertSilence: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        const obj = JSON.parse(JSON.stringify(n))
+        if (obj.ruleId == -1) {
+          obj.ruleId = null
         }
-      }
-    },
-    data(){
-      let that=this;
-      let validate = (rule, value, callback) => {
-        if(!this.editAlertSilence.startAt){
-          callback(new Error('请选择开始时间!'));
-        }else if(!this.editAlertSilence.endAt){
-          callback(new Error('请选择结束时间!'));
-        } else{
-          callback();
+        if (obj.linkId == -1) {
+          obj.linkId = null
         }
-      };
-      return {
-        editAlertSilence:{
-          id:'',
-          startAt:'',
-          endAt:'',
-          ruleId:'',
-          type:'',
-          linkId:'',
-          reason:'',
-          time:[],
-          matcher:'',
-          name:''
-        },
-        rules:{
-          time: [
-            // { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
-            { required: true, trigger: 'change'},
-            { validator: validate, trigger: 'change' }
-          ],
-          matcher:[
-            { required: true, message: this.$t('alert.silence.selectMather'), trigger: 'change' },
-          ]
-        },
-        rangeTime:'',
-        ruleList:[],
-        filterSilence:'',
-        silenceData:[],
-        typeContentLoading:false,
-        typeList:[
-          {type:'datacenter',name:'Datacenter'},
-          {type:'project',name:'Project'},
-          {type:'module',name:'Module'},
-          {type:'endpoint',name:'Endpoint'},
-          {type:'asset',name:'Asset'},
-        ],
-        datacenterData:null,
-        assetData:null,
-        projectData:null,
-        moduleData:null,
-        endpointData:null,
-        startAtTamp:'',
-        endAtTamp:'',
-      }
-    },
-    mounted(){
-      this.getRuleList()
-    },
-    methods:{
-      clickOutside(){
-        this.esc(false);
-      },
-      esc(refresh){
-        this.prevent_opt.save=false;
-        this.$emit("close",refresh);
-      },
-      save(){
-        if(this.prevent_opt.save){
-          return
-        }
-        ;
-        this.prevent_opt.save=true;
-        this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId ;
-        this.$refs.alertSilenceForm.validate((valid)=>{
-          if(this.endAtTamp < this.startAtTamp){
-            this.$message({
-              message: '结束时间必须大于开始时间',
-              type: 'error'
-            });
-            return;
-          }
-          let params={...this.editAlertSilence};
-          delete  params.time;
-          delete  params.matcher;
-          if(valid){
-            params={
-              id:params.id,
-              endAt:params.endAt,
-              startAt:params.startAt,
-              linkId:params.linkId,
-              linkName:params.linkName,
-              reason:params.reason,
-              ruleId:params.ruleId,
-              name:params.name,
-              type:params.type,
-            }
-            if(this.editAlertSilence.id){
-              this.$put('/alert/silence',params).then(response=>{
-                this.prevent_opt.save=false;
-                if(response.code===200){
-                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-              });
-            }else{
-              this.$post('alert/silence',params).then(response=>{
-                this.prevent_opt.save=false;
-                if(response.code===200){
-                  this.$message({duration:1000,type:'success',message:this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          }else{
-            this.prevent_opt.save=false;
-            return false;
-          }
-        })
-      },
-      del(){
-        if(this.prevent_opt.save){
-          return
-        }
-        ;
-        this.prevent_opt.save=true;
-        this.$confirm(this.$t("tip.confirmDelete"),{
-          confirmButtonText:this.$t("tip.yes"),
-          cancelButtonText:this.$t("tip.no"),
-          type:'warning'
-        }).then(()=>{
-          this.$delete("/alert/silence?ids="+this.editAlertSilence.id).then(response=>{
-            this.prevent_opt.save=false;
-            if(response.code===200){
-              this.$message({type:'success',message:this.$t("tip.deleteSuccess")});
-              this.esc(true);
-            }else{
-              this.$message.error(response.msg);
-            }
-          })
-        }).catch(()=>{
-          this.prevent_opt.save=false;
-        });
-      },
-      getRuleList(){
-        this.$get('alert/rule',{pageNo:1,pageSize:-1}).then(response=>{
-          if(response.code==200){
-            this.ruleList=response.data.list;
-          }
-        })
-      },
-      dateChange(val,type){
-        if(type==='startAt'){
-          this.editAlertSilence.startAt=bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss');
-          this.startAtTamp=new Date(val).getTime();
-        } else if(type==='endAt'){
-          this.editAlertSilence.endAt=bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss');
-          this.endAtTamp=new Date(val).getTime();
-        }
-        this.$forceUpdate
+        this.editAlertSilence = Object.assign(this.editAlertSilence, obj)
+        this.startAtTamp = new Date(this.editAlertSilence.startAt).getTime()
+        this.endAtTamp = new Date(this.editAlertSilence.endAt).getTime()
+        this.editAlertSilence.time = this.startAtTamp
         this.rangeTimeCallback()
-      },
-      rangeTimeCallback(){
-        if(this.editAlertSilence.time){
-          let num=new Date(this.editAlertSilence.endAt).getTime() - new Date(this.editAlertSilence.startAt).getTime();
-          this.rangeTime=num/(60*60*1000);//以小时为单位
-        }else{
-          this.rangeTime=null;
+        this.typeChange(this.editAlertSilence.type, obj.linkId)
+        if (obj.linkId || obj.ruleId) {
+          this.matcherChange()
         }
+      }
+    }
+  },
+  data () {
+    const validate = (rule, value, callback) => {
+      if (!this.editAlertSilence.startAt) {
+        callback(new Error('请选择开始时间!'))
+      } else if (!this.editAlertSilence.endAt) {
+        callback(new Error('请选择结束时间!'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      editAlertSilence: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: '',
+        linkId: '',
+        reason: '',
+        time: [],
+        matcher: '',
+        name: ''
       },
-      rangeTimeChange(val){
-        let arr=[bus.timeFormate(bus.getOffsetTimezoneData(),'yyyy-MM-dd hh:mm:ss'),bus.timeFormate(bus.getOffsetTimezoneData(val*1),'yyyy-MM-dd hh:mm:ss')]
-        this.$set(this.editAlertSilence,'startAt',arr[0]);
-        this.$set(this.editAlertSilence,'endAt',arr[1]);
-        this.startAtTamp=new Date(this.editAlertSilence.startAt).getTime();
-        this.endAtTamp=new Date(this.editAlertSilence.endAt).getTime();
-        this.$forceUpdate
+      rules: {
+        time: [
+          // { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
+          { required: true, trigger: 'change' },
+          { validator: validate, trigger: 'change' }
+        ],
+        matcher: [
+          { required: true, message: this.$t('alert.silence.selectMather'), trigger: 'change' }
+        ]
       },
-      matcherChange(val){
-        this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId;
-      },
-      silenceChange(val){
-        this.editAlertSilence.linkId=val.id;
-        this.editAlertSilence.matcher=this.editAlertSilence.ruleId || this.editAlertSilence.linkId;
-        if(this.editAlertSilence.type==='datacenter'){
-          this.editAlertSilence.name=val.name;
+      rangeTime: '',
+      ruleList: [],
+      filterSilence: '',
+      silenceData: [],
+      typeContentLoading: false,
+      typeList: [
+        { type: 'datacenter', name: 'Datacenter' },
+        { type: 'project', name: 'Project' },
+        { type: 'module', name: 'Module' },
+        { type: 'endpoint', name: 'Endpoint' },
+        { type: 'asset', name: 'Asset' }
+      ],
+      datacenterData: null,
+      assetData: null,
+      projectData: null,
+      moduleData: null,
+      endpointData: null,
+      startAtTamp: '',
+      endAtTamp: ''
+    }
+  },
+  mounted () {
+    this.getRuleList()
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    save () {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
+      this.$refs.alertSilenceForm.validate((valid) => {
+        if (this.endAtTamp < this.startAtTamp) {
+          this.$message({
+            message: '结束时间必须大于开始时间',
+            type: 'error'
+          })
+          return
         }
-        if(this.editAlertSilence.type==='asset'){
-          this.editAlertSilence.name=val.sn
-        }
-        if(this.editAlertSilence.type==='project'){
-          this.editAlertSilence.name=val.name;
-        }
-        if(this.editAlertSilence.type==='module'){
-          this.editAlertSilence.name=val.name;
-        }
-        if(this.editAlertSilence.type==='endpoint'){
-          this.editAlertSilence.name=val.name;
-        }
-
-
-
-      },
-      clearValue(){
-        this.editAlertSilence.name='';
-        this.editAlertSilence.linkId='';
-      },
-      typeChange(val,linkId){
-        let firstArr=[]
-        let secondArr=[];
-        let thirddiArr=[];
-        this.typeContentLoading=true;
-        this.editAlertSilence.linkId=linkId?linkId:'';
-        this.editAlertSilence.name='';
-        if(val==='datacenter'){
-          this.$get('idc',{pageNo:1,pageSize:-1}).then(response=>{
-            if(response.code==200){
-              firstArr=response.data.list;
-              if(linkId){
-                this.editAlertSilence.name=firstArr.find(item=>item.id===linkId).name;
+        let params = { ...this.editAlertSilence }
+        delete params.time
+        delete params.matcher
+        if (valid) {
+          params = {
+            id: params.id,
+            endAt: params.endAt,
+            startAt: params.startAt,
+            linkId: params.linkId,
+            linkName: params.linkName,
+            reason: params.reason,
+            ruleId: params.ruleId,
+            name: params.name,
+            type: params.type
+          }
+          if (this.editAlertSilence.id) {
+            this.$put('/alert/silence', params).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
               }
-              this.silenceData=firstArr;
-              this.datacenterData=firstArr;
-              this.typeContentLoading=false;
-            }
-          })
-        }
-
-        if(val==='asset'){
-          this.$get('asset?pageNo=1&pageSize=-1').then(res=>{
-            if(res.code==200){
-              let arr=[];
-              res.data.list.forEach(asset=>{
-                asset.name=asset.sn;
-                if(linkId===asset.id){
-                  this.editAlertSilence.name=asset.name;
-                }
-                let idcF=arr.find(idc=>idc.id===asset.idc.id);
-                if(idcF){
-                  idcF.children.push(asset);
-                } else{
-                  let idc={...asset.idc};
-                  idc.children=[asset];
-                  arr.push(idc);
-                }
-              })
-              this.silenceData=arr;
-              this.assetData=arr;
-              this.typeContentLoading=false;
-            }
-          })
-        }
-
-        if(val==='project'){
-          this.$get('project',{pageNo:1,pageSize:-1}).then(response=>{
-            if(response.code==200){
-              firstArr=response.data.list;
-              if(linkId){
-                this.editAlertSilence.name=firstArr.find(item=>item.id===linkId).name;
+            })
+          } else {
+            this.$post('alert/silence', params).then(response => {
+              this.prevent_opt.save = false
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
               }
-              this.silenceData=firstArr;
-              this.projectData=firstArr;
-              this.typeContentLoading=false;
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    },
+    del () {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/alert/silence?ids=' + this.editAlertSilence.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code === 200) {
+            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    },
+    getRuleList () {
+      this.$get('alert/rule', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.ruleList = response.data.list
+        }
+      })
+    },
+    dateChange (val, type) {
+      if (type === 'startAt') {
+        this.editAlertSilence.startAt = bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss')
+        this.startAtTamp = new Date(val).getTime()
+      } else if (type === 'endAt') {
+        this.editAlertSilence.endAt = bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss')
+        this.endAtTamp = new Date(val).getTime()
+      }
+      this.$forceUpdate()
+      this.rangeTimeCallback()
+    },
+    rangeTimeCallback () {
+      if (this.editAlertSilence.time) {
+        const num = new Date(this.editAlertSilence.endAt).getTime() - new Date(this.editAlertSilence.startAt).getTime()
+        this.rangeTime = num / (60 * 60 * 1000)// 以小时为单位
+      } else {
+        this.rangeTime = null
+      }
+    },
+    rangeTimeChange (val) {
+      const arr = [bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'), bus.timeFormate(bus.getOffsetTimezoneData(val * 1), 'yyyy-MM-dd hh:mm:ss')]
+      this.$set(this.editAlertSilence, 'startAt', arr[0])
+      this.$set(this.editAlertSilence, 'endAt', arr[1])
+      this.startAtTamp = new Date(this.editAlertSilence.startAt).getTime()
+      this.endAtTamp = new Date(this.editAlertSilence.endAt).getTime()
+      this.$forceUpdate()
+    },
+    matcherChange (val) {
+      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
+    },
+    silenceChange (val) {
+      this.editAlertSilence.linkId = val.id
+      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
+      if (this.editAlertSilence.type === 'datacenter') {
+        this.editAlertSilence.name = val.name
+      }
+      if (this.editAlertSilence.type === 'asset') {
+        this.editAlertSilence.name = val.sn
+      }
+      if (this.editAlertSilence.type === 'project') {
+        this.editAlertSilence.name = val.name
+      }
+      if (this.editAlertSilence.type === 'module') {
+        this.editAlertSilence.name = val.name
+      }
+      if (this.editAlertSilence.type === 'endpoint') {
+        this.editAlertSilence.name = val.name
+      }
+    },
+    clearValue () {
+      this.editAlertSilence.name = ''
+      this.editAlertSilence.linkId = ''
+    },
+    typeChange (val, linkId) {
+      let firstArr = []
+      // const secondArr = []
+      // const thirddiArr = []
+      this.typeContentLoading = true
+      this.editAlertSilence.linkId = linkId || ''
+      this.editAlertSilence.name = ''
+      if (val === 'datacenter') {
+        this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
+          if (response.code == 200) {
+            firstArr = response.data.list
+            if (linkId) {
+              this.editAlertSilence.name = firstArr.find(item => item.id === linkId).name
             }
-          })
-        }
+            this.silenceData = firstArr
+            this.datacenterData = firstArr
+            this.typeContentLoading = false
+          }
+        })
+      }
 
+      if (val === 'asset') {
+        this.$get('asset?pageNo=1&pageSize=-1').then(res => {
+          if (res.code == 200) {
+            const arr = []
+            res.data.list.forEach(asset => {
+              asset.name = asset.sn
+              if (linkId === asset.id) {
+                this.editAlertSilence.name = asset.name
+              }
+              const idcF = arr.find(idc => idc.id === asset.idc.id)
+              if (idcF) {
+                idcF.children.push(asset)
+              } else {
+                const idc = { ...asset.idc }
+                idc.children = [asset]
+                arr.push(idc)
+              }
+            })
+            this.silenceData = arr
+            this.assetData = arr
+            this.typeContentLoading = false
+          }
+        })
+      }
 
-        if(val==='module'){
-          this.$get('module?pageNo=1&pageSize=-1').then(res=>{
-            if(res.code==200){
-              let arr=[];
-              res.data.list.forEach(module=>{
-                if(linkId===module.id){
-                  this.editAlertSilence.name=module.name;
-                }
-                let projectF=arr.find(project=>project.id===module.project.id)
-                if(projectF){
-                  projectF.children.push(module);
-                } else{
-                  let project={...module.project};
-                  project.children=[module];
-                  arr.push(project);
-                }
-              })
-              this.silenceData=arr;
-              this.moduleData=arr;
-              this.typeContentLoading=false;
+      if (val === 'project') {
+        this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
+          if (response.code == 200) {
+            firstArr = response.data.list
+            if (linkId) {
+              this.editAlertSilence.name = firstArr.find(item => item.id === linkId).name
             }
-          })
-        }
+            this.silenceData = firstArr
+            this.projectData = firstArr
+            this.typeContentLoading = false
+          }
+        })
+      }
 
-        if(val==='endpoint'){
-          this.$get('endpoint?pageNo=1&pageSize=-1').then(res=>{
-           if(res.code=200){
-             let arr=[];
-             res.data.list.forEach(item=>{
-               item.name=item.host;
-               if(linkId===item.id){
-                 this.editAlertSilence.name=item.name;
-               }
-               let projectF = arr.find(project=>item.project.id===project.id);
-               if(projectF){
-                 let moduleF = projectF.children.find(module=>module.id===item.module.id);
-                 if(moduleF){
-                   moduleF.children.push(item)
-                 } else{
-                   projectF.children.push({...item.module,children:[item]});
-                 }
-               } else {
-                 let project={...item.project};
-                 project.children=[{...item.module,children:[item]}]
-                 arr.push(project);
-               }
-             });
-             this.silenceData=arr;
-             this.endpointData=arr;
-             this.typeContentLoading=false;
-           }
-          });
+      if (val === 'module') {
+        this.$get('module?pageNo=1&pageSize=-1').then(res => {
+          if (res.code == 200) {
+            const arr = []
+            res.data.list.forEach(module => {
+              if (linkId === module.id) {
+                this.editAlertSilence.name = module.name
+              }
+              const projectF = arr.find(project => project.id === module.project.id)
+              if (projectF) {
+                projectF.children.push(module)
+              } else {
+                const project = { ...module.project }
+                project.children = [module]
+                arr.push(project)
+              }
+            })
+            this.silenceData = arr
+            this.moduleData = arr
+            this.typeContentLoading = false
+          }
+        })
+      }
 
-        }
-
-      },
+      if (val === 'endpoint') {
+        this.$get('endpoint?pageNo=1&pageSize=-1').then(res => {
+          if (res.code == 200) {
+            const arr = []
+            res.data.list.forEach(item => {
+              item.name = item.host
+              if (linkId === item.id) {
+                this.editAlertSilence.name = item.name
+              }
+              const projectF = arr.find(project => item.project.id === project.id)
+              if (projectF) {
+                const moduleF = projectF.children.find(module => module.id === item.module.id)
+                if (moduleF) {
+                  moduleF.children.push(item)
+                } else {
+                  projectF.children.push({ ...item.module, children: [item] })
+                }
+              } else {
+                const project = { ...item.project }
+                project.children = [{ ...item.module, children: [item] }]
+                arr.push(project)
+              }
+            })
+            this.silenceData = arr
+            this.endpointData = arr
+            this.typeContentLoading = false
+          }
+        })
+      }
     }
   }
+}
 </script>
 
 <style scoped lang="scss">

@@ -5,51 +5,50 @@
 </template>
 
 <script>
-  export default {
-    name: "deleteButton",
-    props:{
-      filterFunction:Function,
-      //deleteObjs: Object,
-      deleteObjs: Array,
-      api:String,
-      clickFunction:Function,
-      id:String
+export default {
+  name: 'deleteButton',
+  props: {
+    filterFunction: Function,
+    // deleteObjs: Object,
+    deleteObjs: Array,
+    api: String,
+    clickFunction: Function,
+    id: String
+  },
+  methods: {
+    batchDelete: function () {
+      if (this.deleteObjs.length < 1) return
+      if (this.clickFunction) {
+        this.clickFunction()
+        return
+      }
+      this.$confirm(this.$t('tip.confirmBatchDelete', [this.deleteObjs.length]), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$emit('before')
+        const params = this.filterParam()
+        this.$delete(this.api + params).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.$emit('after')
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
     },
-    methods:{
-      batchDelete:function(){
-        if(this.deleteObjs.length<1) return;
-        if(this.clickFunction){
-          this.clickFunction();
-          return;
-        }
-        this.$confirm(this.$t("tip.confirmBatchDelete",[this.deleteObjs.length]), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$emit('before');
-          let params=this.filterParam();
-          this.$delete(this.api+params).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$emit('after')
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      filterParam:function(){
-        let filterFunction=this.filterFunction
-        if(!filterFunction){
-          filterFunction=(arr)=>{return "?ids="+arr.map(t=>t.id).join(',')};
-        }
+    filterParam: function () {
+      let filterFunction = this.filterFunction
+      if (!filterFunction) {
+        filterFunction = (arr) => { return '?ids=' + arr.map(t => t.id).join(',') }
+      }
 
-        return filterFunction(this.deleteObjs);
-
-      },
+      return filterFunction(this.deleteObjs)
     }
   }
+}
 </script>
 
 <style scoped>

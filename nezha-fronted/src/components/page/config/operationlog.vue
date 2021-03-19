@@ -56,7 +56,7 @@
         </template>
       </el-table-column>
       <el-table-column width="28">
-        <template slot="header" slot-scope="scope">
+        <template slot="header">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
@@ -68,246 +68,246 @@
   </div>
 </template>
 <script>
-  import bus from '../../../libs/bus';
-  export default {
-    name: "oparetionlog",
-    data() {
-      return {
-        tableId: 'operationLogTable', //需要分页的table的id，用于记录每页数量
+import bus from '../../../libs/bus'
+export default {
+  name: 'oparetionlog',
+  data () {
+    return {
+      tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量
 
-        rightBox: { //弹出框相关
-          show: false,
+      rightBox: { // 弹出框相关
+        show: false
+      },
+      rightBoxResize: { // resize弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      rightBoxDownload: { // 下载弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      rightBoxUpload: { // 上传弹出框相关
+        show: false,
+        isAdd: false, // false，true：resize
+        title: ''
+      },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      tableTitle: [
+        {
+          label: this.$t('config.operationlog.id'),
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('config.operationlog.username'),
+          prop: 'username',
+          show: true
         },
-        rightBoxResize: { //resize弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.operationlog.ip'),
+          prop: 'ip',
+          show: true
         },
-        rightBoxDownload: { //下载弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.operationlog.operation'),
+          prop: 'operation',
+          show: true
         },
-        rightBoxUpload: { //上传弹出框相关
-          show: false,
-          isAdd: false, //false，true：resize
-          title: ''
+        {
+          label: this.$t('config.operationlog.type'),
+          prop: 'type',
+          show: true
         },
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
+        {
+          label: this.$t('config.operationlog.state'),
+          prop: 'state',
+          show: true
         },
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
+        // {
+        //   label: this.$t('config.operationlog.userId'),
+        //   prop: 'userId',
+        //   show: false,
+        // },
+        {
+          label: this.$t('config.operationlog.operaId'),
+          prop: 'operaId',
+          show: false
         },
-        tableTitle: [
+        {
+          label: this.$t('config.operationlog.createDate'),
+          prop: 'createDate',
+          show: true
+        },
+        {
+          label: this.$t('config.operationlog.time'),
+          prop: 'time',
+          show: false
+        },
+        {
+          label: this.$t('config.operationlog.params'),
+          prop: 'params',
+          show: false
+        },
+        {
+          label: this.$t('config.operationlog.response'),
+          prop: 'response',
+          show: false
+        }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [
           {
-            label: this.$t("config.operationlog.id"),
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t('config.operationlog.username'),
-            prop: 'username',
-            show: true,
-          },
-          {
-            label: this.$t('config.operationlog.ip'),
-            prop: 'ip',
-            show: true,
-          },
-          {
-            label: this.$t('config.operationlog.operation'),
-            prop: 'operation',
-            show: true,
-          },
-          {
-            label: this.$t('config.operationlog.type'),
-            prop: 'type',
-            show: true,
-          },
-          {
-            label: this.$t('config.operationlog.state'),
-            prop: 'state',
-            show: true,
-          },
-          // {
-          //   label: this.$t('config.operationlog.userId'),
-          //   prop: 'userId',
-          //   show: false,
-          // },
-          {
-            label: this.$t('config.operationlog.operaId'),
-            prop: 'operaId',
-            show: false,
-          },
-          {
-            label: this.$t('config.operationlog.createDate'),
-            prop: 'createDate',
-            show: true,
-          },
-          {
-            label: this.$t('config.operationlog.time'),
-            prop: 'time',
-            show: false,
-          },
-          {
-            label: this.$t('config.operationlog.params'),
-            prop: 'params',
-            show: false,
-          },
-          {
-            label: this.$t('config.operationlog.response'),
-            prop: 'response',
-            show: false,
-          },
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [
-            {
             id: 11,
             name: this.$t('config.operationlog.type'),
             type: 'input',
             label: 'type',
             disabled: false
-          },{
+          }, {
             id: 12,
             name: this.$t('config.operationlog.username'),
             type: 'input',
             label: 'username',
             disabled: false
-          },{
+          }, {
             id: 13,
             name: this.$t('config.operationlog.operation'),
             type: 'selectString',
             label: 'operation',
             disabled: false
           }
-          ],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-      }
-    },
-    methods: {
-      messageStyle(e) {
-        if (e.column.label == this.$t('config.operationlog.state')) {
-          if (e.row.state == 'success') {
-            return 'success';
-          } else {
-            return 'danger';
-          }
-        }
-        return '';
+        ]
       },
-      getTableData: function () {
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('sys/log/list', this.searchLabel).then(response => {
-          this.tools.loading = false;
-          if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.operationLogTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
-          }
-        })
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      formatUsername(row){
-        if(row.username){
-          return row.username;
-        } else if(row.operation==='login'&&!row.username){//如果是登录 且登录失败
-          return JSON.parse(row.params).username
-        } else{
-          return '-'
-        }
-      },
-      search: function (searchObj) {
-        let orderBy = '';
-        if(this.searchLabel.orderBy){
-          orderBy = this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        this.getTableData();
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-    },
-    watch:{
-      tableData(){
-        if(this.$refs.operationLogTable&&this.$refs.operationLogTable.bodyWrapper){
-          this.$refs.operationLogTable.bodyWrapper.scrollTop = 0;
-        }
-      },
-    },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
-    },
-    computed: {
-      isCurrentUser() {
-        return function(username) {
-          return localStorage.getItem('nz-username') == username;
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null
+    }
+  },
+  methods: {
+    messageStyle (e) {
+      if (e.column.label == this.$t('config.operationlog.state')) {
+        if (e.row.state == 'success') {
+          return 'success'
+        } else {
+          return 'danger'
         }
       }
+      return ''
     },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+    getTableData: function () {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('sys/log/list', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.operationLogTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    formatUsername (row) {
+      if (row.username) {
+        return row.username
+      } else if (row.operation === 'login' && !row.username) { // 如果是登录 且登录失败
+        return JSON.parse(row.params).username
+      } else {
+        return '-'
       }
     },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      this.getTableData();
+    search: function (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      this.getTableData()
     },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    }
+  },
+  watch: {
+    tableData () {
+      if (this.$refs.operationLogTable && this.$refs.operationLogTable.bodyWrapper) {
+        this.$refs.operationLogTable.bodyWrapper.scrollTop = 0
+      }
+    }
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
+  },
+  computed: {
+    isCurrentUser () {
+      return function (username) {
+        return localStorage.getItem('nz-username') == username
+      }
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.getTableData()
   }
+}
 </script>

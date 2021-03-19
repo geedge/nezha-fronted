@@ -3,7 +3,7 @@
   <transition name="right-sub-box">
     <div @click.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
       <div class="param-box">
-        <div class="param-box-row" v-for="(item, index) in currentModule.paramObj">
+        <div v-for="(item, index) in currentModule.paramObj" :key="index" class="param-box-row">
           <el-input placeholder="key" class="param-box-row-key" size="mini" v-model="item.key"></el-input>
           <span class="param-box-row-eq">=</span>
           <el-input placeholder="value" class="param-box-row-value" size="mini" v-model="item.value"></el-input>
@@ -20,12 +20,12 @@
 
 <script>
 export default {
-  name: "paramEditBox",
+  name: 'paramEditBox',
   props: {
     editParamBox: Object,
     paramObj: Array
   },
-  data() {
+  data () {
     return {
 
     }

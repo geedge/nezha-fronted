@@ -260,384 +260,383 @@
 </template>
 
 <script>
-  import fileSaver from 'file-saver';
-  import xlsx from 'xlsx';
+import fileSaver from 'file-saver'
+import xlsx from 'xlsx'
 
-  export default {
-    name: "mibBrowser",
-    props: {
-      showTab: String,
-    },
-    data() {
-      return {
-        loading: false,
-        treeLoading: false,
-        snmpSetFormVisible: false, //snmp set表单
-        searchParam: {
-          host: '',
-          port: 161,
-          oid: '',
-          operation: 'get',
-          version: 2,
-          community: 'public',
-          auth: {
-            username: '',
-            password: '',
-            securityLevel: '',
-            authProtocol: '',
-            privProtocol: '',
-            privPassword: ''
-          },
-          type: '',
-          value: ''
+export default {
+  name: 'mibBrowser',
+  props: {
+    showTab: String
+  },
+  data () {
+    return {
+      loading: false,
+      treeLoading: false,
+      snmpSetFormVisible: false, // snmp set表单
+      searchParam: {
+        host: '',
+        port: 161,
+        oid: '',
+        operation: 'get',
+        version: 2,
+        community: 'public',
+        auth: {
+          username: '',
+          password: '',
+          securityLevel: '',
+          authProtocol: '',
+          privProtocol: '',
+          privPassword: ''
         },
-        searchParamPop: {
-          host: '',
-          port: 161,
-          oid: '',
-          operation: 'get',
-          version: 2,
-          community: 'public',
-          auth: {
-            username: '',
-            password: '',
-            securityLevel: '',
-            authProtocol: '',
-            privProtocol: '',
-            privPassword: ''
-          }
-        },
-        operationData: ['get', 'walk', 'getnext', 'set'],
-        advancedShow: false,
-
-        walkParam: {models: []},
-        walkData: [],
-        currentWalk: {name: '', objectID: '', syntax: '', access: '', status: '', index: '', description: ''},
-        resultData: [],
-        modelData: [],
-        assetData: [],
-        showTable:true,
-        typeData: ["OctetString", "Integer", "OID", "Gauge", "Counter32", "IpAddress", "TimeTicks", "Counter64", "UnsignedInteger", "BITS", "Float", "DateAndTime"],
-        assetInputTimer:null,
-      }
-    },
-    computed: {
-      mibName() {
-        return (value) => {
-          return value ? this.getMibName(value) : "";
-        }
-      }
-    },
-    methods: {
-      toFileTab() {
-        this.$emit("toFileTab");
+        type: '',
+        value: ''
       },
-      showDetail(data, node) {
-        this.currentWalk = data;
-        this.searchParam.oid = data.objectID;
-      },
-
-      /*根据oid获取对应的根mib名称*/
-      getMibName(oid) {
-        let node = this.$refs.walkTree.getNode(oid);
-        let mibName = getMibName(node);
-        function getMibName(n) {
-          if (n.parent && n.parent.parent) {
-            return getMibName(n.parent);
-          } else if (n.parent) {
-            return n.data.name;
-          } else {
-            return "";
-          }
-        }
-        return mibName ? mibName : "";
-      },
-
-      /*获取tree的数据*/
-      getWalkData() {
-        this.treeLoading = true;
-        this.$get('mib/tree', {models: this.walkParam.models.join(",")}).then(response => {
-          this.treeLoading = false;
-          if (response.code === 200) {
-            let obj = JSON.parse(response.data);
-            this.walkData = [];
-            for (let item in obj) {
-              this.walkData.push({name: item, subTree: obj[item]});
-            }
-          }
-        });
-      },
-      getModelData() {
-        this.$get('model', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            this.modelData = response.data.list;
-          }
-        });
-      },
-      selectModel(model) {
-        let index = this.walkParam.models.indexOf(parseInt(model.id));
-        if (index == -1) {
-          this.walkParam.models.push(parseInt(model.id));
-        } else {
-          this.walkParam.models.splice(index, 1);
-        }
-        this.getWalkData();
-      },
-      search(set) {
-        if (this.loading) {
-          return;
-        }
-
-        this.popShow();this.popHide()  //再调用一次，对数据赋值
-
-        /*处理snmpset*/
-        if (!set) {
-          if (this.searchParam.operation == 'set') {
-            this.snmpSetFormVisible = true;
-            return;
-          }
-        }
-        if (this.snmpSetFormVisible) {
-          if (!this.searchParam.oid || !this.searchParam.type || !this.searchParam.value) {
-            this.$message.error(this.$t("validate.required"));
-            return;
-          }
-          this.snmpSetFormVisible = false;
-        }
-
-        this.loading = true;
-        setTimeout(() => {
-          this.$post('mib/browser', this.searchParam).then(response => {
-            this.loading = false;
-            if (response.code === 200) {
-              this.resultData = this.resultData.concat(response.data.list);
-              if (this.searchParam.operation == 'set') {
-                this.$message({duration: 2000, type: 'success', message: this.$t("tip.success")});
-              }
-              this.showTable=false;
-              this.$nextTick(()=>{
-                this.showTable=true;
-              })
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        }, 300);
-      },
-
-      popShow() {
-        this.searchParamPop.host = this.searchParam.host;
-        this.searchParamPop.oid = this.searchParam.oid;
-        this.searchParamPop.operation = this.searchParam.operation;
-      },
-      popHide() {
-        this.searchParam = JSON.parse(JSON.stringify(this.searchParamPop));
-      },
-      /*清空result table*/
-      clearResult() {
-        this.resultData = [];
-      },
-      resetSearchParam:function(){
-        this.searchParamPop={
-          host: '',
-            port: 161,
-            oid: '',
-            operation: 'get',
-            version: 2,
-            community: 'public',
-            auth: {
-            username: '',
-              password: '',
-              securityLevel: '',
-              authProtocol: '',
-              privProtocol: '',
-              privPassword: ''
-          }
+      searchParamPop: {
+        host: '',
+        port: 161,
+        oid: '',
+        operation: 'get',
+        version: 2,
+        community: 'public',
+        auth: {
+          username: '',
+          password: '',
+          securityLevel: '',
+          authProtocol: '',
+          privProtocol: '',
+          privPassword: ''
         }
       },
-      assetChange:function(value){
-        clearTimeout(this.assetInputTimer)
-        this.assetInputTimer=setTimeout(()=>{
-          this.resetSearchParam();
-          let asset=this.assetData.find(item=>{
-            return item.host == value
-          })
+      operationData: ['get', 'walk', 'getnext', 'set'],
+      advancedShow: false,
 
-          if(asset&&asset.accounts&&asset.accounts.length>0){
-            let snmpAccount=asset.accounts.find(item=>{
-              return item.protocol == 'SNMP'
-            })
-
-            if(snmpAccount){
-              this.searchParamPop.port=snmpAccount.port;
-              this.searchParamPop.community=snmpAccount.params.community;
-              this.searchParamPop.version=snmpAccount.params.version;
-              if(this.searchParamPop.version == 3){
-                this.searchParamPop.auth.username=snmpAccount.params.username;
-                this.searchParamPop.auth.securityLevel=snmpAccount.params.securityLevel;
-                this.searchParamPop.auth.password=snmpAccount.params.password;
-                this.searchParamPop.auth.authProtocol=snmpAccount.params.authProtocol;
-                if(this.searchParamPop.auth.securityLevel=='authPriv')
-                this.searchParamPop.auth.privProtocol=snmpAccount.params.privProtocol;
-                this.searchParamPop.auth.privPassword=snmpAccount.params.privPassword;
-              }
-            }
-          }
-        },200)
-      },
-      assetSuggestion(queryString, callback) {
-        let data = [];
-        if (!queryString) {
-          data = this.assetData;
-        } else {
-          for (let i = 0; i < this.assetData.length; i++) {
-            if (this.assetData[i].host.indexOf(queryString) != -1) {
-              data.push(this.assetData[i]);
-            }
-          }
-        }
-        callback(data);
-      },
-      getAssetData() {
-        this.$get('asset', {pageSize: -1, pageNo: 1}).then(response => {
-          if (response.code === 200) {
-            this.assetData = response.data.list;
-          }
-        });
-      },
-      /*左侧上下拖动*/
-      treeDetailResize(e) {
-        let treeDom = document.querySelector(".mib-browser-tree"); //tree
-        let detailDom = document.querySelector(".mib-browser-detail"); //detail
-        //得到点击时dom的初始高度：
-        let leftTotalHeight = document.querySelector(".mib-browser-left").offsetHeight;
-        let treeInitialHeight = treeDom.offsetHeight;
-        let detailInitialHeight = detailDom.offsetHeight;
-        //点击时鼠标的Y轴位置
-        let mouseInitialY = e.clientY;
-
-        document.onmousemove = (e) => {
-          e.preventDefault();
-          //得到鼠标拖动的距离
-          let mouseMoveY = Math.abs(e.clientY - mouseInitialY);
-
-          //往上方拖动：
-          if (e.clientY < mouseInitialY) {
-            treeDom.style.height = treeInitialHeight-mouseMoveY-5+'px';
-            detailDom.style.height = detailInitialHeight+mouseMoveY+'px';
-          }
-          //往下方拖动：
-          if (e.clientY > mouseInitialY) {
-            treeDom.style.height = treeInitialHeight+mouseMoveY-5+'px';
-            detailDom.style.height = detailInitialHeight-mouseMoveY+'px';
-          }
-
-          // 主、副列表最小高度限制为55px
-          if(parseInt(treeDom.style.height) >= leftTotalHeight-95){
-            treeDom.style.height = leftTotalHeight-95+'px';
-          }
-          if(parseInt(treeDom.style.height) <= 55){
-            treeDom.style.height = 55+'px';
-          }
-          if(parseInt(detailDom.style.height) >= leftTotalHeight-95){
-            detailDom.style.height = leftTotalHeight-95+'px';
-          }
-          if(parseInt(detailDom.style.height) <= 55){
-            detailDom.style.height = 55+'px';
-          }
-        };
-        document.onmouseup = () => {
-          document.onmousemove = null;
-        }
-      },
-      /*中间左右拖动*/
-      leftRightResize(e) {
-        let leftDom = document.querySelector(".mib-browser-left"); //tree
-        let rightDom = document.querySelector(".mib-browser-right"); //detail
-        //得到点击时dom的初始宽度：
-        let totalWidth = document.querySelector(".mib-browser-box").offsetWidth;
-        let leftInitialWidth = leftDom.offsetWidth;
-        let rightInitialWidth = rightDom.offsetWidth;
-        //点击时鼠标的Y轴位置
-        let mouseInitialX = e.clientX;
-
-        document.onmousemove = (e) => {
-          e.preventDefault();
-          //得到鼠标拖动的距离
-          let mouseMoveX = Math.abs(e.clientX - mouseInitialX);
-
-          //往上方拖动：
-          if (e.clientX < mouseInitialX) {
-            leftDom.style.width = leftInitialWidth-mouseMoveX+'px';
-            rightDom.style.width = rightInitialWidth+mouseMoveX+'px';
-          }
-          //往下方拖动：
-          if (e.clientX > mouseInitialX) {
-            leftDom.style.width = leftInitialWidth+mouseMoveX+'px';
-            rightDom.style.width = rightInitialWidth-mouseMoveX+'px';
-          }
-
-          // 主、副列表最小宽度限制
-          if(parseInt(leftDom.style.width) >= totalWidth-400){
-            leftDom.style.width = totalWidth-400+'px';
-          }
-          if(parseInt(leftDom.style.width) <= 200){
-            leftDom.style.width = 200+'px';
-          }
-          if(parseInt(rightDom.style.width) >= totalWidth-200){
-            rightDom.style.width = totalWidth-200+'px';
-          }
-          if(parseInt(rightDom.style.width) <= 400){
-            rightDom.style.width = 400+'px';
-          }
-        };
-        document.onmouseup = () => {
-          document.onmousemove = null;
-        }
-      },
-      domResize(){
-        let scrollTop=this.$refs['resultTable'].$el.querySelector(".el-table__body-wrapper").scrollTop;
-        this.showTable=false;
-        this.$nextTick(()=>{
-          this.showTable=true;
-          this.$nextTick(()=>{
-            this.$refs['resultTable'].$el.querySelector(".el-table__body-wrapper").scrollTop=scrollTop
-          })
-        })
-      },
-      exportXlsx() {
-        if (this.resultData.length == 0) {
-          return;
-        }
-        let book = xlsx.utils.book_new();
-        let sheet = xlsx.utils.json_to_sheet(this.resultData, {header: ["name", "oid", "value", "type", "ip", "port"]});
-        xlsx.utils.book_append_sheet(book, sheet, 'result');
-        let out = xlsx.write(book, {
-          bookType: 'xlsx',
-          bookSST: true,
-          type: 'array'
-        })
-        try {
-          fileSaver.saveAs(
-            new Blob([out], {
-              type: 'application/octet-stream'
-            }),
-            "result_" + this.searchParam.host + ".xlsx"
-          )
-        } catch (e) {}
-        return out
-      },
-    },
-    mounted() {
-      this.getWalkData();
-      this.getModelData();
-      this.getAssetData();
-      window.addEventListener('resize',this.domResize);
-    },
-    beforeDestroy(){
-      window.removeEventListener('resize',this.domResize);
+      walkParam: { models: [] },
+      walkData: [],
+      currentWalk: { name: '', objectID: '', syntax: '', access: '', status: '', index: '', description: '' },
+      resultData: [],
+      modelData: [],
+      assetData: [],
+      showTable: true,
+      typeData: ['OctetString', 'Integer', 'OID', 'Gauge', 'Counter32', 'IpAddress', 'TimeTicks', 'Counter64', 'UnsignedInteger', 'BITS', 'Float', 'DateAndTime'],
+      assetInputTimer: null
     }
+  },
+  computed: {
+    mibName () {
+      return (value) => {
+        return value ? this.getMibName(value) : ''
+      }
+    }
+  },
+  methods: {
+    toFileTab () {
+      this.$emit('toFileTab')
+    },
+    showDetail (data, node) {
+      this.currentWalk = data
+      this.searchParam.oid = data.objectID
+    },
+
+    /* 根据oid获取对应的根mib名称 */
+    getMibName (oid) {
+      const node = this.$refs.walkTree.getNode(oid)
+      const mibName = getMibName(node)
+      function getMibName (n) {
+        if (n.parent && n.parent.parent) {
+          return getMibName(n.parent)
+        } else if (n.parent) {
+          return n.data.name
+        } else {
+          return ''
+        }
+      }
+      return mibName || ''
+    },
+
+    /* 获取tree的数据 */
+    getWalkData () {
+      this.treeLoading = true
+      this.$get('mib/tree', { models: this.walkParam.models.join(',') }).then(response => {
+        this.treeLoading = false
+        if (response.code === 200) {
+          const obj = JSON.parse(response.data)
+          this.walkData = []
+          for (const item in obj) {
+            this.walkData.push({ name: item, subTree: obj[item] })
+          }
+        }
+      })
+    },
+    getModelData () {
+      this.$get('model', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          this.modelData = response.data.list
+        }
+      })
+    },
+    selectModel (model) {
+      const index = this.walkParam.models.indexOf(parseInt(model.id))
+      if (index == -1) {
+        this.walkParam.models.push(parseInt(model.id))
+      } else {
+        this.walkParam.models.splice(index, 1)
+      }
+      this.getWalkData()
+    },
+    search (set) {
+      if (this.loading) {
+        return
+      }
+
+      this.popShow(); this.popHide() // 再调用一次，对数据赋值
+
+      /* 处理snmpset */
+      if (!set) {
+        if (this.searchParam.operation == 'set') {
+          this.snmpSetFormVisible = true
+          return
+        }
+      }
+      if (this.snmpSetFormVisible) {
+        if (!this.searchParam.oid || !this.searchParam.type || !this.searchParam.value) {
+          this.$message.error(this.$t('validate.required'))
+          return
+        }
+        this.snmpSetFormVisible = false
+      }
+
+      this.loading = true
+      setTimeout(() => {
+        this.$post('mib/browser', this.searchParam).then(response => {
+          this.loading = false
+          if (response.code === 200) {
+            this.resultData = this.resultData.concat(response.data.list)
+            if (this.searchParam.operation == 'set') {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.success') })
+            }
+            this.showTable = false
+            this.$nextTick(() => {
+              this.showTable = true
+            })
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      }, 300)
+    },
+
+    popShow () {
+      this.searchParamPop.host = this.searchParam.host
+      this.searchParamPop.oid = this.searchParam.oid
+      this.searchParamPop.operation = this.searchParam.operation
+    },
+    popHide () {
+      this.searchParam = JSON.parse(JSON.stringify(this.searchParamPop))
+    },
+    /* 清空result table */
+    clearResult () {
+      this.resultData = []
+    },
+    resetSearchParam: function () {
+      this.searchParamPop = {
+        host: '',
+        port: 161,
+        oid: '',
+        operation: 'get',
+        version: 2,
+        community: 'public',
+        auth: {
+          username: '',
+          password: '',
+          securityLevel: '',
+          authProtocol: '',
+          privProtocol: '',
+          privPassword: ''
+        }
+      }
+    },
+    assetChange: function (value) {
+      clearTimeout(this.assetInputTimer)
+      this.assetInputTimer = setTimeout(() => {
+        this.resetSearchParam()
+        const asset = this.assetData.find(item => {
+          return item.host == value
+        })
+
+        if (asset && asset.accounts && asset.accounts.length > 0) {
+          const snmpAccount = asset.accounts.find(item => {
+            return item.protocol == 'SNMP'
+          })
+
+          if (snmpAccount) {
+            this.searchParamPop.port = snmpAccount.port
+            this.searchParamPop.community = snmpAccount.params.community
+            this.searchParamPop.version = snmpAccount.params.version
+            if (this.searchParamPop.version == 3) {
+              this.searchParamPop.auth.username = snmpAccount.params.username
+              this.searchParamPop.auth.securityLevel = snmpAccount.params.securityLevel
+              this.searchParamPop.auth.password = snmpAccount.params.password
+              this.searchParamPop.auth.authProtocol = snmpAccount.params.authProtocol
+              if (this.searchParamPop.auth.securityLevel == 'authPriv') { this.searchParamPop.auth.privProtocol = snmpAccount.params.privProtocol }
+              this.searchParamPop.auth.privPassword = snmpAccount.params.privPassword
+            }
+          }
+        }
+      }, 200)
+    },
+    assetSuggestion (queryString, callback) {
+      let data = []
+      if (!queryString) {
+        data = this.assetData
+      } else {
+        for (let i = 0; i < this.assetData.length; i++) {
+          if (this.assetData[i].host.indexOf(queryString) != -1) {
+            data.push(this.assetData[i])
+          }
+        }
+      }
+      callback(data)
+    },
+    getAssetData () {
+      this.$get('asset', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          this.assetData = response.data.list
+        }
+      })
+    },
+    /* 左侧上下拖动 */
+    treeDetailResize (e) {
+      const treeDom = document.querySelector('.mib-browser-tree') // tree
+      const detailDom = document.querySelector('.mib-browser-detail') // detail
+      // 得到点击时dom的初始高度：
+      const leftTotalHeight = document.querySelector('.mib-browser-left').offsetHeight
+      const treeInitialHeight = treeDom.offsetHeight
+      const detailInitialHeight = detailDom.offsetHeight
+      // 点击时鼠标的Y轴位置
+      const mouseInitialY = e.clientY
+
+      document.onmousemove = (e) => {
+        e.preventDefault()
+        // 得到鼠标拖动的距离
+        const mouseMoveY = Math.abs(e.clientY - mouseInitialY)
+
+        // 往上方拖动：
+        if (e.clientY < mouseInitialY) {
+          treeDom.style.height = treeInitialHeight - mouseMoveY - 5 + 'px'
+          detailDom.style.height = detailInitialHeight + mouseMoveY + 'px'
+        }
+        // 往下方拖动：
+        if (e.clientY > mouseInitialY) {
+          treeDom.style.height = treeInitialHeight + mouseMoveY - 5 + 'px'
+          detailDom.style.height = detailInitialHeight - mouseMoveY + 'px'
+        }
+
+        // 主、副列表最小高度限制为55px
+        if (parseInt(treeDom.style.height) >= leftTotalHeight - 95) {
+          treeDom.style.height = leftTotalHeight - 95 + 'px'
+        }
+        if (parseInt(treeDom.style.height) <= 55) {
+          treeDom.style.height = 55 + 'px'
+        }
+        if (parseInt(detailDom.style.height) >= leftTotalHeight - 95) {
+          detailDom.style.height = leftTotalHeight - 95 + 'px'
+        }
+        if (parseInt(detailDom.style.height) <= 55) {
+          detailDom.style.height = 55 + 'px'
+        }
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+      }
+    },
+    /* 中间左右拖动 */
+    leftRightResize (e) {
+      const leftDom = document.querySelector('.mib-browser-left') // tree
+      const rightDom = document.querySelector('.mib-browser-right') // detail
+      // 得到点击时dom的初始宽度：
+      const totalWidth = document.querySelector('.mib-browser-box').offsetWidth
+      const leftInitialWidth = leftDom.offsetWidth
+      const rightInitialWidth = rightDom.offsetWidth
+      // 点击时鼠标的Y轴位置
+      const mouseInitialX = e.clientX
+
+      document.onmousemove = (e) => {
+        e.preventDefault()
+        // 得到鼠标拖动的距离
+        const mouseMoveX = Math.abs(e.clientX - mouseInitialX)
+
+        // 往上方拖动：
+        if (e.clientX < mouseInitialX) {
+          leftDom.style.width = leftInitialWidth - mouseMoveX + 'px'
+          rightDom.style.width = rightInitialWidth + mouseMoveX + 'px'
+        }
+        // 往下方拖动：
+        if (e.clientX > mouseInitialX) {
+          leftDom.style.width = leftInitialWidth + mouseMoveX + 'px'
+          rightDom.style.width = rightInitialWidth - mouseMoveX + 'px'
+        }
+
+        // 主、副列表最小宽度限制
+        if (parseInt(leftDom.style.width) >= totalWidth - 400) {
+          leftDom.style.width = totalWidth - 400 + 'px'
+        }
+        if (parseInt(leftDom.style.width) <= 200) {
+          leftDom.style.width = 200 + 'px'
+        }
+        if (parseInt(rightDom.style.width) >= totalWidth - 200) {
+          rightDom.style.width = totalWidth - 200 + 'px'
+        }
+        if (parseInt(rightDom.style.width) <= 400) {
+          rightDom.style.width = 400 + 'px'
+        }
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+      }
+    },
+    domResize () {
+      const scrollTop = this.$refs.resultTable.$el.querySelector('.el-table__body-wrapper').scrollTop
+      this.showTable = false
+      this.$nextTick(() => {
+        this.showTable = true
+        this.$nextTick(() => {
+          this.$refs.resultTable.$el.querySelector('.el-table__body-wrapper').scrollTop = scrollTop
+        })
+      })
+    },
+    exportXlsx () {
+      if (this.resultData.length == 0) {
+        return
+      }
+      const book = xlsx.utils.book_new()
+      const sheet = xlsx.utils.json_to_sheet(this.resultData, { header: ['name', 'oid', 'value', 'type', 'ip', 'port'] })
+      xlsx.utils.book_append_sheet(book, sheet, 'result')
+      const out = xlsx.write(book, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'array'
+      })
+      try {
+        fileSaver.saveAs(
+          new Blob([out], {
+            type: 'application/octet-stream'
+          }),
+          'result_' + this.searchParam.host + '.xlsx'
+        )
+      } catch (e) {}
+      return out
+    }
+  },
+  mounted () {
+    this.getWalkData()
+    this.getModelData()
+    this.getAssetData()
+    window.addEventListener('resize', this.domResize)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.domResize)
   }
+}
 </script>
 
 <style lang="scss">

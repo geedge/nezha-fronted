@@ -18,7 +18,7 @@
       <div class="top-tools">
         <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
           <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search" :bottomBox.inTransform="true"></search-input>
+            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -53,7 +53,7 @@
               <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
               <span v-else-if="item.prop == 'param'">
               <template v-if="scope.row.paramObj">
-                <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+                <span v-for="(p, i) in scope.row.paramObj" :key="i">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
               </template>
               <template v-else>-</template>
             </span>
@@ -94,248 +94,239 @@
 </template>
 
 <script>
-  import nzAlertTag from '@/components/page/alert/nzAlertTag';
-  import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
-  import alertLabel from '@/components/common/alert/alertLabel'
-  export default {
-    name:"endpointTable",
-    props:{
-      moduleId:{},
-      projectId:{},
-    },
-    components: {
-      'nz-alert-tag': nzAlertTag,
-      'alertRuleInfo':alertRuleInfo,
-      'alertLabel':alertLabel,
-    },
-    watch:{
-    },
-    computed: {
-      tagType() {
-        return (key) => {
-          if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-            return "normal";
-          } else {
-            return "info";
-          }
-        }
-      },
-      tagValue() {
-        return (key, value) => {
-          if (key == 'type') {
-            if (value ==  1) {
-              value = this.$t("project.project.project");
-            } else if (value == 2) {
-              value = this.$t("module.module.module");
-            } else if (value == 3) {
-              value = this.$t("asset.asset");
-            }
-          }
-          return key + "：" + value;
+export default {
+  name: 'endpointTable',
+  props: {
+    moduleId: {},
+    projectId: {}
+  },
+  watch: {
+  },
+  computed: {
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
         }
       }
     },
-    data(){
-      return{
-        pageObj: {
-          pageNo: 1,
-          pageSize: this.$CONSTANTS.defaultPageSize,
-          total: 0
-        },
-        mainTableHeight:'100%',
-        tableTitle: [
-          {
-            label: this.$t("project.endpoint.endpointId"),
-            prop: 'id',
-            show: true,
-            width: 150
-          },{
-            label: this.$t("project.endpoint.asset"),
-            prop: 'asset',
-            show: true,
-          },{
-            label: this.$t("project.endpoint.port"),
-            prop: 'port',
-            show: true,
-          },{
-            label: this.$t("project.endpoint.path"),
-            prop: 'path',
-            show: true,
-          },{
-            label: this.$t("alert.list.state"),
-            prop: 'state',
-            show: true,
-          },
-          // {
-          //   label: this.$t("project.endpoint.lastUpdate"),
-          //   prop: 'lastUpdate',
-          //   show: true,
-          // },
-        ],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: "ID",
-            type: 'input',
-            label: 'id',
-            disabled: false
-          }, {
-            id: 11,
-            name: this.$t('asset.asset'),
-            type: 'asset',
-            label: 'asset',
-            disabled: false
-          }],
-        },
-        tableData:[],
-        loading:false,
-        tableHeight:'100%',
-        searchLabel:{
-
-        },
-        deleteBox:{}
+    tagValue () {
+      return (key, value) => {
+        if (key == 'type') {
+          if (value == 1) {
+            value = this.$t('project.project.project')
+          } else if (value == 2) {
+            value = this.$t('module.module.module')
+          } else if (value == 3) {
+            value = this.$t('asset.asset')
+          }
+        }
+        return key + '：' + value
       }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
-      }
-    },
-    mounted(){
-      this.getEndpointList();
-    },
-    methods:{
-      getEndpointList: function () {
-        this.loading=true;
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.$set(this.searchLabel, "moduleId", this.moduleId);
-        this.$get('endpoint', this.searchLabel).then(response => {
-          this.loading = false;
-          if (response.code === 200) {
-            // for (let i = 0; i < response.data.list.length; i++) {
-            //   try {
-            //     let tempObj = JSON.parse(response.data.list[i].param);
-            //     response.data.list[i].paramObj = [];
-            //     for (let k in tempObj) {
-            //       response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
-            //     }
-            //   } catch (err) {
-            //     //console.error(response.data.list[i], err);
-            //   }
-            // }
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total;
-          }
-        });
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getEndpointList();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getEndpointList();
-      },
-      selectChange(s) {
-        let ids = [];
-        this.deleteBox.ids = "";
-        s.forEach(item => {
-          ids.push(item.id);
-        });
-        this.deleteBox.ids = ids.join(",");
-      },
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.pageObj.orderBy=orderBy;
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getEndpointList();
-      },
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      clickOutside() {
-        this.esc(false);
-      },
-      messageStyle(e) {
-        if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
-          if (e.row.alertNum > 0) {
-            return 'danger';
-          } else {
-            return 'success';
-          }
-        }
-        return '';
-      },
-      formatPingTime:function(str){
-        if(!str || str == ''){
-          return this.$t('asset.assetStatPre')+this.$t('asset.assetStatDown');
-        }
-        let ds='-';
-        let ts=':';
-        let time=new Date(str);
-        let year=time.getFullYear();
-        let month=time.getMonth()+1 > 9 ? time.getMonth()+1 : ('0'+(time.getMonth()+1));
-        let day=time.getDate() > 9 ? time.getDate():('0'+time.getDate());
-        let hours=time.getHours() > 9? time.getHours():('0'+time.getHours());
-        let minutes=time.getMinutes() > 9 ?time.getMinutes():('0'+time.getMinutes());
-        let seconds=time.getSeconds() > 9 ? time.getSeconds():('0'+time.getSeconds());
-        return this.$t('asset.assetStatPre')+year+ds+month+ds+day+' '+hours+ts+minutes+ts+seconds;
-
-      },
-      getStateErrorMsg(row) {
-        let errCodes = [230009, 230010, 230011];
-        if(row){
-          if(row.state == 0){
-            if(errCodes.find((item)=>{return row.stateInfo.code == item})){
-              return this.$t('project.endpoint.stateInfo_'+row.stateInfo.code)
-            }else{
-              return row.stateInfo.msg;
-              this.$message.error('state code error');
-            }
-          }
-        }
-      },
-      search(searchObj) {
-        let orderBy='';
-        if(this.searchLabel.orderBy){
-          orderBy=this.searchLabel.orderBy
-        }
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            if (item == "alertMessageState") {
-              this.$set(this.searchLabel, "state", searchObj[item]);
-            } else{
-              this.$set(this.searchLabel, item, searchObj[item]);
-            }
-          }
-        }
-        if(orderBy){
-          this.$set(this.searchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.endpointTable){
-          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getEndpointList();
-      },
-    },
-    beforeDestroy(){
-
     }
+  },
+  data () {
+    return {
+      pageObj: {
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
+      mainTableHeight: '100%',
+      tableTitle: [
+        {
+          label: this.$t('project.endpoint.endpointId'),
+          prop: 'id',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('project.endpoint.asset'),
+          prop: 'asset',
+          show: true
+        }, {
+          label: this.$t('project.endpoint.port'),
+          prop: 'port',
+          show: true
+        }, {
+          label: this.$t('project.endpoint.path'),
+          prop: 'path',
+          show: true
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true
+        }
+        // {
+        //   label: this.$t("project.endpoint.lastUpdate"),
+        //   prop: 'lastUpdate',
+        //   show: true,
+        // },
+      ],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 11,
+          name: this.$t('asset.asset'),
+          type: 'asset',
+          label: 'asset',
+          disabled: false
+        }]
+      },
+      tableData: [],
+      loading: false,
+      tableHeight: '100%',
+      searchLabel: {
+
+      },
+      deleteBox: {}
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    this.getEndpointList()
+  },
+  methods: {
+    getEndpointList: function () {
+      this.loading = true
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'moduleId', this.moduleId)
+      this.$get('endpoint', this.searchLabel).then(response => {
+        this.loading = false
+        if (response.code === 200) {
+          // for (let i = 0; i < response.data.list.length; i++) {
+          //   try {
+          //     let tempObj = JSON.parse(response.data.list[i].param);
+          //     response.data.list[i].paramObj = [];
+          //     for (let k in tempObj) {
+          //       response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
+          //     }
+          //   } catch (err) {
+          //     //console.error(response.data.list[i], err);
+          //   }
+          // }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+        }
+      })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getEndpointList()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getEndpointList()
+    },
+    selectChange (s) {
+      const ids = []
+      this.deleteBox.ids = ''
+      s.forEach(item => {
+        ids.push(item.id)
+      })
+      this.deleteBox.ids = ids.join(',')
+    },
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.pageObj.orderBy = orderBy
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getEndpointList()
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+    clickOutside () {
+      this.esc(false)
+    },
+    messageStyle (e) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.tableTitle.alerts')) {
+        if (e.row.alertNum > 0) {
+          return 'danger'
+        } else {
+          return 'success'
+        }
+      }
+      return ''
+    },
+    formatPingTime: function (str) {
+      if (!str || str == '') {
+        return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
+      }
+      const ds = '-'
+      const ts = ':'
+      const time = new Date(str)
+      const year = time.getFullYear()
+      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
+      const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
+      const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
+      const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
+      const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
+      return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
+    },
+    getStateErrorMsg (row) {
+      const errCodes = [230009, 230010, 230011]
+      if (row) {
+        if (row.state == 0) {
+          if (errCodes.find((item) => { return row.stateInfo.code == item })) {
+            return this.$t('project.endpoint.stateInfo_' + row.stateInfo.code)
+          } else {
+            this.$message.error('state code error')
+            return row.stateInfo.msg
+          }
+        }
+      }
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.searchLabel.orderBy) {
+        orderBy = this.searchLabel.orderBy
+      }
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          if (item == 'alertMessageState') {
+            this.$set(this.searchLabel, 'state', searchObj[item])
+          } else {
+            this.$set(this.searchLabel, item, searchObj[item])
+          }
+        }
+      }
+      if (orderBy) {
+        this.$set(this.searchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.endpointTable) {
+        this.$refs.endpointTable.bodyWrapper.scrollTop = 0
+      }
+      this.getEndpointList()
+    }
+  },
+  beforeDestroy () {
+
   }
+}
 </script>
 
 <style scoped>
@@ -365,4 +356,3 @@
   }
   /* end--table*/
 </style>
-

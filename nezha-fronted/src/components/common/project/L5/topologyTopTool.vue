@@ -55,123 +55,123 @@
 </template>
 
 <script>
-  import {getTopology} from "../../js/common";
+import { getTopology } from '../../js/common'
 
-  export default {
-    name:"topologyTopTool",
-    data(){
-      return {
-        option:{
-          lineName:'curve',
-          lineWidth:1,
-          fromArrow:'',
-          toArrow:'triangleSolid',
-          scale:100,
-          grid:false,
-          rule:false,
-        },
-        scaleNum:100,
-        penLineType:[
-          {d:'M5 14 a100,50 0 0,1 85,0',"stroke-dasharray":"",name:'curve'},
-          {d:'M5 8 l40 0 l0 12 l40 0',"stroke-dasharray":"",name:'polyline'},
-          {d:'M5 14 l85 0',"stroke-dasharray":"",name:'line'},
-          {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
-        ],
-        penLineFromTOArrow:[
-          {d:'M5 14 l85 0',"points":"",fill:'',stroke:"",'stroke-width':"",name:''},
-          {d:'M5 14 l85 0',"points":"5 14,20 9,20 19",fill:'#000000',stroke:"",'stroke-width':"",name:'triangleSolid'},
-          {d:'M5 14 l85 0',"points":"5 14,20 9,20 19",fill:'#ffffff', stroke:"#000000",'stroke-width':"1",name:'triangle'},
-          {d:'M5 14 l85 0',fill:'#000000', stroke:"",'stroke-width':"",cx:"10",cy:"14",r:"5",name:'circleSolid'},
-          {d:'M5 14 l85 0',fill:'#ffffff', stroke:"#000000",'stroke-width':"1",cx:"10",cy:"14",r:"5",name:'circle'},
-        ],
-        redoFlag:false,
+export default {
+  name: 'topologyTopTool',
+  data () {
+    return {
+      option: {
+        lineName: 'curve',
+        lineWidth: 1,
+        fromArrow: '',
+        toArrow: 'triangleSolid',
+        scale: 100,
+        grid: false,
+        rule: false
+      },
+      scaleNum: 100,
+      penLineType: [
+        { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve' },
+        { d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line' },
+        { d: 'M5 20 C0,8 50,0 85,0', 'stroke-dasharray': '', name: 'mind' }
+      ],
+      penLineFromTOArrow: [
+        { d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: '' },
+        { d: 'M5 14 l85 0', points: '5 14,20 9,20 19', fill: '#000000', stroke: '', 'stroke-width': '', name: 'triangleSolid' },
+        { d: 'M5 14 l85 0', points: '5 14,20 9,20 19', fill: '#ffffff', stroke: '#000000', 'stroke-width': '1', name: 'triangle' },
+        { d: 'M5 14 l85 0', fill: '#000000', stroke: '', 'stroke-width': '', cx: '10', cy: '14', r: '5', name: 'circleSolid' },
+        { d: 'M5 14 l85 0', fill: '#ffffff', stroke: '#000000', 'stroke-width': '1', cx: '10', cy: '14', r: '5', name: 'circle' }
+      ],
+      redoFlag: false
+    }
+  },
+  props: {
+    selection: {
+      type: Object,
+      require: true
+    },
+    index: {
+      type: Number,
+      require: true
+    },
+    toolShow: {
+      type: Object,
+      require: true
+    },
+    cachesIndex: {
+      type: Number,
+      require: true
+    }
+  },
+  mounted () {
+    const dataOption = getTopology(this.index).data
+    Object.keys(this.option).forEach(key => {
+      if (key === 'scale') {
+        this.scaleNum = (JSON.stringify(dataOption[key]) ? dataOption[key] * 100 : this.scaleNum)
+      } else {
+        this.option[key] = (JSON.stringify(dataOption[key]) ? dataOption[key] : this.option[key])
       }
+    })
+  },
+  methods: {
+    // todo 1清空后的 处理属性工具的默认值 2工具栏的移动 以及节点工具和属性工具的移动 3 结束箭头类型的方向
+    changeOption (key) {
+      getTopology(this.index).data[key] = this.option[key]
+      getTopology(this.index).render()
     },
-    props:{
-      selection:{
-        type:Object,
-        require:true
-      },
-      index:{
-        type:Number,
-        require:true,
-      },
-      toolShow:{
-        type:Object,
-        require:true
-      },
-      cachesIndex:{
-        type:Number,
-        require:true,
+    undo () { // 撤销
+      getTopology(this.index).undo()
+      // if(!this.redoFlag){
+      //   this.$emit('redoIndexChange',getTopology(this.index).caches.index)
+      // }
+      // let a = getTopology(this.index).undo();
+      // console.log(a);
+      // setTimeout(()=>{
+      //   this.redoFlag=true;
+      // },200)
+    },
+    redo () { // 重做
+      getTopology(this.index).redo()
+    },
+    centerView () { // 居中显示
+      getTopology(this.index).centerView()
+    },
+    fitView () { // 自适应画布大小
+      getTopology(this.index).fitView()
+    },
+    changeScale (num) {
+      this.scaleNum += num
+      if (this.scaleNum < 25) {
+        this.scaleNum = 25
       }
+      if (this.scaleNum > 400) {
+        this.scaleNum = 400
+      }
+      this.scale(this.scaleNum)
     },
-    mounted(){
-      let dataOption=getTopology(this.index).data;
-      Object.keys(this.option).forEach(key=>{
-        if(key==='scale'){
-          this.scaleNum=(JSON.stringify(dataOption[key])?dataOption[key]*100:this.scaleNum)
-        }else{
-          this.option[key]=(JSON.stringify(dataOption[key])?dataOption[key]:this.option[key]);
-        }
-      })
+    scale (val) {
+      this.scaleNum = val
+      getTopology(this.index).scaleTo(val / 100)
     },
-    methods:{
-      // todo 1清空后的 处理属性工具的默认值 2工具栏的移动 以及节点工具和属性工具的移动 3 结束箭头类型的方向
-      changeOption(key){
-        getTopology(this.index).data[key]=this.option[key];
-        getTopology(this.index).render();
-      },
-      undo(){//撤销
-        getTopology(this.index).undo();
-        // if(!this.redoFlag){
-        //   this.$emit('redoIndexChange',getTopology(this.index).caches.index)
-        // }
-        // let a = getTopology(this.index).undo();
-        // console.log(a);
-        // setTimeout(()=>{
-        //   this.redoFlag=true;
-        // },200)
-      },
-      redo(){//重做
-        getTopology(this.index).redo();
-      },
-      centerView(){//居中显示
-        getTopology(this.index).centerView();
-      },
-      fitView(){//自适应画布大小
-        getTopology(this.index).fitView();
-      },
-      changeScale(num){
-        this.scaleNum+=num;
-        if(this.scaleNum<25){
-          this.scaleNum=25
-        }
-        if(this.scaleNum>400){
-          this.scaleNum=400
-        }
-        this.scale(this.scaleNum)
-      },
-      scale(val){
-        this.scaleNum=val;
-        getTopology(this.index).scaleTo(val/100);
-      },
-      del(){
-        let delObj=this.selection.pen?this.selection.pen.id:this.selection.pens
-        this.$emit('del', delObj);
-      },
-      clear(){
-        let data={...getTopology(this.index).data};
-        data.pens=[];
-        getTopology(this.index).open({});
-      },
-      toolShowChange(attr){
-        this.$emit('toolShowChange',attr);
-      },
-      changeOpt(key,val){
+    del () {
+      const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
+      this.$emit('del', delObj)
+    },
+    clear () {
+      const data = { ...getTopology(this.index).data }
+      data.pens = []
+      getTopology(this.index).open({})
+    },
+    toolShowChange (attr) {
+      this.$emit('toolShowChange', attr)
+    },
+    changeOpt (key, val) {
 
-      }
     }
   }
+}
 </script>
 <style lang="scss">
   .scale-number-popover{

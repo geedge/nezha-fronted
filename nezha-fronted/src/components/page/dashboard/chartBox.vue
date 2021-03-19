@@ -133,7 +133,7 @@
   }
 
 </style>
-<template key="chartBox">
+<template>
   <div  class="mc">
     <div :class="boxClass" class="right-box right-box-add-chart z-top right-box-chart" v-clickoutside="{obj:editChart,func:clickOutside}">
       <transition name="right-box">
@@ -352,15 +352,15 @@
           </el-radio-group>
         </el-form-item>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'value'" id="chart-box-valueMapping-type1">
-          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" prop="span" class="half-form-item-other" >
+          <template  v-for="(mapping, index) in editChart.param.valueMapping.mapping">
+            <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.value')" class="half-form-item-other" prop="span" >
               <el-input size="mini" type="input" v-model="mapping.value" style="display: inline-block;;"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" prop="span" class="half-form-item-other  half-form-item-other-two">
+            <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.text')" class="half-form-item-other  half-form-item-other-two" prop="span">
               <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text"></el-input>
               <!--颜色选择器 start-->
               <div class="color-show">
-                <nezhaColor :value-arr="[{name:'bac',value:showPicker[index].bac,key:'bac'},{name:'text',value:showPicker[index].text,key:'text'}]" @colorChange="(val,key)=>{colorChange(mapping,key,val)}" :single="false" :color-val="mapping.color"/>
+                <nezhaColor :color-val="mapping.color" :single="false" :value-arr="[{name:'bac', value:showPicker[index].bac, key:'bac'},{name:'text', value:showPicker[index].text, key:'text'}]" @colorChange="(val,key)=>{colorChange(mapping,key,val)}"/>
               </div>
               <!--颜色选择器 end-->
               <span  @click="delMapping(index)" class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
@@ -368,8 +368,8 @@
           </template>
         </template>
         <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'" id="chart-box-valueMapping-type2">
-          <template  v-for="(mapping,index) in editChart.param.valueMapping.mapping">
-            <div class="half-form-item-other" style="display: inline-block;margin-left: 15px">
+          <template v-for="(mapping, index) in editChart.param.valueMapping.mapping">
+            <div :key="index" class="half-form-item-other" style="display: inline-block;margin-left: 15px">
               <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" prop="span" class="one-third-form-item-left" >
                 <el-input size="mini" type="input" v-model="mapping.from"></el-input>
               </el-form-item>
@@ -377,7 +377,7 @@
                 <el-input size="mini" type="input" v-model="mapping.to"></el-input>
               </el-form-item>
             </div>
-            <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" class="half-form-item-other-two range" prop="span">
+            <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.text')" class="half-form-item-other-two range" prop="span">
               <el-input size="mini" style="display: inline-block;width:calc(100% - 80px);" type="input" v-model="mapping.text" ></el-input>
               <!--颜色选择器 start-->
               <div class="color-show">
@@ -398,8 +398,8 @@
           <div style="margin-bottom: 20px; width: 100%" ></div>
           <div style="display: flex;">
             <span style="margin-left: 15px;"></span>
-            <template v-for="item in sortedOptionKeys">
-              <div style="flex: 1">
+            <template v-for="(item, index) in sortedOptionKeys">
+              <div :key="index" style="flex: 1">
                 <span style="margin-right: 10px;color:rgb(102, 102, 102)">{{item.label}}</span>
                 <el-switch
                   :id="'chart-box-legendValue-'+item.label"
@@ -407,7 +407,7 @@
                   active-value="on"
                   inactive-value="off"
                   active-color="#ee9d3f"
-                  @change="">
+                >
                 </el-switch>
               </div>
             </template>
@@ -441,340 +441,337 @@
 </template>
 
 <script>
-  import bus from '../../../libs/bus';
-  import ChartMetric from "./chartMetric";
-  import chartDataFormat from '../../charts/chartDataFormat';
-  import chartPreview from '../../charts/chartPreview';
-  import {getUUID, resetZIndex} from "../../common/js/common";
-  import alertChartParam from "./alertChartParam";
-  import promqlInput from "./explore/promqlInput";
-  import {nzNumber} from "../../common/js/validate";
-  import richTextEditor from "../../charts/richTextEditor";
-  import selectPanel from "../../common/popBox/selectPanel";
-  import nezhaColor from '../../common/nezhaColor'
-  import i18n from "../../common/i18n";
+import bus from '../../../libs/bus'
+import chartDataFormat from '../../charts/chartDataFormat'
+import chartPreview from '../../charts/chartPreview'
+import { getUUID, resetZIndex } from '../../common/js/common'
+import alertChartParam from './alertChartParam'
+import promqlInput from './explore/promqlInput'
+import { nzNumber } from '../../common/js/validate'
+import richTextEditor from '../../charts/richTextEditor'
+import selectPanel from '../../common/popBox/selectPanel'
+import nezhaColor from '../../common/nezhaColor'
+import i18n from '../../common/i18n'
 
-  var rz = {
-    methods: {
-      rz(e) {
-        resetZIndex(e);
-      }
+const rz = {
+  methods: {
+    rz (e) {
+      resetZIndex(e)
     }
-  };
-  export default {
-    name: "chartBox",
-    props: {
-      boxClass: String,
-      panelData: Array,
-      showPanel: Object,
-      chart: Object,
-      from: {type: String},
-      fromEndpoint:{
-        type:Boolean,
-        default:false,
-      }
-    },
-    mixins: [rz],
-    data() {
-      return {
-        optionBtn:{
-          save:false,
-        },
-        editChart: {},
-        filterPanel: "",
-        statisticsList: this.$CONSTANTS.statisticsList,
+  }
+}
+export default {
+  name: 'chartBox',
+  props: {
+    boxClass: String,
+    panelData: Array,
+    showPanel: Object,
+    chart: Object,
+    from: { type: String },
+    fromEndpoint: {
+      type: Boolean,
+      default: false
+    }
+  },
+  mixins: [rz],
+  data () {
+    return {
+      optionBtn: {
+        save: false
+      },
+      editChart: {},
+      filterPanel: '',
+      statisticsList: this.$CONSTANTS.statisticsList,
 
-        promqlCount: 1,
-        promqlKeys: [],
-        elementIds: [],
-        expressions: [],
-        legends: [],
-        statistics: "",
-        isEdit:false,
-        editInfo: {},
-        isUrl:false,
-        isSingleStat:false,
-        isAlert:false,
-        rules: {
-          panelName: [
-            {required: true,  message: this.$t('validate.required'),  trigger: 'change'}
-          ],
-          title: [
-            {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
-          ],
-          url: [
-            {required: true,  message: this.$t('validate.required'),  trigger: 'blur'}
-          ],
-          'param.threshold':[
-            {validator:nzNumber,trigger: 'blur'}
-          ],
-          "param.statistics":[
-            {required: true,  message: this.$t('validate.required'),  trigger: 'change'}
-          ]
-        },
-        chartTypeList: [
-          {
-            id:"line",
-            name:this.$t("dashboard.panel.chartForm.typeVal.line.label")
-          },
-          {
-            id:'stackArea',
-            name:this.$t("dashboard.panel.chartForm.typeVal.stackArea.label")
-          },
-          {
-            id:"bar",
-            name:this.$t("dashboard.panel.chartForm.typeVal.bar.label")
-          },
-          {
-            id:'singleStat',
-            name:this.$t("dashboard.panel.chartForm.typeVal.singleStat.label")
-          },
-          {
-            id:'pie',
-            name:this.$t("dashboard.panel.chartForm.typeVal.pie.label")
-          },
-          {
-            id:"table",
-            name:this.$t("dashboard.panel.chartForm.typeVal.table.label")
-          },
-          {
-            id:'alertList',
-            name:this.$t("dashboard.panel.chartForm.typeVal.alertList.label")
-          },
-          {
-            id:'text',
-            name:this.$t("dashboard.panel.chartForm.typeVal.text.label")
-          },
-          {
-            id:'url',
-            name:this.$t("dashboard.panel.chartForm.typeVal.url.label")
-          },
-
+      promqlCount: 1,
+      promqlKeys: [],
+      elementIds: [],
+      expressions: [],
+      legends: [],
+      statistics: '',
+      isEdit: false,
+      editInfo: {},
+      isUrl: false,
+      isSingleStat: false,
+      isAlert: false,
+      rules: {
+        panelName: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
-        elements: [1], // 指标部分 tarNum
-        elementTarget: [], // 本地保存数据
-        alertParams:{},
-        spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        nullTypeList:[{
-          label:'connected',
-          value:'connected'
-        },{
-          label:'null',
-          value:'null'
-        },{
-          label:'zero',
-          value:'zero'
-        }],
-        // 是否为编辑已有信息
-        isedit: false,
-        //productId: 0,//不需要这个参数，可以删除
-        isInputPanel:false,
-        panelId: 0,
-        panelName: '',
-        selectFirstPanel: false,
-        metricList: [], // metric列表
-        metricCascaderList:[],//metric级联列表
-        metricAllData:new Map(),//存放所有的project-module-metric-labelValue，避免重复加载
-        deleteIndex: '', // 要删除的指标模块
-        subCount: 0, // subSave保存data到bus计数器
-        panel: {
-          id: '',
-          name: ''
+        title: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        url: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        'param.threshold': [
+          { validator: nzNumber, trigger: 'blur' }
+        ],
+        'param.statistics': [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
+      },
+      chartTypeList: [
+        {
+          id: 'line',
+          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
         },
-        heightSuggestions:['300','400','500','600'],
-        unitOptions:chartDataFormat.unitOptions(),
-        sortedOptionKeys:[{key:'min',label:'Min'},{key:'max',label:'Max'},{key:'avg',label:'Avg'},{key:'last',label:'Last'},{key:'total',label:'Total'}],
-        textShow:false,
-        metricOptions: [],
-        showPicker:[],
-        //metricStore: []
+        {
+          id: 'stackArea',
+          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
+        },
+        {
+          id: 'bar',
+          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+        },
+        {
+          id: 'singleStat',
+          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
+        },
+        {
+          id: 'pie',
+          name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
+        },
+        {
+          id: 'table',
+          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+        },
+        {
+          id: 'alertList',
+          name: this.$t('dashboard.panel.chartForm.typeVal.alertList.label')
+        },
+        {
+          id: 'text',
+          name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
+        },
+        {
+          id: 'url',
+          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
+        }
+
+      ],
+      elements: [1], // 指标部分 tarNum
+      elementTarget: [], // 本地保存数据
+      alertParams: {},
+      spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      nullTypeList: [{
+        label: 'connected',
+        value: 'connected'
+      }, {
+        label: 'null',
+        value: 'null'
+      }, {
+        label: 'zero',
+        value: 'zero'
+      }],
+      // 是否为编辑已有信息
+      isedit: false,
+      // productId: 0,//不需要这个参数，可以删除
+      isInputPanel: false,
+      panelId: 0,
+      panelName: '',
+      selectFirstPanel: false,
+      metricList: [], // metric列表
+      metricCascaderList: [], // metric级联列表
+      metricAllData: new Map(), // 存放所有的project-module-metric-labelValue，避免重复加载
+      deleteIndex: '', // 要删除的指标模块
+      subCount: 0, // subSave保存data到bus计数器
+      panel: {
+        id: '',
+        name: ''
+      },
+      heightSuggestions: ['300', '400', '500', '600'],
+      unitOptions: chartDataFormat.unitOptions(),
+      sortedOptionKeys: [{ key: 'min', label: 'Min' }, { key: 'max', label: 'Max' }, { key: 'avg', label: 'Avg' }, { key: 'last', label: 'Last' }, { key: 'total', label: 'Total' }],
+      textShow: false,
+      metricOptions: [],
+      showPicker: []
+      // metricStore: []
+    }
+  },
+  components: {
+    'chart-preview': chartPreview,
+    'alert-chart-param': alertChartParam,
+    'promql-input': promqlInput,
+    'rich-text-editor': richTextEditor,
+    selectPanel,
+    nezhaColor
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.initElements()
+    })
+
+    setTimeout(() => {
+      this.textShow = true
+    }, 300)
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    selectPanel (panel) {
+      this.panelName = panel.name
+      this.panelId = panel.id
+    },
+    toAddPanel () {
+      this.$refs.panelBox2.show(true)
+      this.panel = {
+        id: '',
+        name: ''
       }
+      this.$refs.panelBox2.setTitle(this.$t('dashboard.panel.createPanelTitle'))
     },
-    components:{
-      'chart-metric':ChartMetric,
-      'chart-preview':chartPreview,
-      'alert-chart-param':alertChartParam,
-      'promql-input': promqlInput,
-      'rich-text-editor':richTextEditor,
-      selectPanel,
-      nezhaColor,
+    panelReload (panelName) { // 刷新panel下拉框
+      if (panelName) {
+        this.panelName = panelName
+      }
+      this.$emit('reloadOnlyPanel')
     },
-    mounted() {
-      this.$nextTick(() => {
-        this.initElements();
-
-      });
-
-      setTimeout(()=>{
-        this.textShow=true;
-      },300)
-    },
-    methods: {
-      clickOutside() {
-        this.esc(false);
-      },
-      selectPanel(panel) {
-        this.panelName = panel.name;
-        this.panelId = panel.id;
-      },
-      toAddPanel() {
-        this.$refs.panelBox2.show(true);
-        this.panel = {
-          id: '',
-          name: ''
-        };
-        this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.createPanelTitle"));
-      },
-      panelReload(panelName) { //刷新panel下拉框
-        if (panelName) {
-          this.panelName = panelName;
-        }
-        this.$emit("reloadOnlyPanel");
-      },
-      deletePanel(panel) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel?ids=" + panel.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              if (this.panelId == panel.id) {
-                this.selectFirstPanel = true;
-                this.$emit('reload', true);
-              } else {
-                this.$emit('reload');
-              }
+    deletePanel (panel) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('panel?ids=' + panel.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            if (this.panelId == panel.id) {
+              this.selectFirstPanel = true
+              this.$emit('reload', true)
             } else {
-              this.$message.error(response.msg);
+              this.$emit('reload')
             }
-          })
-        });
-      },
-      editPanel(panel) {
-        this.$refs.panelBox2.show(true);
-        this.panel = Object.assign({}, panel);
-        this.$refs.panelBox2.setTitle(this.$t("dashboard.panel.editPanelTitle"));
-      },
-      setUnit(unit) {
-        this.$set(this.editChart,'unit',Number.parseInt(unit))
-      },
-      expressionChange: function () {
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    editPanel (panel) {
+      this.$refs.panelBox2.show(true)
+      this.panel = Object.assign({}, panel)
+      this.$refs.panelBox2.setTitle(this.$t('dashboard.panel.editPanelTitle'))
+    },
+    setUnit (unit) {
+      this.$set(this.editChart, 'unit', Number.parseInt(unit))
+    },
+    expressionChange: function () {
 
-      },
-      addExpression() {
-        this.expressions.push('');
-        this.legends.push('');
-        this.promqlKeys.push(getUUID());
-        this.elementIds.push("");
-        this.promqlCount++;
-      },
-      removeExpression(index) {
-        if (this.promqlCount > 1) {
-          this.expressions.splice(index, 1);
-          this.legends.splice(index, 1);
-          this.promqlKeys.splice(index, 1);
-          this.elementIds.splice(index, 1);
-          this.promqlCount--;
-          this.$nextTick(() => {
-            this.expressions.forEach((ex, index) => {
-              if (ex) {
-                this.$refs[`promql-${index}`][0].metricChange(ex);
-              }
-            });
-          });
-        }
-      },
-      copyExpression(index) {
-        this.expressions.push(this.expressions[index]);
-        this.legends.push(this.legends[index]);
-        this.promqlKeys.push(getUUID());
-        this.elementIds.push("");
-        this.promqlCount++;
+    },
+    addExpression () {
+      this.expressions.push('')
+      this.legends.push('')
+      this.promqlKeys.push(getUUID())
+      this.elementIds.push('')
+      this.promqlCount++
+    },
+    removeExpression (index) {
+      if (this.promqlCount > 1) {
+        this.expressions.splice(index, 1)
+        this.legends.splice(index, 1)
+        this.promqlKeys.splice(index, 1)
+        this.elementIds.splice(index, 1)
+        this.promqlCount--
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex);
+              this.$refs[`promql-${index}`][0].metricChange(ex)
             }
-          });
-        });
-      },
-      save() {
-        this.$refs['chartForm'].validate((valid) => {
-          if (valid) {
-            if (this.editChart.id) {//修改
-              this.$put('panel/'+this.editChart.id+'/charts').then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            } else {//新增
-              this.$post('panel/charts', this.editChart).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-              });
-            }
-          } else {
-            console.error('error submit!!');
-            return false;
+          })
+        })
+      }
+    },
+    copyExpression (index) {
+      this.expressions.push(this.expressions[index])
+      this.legends.push(this.legends[index])
+      this.promqlKeys.push(getUUID())
+      this.elementIds.push('')
+      this.promqlCount++
+      this.$nextTick(() => {
+        this.expressions.forEach((ex, index) => {
+          if (ex) {
+            this.$refs[`promql-${index}`][0].metricChange(ex)
           }
-        });
-      },
-      del() {
-          this.$emit('delete-chart',this.editChart)
-      },
-      //----------------------------------
-
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-
-      /*metric部分相关方法--begin*/
-      // 增加指标,tarNum
-      addTarget() {
-        this.elements.push(1);
-      },
-      // 删除指标,第一步, 新方法
-      deleteTarget(index) {
-        //alert('box第一步，循环所有的metric，为什么要循环？？');
-        this.deleteIndex = index;
-        // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
-        this.$refs.chartTag.forEach((item) => {
-          // 子组件保存内容到bus
-          item.subSave();
-        });
-      },
-      // subSave保存成功后回调,第二步
-      subOk() {
-        // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
-        //alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
-        this.subCount += 1;
-        if (this.subCount === this.elements.length) {
-          this.subCount = 0;
-          // 保存完成,进行删除操作
-          //('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
-          this.elements.splice(this.deleteIndex, 1);
-          this.elementTarget.splice(this.deleteIndex, 1);//没有作用，此处是[]
-          bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1);
-
-          this.$nextTick(() => {
-            this.$refs.chartTag.forEach((item, index) => {
-              item.setSubdata(index); // 将数据从bus重新赋值
-            });
-          });
+        })
+      })
+    },
+    save () {
+      this.$refs.chartForm.validate((valid) => {
+        if (valid) {
+          if (this.editChart.id) { // 修改
+            this.$put('panel/' + this.editChart.id + '/charts').then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          } else { // 新增
+            this.$post('panel/charts', this.editChart).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          }
+        } else {
+          console.error('error submit!!')
+          return false
         }
-      },
-      // 格式化tag为字符串表达式
-      /*
+      })
+    },
+    del () {
+      this.$emit('delete-chart', this.editChart)
+    },
+    // ----------------------------------
+
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
+
+    /* metric部分相关方法--begin */
+    // 增加指标,tarNum
+    addTarget () {
+      this.elements.push(1)
+    },
+    // 删除指标,第一步, 新方法
+    deleteTarget (index) {
+      // alert('box第一步，循环所有的metric，为什么要循环？？');
+      this.deleteIndex = index
+      // alert('box第一步，循环所有的metric，循环前metric,循环次数='+this.$refs.chartTag.length);
+      this.$refs.chartTag.forEach((item) => {
+        // 子组件保存内容到bus
+        item.subSave()
+      })
+    },
+    // subSave保存成功后回调,第二步
+    subOk () {
+      // 每个模块均有返回,当全部模块返回完成时,将sub计数器重置
+      // alert('box第二步，subCount和元素个数一样了，就从deleteIndex开始删除一个元素，this.subCount='+this.subCount);
+      this.subCount += 1
+      if (this.subCount === this.elements.length) {
+        this.subCount = 0
+        // 保存完成,进行删除操作
+        // ('box第二步，deleteIndex='+this.deleteIndex+'=开始删除一个元素')
+        this.elements.splice(this.deleteIndex, 1)
+        this.elementTarget.splice(this.deleteIndex, 1)// 没有作用，此处是[]
+        bus.chartAddInfo.metricTarget.splice(this.deleteIndex, 1)
+
+        this.$nextTick(() => {
+          this.$refs.chartTag.forEach((item, index) => {
+            item.setSubdata(index) // 将数据从bus重新赋值
+          })
+        })
+      }
+    },
+    // 格式化tag为字符串表达式
+    /*
       tagsToString(metric,arr) {
         let str = metric;
         let sepStr = '';
@@ -807,20 +804,20 @@
         return str;
       },
        */
-      autocompleteExist(string) {
-        let result = false;
-        for (let i = 0; i < this.panelData.length; i++) {
-          if (this.panelData[i].name.toLowerCase() == string.toLowerCase()) {
-            result = this.panelData[i].id;
-            break;
-          }
+    autocompleteExist (string) {
+      let result = false
+      for (let i = 0; i < this.panelData.length; i++) {
+        if (this.panelData[i].name.toLowerCase() == string.toLowerCase()) {
+          result = this.panelData[i].id
+          break
         }
-        return result;
-      },
-      // 新建图表
-      addCharts(params) {
-        //先处理panel
-        /*let panelPromise=new Promise(resolve => {
+      }
+      return result
+    },
+    // 新建图表
+    addCharts (params) {
+      // 先处理panel
+      /* let panelPromise=new Promise(resolve => {
           if (this.panelId) {
             panelId = this.panelId;
             panel=this.panelData.find(p => p.id === this.panelId);
@@ -849,395 +846,389 @@
               });
             }
           }
-        });*/
+        }); */
 
-        //panelPromise.then(()=>{
-          if (this.panelId) {
-            this.$post('panel/' + this.panelId + '/charts', params ? params : this.editChart).then(response => {
-              if (response.code === 200) {
-                this.esc();
-                this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                this.$refs.chartForm.resetFields();//清空表单
-                this.$emit('on-create-success', 'create', response.data, params, {id: this.panelId, name: this.panelName});
-              } else {
-                if (response.msg) {
-                  this.$message.error(response.msg);
-                } else {
-                  this.$message.error(response);
-                }
-              }
-              this.prevent_opt.save=false
-            });
-          }
-        //})
-      },
-      // 更新图表
-      updateCharts(params) {
-        let panelId=this.panelId?this.panelId:this.chart.panelId;
-        this.$put('panel/' + panelId + '/charts', params ? params : this.editChart).then(response2 => {
-          if (response2.code === 200) {
-            this.esc();
-            this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-            // this.$refs.chartForm.resetFields();//清空表单
-            this.$emit('on-create-success', 'update', response2.data, params);
+      // panelPromise.then(()=>{
+      if (this.panelId) {
+        this.$post('panel/' + this.panelId + '/charts', params || this.editChart).then(response => {
+          if (response.code === 200) {
+            this.esc()
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+            this.$refs.chartForm.resetFields()// 清空表单
+            this.$emit('on-create-success', 'create', response.data, params, { id: this.panelId, name: this.panelName })
           } else {
-            if(response2.msg){
-              this.$message.error(response2.msg);
-            }else {
-              this.$message.error(response2);
+            if (response.msg) {
+              this.$message.error(response.msg)
+            } else {
+              this.$message.error(response)
             }
           }
-          this.prevent_opt.save=false
-        });
-      },
-      // 获取每个tag组件内部校验后数据,点击生成图表时触发
-      getTarget(target,pointer,optType) {
-        this.elementTarget.push(target);
-        if (this.elementTarget.length === this.elements.length) {
-          this.$refs.chartForm.validate((valid) => {
-            const params = {
-              // productId: this.productId,
-              //panelId: this.panelId,
-              title: this.editChart.title,//this.editChart
-              span: this.editChart.span,
-              height: this.editChart.height,
-              type: this.editChart.type,
-              unit:this.editChart.unit,
-              param:{
-
-              },
-              sync: this.editChart.sync
-            };
-            if(this.editChart.type === 'singleStat'||this.editChart.type == 'pie'){
-              // params.param.statistics=this.statistics;
-            } else {
-              delete params.param.statistics;
-            }
-            if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'){
-              params.param.threshold=this.editChart.param.threshold;
-              params.param.nullType=this.editChart.param.nullType;
-            } else {
-              delete params.param.threshold;
-            }
-            //生成指标数组
-            const elements = [];
-            this.elementTarget.forEach((elem,index) => {
-              if(elem.type==='normal'){
-                const metricStr = bus.tagsToString(elem.metric,elem.selectedTagList);
-                elements.push({
-                  //id:index+1,
-                  //metric: elem.metric,//指标名称
-                  expression: metricStr,//指标对应Label及Value组成的表达式字符串
-                  type:elem.type,//指标类型
-                  legend:elem.legend,//配置的legend
-                });
-              }else if(elem.type==='expert'){
-                elements.push({
-                  //id:index+1,
-                  //metric: elem.metric,//指标名称
-                  expression: elem.expression,//指标对应Label及Value组成的表达式字符串
-                  type:elem.type,//指标类型
-                  legend:elem.legend,//配置的legend
-                });
-              }
-            });
-            params.elements = elements;
-            if (valid) {
-              if(optType==='preview') {
-                if (this.isedit) {
-                  params.id = this.editChart.id;
-                }
-                this.$refs.chartsPreview.show(params);
-              }else{
-                if (this.isedit) {
-                  params.id = this.editChart.id;
-                  this.updateCharts(params);
-                } else {
-                  this.addCharts(params);
-                }
-              }
-            }
-          });
+          this.prevent_opt.save = false
+        })
+      }
+      // })
+    },
+    // 更新图表
+    updateCharts (params) {
+      const panelId = this.panelId ? this.panelId : this.chart.panelId
+      this.$put('panel/' + panelId + '/charts', params || this.editChart).then(response2 => {
+        if (response2.code === 200) {
+          this.esc()
+          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+          // this.$refs.chartForm.resetFields();//清空表单
+          this.$emit('on-create-success', 'update', response2.data, params)
+        } else {
+          if (response2.msg) {
+            this.$message.error(response2.msg)
+          } else {
+            this.$message.error(response2)
+          }
         }
-      },
-      getAlertParam:function(param,opType){
+        this.prevent_opt.save = false
+      })
+    },
+    // 获取每个tag组件内部校验后数据,点击生成图表时触发
+    getTarget (target, pointer, optType) {
+      this.elementTarget.push(target)
+      if (this.elementTarget.length === this.elements.length) {
         this.$refs.chartForm.validate((valid) => {
           const params = {
-            title: this.editChart.title,//this.editChart
+            // productId: this.productId,
+            // panelId: this.panelId,
+            title: this.editChart.title, // this.editChart
             span: this.editChart.span,
             height: this.editChart.height,
             type: this.editChart.type,
-            unit:this.editChart.unit,
-            param:param,
-            sync: this.editChart.sync,
-          };
+            unit: this.editChart.unit,
+            param: {
+
+            },
+            sync: this.editChart.sync
+          }
+          if (this.editChart.type === 'singleStat' || this.editChart.type == 'pie') {
+            // params.param.statistics=this.statistics;
+          } else {
+            delete params.param.statistics
+          }
+          if (this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea') {
+            params.param.threshold = this.editChart.param.threshold
+            params.param.nullType = this.editChart.param.nullType
+          } else {
+            delete params.param.threshold
+          }
+          // 生成指标数组
+          const elements = []
+          this.elementTarget.forEach((elem, index) => {
+            if (elem.type === 'normal') {
+              const metricStr = bus.tagsToString(elem.metric, elem.selectedTagList)
+              elements.push({
+                // id:index+1,
+                // metric: elem.metric,//指标名称
+                expression: metricStr, // 指标对应Label及Value组成的表达式字符串
+                type: elem.type, // 指标类型
+                legend: elem.legend// 配置的legend
+              })
+            } else if (elem.type === 'expert') {
+              elements.push({
+                // id:index+1,
+                // metric: elem.metric,//指标名称
+                expression: elem.expression, // 指标对应Label及Value组成的表达式字符串
+                type: elem.type, // 指标类型
+                legend: elem.legend// 配置的legend
+              })
+            }
+          })
+          params.elements = elements
           if (valid) {
-            if(opType==='preview') {
+            if (optType === 'preview') {
               if (this.isedit) {
-                params.id = this.editChart.id;
+                params.id = this.editChart.id
               }
-              this.$refs.chartsPreview.show(params);
-            }else{
+              this.$refs.chartsPreview.show(params)
+            } else {
               if (this.isedit) {
-                params.id = this.editChart.id;
-                this.updateCharts(params);
+                params.id = this.editChart.id
+                this.updateCharts(params)
               } else {
-                this.addCharts(params);
+                this.addCharts(params)
               }
             }
           }
         })
-      },
-      SyncSave(){
-        this.editChart.sync=1;
-        this.confirmAdd();
-      },
-      confirmAdd() {
-        this.prevent_opt.save=true
-        this.elementTarget = []; // 初始化清空参数
-        if(this.editChart.type!=='url'&&this.editChart.type != 'text'){
-          /*if(this.editChart.type == 'alertList'){
+      }
+    },
+    getAlertParam: function (param, opType) {
+      this.$refs.chartForm.validate((valid) => {
+        const params = {
+          title: this.editChart.title, // this.editChart
+          span: this.editChart.span,
+          height: this.editChart.height,
+          type: this.editChart.type,
+          unit: this.editChart.unit,
+          param: param,
+          sync: this.editChart.sync
+        }
+        if (valid) {
+          if (opType === 'preview') {
+            if (this.isedit) {
+              params.id = this.editChart.id
+            }
+            this.$refs.chartsPreview.show(params)
+          } else {
+            if (this.isedit) {
+              params.id = this.editChart.id
+              this.updateCharts(params)
+            } else {
+              this.addCharts(params)
+            }
+          }
+        }
+      })
+    },
+    SyncSave () {
+      this.editChart.sync = 1
+      this.confirmAdd()
+    },
+    confirmAdd () {
+      this.prevent_opt.save = true
+      this.elementTarget = [] // 初始化清空参数
+      if (this.editChart.type !== 'url' && this.editChart.type != 'text') {
+        /* if(this.editChart.type == 'alertList'){
             this.$refs.alertParamBox.saveParam();
           }else{
             this.$refs.chartTag.forEach((item, index) => {//循环指标列表
               // 触发每个tag组件内部进行校验
               item.saveTarget(index);
             });
-          }*/
-          if(this.editChart.type == 'alertList'){
-            this.$refs.alertParamBox.saveParam();
-            return ;
-          }
-          if(this.editChart.type == 'singleStat'||this.editChart.type == 'pie'||this.editChart.type == 'table'){
-            // this.$set(this.editChart.param, "statistics", this.statistics);
-          } else {
-            delete this.editChart.param.statistics;
-          }
-          if (this.expressions[0]) {
-            this.editChart.elements = [];
-            this.expressions.forEach((expr, i) => {
-              this.editChart.elements.push({id: this.elementIds[i], expression: expr, type: "expert", legend: this.legends[i]});
-            });
-          }
-          if (this.editChart.id) {
-            this.updateCharts();
-          } else {
-            this.addCharts();
-          }
-        }else {
-          if(this.editChart.type == 'url'){
-            this.$refs.chartForm.validate((valid) => {
-              const params = {
-                title: this.editChart.title,//this.editChart
-                span: this.editChart.span,
-                height: this.editChart.height,
-                type: this.editChart.type,
-                unit:this.editChart.unit,
-                param:{
-                  url:this.editChart.param.url,
-                },
-                sync: this.editChart.sync
-              };
-
-              if (valid) {
-                params.elements = [];
-                if (this.isedit) {
-                  params.id = this.editChart.id;
-                  this.updateCharts(params);
-                } else {
-                  this.addCharts(params);
-                }
-              }
-            });
-          }else{
-            this.$refs.chartForm.validate((valid) => {
-              let text=this.$refs.richTextEditor.getContent();
-              if(!text){
-                valid=false;
-              }
-              const params = {
-                title: this.editChart.title,//this.editChart
-                span: this.editChart.span,
-                height: this.editChart.height,
-                type: this.editChart.type,
-                param:{
-                  text:text
-                },
-                sync: this.editChart.sync
-              };
-
-              if (valid) {
-                params.elements = [];
-                if (this.isedit) {
-                  params.id = this.editChart.id;
-                  this.updateCharts(params);
-                } else {
-                  this.addCharts(params);
-                }
-              }
-            });
-          }
+          } */
+        if (this.editChart.type == 'alertList') {
+          this.$refs.alertParamBox.saveParam()
+          return
         }
-      },
-      // 获取metric列表
-      getSuggestMetric() {
-        //this.$get('/prom/api/v1/label/__name__/values').then(response => {
-        this.$get('/module?pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.metricList = response.data.list;
-            const cascaderMap = new Map();
-            this.metricList.forEach((item,index) => {
-              let projectName = item.project.name;
-              let moduleName = item.name;
-              const childOption = {
-                value: moduleName,
-                label: moduleName,
-                children:[],
-              };
-              if(cascaderMap.has(projectName)){
-                cascaderMap.get(projectName).push(childOption);
-              }else {
-                let childArr = [];
-                childArr.push(childOption);
-                cascaderMap.set(projectName,childArr);
-              }
-
-              //缓存全局数据
-              const moduleItem = {
-                name:moduleName,
-                metricMap:new Map()
-              };
-              if(this.metricAllData.has(projectName)){
-                let moduleGroup = this.metricAllData.get(projectName);
-                this.metricAllData.get(projectName).push(moduleItem);
-              }else {
-                let moduleList = [];
-                moduleList.push(moduleItem);
-                this.metricAllData.set(projectName,moduleList);
-              }
-            });
-            let metricCascaderArr = [];
-            cascaderMap.forEach(function(value,index){
-              const option = {
-                value: index+"_par",
-                label: index,
-                children:value,
-              };
-              metricCascaderArr.push(option);
-            });
-
-            this.metricCascaderList = metricCascaderArr;
-          }else {
-            this.metricList = [];
-            this.metricCascaderList = [];
-          }
-        })
-      },
-      // 创建打开
-      createData(panelId, elementInfo) {
-        if (panelId == -1) {
-          let p = this.panelData[0];
-          this.editChart.panelName = p.name;
+        if (this.editChart.type == 'singleStat' || this.editChart.type == 'pie' || this.editChart.type == 'table') {
+          // this.$set(this.editChart.param, "statistics", this.statistics);
         } else {
-          this.panelId = panelId;
+          delete this.editChart.param.statistics
         }
-        if (elementInfo) {
-          if (elementInfo.elements.length > 1) {
-
-            this.$nextTick(() => {
-              this.elements = [];
-              elementInfo.elements.forEach((item, index) => {
-                this.elements.push(index);
-              });
-              let dSet = this.$refs.chartTag;
-              this.$nextTick(() => {
-                dSet.forEach((item, index) => {
-                  item.setMdata(elementInfo.elements[index]);
-                });
-              });
-            });
-
-          } else {
-            this.$nextTick(() => {
-              this.$refs.chartTag[0].setMdata(elementInfo.elements[0]);
-            });
-          }
-        }
-        this.isedit = false;
-        this.initInfo(); // 初始化图表信息
-        //this.editChartModal = true;//????控制弹出框显示和隐藏的，不需要了
-        this.initOpen(); // 获取metric, productId数据
-      },
-      setIsUrl(){
-        this.isUrl = true;
-        this.isSingleStat = false;
-        this.isAlert = false;
-      },
-      setIsSingleStat(){
-        this.isUrl = false;
-        this.isSingleStat = true;
-        this.isAlert=false;
-      },
-      setIsAlertList(){
-        this.isAlert = true;
-        this.isUrl = false;
-        this.isSingleStat = false;
-      },
-      setIsOtherChart(){
-        this.isSingleStat = false;
-        this.isUrl = false;
-        this.isAlert=false;
-      },
-      // 编辑chart时使用, set_tdata
-      editData(data, panelId) {
-        if (!panelId) {
-          this.panelId = 0;
-        } else {
-          this.panelId = panelId;
-          let temp = this.panelData.filter((item) => {
-            return item.id == panelId;
-          });
-        }
-        this.isedit = true;
-        this.editInfo = data;
-        // 图表信息获取
-        this.editChart.id = data.id;
-        this.editChart.title = data.title;
-        this.editChart.span = data.span;
-        this.editChart.height = data.height+'';
-        this.editChart.type = data.type;
-        this.editChart.unit=data.unit;
-        this.editChart.elements = data.elements;
-        if(this.editChart.type==='url'){
-          this.editChart.param.url = data.param.url;
-          this.setIsUrl();
-          //this.elements = [1];
-        }else if(this.editChart.type==='table'){
-          this.statisticsList=JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
-          this.statisticsList.push({value: "null", label: i18n.t("dashboard.panel.chartForm.statisticsVal.null")},);
-        }else if(this.editChart.type==='alertList'){
-          this.editChart.param = data.param;
-          this.setIsAlertList();
-          this.$nextTick(()=>{
-            this.$refs.alertParamBox.setData(data)
+        if (this.expressions[0]) {
+          this.editChart.elements = []
+          this.expressions.forEach((expr, i) => {
+            this.editChart.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
           })
-          //this.elements=[1];
-        }else if(this.editChart.type==='singleStat'){
-          this.setIsSingleStat();
-        }else{
-          if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='singleStat')&&data.param){
-            this.editChart.param.threshold=data.param.threshold;
-            this.editChart.param.statistics = this.statistics = data.param.statistics;
-          }else{
-            this.editChart.param.threshold='';
-          }
-          if((this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea')&&data.param){
-            this.editChart.param.nullType=data.param.nullType;
-          }
-          this.setIsOtherChart();
-          //this.getSuggestMetric();//获得指标列表
-          // 指标
-          /*this.elements = [];
+        }
+        if (this.editChart.id) {
+          this.updateCharts()
+        } else {
+          this.addCharts()
+        }
+      } else {
+        if (this.editChart.type == 'url') {
+          this.$refs.chartForm.validate((valid) => {
+            const params = {
+              title: this.editChart.title, // this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              unit: this.editChart.unit,
+              param: {
+                url: this.editChart.param.url
+              },
+              sync: this.editChart.sync
+            }
+
+            if (valid) {
+              params.elements = []
+              if (this.isedit) {
+                params.id = this.editChart.id
+                this.updateCharts(params)
+              } else {
+                this.addCharts(params)
+              }
+            }
+          })
+        } else {
+          this.$refs.chartForm.validate((valid) => {
+            const text = this.$refs.richTextEditor.getContent()
+            if (!text) {
+              valid = false
+            }
+            const params = {
+              title: this.editChart.title, // this.editChart
+              span: this.editChart.span,
+              height: this.editChart.height,
+              type: this.editChart.type,
+              param: {
+                text: text
+              },
+              sync: this.editChart.sync
+            }
+
+            if (valid) {
+              params.elements = []
+              if (this.isedit) {
+                params.id = this.editChart.id
+                this.updateCharts(params)
+              } else {
+                this.addCharts(params)
+              }
+            }
+          })
+        }
+      }
+    },
+    // 获取metric列表
+    getSuggestMetric () {
+      // this.$get('/prom/api/v1/label/__name__/values').then(response => {
+      this.$get('/module?pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.metricList = response.data.list
+          const cascaderMap = new Map()
+          this.metricList.forEach((item, index) => {
+            const projectName = item.project.name
+            const moduleName = item.name
+            const childOption = {
+              value: moduleName,
+              label: moduleName,
+              children: []
+            }
+            if (cascaderMap.has(projectName)) {
+              cascaderMap.get(projectName).push(childOption)
+            } else {
+              const childArr = []
+              childArr.push(childOption)
+              cascaderMap.set(projectName, childArr)
+            }
+
+            // 缓存全局数据
+            const moduleItem = {
+              name: moduleName,
+              metricMap: new Map()
+            }
+            if (this.metricAllData.has(projectName)) {
+              this.metricAllData.get(projectName).push(moduleItem)
+            } else {
+              const moduleList = []
+              moduleList.push(moduleItem)
+              this.metricAllData.set(projectName, moduleList)
+            }
+          })
+          const metricCascaderArr = []
+          cascaderMap.forEach(function (value, index) {
+            const option = {
+              value: index + '_par',
+              label: index,
+              children: value
+            }
+            metricCascaderArr.push(option)
+          })
+
+          this.metricCascaderList = metricCascaderArr
+        } else {
+          this.metricList = []
+          this.metricCascaderList = []
+        }
+      })
+    },
+    // 创建打开
+    createData (panelId, elementInfo) {
+      if (panelId == -1) {
+        const p = this.panelData[0]
+        this.editChart.panelName = p.name
+      } else {
+        this.panelId = panelId
+      }
+      if (elementInfo) {
+        if (elementInfo.elements.length > 1) {
+          this.$nextTick(() => {
+            this.elements = []
+            elementInfo.elements.forEach((item, index) => {
+              this.elements.push(index)
+            })
+            const dSet = this.$refs.chartTag
+            this.$nextTick(() => {
+              dSet.forEach((item, index) => {
+                item.setMdata(elementInfo.elements[index])
+              })
+            })
+          })
+        } else {
+          this.$nextTick(() => {
+            this.$refs.chartTag[0].setMdata(elementInfo.elements[0])
+          })
+        }
+      }
+      this.isedit = false
+      this.initInfo() // 初始化图表信息
+      // this.editChartModal = true;//????控制弹出框显示和隐藏的，不需要了
+      this.initOpen() // 获取metric, productId数据
+    },
+    setIsUrl () {
+      this.isUrl = true
+      this.isSingleStat = false
+      this.isAlert = false
+    },
+    setIsSingleStat () {
+      this.isUrl = false
+      this.isSingleStat = true
+      this.isAlert = false
+    },
+    setIsAlertList () {
+      this.isAlert = true
+      this.isUrl = false
+      this.isSingleStat = false
+    },
+    setIsOtherChart () {
+      this.isSingleStat = false
+      this.isUrl = false
+      this.isAlert = false
+    },
+    // 编辑chart时使用, set_tdata
+    editData (data, panelId) {
+      if (!panelId) {
+        this.panelId = 0
+      } else {
+        this.panelId = panelId
+      }
+      this.isedit = true
+      this.editInfo = data
+      // 图表信息获取
+      this.editChart.id = data.id
+      this.editChart.title = data.title
+      this.editChart.span = data.span
+      this.editChart.height = data.height + ''
+      this.editChart.type = data.type
+      this.editChart.unit = data.unit
+      this.editChart.elements = data.elements
+      if (this.editChart.type === 'url') {
+        this.editChart.param.url = data.param.url
+        this.setIsUrl()
+        // this.elements = [1];
+      } else if (this.editChart.type === 'table') {
+        this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
+        this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
+      } else if (this.editChart.type === 'alertList') {
+        this.editChart.param = data.param
+        this.setIsAlertList()
+        this.$nextTick(() => {
+          this.$refs.alertParamBox.setData(data)
+        })
+        // this.elements=[1];
+      } else if (this.editChart.type === 'singleStat') {
+        this.setIsSingleStat()
+      } else {
+        if ((this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'singleStat') && data.param) {
+          this.editChart.param.threshold = data.param.threshold
+          this.editChart.param.statistics = this.statistics = data.param.statistics
+        } else {
+          this.editChart.param.threshold = ''
+        }
+        if ((this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea') && data.param) {
+          this.editChart.param.nullType = data.param.nullType
+        }
+        this.setIsOtherChart()
+        // this.getSuggestMetric();//获得指标列表
+        // 指标
+        /* this.elements = [];
           bus.chartAddInfo.metricTarget = [];
           data.elements.forEach((item, index) => {
             this.elements.push(index);
@@ -1255,436 +1246,434 @@
                 item.setMdata(data.elements[index]);
               });
             }
-          });*/
-        }
-      },
+          }); */
+      }
+    },
 
-      // 初始化信息
-      initInfo() {
-        this.editChart.title = '';
-        this.editChart.type = 'line';
-        this.editChart.span = 12;
-        this.editChart.height = 400+'';
-        this.editChart.unit=2;
-        let param = {};
-        param.last=0;
-        param.url='';
-        param.threshold='';
-        param.valueMapping={type:'text',mapping:[{value:'',text:'',color:{bac:'#fff',text:'#000'}}]};
-        param.legendValue={min:'off',max:'off',avg:'off',last:'off',total:'off'};
-        param.nullType='connected';
-        this.$set(this.editChart, "param", param);
-        this.elements = [1];
-        this.elementTarget = [];
-        bus.chartAddInfo.metricTarget = [];
-        this.setIsOtherChart();
-      },
-      // 创建时打开,用于清空chart-tag数据
-      initOpen() {
-        //bus.$emit('clear_history');
-        /*  项目不需要produce
+    // 初始化信息
+    initInfo () {
+      this.editChart.title = ''
+      this.editChart.type = 'line'
+      this.editChart.span = 12
+      this.editChart.height = 400 + ''
+      this.editChart.unit = 2
+      const param = {}
+      param.last = 0
+      param.url = ''
+      param.threshold = ''
+      param.valueMapping = { type: 'text', mapping: [{ value: '', text: '', color: { bac: '#fff', text: '#000' } }] }
+      param.legendValue = { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' }
+      param.nullType = 'connected'
+      this.$set(this.editChart, 'param', param)
+      this.elements = [1]
+      this.elementTarget = []
+      bus.chartAddInfo.metricTarget = []
+      this.setIsOtherChart()
+    },
+    // 创建时打开,用于清空chart-tag数据
+    initOpen () {
+      // bus.$emit('clear_history');
+      /*  项目不需要produce
         if (this.$route.params.productId) {
           this.productId = parseInt(this.$route.params.productId, 10);
         }
         */
-        //this.getSuggestMetric();
-      },
+      // this.getSuggestMetric();
+    },
 
-      /*metric部分相关方法--end*/
-      querySearch(queryString, cb) {
-        let suggestions = this.heightSuggestions;
-        let results=queryString&&(suggestions.includes(queryString)||suggestions.filter(this.createFilter(queryString)).length>0)?suggestions:[];
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (suggestion) => {
-          return (suggestion.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      handleSelect:function(item){
-        this.editChart.height=item;
-      },
-      unitSelected:function(value){
-        //this.editChart.unit=value[value.length-1];
-      },
-      chartTypeChange(){
-        let chartType = this.editChart.type;
-        this.editChart.param.url='';
-        if(chartType==='url'){
-          this.setIsUrl();
-          /*if(this.$refs.chartTag){
+    /* metric部分相关方法--end */
+    querySearch (queryString, cb) {
+      const suggestions = this.heightSuggestions
+      const results = queryString && (suggestions.includes(queryString) || suggestions.filter(this.createFilter(queryString)).length > 0) ? suggestions : []
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (suggestion) => {
+        return (suggestion.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect: function (item) {
+      this.editChart.height = item
+    },
+    unitSelected: function (value) {
+      // this.editChart.unit=value[value.length-1];
+    },
+    chartTypeChange () {
+      const chartType = this.editChart.type
+      this.editChart.param.url = ''
+      if (chartType === 'url') {
+        this.setIsUrl()
+        /* if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
               item.setNotSingleStat();
             });
-          }*/
-        }else if(chartType === 'alertList'){
-          this.setIsAlertList();
-        }else if(chartType === 'singleStat' || chartType==='pie') {
-
-          if(chartType == 'singleStat'){
-            this.setIsSingleStat();
-            this.resetElements();
-          }
-          this.editChart.param={
-            statistics:'last',
-            valueMapping:{
-              type:'value',
-              mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]
-            }
-          }
-          this.showPicker=[{bac:false,text:false}];
-        }else {
-          this.setIsOtherChart();
-          if(chartType === 'bar'||chartType === 'line'||chartType === 'stackArea'){
-            this.editChart.param={nullType:'connected',threshold:'',legendValue:{min:'off',max:'off',avg:'off',last:'off',total:'off'}}
-          }else if(chartType == 'table'){
-            this.$set(this.editChart.param,'last',0)
-            this.editChart.param={
-              statistics:'last',
-              nullType:'connected',
-              valueMapping:{
-                type:'value',
-                mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]
-              }
-            }
-            this.showPicker=[{bac:false,text:false}];
-            this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList));
-            this.statisticsList.push({value: "null", label: i18n.t("dashboard.panel.chartForm.statisticsVal.null")},);
-
-          }
-          /*if(this.$refs.chartTag){
-            this.$refs.chartTag.forEach((item, index) => {
-              item.setNotSingleStat();
-            });
-          }*/
+          } */
+      } else if (chartType === 'alertList') {
+        this.setIsAlertList()
+      } else if (chartType === 'singleStat' || chartType === 'pie') {
+        if (chartType == 'singleStat') {
+          this.setIsSingleStat()
+          this.resetElements()
         }
-      },
-      resetElements() {
-        this.promqlKeys = [""];
-        this.expressions = [""];
-        this.legends = [];
-        this.elementIds = [];
-      },
-      inputPanel:function(){
-        this.isInputPanel=true;
-      },
-      /*panel搜索建议*/
-      panelSuggestion(queryString, callback) {
-       if(!this.isInputPanel){
-         callback(JSON.parse(JSON.stringify(this.panelData)));
-       }else{
-         let data = [];
-         if (!queryString) {
-           data = this.panelData;
-         } else {
-           for (let i = 0; i < this.panelData.length; i++) {
-             if (this.panelData[i].name.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
-               data.push(this.panelData[i]);
-             }
-           }
-         }
-         callback(data);
-       }
-      },
+        this.editChart.param = {
+          statistics: 'last',
+          valueMapping: {
+            type: 'value',
+            mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
+          }
+        }
+        this.showPicker = [{ bac: false, text: false }]
+      } else {
+        this.setIsOtherChart()
+        if (chartType === 'bar' || chartType === 'line' || chartType === 'stackArea') {
+          this.editChart.param = { nullType: 'connected', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
+        } else if (chartType == 'table') {
+          this.$set(this.editChart.param, 'last', 0)
+          this.editChart.param = {
+            statistics: 'last',
+            nullType: 'connected',
+            valueMapping: {
+              type: 'value',
+              mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
+            }
+          }
+          this.showPicker = [{ bac: false, text: false }]
+          this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
+          this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
+        }
+        /* if(this.$refs.chartTag){
+            this.$refs.chartTag.forEach((item, index) => {
+              item.setNotSingleStat();
+            });
+          } */
+      }
+    },
+    resetElements () {
+      this.promqlKeys = ['']
+      this.expressions = ['']
+      this.legends = []
+      this.elementIds = []
+    },
+    inputPanel: function () {
+      this.isInputPanel = true
+    },
+    /* panel搜索建议 */
+    panelSuggestion (queryString, callback) {
+      if (!this.isInputPanel) {
+        callback(JSON.parse(JSON.stringify(this.panelData)))
+      } else {
+        let data = []
+        if (!queryString) {
+          data = this.panelData
+        } else {
+          for (let i = 0; i < this.panelData.length; i++) {
+            if (this.panelData[i].name.toLowerCase().indexOf(queryString.toLowerCase()) != -1) {
+              data.push(this.panelData[i])
+            }
+          }
+        }
+        callback(data)
+      }
+    },
 
-      //preview -start
-      //预览图表
-      preview(){
-        //验证图表数据是否合法？？，合法了再显示预览窗口
-        this.elementTarget = []; // 初始化清空参数
-        this.alertParams={};
-        if(this.editChart.type!=='url'&&this.editChart.type!=='text'){
-          if(this.editChart.type == 'alertList'){
-            this.$refs.alertParamBox.saveParam('preview');
-          }else{
-            /*this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+    // preview -start
+    // 预览图表
+    preview () {
+      // 验证图表数据是否合法？？，合法了再显示预览窗口
+      this.elementTarget = [] // 初始化清空参数
+      this.alertParams = {}
+      if (this.editChart.type !== 'url' && this.editChart.type !== 'text') {
+        if (this.editChart.type == 'alertList') {
+          this.$refs.alertParamBox.saveParam('preview')
+        } else {
+          /* this.$refs.chartTag.forEach((item, index) => {//循环指标列表
               // 触发每个tag组件内部进行校验
               item.saveTarget(index,'preview');
-            });*/
-            this.$refs.chartForm.validate((valid) => {
-              const params = {
-                // productId: this.productId,
-                //panelId: this.panelId,
-                title: this.editChart.title,//this.editChart
-                span: this.editChart.span,
-                height: this.editChart.height,
-                type: this.editChart.type,
-                unit:this.editChart.unit,
-                param:this.editChart.param,
-                sync: this.editChart.sync
-              };
-              if(this.editChart.type === 'singleStat'||this.editChart.type === 'table'){
-                // params.param.statistics=this.statistics;
-                params.param.valueMapping=this.editChart.param.valueMapping;
-              }
-              if(this.editChart.type != 'singleStat' && this.editChart.type != 'pie'&& this.editChart.type != 'table'){
-                delete params.param.statistics;
-              }
-              if(this.editChart.type==='line'||this.editChart.type==='bar'||this.editChart.type==='stackArea'||this.editChart.type==='table'){
-                params.param.threshold=this.editChart.param.threshold;
-                if(this.editChart.type==='table'){
-                  delete params.param.threshold;
-                  params.param.valueMapping=this.editChart.param.valueMapping;
-                }
-                params.param.nullType=this.editChart.param.nullType;
-                params.param.legendValue=this.editChart.param.legendValue;
-              } else {
-                delete params.param.threshold;
-                delete params.param.nullType;
-              }
-              //生成指标数组
-              const elements = [];
-              this.expressions.forEach((expr, index) => {
-                elements.push({
-                  expression: expr,
-                  type: 'expert',
-                  legend: this.legends[index],
-                });
-              });
-              params.elements = elements;
-              if (valid) {
-                this.$refs.chartsPreview.show(params);
-              }
-            });
-          }
-        }else if(this.editChart.type=='url'){
+            }); */
           this.$refs.chartForm.validate((valid) => {
             const params = {
-              title: this.editChart.title,//this.editChart
+              // productId: this.productId,
+              // panelId: this.panelId,
+              title: this.editChart.title, // this.editChart
               span: this.editChart.span,
               height: this.editChart.height,
               type: this.editChart.type,
-              unit:this.editChart.unit,
-              param:{
-                url:this.editChart.param.url,
-              }
-            };
-
-            if (valid) {
-              if (this.isedit) {
-                params.id = this.editChart.id;
-              }
-              this.$refs.chartsPreview.show(params);
+              unit: this.editChart.unit,
+              param: this.editChart.param,
+              sync: this.editChart.sync
             }
-          });
-        }else{
-          this.$refs.chartForm.validate((valid) => {
-            let text=this.$refs.richTextEditor.getContent();
-            if(!text){
-              valid=false;
+            if (this.editChart.type === 'singleStat' || this.editChart.type === 'table') {
+              // params.param.statistics=this.statistics;
+              params.param.valueMapping = this.editChart.param.valueMapping
             }
-            const params = {
-              title: this.editChart.title,//this.editChart
-              span: this.editChart.span,
-              height: this.editChart.height,
-              type: this.editChart.type,
-              unit:this.editChart.unit,
-              param:{
-                text:text
-              }
-            };
-
-            if (valid) {
-              if (this.isedit) {
-                params.id = this.editChart.id;
-              }
-              this.$refs.chartsPreview.show(params);
+            if (this.editChart.type != 'singleStat' && this.editChart.type != 'pie' && this.editChart.type != 'table') {
+              delete params.param.statistics
             }
-          });
-        }
-      },
-      //preview--end
-      initElements() {
-        if (!this.editChart.elements || this.editChart.elements.length == 0) {
-          this.editChart.elements = [{expression: "", legend: "", type: "expert", id: ""}];
-        }
-        this.editChart.elements.forEach(element => {
-          if(element&&element!=''){
-            this.promqlKeys.push(getUUID());
-            this.expressions.push(element.expression);
-            this.legends.push(element.legend);
-            this.elementIds.push(element.id);
-          }
-        });
-        this.promqlCount=this.editChart.elements.length;
-        this.$nextTick(() => {
-          this.expressions.forEach((ex, index) => {
-            if (ex) {
-              this.$refs[`promql-${index}`][0].metricChange(ex);
+            if (this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'table') {
+              params.param.threshold = this.editChart.param.threshold
+              if (this.editChart.type === 'table') {
+                delete params.param.threshold
+                params.param.valueMapping = this.editChart.param.valueMapping
+              }
+              params.param.nullType = this.editChart.param.nullType
+              params.param.legendValue = this.editChart.param.legendValue
+            } else {
+              delete params.param.threshold
+              delete params.param.nullType
             }
-          });
-        });
-      },
-      valueMappingChange:function(value){
-        if(this.editChart.param.valueMapping.type == 'value'){
-          this.editChart.param.valueMapping.mapping =[{text:'',value:'',color:{bac:'#fff',text:'#000'}}];
-          this.showPicker=[{bac:false,text:false}]
-        }else{
-          this.editChart.param.valueMapping.mapping =[{from:'',to:'',text:'',color:{bac:'#fff',text:'#000'}}];
-          this.showPicker=[{bac:false,text:false}]
-        }
-      },
-      addMapping:function(){
-        if(this.editChart.param.valueMapping.type == 'value'){
-          this.editChart.param.valueMapping.mapping .push({text:'',value:'',color:{bac:'#fff',text:'#000'}});
-          this.showPicker.push({bac:false,text:false})
-        }else{
-          this.editChart.param.valueMapping.mapping .push({from:'',to:'',text:'',color:{bac:'#fff',text:'#000'}});
-          this.showPicker.push({bac:false,text:false})
-        }
-      },
-      colorPickerClick(index){
-        if(this.showPicker[index].bac|| this.showPicker[index].text){//再次点击关闭
-          this.showPicker[index].bac=false;
-          this.showPicker[index].text=false;
-          return
-        }
-        this.showPicker[index].bac=true;
-        this.$refs['colorPickerBac'+ index][0].showPicker=true;
-      },
-      changeShowPicker(index,atr){
-        this.$refs['colorPickerBac'  + index][0].showPicker=true;
-        this.showPicker[index].bac=false;
-        this.showPicker[index].text=false;
-        this.showPicker[index][atr]=true;
-        // atr=atr.toLowerCase().replace(/( |^)[a-z]/g,(L)=>L.toUpperCase());
-      },
-      colorChange(mapping,key,val){
-        mapping.color[key]=val
-      },
-      colorRGBtoHex(color) {
-        let rgb = color.split(',');
-        let r = parseInt(rgb[0].split('(')[1]);
-        let g = parseInt(rgb[1]);
-        let b = parseInt(rgb[2].split(')')[0]);
-        let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-        return hex;
-      },
-      colorOut(index,e){
-        let flag=false;
-        e.path.forEach((item)=>{
-          if(item.className==='el-color-dropdown el-color-picker__panel' || item.className==='color-tab'){
-            flag=true
-          }
-        })
-        if(flag){
-          return
-        }
-        if(this.showPicker[index]){
-          this.showPicker[index].bac=false;
-          this.showPicker[index].text=false;
-        }
-      },
-      delMapping:function(index){
-        this.editChart.param.valueMapping.mapping.splice(index,1)
-      },
-      queryMetrics() {
-        this.metricOptions = [];
-        this.$get('prom/api/v1/label/__name__/values').then(response=>{
-          if(response.status == 'success'){
-            let metrics=response.data.sort();
-            let metricMap=new Map();
-            metrics.forEach((item)=>{
-              let key='';
-              if(/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)){
-                key=item.split('_')[0];
-              }else if(/^_\w*/.test(item)){
-                key='      ';
-              }else{
-                key=item;
-              }
-              if(metricMap.get(key)){
-                let values=metricMap.get(key);
-                values.push({label:item,value:item});
-              }else{
-                let values=[{label:item,value:item}];
-                metricMap.set(key,values);
-              }
-              //this.metricStore.push({label:item,value:item,insertText:item})
-            });
-            for(let key of metricMap.keys()){
-              let option={
-                label:key,
-                value:key,
-              };
-              if(metricMap.get(key) && metricMap.get(key).length>1){
-                option.children=metricMap.get(key);
-              }
-              this.metricOptions.push(option);
-            }
-          }
-        })
-      },
-      getMetricOptions() {
-        return this.metricOptions;
-      }
-    },
-    created() {
-      this.getSuggestMetric();
-      this.queryMetrics();
-    },
-    watch: {
-      chart: {
-        deep: true,
-        immediate: true,
-        handler(n) {
-          if((n.param&&n.param.valueMapping)&&(n.type === 'singleStat' || n.type === 'table')){
-            n.param.valueMapping.mapping.forEach(item=>{
-              this.showPicker.push({bac:false,text:false})
-              if(!item.color){
-                item.color={bac:'#fff',text:'#000'};
-              }
+            // 生成指标数组
+            const elements = []
+            this.expressions.forEach((expr, index) => {
+              elements.push({
+                expression: expr,
+                type: 'expert',
+                legend: this.legends[index]
+              })
             })
+            params.elements = elements
+            if (valid) {
+              this.$refs.chartsPreview.show(params)
+            }
+          })
+        }
+      } else if (this.editChart.type == 'url') {
+        this.$refs.chartForm.validate((valid) => {
+          const params = {
+            title: this.editChart.title, // this.editChart
+            span: this.editChart.span,
+            height: this.editChart.height,
+            type: this.editChart.type,
+            unit: this.editChart.unit,
+            param: {
+              url: this.editChart.param.url
+            }
           }
 
-          if(n.title){
-            this.isEdit=true;
-          }
-          this.editChart = JSON.parse(JSON.stringify(n));
-          if(!n.param.nullType){
-            this.editChart.param.nullType='connected';
-          }
-          if (n.type === 'url') {
-            this.setIsUrl();
-          } else if(n.type === 'alertList'){
-            this.setIsAlertList();
-          } else if(n.type === 'singleStat'){
-            if(n.param&&!n.param.valueMapping){
-              this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
-              this.showPicker.push({bac:false,text:false});
+          if (valid) {
+            if (this.isedit) {
+              params.id = this.editChart.id
             }
-            this.setIsSingleStat();
-          } else if(n.type  === 'table'){
-            n.param.last?this.$set(this.editChart.param,'last',n.param.last):this.$set(this.editChart.param,'last',0)
-            if(n.param&&!n.param.valueMapping){
-              this.$set(this.editChart.param,'valueMapping',{type:'value',mapping:[{text:'',value:'',color:{bac:'#fff',text:'#000'}}]});
-              this.showPicker.push({bac:false,text:false});
+            this.$refs.chartsPreview.show(params)
+          }
+        })
+      } else {
+        this.$refs.chartForm.validate((valid) => {
+          const text = this.$refs.richTextEditor.getContent()
+          if (!text) {
+            valid = false
+          }
+          const params = {
+            title: this.editChart.title, // this.editChart
+            span: this.editChart.span,
+            height: this.editChart.height,
+            type: this.editChart.type,
+            unit: this.editChart.unit,
+            param: {
+              text: text
             }
-          }else {
-            this.setIsOtherChart();
-            n.param&&!n.param.legendValue&&this.$set(this.editChart.param,'legendValue',{min:'off',max:'off',avg:'off',last:'off',total:'off'})
           }
-          this.$set(this.editChart, "panelName", this.showPanel.name);
-          if (this.showPanel.id) {
-            this.panelId = this.showPanel.id;
+
+          if (valid) {
+            if (this.isedit) {
+              params.id = this.editChart.id
+            }
+            this.$refs.chartsPreview.show(params)
           }
-          if (n.id) {
-            this.editData(this.editChart, this.showPanel.id);
-          } else {
-            this.createData(this.showPanel.id);
+        })
+      }
+    },
+    // preview--end
+    initElements () {
+      if (!this.editChart.elements || this.editChart.elements.length == 0) {
+        this.editChart.elements = [{ expression: '', legend: '', type: 'expert', id: '' }]
+      }
+      this.editChart.elements.forEach(element => {
+        if (element && element != '') {
+          this.promqlKeys.push(getUUID())
+          this.expressions.push(element.expression)
+          this.legends.push(element.legend)
+          this.elementIds.push(element.id)
+        }
+      })
+      this.promqlCount = this.editChart.elements.length
+      this.$nextTick(() => {
+        this.expressions.forEach((ex, index) => {
+          if (ex) {
+            this.$refs[`promql-${index}`][0].metricChange(ex)
+          }
+        })
+      })
+    },
+    valueMappingChange: function (value) {
+      if (this.editChart.param.valueMapping.type == 'value') {
+        this.editChart.param.valueMapping.mapping = [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
+        this.showPicker = [{ bac: false, text: false }]
+      } else {
+        this.editChart.param.valueMapping.mapping = [{ from: '', to: '', text: '', color: { bac: '#fff', text: '#000' } }]
+        this.showPicker = [{ bac: false, text: false }]
+      }
+    },
+    addMapping: function () {
+      if (this.editChart.param.valueMapping.type == 'value') {
+        this.editChart.param.valueMapping.mapping.push({ text: '', value: '', color: { bac: '#fff', text: '#000' } })
+        this.showPicker.push({ bac: false, text: false })
+      } else {
+        this.editChart.param.valueMapping.mapping.push({ from: '', to: '', text: '', color: { bac: '#fff', text: '#000' } })
+        this.showPicker.push({ bac: false, text: false })
+      }
+    },
+    colorPickerClick (index) {
+      if (this.showPicker[index].bac || this.showPicker[index].text) { // 再次点击关闭
+        this.showPicker[index].bac = false
+        this.showPicker[index].text = false
+        return
+      }
+      this.showPicker[index].bac = true
+      this.$refs['colorPickerBac' + index][0].showPicker = true
+    },
+    changeShowPicker (index, atr) {
+      this.$refs['colorPickerBac' + index][0].showPicker = true
+      this.showPicker[index].bac = false
+      this.showPicker[index].text = false
+      this.showPicker[index][atr] = true
+      // atr=atr.toLowerCase().replace(/( |^)[a-z]/g,(L)=>L.toUpperCase());
+    },
+    colorChange (mapping, key, val) {
+      mapping.color[key] = val
+    },
+    colorRGBtoHex (color) {
+      const rgb = color.split(',')
+      const r = parseInt(rgb[0].split('(')[1])
+      const g = parseInt(rgb[1])
+      const b = parseInt(rgb[2].split(')')[0])
+      const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+      return hex
+    },
+    colorOut (index, e) {
+      let flag = false
+      e.path.forEach((item) => {
+        if (item.className === 'el-color-dropdown el-color-picker__panel' || item.className === 'color-tab') {
+          flag = true
+        }
+      })
+      if (flag) {
+        return
+      }
+      if (this.showPicker[index]) {
+        this.showPicker[index].bac = false
+        this.showPicker[index].text = false
+      }
+    },
+    delMapping: function (index) {
+      this.editChart.param.valueMapping.mapping.splice(index, 1)
+    },
+    queryMetrics () {
+      this.metricOptions = []
+      this.$get('prom/api/v1/label/__name__/values').then(response => {
+        if (response.status == 'success') {
+          const metrics = response.data.sort()
+          const metricMap = new Map()
+          metrics.forEach((item) => {
+            let key = ''
+            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
+              key = item.split('_')[0]
+            } else if (/^_\w*/.test(item)) {
+              key = '      '
+            } else {
+              key = item
+            }
+            if (metricMap.get(key)) {
+              const values = metricMap.get(key)
+              values.push({ label: item, value: item })
+            } else {
+              const values = [{ label: item, value: item }]
+              metricMap.set(key, values)
+            }
+            // this.metricStore.push({label:item,value:item,insertText:item})
+          })
+          for (const key of metricMap.keys()) {
+            const option = {
+              label: key,
+              value: key
+            }
+            if (metricMap.get(key) && metricMap.get(key).length > 1) {
+              option.children = metricMap.get(key)
+            }
+            this.metricOptions.push(option)
           }
         }
-      },
+      })
     },
-    beforeDestroy() {
-      if(this.$refs.chartTag){
-        this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-          item.clearSelectedTagList();
-        });
+    getMetricOptions () {
+      return this.metricOptions
+    }
+  },
+  created () {
+    this.getSuggestMetric()
+    this.queryMetrics()
+  },
+  watch: {
+    chart: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        if ((n.param && n.param.valueMapping) && (n.type === 'singleStat' || n.type === 'table')) {
+          n.param.valueMapping.mapping.forEach(item => {
+            this.showPicker.push({ bac: false, text: false })
+            if (!item.color) {
+              item.color = { bac: '#fff', text: '#000' }
+            }
+          })
+        }
+
+        if (n.title) {
+          this.isEdit = true
+        }
+        this.editChart = JSON.parse(JSON.stringify(n))
+        if (!n.param.nullType) {
+          this.editChart.param.nullType = 'connected'
+        }
+        if (n.type === 'url') {
+          this.setIsUrl()
+        } else if (n.type === 'alertList') {
+          this.setIsAlertList()
+        } else if (n.type === 'singleStat') {
+          if (n.param && !n.param.valueMapping) {
+            this.$set(this.editChart.param, 'valueMapping', { type: 'value', mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }] })
+            this.showPicker.push({ bac: false, text: false })
+          }
+          this.setIsSingleStat()
+        } else if (n.type === 'table') {
+          n.param.last ? this.$set(this.editChart.param, 'last', n.param.last) : this.$set(this.editChart.param, 'last', 0)
+          if (n.param && !n.param.valueMapping) {
+            this.$set(this.editChart.param, 'valueMapping', { type: 'value', mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }] })
+            this.showPicker.push({ bac: false, text: false })
+          }
+        } else {
+          this.setIsOtherChart()
+          n.param && !n.param.legendValue && this.$set(this.editChart.param, 'legendValue', { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' })
+        }
+        this.$set(this.editChart, 'panelName', this.showPanel.name)
+        if (this.showPanel.id) {
+          this.panelId = this.showPanel.id
+        }
+        if (n.id) {
+          this.editData(this.editChart, this.showPanel.id)
+        } else {
+          this.createData(this.showPanel.id)
+        }
       }
-      this.isUrl = false;
-    },
+    }
+  },
+  beforeDestroy () {
+    if (this.$refs.chartTag) {
+      this.$refs.chartTag.forEach((item, index) => { // 循环指标列表
+        item.clearSelectedTagList()
+      })
+    }
+    this.isUrl = false
   }
+}
 </script>
 <style>
   .popper-z-index{
@@ -1706,4 +1695,3 @@
     z-index: 2200!important;
   }
 </style>
-

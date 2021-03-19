@@ -35,98 +35,97 @@
   </div>
 </template>
 <script>
-  import {noSpecialChar} from '../../common/js/validate';
-  export default {
-    name: "projectBox",
-    props: {
-      project: Object
-    },
-    data() {
-      return {
-        editProject: {},
-        rules: {
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            {validator:noSpecialChar,trigger: "change"}
-          ]
-        }
+import { noSpecialChar } from '../../common/js/validate'
+export default {
+  name: 'projectBox',
+  props: {
+    project: Object
+  },
+  data () {
+    return {
+      editProject: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'change' }
+        ]
       }
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
     },
-    methods: {
-      clickOutside() {
-        this.esc(false);
-      },
 
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
+    },
 
-      /*保存*/
-      save() {
-        this.$refs['projectForm'].validate((valid) => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            if (this.editProject.id) {
-              this.$put('project', this.editProject).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('projectListChange');
-                  this.$store.commit('setProject', this.project);
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            } else {
-              this.$post('project', this.editProject).then(response => {
-                if (response.code === 200) {
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$store.commit('projectListChange');
-                  this.esc(true);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            }
+    /* 保存 */
+    save () {
+      this.$refs.projectForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (this.editProject.id) {
+            this.$put('project', this.editProject).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$store.commit('projectListChange')
+                this.$store.commit('setProject', this.project)
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
           } else {
-            console.log('error submit!!');
-            return false;
+            this.$post('project', this.editProject).then(response => {
+              if (response.code === 200) {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$store.commit('projectListChange')
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
           }
-        });
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("project?ids=" + this.editProject.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$store.commit('projectListChange');
-              this.esc(true);
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      }
-    },
-    watch: {
-      project: {
-        immediate: true,
-        handler(n, o) {
-          this.editProject = JSON.parse(JSON.stringify(n));
+        } else {
+          console.log('error submit!!')
+          return false
         }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('project?ids=' + this.editProject.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.$store.commit('projectListChange')
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    }
+  },
+  watch: {
+    project: {
+      immediate: true,
+      handler (n, o) {
+        this.editProject = JSON.parse(JSON.stringify(n))
       }
     }
   }
+}
 </script>
-
 
 <style scoped>
 

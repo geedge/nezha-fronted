@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <div>
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{obj.host}}</div><div
@@ -73,26 +73,26 @@
         :min-width="item.minWidth || item.width"
       >
         <template slot-scope="scope" :column="item">
-          <span v-if="item.prop == 'asset' && scope.row[item.prop]" class="link" @click="">
+          <span v-if="item.prop === 'asset' && scope.row[item.prop]" class="link">
             {{scope.row[item.prop].sn}} :
             ({{scope.row[item.prop].host}})
           </span>
-          <span v-else-if="item.prop == 'project' && scope.row[item.prop]">{{scope.row.project.name}}</span>
-          <span v-else-if="item.prop == 'module' && scope.row[item.prop]">{{scope.row.module.name}}</span>
-          <span v-else-if="item.prop == 'param'">
+          <span v-else-if="item.prop === 'project' && scope.row[item.prop]">{{scope.row.project.name}}</span>
+          <span v-else-if="item.prop === 'module' && scope.row[item.prop]">{{scope.row.module.name}}</span>
+          <span v-else-if="item.prop === 'param'">
             <template v-if="scope.row.paramObj">
-              <span v-for="(p,i) in scope.row.paramObj">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
+              <span v-for="(p, i) in scope.row.paramObj" :key="i">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
             </template>
             <template v-else>-</template>
           </span>
-          <span v-else-if="item.prop == 'labels'">
+          <span v-else-if="item.prop === 'labels'">
             <template v-if="scope.row.labelModule">
-              <span v-for="(p,i) in scope.row.labelModule">{{p.key}}={{p.value}}<span v-if="i < scope.row.labelModule.length-1">，</span></span>
+              <span v-for="(p, i) in scope.row.labelModule" :key="i">{{p.key}}={{p.value}}<span v-if="i < scope.row.labelModule.length-1">，</span></span>
             </template>
             <template v-else>-</template>
           </span>
-          <template v-else-if="item.prop == 'type'">{{scope.row.module.type}}</template>
-          <div v-else-if="item.prop == 'option'">&nbsp;
+          <template v-else-if="item.prop === 'type'">{{scope.row.module.type}}</template>
+          <div v-else-if="item.prop === 'option'">&nbsp;
             <span
               :id="'edp-edit-'+scope.row.id"
               :title="$t('overall.edit')"
@@ -103,15 +103,15 @@
             </span>
             <span :id="'asset-del-'+scope.row.id" :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" v-has="'asset_endpoint_delete'"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
-          <span v-else-if="item.prop == 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
-          <span v-else-if="item.prop == 'state'" >
+          <span v-else-if="item.prop === 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
+          <span v-else-if="item.prop === 'state'" >
             <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">
               <div slot="reference" style="width: 20px">
                 <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0', 'active-icon gray':scope.row.state == '2'}"></div>
               </div>
             </el-popover>
           </span>
-          <template v-else-if="item.prop=='alerts'">
+          <template v-else-if="item.prop === 'alerts'">
                 <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
                   <span :id="'endpoint-alerts-'+scope.row.id" >
                     {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
@@ -125,7 +125,7 @@
         </template>
       </el-table-column>
       <el-table-column width="28" :resizable="false">
-        <template slot="header" slot-scope="scope">
+        <template slot="header">
           <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
             <i class="nz-icon nz-icon-gear"></i>
           </span>
@@ -145,391 +145,388 @@
     <transition name="right-box">
       <edit-endpoint-box v-if="rightBox.editEndpoint.show" :project="currentProject" :module="currentModule" :endpoint="endpoint" @close="closeEditEndpointRightBox" ref="editEndpointBox"></edit-endpoint-box>
     </transition>
-  </span>
+  </div>
 </template>
 
 <script>
-  import exportXLSX from "../../exportXLSX";
-  import bus from '@/libs/bus'
-  import deleteButton from "../../deleteButton";
-  export default {
-    name: "endpointTab",
-    components: {
-      'export-excel': exportXLSX,
-      'delete-button':deleteButton,
-    },
-    props: {
-      obj: Object, //关联的实体对象
-    },
-    data() {
-      return {
-        rightBox: {
-          add: {show: false},
-          edit: {show: false},
-          editEndpoint: {show: false},
+import exportXLSX from '../../exportXLSX'
+import bus from '@/libs/bus'
+import deleteButton from '../../deleteButton'
+export default {
+  name: 'endpointTab',
+  components: {
+    'export-excel': exportXLSX,
+    'delete-button': deleteButton
+  },
+  props: {
+    obj: Object // 关联的实体对象
+  },
+  data () {
+    return {
+      rightBox: {
+        add: { show: false },
+        edit: { show: false },
+        editEndpoint: { show: false }
+      },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      batchDeleteObjs: [],
+      endpoint: {}, // 用来查看详情和编辑的对象
+      tableTitle: [
+        {
+          label: this.$t('project.endpoint.endpointId'),
+          prop: 'id',
+          show: true
+        }, {
+          label: this.$t('project.project.project'),
+          prop: 'project',
+          show: true,
+          width: '120'
+        }, {
+          label: this.$t('project.module.module'),
+          prop: 'module',
+          show: true,
+          width: '120'
+        }, {
+          label: this.$t('project.endpoint.asset'),
+          prop: 'asset',
+          show: true,
+          minWidth: '400'
+        }, {
+          label: this.$t('project.endpoint.host'),
+          prop: 'host',
+          show: true,
+          width: 120
+        }, {
+          label: this.$t('project.endpoint.port'),
+          prop: 'port',
+          show: true,
+          width: '120'
+        }, {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          show: false,
+          width: 120
+        }, {
+          label: this.$t('project.endpoint.labels'),
+          prop: 'labels',
+          show: true,
+          width: 200
+        }, {
+          label: this.$t('project.endpoint.param'),
+          prop: 'param',
+          show: true,
+          width: 200
+        }, {
+          label: this.$t('project.endpoint.path'),
+          prop: 'path',
+          show: true,
+          width: 200
+        }, {
+          label: this.$t('alert.list.state'),
+          prop: 'state',
+          show: true,
+          width: '80'
+        }, {
+          label: this.$t('project.endpoint.alerts'),
+          prop: 'alerts',
+          show: true,
+          width: 150
         },
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        batchDeleteObjs:[],
-        endpoint: {}, //用来查看详情和编辑的对象
-        endpointSearchLabel:{
-
-        },
-        tableTitle: [
-          {
-            label: this.$t("project.endpoint.endpointId"),
-            prop: 'id',
-            show: true,
-          },{
-            label: this.$t("project.project.project"),
-            prop: 'project',
-            show: true,
-            width:'120',
-          },{
-            label: this.$t("project.module.module"),
-            prop: 'module',
-            show: true,
-            width:'120',
-          },{
-            label: this.$t("project.endpoint.asset"),
-            prop: 'asset',
-            show: true,
-            minWidth:'400',
-          },{
-            label: this.$t("project.endpoint.host"),
-            prop: 'host',
-            show: true,
-            width:120,
-          },{
-            label: this.$t("project.endpoint.port"),
-            prop: 'port',
-            show: true,
-            width:'120'
-          },{
-            label: this.$t("overall.type"),
-            prop: 'type',
-            show: false,
-            width:120,
-          },{
-            label: this.$t("project.endpoint.labels"),
-            prop: 'labels',
-            show: true,
-            width:200,
-          },{
-            label: this.$t("project.endpoint.param"),
-            prop: 'param',
-            show: true,
-            width:200,
-          },{
-            label: this.$t("project.endpoint.path"),
-            prop: 'path',
-            show: true,
-            width:200,
-          },{
-            label: this.$t("alert.list.state"),
-            prop: 'state',
-            show: true,
-            width:'80'
-          },{
-            label: this.$t("project.endpoint.alerts"),
-            prop: 'alerts',
-            show: true,
-            width:150,
-          },
-          /*{
+        /* {
             label: this.$t("project.endpoint.lastUpdate"),
             prop: 'lastUpdate',
             show: true,
-          },*/
-          {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
+          }, */
+        {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120
+        }
+      ],
+      tablelable: [],
+      dropCol: [],
+      currentProject: { id: '', name: '', remark: '' }, // endpoint弹框、module列表用来回显project
+      currentModule: { id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [] }, // endpoint弹框用来回显module
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 11,
+          name: this.$t('asset.asset'),
+          type: 'query',
+          label: 'query',
+          disabled: false
+        }, {
+          id: 33,
+          name: this.$t('asset.state'),
+          // name: this.$t('asset.asset'),
+          type: 'select',
+          label: 'endpointState',
+          disabled: false,
+          readonly: true
+        }, {
+          id: 34,
+          name: this.$t('project.project.project'),
+          // name: this.$t('asset.asset'),
+          type: 'input',
+          label: 'projectName',
+          disabled: false
+        }, {
+          id: 35,
+          name: this.$t('project.module.module'),
+          // name: this.$t('asset.asset'),
+          type: 'input',
+          label: 'moduleName',
+          disabled: false
+        }]
+      },
+      endpointSearchLabel: { // 搜索参数
+      },
+      tableData: []
+    }
+  },
+  methods: {
+    // 切换tab
+    changeTab (tab) {
+      this.$emit('changeTab', tab)
+    },
+    getTableData () {
+      this.tools.loading = true
+      this.$set(this.endpointSearchLabel, 'assetId', this.asset.id)
+      this.$set(this.endpointSearchLabel, 'pageSize', '-1')
+      this.$get('/endpoint', this.endpointSearchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            try {
+              const param = response.data.list[i].param || '{}'
+              const tempObj = JSON.parse(param)
+              response.data.list[i].paramObj = []
+              const labels = response.data.list[i].labels || '{}'
+              const tempObj1 = JSON.parse(labels)
+              response.data.list[i].labelModule = []
+              for (const k in tempObj) {
+                response.data.list[i].paramObj.push({ key: k, value: tempObj[k] })
+              }
+              for (const k in tempObj1) {
+                response.data.list[i].labelModule.push({ key: k, value: tempObj1[k] })
+              }
+            } catch (err) {
+              // console.error(response.data.list[i], err);
+            }
           }
-        ],
-        tablelable: [],
-        dropCol: [],
-        currentProject: {id: '', name: '', remark: ''}, //endpoint弹框、module列表用来回显project
-        currentModule: {id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: []}, //endpoint弹框用来回显module
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: "ID",
-            type: 'input',
-            label: 'id',
-            disabled: false
-          }, {
-            id: 11,
-            name: this.$t('asset.asset'),
-            type: 'query',
-            label: 'query',
-            disabled: false
-          },{
-            id:33,
-            name:this.$t('asset.state'),
-            // name: this.$t('asset.asset'),
-            type:'select',
-            label:'endpointState',
-            disabled:false,
-            readonly:true,
-          },{
-            id:34,
-            name:this.$t('project.project.project'),
-            // name: this.$t('asset.asset'),
-            type:'input',
-            label:'projectName',
-            disabled:false,
-          },{
-            id:35,
-            name:this.$t('project.module.module'),
-            // name: this.$t('asset.asset'),
-            type:'input',
-            label:'moduleName',
-            disabled:false,
-          }],
-        },
-        endpointSearchLabel: { //搜索参数
-        },
-        tableData: [],
+          this.tableData = response.data.list
+          this.$emit('reload')
+        }
+      })
+    },
+    closeRightBox (refresh) {
+      this.rightBox.add.show = false
+      this.rightBox.edit.show = false
+      if (refresh) {
+        this.getTableData()
       }
     },
-    methods: {
-      // 切换tab
-      changeTab(tab) {
-        this.$emit('changeTab', tab);
-      },
-      getTableData() {
-        this.tools.loading = true;
-        this.$set(this.endpointSearchLabel, "assetId", this.asset.id);
-        this.$set(this.endpointSearchLabel, "pageSize", '-1');
-        this.$get('/endpoint',this.endpointSearchLabel).then(response => {
-          this.tools.loading = false;
+    delEndpoint (endpoint) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('endpoint?ids=' + endpoint.id).then(response => {
           if (response.code === 200) {
-            for (let i = 0; i < response.data.list.length; i++) {
-              try {
-                let param=response.data.list[i].param|| '{}';
-                let tempObj = JSON.parse(param);
-                response.data.list[i].paramObj = [];
-                let labels=response.data.list[i].labels|| '{}';
-                let tempObj1=JSON.parse(labels);
-                response.data.list[i].labelModule = [];
-                for (let k in tempObj) {
-                  response.data.list[i].paramObj.push({key: k, value: tempObj[k]})
-                }
-                for (let k in tempObj1) {
-                  response.data.list[i].labelModule.push({key: k, value: tempObj1[k]})
-                }
-              } catch (err) {
-                //console.error(response.data.list[i], err);
-              }
-            }
-            this.tableData = response.data.list;
-            this.$emit("reload");
-          }
-        });
-      },
-      closeRightBox(refresh) {
-        this.rightBox.add.show = false;
-        this.rightBox.edit.show = false;
-        if (refresh) {
-          this.getTableData();
-        }
-      },
-      delEndpoint(endpoint) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("endpoint?ids=" + endpoint.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          });
-        });
-      },
-      toEdit(endpoint) {
-        this.endpoint = JSON.parse(JSON.stringify(endpoint));
-        if (!this.endpoint.paramObj) {
-          this.$set(this.endpoint, 'paramObj', []);
-        }
-        this.rightBox.edit = true;
-        this.$nextTick(() => {
-          this.$refs.editEndpointBox.show(true);
-          this.$refs.editEndpointBox.toEdit(true, this.endpoint.id);
-        });
-      },
-      editEndpoint(endpoint) {
-        this.endpoint = JSON.parse(JSON.stringify(endpoint));
-        this.$set(this.endpoint,'projectId',this.endpoint.project.id);
-        this.$set(this.endpoint,'moduleId',this.endpoint.moduleId);
-
-        this.rightBox.editEndpoint.show = true;
-        if (!this.endpoint.paramObj) {
-          this.$set(this.endpoint, 'paramObj', []);
-        }
-        if (!this.endpoint.labelModule) {
-          this.$set(this.endpoint, 'labelModule', []);
-        }
-      },
-      closeEditEndpointRightBox(refresh) {
-        this.rightBox.editEndpoint.show = false;
-        if (refresh) {
-          this.getTableData();
-        }
-      },
-      add() {
-        this.rightBox.add.show = true;
-      },
-      search(searchObj) {
-        let orderBy = '';
-        if(this.endpointSearchLabel.orderBy){
-          orderBy=this.endpointSearchLabel.orderBy
-        }
-        this.endpointSearchLabel = {};
-        // this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item] || searchObj[item] === 0) {
-            if (item === "endpointState") {
-              this.$set(this.endpointSearchLabel, 'state', searchObj[item]);
-            } else {
-              this.$set(this.endpointSearchLabel,item,searchObj[item]);
-            }
-          }
-        }
-        if(orderBy){
-          this.$set(this.endpointSearchLabel, 'orderBy', orderBy);
-        }
-        if(this.$refs.endpointTable&& this.$refs.endpointTable.bodyWrapper){
-          this.$refs.endpointTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      dateFormat(time) {
-        if (!time) {
-          return '-';
-        }
-        let date = new Date(time * 1000);
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-        let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-        let hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
-      },
-      getStateContent:function(row){
-        if (row) {
-          if (row.state == 1) {
-            return 'up';
-          } else if (row.state == 0){
-            return 'down';
-          } else if (row.state == 2) {
-            return 'suspended';
-          }
-        }
-      },
-      formatUpdateTime:function(date){
-        let time=new Date(date);
-        let hours=time.getHours()>9?time.getHours():'0'+time.getHours();
-        let minutes=time.getMinutes()>9?time.getMinutes():'0'+time.getMinutes();
-
-        return hours+':'+minutes;
-      },
-      getStateErrorMsg:function(row){
-        let errCodes=[230009,230010,230011];
-        if(row){
-          if(row.state == 0){
-            if(errCodes.find((item)=>{return row.stateInfo.code == item})){
-              return this.$t('project.endpoint.stateInfo_'+row.stateInfo.code)
-            }else{
-              return row.stateInfo.msg;
-              this.$message.error('state code error');
-            }
-          }
-        }
-      },
-      initEvent() {
-        bus.$on("current-project-change", project => {
-          this.currentProject = project;
-        });
-        bus.$on("current-module-change", module => {
-          this.currentModule = module;
-        });
-        // bus.$on("endpoint-list-change", menu => {
-        //   this.getEndpointTableData();
-        // });
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy='';
-        if(item.order==='ascending'){
-          orderBy=item.prop;
-        }
-        if(item.order==='descending'){
-          orderBy='-'+item.prop;
-        }
-        this.$set(this.endpointSearchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
-      messageStyle(e) {
-        if (e.column.label == 'Alerts' || e.column.label == this.$t("project.endpoint.alerts")) {
-          if (e.row.alertNum > 0) {
-            return 'danger';
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
           } else {
-            return 'success';
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    toEdit (endpoint) {
+      this.endpoint = JSON.parse(JSON.stringify(endpoint))
+      if (!this.endpoint.paramObj) {
+        this.$set(this.endpoint, 'paramObj', [])
+      }
+      this.rightBox.edit = true
+      this.$nextTick(() => {
+        this.$refs.editEndpointBox.show(true)
+        this.$refs.editEndpointBox.toEdit(true, this.endpoint.id)
+      })
+    },
+    editEndpoint (endpoint) {
+      this.endpoint = JSON.parse(JSON.stringify(endpoint))
+      this.$set(this.endpoint, 'projectId', this.endpoint.project.id)
+      this.$set(this.endpoint, 'moduleId', this.endpoint.moduleId)
+
+      this.rightBox.editEndpoint.show = true
+      if (!this.endpoint.paramObj) {
+        this.$set(this.endpoint, 'paramObj', [])
+      }
+      if (!this.endpoint.labelModule) {
+        this.$set(this.endpoint, 'labelModule', [])
+      }
+    },
+    closeEditEndpointRightBox (refresh) {
+      this.rightBox.editEndpoint.show = false
+      if (refresh) {
+        this.getTableData()
+      }
+    },
+    add () {
+      this.rightBox.add.show = true
+    },
+    search (searchObj) {
+      let orderBy = ''
+      if (this.endpointSearchLabel.orderBy) {
+        orderBy = this.endpointSearchLabel.orderBy
+      }
+      this.endpointSearchLabel = {}
+      // this.pageObj.pageNo = 1;
+      for (const item in searchObj) {
+        if (searchObj[item] || searchObj[item] === 0) {
+          if (item === 'endpointState') {
+            this.$set(this.endpointSearchLabel, 'state', searchObj[item])
+          } else {
+            this.$set(this.endpointSearchLabel, item, searchObj[item])
           }
         }
-        return '';
-      },
+      }
+      if (orderBy) {
+        this.$set(this.endpointSearchLabel, 'orderBy', orderBy)
+      }
+      if (this.$refs.endpointTable && this.$refs.endpointTable.bodyWrapper) {
+        this.$refs.endpointTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
     },
-    watch: {
-      obj: {
-        immediate: true,
-        deep: true,
-        handler(n) {
-          if (n) {
-            this.asset = JSON.parse(JSON.stringify(n));
-            this.$nextTick(()=>{
-              this.getTableData();
-            })
+    dateFormat (time) {
+      if (!time) {
+        return '-'
+      }
+      const date = new Date(time * 1000)
+      const year = date.getFullYear()
+      const month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+      const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+      const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+
+      return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+    },
+    getStateContent: function (row) {
+      if (row) {
+        if (row.state == 1) {
+          return 'up'
+        } else if (row.state == 0) {
+          return 'down'
+        } else if (row.state == 2) {
+          return 'suspended'
+        }
+      }
+    },
+    formatUpdateTime: function (date) {
+      const time = new Date(date)
+      const hours = time.getHours() > 9 ? time.getHours() : '0' + time.getHours()
+      const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes()
+
+      return hours + ':' + minutes
+    },
+    getStateErrorMsg: function (row) {
+      const errCodes = [230009, 230010, 230011]
+      if (row) {
+        if (row.state == 0) {
+          if (errCodes.find((item) => { return row.stateInfo.code == item })) {
+            return this.$t('project.endpoint.stateInfo_' + row.stateInfo.code)
+          } else {
+            this.$message.error('state code error')
+            return row.stateInfo.msg
           }
         }
-      },
+      }
     },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom")
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/projectBottom"))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      this.initEvent();
-    },
-    beforeDestroy(){
-      bus.$off("current-project-change", project => {
-        this.currentProject = project;
-      });
-      bus.$on("current-module-change", module => {
-        this.currentModule = module;
-      });
+    initEvent () {
+      bus.$on('current-project-change', project => {
+        this.currentProject = project
+      })
+      bus.$on('current-module-change', module => {
+        this.currentModule = module
+      })
       // bus.$on("endpoint-list-change", menu => {
       //   this.getEndpointTableData();
       // });
+    },
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.endpointSearchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    },
+    messageStyle (e) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('project.endpoint.alerts')) {
+        if (e.row.alertNum > 0) {
+          return 'danger'
+        } else {
+          return 'success'
+        }
+      }
+      return ''
     }
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+          this.asset = JSON.parse(JSON.stringify(n))
+          this.$nextTick(() => {
+            this.getTableData()
+          })
+        }
+      }
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-/projectBottom')
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-/projectBottom'))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.initEvent()
+  },
+  beforeDestroy () {
+    bus.$off('current-project-change', project => {
+      this.currentProject = project
+    })
+    bus.$on('current-module-change', module => {
+      this.currentModule = module
+    })
+    // bus.$on("endpoint-list-change", menu => {
+    //   this.getEndpointTableData();
+    // });
   }
+}
 </script>
 
 <style scoped>

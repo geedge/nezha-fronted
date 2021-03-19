@@ -65,7 +65,7 @@
           v-for="(item, index) in tools.customTableTitle"
           v-if="item.show"
         >
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
           <span :title="item.label" class="tag-header" v-if="item.type == 'tag'"><span class="tag-value">{{item.label}}</span><span style="color:orange;">&nbsp;[Notification]</span></span>
           <span v-else><span>{{item.label}}</span></span>
         </template>
@@ -93,7 +93,7 @@
           </template>
         </el-table-column>
         <el-table-column fixed="right" width="28">
-          <template :resizable="false" slot="header" slot-scope="scope">
+          <template slot="header" :resizable="false">
             <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
               <i class="nz-icon nz-icon-gear"></i>
             </span>
@@ -108,245 +108,243 @@
   </div>
 </template>
 <script>
-  import deleteButton from "../../common/deleteButton";
-  import menuBox from '../../common/rightBox/menuBox';
-  import bus from "../../../libs/bus";
+import deleteButton from '../../common/deleteButton'
+import menuBox from '../../common/rightBox/menuBox'
+import bus from '../../../libs/bus'
 
-  export default {
-    name: "menus",
-    components: {
-      'menu-box': menuBox,
-      'delete-button':deleteButton,
-    },
-    data() {
-      return {
-        //侧滑
-        rightBox: {
-          show: false,
-        },
-        /*工具参数*/
-        tools: {
-          loading: false, //是否显示table加载动画
-          toTopBtnTop: this.$tableHeight.toTopBtnTop, //to-top按钮的top属性
-          tableHover: false, //控制滚动条和top按钮同时出现
-          showTopBtn: false, //显示To top按钮
-          showCustomTableTitle: false, //自定义列弹框是否显示
-          customTableTitle: [], //自定义列工具的数据
-        },
-        mainTableHeight: this.$tableHeight.normal, //主列表table高度
-        batchDeleteObjs:[],
-        menu: {},
+export default {
+  name: 'menus',
+  components: {
+    'menu-box': menuBox,
+    'delete-button': deleteButton
+  },
+  data () {
+    return {
+      // 侧滑
+      rightBox: {
+        show: false
+      },
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
+        tableHover: false, // 控制滚动条和top按钮同时出现
+        showTopBtn: false, // 显示To top按钮
+        showCustomTableTitle: false, // 自定义列弹框是否显示
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      batchDeleteObjs: [],
+      menu: {},
 
-        tableId: 'menusTable', //需要分页的table的id，用于记录每页数量
-        blankMenu: { //空白对象
-          "name": "",
-          "code": "",
-          "i18n": "",
-          "parentId": 0,
-          "type": 1,
-          "route": "",
-          "orderNum": 1,
-          "perms": "",
-        },
-        pageObj: { //分页对象
-          pageNo: 1,
-          pageSize: 50,
-          total: 0
-        },
-        tableTitle: [ //原table列
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          }, {
-            label: this.$t("config.menus.name"),
-            prop: 'name',
-            show: true,
-          }, {
-            label: this.$t("config.menus.code"),
-            prop: 'code',
-            show: true,
-          }, {
-            label: this.$t("config.menus.i18n"),
-            prop: 'i18n',
-            show: true,
-          },{
-            label: this.$t("config.menus.type"),
-            prop: 'type',
-            show: true,
-          },{
-            label: this.$t("config.menus.route"),
-            prop: 'route',
-            show: true,
-          },{
-            label: this.$t("config.menus.perms"),
-            prop: 'perms',
-            show: true,
-          },{
-            label: this.$t("config.menus.orderNum"),
-            prop: 'orderNum',
-            show: true,
-          },{
-            label: this.$t('config.menus.option'),
-            prop: 'option',
-            show: true,
-            width: 120,
-            fixed: "right"
-          }
-        ],
-        tableData: [],
-        searchMsg: { //给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 10,
-            name: "ID",
-            type: 'input',
-            label: "id",
-            disabled: false
-          }],
-        },
-        searchLabel: {}, //搜索参数
-        scrollbarWrap: null,
-        delFlag:false,
+      tableId: 'menusTable', // 需要分页的table的id，用于记录每页数量
+      blankMenu: { // 空白对象
+        name: '',
+        code: '',
+        i18n: '',
+        parentId: 0,
+        type: 1,
+        route: '',
+        orderNum: 1,
+        perms: ''
+      },
+      pageObj: { // 分页对象
+        pageNo: 1,
+        pageSize: 50,
+        total: 0
+      },
+      tableTitle: [ // 原table列
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        }, {
+          label: this.$t('config.menus.name'),
+          prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.menus.code'),
+          prop: 'code',
+          show: true
+        }, {
+          label: this.$t('config.menus.i18n'),
+          prop: 'i18n',
+          show: true
+        }, {
+          label: this.$t('config.menus.type'),
+          prop: 'type',
+          show: true
+        }, {
+          label: this.$t('config.menus.route'),
+          prop: 'route',
+          show: true
+        }, {
+          label: this.$t('config.menus.perms'),
+          prop: 'perms',
+          show: true
+        }, {
+          label: this.$t('config.menus.orderNum'),
+          prop: 'orderNum',
+          show: true
+        }, {
+          label: this.$t('config.menus.option'),
+          prop: 'option',
+          show: true,
+          width: 120,
+          fixed: 'right'
+        }
+      ],
+      tableData: [],
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 10,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }]
+      },
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      delFlag: false
+    }
+  },
+  methods: {
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
       }
     },
-    methods: {
-      closeRightBox(refresh) {
-        this.rightBox.show = false;
-        if (refresh) {
-          this.delFlag=true;
-          this.getTableData();
-        }
-      },
-      edit(u) {
-        if(u.buildIn == 1){
-          return ;
-        }
-        this.menu = JSON.parse(JSON.stringify(u));
-        this.rightBox.show = true;
-      },
-      del(u) {
-        if(u.buildIn == 1){
-          return ;
-        }
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("sys/menu?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.delFlag=true;
-              this.$message({duration: 2000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.getTableData();
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      getTableData() {
-        this.$set(this.searchLabel, "pageNo", this.pageObj.pageNo);
-        this.$set(this.searchLabel, "pageSize", this.pageObj.pageSize);
-        this.tools.loading = true;
-        this.$get('sys/menu', this.searchLabel).then(response => {
-          this.tools.loading = false;
+    edit (u) {
+      if (u.buildIn == 1) {
+        return
+      }
+      this.menu = JSON.parse(JSON.stringify(u))
+      this.rightBox.show = true
+    },
+    del (u) {
+      if (u.buildIn == 1) {
+        return
+      }
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('sys/menu?ids=' + u.id).then(response => {
           if (response.code === 200) {
-            this.tableData = response.data.list;
-            this.pageObj.total = response.data.total
-            this.tools.loading = false;
-            if (!this.scrollbarWrap) {
-              this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.menusTable.bodyWrapper;
-                this.toTopBtnHandler(this.scrollbarWrap);
-              });
-            }
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
           }
         })
-      },
-      add() {
-        this.menu = this.newMenu();
-        this.rightBox.show = true;
-      },
-      esc() {
-        this.rightBox.show = false;
-      },
-      newMenu() {
-        return JSON.parse(JSON.stringify(this.blankMenu));
-      },
-      pageNo(val) {
-        this.pageObj.pageNo = val;
-        this.getTableData();
-      },
-      pageSize(val) {
-        this.pageObj.pageSize = val;
-        localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val);
-        this.getTableData();
-      },
-      search(searchObj) {
-        this.searchLabel = {};
-        this.pageObj.pageNo = 1;
-        for (let item in searchObj) {
-          if (searchObj[item]) {
-            this.$set(this.searchLabel, item, searchObj[item]);
-          }
-        }
-        if(this.$refs.menusTable){
-          this.$refs.menusTable.bodyWrapper.scrollTop = 0;
-        }
-        this.getTableData();
-      },
-      // 数据排序
-      tableDataSort(item){
-        let orderBy = '';
-        if(item.order === 'ascending') {
-          orderBy = item.prop;
-        }
-        if(item.order === 'descending') {
-          orderBy = '-' + item.prop;
-        }
-        this.$set(this.searchLabel, "orderBy", orderBy);
-        this.getTableData();
-      },
+      })
     },
-    watch:{
-      tableData: {
-        deep: true,
-        handler(n) {
-          if (n.length === 0 && this.pageObj.pageNo > 1) {
-            this.pageNo(this.pageObj.pageNo-1);
+    getTableData () {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get('sys/menu', this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          this.tools.loading = false
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.menusTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
           }
-
-          if(!this.delFlag){ // 不是删除时回到顶部
-            this.$refs.menusTable.bodyWrapper.scrollTop = 0
-          }else{
-            this.delFlag=false;
-          }
-
-
+        }
+      })
+    },
+    add () {
+      this.menu = this.newMenu()
+      this.rightBox.show = true
+    },
+    esc () {
+      this.rightBox.show = false
+    },
+    newMenu () {
+      return JSON.parse(JSON.stringify(this.blankMenu))
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    search (searchObj) {
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
         }
       }
-    },
-    created(){
-      //是否存在分页缓存
-      let pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId);
-      if (pageSize != 'undefined' && pageSize != null) {
-        this.pageObj.pageSize = pageSize
+      if (this.$refs.menusTable) {
+        this.$refs.menusTable.bodyWrapper.scrollTop = 0
       }
+      this.getTableData()
     },
-    mounted() {
-      //初始化表头
-      this.tools.customTableTitle = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-        ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-        : this.tableTitle;
-      this.tableTitleReset(this.tableTitle,this.tools.customTableTitle);
-      this.getTableData();
-    },
-    beforeDestroy() {
-      if(this.scrollbarWrap){
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce);
-      };
+    // 数据排序
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
     }
+  },
+  watch: {
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
+
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.menusTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
+        }
+      }
+    }
+  },
+  created () {
+    // 是否存在分页缓存
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+  },
+  mounted () {
+    // 初始化表头
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.getTableData()
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    };
   }
+}
 </script>

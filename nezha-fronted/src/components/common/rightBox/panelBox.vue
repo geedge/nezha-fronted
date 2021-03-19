@@ -1,4 +1,4 @@
-<template key="panelBox">
+<template>
   <transition name="right-box-580">
     <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="{obj:panel,func:clickos}">
       <!-- begin--顶部按钮-->
@@ -39,95 +39,94 @@
   </transition>
 </template>
 <script>
-  export default {
-    name: "panelBox",
-    props: {
-      panel: Object
-    },
-    data() {
-      return {
-        rightBox: { //面板弹出框相关
-          show: false,
-          title: this.$t('dashboard.panel.createPanelTitle')
-        },
+export default {
+  name: 'panelBox',
+  props: {
+    panel: Object
+  },
+  data () {
+    return {
+      rightBox: { // 面板弹出框相关
+        show: false,
+        title: this.$t('dashboard.panel.createPanelTitle')
       }
-    },
-    methods: {
-      show(show) {
-        this.rightBox.show = show;
-      },
-      setTitle(title) {
-        this.rightBox.title = title;
-      },
-      clickos() {
-        this.esc();
-      },
-      //面板相关方法
-      del: function(u) {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("panel?ids=" + u.id).then(response => {
-            if (response.code === 200) {
-              this.esc();
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.$emit("reloadForDel");
-            } else {
-              this.$message.error(response.msg);
-            }
-          })
-        });
-      },
-      save: function() {
-        this.$refs.panelForm.validate((valid) => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            if (this.panel.id) {
-              this.$put('panel', this.panel).then(response => {
-                if (response.code === 200) {
-                  this.esc();
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload");
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            } else {
-              this.$post('panel', this.panel).then(response => {
-                if (response.code === 200) {
-                  this.esc();
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.$emit("reload", this.panel.name);
-                } else {
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              });
-            }
-          } else {
-            return false;
-          }
-        });
-      },
-      esc: function() {
-        this.rightBox.show = false;
-      },
-    },
-    created() {
-
-    },
-    mounted: function() {
-
-    },
-    watch: {
-
     }
-  }
-</script>
+  },
+  methods: {
+    show (show) {
+      this.rightBox.show = show
+    },
+    setTitle (title) {
+      this.rightBox.title = title
+    },
+    clickos () {
+      this.esc()
+    },
+    // 面板相关方法
+    del: function (u) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('panel?ids=' + u.id).then(response => {
+          if (response.code === 200) {
+            this.esc()
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.$emit('reloadForDel')
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    save: function () {
+      this.$refs.panelForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          if (this.panel.id) {
+            this.$put('panel', this.panel).then(response => {
+              if (response.code === 200) {
+                this.esc()
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$emit('reload')
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            this.$post('panel', this.panel).then(response => {
+              if (response.code === 200) {
+                this.esc()
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$emit('reload', this.panel.name)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    esc: function () {
+      this.rightBox.show = false
+    }
+  },
+  created () {
 
+  },
+  mounted: function () {
+
+  },
+  watch: {
+
+  }
+}
+</script>
 
 <style scoped>
   .z-top{

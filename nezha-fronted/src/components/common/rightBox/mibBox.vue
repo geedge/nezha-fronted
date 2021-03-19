@@ -61,200 +61,200 @@
 </template>
 
 <script>
-  export default {
-    name: "modelBox",
-    props: {
-      mib: Object
-    },
-    data() {
-      let $temp=this;
-      return {
-        editMib: {},
-        rules: {
-          name: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ]
-        },
-        checkMibFile : (rule, value, callback) => {
-          setTimeout(() => {
-            if(!$temp.editMib.id){
-              if(!$temp.uploadFile || !$temp.uploadFile.raw){
-                $temp.uploadErrorMsg=$temp.$t('config.mib.requiredMibFile');
-                return callback(new Error(' '));
-              }else{
-                $temp.uploadErrorMsg=null;
-                return callback()
-              }
-            }else{
-              $temp.uploadErrorMsg=null;
-              return callback();
-            }
-          }, 200);
-        },
-        checkModels:(rule, value, callback)=>{
-          setTimeout(() => {
-            if(!$temp.editMib.models||$temp.editMib.models == ''){
-              // return callback(new Error($temp.$t('validate.required')))
-              return callback();
-            }else{
-              return callback();
-            }
-          }, 200);
-        },
-        selectedModels:[],
-        modelOptions:[],
-        modelProps: { multiple: true ,emitPath:false},
-        uploadFileList:[],
-        uploadFile:null,
-        uploadErrorMsg:null,
-      }
-    },
-    methods: {
-      clickOutside() {
-        this.esc(false);
+export default {
+  name: 'modelBox',
+  props: {
+    mib: Object
+  },
+  data () {
+    const $temp = this
+    return {
+      editMib: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]
       },
-      /*关闭弹框*/
-      esc(refresh) {
-        this.$emit("close", refresh);
-      },
-      queryModelInfos:function(){
-        this.$get('model?pageSize=-1').then(response=>{
-          if(response.code == 200){
-            let modelInfos=response.data.list;
-            let sortModels={};
-            modelInfos.forEach((item)=>{
-              if(!sortModels[item.type.value]){//没有这个assetType
-                sortModels[item.type.value]={}
-              }
-              if(!sortModels[item.type.value][item.vendor.value]){
-                sortModels[item.type.value][item.vendor.value]=[];
-              }
-              item.label=item.name;
-              item.value=item.id;
-              sortModels[item.type.value][item.vendor.value].push(item);
-            })
-            for (let assetType of Object.keys(sortModels)){
-              let option={
-                label:assetType,
-                value:assetType,
-                children:[]
-              }
-              for(let vendor of Object.keys(sortModels[assetType])){
-                let child={
-                  label:vendor,
-                  value:vendor,
-                  children: sortModels[assetType][vendor]
-                }
-                option.children.push(child);
-              }
-              this.modelOptions.push(option);
-            }
-          }
-        })
-      },
-      selectedModelChange:function(nodes){
-        let selectedNodes=this.selectedModels;
-        if(selectedNodes && selectedNodes.length>0){
-          let models='';
-          for(let node of selectedNodes){
-            models+=node+',';
-          }
-          this.editMib.models=models.substr(0,models.length-1);
-        }else{
-          this.editMib.models='';
-        }
-        this.$refs.mibForm.validateField('models')
-      },
-      uploadChange(file,fileList) {
-        if (fileList.length > 0) {
-          this.uploadFileList = [fileList[fileList.length - 1]];
-          this.uploadFile = this.uploadFileList[0];
-        }
-        this.validateFile();
-      },
-      afterClearFile(file, fileList) {
-        this.uploadFileList = [];
-        this.uploadFile = null;
-        this.validateFile();
-      },
-      validateFile:function(){
-        this.$refs.mibForm.validateField('file')
-      },
-      /*保存*/
-      save() {
-        this.$refs.mibForm.validate((valid) => {
-          if (valid) {
-            this.prevent_opt.save=true;
-            let form = new FormData();
-            form.append('name',this.editMib.name);
-            form.append('remark',this.editMib.remark);
-            form.append('models',this.editMib.models);
-            form.append('file', this.uploadFile && this.uploadFile.raw ? this.uploadFile.raw : null);
-            if(!this.editMib.id){
-              this.$post('/mib', form, {'Content-Type': 'multipart/form-data'}).then(response=>{
-                if(response.code==200 && response.msg == 'success'){
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              })
-            }else{
-              form.append('id',this.editMib.id);
-              this.$put('/mib',form,{'Content-Type': 'multipart/form-data'}).then(response=>{
-                if(response.code==200 && response.msg=='success'){
-                  this.$message({duration: 1000, type: 'success', message: this.$t("tip.saveSuccess")});
-                  this.esc(true);
-                }else{
-                  this.$message.error(response.msg);
-                }
-                this.prevent_opt.save=false;
-              })
-            }
-          }else{
-            this.prevent_opt.save=false;
-          }
-        })
-      },
-      /*删除*/
-      del() {
-        this.$confirm(this.$t("tip.confirmDelete"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'warning'
-        }).then(() => {
-          this.$delete("mib?ids=" + this.editMib.id).then(response => {
-            if (response.code === 200) {
-              this.$message({duration: 1000, type: 'success', message: this.$t("tip.deleteSuccess")});
-              this.esc(true);
+      checkMibFile: (rule, value, callback) => {
+        setTimeout(() => {
+          if (!$temp.editMib.id) {
+            if (!$temp.uploadFile || !$temp.uploadFile.raw) {
+              $temp.uploadErrorMsg = $temp.$t('config.mib.requiredMibFile')
+              return callback(new Error(' '))
             } else {
-              this.$message.error(response.msg);
+              $temp.uploadErrorMsg = null
+              return callback()
             }
-          });
-        });
+          } else {
+            $temp.uploadErrorMsg = null
+            return callback()
+          }
+        }, 200)
       },
+      checkModels: (rule, value, callback) => {
+        setTimeout(() => {
+          if (!$temp.editMib.models || $temp.editMib.models == '') {
+            // return callback(new Error($temp.$t('validate.required')))
+            return callback()
+          } else {
+            return callback()
+          }
+        }, 200)
+      },
+      selectedModels: [],
+      modelOptions: [],
+      modelProps: { multiple: true, emitPath: false },
+      uploadFileList: [],
+      uploadFile: null,
+      uploadErrorMsg: null
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
     },
-    mounted() {
-      this.queryModelInfos();
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.$emit('close', refresh)
     },
-    computed: {
-    },
-    watch: {
-      mib: {
-        immediate: true,
-        deep: true,
-        handler(n, o) {
-          this.editMib = JSON.parse(JSON.stringify(n));
-          if(this.editMib.models){
-            this.selectedModels = this.editMib.models.split(',');
-          }else{
-            this.selectedModels = [];
+    queryModelInfos: function () {
+      this.$get('model?pageSize=-1').then(response => {
+        if (response.code == 200) {
+          const modelInfos = response.data.list
+          const sortModels = {}
+          modelInfos.forEach((item) => {
+            if (!sortModels[item.type.value]) { // 没有这个assetType
+              sortModels[item.type.value] = {}
+            }
+            if (!sortModels[item.type.value][item.vendor.value]) {
+              sortModels[item.type.value][item.vendor.value] = []
+            }
+            item.label = item.name
+            item.value = item.id
+            sortModels[item.type.value][item.vendor.value].push(item)
+          })
+          for (const assetType of Object.keys(sortModels)) {
+            const option = {
+              label: assetType,
+              value: assetType,
+              children: []
+            }
+            for (const vendor of Object.keys(sortModels[assetType])) {
+              const child = {
+                label: vendor,
+                value: vendor,
+                children: sortModels[assetType][vendor]
+              }
+              option.children.push(child)
+            }
+            this.modelOptions.push(option)
           }
         }
-      },
+      })
+    },
+    selectedModelChange: function (nodes) {
+      const selectedNodes = this.selectedModels
+      if (selectedNodes && selectedNodes.length > 0) {
+        let models = ''
+        for (const node of selectedNodes) {
+          models += node + ','
+        }
+        this.editMib.models = models.substr(0, models.length - 1)
+      } else {
+        this.editMib.models = ''
+      }
+      this.$refs.mibForm.validateField('models')
+    },
+    uploadChange (file, fileList) {
+      if (fileList.length > 0) {
+        this.uploadFileList = [fileList[fileList.length - 1]]
+        this.uploadFile = this.uploadFileList[0]
+      }
+      this.validateFile()
+    },
+    afterClearFile (file, fileList) {
+      this.uploadFileList = []
+      this.uploadFile = null
+      this.validateFile()
+    },
+    validateFile: function () {
+      this.$refs.mibForm.validateField('file')
+    },
+    /* 保存 */
+    save () {
+      this.$refs.mibForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          const form = new FormData()
+          form.append('name', this.editMib.name)
+          form.append('remark', this.editMib.remark)
+          form.append('models', this.editMib.models)
+          form.append('file', this.uploadFile && this.uploadFile.raw ? this.uploadFile.raw : null)
+          if (!this.editMib.id) {
+            this.$post('/mib', form, { 'Content-Type': 'multipart/form-data' }).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          } else {
+            form.append('id', this.editMib.id)
+            this.$put('/mib', form, { 'Content-Type': 'multipart/form-data' }).then(response => {
+              if (response.code == 200 && response.msg == 'success') {
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(response.msg)
+              }
+              this.prevent_opt.save = false
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+        }
+      })
+    },
+    /* 删除 */
+    del () {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('mib?ids=' + this.editMib.id).then(response => {
+          if (response.code === 200) {
+            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    }
+  },
+  mounted () {
+    this.queryModelInfos()
+  },
+  computed: {
+  },
+  watch: {
+    mib: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.editMib = JSON.parse(JSON.stringify(n))
+        if (this.editMib.models) {
+          this.selectedModels = this.editMib.models.split(',')
+        } else {
+          this.selectedModels = []
+        }
+      }
     }
   }
+}
 </script>
 
 <style>

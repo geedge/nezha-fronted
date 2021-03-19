@@ -1,5 +1,5 @@
 <template>
-    <el-popover :placement="placement" width="300"  @hide="" ref="endpointPop" v-model="popBox.show" popper-class="nz-pop" @show="atShowPop">
+    <el-popover ref="endpointPop" v-model="popBox.show" :placement="placement" popper-class="nz-pop" width="300" @show="atShowPop">
       <div class="pop-box-title">
         <div class="pop-top-btns">
           <button type="button" @click="esc" class="nz-btn nz-btn-size-alien nz-btn-size-small nz-btn-style-light nz-btn-min-width-35" id="dc-esc">
@@ -26,14 +26,14 @@
             class="pop-box-table">
             <el-table-column >
               <template slot-scope="scope" :column="item">
-                <span class="link" @click="" >{{scope.row.name}}</span>
+                <span class="link">{{scope.row.name}}</span>
               </template>
             </el-table-column>
             <el-table-column type="expand">
-              <template slot-scope="props">
+              <template>
                 <div class="table-inner">
-                  <template v-for="(item,index) in filterEndpoints()">
-                    <div class="inner-row">
+                  <template v-for="(item, index) in filterEndpoints()">
+                    <div :key="index" class="inner-row">
                       <div class="inner-col left">ID：{{item.id}}</div>
                       <div class="inner-col right">
                         <el-popover placement="right"  width="50" trigger="hover" :content="(item.state == 1?'up':'down')+'['+(item.lastUpdate&&item.lastUpdate!=''?(new Date(item.lastUpdate).getHours()+':'+new Date(item.lastUpdate).getMinutes()):'--')+']'" >
@@ -59,116 +59,116 @@
 </template>
 
 <script>
-  import {resetZIndex} from '../../common/js/common'
-    export default {
-      name: "endpointStatusPop",
-      props:{
-        placement:{type:String,default:'left'},
-        assetId:{type:Number,required:true}
-      },
-      data(){
-        let temp=this;
-        return{
-          popBox:{title:this.$t('project.endpoint.endpoint'),show:false},
-          endpointDatas:[],
-          endpoints:[],
-          modules:[],
-          projects:new Map(),
-          showModule:null,
-          showProject:null,
-          getRowKeys(row) {
-            if(temp.showModule&&row.id==temp.showModule.id){
-              temp.$refs.popTab.toggleRowExpansion(row,true);
-              // temp.$refs.popTab.setCurrentRow(row);
-            }
-            return row.id
-          },
-          expands:[],
+import { resetZIndex } from '../../common/js/common'
+export default {
+  name: 'endpointStatusPop',
+  props: {
+    placement: { type: String, default: 'left' },
+    assetId: { type: Number, required: true }
+  },
+  data () {
+    const temp = this
+    return {
+      popBox: { title: this.$t('project.endpoint.endpoint'), show: false },
+      endpointDatas: [],
+      endpoints: [],
+      modules: [],
+      projects: new Map(),
+      showModule: null,
+      showProject: null,
+      getRowKeys (row) {
+        if (temp.showModule && row.id == temp.showModule.id) {
+          temp.$refs.popTab.toggleRowExpansion(row, true)
+          // temp.$refs.popTab.setCurrentRow(row);
         }
+        return row.id
       },
-      created() {
-
-      },
-      methods:{
-        getEndpointDatas:function(){
-          this.$get('/endpoint?assetId='+this.assetId+'pageSize=-1').then(response => {
-            if (response.code === 200) {
-              this.endpointDatas = response.data.list;
-              this.dealDatas(JSON.parse(JSON.stringify(this.endpointDatas)));
-            }
-          });
-        },
-        dealDatas:function(endpointDatas){ //为方便组织结构，将数据分层
-          let temp=this;
-          temp.endpoints=[];
-          temp.modules=[];
-          temp.projects.clear();
-          temp.showModule=null;
-          temp.showProject=null;
-          endpointDatas.forEach((item,index)=>{
-            let module=JSON.parse(JSON.stringify(item.module));
-            module.projectId=item.project.id;
-            temp.modules.push(module);
-            let project=JSON.parse(JSON.stringify(item.project));
-            temp.projects.set(project.id,project);
-            delete item.module;
-            delete item.project;
-            temp.endpoints.push(item);
-          })
-          this.modules=this.duplicateRemoval(this.modules);
-          this.initShow();
-        },
-        duplicateRemoval:function(arr){
-          const res = new Map();
-          return arr.filter(a=>{
-            return !res.has(a.id) && res.set(a.id,1);
-          })
-        },
-        initShow:function(){
-          if(!this.showModule){
-            this.showModule=this.modules[0];
-          }
-        },
-        filterEndpoints:function(){
-          if(this.showModule){
-            return this.endpoints.filter((item)=>{
-              return item.moduleId==this.showModule.id;
-            })
-          }
-        },
-        expandSelect(row, expandedRows) {//只能展开一行
-          this.expands = []
-          if (expandedRows.length > 0) {
-            row ? this.expands.push(row.id) : '';
-            this.showModule=row;
-            this.showProject=this.projects.get(row.projectId);
-          }
-        },
-        esc:function(){
-          this.popBox.show=false;
-        },
-        resetZIndex,
-        atShowPop:function(){
-          this.getEndpointDatas();
-        },
-        clickTabRow:function(row, column, event){
-          this.$refs.popTab.toggleRowExpansion(row);
-        }
-      },
-      mounted() {
-      },
-      watch:{
-        showModule:{
-          handler(n,o){
-            if(!n){
-             n=this.modules && this.modules.length>0?this.modules[0]:null;
-            }
-            this.showProject=this.projects.get(n.projectId);
-          }
-        }
-      }
-
+      expands: []
     }
+  },
+  created () {
+
+  },
+  methods: {
+    getEndpointDatas: function () {
+      this.$get('/endpoint?assetId=' + this.assetId + 'pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.endpointDatas = response.data.list
+          this.dealDatas(JSON.parse(JSON.stringify(this.endpointDatas)))
+        }
+      })
+    },
+    dealDatas: function (endpointDatas) { // 为方便组织结构，将数据分层
+      const temp = this
+      temp.endpoints = []
+      temp.modules = []
+      temp.projects.clear()
+      temp.showModule = null
+      temp.showProject = null
+      endpointDatas.forEach((item, index) => {
+        const module = JSON.parse(JSON.stringify(item.module))
+        module.projectId = item.project.id
+        temp.modules.push(module)
+        const project = JSON.parse(JSON.stringify(item.project))
+        temp.projects.set(project.id, project)
+        delete item.module
+        delete item.project
+        temp.endpoints.push(item)
+      })
+      this.modules = this.duplicateRemoval(this.modules)
+      this.initShow()
+    },
+    duplicateRemoval: function (arr) {
+      const res = new Map()
+      return arr.filter(a => {
+        return !res.has(a.id) && res.set(a.id, 1)
+      })
+    },
+    initShow: function () {
+      if (!this.showModule) {
+        this.showModule = this.modules[0]
+      }
+    },
+    filterEndpoints: function () {
+      if (this.showModule) {
+        return this.endpoints.filter((item) => {
+          return item.moduleId == this.showModule.id
+        })
+      }
+    },
+    expandSelect (row, expandedRows) { // 只能展开一行
+      this.expands = []
+      if (expandedRows.length > 0) {
+        row && this.expands.push(row.id)
+        this.showModule = row
+        this.showProject = this.projects.get(row.projectId)
+      }
+    },
+    esc: function () {
+      this.popBox.show = false
+    },
+    resetZIndex,
+    atShowPop: function () {
+      this.getEndpointDatas()
+    },
+    clickTabRow: function (row, column, event) {
+      this.$refs.popTab.toggleRowExpansion(row)
+    }
+  },
+  mounted () {
+  },
+  watch: {
+    showModule: {
+      handler (n, o) {
+        if (!n) {
+          n = this.modules && this.modules.length > 0 ? this.modules[0] : null
+        }
+        this.showProject = this.projects.get(n.projectId)
+      }
+    }
+  }
+
+}
 </script>
 
 <style scoped>
@@ -247,4 +247,3 @@
   }
 
 </style>
-

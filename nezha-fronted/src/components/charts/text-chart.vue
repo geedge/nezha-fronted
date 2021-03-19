@@ -58,178 +58,175 @@
 </template>
 
 <script>
-  import loading from "../common/loading";
-  import timePicker from '../common/timePicker'
-  import 'quill/dist/quill.snow.css'
-  export default {
-    name: 'chartSingleStat',
-    components: {
-      'loading': loading,
-      'time-picker':timePicker
+import loading from '../common/loading'
+import 'quill/dist/quill.snow.css'
+export default {
+  name: 'chartSingleStat',
+  components: {
+    loading: loading
+  },
+  props: {
+    chartData: {
+      type: Object
     },
-    props: {
-      chartData: {
-        type: Object
-      },
-      // 看板id
-      panelId: {
-        type: Number,
-        default: 0,
-      },
-      editChartId: {
-        type: String,
-        default: 'editChartId',
-      },
-      chartIndex:{
-        type: Number,
-        default: 0,
-      },
-      from: {type: String},
-      isLock:{type:Boolean,default:false}
+    // 看板id
+    panelId: {
+      type: Number,
+      default: 0
     },
-    data() {
-      return {
-        data: {}, // 该图表信息,chartItem
-        noData:false,
-        unit:{},
-        text: '', // 保存信息
-        screenText:'',//全屏数据
-        loading:Object,
-        panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
-        firstLoad: false, // 是否第一次加载
-        screenModal: false,
-        firstShow: false, // 默认不显示操作按钮,
-        caretShow:false,
-        dragTitleShow:false,
-        dropdownMenuShow:false,
-        divFirstShow:false,
-      };
+    editChartId: {
+      type: String,
+      default: 'editChartId'
     },
-    created() {
+    chartIndex: {
+      type: Number,
+      default: 0
     },
-    computed: {},
-    watch: {
-      dropdownMenuShow(n) {
-        this.$emit("dropmenu-change", n);
+    from: { type: String },
+    isLock: { type: Boolean, default: false }
+  },
+  data () {
+    return {
+      data: {}, // 该图表信息,chartItem
+      noData: false,
+      unit: {},
+      text: '', // 保存信息
+      screenText: '', // 全屏数据
+      loading: Object,
+      panelIdInner: '', // 看板id=panelId,原写作chart,由set_data获取
+      firstLoad: false, // 是否第一次加载
+      screenModal: false,
+      firstShow: false, // 默认不显示操作按钮,
+      caretShow: false,
+      dragTitleShow: false,
+      dropdownMenuShow: false,
+      divFirstShow: false
+    }
+  },
+  created () {
+  },
+  computed: {},
+  watch: {
+    dropdownMenuShow (n) {
+      this.$emit('dropmenu-change', n)
+    }
+  },
+  methods: {
+    startResize (e) {
+      const vm = this
+      this.$chartResizeTool.start(vm, this.data, e)
+    },
+    startLoading (area) {
+      if (area === 'screen') {
+        this.$refs['localLoadingScreen' + this.chartIndex].startLoading()
+      } else {
+        // this.showLoading = true;
+        this.$refs['localLoading' + this.chartIndex].startLoading()
       }
     },
-    methods: {
-      startResize(e) {
-        let vm = this;
-        this.$chartResizeTool.start(vm, this.data, e);
-      },
-      startLoading(area){
-        if(area==='screen'){
-          this.$refs['localLoadingScreen'+this.chartIndex].startLoading();
-        }else {
-          //this.showLoading = true;
-          this.$refs['localLoading'+this.chartIndex].startLoading();
+    endLoading (area) {
+      if (area === 'screen') {
+        // this.showLoadingScreen = false;
+        this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
+      } else {
+        // this.showLoading = false;
+        this.$refs['localLoading' + this.chartIndex].endLoading()
+      }
+    },
+    showLoad (chartItem) {
+      this.$nextTick(() => {
+        const chartBox = document.getElementById('chartSingleStatDiv' + this.chartIndex)
+        let height = Math.floor(chartItem.height / 10) * 10// 图表高度四舍五入
+        if (height < this.minHeight) {
+          height = this.minHeight
         }
-      },
-      endLoading(area){
-        if(area==='screen'){
-          //this.showLoadingScreen = false;
-          this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
-        }else {
-          //this.showLoading = false;
-          this.$refs['localLoading'+this.chartIndex].endLoading();
-        }
-      },
-      showLoad(chartItem) {
-        this.$nextTick(() => {
-          const chartBox = document.getElementById('chartSingleStatDiv'+this.chartIndex);
-          let height = Math.floor(chartItem.height/10)*10;//图表高度四舍五入
-          if(height<this.minHeight){
-            height = this.minHeight;
-          }
-          chartBox.style.height = `${height-this.chartSpaceHeight}px`;
-          const singleStatBox = document.getElementById('chartContainer'+this.chartIndex);
-          singleStatBox.style.height = `${height-this.chartSpaceHeight-this.titleHeight}px`;// -75-32
-        });
-        this.startLoading();
-        this.divFirstShow = true;
-      },
-      // 重新请求数据 刷新操作-local
-      refreshChart() {
-        this.dropdownMenuShow=false;
-        this.startLoading();
-        this.firstShow = false;
-        this.$emit('on-refresh-data', this.data.id);
-      },
-      // 编辑图表
-      editChart() {
-        this.dropdownMenuShow=false;
-        this.$emit('on-edit-chart-block', this.data.id);
-      },
-      // 删除该图表
-      removeChart() {
-        this.dropdownMenuShow=false;
-        this.$emit('on-remove-chart-block', this.data.id);
-      },
-      clickos() {
-        this.dropdownMenuShow=false;
-      },
-      clearChart(){
-        this.data = {};
-      },
-      duplicate(){
-        this.dropdownMenuShow=false;
-        this.$confirm(this.$t("tip.confirmDuplicate"), {
-          confirmButtonText: this.$t("tip.yes"),
-          cancelButtonText: this.$t("tip.no"),
-          type: 'info'
-        }).then(() => {
-          const param = {id:this.data.id};
-          this.$post('panel/'+ this.data.panelId+'/charts/duplicate',(param)).then(response => {
-            if (response.code === 200) {
-              this.$message({
-                duration: 2000,
-                type: 'success',
-                message: this.$t("tip.duplicateSuccess")
-              });
-              this.$emit('on-duplicate-chart-block', this.data.id,response.data);
-            }else {
-              if(response.msg){
-                this.$message.error(response.msg);
-              }else if(response.error){
-                this.$message.error(response.error);
-              }else {
-                this.$message.error(response);
-              }
+        chartBox.style.height = `${height - this.chartSpaceHeight}px`
+        const singleStatBox = document.getElementById('chartContainer' + this.chartIndex)
+        singleStatBox.style.height = `${height - this.chartSpaceHeight - this.titleHeight}px`// -75-32
+      })
+      this.startLoading()
+      this.divFirstShow = true
+    },
+    // 重新请求数据 刷新操作-local
+    refreshChart () {
+      this.dropdownMenuShow = false
+      this.startLoading()
+      this.firstShow = false
+      this.$emit('on-refresh-data', this.data.id)
+    },
+    // 编辑图表
+    editChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-edit-chart-block', this.data.id)
+    },
+    // 删除该图表
+    removeChart () {
+      this.dropdownMenuShow = false
+      this.$emit('on-remove-chart-block', this.data.id)
+    },
+    clickos () {
+      this.dropdownMenuShow = false
+    },
+    clearChart () {
+      this.data = {}
+    },
+    duplicate () {
+      this.dropdownMenuShow = false
+      this.$confirm(this.$t('tip.confirmDuplicate'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'info'
+      }).then(() => {
+        const param = { id: this.data.id }
+        this.$post('panel/' + this.data.panelId + '/charts/duplicate', (param)).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 2000,
+              type: 'success',
+              message: this.$t('tip.duplicateSuccess')
+            })
+            this.$emit('on-duplicate-chart-block', this.data.id, response.data)
+          } else {
+            if (response.msg) {
+              this.$message.error(response.msg)
+            } else if (response.error) {
+              this.$message.error(response.error)
+            } else {
+              this.$message.error(response)
             }
-          });
-        });
-      },
-      // 全屏查看
-      showAllScreen() {
-        this.dropdownMenuShow=false;
-        this.screenModal = true;
-      },
-      resize(chartItem) {
-        document.querySelector('#chartSingleStatDiv' + this.chartIndex + " .rich-text-container").style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`;
-      },
-      // 设置数据, filter区分
-      setData(chartItem, seriesItem, panelId, filter,area) {
-        this.$nextTick(() => {
-          this.resize(chartItem);
-        });
-        this.divFirstShow = true;
-
-        this.firstShow = true; // 展示操作按键
-
-        this.panelIdInner = panelId;
-        this.data = chartItem;
-        this.text=chartItem.param.text;
-        this.screenText=chartItem.param.text;
-        this.endLoading();
-
-      },
+          }
+        })
+      })
     },
-    mounted() {
-      this.firstLoad = false;
+    // 全屏查看
+    showAllScreen () {
+      this.dropdownMenuShow = false
+      this.screenModal = true
     },
-    beforeDestroy() {
-      this.clearChart();
+    resize (chartItem) {
+      document.querySelector('#chartSingleStatDiv' + this.chartIndex + ' .rich-text-container').style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`
     },
-  };
+    // 设置数据, filter区分
+    setData (chartItem, seriesItem, panelId, filter, area) {
+      this.$nextTick(() => {
+        this.resize(chartItem)
+      })
+      this.divFirstShow = true
+
+      this.firstShow = true // 展示操作按键
+
+      this.panelIdInner = panelId
+      this.data = chartItem
+      this.text = chartItem.param.text
+      this.screenText = chartItem.param.text
+      this.endLoading()
+    }
+  },
+  mounted () {
+    this.firstLoad = false
+  },
+  beforeDestroy () {
+    this.clearChart()
+  }
+}
 </script>

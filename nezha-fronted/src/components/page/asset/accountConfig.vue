@@ -95,107 +95,105 @@
 </template>
 
 <script>
-  import {port} from '../../common/js/validate'
+import { port } from '../../common/js/validate'
 export default {
-    name: "accountConfig",
-    props:{
-      account:{type:Object},
-      isAllowedChangeProtocol:{type:Boolean,default:true}
-    },
-    data(){
-      return {
-        rules:{
-          "params.username": [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur'}
-          ],
-          port: [
-            {required: true, message: this.$t('validate.required'), trigger: 'blur'},
-            { validator: port, trigger: 'blur'}
-          ],
-        },
-        showTelnetOption:false
+  name: 'accountConfig',
+  props: {
+    account: { type: Object },
+    isAllowedChangeProtocol: { type: Boolean, default: true }
+  },
+  data () {
+    return {
+      rules: {
+        'params.username': [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        port: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: port, trigger: 'blur' }
+        ]
+      },
+      showTelnetOption: false
+    }
+  },
+  methods: {
+    resetData () {
+      this.account = {
+        id: null,
+        user: '',
+        authType: 1,
+        protocol: 'SSH',
+        pwd: '',
+        port: null,
+        privateKey: null,
+        userTip: '',
+        passwordTip: '',
+        reloginPasswordTip: ''
       }
     },
-    methods:{
-      resetData:function(){
-        this.account={
-          id:null,
-          user:"",
-          authType:1,
-          protocol:'SSH',
-          pwd:"",
-          port:null,
-          privateKey:null,
-          userTip:"",
-          passwordTip:'',
-          reloginPasswordTip:''
-        }
-      },
-      isShowTelnetOption:function(){
-        this.showTelnetOption=!this.showTelnetOption;
-        if(!this.showTelnetOption){
-          this.account.userTip="";
-          this.account.passwordTip="";
-          this.account.reloginPasswordTip="";
-        }
-      },
-      telnetOptionState:function(){
-        if(this.account.userTip != ''|| this.account.passwordTip != '' || this.account.reloginPasswordTip != ''){
-          this.showTelnetOption=true;
-        }
-      },
-      changeProtocolType:function(protocolType){
-        if(this.isAllowedChangeProtocol){
-          this.account.protocol=protocolType;
-          this.$emit('protocol-type-change',protocolType)
-        }else{
-          return ;
-        }
-      },
-      clearPrivateKey:function(){
-        this.account.privateKey=null;
-      },
-      clearTelnetOptions:function(){
-        this.account.userTip='';
-        this.account.passwordTip='';
-        this.account.reloginPasswordTip='';
-      },
-      handleChange(file,fileList) {
-        if (fileList.length > 0) {
-          this.uploadFileList = [fileList[fileList.length - 1]]
-        }
-        this.account.uploadFile = this.uploadFileList[0];
-        this.validateFile();
-      },
-      validateAccount:function(){
-        this.validateResult=false;
-        this.$refs.accountForm.validate((valid) => {
-          this.$emit("setValidateResult", valid, this.account.protocol);
-        });
-      },
-
+    isShowTelnetOption () {
+      this.showTelnetOption = !this.showTelnetOption
+      if (!this.showTelnetOption) {
+        this.account.userTip = ''
+        this.account.passwordTip = ''
+        this.account.reloginPasswordTip = ''
+      }
     },
-    watch:{
-      account:{
-        immediate:true,
-        deep:true,
-        handler(n,o){
-          if(n.authType == 1){//密码登录
-            this.clearPrivateKey();
-          }
-          if(n.authType == 2){//公钥登录
-            this.account.pwd='';
-          }
-          if(n.protocol == 'SSH'){
-            this.showTelnetOption=false;
-            this.clearTelnetOptions();
-          }else{
-            this.clearPrivateKey();
-          }
-          this.telnetOptionState();
+    telnetOptionState () {
+      if (this.account.userTip != '' || this.account.passwordTip != '' || this.account.reloginPasswordTip != '') {
+        this.showTelnetOption = true
+      }
+    },
+    changeProtocolType (protocolType) {
+      if (this.isAllowedChangeProtocol) {
+        this.account.protocol = protocolType
+        this.$emit('protocol-type-change', protocolType)
+      }
+    },
+    clearPrivateKey () {
+      this.account.privateKey = null
+    },
+    clearTelnetOptions () {
+      this.account.userTip = ''
+      this.account.passwordTip = ''
+      this.account.reloginPasswordTip = ''
+    },
+    handleChange (file, fileList) {
+      if (fileList.length > 0) {
+        this.uploadFileList = [fileList[fileList.length - 1]]
+      }
+      this.account.uploadFile = this.uploadFileList[0]
+      this.validateFile()
+    },
+    validateAccount () {
+      this.validateResult = false
+      this.$refs.accountForm.validate((valid) => {
+        this.$emit('setValidateResult', valid, this.account.protocol)
+      })
+    }
+
+  },
+  watch: {
+    account: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        if (n.authType == 1) { // 密码登录
+          this.clearPrivateKey()
         }
+        if (n.authType == 2) { // 公钥登录
+          this.account.pwd = ''
+        }
+        if (n.protocol == 'SSH') {
+          this.showTelnetOption = false
+          this.clearTelnetOptions()
+        } else {
+          this.clearPrivateKey()
+        }
+        this.telnetOptionState()
       }
     }
+  }
 }
 </script>
 
