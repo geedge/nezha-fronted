@@ -44,9 +44,9 @@
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.mapConfig')" >
               <div class="system-map">
-                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lat')}}</span><span><el-input width="20px" v-model="basic.map_config.latitude"></el-input></span></div>
-                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lng')}}</span><span><el-input width="20px" v-model="basic.map_config.longitude"></el-input></span></div>
-                <div class="system-map-item"><span class="label">{{$t('config.system.basic.zoom')}}</span><span><el-input width="20px" v-model="basic.map_config.zoom"></el-input></span></div>
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lat')}}</span><span><el-input width="20px" v-model="basic.map_center_config.latitude"></el-input></span></div>
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.lng')}}</span><span><el-input width="20px" v-model="basic.map_center_config.longitude"></el-input></span></div>
+                <div class="system-map-item"><span class="label">{{$t('config.system.basic.zoom')}}</span><span><el-input width="20px" v-model="basic.map_center_config.zoom"></el-input></span></div>
                 <div class="system-map-item" style="margin-right: unset !important;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-shuidi" style="color:rgb(238, 157, 63)"></i></div>
               </div>
             </el-form-item>
@@ -62,7 +62,7 @@
               <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
-          <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.setup.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="true">
+          <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.system.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="true">
             <div id="map" style="height: 100%; width: 100%"></div>
           </el-dialog>
         </div>
@@ -393,7 +393,7 @@
               default_cabinet_usize:'',
               query_max_series:'',
               unsaved_change:'on',
-              map_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
+              map_center_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
             },
             mapConfigVisible:false,
             map:null,
@@ -570,12 +570,12 @@
             });
             L.Marker.prototype.options.icon = DefaultIcon;
             let map = L.map("map",{
-              minZoom:this.basic.map_config.minZoom,
-              maxZoom:this.basic.map_config.maxZoom,
+              minZoom:this.basic.map_center_config.minZoom,
+              maxZoom:this.basic.map_center_config.maxZoom,
               attributionControl:false,
               zoomControl:false,
               maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
-            }).setView([this.basic.map_config.latitude,this.basic.map_config.longitude],this.basic.map_config.zoom);
+            }).setView([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude],this.basic.map_center_config.zoom);
 
             L.tileLayer(
               "/static/Tiles/{z}/{x}/{y}.png",
@@ -594,7 +594,7 @@
               zoomOutTitle:'',
             }).addTo(map)
 
-            let marker = L.marker([this.basic.map_config.latitude,this.basic.map_config.longitude]).addTo(map);
+            let marker = L.marker([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude]).addTo(map);
             map.on("click", function(e) {
               var lat = e.latlng.lat;
               var lng = e.latlng.lng;
@@ -606,9 +606,9 @@
           mapClose:function(){
             this.mapConfigVisible=false
             let latlng = this.marker.getLatLng();
-            this.basic.map_config.latitude = latlng.lat;
-            this.basic.map_config.longitude = latlng.lng;
-            this.basic.map_config.zoom = this.map.getZoom();
+            this.basic.map_center_config.latitude = latlng.lat;
+            this.basic.map_center_config.longitude = latlng.lng;
+            this.basic.map_center_config.zoom = this.map.getZoom();
           },
           selectTab:function(tab){
             this.querySetInfo(tab.name)
@@ -641,6 +641,7 @@
                   localStorage.setItem('nz-sys-asset-ping-switch',this.basic.asset_ping_switch);
                   localStorage.setItem('nz-sys-default-cabinet-usize',this.basic.default_cabinet_usize);
                   localStorage.setItem('nz-unnsaved-change',this.basic.unsaved_change)
+                  this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
                 }else if(type == 'terminal'){
                   localStorage.setItem('nz-sys-max-terminal-num',this.terminal.max_terminal_num);
                 }
@@ -657,9 +658,13 @@
             this.$refs[formName].validate((valid) => {
               if (valid) {
                 let param={};
+                if(type == 'basic'){
+                  this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
+                }
                 param[type]=Object.assign({},this[type]);
                 this.$set(param[type],'test','false')
                 let postParam=Object.assign({},param);
+
                 for (let key in postParam[type]){
                   postParam[type][key]=postParam[type][key]+'';
                 }
@@ -1010,18 +1015,9 @@
           openUrl(item){
             // window.open(item.url)
           },
-          queryDefaultMapConfig:function(){
-            this.$get("/sysConfig?paramKey=map_center_config").then(response=>{
-              if(response.code == 200){
-                console.log(response.data)
-                this.basic.map_config = JSON.parse(response.data.paramKey.map_center_config);
-              }
-            })
-          }
         },
         mounted() {
           this.querySetInfo('basic');
-          this.queryDefaultMapConfig();
         }
     }
 </script>
@@ -1038,7 +1034,6 @@
   }
   .system .system-map{
     width: 100%;
-    margin-bottom:18px
   }
   .system-map .system-map-item{
     display: inline-block;
@@ -1048,7 +1043,7 @@
     margin-right: 10px;
   }
   .system-map .el-input{
-    width: 95px !important;
+    width: 92px !important;
   }
   .linkBox{
     max-height: 800px;
