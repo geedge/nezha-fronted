@@ -33,10 +33,10 @@
             <button type="button" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new option-btn" @click="selectAllOrNone" :class="{'btn-active':selectAllFlag}"><span ><i class="nz-icon nz-icon-delete"></i></span></button>
           </div>-->
           <el-tree :data="menus" :default-expand-all="expandAllFlag" :props="{label:labelFormatter}"  @check-change="selectChange" class="tree-border" node-key="id" ref="menuTree" show-checkbox id="role-box-input-menus">
-            <div slot-scope="data">
+            <div slot-scope="{ node, data }">
               <span>
-                <i v-if="data.data.type == '1'" class="el-icon-menu"></i>
-                <i v-if="data.data.type == '2'" class="el-icon-edit"></i>
+                <i v-if="data.type == '1'" class="el-icon-menu"></i>
+                <i v-if="data.type == '2'" class="el-icon-edit"></i>
               </span>
               {{$t(data.i18n)}}
             </div>
@@ -142,6 +142,8 @@ export default {
       this.$get('sys/menu').then(response => {
         if (response.code == 200) {
           this.menus = response.data.list
+
+          console.log("menus",this.menus)
         } else {
           this.$message.error('load menu faild')
         }
