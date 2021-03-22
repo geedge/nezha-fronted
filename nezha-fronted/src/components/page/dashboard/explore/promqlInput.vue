@@ -361,7 +361,7 @@ export default {
         let returnFlag = false
         let errorStr = ''
         this.tempBox.vars.forEach((item) => {
-          params.varsVal[item] = this.tempBox[item]
+          params.varsVal[item] = this.tempBoxId[item] || this.tempBox[item]
           if (!this.tempBox[item]) {
             errorStr += item + ','
             returnFlag = true
@@ -378,6 +378,7 @@ export default {
 
         if (this.tempBox.vars.length == 0) {
           this.tempBoxShow = false
+          // eslint-disable-next-line vue/no-mutating-props
           this.expressionList[this.index] = params.expression
           this.$emit('change', params.expression)
           return
