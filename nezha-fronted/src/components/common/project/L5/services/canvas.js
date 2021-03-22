@@ -305,6 +305,7 @@ export function myCubeAnchors (node) { // 立方体锚点
 /* 自定义立方体 */
 
 export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
+  console.log(node)
   node.animateType = animateType
   if (node.animateType === 'custom') {
     return
@@ -314,6 +315,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
   const state = Node.cloneState(node)
   switch (animateType) {
     case 'upDown':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.rect.y -= 10
       state.rect.ey -= 10
       node.animateFrames.push({
@@ -333,6 +339,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'leftRight':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.rect.x -= 10
       state.rect.ex -= 10
       node.animateFrames.push({
@@ -368,6 +379,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'heart':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.rect.x -= 5
       state.rect.ex += 5
       state.rect.y -= 5
@@ -386,6 +402,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'success':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.strokeStyle = strokeStyle || '#237804'
       node.animateFrames.push({
         duration: 100,
@@ -417,6 +438,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'warning':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.strokeStyle = strokeStyle || '#fa8c16'
       state.fillStyle = fillStyle || '#fa8c16'
       state.lineWidth = 5
@@ -446,6 +472,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'error':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.strokeStyle = strokeStyle || '#cf1322'
       state.fillStyle = fillStyle || '#cf132222'
       state.lineWidth = 5
@@ -475,6 +506,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'show':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.strokeStyle = strokeStyle || '#fa541c'
       state.rotate = -5
       node.animateFrames.push({
@@ -496,6 +532,11 @@ export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
       })
       break
     case 'fade':
+      node.animateFrames.push({
+        duration: 0,
+        linear: true,
+        state: Node.cloneState(state)
+      })
       state.strokeStyle = strokeStyle || '#fa541c'
       state.globalAlpha = 0.3
       node.animateFrames.push({
