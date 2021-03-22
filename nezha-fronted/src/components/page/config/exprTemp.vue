@@ -255,7 +255,7 @@ export default {
       blackExprTemp: {
         id: '',
         name: '',
-        gname: 'default',
+        gname: '',
         expression: '',
         remark: ''
       },
