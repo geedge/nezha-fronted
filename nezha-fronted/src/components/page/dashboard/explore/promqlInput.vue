@@ -151,10 +151,11 @@
 
 <script>
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
+import editor from './editor'
 export default {
   name: 'promqlInput',
   components: {
-    'editor':editor,
+    editor: editor,
     selectAlertSilence
   },
   props: {
@@ -203,7 +204,7 @@ export default {
       datacenterOption: [],
       projectOption: [],
       filterSilence: '',
-      tempBoxId:{},
+      tempBoxId: {}
     }
   },
   created () {
@@ -232,8 +233,8 @@ export default {
     queryMetrics: function () {
       this.$get('prom/api/v1/label/__name__/values').then(response => {
         if (response.status == 'success') {
-          let metrics = response.data.sort()
-          let metricMap = new Map()
+          const metrics = response.data.sort()
+          const metricMap = new Map()
           metrics.forEach((item) => {
             let key = ''
             if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
@@ -244,16 +245,16 @@ export default {
               key = item
             }
             if (metricMap.get(key)) {
-              let values = metricMap.get(key)
+              const values = metricMap.get(key)
               values.push({ label: item, value: item })
             } else {
-              let values = [{ label: item, value: item }]
+              const values = [{ label: item, value: item }]
               metricMap.set(key, values)
             }
             // this.metricStore.push({label:item,value:item,insertText:item})
           })
-          for (let key of metricMap.keys()) {
-            let option = {
+          for (const key of metricMap.keys()) {
+            const option = {
               label: key,
               value: key
             }
@@ -269,8 +270,8 @@ export default {
       })
     },
     filterInput: function (queryString, cb) {
-      let metrics = Object.assign([], this.metricStore)
-      let result = queryString
+      const metrics = Object.assign([], this.metricStore)
+      const result = queryString
         ? metrics.filter((item) => {
           return item.value.toLowerCase().indexOf(queryString.toLowerCase()) != -1
         })
@@ -354,7 +355,7 @@ export default {
       this.tempBoxShow = flag
       if (flag) {
         this.cascaderValue = ''
-        let params = {}
+        const params = {}
         params.expression = this.tempBox.expression
         params.varsVal = {}
         let returnFlag = false
@@ -395,8 +396,8 @@ export default {
     },
 
     format (str) {
-      let arr = str.split('.')
-      let keyword = arr[0].toLowerCase()
+      const arr = str.split('.')
+      const keyword = arr[0].toLowerCase()
       switch (keyword) {
         case 'asset':
         case 'module':
@@ -419,14 +420,14 @@ export default {
         case 'asset':
           this.$get('asset', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
-              let arr = []
+              const arr = []
               response.data.list.forEach(asset => {
                 asset.name = asset.sn
-                let idcF = arr.find(idc => idc.id === asset.idc.id)
+                const idcF = arr.find(idc => idc.id === asset.idc.id)
                 if (idcF) {
                   idcF.children.push(asset)
                 } else {
-                  let idc = { ...asset.idc }
+                  const idc = { ...asset.idc }
                   idc.children = [asset]
                   arr.push(idc)
                 }
@@ -438,13 +439,13 @@ export default {
         case 'module':
           this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
-              let arr = []
+              const arr = []
               response.data.list.forEach(module => {
-                let projectF = arr.find(project => project.id === module.project.id)
+                const projectF = arr.find(project => project.id === module.project.id)
                 if (projectF) {
                   projectF.children.push(module)
                 } else {
-                  let project = { ...module.project }
+                  const project = { ...module.project }
                   project.children = [module]
                   arr.push(project)
                 }
@@ -456,19 +457,19 @@ export default {
         case 'endpoint':
           this.$get('endpoint', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
-              let arr = []
+              const arr = []
               response.data.list.forEach(item => {
                 item.name = item.host
-                let projectF = arr.find(project => item.project.id === project.id)
+                const projectF = arr.find(project => item.project.id === project.id)
                 if (projectF) {
-                  let moduleF = projectF.children.find(module => module.id === item.module.id)
+                  const moduleF = projectF.children.find(module => module.id === item.module.id)
                   if (moduleF) {
                     moduleF.children.push(item)
                   } else {
                     projectF.children.push({ ...item.module, children: [item] })
                   }
                 } else {
-                  let project = { ...item.project }
+                  const project = { ...item.project }
                   project.children = [{ ...item.module, children: [item] }]
                   arr.push(project)
                 }
@@ -497,7 +498,7 @@ export default {
     },
     silenceChange (val, key) {
       this.tempBox[key] = val.name
-      this.tempBoxId[key]=val.id;
+      this.tempBoxId[key] = val.id
     },
     clearValue (key) {
       this.tempBox[key] = ''

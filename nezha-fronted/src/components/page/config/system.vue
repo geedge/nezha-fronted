@@ -370,8 +370,8 @@ import draggable from 'vuedraggable'
 // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
 import 'leaflet/dist/leaflet.css'
 import * as L from 'leaflet'
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import icon from 'leaflet/dist/images/marker-icon.png'
+import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 export default {
   name: 'system',
   components: { draggable },
@@ -390,11 +390,11 @@ export default {
         default_cabinet_usize: '',
         query_max_series: '',
         unsaved_change: 'on',
-        map_center_config:{"longitude":116.39,"latitude":39.9,"zoom":4,"minZoom":1,"maxZoom":10}
+        map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 }
       },
-      mapConfigVisible:false,
-      map:null,
-      marker:null,
+      mapConfigVisible: false,
+      map: null,
+      marker: null,
       basicCopy: null,
       basicRules: {
         system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -554,58 +554,58 @@ export default {
     }
   },
   methods: {
-    initMap:function(){
-      if(this.map){
-        this.map.remove();
-        this.map=null;
+    initMap: function () {
+      if (this.map) {
+        this.map.remove()
+        this.map = null
       }
-      let DefaultIcon = L.icon({
+      const DefaultIcon = L.icon({
         iconUrl: icon,
         iconSize: [26, 40],
         iconAnchor: [13, 40],
         shadowUrl: iconShadow
-      });
-      L.Marker.prototype.options.icon = DefaultIcon;
-      let map = L.map("map",{
-        minZoom:this.basic.map_center_config.minZoom,
-        maxZoom:this.basic.map_center_config.maxZoom,
-        attributionControl:false,
-        zoomControl:false,
-        maxBounds:L.latLngBounds(L.latLng(-90,-180),L.latLng(90,180))
-      }).setView([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude],this.basic.map_center_config.zoom);
+      })
+      L.Marker.prototype.options.icon = DefaultIcon
+      const map = L.map('map', {
+        minZoom: this.basic.map_center_config.minZoom,
+        maxZoom: this.basic.map_center_config.maxZoom,
+        attributionControl: false,
+        zoomControl: false,
+        maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
+      }).setView([this.basic.map_center_config.latitude, this.basic.map_center_config.longitude], this.basic.map_center_config.zoom)
 
       L.tileLayer(
-        "/static/Tiles/{z}/{x}/{y}.png",
-        {noWrap:true}
-      ).addTo(map);
+        '/static/Tiles/{z}/{x}/{y}.png',
+        { noWrap: true }
+      ).addTo(map)
 
-      let attribution=L.control.attribution({position:'bottomright',prefix:''})
+      const attribution = L.control.attribution({ position: 'bottomright', prefix: '' })
       attribution.addAttribution(' © OpenStreetMap contributors')
       attribution.addTo(map)
 
       L.control.zoom({
-        position:'bottomright',
-        zoomInText:`<i class="nz-icon nz-icon-enlarge"></i>`,
-        zoomOutText:`<i class="nz-icon nz-icon-narrow"></i>`,
-        zoomInTitle:'',
-        zoomOutTitle:'',
+        position: 'bottomright',
+        zoomInText: '<i class="nz-icon nz-icon-enlarge"></i>',
+        zoomOutText: '<i class="nz-icon nz-icon-narrow"></i>',
+        zoomInTitle: '',
+        zoomOutTitle: ''
       }).addTo(map)
 
-      let marker = L.marker([this.basic.map_center_config.latitude,this.basic.map_center_config.longitude]).addTo(map);
-      map.on("click", function(e) {
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-        marker.setLatLng([lat,lng]);
-      });
-      this.map = map;
-      this.marker = marker;
+      const marker = L.marker([this.basic.map_center_config.latitude, this.basic.map_center_config.longitude]).addTo(map)
+      map.on('click', function (e) {
+        const lat = e.latlng.lat
+        const lng = e.latlng.lng
+        marker.setLatLng([lat, lng])
+      })
+      this.map = map
+      this.marker = marker
     },
-    mapClose:function(){
-      this.mapConfigVisible=false
-      let latlng = this.marker.getLatLng();
-      this.basic.map_center_config.latitude = latlng.lat;
-      this.basic.map_center_config.longitude = latlng.lng;
-      this.basic.map_center_config.zoom = this.map.getZoom();
+    mapClose: function () {
+      this.mapConfigVisible = false
+      const latlng = this.marker.getLatLng()
+      this.basic.map_center_config.latitude = latlng.lat
+      this.basic.map_center_config.longitude = latlng.lng
+      this.basic.map_center_config.zoom = this.map.getZoom()
     },
     selectTab: function (tab) {
       this.querySetInfo(tab.name)
@@ -654,14 +654,14 @@ export default {
       this.prevent_opt.save = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let param={};
-          if(type == 'basic'){
+          const param = {}
+          if (type == 'basic') {
             this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
           }
           param[type] = Object.assign({}, this[type])
           this.$set(param[type], 'test', 'false')
-          let postParam = Object.assign({}, param)
-          for (let key in postParam[type]) {
+          const postParam = Object.assign({}, param)
+          for (const key in postParam[type]) {
             postParam[type][key] = postParam[type][key] + ''
           }
           this.$put('/sysConfig', postParam).then(response => {
@@ -687,11 +687,11 @@ export default {
       this.prevent_opt.save = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let param = {}
+          const param = {}
           param[type] = Object.assign({}, this[type])
           this.$set(param[type], 'test', 'true')
-          let postParam = Object.assign({}, param)
-          for (let key in postParam[type]) {
+          const postParam = Object.assign({}, param)
+          for (const key in postParam[type]) {
             postParam[type][key] = postParam[type][key] + ''
           }
           this.$put('/sysConfig', postParam).then(response => {
@@ -708,7 +708,6 @@ export default {
         }
       })
     },
-
 
     resetForm (formName, type) {
       this.$refs[formName].resetFields()
@@ -927,7 +926,7 @@ export default {
     },
     // link edit
     notificationEdit (item) {
-      let index = this.notification.findIndex((item1) => item.id == item1.id)
+      const index = this.notification.findIndex((item1) => item.id == item1.id)
       this.$set(this.notification, index, { ...this.notification[index], isEdit: true })
     },
     // link update
@@ -936,7 +935,7 @@ export default {
       this.prevent_opt.save = true
       this.$refs['notificationForm' + item.id][0].validate((valid) => {
         if (valid) {
-          let params = {
+          const params = {
             id: item.id,
             name: item.name,
             filePath: item.filePath
@@ -944,7 +943,7 @@ export default {
           this.$put('/alert/script', params).then(response => {
             this.prevent_opt.save = false
             if (response.code == 200) {
-              let index = this.notification.findIndex((item1) => item.id == item1.id)
+              const index = this.notification.findIndex((item1) => item.id == item1.id)
               this.$set(this.notification, index, { ...this.notification[index], isEdit: false })
               this.notificationReserved = [...this.notification]
               // this.$store.commit('setLinkData',this.notification);
@@ -961,8 +960,8 @@ export default {
     },
     // link cancel
     notificationCancel (item) {
-      let index = this.notification.findIndex((item1) => item.id == item1.id)
-      let indexReserved = this.notificationReserved.findIndex((item1) => item.id == item1.id)
+      const index = this.notification.findIndex((item1) => item.id == item1.id)
+      const indexReserved = this.notificationReserved.findIndex((item1) => item.id == item1.id)
       this.$set(this.notification, index, { ...this.notificationReserved[indexReserved], isEdit: false })
     },
     // link del
