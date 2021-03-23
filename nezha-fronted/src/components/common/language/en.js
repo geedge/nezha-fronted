@@ -1025,9 +1025,9 @@ const en = {
       asset: 'asset'
 
     },
-    P1Rule: 'P1: Critical, alarm that can cause business paralysis',
-    P2Rule: 'P2: Major, alarm that do not affect the business',
-    P3Rule: 'P3: Minor, alarm that need to deal with, but not urgent'
+    P1Rule: 'P1: Critical, alert that can cause business paralysis',
+    P2Rule: 'P2: Major, alert that requires urgent attention, but does not affect the business yet',
+    P3Rule: 'P3: Minor, alert that needs to be dealt with, but not urgent'
   },
   project: {
     chart: {
