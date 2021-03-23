@@ -39,7 +39,7 @@
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keyup="enter(val, $event)" @click="stop_click">
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
@@ -49,7 +49,7 @@
                                 <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectString'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectString'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
@@ -59,7 +59,7 @@
                                 <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'dc'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'dc'">
                               <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                   <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -69,7 +69,7 @@
                                 <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'asset'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left" v-if="val.type == 'asset'">
                               <el-scrollbar v-if="assetSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
@@ -79,7 +79,7 @@
                                 <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'project'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'project'">
                               <el-scrollbar v-if="projectSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -89,7 +89,7 @@
                                 <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'module'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'module'">
                               <el-scrollbar v-if="moduleSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -100,37 +100,37 @@
                               </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectAction'">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectAction'">
                                 <ul>
                                     <li v-for="(item,key) in actionSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.value,$event)">{{item.value}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol下拉选择 -->
-                             <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectType'">
+                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectType'">
                                 <ul>
                                     <li v-for="(item,key) in schemaTypeSelect" :key="key" @click="tr_selectTypeInfo(item)">{{item.value}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol二层下拉 -->
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="TypeSelect.length!=0&&val.type == 'selectType'&&secondShow">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="TypeSelect.length!=0&&val.type == 'selectType'&&secondShow">
                                 <ul>
                                     <li v-for="(item,key) in TypeSelect" :key="key" @click="tr_selectProtocolInfo(item)">{{item.name}}</li>
                                 </ul>
                             </div>
 <!--                           时间计划-->
-                            <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'select'&&val.id==5">
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'&&val.id==5">
                                 <ul>
                                     <li v-for="(item, i) in schlist" :key="i" @click="selectSul(item.name)">{{item.name}}</li>
                                 </ul>
                             </div>
                           <!--endpoint 状态-->
-                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'state'&&val.id==33">
+                          <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'state'&&val.id==33">
                             <ul>
                               <li v-for="(item,key) in selectInfoList['endpointState']" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                             </ul>
                           </div>
                           <!--alertMessage idc-->
-                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'idc'&&val.id==27">
+                          <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'idc'&&val.id==27">
                             <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                               <ul>
                                 <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -141,7 +141,7 @@
                             </ul>
                           </div>
                           <!--exprTemp ganem-->
-                          <div class="select_info_list" :style="'top:' + selectDom.top" v-if="val.type == 'selectTemp'&&val.id==13">
+                          <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectTemp'&&val.id==13">
                             <el-scrollbar v-if="gnameList.length > 8" class="el-scrollbar-small" style="height: 240px;">
                               <ul>
                                 <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -174,7 +174,7 @@
             <div v-show="clearSearchShow" class="clear-search" @click="clear_input">
                 <i class="nz-icon nz-icon-circle-close"></i>
             </div>
-            <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top" @click="stop_click" id="input_list" v-if="!single || (single&&searchLabelList.length==searchMsg.searchLabelList.length)">
+            <div :class="input_list?'input_list none':'input_list'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " @click="stop_click" id="input_list" v-if="!single || (single&&searchLabelList.length==searchMsg.searchLabelList.length)">
                 <ul>
                     <li v-for="(val,ind) in searchLabelList" @click="select_name(val.name,ind,val.id,val.type,val.label,val.disabled,val.readonly,$event)" :key="ind" :class="{'search-style-ind':searchStyleNum==ind,'is-disabled':val.disabled}">
                         <span>{{val.name}}</span>
@@ -198,7 +198,7 @@ export default {
   name: 'index',
   data () {
     return {
-      selectDom: { top: '', tempTop: '', show: true }, // 选择弹框的位置
+      selectDom: { top: '', left:'', tempTop: '', show: true }, // 选择弹框的位置
       clearSearchShow: false,
       select_conditionsName: '',
       selectInfoList: searchSelectInfo,
@@ -1246,6 +1246,7 @@ export default {
           } else {
             const position = inputListDom.getBoundingClientRect()
             this.selectDom.top = position.top + 36 + 'px'
+            this.selectDom.left = position.left + 'px'
           }
         })
       }
