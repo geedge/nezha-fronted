@@ -414,7 +414,7 @@ registerNode('myCube', myCubec, myCubeAnchors, null, null)
 const canvasOptions = {
   rotateCursor: '/img/rotate.cur',
   translateKey: 'None',
-  disableEmptyLine: true,
+  disableEmptyLine: false,
   autoExpandDistance: 0,
   minScale: 0.01
 }
@@ -579,6 +579,10 @@ export default {
       immediate: true,
       handler (n) {
         if (n.id) {
+          if (getTopology(this.topologyIndex)) {
+            getTopology(this.topologyIndex).destroy()
+            setTopology(this.topologyIndex, null)
+          }
           if (!this.objChange) {
             this.editTopologyFlag = false
             this.topologyLoading = true
@@ -718,9 +722,9 @@ export default {
             setTimeout(() => {
               getTopology(this.topologyIndex).data.pens.forEach(item => {
                 if (item.animatePlay) {
-                  item.initAnimate()
+                  item.stopAnimate()
                   setTimeout(() => {
-                    item.animate('', new Date())
+                    item.startAnimate()
                   })
                 }
               }, 100)
@@ -1743,12 +1747,7 @@ export default {
         getTopology(this.topologyIndex).lock(0)
         getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
           if (item.animatePlay) {
-            console.log(123213123)
             item.stopAnimate()
-            setTimeout(() => {
-              item.restore(item)
-              item.initAnimate()
-            })
           }
           if (!item.data.expressArr.length) {
             item.data.expressArr = ['']
@@ -1780,7 +1779,6 @@ export default {
             item.fontColor = '#000000'
           }
         })
-        getTopology(this.topologyIndex).render();
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         this.toolShow.attrCord = [domRect.width - 350, 0]
         this.toolShow.height = domRect.height
