@@ -655,6 +655,7 @@ export default {
 }
 .mib-browser-model-dropdown {
   height: 300px;
+  overflow-y: auto;
 }
 .mib-browser {
   .top-tool-search .el-input__inner {

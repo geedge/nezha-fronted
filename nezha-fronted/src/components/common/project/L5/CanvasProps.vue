@@ -1189,11 +1189,7 @@ export default {
         }
       })
     },
-    tabClick (n) {
-      if (this.selection.pen && this.tab == '1') {
-
-      }
-    },
+    tabClick (n) { },
     moduleIdChange (n) {
       this.selection.pen.data.moduleName = this.modules.find(item => item.id === n).name
       if (!this.selection.pen.data.title) {

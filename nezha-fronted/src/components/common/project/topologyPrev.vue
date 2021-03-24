@@ -1710,20 +1710,20 @@
         if (url) {
           return new Promise((resolve, reject) => {
             this.$axios
-              .get(url, {
-                responseType: 'arraybuffer'
-              })
-              .then(res => {
-                return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
-              })
-              .then(data => {
-                resolve(data)
-                // changeImage(data,(img)=>{
-                //   resolve(img)
-                // })
-              })
-              .catch(err => {
-              })
+            .get(url, {
+              responseType: 'arraybuffer'
+            })
+            .then(res => {
+              return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
+            })
+            .then(data => {
+              resolve(data)
+              // changeImage(data,(img)=>{
+              //   resolve(img)
+              // })
+            })
+            .catch(err => {
+            })
           })
         }
       },
@@ -2495,7 +2495,7 @@
     }
   }
 
-  .project-box{
+  .project-box {
     width: 100%;
     height: calc(100% - 20px);
     margin-top: 10px;

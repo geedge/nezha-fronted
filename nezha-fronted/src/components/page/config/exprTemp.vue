@@ -77,7 +77,7 @@
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
             <span :id="'alert-edit-'+scope.row.id" :title="$t('overall.edit')" @click.stop="edit(scope.row)"
-                  class="content-right-option" v-has="'expr_temp_update'">
+                  class="content-right-option" v-has="'expr_temp_update'" v-if="scope.row.buildIn !== 1">
               <i class="nz-icon nz-icon-edit"></i>
             </span>
             <span
@@ -85,7 +85,8 @@
               :title="$t('overall.delete')"
               @click="del(scope.row)"
               class="content-right-option"
-              v-has="'expr_temp_delete'">
+              v-has="'expr_temp_delete'"
+              v-if="scope.row.buildIn !== 1">
               <i  class="nz-icon nz-icon-delete"></i>
             </span>
             <span

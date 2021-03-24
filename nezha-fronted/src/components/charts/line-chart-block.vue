@@ -593,7 +593,7 @@ export default {
       let maxValue = maxValueCopies.maxValue
       // let minValue = maxValueCopies.minValue
       if (chartInfo.unit && dataArg.length > 0) {
-        maxValue = dataArg[0].data[0][1]
+        // maxValue = dataArg[0].data[0][1]
         // minValue = dataArg[0].data[0][1]
         for (let j = 0; j < dataArg.length; j++) {
           dataArg[j].showAllSymbol = false

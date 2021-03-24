@@ -198,7 +198,7 @@ export default {
   name: 'index',
   data () {
     return {
-      selectDom: { top: '', left:'', tempTop: '', show: true }, // 选择弹框的位置
+      selectDom: { top: '', left: '', tempTop: '', show: true }, // 选择弹框的位置
       clearSearchShow: false,
       select_conditionsName: '',
       selectInfoList: searchSelectInfo,
