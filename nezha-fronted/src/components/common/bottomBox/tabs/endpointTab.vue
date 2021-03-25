@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <div class="sub-top-tools">
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{obj.host}}</div><div
@@ -51,7 +51,7 @@
       :height="$tableHeight.noPagination"
       :cell-class-name="messageStyle"
       ref="endpointTable"
-      style="width: 100%;"
+      style="width: 100%;height: 100%"
       @sort-change="tableDataSort"
       @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
     >
