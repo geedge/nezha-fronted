@@ -123,7 +123,7 @@
             </span>
               </div>
               <div v-else-if=" item.prop === 'group' ">
-                {{scope.row[item.prop].name}}
+                {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
               </div>
               <div v-else-if=" item.prop === 'display' ">
                 <el-switch

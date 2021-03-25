@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="type==='text'">
-      <el-input size="small" maxlength="128"/>
+      <el-input v-model="inputValue" size="small" maxlength="128"/>
     </div>
     <div v-else-if="type==='multitext'">
       <el-row v-for="(item, index) in inputArr" :key="index" style="margin-bottom: 10px">
@@ -21,7 +21,7 @@
       </el-row>
     </div>
     <div v-else-if="type==='textarea'">
-      <el-input size="small" type="textarea" maxlength="512" :autosize="{ minRows: 2, maxRows: 4}"/>
+      <el-input v-model="inputValue" size="small" type="textarea" maxlength="512" :autosize="{ minRows: 2, maxRows: 4}"/>
     </div>
     <div v-else-if="type==='radio'">
       <el-radio-group v-model="optionValue" >
@@ -39,10 +39,10 @@
       </el-select>
     </div>
     <div v-else-if="type==='integer'">
-      <el-input-number size="small" maxlength="64" :controls="false"></el-input-number>
+      <el-input-number v-model="inputValue" size="small" maxlength="64" :controls="false"></el-input-number>
     </div>
     <div v-else-if="type==='double'">
-      <el-input-number  size="small" :precision="param.decimals" :controls="false"></el-input-number>
+      <el-input-number  v-model="inputValue" size="small" :precision="param.decimals" :controls="false"></el-input-number>
     </div>
     <div v-else-if="type==='datetime'">
       <div v-if="param.subType==='date'">
@@ -78,6 +78,9 @@
         </el-date-picker>
       </div>
     </div>
+    <div v-else-if="type==='email'" :class="emailError?'emailError':''">
+      <el-input v-model="inputValue" size="small" @blur="emailChange"/>
+    </div>
   </div>
 </template>
 
@@ -106,7 +109,9 @@ export default {
       optionValue: '',
       checkOption: [],
       daterange: [],
-      date: null
+      date: null,
+      emailError: false,
+      inputValue: ''
     }
   },
   watch: {
@@ -151,11 +156,17 @@ export default {
         return
       }
       this.inputArr.splice(index, 1)
+    },
+    emailChange (val) {
+      const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
+      this.emailError = !reg.test(val)
     }
   }
 }
 </script>
 
 <style scoped>
-
+.emailError /deep/ .el-input__inner{
+  border-color: #F56C6C;
+}
 </style>
