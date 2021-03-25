@@ -937,6 +937,7 @@ const en = {
     assetMeta: {
       example: 'Example',
       assetMeta: 'Asset meta',
+      all: 'All',
       addGroup: 'Create group',
       editGroup: 'Edit group',
       addMeta: 'Create meta',
@@ -973,7 +974,8 @@ const en = {
       interval: 'Interval',
       decimals: 'Decimals',
       moreOptionsError: 'There are up to 20 options',
-      onlyOptionError: 'You need at least one option'
+      onlyOptionError: 'You need at least one option',
+      metaOptionNull: 'Please input option'
     },
     exprTemp: {
       exprTemp: 'Expression template',

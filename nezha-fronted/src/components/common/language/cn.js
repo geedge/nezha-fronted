@@ -933,7 +933,8 @@ const cn = {
     },
     assetMeta: {
       example: '示例',
-      assetMeta: '资产标签',
+      assetMeta: '资产元数据',
+      all: '全部',
       addGroup: '创建分组',
       editGroup: '编辑分组',
       addMeta: '创建Meta',
@@ -970,7 +971,8 @@ const cn = {
       interval: '区间',
       decimals: '精度',
       moreOptionsError: '选项最多20条',
-      onlyOptionError: '至少需要一个选项'
+      onlyOptionError: '至少需要一个选项',
+      metaOptionNull: '请填写选项信息'
     },
     exprTemp: {
       exprTemp: 'expression模板',

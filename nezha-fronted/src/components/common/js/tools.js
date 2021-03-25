@@ -468,13 +468,13 @@ export const tableSet = {
         }
         break
       }
-      case 'id': break
       case 'startAt': {
         if (from === 'alertSilence') {
           return false
         }
         break
       }
+      case 'id':
       case 'alertRule':
       case 'severity':
       case 'endAt':

@@ -208,12 +208,12 @@ export default {
           show: true,
           width: 80
         }, {
-          label: this.$t('config.assetMeta.key'),
-          prop: 'metaKey',
-          show: true
-        }, {
           label: this.$t('config.assetMeta.name'),
           prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.assetMeta.key'),
+          prop: 'metaKey',
           show: true
         }, {
           label: this.$t('config.assetMeta.group'),
@@ -243,7 +243,7 @@ export default {
         }
       ],
       groupData: [{
-        name: 'All',
+        name: this.$t('config.assetMeta.all'),
         id: -1,
         children: []
       }],
@@ -280,25 +280,19 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
-          // {
-          //   id: 11,
-          //   name: 'Id',
-          //   type: 'input',
-          //   label: 'id',
-          //   disabled: false
-          // }, {
-          //   id: 12,
-          //   name: this.$t('config.assetMeta.name'),
-          //   type: 'input',
-          //   label: 'name',
-          //   disabled: false
-          // }, {
-          //   id: 13,
-          //   name: this.$t('config.assetMeta.gname'),
-          //   type: 'selectTemp',
-          //   label: 'gname',
-          //   disabled: false
-          // }
+          {
+            id: 11,
+            name: 'Id',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          }, {
+            id: 12,
+            name: this.$t('config.assetMeta.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }
         ]
       },
       searchLabel: {}, // 搜索参数
