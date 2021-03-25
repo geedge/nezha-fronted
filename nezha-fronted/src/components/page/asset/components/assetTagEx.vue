@@ -157,9 +157,9 @@ export default {
       }
       this.inputArr.splice(index, 1)
     },
-    emailChange (val) {
-      const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
-      this.emailError = !reg.test(val)
+    emailChange () {
+      const reg = /^[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-_.][a-zA-Z0-9]+)*\.[a-z]{2,}$/
+      this.emailError = !reg.test(this.inputValue)
     }
   }
 }
