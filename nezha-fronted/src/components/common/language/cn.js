@@ -438,7 +438,8 @@ const cn = {
     uSize: '必须是(1 - 47)的数字',
     requiredIdc: '机房为必选项',
     tooLong: '文本太长',
-    key: '不合法的值'
+    key: '不合法的值',
+    onlyWord: '只可以输入a-z、A-Z、0-9、"_" 字符'
   },
   search: {
     searchTip: '点击或回车执行搜索',
@@ -929,6 +930,35 @@ const cn = {
       assetTotal: '资产总数',
       createAssetState: '新增资产状态',
       editAssetState: '编辑资产状态'
+    },
+    assetMeta: {
+      example: '示例',
+      assetMeta: '资产标签',
+      addGroup: '创建分组',
+      editGroup: '编辑分组',
+      addMeta: '创建Meta',
+      editMeta: '编辑Meta',
+      groupName: '名称',
+      key: '键名',
+      name: '名称',
+      group: '组',
+      search: '搜索',
+      display: '显示',
+      type: '类型',
+      params: '参数',
+      updateMeta: '编辑Meta',
+      deleteMeta: '删除 Meta',
+      infoMeta: 'Meta 信息',
+      text: '单行文本',
+      multitext: '多行文本',
+      textarea: '文本域',
+      radio: '单选按钮',
+      checkbox: '多选',
+      select: '下拉列表',
+      integer: '整数',
+      double: '小数',
+      datetime: '日期',
+      email: '邮箱'
     },
     exprTemp: {
       exprTemp: 'expression模板',

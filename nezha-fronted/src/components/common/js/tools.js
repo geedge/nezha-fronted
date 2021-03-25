@@ -637,7 +637,7 @@ export const tableSet = {
           case 'gname': return 'gname'
           default : return prop
         }
-      default: break
+      default: return prop
     }
   },
   // 本地正序

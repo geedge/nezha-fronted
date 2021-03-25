@@ -66,6 +66,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/assetState.vue'], resolve)
         },
         {
+          path: '/assetMeta',
+          component: resolve => require(['../components/page/config/assetMeta.vue'], resolve)
+        },
+        {
           path: '/dc',
           component: resolve => require(['../components/page/config/dc.vue'], resolve)
         },

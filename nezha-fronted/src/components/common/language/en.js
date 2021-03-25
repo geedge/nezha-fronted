@@ -441,7 +441,8 @@ const en = {
     requiredIdc: 'dc is required',
     key: 'Invalid key',
     repeat: 'Repeat',
-    tooLong: 'Too long content'
+    tooLong: 'Too long content',
+    onlyWord: 'only input a-z、A-Z、0-9、"_" '
   },
   search: {
     searchTip: 'Enter to search', // '点击或回车执行搜索'
@@ -932,6 +933,35 @@ const en = {
       assetTotal: 'Total assets',
       createAssetState: 'Create asset state',
       editAssetState: 'Edit asset state'
+    },
+    assetMeta: {
+      example: 'Example',
+      assetMeta: 'Asset meta',
+      addGroup: 'Create group',
+      editGroup: 'Edit group',
+      addMeta: 'Create meta',
+      editMeta: 'Edit meta',
+      groupName: 'Name',
+      key: 'Key',
+      name: 'Name',
+      group: 'Group',
+      search: 'Search',
+      display: 'Display',
+      type: 'Type',
+      params: 'Params',
+      updateMeta: 'Update Meta',
+      deleteMeta: 'Delete Meta',
+      infoMeta: 'Meta Info',
+      text: 'TEXT',
+      multitext: 'MULTITEXT',
+      textarea: 'TEXTAREA',
+      radio: 'RADIO',
+      checkbox: 'CHECKBOX',
+      select: 'SELECT',
+      integer: 'INTEGER',
+      double: 'DOUBLE',
+      datetime: 'DATETIME',
+      email: 'EMAIL'
     },
     exprTemp: {
       exprTemp: 'Expression template',

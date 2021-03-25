@@ -143,7 +143,7 @@ export default {
         if (response.code == 200) {
           this.menus = response.data.list
 
-          console.log("menus",this.menus)
+          console.log('menus', this.menus)
         } else {
           this.$message.error('load menu faild')
         }
