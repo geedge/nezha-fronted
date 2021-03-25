@@ -233,8 +233,8 @@ export default {
           show: true
         }, {
           label: this.$t('config.assetMeta.params'),
-          prop: 'params',
-          show: true
+          prop: 'param',
+          show: false
         }, {
           label: this.$t('alert.config.option'),
           prop: 'option',
