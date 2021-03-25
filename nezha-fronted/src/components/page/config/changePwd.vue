@@ -91,10 +91,10 @@ export default {
       this.$refs.changePwdForm.validate((valid) => {
         if (valid) {
           const paramObj = {
-            password: this.user.pwd,
-            newPassword: this.user.newPwd
+            pin: this.user.pwd,
+            newPin: this.user.newPwd
           }
-          this.$get('/sys/user/password?password=' + paramObj.password + '&newPassword=' + paramObj.newPassword).then(response => {
+          this.$get('/sys/user/password?pin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
             if (response && response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.close()
