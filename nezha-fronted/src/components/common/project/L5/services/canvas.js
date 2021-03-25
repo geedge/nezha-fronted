@@ -305,7 +305,6 @@ export function myCubeAnchors (node) { // 立方体锚点
 /* 自定义立方体 */
 
 export function onChangeAnimate (node, animateType, fillStyle, strokeStyle) {
-  console.log(node)
   node.animateType = animateType
   if (node.animateType === 'custom') {
     return

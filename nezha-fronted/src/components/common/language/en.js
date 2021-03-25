@@ -961,7 +961,19 @@ const en = {
       integer: 'INTEGER',
       double: 'DOUBLE',
       datetime: 'DATETIME',
-      email: 'EMAIL'
+      email: 'EMAIL',
+      option: 'Options',
+      isCheck: 'Is check',
+      operate: 'Operate',
+      default: 'Default',
+      dateType: 'Date type',
+      date: 'Date',
+      time: 'Time',
+      datetimes: 'Date + Time',
+      interval: 'Interval',
+      decimals: 'Decimals',
+      moreOptionsError: 'There are up to 20 options',
+      onlyOptionError: 'You need at least one option'
     },
     exprTemp: {
       exprTemp: 'Expression template',

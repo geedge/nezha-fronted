@@ -254,7 +254,6 @@ export default {
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {
                 this.scrollbarWrap = this.$refs.endpointQueryTable.$refs.singleTable.bodyWrapper
-                console.info(this.scrollbarWrap)
                 this.toTopBtnHandler(this.scrollbarWrap)
               })
             }

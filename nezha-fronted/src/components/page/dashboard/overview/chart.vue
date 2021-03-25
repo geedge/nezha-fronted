@@ -178,7 +178,6 @@ export default {
         if (this.option.series instanceof Array) {
           this.option.series = this.option.series.filter((item, index) => index < this.dataSize)
         }
-        console.log('option', this.option)
         this.chart.setOption(this.option)
       } else {
         this.noData = true

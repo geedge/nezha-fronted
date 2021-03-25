@@ -312,7 +312,6 @@ export default {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
-          console.info(this.$refs.exprTempTable)
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.exprTempTable.bodyWrapper

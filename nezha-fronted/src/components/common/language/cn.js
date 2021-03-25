@@ -958,7 +958,19 @@ const cn = {
       integer: '整数',
       double: '小数',
       datetime: '日期',
-      email: '邮箱'
+      email: '邮箱',
+      option: '选项',
+      isCheck: '是否默认选择',
+      operate: '操作',
+      default: '默认',
+      dateType: '日期类型',
+      date: '日期',
+      time: '时间',
+      datetimes: '时间+时间',
+      interval: '区间',
+      decimals: '精度',
+      moreOptionsError: '选项最多20条',
+      onlyOptionError: '至少需要一个选项'
     },
     exprTemp: {
       exprTemp: 'expression模板',

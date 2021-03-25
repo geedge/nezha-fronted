@@ -352,7 +352,6 @@ export default {
         this.tools.loading = false
         if (response.code == 200) {
           this.groupData[0].children = response.data.list
-          console.log(this.groupData)
           this.$forceUpdate()
         }
       })
@@ -423,18 +422,15 @@ export default {
       this.getAssetMeta()
     },
     addGroup () {
-      console.log(123123123123)
       this.metaGroup = JSON.parse(JSON.stringify(this.blackMetaGroup))
       this.rightBox.groupShow = true
     },
     editGroup (group) {
-      console.log(group)
       this.metaGroup = JSON.parse(JSON.stringify(group))
       this.rightBox.groupShow = true
     },
     delGroup (group) {
       const selectKey = this.$refs.groupTree.getCurrentKey()
-      console.log(selectKey)
       if (this.prevent_opt.save) {
         return
       }

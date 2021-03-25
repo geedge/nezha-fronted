@@ -75,13 +75,13 @@
             <div v-if="editAssetMeta.type==='radio' || editAssetMeta.type==='checkbox' || editAssetMeta.type==='select'" class="meta-option-box">
               <el-row class="asset-meta-param-row asset-meta-param-header">
                 <el-col :span="12">
-                  选项
+                  {{$t('config.assetMeta.option')}}
                 </el-col>
                 <el-col :span="6">
-                  是否默认
+                  {{$t('config.assetMeta.isCheck')}}
                 </el-col>
                 <el-col :span="6">
-                  操作
+                  {{$t('config.assetMeta.operate')}}
                 </el-col>
               </el-row>
               <el-row v-for="(item,index) in editAssetMeta.param.items" :key="index" class="asset-meta-param-row">
@@ -89,9 +89,9 @@
                   <el-input v-model = "item.name" size="small" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
                 </el-col>
                 <el-col :span="6">
-                  <el-radio v-if="editAssetMeta.type==='radio' || editAssetMeta.type==='select'" v-model = "item.check" :label="true" @change="radioChange(index)">默认</el-radio>
+                  <el-radio v-if="editAssetMeta.type==='radio' || editAssetMeta.type==='select'" v-model = "item.check" :label="true" @change="radioChange(index)">{{$t('config.assetMeta.default')}}</el-radio>
 
-                  <el-checkbox v-else v-model="item.check" @change="checkBoxChange">默认</el-checkbox>
+                  <el-checkbox v-else v-model="item.check" @change="checkBoxChange"> {{$t('config.assetMeta.default')}}</el-checkbox>
 
                 </el-col>
                 <el-col :span="6">
@@ -109,15 +109,15 @@
 
             <div v-if="editAssetMeta.type==='datetime'">
               <el-row style="margin-bottom: 10px">
-                <span class="datetime-header">日期类型: </span>
-                <el-radio-group v-model="editAssetMeta.param.subType" @change="()=>{console.log(editAssetMeta.param.subType)}">
-                  <el-radio :label="'date'">日期</el-radio>
-                  <el-radio :label="'time'">时间</el-radio>
-                  <el-radio :label="'dateTime'">日期+时间</el-radio>
+                <span class="datetime-header">{{$t('config.assetMeta.dateType')}}: </span>
+                <el-radio-group v-model="editAssetMeta.param.subType">
+                  <el-radio :label="'date'">{{$t('config.assetMeta.date')}}</el-radio>
+                  <el-radio :label="'time'">{{$t('config.assetMeta.time')}}</el-radio>
+                  <el-radio :label="'datetime'">{{$t('config.assetMeta.datetimes')}}</el-radio>
                 </el-radio-group>
               </el-row>
               <el-row>
-                <span class="datetime-header">是否区间: </span>
+                <span class="datetime-header">{{$t('config.assetMeta.interval')}}: </span>
                 <el-switch
                   v-model="editAssetMeta.param.interval"
                   @change="$forceUpdate"
@@ -126,6 +126,12 @@
               </el-row>
             </div>
 
+            <div v-if="editAssetMeta.type==='double'">
+              <el-row>
+                <span class="datetime-header">{{$t('config.assetMeta.decimals')}}: </span>
+                <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate" :min="0" :max="10" :controls="false" size="small"></el-input-number>
+              </el-row>
+            </div>
           </el-form-item>
 
           <el-form-item :label='$t("overall.remark")' prop="remark">
@@ -133,6 +139,7 @@
           </el-form-item>
 
           <el-form-item :label='$t("config.assetMeta.example")'>
+            <assetTagEx :type="editAssetMeta.type" :param="editAssetMeta.param"/>
           </el-form-item>
 
         </el-form>
@@ -155,12 +162,13 @@
 </template>
 
 <script>
+import assetTagEx from '../../page/asset/components/assetTagEx'
 export default {
   name: 'assetMetaBox',
   props: {
     assetMeta: {}
   },
-  components: {},
+  components: { assetTagEx },
   data () {
     return {
       editAssetMeta: {
@@ -261,7 +269,7 @@ export default {
       this.$refs.editAssetMetaForm.validate((valid) => {
         if (valid) {
           const param = { ...this.editAssetMeta }
-          if (param.type !== 'radio' && param.type !== 'checkbox' && param.type !== 'select' && param.type !== 'datetime'){
+          if (param.type !== 'radio' && param.type !== 'checkbox' && param.type !== 'select' && param.type !== 'datetime') {
             delete param.param
           } else {
             param.param = JSON.stringify(param.param)
@@ -321,12 +329,10 @@ export default {
       this.$get('asset/field/group', { pageSize: -1 }).then(response => {
         if (response.code == 200) {
           this.groupData = response.data.list
-          console.log(this.groupData)
         }
       })
     },
     selectType (val, init) {
-      console.log(val)
       switch (val) {
         case 'radio' :
         case 'checkbox' :
@@ -350,6 +356,13 @@ export default {
             interval: false
           }
           break
+        case 'double' :
+          this.showParam = true
+          if (init) return
+          this.editAssetMeta.param = {
+            decimals: 2
+          }
+          break
         default:
           this.showParam = false
           break
@@ -361,7 +374,6 @@ export default {
       this.$forceUpdate()
     },
     radioChange (i) {
-      console.log(i)
       this.editAssetMeta.param.items.forEach((item, index) => {
         if (index === i) {
           item.check = !!item.check
@@ -375,8 +387,8 @@ export default {
       this.$forceUpdate()
     },
     addParam () {
-      if (this.editAssetMeta.param.items.length > 20) {
-        this.$message.error('选项最多20条')
+      if (this.editAssetMeta.param.items.length >= 20) {
+        this.$message.error(this.$t('config.assetMeta.moreOptionsError'))
         return
       }
       this.editAssetMeta.param.items.push({
@@ -386,8 +398,8 @@ export default {
       this.$forceUpdate()
     },
     deleteParam (index) {
-      if (this.editAssetMeta.param.items.length > 20) {
-        this.$message.error('至少需要一个选项')
+      if (this.editAssetMeta.param.items.length === 1) {
+        this.$message.error(this.$t('config.assetMeta.onlyOptionError'))
         return
       }
       this.editAssetMeta.param.items.splice(index, 1)

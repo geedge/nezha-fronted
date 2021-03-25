@@ -91,7 +91,6 @@ export default {
       }
       /// monitor
       const url = baseUrl + '/terminal/monitor.ws?' + '&token=' + token + '&uuid=' + this.obj.uuid
-      console.info(url)
       if (this.terminalSocket) { // 如果存在之前的链接 先断开 再链接新的
         this.terminalSocket.close()
       }
