@@ -11,7 +11,7 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.password" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
+        <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login" v-loading="loading">{{$t("login.login")}}</button>
@@ -40,7 +40,7 @@ export default {
     return {
       loginData: {
         username: '',
-        password: '',
+        pin: '',
         remember: false
       },
       loading: false,
@@ -79,7 +79,7 @@ export default {
       localStorage.setItem('nz-language', this.lang)
     },
     validateLogin () {
-      if (!this.loginData.username || !this.loginData.password) {
+      if (!this.loginData.username || !this.loginData.pin) {
         this.$message.error('Empty username or password')
         return false
       } else {
