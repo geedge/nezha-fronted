@@ -712,7 +712,8 @@ const en = {
       suspended: 'Suspended',
       state: 'State',
       longitude: 'Longitude',
-      latitude: 'Latitude'
+      latitude: 'Latitude',
+      lnglat:'Coordinate'
     },
     model: {
       model: 'Asset model',
@@ -842,11 +843,12 @@ const en = {
         day: 'day',
         maxSeries: 'Query max series',
         unsaved: 'Unsaved tip',
-        mapConfig: 'Map attribute',
+        mapConfig: 'Map center',
         mapTitle: 'Configurate map',
         lat: 'latitude',
         lng: 'longitude',
-        zoom: 'zoom'
+        zoom: 'zoom',
+        lnglat:'coordinate'
       },
       email: {
         email: 'Email',

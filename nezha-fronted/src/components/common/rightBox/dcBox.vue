@@ -15,7 +15,7 @@
 
       <!-- begin--表单-->
       <div class="right-box-form-box">
-        <el-form class="right-box-form right-box-form-left" label-width="120px" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
+        <el-form class="right-box-form right-box-form-left" label-width="120px" size="small" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
           </el-form-item>
@@ -39,6 +39,9 @@
               <!--</template>-->
             <!--</select-area>-->
           <!--</el-form-item>-->
+          <el-form-item :label="$t('config.dc.lnglat')" prop="state">
+            <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false"></latlng-picker>
+          </el-form-item>
           <el-form-item :label='$t("config.dc.state")' prop="state">
             <el-switch
               id="dc-box-input-name"
@@ -49,34 +52,7 @@
             >
             </el-switch>
           </el-form-item>
-          <el-form-item :label='$t("config.dc.longitude")' prop="longitude" :rules="[{required:coordinateFlag,trigger:'blur'}]">
-            <el-input-number
-              id="dc-box-input-longitude"
-              placeholder=""
-              v-model="editDc.longitude"
-              size="small"
-              controls-position="right"
-              :min="-180"
-              :max="180"
-              :step="0.00001"
-              :precision="5"
-              @change="(val)=>{coordinateChange(val,'longitude')}"
-            />
-          </el-form-item>
-          <el-form-item :label='$t("config.dc.latitude")' prop="latitude"  :rules="[{required:coordinateFlag,trigger:'blur'}]">
-            <el-input-number
-              id="dc-box-input-latitude"
-              placeholder=""
-              v-model="editDc.latitude"
-              size="small"
-              controls-position="right"
-              :min="-90"
-              :max="90"
-              :step="0.00001"
-              :precision="5"
-              @change="(val)=>{coordinateChange(val,'latitude')}"
-            />
-          </el-form-item>
+
         </el-form>
       </div>
 
@@ -94,9 +70,11 @@
 </template>
 
 <script>
+import latlngPicker from "../latlngPicker";
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'dcBox',
+  components:{latlngPicker},
   props: {
     dc: Object,
     userData: Array
@@ -131,34 +109,30 @@ export default {
     },
 
     /* 保存 */
-    save () {
-      if (this.prevent_opt.save) { return } ;
+    save: function () {
+      if (this.prevent_opt.save) {
+        return
+      }
+      ;
       this.prevent_opt.save = true
       this.$refs.dcForm.validate((valid) => {
         if (valid) {
           if (this.editDc.id) {
-            const param = { ...this.editDc }
-            if (param.area) {
-              param.areaId = param.area.id
-            }
-            if (!regNum.test(param.longitude)) {
-              param.longitude = null
-            }
-            if (!regNum.test(param.latitude)) {
-              param.latitude = null
-            }
-
+            const param = {...this.editDc}
+            let attr = this.$refs.latlngPicker.getAttribute();
+            param.latitude = attr.latitude;
+            param.longitude = attr.longitude;
             this.$put('idc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$message({duration: 1000, type: 'success', message: this.$t('tip.saveSuccess')})
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
               }
             })
           } else {
-            const param = { ...this.editDc }
+            const param = {...this.editDc}
             if (param.area) {
               param.areaId = param.area.id
             }
@@ -171,7 +145,7 @@ export default {
             this.$post('idc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$message({duration: 1000, type: 'success', message: this.$t('tip.saveSuccess')})
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
@@ -236,6 +210,9 @@ export default {
       deep: true,
       handler (n, o) {
         this.editDc = JSON.parse(JSON.stringify(n))
+        this.$nextTick(()=>{
+          this.$refs.latlngPicker.setLnglat(this.editDc.latitude,this.editDc.longitude);
+        })
       }
     }
   }
