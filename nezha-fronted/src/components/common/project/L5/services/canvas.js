@@ -221,7 +221,7 @@ export function myShape (ctx, node) { // 自定义图片组件
   ctx.beginPath()
 
   ctx.rect(node.rect.x, node.rect.y, node.rect.width, node.rect.height)
-  if (node.data.lineWidth <= 0) {
+  if (node.data && node.data.lineWidth <= 0) {
     ctx.strokeStyle = 'rgba(0,0,0,0)'
   }
   // 必须判空再填充
