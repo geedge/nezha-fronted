@@ -767,7 +767,8 @@ const cn = {
       suspended: '停用',
       state: '状态',
       longitude: '经度',
-      latitude: '纬度'
+      latitude: '纬度',
+      lnglat:'坐标'
     },
     model: {
       model: '资产型号',
@@ -839,11 +840,12 @@ const cn = {
         day: '天',
         maxSeries: 'Query max series',
         unsaved: '未保存提示',
-        mapConfig: '地图属性',
+        mapConfig: '地图中心点',
         mapTitle: '配置地图',
         lat: '纬度',
         lng: '经度',
-        zoom: '缩放'
+        zoom: '缩放',
+        lnglat:'坐标',
       },
       email: {
         email: '邮件',
