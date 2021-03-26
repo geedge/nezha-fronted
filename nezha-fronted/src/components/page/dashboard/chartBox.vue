@@ -198,7 +198,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text'">
+          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'">
             <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable id="chart-box-unit"
                          placeholder=""
                          popper-class="dc-dropdown"
