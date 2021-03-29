@@ -81,7 +81,7 @@
           </div>
 
           <topology-top-tool
-            v-if="editTopologyFlag"
+            v-if="editTopologyFlag&&toolShow.topTool"
             :selection.sync="props"
             @del="delPen"
             :index="topologyIndex"
@@ -460,6 +460,7 @@
         toolShow: {
           node: true,
           attr: true,
+          topTool: true,
           nodeCord: [0, 0],
           attrCord: [0, 0],
           height: 500
@@ -1163,12 +1164,14 @@
       },
 
       onMessage (event, data, e) {
-        // console.log('onMessage',event,data);
+        console.log('onMessage', event, data);
         // console.log(getTopology(this.topologyIndex))
         // this.notModuleIDArr=[];
         this.toolShow.attr = false
-        this.$nextTick(()=>{
+        this.toolShow.topTool = false
+        this.$nextTick(() => {
           this.toolShow.attr = true
+          this.toolShow.topTool = true
         })
         if (data) {
           this.notModuleIDArr.forEach(item => {
@@ -1418,7 +1421,7 @@
             }
             case 'scale': {
               if (this.$refs.topTool) {
-                this.$refs.topTool.option.scale = data
+                this.$refs.topTool.scaleNum = parseInt(data * 100)
               }
               break
             }

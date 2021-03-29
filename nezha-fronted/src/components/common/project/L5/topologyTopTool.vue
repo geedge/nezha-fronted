@@ -109,14 +109,13 @@ export default {
     const dataOption = getTopology(this.index).data
     Object.keys(this.option).forEach(key => {
       if (key === 'scale') {
-        this.scaleNum = (JSON.stringify(dataOption[key]) ? dataOption[key] * 100 : this.scaleNum)
+        this.scaleNum = (JSON.stringify(dataOption[key]) ? parseInt(dataOption[key] * 100) : this.scaleNum)
       } else {
         this.option[key] = (JSON.stringify(dataOption[key]) ? dataOption[key] : this.option[key])
       }
     })
   },
   methods: {
-    // todo 1清空后的 处理属性工具的默认值 2工具栏的移动 以及节点工具和属性工具的移动 3 结束箭头类型的方向
     changeOption (key) {
       getTopology(this.index).data[key] = this.option[key]
       getTopology(this.index).render()
