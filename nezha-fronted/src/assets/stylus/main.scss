@@ -2495,3 +2495,7 @@ li{
   outline: none;
 }
 
+/deep/ .el-switch.is-checked .el-switch__core{
+  border-color: #ee9d3f;
+  background-color: #ee9d3f;
+}

@@ -580,7 +580,7 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 选中为空 -->
-    <div v-if="!selection.pen && !selection.pens" style="height: 100%">
+    <div v-else style="height: 100%">
       <div class="project-title">
         Project
       </div>

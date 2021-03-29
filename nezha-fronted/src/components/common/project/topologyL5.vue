@@ -414,7 +414,7 @@ registerNode('myCube', myCubec, myCubeAnchors, null, null)
 const canvasOptions = {
   rotateCursor: '/img/rotate.cur',
   translateKey: 'None',
-  disableEmptyLine: false,
+  disableEmptyLine: true,
   autoExpandDistance: 0,
   minScale: 0.01
 }
@@ -830,15 +830,15 @@ export default {
               clearInterval(timer)
               const promiseArr = []
               const self = this
-              // for(let i=0;i<data.pens.length;i++){
-              //   let line=data.pens[i]
-              //   if(line.type===1){
-              //    if(!data.pens.find(item=>item.id===line.from.id) || !data.pens.find(item=>item.id===line.to.id)){
-              //      data.pens.splice(i, 1);
-              //      i--;
-              //    }
-              //   }
-              // }
+              for (let i = 0; i < data.pens.length; i++) {
+                const line = data.pens[i]
+                if (line.type === 1) {
+                  if (!data.pens.find(item => item.id === line.from.id) || !data.pens.find(item => item.id === line.to.id)) {
+                    data.pens.splice(i, 1)
+                    i--
+                  }
+                }
+              }
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
                   item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
@@ -1166,6 +1166,10 @@ export default {
       // console.log('onMessage',event,data);
       // console.log(getTopology(this.topologyIndex))
       // this.notModuleIDArr=[];
+      this.toolShow.attr = false
+      this.$nextTick(()=>{
+        this.toolShow.attr = true
+      })
       if (data) {
         this.notModuleIDArr.forEach(item => {
           if (item.id === data.id) {
@@ -1220,9 +1224,9 @@ export default {
             animatePlay: false,
             strokeStyle: data.strokeStyle,
             animateColor: data.animateColor,
-            arrowColor: '#00000',
-            fromArrowColor: '#00000',
-            toArrowColor: '#00000',
+            arrowColor: '#000000',
+            fromArrowColor: '#000000',
+            toArrowColor: '#000000',
             lineWidth: 1,
             // chart 配置项
             valueMapping: [{
