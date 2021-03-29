@@ -7,9 +7,9 @@
         </el-input>
       </div>
       <div class="input-box-item" v-if="showZoom">
-        <el-input-number controls-position="right" :min="this.mapParam.minZoom" :max="this.mapParam.maxZoom" :step="1"  v-model="mapParam.zoom">
+        <el-input controls-position="right" :min="this.mapParam.minZoom" :max="this.mapParam.maxZoom" :step="1"  v-model="mapParam.zoom">
           <template slot="prepend">{{$t('config.system.basic.zoom')}}</template>
-        </el-input-number>
+        </el-input>
       </div>
       <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-shuidi" style="color:rgb(238, 157, 63)"></i></div>
     </div>

@@ -43,7 +43,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.mapConfig')" >
-              <latlng-picker :init-data="basic.map_center_config" ref="latlngPicker"></latlng-picker>
+              <latlng-picker :init-data="basic.map_center_config" ref="latlngPicker" :show-zoom="true"></latlng-picker>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
               <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
