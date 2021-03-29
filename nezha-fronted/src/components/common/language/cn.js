@@ -1063,7 +1063,8 @@ const cn = {
       project: '项目',
       module: '模块',
       endpoint: 'endpoint',
-      asset: '资产'
+      asset: '资产',
+      timeError: '结束时间必须大于开始时间'
     },
     P1Rule: 'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule: 'P2: 重要，需要紧急关注的警报，但还没有影响业务',

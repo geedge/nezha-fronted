@@ -726,11 +726,13 @@ export default {
     }
 
     if (value < 1024 && type === 'Data') {
-      const interVal = value / copies
+      let interVal = value / copies
+      interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
     if (value < 1000 && (type === 'DataRate' || type === 'Misc')) {
-      const interVal = value / copies
+      let interVal = value / copies
+      interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
     if (type === 'Data') {
@@ -743,7 +745,8 @@ export default {
         }
         interVal = Math.ceil(interVal) * Math.pow(1024, pow)
       }
-      interVal = interVal || 1
+      console.log(interVal)
+      interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
     if (type === 'DataRate' || type === 'Misc') {
@@ -756,7 +759,7 @@ export default {
         }
         interVal = Math.ceil(interVal) * Math.pow(1000, pow)
       }
-      interVal = interVal || 1
+      interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
     return 1

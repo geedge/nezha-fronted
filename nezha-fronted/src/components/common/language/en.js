@@ -1068,8 +1068,8 @@ const en = {
       project: 'project',
       module: 'module',
       endpoint: 'endpoint',
-      asset: 'asset'
-
+      asset: 'asset',
+      timeError: 'The end time must be greater than the start time'
     },
     P1Rule: 'P1: Critical, alert that can cause business paralysis',
     P2Rule: 'P2: Major, alert that requires urgent attention, but does not affect the business yet',

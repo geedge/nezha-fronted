@@ -98,14 +98,14 @@ export default {
       }
     },
     getIntervalData (interval) { // interval:结束时间到现在的秒数
-      const start = new Date(this.searchTime[0])
-      const end = new Date(this.searchTime[1])
-      start.setSeconds(start.getSeconds() + interval)
-      end.setSeconds(end.getSeconds() + interval)
-
-      this.searchTime = this.timeFormate([start, end])
-      this.$refs.timePicker.setCostomTime(this.searchTime)
-      this.$emit('change', this.searchTime)
+      // const start = new Date(this.searchTime[0])
+      // const end = new Date(this.searchTime[1])
+      // start.setSeconds(start.getSeconds() + interval)
+      // end.setSeconds(end.getSeconds() + interval)
+      //
+      // this.searchTime = this.timeFormate([start, end])
+      // this.$refs.timePicker.setCostomTime(this.searchTime)
+      // this.$emit('change', this.searchTime)
       // 刷新数据
       this.refreshDataFunc()
     },

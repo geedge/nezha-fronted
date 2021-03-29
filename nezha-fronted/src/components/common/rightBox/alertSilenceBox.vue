@@ -173,9 +173,9 @@ export default {
   data () {
     const validate = (rule, value, callback) => {
       if (!this.editAlertSilence.startAt) {
-        callback(new Error('请选择开始时间!'))
+        callback(new Error(this.$t('alert.silence.selectTime')))
       } else if (!this.editAlertSilence.endAt) {
-        callback(new Error('请选择结束时间!'))
+        callback(new Error(this.$t('alert.silence.selectTime')))
       } else {
         callback()
       }
@@ -244,8 +244,9 @@ export default {
       this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
       this.$refs.alertSilenceForm.validate((valid) => {
         if (this.endAtTamp < this.startAtTamp) {
+          this.prevent_opt.save = false
           this.$message({
-            message: '结束时间必须大于开始时间',
+            message: this.$t('alert.silence.timeError'),
             type: 'error'
           })
           return

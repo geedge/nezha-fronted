@@ -1766,10 +1766,10 @@ export default {
         maxValue = 0
         minValue = 0
         for (let j = 0; j < dataArg.length; j++) {
-          for (let i = 0; i < dataArg[j].data.length - 1; i++) {
-            if (dataArg[j].data[i + 1][1] !== 'NaN') {
-              maxValue = (maxValue < Number(dataArg[j].data[i + 1][1]) ? Number(dataArg[j].data[i + 1][1]) : maxValue)
-              minValue = (minValue > Number(dataArg[j].data[i + 1][1]) ? Number(dataArg[j].data[i + 1][1]) : minValue)
+          for (let i = 0; i < dataArg[j].data.length; i++) {
+            if (!isNaN(dataArg[j].data[i][1])) {
+              maxValue = (maxValue < Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : maxValue)
+              minValue = (minValue > Number(dataArg[j].data[i][1]) ? Number(dataArg[j].data[i][1]) : minValue)
             }
           }
         }
