@@ -65,8 +65,7 @@
    border-right: none;
   }
   .calendar{
-    width: 125px;
-    overflow: hidden;
+    /*width: 125px;*/
   }
   .nz-icon-compare{
     background: #FFFFFF;
@@ -83,9 +82,11 @@
   @keyframes bounce-in {
     0% {
       width: 0;
+      overflow: hidden;
     }
     100% {
-      width: 125px;
+     width:125px;
+      overflow: hidden;
     }
   }
 </style>
@@ -113,7 +114,7 @@
   <div class="multiple-time-box">
     <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition name="multiple-time-datepicker">
-      <div ref="calendar" class="calendar top-tools" id="panel-calender" v-show="showDropdown">
+      <div class="calendar top-tools" id="panel-calender" v-show="showDropdown">
         <el-date-picker prefix-icon=" " size="mini" ref="calendar"
                         format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
                         popper-class="panel-time-picker-popper"
