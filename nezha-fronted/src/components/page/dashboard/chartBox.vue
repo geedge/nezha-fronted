@@ -1130,7 +1130,7 @@ export default {
       })
     },
     // 创建打开
-    createData (panelId, elementInfo) {
+    createData (panelId, elementInfo, unit) {
       if (panelId == -1) {
         const p = this.panelData[0]
         this.editChart.panelName = p.name
@@ -1158,7 +1158,7 @@ export default {
         }
       }
       this.isedit = false
-      this.initInfo() // 初始化图表信息
+      this.initInfo(unit) // 初始化图表信息
       // this.editChartModal = true;//????控制弹出框显示和隐藏的，不需要了
       this.initOpen() // 获取metric, productId数据
     },
@@ -1251,12 +1251,12 @@ export default {
     },
 
     // 初始化信息
-    initInfo () {
+    initInfo (unit) {
       this.editChart.title = ''
       this.editChart.type = 'line'
       this.editChart.span = 12
       this.editChart.height = 400 + ''
-      this.editChart.unit = 2
+      this.editChart.unit = unit || 2
       const param = {}
       param.last = 0
       param.url = ''
@@ -1660,7 +1660,7 @@ export default {
         if (n.id) {
           this.editData(this.editChart, this.showPanel.id)
         } else {
-          this.createData(this.showPanel.id)
+          this.createData(this.showPanel.id, '', n.unit)
         }
       }
     }
