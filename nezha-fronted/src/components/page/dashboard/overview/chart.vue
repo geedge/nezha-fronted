@@ -413,15 +413,15 @@ export default {
       let minusFlag = true
       let str = '<div>'
       params.forEach((item, i) => {
-        if (i === 0) {
+        const alias = this.queryAlias(i)
+        if (i === 0 && alias.indexOf('Previous ') === -1) {
           const value = item.data[0]
           const tData = new Date(value)
           str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
               [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
           str += '<br/>'
         }
-        const alias = this.queryAlias(i)
-        if (alias.indexOf('process_') !== -1 && minusFlag) {
+        if (alias.indexOf('Previous ') !== -1 && minusFlag) {
           const value = item.data[0] - this.minusTime
           const tData = new Date(value)
           str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +

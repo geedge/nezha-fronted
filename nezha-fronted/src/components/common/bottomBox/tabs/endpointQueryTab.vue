@@ -501,9 +501,9 @@ export default {
                   isGray: false
                 }
                 if (promIndex >= this.selectedEndpoints.length) {
-                  legend.name = 'process_' + legend.name
+                  legend.name = 'Previous ' + legend.name
                   chartData.name = legend.name
-                  legend.alias = 'process_' + legend.alias
+                  legend.alias = 'Previous ' + legend.alias
                 }
                 this.legend.push(legend)
                 chartData.data = queryData.values.map((dpsItem, dpsIndex) => {

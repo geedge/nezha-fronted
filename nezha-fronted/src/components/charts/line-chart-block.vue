@@ -730,14 +730,14 @@ export default {
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
-              if (i === 0) {
+              if (i === 0 && tip.alias.indexOf('Previous ') === -1) {
                 const value = item.data[0]
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px">'
                 str += bus.timeFormate(tData)
                 str += '</div>'
               }
-              if (tip.alias.indexOf('process_') !== -1 && minusFlag) {
+              if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
                 const value = item.data[0] - minusTime
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
@@ -1585,8 +1585,8 @@ export default {
                         alias = host
                       }
                       if (pos >= this.data.elements.length) {
-                        legend.push({ name: 'process_' + host + '-' + elements.id + '-' + innerPos, alias: 'process_' + alias })
-                        seriesItem.theData.name = 'process_' + host + '-' + elements.id + '-' + innerPos
+                        legend.push({ name: 'Previous ' + host + '-' + elements.id + '-' + innerPos, alias: 'Previous ' + alias })
+                        seriesItem.theData.name = 'Previous ' + host + '-' + elements.id + '-' + innerPos
                         seriesItem.metric_name = seriesItem.theData.name
                       } else {
                         legend.push({ name: host + '-' + elements.id + '-' + innerPos, alias: alias })

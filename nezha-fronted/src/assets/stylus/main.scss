@@ -267,11 +267,11 @@ li{
   padding: 4px 6px;
 }
 .nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
-  background-image: $btn-light-background-color-hover;
+  //background-image: $btn-light-background-color-hover;
 }
 .nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) {
   background-image: none;
-  background-color: $btn-normal-background-color-hover;
+  //background-color: $btn-normal-background-color-hover;
 }
 .nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
   background-color: #dedede;
