@@ -60,7 +60,13 @@
   }
   .compare-box{
     line-height: 50px;
-    margin-right: 20px;
+  }
+  .compare-box .nz-icon-compare{
+   border-right: none;
+  }
+  .calendar{
+    width: 125px;
+    overflow: hidden;
   }
   .nz-icon-compare{
     background: #FFFFFF;
@@ -69,19 +75,17 @@
     padding: 6px 8px;
   }
   .multiple-time-datepicker-enter-active {
-    transform-origin: 100% 50%;
     animation: bounce-in .6s;
   }
   .multiple-time-datepicker-leave-active {
-    transform-origin: 100% 50%;
     animation: bounce-in .6s reverse;
   }
   @keyframes bounce-in {
     0% {
-      transform: scaleX(0);
+      width: 0;
     }
     100% {
-      transform: scale(1);
+      width: 125px;
     }
   }
 </style>
@@ -109,59 +113,59 @@
   <div class="multiple-time-box">
     <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition name="multiple-time-datepicker">
-      <div class="calendar top-tools" id="panel-calender" v-show="showDropdown">
-      <el-date-picker prefix-icon=" " size="mini" ref="calendar"
-                      format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
-                      popper-class="panel-time-picker-popper"
-                      align="right">
-      </el-date-picker>
-      <!--
-      <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
-              class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
-        <i style="font-size: 12px" class="el-icon-arrow-right"></i>
-      </button>-->
-      <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
-        <el-popover
-          placement="bottom-end"
-          min-width="120px"
-          :visible-arrow="false"
-          :disabled="isPopoverDisabled"
-          trigger="hover"
-          popper-class="popper-z-index"
-          id="panel-calender-popover">
-          <template v-if="this.searchTime&&this.searchTime.length>1">
-            <el-row  :gutter="10" class="calendar-popover">
-              <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
-            </el-row>
-            <el-row  :gutter="10" class="calendar-popover">
-              <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
-            </el-row>
-            <el-row  :gutter="10" class="calendar-popover">
-              <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
-            </el-row>
-          </template>
-          <template v-else>
-            <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
-          </template>
-          <div  class="el-dropdown-link" slot="reference">
-            <i class="nz-icon nz-icon-time" style="width:20px;"></i>
-            <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
-            <span class="dropdown--suffix">
+      <div ref="calendar" class="calendar top-tools" id="panel-calender" v-show="showDropdown">
+        <el-date-picker prefix-icon=" " size="mini" ref="calendar"
+                        format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
+                        popper-class="panel-time-picker-popper"
+                        align="right">
+        </el-date-picker>
+        <!--
+        <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
+                class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
+          <i style="font-size: 12px" class="el-icon-arrow-right"></i>
+        </button>-->
+        <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
+          <el-popover
+            placement="bottom-end"
+            min-width="120px"
+            :visible-arrow="false"
+            :disabled="isPopoverDisabled"
+            trigger="hover"
+            popper-class="popper-z-index"
+            id="panel-calender-popover">
+            <template v-if="this.searchTime&&this.searchTime.length>1">
+              <el-row  :gutter="10" class="calendar-popover">
+                <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
+              </el-row>
+              <el-row  :gutter="10" class="calendar-popover">
+                <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
+              </el-row>
+              <el-row  :gutter="10" class="calendar-popover">
+                <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
+              </el-row>
+            </template>
+            <template v-else>
+              <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
+            </template>
+            <div  class="el-dropdown-link" slot="reference">
+              <i class="nz-icon nz-icon-time" style="width:20px;"></i>
+              <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
+              <span class="dropdown--suffix">
             <i class="el-icon-arrow-down"></i>
           </span>
-          </div>
-        </el-popover>
-        <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
-          <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
-          <template v-for="(item, index) in timeData" >
-            <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
-              {{item.text}}
-            </el-dropdown-item>
-          </template>
+            </div>
+          </el-popover>
+          <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
+            <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
+            <template v-for="(item, index) in timeData" >
+              <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
+                {{item.text}}
+              </el-dropdown-item>
+            </template>
 
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </transition>
   </div>
 </template>
@@ -428,10 +432,12 @@ export default {
       this.showDropdown = !this.showDropdown
       if (!this.showDropdown) {
         this.searchTime = []
-        this.showTime = this.nowTimeType = {
-          id: 12,
-          text: this.$t('dashboard.panel.noDate')
-        }
+        setTimeout(() => {
+          this.showTime = this.nowTimeType = {
+            id: 12,
+            text: this.$t('dashboard.panel.noDate')
+          }
+        }, 600)
         this.$emit('change', this.searchTime)
       } else {
         this.searchTime = []
