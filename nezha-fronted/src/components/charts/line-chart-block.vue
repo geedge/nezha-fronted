@@ -1371,6 +1371,11 @@ export default {
       this.screenModal = true
       this.isGreyScreen = []
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
+      this.$refs.pickTime.$refs.multipleTime.showTime = {
+        id: 12,
+        text: this.$t('dashboard.panel.noDate')
+      }
+      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)
       this.seriesItemScreen = this.seriesItem
       // this.seriesItemScreen = this.seriesItem;

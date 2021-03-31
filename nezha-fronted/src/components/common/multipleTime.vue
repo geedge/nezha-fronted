@@ -53,6 +53,37 @@
     margin-left: 4px;
   }
   .calendar-popover-text {}
+  .multiple-time-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tongbi-box{
+    line-height: 50px;
+    margin-right: 20px;
+  }
+  .nz-icon-tongbi{
+    background: #FFFFFF;
+    border: 1px solid #DEDEDE;
+    border-radius: 2px;
+    padding: 6px 8px;
+  }
+  .multiple-time-datepicker-enter-active {
+    transform-origin: 100% 50%;
+    animation: bounce-in .6s;
+  }
+  .multiple-time-datepicker-leave-active {
+    transform-origin: 100% 50%;
+    animation: bounce-in .6s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 </style>
 <style lang="scss">
   .panel-time-picker-popper[x-placement^=bottom] .popper__arrow {
@@ -75,58 +106,63 @@
   }
 </style>
 <template>
-  <div class="calendar top-tools" id="panel-calender">
-    <el-date-picker prefix-icon=" " size="mini" ref="calendar"
-                    format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
-                    popper-class="panel-time-picker-popper"
-                    align="right">
-    </el-date-picker>
-    <!--
-    <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
-            class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
-      <i style="font-size: 12px" class="el-icon-arrow-right"></i>
-    </button>-->
-    <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
-      <el-popover
-        placement="bottom-end"
-        min-width="120px"
-        :visible-arrow="false"
-        :disabled="isPopoverDisabled"
-        trigger="hover"
-        popper-class="popper-z-index"
-        id="panel-calender-popover">
-        <template v-if="this.searchTime&&this.searchTime.length>1">
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
-          </el-row>
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
-          </el-row>
-          <el-row  :gutter="10" class="calendar-popover">
-            <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
-          </el-row>
-        </template>
-        <template v-else>
-          <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
-        </template>
-        <div  class="el-dropdown-link" slot="reference">
-          <i class="nz-icon nz-icon-time" style="width:20px;"></i>
-          <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
-          <span class="dropdown--suffix">
+  <div class="multiple-time-box">
+    <div :class="showDropdown?'tongbi-box':''"><i class="nz-icon nz-icon-tongbi" @click="changeShowDropdown" /></div>
+    <transition name="multiple-time-datepicker">
+      <div class="calendar top-tools" id="panel-calender" v-show="showDropdown">
+      <el-date-picker prefix-icon=" " size="mini" ref="calendar"
+                      format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
+                      popper-class="panel-time-picker-popper"
+                      align="right">
+      </el-date-picker>
+      <!--
+      <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
+              class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
+        <i style="font-size: 12px" class="el-icon-arrow-right"></i>
+      </button>-->
+      <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
+        <el-popover
+          placement="bottom-end"
+          min-width="120px"
+          :visible-arrow="false"
+          :disabled="isPopoverDisabled"
+          trigger="hover"
+          popper-class="popper-z-index"
+          id="panel-calender-popover">
+          <template v-if="this.searchTime&&this.searchTime.length>1">
+            <el-row  :gutter="10" class="calendar-popover">
+              <el-col :span="24" class="calendar-popover-text">{{searchTime[0]}}</el-col>
+            </el-row>
+            <el-row  :gutter="10" class="calendar-popover">
+              <el-col :span="24" class="calendar-popover-text">{{$t('dashboard.panel.to')}}</el-col>
+            </el-row>
+            <el-row  :gutter="10" class="calendar-popover">
+              <el-col :span="24" class="calendar-popover-text">{{searchTime[1]}}</el-col>
+            </el-row>
+          </template>
+          <template v-else>
+            <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
+          </template>
+          <div  class="el-dropdown-link" slot="reference">
+            <i class="nz-icon nz-icon-time" style="width:20px;"></i>
+            <span class="panel-list-title" id="timePickerContent">{{showTime.text}}</span>
+            <span class="dropdown--suffix">
             <i class="el-icon-arrow-down"></i>
           </span>
-        </div>
-      </el-popover>
-      <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
-        <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
-        <template v-for="(item, index) in timeData" >
-          <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
-            {{item.text}}
-          </el-dropdown-item>
-        </template>
+          </div>
+        </el-popover>
+        <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
+          <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
+          <template v-for="(item, index) in timeData" >
+            <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
+              {{item.text}}
+            </el-dropdown-item>
+          </template>
 
-      </el-dropdown-menu>
-    </el-dropdown>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    </transition>
   </div>
 </template>
 
@@ -145,11 +181,11 @@ export default {
     return {
       startTime: '',
       searchTime: [],
-      showSelect: false,
+      showDropdown: false,
       step: '',
       showTime: {
-        id: 4,
-        text: this.$t('dashboard.panel.beforeOneHour')
+        id: 12,
+        text: this.$t('dashboard.panel.noDate')
       },
       timeData: [
         {
@@ -297,23 +333,6 @@ export default {
             } */
       this.$emit('change', this.searchTime)
     },
-    setCustomTime (timeGroup) {
-      if (timeGroup.length === 2) {
-        this.$set(this.searchTime, 0, timeGroup[0])
-        this.$set(this.searchTime, 1, timeGroup[1])
-
-        this.nowTimeType = {
-          id: 4,
-          text: this.$t('dashboard.panel.beforeOneHour'),
-          type: 'hour',
-          value: 1
-        }
-        this.$set(this.showTime, 'id', this.nowTimeType.id)
-        this.$set(this.showTime, 'value', this.nowTimeType.value)
-        this.$set(this.showTime, 'type', this.nowTimeType.type)
-        this.$set(this.showTime, 'text', this.nowTimeType.text)
-      }
-    },
     // left(){},
     // right(){},
     timeChange (val, from) {
@@ -405,6 +424,17 @@ export default {
         this.isPopoverDisabled = true
       } else {
         this.isPopoverDisabled = false
+      }
+    },
+    changeShowDropdown () {
+      this.showDropdown = !this.showDropdown
+      if (!this.showDropdown) {
+        this.searchTime = []
+        this.showTime = this.nowTimeType = {
+          id: 12,
+          text: this.$t('dashboard.panel.noDate')
+        }
+        this.$emit('change', this.searchTime)
       }
     }
   }

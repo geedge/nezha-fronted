@@ -171,6 +171,6 @@ export default {
     margin-top: -1px;
   }
   .multiple-time{
-    margin-right: 10px;
+    margin-right: 20px;
   }
 </style>
