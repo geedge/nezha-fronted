@@ -502,6 +502,7 @@ export default {
                 }
                 if (promIndex >= this.selectedEndpoints.length) {
                   legend.name = 'process_' + legend.name
+                  chartData.name = legend.name
                   legend.alias = 'process_' + legend.alias
                 }
                 this.legend.push(legend)

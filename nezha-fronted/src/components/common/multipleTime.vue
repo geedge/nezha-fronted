@@ -58,11 +58,11 @@
     justify-content: space-between;
     align-items: center;
   }
-  .tongbi-box{
+  .compare-box{
     line-height: 50px;
     margin-right: 20px;
   }
-  .nz-icon-tongbi{
+  .nz-icon-compare{
     background: #FFFFFF;
     border: 1px solid #DEDEDE;
     border-radius: 2px;
@@ -107,7 +107,7 @@
 </style>
 <template>
   <div class="multiple-time-box">
-    <div :class="showDropdown?'tongbi-box':''"><i class="nz-icon nz-icon-tongbi" @click="changeShowDropdown" /></div>
+    <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
     <transition name="multiple-time-datepicker">
       <div class="calendar top-tools" id="panel-calender" v-show="showDropdown">
       <el-date-picker prefix-icon=" " size="mini" ref="calendar"
@@ -432,6 +432,16 @@ export default {
           id: 12,
           text: this.$t('dashboard.panel.noDate')
         }
+        this.$emit('change', this.searchTime)
+      } else {
+        this.searchTime = []
+        this.showTime = this.nowTimeType = {
+          id: 4,
+          text: this.$t('dashboard.panel.beforeOneHour'),
+          type: 'hour',
+          value: 1
+        }
+        this.setSearchTime(this.showTime.type, this.showTime.value)
         this.$emit('change', this.searchTime)
       }
     }

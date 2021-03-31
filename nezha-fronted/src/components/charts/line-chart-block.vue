@@ -283,14 +283,7 @@ export default {
         screenLegendList:[], */
       isGrey: [],
       isGreyScreen: [],
-      /* bgColorList: ['#7bbfea', '#b3424a', '#f05b72', '#596032', '#bd6758',
-          '#cd9a5b', '#918597', '#70a19f', '#005344', '#FF00FF',
-          '#f7acbc', '#5f5d46', '#66ffff', '#ccFF66', '#f47920',
-          '#769149', '#1d953f', '#abc88b', '#7f7522', '#9b95c9',
-          '#f3715c', '#ea66a6', '#d1c7b7', '#9d9087', '#77787b',
-          '#f58220', '#c37e00', '#00ae9d', '#f26522', '#76becc',
-          '#76624c', '#d71345', '#2468a2', '#ca8687', '#1b315e',
-        ], */
+      bgColorList: [],
       stackTotalColor: null,
       firstShow: false, // 默认不显示操作按钮,
       caretShow: false,
@@ -1593,13 +1586,14 @@ export default {
                       }
                       if (pos >= this.data.elements.length) {
                         legend.push({ name: 'process_' + host + '-' + elements.id + '-' + innerPos, alias: 'process_' + alias })
+                        seriesItem.theData.name = 'process_' + host + '-' + elements.id + '-' + innerPos
+                        seriesItem.metric_name = seriesItem.theData.name
                       } else {
                         legend.push({ name: host + '-' + elements.id + '-' + innerPos, alias: alias })
+                        seriesItem.theData.name = host + '-' + elements.id + '-' + innerPos
+                        seriesItem.metric_name = seriesItem.theData.name
                       }
                       // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-
-                      seriesItem.theData.name = host + '-' + elements.id + '-' + innerPos
-                      seriesItem.metric_name = seriesItem.theData.name
                       // 将秒改为毫秒
                       // alert('table=='+JSON.stringify(queryItem))
                       seriesItem.theData.data = queryItem.values.map((dpsItem, dpsIndex) => {
@@ -1632,6 +1626,9 @@ export default {
               }
             })
             this.setColor(legend.length)
+            legend.forEach((item, index) => {
+              item.color = this.bgColorList[index]
+            })
             if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.data.elements.length) {
               const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
               let cutPoint = 0
