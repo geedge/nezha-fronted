@@ -149,6 +149,7 @@ export default {
       echart: null,
       echartScreen: null,
       bgColorList: [],
+      stableFilter: {},
       option: {
         title: {
           show: false
@@ -296,7 +297,7 @@ export default {
       this.searchTime = []
       this.$set(this.searchTime, 0, this.oldSearchTime[0])
       this.$set(this.searchTime, 1, this.oldSearchTime[1])
-      // this.$refs.calendarPanel.setCustomTime(this.searchTime);
+      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)
       this.screenModal = true
     },
     resize (chartItem) {
@@ -304,6 +305,9 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
+      if (filter) {
+        this.stableFilter = filter
+      }
       if (errorMsg && errorMsg !== '') {
         this.isError = true
         this.errorContent = errorMsg

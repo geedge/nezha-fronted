@@ -394,6 +394,7 @@ export default {
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       this.filter.value = this.searchTime[2]
+      this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       this.getTableData()
       this.getData(this.filter)
     },

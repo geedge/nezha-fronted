@@ -70,11 +70,11 @@
 </template>
 
 <script>
-import latlngPicker from "../latlngPicker";
+import latlngPicker from '../latlngPicker'
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'dcBox',
-  components:{latlngPicker},
+  components: { latlngPicker },
   props: {
     dc: Object,
     userData: Array
@@ -118,21 +118,21 @@ export default {
       this.$refs.dcForm.validate((valid) => {
         if (valid) {
           if (this.editDc.id) {
-            const param = {...this.editDc}
-            let attr = this.$refs.latlngPicker.getAttribute();
-            param.latitude = attr.latitude;
-            param.longitude = attr.longitude;
+            const param = { ...this.editDc }
+            const attr = this.$refs.latlngPicker.getAttribute()
+            param.latitude = attr.latitude
+            param.longitude = attr.longitude
             this.$put('idc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({duration: 1000, type: 'success', message: this.$t('tip.saveSuccess')})
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
               }
             })
           } else {
-            const param = {...this.editDc}
+            const param = { ...this.editDc }
             if (param.area) {
               param.areaId = param.area.id
             }
@@ -145,7 +145,7 @@ export default {
             this.$post('idc', param).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
-                this.$message({duration: 1000, type: 'success', message: this.$t('tip.saveSuccess')})
+                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
               } else {
                 this.$message.error(response.msg)
@@ -210,8 +210,8 @@ export default {
       deep: true,
       handler (n, o) {
         this.editDc = JSON.parse(JSON.stringify(n))
-        this.$nextTick(()=>{
-          this.$refs.latlngPicker.setLnglat(this.editDc.latitude,this.editDc.longitude);
+        this.$nextTick(() => {
+          this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
         })
       }
     }

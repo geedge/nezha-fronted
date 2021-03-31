@@ -20,118 +20,118 @@
 </template>
 
 <script>
-  // 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
-  import 'leaflet/dist/leaflet.css'
-  import * as L from 'leaflet'
-  import icon from 'leaflet/dist/images/marker-icon.png'
-  import iconShadow from 'leaflet/dist/images/marker-shadow.png'
-  export default {
-    name: "latlngPicker",
-    props:{
-      initData:{type:Object},
-      appendToBody:{type:Boolean,default:true},
-      showZoom:{type:Boolean,default:true}
+// 引入Leaflet对象 挂载到Vue上，便于全局使用，也可以单独页面中单独引用
+import 'leaflet/dist/leaflet.css'
+import * as L from 'leaflet'
+import icon from 'leaflet/dist/images/marker-icon.png'
+import iconShadow from 'leaflet/dist/images/marker-shadow.png'
+export default {
+  name: 'latlngPicker',
+  props: {
+    initData: { type: Object },
+    appendToBody: { type: Boolean, default: true },
+    showZoom: { type: Boolean, default: true }
+  },
+  data () {
+    return {
+      lnglat: '',
+      mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
+      map: null,
+      marker: null,
+      mapConfigVisible: false
+    }
+  },
+  created () {
+    if (this.initData) {
+      this.mapParam = JSON.parse(JSON.stringify(this.initData))
+    } else {
+      this.queryDefaultMapConfig()
+    }
+    this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+  },
+  mounted () {
+  },
+  methods: {
+    initMap: function () {
+      if (this.map) {
+        this.map.remove()
+        this.map = null
+      }
+      this.setLatlng()
+      const DefaultIcon = L.icon({
+        iconUrl: icon,
+        iconSize: [26, 40],
+        iconAnchor: [13, 40],
+        shadowUrl: iconShadow
+      })
+      L.Marker.prototype.options.icon = DefaultIcon
+      const map = L.map('map', {
+        minZoom: this.mapParam.minZoom,
+        maxZoom: this.mapParam.maxZoom,
+        attributionControl: false,
+        zoomControl: false,
+        maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
+      }).setView([this.mapParam.latitude, this.mapParam.longitude], this.mapParam.zoom)
+
+      L.tileLayer(
+        '/static/Tiles/{z}/{x}/{y}.png',
+        { noWrap: true }
+      ).addTo(map)
+
+      const attribution = L.control.attribution({ position: 'bottomright', prefix: '' })
+      attribution.addAttribution(' © OpenStreetMap contributors')
+      attribution.addTo(map)
+
+      L.control.zoom({
+        position: 'bottomright',
+        zoomInText: '<i class="nz-icon nz-icon-enlarge"></i>',
+        zoomOutText: '<i class="nz-icon nz-icon-narrow"></i>',
+        zoomInTitle: '',
+        zoomOutTitle: ''
+      }).addTo(map)
+
+      const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
+      map.on('click', function (e) {
+        const latitude = e.latlng.lat
+        const longitude = e.latlng.lng
+        marker.setLatLng([latitude, longitude])
+      })
+      this.map = map
+      this.marker = marker
     },
-    data(){
-      return{
-        lnglat:"",
-        mapParam:{ longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
-        map: null,
-        marker: null,
-        mapConfigVisible: false,
+    mapClose: function () {
+      this.mapConfigVisible = false
+      const latlng = this.marker.getLatLng()
+      this.mapParam.longitude = latlng.lng.toFixed(3)
+      this.mapParam.latitude = latlng.lat.toFixed(3)
+      this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+
+      this.mapParam.zoom = this.map.getZoom()
+    },
+    setLatlng: function () {
+      const lnglat = this.lnglat.split(',')
+      this.mapParam.longitude = lnglat[0]
+      this.mapParam.latitude = lnglat[1]
+    },
+    getAttribute: function () {
+      return JSON.parse(JSON.stringify(this.mapParam))
+    },
+    setLnglat: function (lat, lng) {
+      if (lat && lng) {
+        this.mapParam.latitude = lat
+        this.mapParam.longitude = lng
+        this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
       }
     },
-    created() {
-      if(this.initData){
-        this.mapParam = JSON.parse(JSON.stringify(this.initData));
-      }else{
-        this.queryDefaultMapConfig();
-      }
-      this.lnglat = this.mapParam.longitude+","+this.mapParam.latitude;
-    },
-    mounted() {
-    },
-    methods:{
-      initMap: function () {
-        if (this.map) {
-          this.map.remove()
-          this.map = null
+    queryDefaultMapConfig: function () {
+      this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+        if (response.code == 200) {
+          this.mapParam = JSON.parse(response.data.paramKey.map_center_config)
         }
-        this.setLatlng();
-        const DefaultIcon = L.icon({
-          iconUrl: icon,
-          iconSize: [26, 40],
-          iconAnchor: [13, 40],
-          shadowUrl: iconShadow
-        })
-        L.Marker.prototype.options.icon = DefaultIcon
-        const map = L.map('map', {
-          minZoom: this.mapParam.minZoom,
-          maxZoom: this.mapParam.maxZoom,
-          attributionControl: false,
-          zoomControl: false,
-          maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180))
-        }).setView([this.mapParam.latitude, this.mapParam.longitude], this.mapParam.zoom)
-
-        L.tileLayer(
-          '/static/Tiles/{z}/{x}/{y}.png',
-          { noWrap: true }
-        ).addTo(map)
-
-        const attribution = L.control.attribution({ position: 'bottomright', prefix: '' })
-        attribution.addAttribution(' © OpenStreetMap contributors')
-        attribution.addTo(map)
-
-        L.control.zoom({
-          position: 'bottomright',
-          zoomInText: '<i class="nz-icon nz-icon-enlarge"></i>',
-          zoomOutText: '<i class="nz-icon nz-icon-narrow"></i>',
-          zoomInTitle: '',
-          zoomOutTitle: ''
-        }).addTo(map)
-
-        const marker = L.marker([this.mapParam.latitude, this.mapParam.longitude]).addTo(map)
-        map.on('click', function (e) {
-          const latitude = e.latlng.lat
-          const longitude = e.latlng.lng
-          marker.setLatLng([latitude, longitude])
-        })
-        this.map = map
-        this.marker = marker
-      },
-      mapClose: function () {
-        this.mapConfigVisible = false
-        const latlng = this.marker.getLatLng()
-        this.mapParam.longitude = latlng.lng.toFixed(3);
-        this.mapParam.latitude = latlng.lat.toFixed(3);
-        this.lnglat = this.mapParam.longitude+","+this.mapParam.latitude;
-
-        this.mapParam.zoom = this.map.getZoom();
-      },
-      setLatlng:function(){
-        let lnglat = this.lnglat.split(",");
-        this.mapParam.longitude = lnglat[0]
-        this.mapParam.latitude = lnglat[1]
-      },
-      getAttribute:function(){
-        return JSON.parse(JSON.stringify(this.mapParam));
-      },
-      setLnglat:function(lat,lng){
-        if(lat&&lng){
-          this.mapParam.latitude=lat;
-          this.mapParam.longitude =lng;
-          this.lnglat = this.mapParam.longitude+","+this.mapParam.latitude;
-        }
-      },
-      queryDefaultMapConfig:function(){
-        this.$get("/sysConfig?paramKey=map_center_config").then(response=>{
-          if(response.code == 200){
-            this.mapParam = JSON.parse(response.data.paramKey.map_center_config);
-          }
-        })
-      }
+      })
     }
   }
+}
 </script>
 
 <style scoped>

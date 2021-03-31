@@ -572,7 +572,6 @@ export default {
         this.chartType = 'line'
       }
       const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
-      const minusFlag = this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length
       let minTime = null
       let maxTime = null
       if (dataArg.length > 0 && dataArg[0].data &&
@@ -733,6 +732,7 @@ export default {
           formatter: function (params) {
             let str = '<div>'
             let sum = 0
+            let minusFlag = true
             params.forEach((item, i) => {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
@@ -743,12 +743,13 @@ export default {
                 str += bus.timeFormate(tData)
                 str += '</div>'
               }
-              if (i === params.length / 2 && tip.alias.indexOf('process_') !== -1) {
+              if (tip.alias.indexOf('process_') !== -1 && minusFlag) {
                 const value = item.data[0] - minusTime
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
                 str += '</div>'
+                minusFlag = false
               }
               let val = item.data[1] ? parseFloat(Number(item.data[1]).toFixed(2)) : ''
               if (val === 0) {
@@ -1367,11 +1368,10 @@ export default {
       // this.searchTime = this.oldSearchTime;
       this.$set(this.searchTime, 0, this.oldSearchTime[0])
       this.$set(this.searchTime, 1, this.oldSearchTime[1])
-      // this.$refs.calendarPanel.setCustomTime(this.searchTime);
       this.screenModal = true
       this.isGreyScreen = []
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
-      // this.$refs.pickTime.$refs.timerPick.setCustomTime(this.searchTime)
+      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)
       this.seriesItemScreen = this.seriesItem
       // this.seriesItemScreen = this.seriesItem;
       /*
@@ -1489,7 +1489,6 @@ export default {
         }
         // 一个图表
         axios.all(axiosArr).then((res) => {
-          console.log(res)
           if (res.length > 0) {
             const series = []
             const legend = []
@@ -1626,10 +1625,15 @@ export default {
             console.log(series)
             const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
             console.log(minusTime)
-            if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) {
+            if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.data.elements.length) {
+              let cutPoint = 0
+              res.forEach((item, index) => {
+                if (index < res.length / 2) {
+                  cutPoint += res[index].data.result.length
+                }
+              })
               series.forEach((item, index) => {
-                if (index >= series.length / 2) {
-                  console.log(123123);
+                if (index >= cutPoint) {
                   series[index].data.forEach((item1, index1) => {
                     item1[0] = item1[0] + minusTime
                   })

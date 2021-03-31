@@ -779,7 +779,7 @@ const cn = {
       state: '状态',
       longitude: '经度',
       latitude: '纬度',
-      lnglat:'坐标'
+      lnglat: '坐标'
     },
     model: {
       model: '资产型号',
@@ -856,7 +856,7 @@ const cn = {
         lat: '纬度',
         lng: '经度',
         zoom: '缩放',
-        lnglat:'坐标',
+        lnglat: '坐标'
       },
       email: {
         email: '邮件',

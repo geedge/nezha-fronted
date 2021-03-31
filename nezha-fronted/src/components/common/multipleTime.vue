@@ -371,7 +371,7 @@ export default {
       }
     },
     setSearchTime (type, val) {
-      console.log(132, this.stepSearchTime ,val,new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60)
+      console.log(132, this.stepSearchTime, val, new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60)
       if (type === 'minute') {
         const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
         const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')

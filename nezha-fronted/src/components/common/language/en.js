@@ -724,7 +724,7 @@ const en = {
       state: 'State',
       longitude: 'Longitude',
       latitude: 'Latitude',
-      lnglat:'Coordinate'
+      lnglat: 'Coordinate'
     },
     model: {
       model: 'Asset model',
@@ -859,7 +859,7 @@ const en = {
         lat: 'latitude',
         lng: 'longitude',
         zoom: 'zoom',
-        lnglat:'coordinate'
+        lnglat: 'coordinate'
       },
       email: {
         email: 'Email',

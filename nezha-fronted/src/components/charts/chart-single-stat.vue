@@ -123,6 +123,7 @@ export default {
         start_time: '',
         end_time: ''
       },
+      stableFilter: {},
       firstShow: false, // 默认不显示操作按钮,
       caretShow: false,
       dragTitleShow: false,
@@ -387,7 +388,7 @@ export default {
       this.searchTime = []
       this.$set(this.searchTime, 0, this.oldSearchTime[0])
       this.$set(this.searchTime, 1, this.oldSearchTime[1])
-      // this.$refs.calendarPanel.setCustomTime(this.searchTime);
+      this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)
 
       this.seriesItemScreen = this.seriesItem
       this.screenModal = true
@@ -397,6 +398,9 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
+      if (filter) {
+        this.stableFilter = filter
+      }
       if (errorMsg && errorMsg !== '') {
         this.isError = true
         this.errorContent = errorMsg

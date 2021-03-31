@@ -356,13 +356,13 @@
 
 <script>
 import { positiveInteger, port, hostPlus, host, uSize } from '../../common/js/validate'
-import latlngPicker from "../../common/latlngPicker";
+import latlngPicker from '../../common/latlngPicker'
 import bus from '../../../libs/bus'
 import draggable from 'vuedraggable'
 
 export default {
   name: 'system',
-  components: { draggable ,latlngPicker},
+  components: { draggable, latlngPicker },
   data () {
     return {
       basic: {
@@ -588,7 +588,7 @@ export default {
         if (valid) {
           const param = {}
           if (type == 'basic') {
-            this.basic.map_center_config = this.$refs.latlngPicker.getAttribute();
+            this.basic.map_center_config = this.$refs.latlngPicker.getAttribute()
             this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
           }
           param[type] = Object.assign({}, this[type])

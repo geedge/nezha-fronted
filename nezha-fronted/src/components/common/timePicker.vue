@@ -262,38 +262,32 @@ export default {
     },
     setCustomTime (timeGroup) {
       console.log(timeGroup)
-      if (!timeGroup[2] || timeGroup.length === 2) {
-        this.$set(this.searchTime, 0, timeGroup[0])
-        this.$set(this.searchTime, 1, timeGroup[1])
-
-        this.nowTimeType = {
-          id: 0,
-          text: this.$t('dashboard.panel.customTimeRange')
-        }
-        this.$set(this.showTime, 'id', this.nowTimeType.id)
-        this.$set(this.showTime, 'text', this.nowTimeType.text)
-      } else if (timeGroup[2]) {
-        const type = timeGroup[2].substr(timeGroup[2].length - 1, 1)
-        const value = timeGroup[2].substr(0, timeGroup[2].length - 1)
-        if (value == 30 && type === 'd') {
-          this.showTime = this.nowTimeType = {
-            id: 11,
-            text: this.$t('dashboard.panel.lastThirtyDay'),
-            type: 'date',
-            value: 30
-          }
-        } else if (value == 30 && type === 'm') {
-          this.showTime = this.nowTimeType = {
-            id: 3,
-            text: this.$t('dashboard.panel.lastThirtyMin'),
-            type: 'minute',
-            value: 30
-          }
+      if (timeGroup) {
+        this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
+        if (this.showTime) {
+          this.$set(this.searchTime, 0, timeGroup.start_time)
+          this.$set(this.searchTime, 1, timeGroup.end_time)
         } else {
-          this.showTime = this.nowTimeType = this.timeData.find(item => item.value == value)
+          this.showTime = this.nowTimeType = {
+            id: 4,
+            text: this.$t('dashboard.panel.lastOneHour'),
+            type: 'hour',
+            value: 1
+          }
+          const time = bus.getTimezontDateRange()
+          this.$set(this.searchTime, 0, time[0])
+          this.$set(this.searchTime, 1, time[1])
         }
-        this.$set(this.showTime, 'id', this.nowTimeType.id)
-        this.$set(this.showTime, 'text', this.nowTimeType.text)
+      } else {
+        this.showTime = this.nowTimeType = {
+          id: 4,
+          text: this.$t('dashboard.panel.lastOneHour'),
+          type: 'hour',
+          value: 1
+        }
+        const time = bus.getTimezontDateRange()
+        this.$set(this.searchTime, 0, time[0])
+        this.$set(this.searchTime, 1, time[1])
       }
     },
     // left(){},
