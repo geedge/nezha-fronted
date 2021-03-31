@@ -6,7 +6,9 @@
   .plTableBox.nz-table /deep/  .el-table{
     display: block !important;
   }
-
+.project-calendar{
+  margin-top: 2px;
+}
 </style>
 <style>
   .endpoint-dialog .el-dialog__body{
@@ -111,11 +113,11 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart"></pick-time>
+          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>
           <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'project_endpoint_query_chart_toAdd'" id="endpoint-query-full-chart-save">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
-      <chart ref="endpointChart" :unit="chartUnit"></chart>
+      <chart ref="endpointChart" :unit="chartUnit" :minusTime="minusTime"></chart>
     </el-dialog>
     <transition name="right-box">
       <chart-box :chart="chart" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'endpointQuery'}" @close="rightBox.show = false" @on-create-success="createSuccess" @reload="getPanelData" @reloadOnlyPanel="getPanelData" box-class="save-chart-box" from="project_endpoint_query" ref="addChartModal" v-if="rightBox.show" style="z-index: 2900" :fromEndpoint="true"></chart-box>
@@ -170,7 +172,8 @@ export default {
       rightBox: { show: false },
       plTableSHow: true,
       scrollTop: 0,
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      minusTime: 0
     }
   },
   methods: {
@@ -398,12 +401,24 @@ export default {
       this.chartDatas = []
       this.legend = []
       this.graphShow = true
+      this.$refs.pickTime.$refs.multipleTime.searchTime = []
+      this.$refs.pickTime.$refs.multipleTime.showTime = {
+        id: 12,
+        text: this.$t('dashboard.panel.noDate')
+      }
+      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.$nextTick(() => {
         this.$refs.endpointChart.startLoading()
         this.queryChartDate()
       })
     },
     dialogClose: function () {
+      this.$refs.pickTime.$refs.multipleTime.searchTime = []
+      this.$refs.pickTime.$refs.multipleTime.showTime = {
+        id: 12,
+        text: this.$t('dashboard.panel.noDate')
+      }
+      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.graphShow = false
     },
     chartUnitChange: function (unit) {
@@ -434,6 +449,13 @@ export default {
       const axiosArr = []
       for (const endpoint of this.selectedEndpoints) {
         axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + endpoint.element + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+      }
+      if (this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
+        const startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+        for (const endpoint of this.selectedEndpoints) {
+          axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + endpoint.element + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
+        }
       }
       this.legend = []
       this.chartDatas = []
@@ -478,6 +500,10 @@ export default {
                   // showText:this.formatLegend(chartData.name),
                   isGray: false
                 }
+                if (promIndex >= this.selectedEndpoints.length) {
+                  legend.name = 'process_' + legend.name
+                  legend.alias = 'process_' + legend.alias
+                }
                 this.legend.push(legend)
                 chartData.data = queryData.values.map((dpsItem, dpsIndex) => {
                   return [dpsItem[0] * 1000, Number(dpsItem[1])]
@@ -490,6 +516,24 @@ export default {
             }
           }
         })
+
+        if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.selectedEndpoints.length) {
+          const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+          this.minusTime = minusTime
+          let cutPoint = 0
+          res.forEach((item, index) => {
+            if (index < res.length / 2) {
+              cutPoint += res[index].data.data.result.length
+            }
+          })
+          this.chartDatas.forEach((item, index) => {
+            if (index >= cutPoint) {
+              this.chartDatas[index].data.forEach((item1, index1) => {
+                item1[0] = item1[0] + minusTime
+              })
+            }
+          })
+        }
         this.$nextTick(() => {
           if (this.$refs.endpointChart) {
             this.$refs.endpointChart.setRandomColors(this.chartDatas.length)

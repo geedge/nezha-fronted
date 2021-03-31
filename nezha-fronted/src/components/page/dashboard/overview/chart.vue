@@ -40,7 +40,8 @@ export default {
     tooltipFormatter: Function,
     yAxisFormatter: Function,
     map: {},
-    axisTooltip: { type: String } // x/y
+    axisTooltip: { type: String }, // x/y
+    minusTime: {} // 用于比较图表时的时间差值
   },
   data () {
     return {
@@ -409,6 +410,7 @@ export default {
       return params.title
     },
     defaultTooltipFormatter: function (params) {
+      let minusFlag = true
       let str = '<div>'
       params.forEach((item, i) => {
         if (i === 0) {
@@ -418,7 +420,15 @@ export default {
               [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
           str += '<br/>'
         }
-        const alias = this.queryAlias(item.seriesName)
+        const alias = this.queryAlias(i)
+        if (alias.indexOf('process_') !== -1 && minusFlag) {
+          const value = item.data[0] - this.minusTime
+          const tData = new Date(value)
+          str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
+            [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
+          str += '<br/>'
+          minusFlag = false
+        }
         const val = Number(item.data[1])
         str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
         str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
@@ -430,10 +440,10 @@ export default {
       str += '</div>'
       return str
     },
-    queryAlias: function (seriesName) {
+    queryAlias: function (i) {
       let alias = null
       if (this.legend && this.legend.length > 0) {
-        const tempLegend = this.legend.find((item) => { return item.name == seriesName })
+        const tempLegend = this.legend.find((item, index) => { return index === i })
         if (tempLegend) {
           alias = tempLegend.alias
         }

@@ -365,7 +365,6 @@ export default {
             this.isCustom = false
             this.$emit('change', this.searchTime)
           } else {
-            console.log(123123)
             this.isCustom = true
             this.$refs.calendar.focus()
           }
@@ -390,7 +389,6 @@ export default {
       }
     },
     setSearchTime (type, val) {
-      console.log(132, this.stepSearchTime, val, new Date(this.stepSearchTime[0]).getTime() - val * 60 * 60)
       if (type === 'minute') {
         const startTime = bus.timeFormate(new Date(this.stepSearchTime[0]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')
         const endTime = bus.timeFormate(new Date(this.stepSearchTime[1]).getTime() - val * 60 * 1000, 'yyyy-MM-dd hh:mm:ss')

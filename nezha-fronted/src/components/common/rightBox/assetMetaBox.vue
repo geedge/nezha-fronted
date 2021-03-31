@@ -272,7 +272,6 @@ export default {
           if (param.type === 'radio' || param.type === 'checkbox' || param.type === 'select') {
             for (let i = 0; i < param.param.items.length; i++) {
               if (!param.param.items[i].name) {
-                console.log(this.$refs['metaNameOption' + i])
                 this.$refs['metaNameOption' + i][0].focus()
                 this.$message.error(this.$t('config.assetMeta.metaOptionNull'))
                 this.prevent_opt.save = false

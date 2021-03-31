@@ -261,7 +261,6 @@ export default {
       this.$emit('change', this.searchTime)
     },
     setCustomTime (timeGroup) {
-      console.log(timeGroup)
       if (timeGroup) {
         this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
         if (this.showTime) {
@@ -293,7 +292,6 @@ export default {
     // left(){},
     // right(){},
     timeChange (val, from) {
-      console.log(val, from)
       this.nowTimeType = val
       this.$set(this.showTime, 'id', val.id)
       this.$set(this.showTime, 'text', val.text)
@@ -322,7 +320,6 @@ export default {
             this.$refs.calendar.focus()
           }
         } else {
-          console.log(123123123)
           this.isCustom = false
           if (this.showEmpty && id === 12) {
             this.searchTime = []

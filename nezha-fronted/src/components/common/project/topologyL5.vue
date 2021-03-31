@@ -1164,7 +1164,7 @@ export default {
     },
 
     onMessage (event, data, e) {
-      console.log('onMessage', event, data)
+      // console.log('onMessage', event, data)
       // console.log(getTopology(this.topologyIndex))
       // this.notModuleIDArr=[];
       this.toolShow.attr = false

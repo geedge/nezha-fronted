@@ -97,6 +97,7 @@
                    @close="screenModal = false;screenLegendListMore=[]"
                    style="margin-top: 1vh !important;"
                    @opened="initDialog"
+                   @closed="closeDialog"
                    :modal-append-to-body="false"
         >
           <el-popover
@@ -1046,8 +1047,6 @@ export default {
           })
         })
       } else if (chartSite === 'screen') { // 全屏显示
-        // eslint-disable-next-line
-        console.log(legend)
         if (legend) {
           this.screenLegendList = []
           this.isGreyScreen = []
@@ -1353,6 +1352,14 @@ export default {
         });
         */
     },
+    closeDialog () {
+      this.$refs.pickTime.$refs.multipleTime.searchTime = []
+      this.$refs.pickTime.$refs.multipleTime.showTime = {
+        id: 12,
+        text: this.$t('dashboard.panel.noDate')
+      }
+      this.$refs.pickTime.$refs.multipleTime.showDropdown = false
+    },
     changeDate (st) {
       this.oldSearchTime = st
       this.searchTime = st
@@ -1448,7 +1455,6 @@ export default {
         }
         const step = bus.getStep(startTime, endTime)
         if (type === 'list') { // 普通模式,主控台使用
-          console.log(123)
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele
             let query = encodeURIComponent(filterItem.expression)
@@ -1459,7 +1465,6 @@ export default {
             }
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
-          console.log(this.$refs.pickTime.$refs.multipleTime.searchTime)
           if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
             startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
             endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
@@ -1627,10 +1632,8 @@ export default {
               }
             })
             this.setColor(legend.length)
-            console.log(series)
-            const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
-            console.log(minusTime)
             if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.data.elements.length) {
+              const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
               let cutPoint = 0
               res.forEach((item, index) => {
                 if (index < res.length / 2) {
