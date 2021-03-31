@@ -75,10 +75,10 @@
     padding: 6px 8px;
   }
   .multiple-time-datepicker-enter-active {
-    animation: bounce-in .6s;
+    animation: bounce-in .5s;
   }
   .multiple-time-datepicker-leave-active {
-    animation: bounce-in .6s reverse;
+    animation: bounce-in .5s reverse;
   }
   @keyframes bounce-in {
     0% {
@@ -437,7 +437,7 @@ export default {
             id: 12,
             text: this.$t('dashboard.panel.noDate')
           }
-        }, 600)
+        }, 500)
         this.$emit('change', this.searchTime)
       } else {
         this.searchTime = []

@@ -907,7 +907,6 @@ export default {
     }
 
     button:hover {
-      background: $btn-light-background-color-hover;
     }
   }
 
