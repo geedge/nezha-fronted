@@ -61,7 +61,7 @@
   }
 
   .panel-time-picker-popper .el-date-table td.today span {
-    color: #FFF !important;
+    color: #232f3e !important;
   }
 
   .panel-time-picker-popper .el-picker-panel__footer button:nth-child(1){
@@ -155,12 +155,13 @@ export default {
       timeData: [
         {
           id: 0,
-          text: this.$t('dashboard.panel.customTimeRange')
+          text: this.$t('dashboard.panel.customTimeRange'),
+          value: -1
         },
         {
           id: 12,
-          text: this.$t('dashboard.panel.noDate')
-
+          text: this.$t('dashboard.panel.noDate'),
+          value: 0
         },
         {
           id: 1,
@@ -260,15 +261,36 @@ export default {
       this.$emit('change', this.searchTime)
     },
     setCustomTime (timeGroup) {
-      if (timeGroup.length === 2) {
+      console.log(timeGroup)
+      if (!timeGroup[2] || timeGroup.length === 2) {
         this.$set(this.searchTime, 0, timeGroup[0])
         this.$set(this.searchTime, 1, timeGroup[1])
 
         this.nowTimeType = {
-          id: 4,
-          text: this.$t('dashboard.panel.lastOneHour'),
-          type: 'hour',
-          value: 1
+          id: 0,
+          text: this.$t('dashboard.panel.customTimeRange')
+        }
+        this.$set(this.showTime, 'id', this.nowTimeType.id)
+        this.$set(this.showTime, 'text', this.nowTimeType.text)
+      } else if (timeGroup[2]) {
+        const type = timeGroup[2].substr(timeGroup[2].length - 1, 1)
+        const value = timeGroup[2].substr(0, timeGroup[2].length - 1)
+        if (value == 30 && type === 'd') {
+          this.showTime = this.nowTimeType = {
+            id: 11,
+            text: this.$t('dashboard.panel.lastThirtyDay'),
+            type: 'date',
+            value: 30
+          }
+        } else if (value == 30 && type === 'm') {
+          this.showTime = this.nowTimeType = {
+            id: 3,
+            text: this.$t('dashboard.panel.lastThirtyMin'),
+            type: 'minute',
+            value: 30
+          }
+        } else {
+          this.showTime = this.nowTimeType = this.timeData.find(item => item.value == value)
         }
         this.$set(this.showTime, 'id', this.nowTimeType.id)
         this.$set(this.showTime, 'text', this.nowTimeType.text)
@@ -277,6 +299,7 @@ export default {
     // left(){},
     // right(){},
     timeChange (val, from) {
+      console.log(val, from)
       this.nowTimeType = val
       this.$set(this.showTime, 'id', val.id)
       this.$set(this.showTime, 'text', val.text)
@@ -305,6 +328,7 @@ export default {
             this.$refs.calendar.focus()
           }
         } else {
+          console.log(123123123)
           this.isCustom = false
           if (this.showEmpty && id === 12) {
             this.searchTime = []

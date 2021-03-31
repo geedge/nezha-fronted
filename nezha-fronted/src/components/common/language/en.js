@@ -211,7 +211,7 @@ const en = {
             label: 'Line Chart' // "曲线图"
           },
           bar: {
-            label: 'Histogram' // "柱状图"
+            label: 'Bar' // "柱状图"
           },
           table: {
             label: 'Table' // "表格"
@@ -224,7 +224,7 @@ const en = {
             staticTip: 'The content in the double curly braces will be replaced on the Asset page'
           },
           singleStat: {
-            label: 'SingleStat'
+            label: 'Single value'
           },
           pie: {
             label: 'Pie'
@@ -304,6 +304,17 @@ const en = {
       lastTwoDay: 'Last 2 days',
       lastSevenDay: 'Last 7 days',
       lastThirtyDay: 'Last 30 days',
+      beforeFiveMin: 'Before 5 minutes',
+      beforeFifteenMin: 'Before 15 minutes',
+      beforeThirtyMin: 'Before 30 minutes',
+      beforeOneHour: 'Before 1 hour',
+      beforeThreeHour: 'Before 3 hours',
+      beforeSixHour: 'Before 6 hours',
+      beforeTwelveHour: 'Before 12 hours',
+      beforeTwentyFourHour: 'Before 24 hours',
+      beforeTwoDay: 'Before 2 days',
+      beforeSevenDay: 'Before 7 days',
+      beforeThirtyDay: 'Before 30 days',
       refreshInterval: {
         never: 'Off', // '从不'
         oneMinute: '1 minute', // 1 minute

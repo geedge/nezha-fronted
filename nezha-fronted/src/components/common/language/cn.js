@@ -211,7 +211,7 @@ const cn = {
             staticTip: '双大括号中的内容将会在asset页面被替换'
           },
           singleStat: {
-            label: 'SingleStat'
+            label: 'Single value'
           },
           pie: {
             label: '饼图'
@@ -297,6 +297,17 @@ const cn = {
       lastTwo: '最近2天',
       lastSevenDay: '最近7天',
       lastThirtyDay: '最近30天',
+      beforeFiveMin: '之前5分钟',
+      beforeFifteenMin: '之前15分钟',
+      beforeThirtyMin: '之前30分钟',
+      beforeOneHour: '之前1小时',
+      beforeThreeHour: '之前3小时',
+      beforeSixHour: '之前6小时',
+      beforeTwelveHour: '之前12小时',
+      beforeTwentyFourHour: '之前24小时',
+      beforeTwoDay: '之前2天',
+      beforeSevenDay: '之前7天',
+      beforeThirtyDay: '之前30天',
       refreshInterval: {
         never: '关闭',
         oneMinute: '1分钟',

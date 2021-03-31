@@ -131,7 +131,7 @@
             <div class="float-right panel-calendar dialog-tool">
 
 <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
-              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
+              <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" :showMultiple="true" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
             </div>
 <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
@@ -354,11 +354,13 @@ export default {
     mouseLeaveFullChart () {
       if (this.echartModalStore) {
         setTimeout(() => {
-          this.echartModalStore.setOption({
-            toolbox: {
-              show: false
-            }
-          })
+          if (this.echartModalStore) {
+            this.echartModalStore.setOption({
+              toolbox: {
+                show: false
+              }
+            })
+          }
         }, 300)
       }
     },
@@ -569,6 +571,8 @@ export default {
       if (chartInfo.type === 4) { // line,bar
         this.chartType = 'line'
       }
+      const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+      const minusFlag = this.$refs.pickTime && this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length
       let minTime = null
       let maxTime = null
       if (dataArg.length > 0 && dataArg[0].data &&
@@ -590,7 +594,7 @@ export default {
       const stackIconBorderColor = (chartInfo.type === 'stackArea' ? '#53a3cb' : '#7e7e7e')
       const stackIconChooseBorderColor = (chartInfo.type === 'stackArea' ? '#7e7e7e' : '#53a3cb')
       let maxValueCopies = this.getMaxValue(dataArg, chartInfo)
-      let maxValue = maxValueCopies.maxValue
+      const maxValue = maxValueCopies.maxValue
       // let minValue = maxValueCopies.minValue
       if (chartInfo.unit && dataArg.length > 0) {
         // maxValue = dataArg[0].data[0][1]
@@ -736,6 +740,13 @@ export default {
                 const value = item.data[0]
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px">'
+                str += bus.timeFormate(tData)
+                str += '</div>'
+              }
+              if (i === params.length / 2 && tip.alias.indexOf('process_') !== -1) {
+                const value = item.data[0] - minusTime
+                const tData = new Date(value)
+                str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
                 str += '</div>'
               }
@@ -1035,7 +1046,8 @@ export default {
         })
       } else if (chartSite === 'screen') { // 全屏显示
         // eslint-disable-next-line
-          if(legend){
+        console.log(legend)
+        if (legend) {
           this.screenLegendList = []
           this.isGreyScreen = []
           legend.forEach((item, i) => {
@@ -1092,7 +1104,7 @@ export default {
               const screenHeight = document.documentElement.clientHeight || document.body.clientHeight
               const sumHeight = Math.floor(screenHeight * 0.99 * 0.8)// margin-top:1vh; dailog:80%
               self.$refs.screenShowArea.style.height = `${sumHeight - divHeight - self.screenTitleHeight}px`
-              self.echartModalStore.resize({ height: (sumHeight - divHeight - self.screenTitleHeight) })// 图表的高度
+              // self.echartModalStore.resize({ height: (sumHeight - divHeight - self.screenTitleHeight) })// 图表的高度
               self.echartModalStore.off('finished')
             })
           }, 100)
@@ -1358,7 +1370,8 @@ export default {
       // this.$refs.calendarPanel.setCustomTime(this.searchTime);
       this.screenModal = true
       this.isGreyScreen = []
-
+      this.$refs.pickTime.$refs.multipleTime.searchTime = []
+      // this.$refs.pickTime.$refs.timerPick.setCustomTime(this.searchTime)
       this.seriesItemScreen = this.seriesItem
       // this.seriesItemScreen = this.seriesItem;
       /*
@@ -1401,7 +1414,7 @@ export default {
     dateChange (time) {
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-      this.echartModalStore.clear()
+      // this.echartModalStore.clear()
       this.showLegend = false
       this.$refs['localLoadingScreen' + this.chartIndex].startLoading()
       if (this.showSetting) {
@@ -1430,6 +1443,7 @@ export default {
         }
         const step = bus.getStep(startTime, endTime)
         if (type === 'list') { // 普通模式,主控台使用
+          console.log(123)
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele
             let query = encodeURIComponent(filterItem.expression)
@@ -1440,6 +1454,21 @@ export default {
             }
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
+          console.log(this.$refs.pickTime.$refs.multipleTime.searchTime)
+          if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
+            startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+            endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+            this.data.elements.forEach((ele) => {
+              const filterItem = ele
+              let query = encodeURIComponent(filterItem.expression)
+              if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
+                !this.chartInfo.param && (this.chartInfo.param = {})
+                this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
+                query += '&nullType=' + this.chartInfo.param.nullType
+              }
+              axiosArr.push(this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
+            })
+          }
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
@@ -1460,6 +1489,7 @@ export default {
         }
         // 一个图表
         axios.all(axiosArr).then((res) => {
+          console.log(res)
           if (res.length > 0) {
             const series = []
             const legend = []
@@ -1540,21 +1570,26 @@ export default {
                           host += `${tag}="${queryItem.metric[tag]}",`
                         }
                       })
+                      const elements = this.data.elements[pos] || this.data.elements[pos - this.data.elements.length] // 处理添加对比时的legend
                       if (host.endsWith(',')) { host = host.substr(0, host.length - 1) }
                       if (queryItem.metric.__name__) {
                         host += '}'
                       }
                       if (!host || host === '') {
-                        host = this.data.elements[pos].expression
+                        host = elements.expression
                       }
-                      let alias = this.dealLegendAlias(host, this.data.elements[pos].legend)
+                      let alias = this.dealLegendAlias(host, elements.legend)
                       if (!alias || alias === '') {
                         alias = host
                       }
-                      legend.push({ name: host + '-' + this.data.elements[pos].id + '-' + innerPos, alias: alias })
+                      if (pos >= this.data.elements.length) {
+                        legend.push({ name: 'process_' + host + '-' + elements.id + '-' + innerPos, alias: 'process_' + alias })
+                      } else {
+                        legend.push({ name: host + '-' + elements.id + '-' + innerPos, alias: alias })
+                      }
                       // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
 
-                      seriesItem.theData.name = host + '-' + this.data.elements[pos].id + '-' + innerPos
+                      seriesItem.theData.name = host + '-' + elements.id + '-' + innerPos
                       seriesItem.metric_name = seriesItem.theData.name
                       // 将秒改为毫秒
                       // alert('table=='+JSON.stringify(queryItem))
@@ -1588,6 +1623,19 @@ export default {
               }
             })
             this.setColor(legend.length)
+            console.log(series)
+            const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+            console.log(minusTime)
+            if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) {
+              series.forEach((item, index) => {
+                if (index >= series.length / 2) {
+                  console.log(123123);
+                  series[index].data.forEach((item1, index1) => {
+                    item1[0] = item1[0] + minusTime
+                  })
+                }
+              })
+            }
             this.seriesItemScreen = series
             // this.seriesItemArrScreen=series.filter((item,index)=>index<this.seriesLength);
             this.initChart(this.data, series, this.$refs.screenShowArea, 'screen', legend)

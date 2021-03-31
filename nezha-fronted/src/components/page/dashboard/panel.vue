@@ -190,7 +190,8 @@ export default {
         panelId: 0,
         start_time: '',
         end_time: '',
-        searchName: ''
+        searchName: '',
+        id: 4
       },
       panelId: 0,
       filterPanel: '',
@@ -273,7 +274,7 @@ export default {
     refreshTime (st, et) {
       const startTime = bus.timeFormate(st, 'yyyy-MM-dd hh:mm')
       const endTime = bus.timeFormate(et, 'yyyy-MM-dd hh:mm')
-      this.searchTime = [startTime, endTime]
+      this.searchTime = [startTime, endTime, '']
     },
     panelReloadForDel: function () {
       if (this.showPanel.id === this.panel.id) {
@@ -387,14 +388,16 @@ export default {
     // 选择日期变化
     dateChange (val) {
       const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
+      console.log(this.searchTime)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.panelId = this.showPanel.id
+      this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.value = this.searchTime[2]
       this.getTableData()
       this.getData(this.filter)
     },
-    setSearchTime (type, val) { // 设置searchTime
+    setSearchTime (type, val, nowTimeType) { // 设置searchTime
       if (type === 'minute') {
         const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
         const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')

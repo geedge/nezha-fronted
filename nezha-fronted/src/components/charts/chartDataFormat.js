@@ -745,7 +745,6 @@ export default {
         }
         interVal = Math.ceil(interVal) * Math.pow(1024, pow)
       }
-      console.log(interVal)
       interVal = !isNaN(interVal) ? interVal : 1
       return interVal
     }
