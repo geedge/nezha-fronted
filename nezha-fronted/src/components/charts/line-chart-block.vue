@@ -559,6 +559,7 @@ export default {
     },
     // chartSite用于区分是全屏显示还是局部显示
     initChart (chartInfo, dataArg, ele, chartSite, legend) {
+      this.legendMagicType = legend
       this.chartInfo = chartInfo
       const self = this
       this.chartType = '' // 图表类型
@@ -566,6 +567,7 @@ export default {
         this.chartType = 'line'
       }
       const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+      this.minusTime = minusTime
       let minTime = null
       let maxTime = null
       if (dataArg.length > 0 && dataArg[0].data &&
@@ -738,7 +740,7 @@ export default {
                 str += '</div>'
               }
               if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
-                const value = item.data[0] - minusTime
+                const value = item.data[0] - self.minusTime
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
@@ -973,7 +975,7 @@ export default {
                     let str = '<div>'
                     let sum = 0
                     params.forEach((item, i) => {
-                      const tip = legend[item.seriesIndex]
+                      const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
                       if (i === 0) {
                         const value = item.data[0]
@@ -1140,8 +1142,9 @@ export default {
                     let str = '<div>'
                     let sum = 0
                     let minusFlag = true
+                    // console.log(params ,legend);
                     params.forEach((item, i) => {
-                      const tip = legend[item.seriesIndex]
+                      const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
                       if (i === 0 && tip.alias.indexOf('Previous ') === -1) {
                         const value = item.data[0]
@@ -1151,7 +1154,7 @@ export default {
                         str += '</div>'
                       }
                       if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
-                        const value = item.data[0] - minusTime
+                        const value = item.data[0] - self.minusTime
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                         str += bus.timeFormate(tData)
