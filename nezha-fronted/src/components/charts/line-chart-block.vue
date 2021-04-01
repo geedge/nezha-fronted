@@ -938,6 +938,7 @@ export default {
           window.addEventListener('resize', this.chartResize)
           getChart(this.chartIndex).on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
+            console.log(params,self.isStackArea);
             if (self.isStackArea) {
               getChart(self.chartIndex).setOption({
                 toolbox: {
@@ -1138,15 +1139,24 @@ export default {
                   formatter: function (params) {
                     let str = '<div>'
                     let sum = 0
+                    let minusFlag = true
                     params.forEach((item, i) => {
                       const tip = legend[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
-                      if (i === 0) {
+                      if (i === 0 && tip.alias.indexOf('Previous ') === -1) {
                         const value = item.data[0]
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px">'
                         str += bus.timeFormate(tData)
                         str += '</div>'
+                      }
+                      if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
+                        const value = item.data[0] - minusTime
+                        const tData = new Date(value)
+                        str += '<div style="margin-bottom: 5px;margin-top: 5px">'
+                        str += bus.timeFormate(tData)
+                        str += '</div>'
+                        minusFlag = false
                       }
                       let val = parseFloat(Number(item.data[1]).toFixed(2))
                       if (val === 0) {
