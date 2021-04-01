@@ -264,6 +264,7 @@ export default {
       if (timeGroup) {
         this.showTime = this.nowTimeType = this.timeData.find(item => item.id == timeGroup.id)
         if (this.showTime) {
+          this.showTime = Object.assign({}, this.showTime)
           this.$set(this.searchTime, 0, timeGroup.start_time)
           this.$set(this.searchTime, 1, timeGroup.end_time)
         } else {
