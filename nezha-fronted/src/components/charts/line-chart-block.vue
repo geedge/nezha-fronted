@@ -760,9 +760,8 @@ export default {
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
               str += '<div style="padding-left: 10px;">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, oldDot)
-              str += '</div>'
               if (previousItem) {
-                str += '<div style="padding-left: 10px;">'
+                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
                 let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
                 if (previousval === 0) {
                   previousval = Number(item.data[1]).toExponential(2)
@@ -777,8 +776,12 @@ export default {
                 }
 
                 str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
-                str += '</div>'
+                str += '</span>'
+              } else if (tip.alias.indexOf('Previous ') !== -1) {
+                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                str += '</span>'
               }
+              str += '</div>'
               str += '</div>'
             })
             if (self.data.type === 'stackArea' || self.isStackArea) {
@@ -1195,6 +1198,27 @@ export default {
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
                       str += '<div style="padding-left: 10px;">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                      if (previousItem) {
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+                        if (previousval === 0) {
+                          previousval = Number(item.data[1]).toExponential(2)
+                        }
+                        let minusVal = 0
+                        if (previousval <= val) {
+                          minusVal = val - previousval
+                          str += '+'
+                        } else {
+                          minusVal = previousval - val
+                          str += '-'
+                        }
+
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                        str += '</span>'
+                      } else if (tip.alias.indexOf('Previous ') !== -1) {
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        str += '</span>'
+                      }
                       str += '</div>'
                       if (previousItem) {
                         str += '<div style="padding-left: 10px;">'
