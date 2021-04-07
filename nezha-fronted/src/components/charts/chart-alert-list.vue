@@ -20,21 +20,25 @@
               <span class="panel-info-corner-inner"></span>
             </span>
           </el-popover>
-          <el-dropdown trigger="click" v-show="!isPreview" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
+          <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartInfo.name}}</span>
-              <span class="chart-title-icon" v-if="data.editable"><i class="nz-icon nz-icon-xialaxuanze  "  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
+            <span class="el-dropdown-link chart-title">
+              <span class="chart-title-text">{{chartData.name}}</span>
+              <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
+                <span  @click="refreshChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
+                  <i class="nz-icon nz-icon-replay"></i>
+                </span>
+                 <span  @click="showAllScreen" class="" :title="$t('dashboard.screen')">
+                  <i class="nz-icon nz-icon-maxview"></i>
+                 </span>
+                <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
+              </span>
             </span>
-            <ul slot="dropdown" v-show="dropdownMenuShow" v-if="data.editable" :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
-              <li  @click="refreshChart" class="el-dropdown-menu__item">
-                <i class="global-active-color el-icon-refresh-right" style="font-size: 16px;"></i><span>{{$t('dashboard.refresh')}}</span></li>
-              <li  @click="editChart" class="el-dropdown-menu__item" v-has="`${from}_chart_toEdit`">
-                <i class="nz-icon nz-icon-edit" style="font-size: 14px; margin-right: 11px; margin-left: 1px;"></i>{{$t('dashboard.edit')}}</li>
+            <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
+              <li  @click="editChart" class="el-dropdown-menu__item">
+                <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
               <li  @click="removeChart" class="el-dropdown-menu__item" v-has="`${from}_chart_delete`">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
-              <li  @click="showAllScreen" class="el-dropdown-menu__item">
-                <i class="el-icon-full-screen" style="font-size: 16px;"></i>{{$t('dashboard.screen')}}</li>
               <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
             </ul>
@@ -839,31 +843,7 @@ export default {
     },
     duplicate () {
       this.dropdownMenuShow = false
-      this.$confirm(this.$t('tip.confirmDuplicate'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'info'
-      }).then(() => {
-        const param = { id: this.data.id }
-        this.$post('panel/' + this.data.panelId + '/charts/duplicate', (param)).then(response => {
-          if (response.code === 200) {
-            this.$message({
-              duration: 2000,
-              type: 'success',
-              message: this.$t('tip.duplicateSuccess')
-            })
-            this.$emit('on-duplicate-chart-block', this.data.id, response.data)
-          } else {
-            if (response.msg) {
-              this.$message.error(response.msg)
-            } else if (response.error) {
-              this.$message.error(response.error)
-            } else {
-              this.$message.error(response)
-            }
-          }
-        })
-      })
+      this.$emit('on-duplicate-chart-block', this.data.id)
     },
     // 全屏查看
     showAllScreen () {

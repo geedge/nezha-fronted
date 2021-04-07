@@ -15,7 +15,7 @@
 
                 <template slot-scope="{ node, data }">
                   <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
-                    <i class="nz-icon nz-icon-moban"></i>
+                    <i class="nz-icon nz-icon-template2"></i>
                     {{data.label}}
                   </div>
                 </template>
@@ -50,7 +50,7 @@
 
                   <template slot-scope="{ node, data }">
                     <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
-                      <i class="nz-icon nz-icon-moban"></i>
+                      <i class="nz-icon nz-icon-template2"></i>
                       {{data.label}}
                     </div>
                   </template>
@@ -651,11 +651,11 @@ export default {
     padding: 0 10px 0 25px;
     position: relative;
   }
-  .nz-cascade .nz-icon-moban {
+  .nz-cascade .nz-icon-template2 {
     display: none;
   }
 
-  .nz-cascade-temp .nz-icon-moban{
+  .nz-cascade-temp .nz-icon-template2{
     display: inline-block;
     position: absolute;
     left: 5px;

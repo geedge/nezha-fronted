@@ -220,7 +220,7 @@
           <!--type unit end-->
 
           <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="half-form-item" prop="span">
-            <el-select class="right-box-row-with-btn" :disabled="isGroup"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan" id="chart-box-span">
+            <el-select class="right-box-row-with-btn" :disabled="editChart.type === 'group'"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan" id="chart-box-span">
               <el-option :key="item" :label="'span-' + item" :value="item" v-for="item in spanList">
                 <span class="panel-dropdown-label-txt" > span-{{item}}</span>
               </el-option>
@@ -232,7 +232,7 @@
               id="chart-box-height"
               :fetch-suggestions="querySearch"
               @select="handleSelect"
-              :disabled="isGroup"
+              :disabled="editChart.type === 'group'"
               placeholder=""
               popper-class="popper-z-index no-style-class"
               size="mini"
@@ -507,7 +507,6 @@ export default {
       isUrl: false,
       isSingleStat: false,
       isAlert: false,
-      isGroup: false,
       rules: {
         panelName: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -875,14 +874,6 @@ export default {
           chartParams.groupId = -1
         }
         delete chartParams.panel
-        if (chartParams.type === 'group') {
-          chartParams.elements = [{
-            expression: 'Hadoop_DataNode_BlockChecksumOpNumOps',
-            id: '',
-            legend: '',
-            type: 'expert'
-          }]
-        }
         this.$post('visual/panel/chart', chartParams).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -1208,31 +1199,26 @@ export default {
       this.isUrl = true
       this.isSingleStat = false
       this.isAlert = false
-      this.isGroup = false
     },
     setIsSingleStat () {
       this.isUrl = false
       this.isSingleStat = true
       this.isAlert = false
-      this.isGroup = false
     },
     setIsAlertList () {
       this.isAlert = true
       this.isUrl = false
       this.isSingleStat = false
-      this.isGroup = false
     },
     setIsOtherChart () {
       this.isSingleStat = false
       this.isUrl = false
       this.isAlert = false
-      this.isGroup = false
     },
     setIsGroup () {
       this.isSingleStat = false
       this.isUrl = false
       this.isAlert = false
-      this.isGroup = true
     },
     // 编辑chart时使用, set_tdata
     editData (data, panelId) {
@@ -1268,6 +1254,8 @@ export default {
         // this.elements=[1];
       } else if (this.editChart.type === 'singleStat') {
         this.setIsSingleStat()
+      } else if (this.editChart.type === 'group') {
+        this.setIsGroup()
       } else {
         if ((this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'singleStat') && data.param) {
           this.editChart.param.threshold = data.param.threshold
@@ -1722,6 +1710,8 @@ export default {
             this.$set(this.editChart.param, 'valueMapping', { type: 'value', mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }] })
             this.showPicker.push({ bac: false, text: false })
           }
+        } else if (n.type === 'group') {
+          this.setIsGroup()
         } else {
           this.setIsOtherChart()
           n.param && !n.param.legendValue && this.$set(this.editChart.param, 'legendValue', { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' })
@@ -1740,7 +1730,7 @@ export default {
             })
           }
         })
-        if (n.id) {
+        if (n.id || n.name) {
           this.editData(this.editChart, this.showPanel.id)
         } else {
           this.createData(this.showPanel.id, '', n.unit)

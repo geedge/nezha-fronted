@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 0px 2px 2px 0;
+    padding: 0px 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -182,6 +182,7 @@
                       @on-edit-chart-block="editData"
                       @on-edit-group-chart="editDataGroup"
                       @on-remove-group-chart="removeChartGroup"
+                      @on-duplicate-group-chart="duplicateChartGroup"
                       @moveGroupItem="moveGroupItem"
                       :panel-id="filter.panelId"
                       :chart-data="item"
@@ -317,12 +318,12 @@ export default {
       this.dataList.forEach((item, index) => {
         item.weight = index
         newWeights.push({ id: item.id, weight: index })
-        if (item.type === 'group' && group.groupId!==item.id) {
+        if (item.type === 'group' && group.groupId !== item.id) {
           item.children.forEach(chart => {
             i++
             newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
           })
-        } else if (item.type === 'group' && group.groupId == item.id){
+        } else if (item.type === 'group' && group.groupId == item.id) {
           group.children.forEach(chart => {
             i++
             newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
@@ -1607,82 +1608,22 @@ export default {
     },
     // 复制图表
     duplicateChart (chartId, duplicateChartBack) {
-      const duplicateChartId = duplicateChartBack.id
-      let chart
-      let chartIndex = -1
-      this.dataList.forEach((item, index) => {
-        if (item.id === chartId) {
-          chartIndex = index
-          chart = item
-        }
+      const chart = this.dataList.find(item => {
+        return item.id === chartId
       })
-      let chartNext
-      const chartNextIndex = chartIndex + 1
-      if (chartNextIndex <= (this.dataList.length - 1)) {
-        chartNext = this.dataList[chartNextIndex]
-      }
-
       if (chart) {
-        chart.next = duplicateChartId
-        const duplicateChart = JSON.parse(JSON.stringify(chart))
-        duplicateChart.id = duplicateChartId
-        duplicateChart.prev = duplicateChartBack.prev
-        duplicateChart.next = duplicateChartBack.next
-        duplicateChart.title = duplicateChartBack.title
-        duplicateChart.elements = duplicateChartBack.elements
-        if (chartNext) {
-          chartNext.prev = duplicateChartId
-        }
-
-        this.dataList.splice(chartNextIndex, 0, duplicateChart)
-
-        const indexInTotal = this.dataTotalList.indexOf(chart)
-        this.dataTotalList.splice(indexInTotal + 1, 0, duplicateChart)
-        const chartInTotal = this.dataTotalList.find(item => item.id === chartId)
-        chartInTotal.next = duplicateChartId
-        if (chartNext) {
-          const chartNextInTotal = this.dataTotalList.find(item => item.id === chartNext.id)
-          chartNextInTotal.prev = chartNext.prev
-        }
-
-        const indexInTotalBak = this.dataTotalListBak.indexOf(chart)
-        this.dataTotalListBak.splice(indexInTotalBak + 1, 0, duplicateChart)
-        const chartInTotalBak = this.dataTotalListBak.find(item => item.id === chartId)
-        chartInTotalBak.next = duplicateChartId
-        if (chartNext) {
-          const chartNextInTotalBak = this.dataTotalListBak.find(item => item.id === chartNext.id)
-          chartNextInTotalBak.prev = chartNext.prev
-        }
-
-        this.currentRecordNum = this.currentRecordNum + 1
-        const chartData = this.chartDataCacheGroup.get(chart.id)
-        // console.log("__chartItem00__", chartData)
-        if (duplicateChartBack.type === 'alertList') {
-          this.$nextTick(() => {
-            this.getAlertListChartData(duplicateChartBack)
-            this.setChartSize(duplicateChart, chartNextIndex) // 设置该图表宽度
-          })
-        } else {
-          let duplicateChartData = {}
-          try {
-            duplicateChartData = JSON.parse(JSON.stringify(chartData))
-          } catch (e) {
-            console.warn(e)
-          }
-          duplicateChartData.chartItem = duplicateChart
-          this.chartDataCacheGroup.set(duplicateChartId, duplicateChartData)
-          this.$nextTick(() => {
-            if (this.$refs['editChart' + duplicateChartId][0]) {
-              this.$refs['editChart' + duplicateChartId][0].showLoad(duplicateChart)// 之后要实现
-            }
-
-            const chartType = duplicateChart.type
-            if (chartType !== 'url') {
-              this.getChartDataForSearch(duplicateChart, chartNextIndex)
-            }
-            this.setChartSize(duplicateChart, chartNextIndex) // 设置该图表宽度
-          })
-        }
+        const copyChart = { ...chart }
+        delete copyChart.id
+        copyChart.name = 'Copy_' + copyChart.name
+        this.$emit('on-edit-chart', copyChart)
+      }
+    },
+    duplicateChartGroup (chart) {
+      if (chart) {
+        const copyChart = { ...chart }
+        delete copyChart.id
+        copyChart.name = 'Copy_' + copyChart.name
+        this.$emit('on-edit-chart', copyChart)
       }
     },
     // 编辑图表

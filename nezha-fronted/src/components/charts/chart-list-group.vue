@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 0px 2px 2px 0;
+    padding: 0px 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -10,7 +10,7 @@
   }
   .list-width{
     width: calc(100% - 2px);
-    padding: 5px 5px 5px 0px;
+    padding: 5px 10px 5px 0px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
@@ -1552,90 +1552,16 @@ export default {
       }
     },
     // 复制图表
-    duplicateChart (chartId, duplicateChartBack) {
-      const duplicateChartId = duplicateChartBack.id
-      let chart
-      let chartIndex = -1
-      this.dataList.forEach((item, index) => {
-        if (item.id === chartId) {
-          chartIndex = index
-          chart = item
-        }
-      })
-      let chartNext
-      const chartNextIndex = chartIndex + 1
-      if (chartNextIndex <= (this.dataList.length - 1)) {
-        chartNext = this.dataList[chartNextIndex]
-      }
-
+    duplicateChart (chartId) {
+      const chart = this.dataList.find(item => item.id === chartId)
       if (chart) {
-        chart.next = duplicateChartId
-        const duplicateChart = JSON.parse(JSON.stringify(chart))
-        duplicateChart.id = duplicateChartId
-        duplicateChart.prev = duplicateChartBack.prev
-        duplicateChart.next = duplicateChartBack.next
-        duplicateChart.title = duplicateChartBack.title
-        duplicateChart.elements = duplicateChartBack.elements
-        if (chartNext) {
-          chartNext.prev = duplicateChartId
-        }
-
-        this.dataList.splice(chartNextIndex, 0, duplicateChart)
-
-        const indexInTotal = this.dataTotalList.indexOf(chart)
-        this.dataTotalList.splice(indexInTotal + 1, 0, duplicateChart)
-        const chartInTotal = this.dataTotalList.find(item => item.id === chartId)
-        chartInTotal.next = duplicateChartId
-        if (chartNext) {
-          const chartNextInTotal = this.dataTotalList.find(item => item.id === chartNext.id)
-          chartNextInTotal.prev = chartNext.prev
-        }
-
-        const indexInTotalBak = this.dataTotalListBak.indexOf(chart)
-        this.dataTotalListBak.splice(indexInTotalBak + 1, 0, duplicateChart)
-        const chartInTotalBak = this.dataTotalListBak.find(item => item.id === chartId)
-        chartInTotalBak.next = duplicateChartId
-        if (chartNext) {
-          const chartNextInTotalBak = this.dataTotalListBak.find(item => item.id === chartNext.id)
-          chartNextInTotalBak.prev = chartNext.prev
-        }
-
-        this.currentRecordNum = this.currentRecordNum + 1
-        const chartData = this.chartDataCacheGroup.get(chart.id)
-        // console.log("__chartItem00__", chartData)
-        if (duplicateChartBack.type === 'alertList') {
-          this.$nextTick(() => {
-            this.getAlertListChartData(duplicateChartBack)
-            this.setChartSize(duplicateChart, chartNextIndex) // 设置该图表宽度
-          })
-        } else {
-          let duplicateChartData = {}
-          try {
-            duplicateChartData = JSON.parse(JSON.stringify(chartData))
-          } catch (e) {
-            console.warn(e)
-          }
-          duplicateChartData.chartItem = duplicateChart
-          this.chartDataCacheGroup.set(duplicateChartId, duplicateChartData)
-          this.$nextTick(() => {
-            if (this.$refs['editChart' + duplicateChartId][0]) {
-              this.$refs['editChart' + duplicateChartId][0].showLoad(duplicateChart)// 之后要实现
-            }
-
-            const chartType = duplicateChart.type
-            if (chartType !== 'url') {
-              this.getChartDataForSearch(duplicateChart, chartNextIndex)
-            }
-            this.setChartSize(duplicateChart, chartNextIndex) // 设置该图表宽度
-          })
-        }
+        this.$emit('on-duplicate-group-chart', chart)
       }
     },
     // 编辑图表
     editData (chartId) {
       // 获取该id下chart的相关信息
       const chart = this.dataList.find(item => item.id === chartId)
-      console.log(chart)
       if (chart) {
         this.$emit('on-edit-group-chart', chart)
       }

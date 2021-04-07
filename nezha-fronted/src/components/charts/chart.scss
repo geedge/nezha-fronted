@@ -68,10 +68,16 @@
   line-height: 20px;
 }
 .nz-chart-dropdown {
+  position: absolute;
+  top: 30px;
+  left: calc(100% - 110px);
+  transform-origin: center top;
+  z-index: 1000;
+  width: 110px;
   li {
     padding-left:15px !important;
     padding-right:0px !important;
-    width:140px;
+    width:94px;
     text-align: left;
     i {
       margin-right: 10px;
@@ -83,7 +89,7 @@
   li {
     padding-left:15px !important;
     padding-right:0px !important;
-    width:140px;
+    width:94px;
     text-align: left;
     i {
       margin-right: 10px;
@@ -310,8 +316,13 @@
         overflow: hidden;
         white-space: nowrap;
         .chart-title-icon{
-          display: inline-block;
+          display: inline-flex;
           cursor: pointer;
+          justify-content: space-between;
+          align-items: center;
+          span{
+            margin-left: 20px;
+          }
         }
       }
     }
@@ -499,9 +510,9 @@
     .chartTitle {
       text-align: center;
       width: 100%;
-      line-height: 20px;
-      height: 28px;
-      padding: 1px 3px 0 3px;
+      line-height: 40px;
+      height: 40px;
+      padding: 1px 10px 0 10px;
       box-sizing: border-box;
       .nz-chart-top{
         width:100%;
@@ -514,11 +525,13 @@
       }
       .chart-title {
         font-size: 14px;
-        line-height: 26px;
-        color: #52545c;
+        line-height: 40px;
         display:flex;
-        justify-content:center;
+        justify-content:space-between;
         align-items:center;
+        height: 39px;
+        color: #333333;
+        font-weight: 400;
         .chart-title-text{
           max-width:calc(100% - 20px);
           text-overflow: ellipsis;
@@ -527,9 +540,14 @@
           cursor: pointer;
         }
         .chart-title-icon{
-          display: inline-block;
+          display: inline-flex;
           cursor: pointer;
-          .nz-icon-xialaxuanze{
+          justify-content: space-between;
+          align-items: center;
+          span{
+            margin-left: 20px;
+          }
+          .nz-icon-more1{
             margin-left: 5px;
             font-size: 16px;
           }
