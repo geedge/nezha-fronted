@@ -19,7 +19,7 @@ export default new Router({
     },
     {
       path: '/',
-      component: resolve => require(['../components/common/home.vue'], resolve),
+      component: resolve => require(['../components/layout/home.vue'], resolve),
       children: [
         {
           path: '/panel',
@@ -43,7 +43,7 @@ export default new Router({
         },
         {
           path: '/account',
-          component: resolve => require(['../components/page/config/account.vue'], resolve)
+          component: resolve => require(['../components/page/config/account2.vue'], resolve)
         },
         {
           path: '/menu',

@@ -1,10 +1,9 @@
-// import "./assets/css/main.css";
-import './assets/stylus/index.scss'
-import './assets/css/nzIcon.css'
-import './assets/css/main.css'
+// import '@/assets/stylus/index.scss'
 import 'element-ui/lib/theme-chalk/index.css'
-import ElementUI from 'element-ui'
 import 'xterm/dist/xterm.css'
+import '@/assets/stylus/main.scss'
+import '@/assets/css/main.scss'
+import ElementUI from 'element-ui'
 import i18n from './components/common/i18n'
 
 import Vue from 'vue'
@@ -79,7 +78,7 @@ Vue.prototype.$unixTimeParseToString = unixTimeParseToString
 Vue.prototype.$chartResizeTool = chartResizeTool
 Vue.prototype.$tableSet = tableSet
 Vue.prototype.$tableHeight = { // 列表页表格的高度
-  normal: 'calc(100% - 100px)', // 常规高度，特例在下方定义
+  normal: 'calc(100% - 48px)', // 常规高度，特例在下方定义
   openSubList: { // 打开二级列表后的高度
     mainList: 'calc(100% - 60px)',
     subList: 'calc(100% - 86px)',
@@ -125,35 +124,8 @@ Vue.mixin({
         return bus.timeFormate(this.timezoneToUtcTime(time), format)
       }
     },
-    tableTitleReset: function (src, dist) {
-      dist.forEach(item => {
-        const title = src.find(t => t.prop === item.prop)
-        if (title && title.label) {
-          item.label = title.label
-        }
-      })
-    },
     hasButton (code) {
       return hasButton(this.$store.getters.buttonList, code)
-    },
-    toTop (wrap) {
-      let currentTop = wrap.scrollTop
-      const interval = currentTop / 10
-      const intervalFunc = setInterval(function () { // 花200ms分10次回到顶部，模拟动画效果
-        if (currentTop === 0) {
-          clearInterval(intervalFunc)
-        } else {
-          currentTop = (currentTop - interval) < interval * 0.5 ? 0 : currentTop - interval
-          wrap.scrollTop = currentTop
-        }
-      }, 20)
-    },
-    toTopBtnHandler (wrap) {
-      const vm = this
-      wrap.addEventListener('scroll', bus.debounce(function () {
-        vm.tools.showTopBtn = wrap.scrollTop > 50
-        vm.tools.tableHover = wrap.scrollTop > 50
-      }, 100))
     },
     numberWithEConvent (num) {
       if (num) {

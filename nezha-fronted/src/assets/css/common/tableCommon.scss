@@ -1,0 +1,205 @@
+/*列表table通用样式*/
+.list-page {
+  background-color: white;
+  height: 100%;
+
+  .main-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    z-index: 0;
+  }
+  .main-list.main-list-with-sub {
+    height: 50%;
+  }
+  .main-modal {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+    z-index: 100;
+  }
+  .top-tools {
+    display: flex;
+    align-items : center;
+    position: relative;
+    flex-direction: row-reverse;
+    padding: 14px 20px 14px 0;
+
+    .top-tool-main-right {
+      display: flex;
+    }
+    .top-tool-btn {
+      height: 32px;
+      width: 36px;
+      border: 1px solid #DEDEDE;
+      outline: none;
+      border-radius: 2px;
+      background-color: $--button-gray-background-color;
+      transition: background-color linear .1s;
+
+      i {
+        font-size: 14px;
+        color: $--button-gray-color;
+      }
+    }
+    .top-tool-btn:hover:not(.nz-btn-disabled) {
+      background-color: $--button-gray-hover-background-color;
+    }
+    .top-tool-btn:focus:not(.nz-btn-disabled) {
+      background-color: $--button-gray-hover-background-color;
+      border-color: #FBCEA4;
+      i {
+        color: $--button-gray-active-color;
+      }
+    }
+    .top-tool-btn--delete.top-tool-btn:focus:not(.nz-btn-disabled) {
+      background-color: $--button-gray-hover-background-color;
+      border-color: #FFC4B9;
+
+      i {
+        color: #F0745A;
+      }
+    }
+  }
+
+  .nz-table2 {
+    position: relative;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+    flex: auto;
+
+    .el-table {
+      position: absolute;
+      width: calc(100% - 40px);
+      border: 1px solid #E7EAED;
+      border-bottom: none;
+
+      .el-table-column--selection {
+        width: 55px !important;
+      }
+
+      td {
+        padding: 9px 0;
+        border-bottom: 1px solid #E7EAED;
+      }
+      th {
+        border-color: #E7EAED;
+      }
+      .el-table__header th:first-of-type {
+        border-left: none;
+      }
+      .gutter {
+        position: fixed;
+        right: 31px;
+        height: 49px;
+        border-bottom: 1px solid #E7EAED;
+        background-color: white;
+      }
+      thead {
+        color: #333;
+      }
+
+      .el-table__body tr:hover>td, .el-table__body tr.hover-row.current-row>td,
+      .el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+      .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td {
+        background-color: #f9f9f9 !important;
+      }
+      .table-operation-title {
+        text-align: center;
+      }
+      .table-operation-items {
+        display: flex;
+        justify-content: center;
+
+        .table-operation-item {
+          display: flex;
+          height: 22px;
+          border-radius: 2px;
+          outline: none;
+        }
+        >.table-operation-item {
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          margin-right: 10px;
+          border: none;
+          border-radius: 2px;
+          background-color: $--button-primary-background-color;
+          opacity: .8;
+          cursor: pointer;
+
+          i {
+            color: $--button-primary-color;
+            font-size: 12px;
+          }
+        }
+        >.table-operation-item:hover {
+        }
+        .table-operation-item.table-operation-item--more {
+          justify-content: space-between;
+          width: 52px;
+          border: 1px solid #DEDEDE;
+
+          span {
+            line-height: 14px;
+            padding-left: 10px;
+          }
+          i {
+            color: #999;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+  /* start--覆盖el-table边框、gutter等样式 */
+  .el-table__body-wrapper, .el-table__fixed-body-wrapper {
+    box-shadow: 1px 0 #E7EAED;
+
+    .cell {
+      color: #333;
+    }
+  }
+  .el-table__body-wrapper .is-hidden, .el-table__header-wrapper .is-hidden {
+    visibility: hidden;
+  }
+  .el-table--border td {
+    border-right: none !important;
+  }
+  .el-table--border .el-table__body-wrapper td:nth-last-child(2) {
+    box-shadow: 1px 0 #E7EAED;
+  }
+  .el-table--border .el-table__header-wrapper th:nth-last-child(3) {
+    border-right: none !important;
+    box-shadow: 1px 0 #E7EAED;
+  }
+  .el-table__fixed-body-wrapper {
+    td:not(.is-hidden) {
+      border-left: 1px solid #E7EAED;
+    }
+  }
+  .el-table__fixed-header-wrapper {
+    th:not(.is-hidden) {
+      border-left: 1px solid #E7EAED;
+    }
+    th:last-of-type {
+      border-right: none !important;
+    }
+  }
+  .el-table--border::after, .el-table--group::after {
+    width: 0;
+  }
+  /* end--覆盖el-table边框、gutter等样式 */
+  .pagination-bottom {
+    position: absolute;
+    bottom: 0;
+    height: 48px;
+    width: 100%;
+  }
+}
+.operation-dropdown-text {
+  font-size: 13px;
+}

@@ -1,10 +1,8 @@
-<style>
-  .dc {
-    height: 100%;
-  }
+<style lang="scss">
+@import '@/assets/css/common/tableCommon.scss';
 </style>
 <template>
-  <div class="dc" >
+  <div class="dc list-page">
     <!--dc table start-->
     <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
       <div class="main-modal"></div>
@@ -14,10 +12,14 @@
             <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
           <button :title="$t('overall.createDatacenter')" @click="add" type="button" v-has="'dc_toAdd'"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="dc-add">
+                  id="dc-add" class="top-tool-btn margin-l-20">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" @before="delFlag=true" @after="getTableData" api="idc" v-has="'dc_delete'" id="dc-list-batch-delete"></delete-button>
+          <button id="account-column-setting" class="top-tool-btn margin-l-10"
+                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
+            <i class="nz-icon-gear nz-icon"></i>
+          </button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -32,100 +34,86 @@
           ref="customTableTitle"
         ></element-set>
       </transition>
-      <el-table
-        id="dc-list-table"
-        class="nz-table"
-        :data="tableData"
-        border
-        tooltip-effect="light"
-        v-show="bottomBox.mainResizeShow"
-        :height="mainTableHeight"
-        ref="dcTable"
-        v-loading="tools.loading"
-        :cell-class-name="assetStatClassName"
-        style="width: 100%;"
-        @sort-change="tableDataSort"
-        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-      >
-        <el-table-column
-          :resizable="false"
-          type="selection"
-          width="40"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          :resizable="true"
-          show-overflow-tooltip
-          v-for="(item, index) in tools.customTableTitle"
-          v-if="item.show"
-          :key="`col-${index}`"
-          :label="item.label"
-          :sortable="sortableShow(item.prop,'dc')"
-          :prop="$tableSet.propTitle(item.prop,'dc')"
+      <div class="nz-table2">
+        <el-table
+          v-show="bottomBox.mainResizeShow"
+          id="dc-list-table"
+          ref="dcTable"
+          v-loading="tools.loading"
+          :cell-class-name="assetStatClassName"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          tooltip-effect="light"
+          @sort-change="tableDataSort"
+          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
         >
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop == 'option'" class="content-right-options">
-              <span :id="'dc-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'dc_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
-              <span :id="'dc-setting-'+scope.row.id" :title="$t('config.dc.traffic.title')" @click="configTraffic(scope.row)" class="content-right-option" v-has="'dc_trafficSetting'" ><i class="nz-icon nz-icon-gear"></i></span>
-              &nbsp;
-              <span :id="'dc-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'dc_delete'"><i class="nz-icon nz-icon-delete"></i></span>
-            </div>
-            <template v-else-if="item.prop == 'principal'">
-              <template v-if="scope.row.principal">
-                <template v-for="item in userData">
-                  <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :label="item.label"
+            :prop="$tableSet.propTitle(item.prop,'dc')"
+            :resizable="true"
+            :sortable="sortableShow(item.prop,'dc')"
+            show-overflow-tooltip
+          >
+            <template slot-scope="scope" :column="item">
+              <template v-if="item.prop == 'principal'">
+                <template v-if="scope.row.principal">
+                  <template v-for="item in userData">
+                    <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
+                  </template>
                 </template>
+                <template v-else>-</template>
               </template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'state'">
-              <el-switch
-                v-model="scope.row.state"
-                active-value="ON"
-                inactive-value="OFF"
-                :disabled="!hasButton('dc_toEdit') || !hasButton('dc_toEdit')"
-                active-color="#ee9d3f"
-                @change="(val)=>{statusChange(scope.row)}"
-              />
-            </template>
-            <template v-else-if="item.prop == 'longitude'">
-              <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'latitude'">
-              <template v-if="regNumTest(scope.row.latitude)">{{scope.row.latitude}}</template>
-              <template v-else>-</template>
-            </template>
-            <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
-              <el-popover
-                placement="top"
-                trigger="hover"
-                :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended">
-                <div slot="reference" class="dc-asset-states">
-                  <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                  <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                  <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                  <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
-                </div>
-              </el-popover>
+              <template v-else-if="item.prop == 'state'">
+                <el-switch
+                  v-model="scope.row.state"
+                  :disabled="!hasButton('dc_toEdit') || !hasButton('dc_toEdit')"
+                  active-color="#ee9d3f"
+                  active-value="ON"
+                  inactive-value="OFF"
+                  @change="(val)=>{statusChange(scope.row)}"
+                />
+              </template>
+              <template v-else-if="item.prop == 'longitude'">
+                <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
+                <template v-else>-</template>
+              </template>
+              <template v-else-if="item.prop == 'latitude'">
+                <template v-if="regNumTest(scope.row.latitude)">{{scope.row.latitude}}</template>
+                <template v-else>-</template>
+              </template>
+              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
+                <el-popover
+                  :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended"
+                  placement="top"
+                  trigger="hover">
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
+                  </div>
+                </el-popover>
 
-            </template >
-            <template v-else-if="item.prop == 'cabinetNum'">
-              <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+              </template >
+              <template v-else-if="item.prop == 'cabinetNum'">
+                <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+              </template>
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
             </template>
-            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" :resizable="false">
-          <template slot="header">
-            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+        </el-table>
+      </div>
       <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow" id="dc-list-totop"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -249,11 +237,6 @@ export default {
           label: this.$t('config.dc.state'),
           prop: 'state',
           show: true
-        }, {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          width: 120
         }
       ],
       tableData: [],

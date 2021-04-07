@@ -1,9 +1,10 @@
-.overview{
+.overview {
   height: 100%;
+  background-color: #f6f6f6;
 }
 .overview-content-header{
   display: flex;
-  padding: 8px 0 2px 0;
+  padding: 0 0 2px 0;
   justify-content: space-between;
 }
 .overview-content-header .header-title{
@@ -35,6 +36,12 @@
   line-height: 35px;
   color: #333333;
   vertical-align: middle;
+}
+.content-row-box .content-col-box:first-child{
+  margin-left: 0;
+}
+.content-row-box .content-col-box:last-child{
+  margin-right: 0;
 }
 .tool-container .date{
   height: 35px;

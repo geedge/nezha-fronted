@@ -1,4 +1,4 @@
-$global-text-color-active: #ee9d3f; // 全局文字active字色
+$global-text-color-active: #fa901c; // 全局文字active字色
 
 $content-right-background-color: #f9f9f9; //右侧背景色
 
@@ -11,8 +11,10 @@ $btn-normal-background-color: linear-gradient(180deg, #F5B93E 0%, #EE9D3F 100%);
 $btn-normal-background-color-hover: #EE9D3F ; //橙色按钮hover背景颜色
 $btn-normal-txt-color: #fff; //橙色按钮字体颜色
 $btn-normal-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //橙色按钮边框阴影
-$btn-light-background-color: linear-gradient(rgb(247, 248, 250) 0%, rgb(231, 234, 240) 100%); //灰色按钮背景颜色
-$btn-light-background-color-hover: linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%); //灰色按钮hover背景颜色
+// $btn-light-background-color: linear-gradient(rgb(247, 248, 250) 0%, rgb(231, 234, 240) 100%); //灰色按钮背景颜色
+// $btn-light-background-color-hover: linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%); //灰色按钮hover背景颜色
+$btn-light-background-color: #F9F9F9;
+$btn-light-background-color-hover: #FFF;
 $btn-light-txt-color: #666; //灰色按钮字体颜色
 $btn-light-shadow: 0 0 1px 1px rgba(162,162,162,0.50); //灰色按钮边框阴影
 
@@ -49,4 +51,3 @@ $suspended-color: #9e9c98; //全局停用色灰色
 $left-menu-bgcolor:#FFF;
 
 @import './main.scss';
-/*@import './table.scss';*/

@@ -37,10 +37,10 @@ li{
   list-style-type:none ;
 }
 
-.nz-icon-gear:before {
+/*.nz-icon-gear:before {
   color: #BA3939;
   font-size:12px;
-}
+}*/
 
 /* begin--通用*/
 .margin-l-5 {
@@ -546,7 +546,7 @@ li{
 .sub-list-tab-active {
   color: $global-text-color-active;
   background-color: white;
-  border-top: solid 2px #ee9d3f;
+  border-top: solid 2px $global-text-color-active;
 }
 .sub-list-tab-title {
   font-size: 14px;
@@ -664,6 +664,21 @@ li{
   cursor: pointer;
 }
 /* begin--顶部工具栏*/
+/*.main-list {
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+.main-list.main-list-with-sub {
+  height: 50%;
+}
+.main-modal {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: none;
+  z-index: 100;
+}
 .top-tools {
   display: flex;
   height: 50px;
@@ -676,7 +691,6 @@ li{
 }
 .top-tools .top-tool-search {
   width: 260px;
-  /*margin: -2px 0 0 0;*/
 }
 .top-tools .top-tool-btn-txt .nz-icon{
   display: inline-block;
@@ -707,27 +721,21 @@ li{
   margin-top: -2px;
   overflow: hidden;
 }
-/*.top-tool-main-right>.nz-btn, .top-tool-main-right-to-left>.nz-btn, .top-tool-main-right>.nz-btn-group, .top-tool-main-right>.panel-calendar {
-  margin-top: -2px;
-}*/
 .asset .top-tool-main-right-to-left {
   right: calc(100% - 440px) !important;
-  /*transform: translateX(100%);*/
 }
 .config .top-tool-main-right-to-left {
   right: calc(100% - 492px) !important;
-  /*transform: translateX(100%);*/
 }
 .top-tool-main-right-to-left {
   right: calc(100% - 390px) !important;
-  /*transform: translateX(100%);*/
 }
 .top-tool-main-right-to-left-small{
   right: calc(100% - 360px) !important;
 }
 .top-tool-main-right-to-left-little{
   right: calc(100% - 286px) !important;
-}
+}*/
 /* end--顶部工具栏*/
 
 /* begin--二级顶部工具栏*/
@@ -761,14 +769,6 @@ li{
 .has-sub-popper {
   color: $danger-color;
 }
-.main-list {
-  height: 100%;
-  position: relative;
-  z-index: 0;
-}
-.main-list.main-list-with-sub {
-  height: 50%;
-}
 .sub-box {
   height: 50%;
   position: relative;
@@ -783,13 +783,7 @@ li{
 .main-and-sub-transition {
   transition: .4s height;
 }
-.main-modal {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  display: none;
-  z-index: 100;
-}
+
 .resize-modal {
   width: 100%;
   opacity: 0.6;
@@ -902,10 +896,10 @@ li{
 .nz-table .el-table__header th:nth-last-child(2) {
   border-right: none;
 }
-.nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+/*.nz-table.el-table--border td, .el-table--border th, .nz-table .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
   border-right: none;
   background: #f9f9f9;
-}
+}*/
 /*.nz-table .el-table__body {
   width: 100% !important;
 }
@@ -1023,7 +1017,7 @@ li{
 .el-table .el-table__body tr:hover>td {
   background-color: #f0f0f0 !important;
 }
-.nz-table-gear {
+/*.nz-table-gear {
   box-sizing: border-box;
   position: relative;
 }
@@ -1031,7 +1025,7 @@ li{
   cursor: pointer;
   position: absolute;
   left: -3px;
-}
+}*/
 .alert-message-tag, .alert-rule-tag {
   margin: 3px;
 }
@@ -1889,7 +1883,7 @@ li{
 .query-input-active {
   margin-top: 1px;
 }
-.top-tools input, .sub-top-tools input {
+.sub-top-tools input {
   background-color: $content-right-background-color;
 }
 .query-input-active .el-input__inner, .query-input-inactive .el-input__inner {
@@ -2364,9 +2358,6 @@ li{
 /deep/ .el-input--mini .el-input__icon{
   line-height: 24px;
 }
-.content-row-box .content-col-box:first-child{
-  margin-left: 0;
-}
 .right-box-small-title{
   font-family: Roboto-Regular;
   font-size: 14px;
@@ -2469,15 +2460,15 @@ li{
   }
 }
 .el-radio-group .el-radio__inner:hover{
-  border-color: #ee9d3f !important;
+  border-color: $global-text-color-active !important;
 }
 .el-radio-group .is-checked {
   .el-radio__inner{
-    background-color: #ee9d3f !important;
-    border-color: #ee9d3f !important;
+    background-color: $global-text-color-active !important;
+    border-color: $global-text-color-active !important;
   }
   .el-radio__label{
-    color: #ee9d3f !important;;
+    color: $global-text-color-active !important;;
   }
 }
 /deep/ .el-input__inner{
@@ -2496,6 +2487,6 @@ li{
 }
 
 /deep/ .el-switch.is-checked .el-switch__core{
-  border-color: #ee9d3f;
-  background-color: #ee9d3f;
+  border-color: $global-text-color-active;
+  background-color: $global-text-color-active;
 }

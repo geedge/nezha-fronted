@@ -1,7 +1,7 @@
 <template>
-    <div :class="['delete-button',(deleteObjs.length<1?'':'delete-button-light')]">
-      <el-button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'nz-btn-disabled' : deleteObjs.length<1}" @click="batchDelete" :id="id"><span><i class="nz-icon nz-icon-delete" ></i></span></el-button>
-    </div>
+  <div :class="['delete-button',(deleteObjs.length<1?'':'delete-button-light')]">
+    <button :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete"><span><i class="nz-icon nz-icon-delete" ></i></span></button>
+  </div>
 </template>
 
 <script>
@@ -9,7 +9,6 @@ export default {
   name: 'deleteButton',
   props: {
     filterFunction: Function,
-    // deleteObjs: Object,
     deleteObjs: Array,
     api: String,
     clickFunction: Function,
@@ -53,18 +52,14 @@ export default {
 
 <style scoped>
   .delete-button{
-    margin-left: 20px;
+    margin-left: 10px;
     opacity: 0.7;
     border-radius: 2px;
   }
   .delete-button .nz-btn-disabled .nz-icon-delete{
     opacity: 0.5;
-    color: #D14A2B;
   }
   .delete-button-light.delete-button{
     border-radius: 2px;
-  }
-  .delete-button-light .nz-icon-delete{
-    color:  #D14A2B;
   }
 </style>

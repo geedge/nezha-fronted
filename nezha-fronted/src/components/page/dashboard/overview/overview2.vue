@@ -1,5 +1,5 @@
 <template>
-  <div class="overview" style="background-color: #f9f9f9;">
+  <div class="overview">
     <!--自定义地图鼠标悬浮提示dom，避免被overflow：hidden裁剪-->
     <div class="my-pane" :style="{'left': `${tooltip.x}px`, 'top': `${tooltip.y}px`}"></div>
     <!--标题-->

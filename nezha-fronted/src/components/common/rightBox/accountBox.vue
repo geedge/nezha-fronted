@@ -1,3 +1,6 @@
+<style lang="scss">
+$--input-focus-border: red;
+</style>
 <template>
   <div class="right-box right-box-account" v-clickoutside="{obj:editUser,func:clickOutside}">
     <!-- begin--顶部按钮-->
@@ -109,9 +112,6 @@ export default {
       return enabled.length === 0
     }
   },
-  created () {
-    this.getRoles()
-  },
   data () {
     const validatePassword = (rule, value, callback) => { // 确认密码的二次校验
       if (value === '' && this.editUser.pin) {
@@ -159,7 +159,6 @@ export default {
       editUser: {},
       scripts: [],
       selectableScripts: [],
-      roles: [],
       pinChange: ''
     }
   },
@@ -192,6 +191,7 @@ export default {
               }
             })
           } else {
+            editUser.roleIds = this.roles.find(t => t.name == 'common').id
             this.$post('sys/user/save', editUser).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {

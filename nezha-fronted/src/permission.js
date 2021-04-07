@@ -115,7 +115,6 @@ export function sortByOrderNum (menuList) {
       menu.children = menu.children.sort((a, b) => {
         return a.orderNum - b.orderNum
       })
-      menu.route = menu.children[0].route
     }
   })
   return r

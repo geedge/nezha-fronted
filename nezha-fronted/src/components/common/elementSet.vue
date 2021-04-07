@@ -101,7 +101,7 @@ export default {
     },
     // 点击第二个cancel
     save () {
-      this.$emit('update:customTableTitle', this.custom)
+      this.$emit('update', this.custom)
       localStorage.setItem(
         'nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + ((typeof this.path !== 'undefined') ? this.path : this.$route.path),
         JSON.stringify(this.custom)
@@ -131,8 +131,8 @@ export default {
   border: 1px solid #EBEEF5;
   box-shadow: $pop-box-shadow;
   position: absolute;
-  top: 83px;
-  right: 0;
+  top: 55px;
+  right: 20px;
   width: 200px;
   color: #606266;
   background: #fff;

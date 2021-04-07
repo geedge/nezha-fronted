@@ -1,10 +1,8 @@
-<style scoped>
-  .prom {
-    height: 100%;
-  }
+<style lang="scss">
+@import '@/assets/css/common/tableCommon.scss';
 </style>
 <template>
-  <div class="prom">
+  <div class="prom list-page">
     <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
       <div class="main-modal"></div>
       <div class="top-tools" v-show="bottomBox.mainResizeShow">
@@ -13,10 +11,14 @@
             <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
           </div>
           <button :title="$t('overall.createPrometheusServer')" @click="add" type="button" v-has="'prom_toAdd'"
-                  class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="prom-add">
+                  id="prom-add" class="top-tool-btn margin-l-20">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="promServer" v-has="'prom_delete'" id="promserver-list-batch-delete"></delete-button>
+          <button id="prom-column-setting" class="top-tool-btn margin-l-10"
+                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
+            <i class="nz-icon-gear nz-icon"></i>
+          </button>
         </div>
         <div class="pagination-top pagination-top-hide display-none"></div>
       </div>
@@ -31,58 +33,46 @@
           ref="customTableTitle"
         ></element-set>
       </transition>
-      <el-table :data="tableData" border v-show="bottomBox.mainResizeShow" :height="mainTableHeight" style="width: 100%;"
-                @sort-change="tableDataSort" class="nz-table" ref="promTable" v-loading="tools.loading"
+      <div class="nz-table2">
+        <el-table v-show="bottomBox.mainResizeShow" ref="promTable" v-loading="tools.loading" :data="tableData"
+                :height="mainTableHeight" border @sort-change="tableDataSort"
                 @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-      >
-        <el-table-column
-          :resizable="false"
-          type="selection"
-          width="40"
-          align="center">
-        </el-table-column>
-        <el-table-column :resizable="true" v-for="(item, index) in tools.customTableTitle"
-                         v-if="item.show"
-                         :key="`col-${index}`"
-                         :label="item.label"
-                         :sortable="$tableSet.sortableShow(item.prop,'promServer')"
-                         :prop="$tableSet.propTitle(item.prop,'promServer')"
-                         :sort-orders="['ascending', 'descending']">
-          <template slot-scope="scope" :column="item">
-            <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
+        >
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column v-for="(item, index) in tools.customTableTitle" v-if="item.show"
+                           :key="`col-${index}`"
+                           :label="item.label"
+                           :prop="$tableSet.propTitle(item.prop,'promServer')"
+                           :resizable="true"
+                           :sort-orders="['ascending', 'descending']"
+                           :sortable="$tableSet.sortableShow(item.prop,'promServer')">
+            <template slot-scope="scope" :column="item">
+              <span v-if="item.prop == 'idc'" >{{scope.row[item.prop]?scope.row[item.prop].name:'-'}}</span>
 
-            <span v-else-if="item.prop == 'type'">
-                <!--{{scope.row[item.prop] == '1' ? 'Global' : ''}}
-                {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}-->
-              {{findServerType(scope.row[item.prop]).text}}
-            </span>
-            <span v-else-if="item.prop == 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-            <span v-else-if="item.prop == 'status'">
-              <el-popover placement="right" width="200" trigger="hover" :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))">
-                <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
-                </div>
-              </el-popover>
-            </span>
-            <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <!--<span :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option" :id="'prom-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-              &nbsp;-->
-              <span :id="'prom-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'prom_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
-              <span :id="'prom-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'prom_delete'"><i class="nz-icon nz-icon-delete"></i></span>
-            </div>
-            <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" :resizable="false">
-          <template slot="header">
-            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
+              <span v-else-if="item.prop == 'type'">
+                  <!--{{scope.row[item.prop] == '1' ? 'Global' : ''}}
+                  {{scope.row[item.prop] == '2' ? 'Per-Datacenter' : ''}}-->
+                {{findServerType(scope.row[item.prop]).text}}
+              </span>
+              <span v-else-if="item.prop == 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+              <span v-else-if="item.prop == 'status'">
+                <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200">
+                  <div slot="reference" style="width: 20px">
+                    <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
+                  </div>
+                </el-popover>
+              </span>
+              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+              <template v-else>-</template>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow" id="promserver-list-totop"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" v-show="!bottomBox.showSubList">
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -179,11 +169,6 @@ export default {
           label: this.$t('config.promServer.checkTime'),
           prop: 'checkTime',
           show: false
-        }, {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          width: 120
         }
       ],
       tableData: [],
