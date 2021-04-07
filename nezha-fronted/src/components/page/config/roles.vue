@@ -1,10 +1,8 @@
-<style scoped>
-  .roles {
-    height: 100%;
-  }
+<style lang="scss">
+@import '@/assets/css/common/tableCommon.scss';
 </style>
 <template>
-  <div class="roles">
+  <div class="roles list-page">
     <!-- 主页面 -->
     <div class="main-list" >
       <!-- 顶部工具栏 -->
@@ -14,11 +12,15 @@
           <div class="top-tool-search">
             <search-input :searchMsg="searchMsg" @search="search" ref="searchInput" ></search-input>
           </div>
-          <button :title="$t('overall.createRole')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" v-has="'role_toAdd'"
+          <button v-has="'role_toAdd'" :title="$t('overall.createRole')" class="top-tool-btn margin-l-20" @click="add"
                   id="roles-add" type="button">
             <i class="nz-icon-create-square nz-icon"></i>
           </button>
           <delete-button :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?ids='+arr.map(t=>t.id).join(',')}" @after="getTableData" @before="delFlag=true" api="sys/role" v-has="'role_delete'" id="role-list-batch-delete"></delete-button>
+          <button id="account-column-setting" class="top-tool-btn margin-l-10"
+                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
+            <i class="nz-icon-gear nz-icon"></i>
+          </button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
         <div class="pagination-top pagination-top-hide display-none"></div>
@@ -33,70 +35,81 @@
           v-if="tools.showCustomTableTitle"
         ></element-set>
       </transition>
-      <el-table
-        :data="tableData"
-        :height="mainTableHeight"
-        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-        @sort-change="tableDataSort"
-        border
-        class="nz-table"
-        ref="rolesTable"
-        style="width: 100%;"
-        v-loading="tools.loading"
-      >
-        <el-table-column
-          :resizable="false"
-          align="center"
-          type="selection"
-          width="40">
-        </el-table-column>
-        <el-table-column
-          :fixed="item.fixed"
-          :key="`col-${index}`"
-          :label="item.label"
-          :prop="item.prop"
-          :resizable="true"
-          :sort-orders="['ascending', 'descending']"
-          v-for="(item, index) in tools.customTableTitle"
-          v-if="item.show"
+      <div class="nz-table2">
+        <el-table
+          ref="rolesTable"
+          v-loading="tools.loading"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+          @sort-change="tableDataSort"
         >
-          <template slot="header" >
-            <span v-if="item.type == 'tag'" :title="item.label" class="tag-header"><span class="tag-value">{{item.label}}</span><span style="color:orange;">&nbsp;[Notification]</span></span>
-            <span v-else><span>{{item.label}}</span></span>
-          </template>
-          <template :column="item" slot-scope="scope">
-            <div class="content-right-options" v-if="item.prop == 'option'">
-              <template v-if="scope.row.buildIn != 1">
-                <span :id="'roles-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'role_toEdit'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
-                &nbsp;
-                <span :id="'roles-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'role_delete'"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
-              </template>
-              <template v-else>
-                <span :id="'roles-detail-'+scope.row.id" :title="$t('overall.view')" @click="detail(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-view"></i></span>
-              </template>
-            </div>
-            <template v-if="item.prop == 'name'">
-              <template v-if="scope.row.i18n">
-                <span>{{$t(scope.row.i18n)}}</span>
-              </template>
-              <template v-else-if="scope.row.name">
-                <span>{{scope.row.name}}</span>
-              </template>
-              <template v-else>
-                <span>-</span>
-              </template>
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :fixed="item.fixed"
+            :label="item.label"
+            :prop="item.prop"
+            :resizable="true"
+            :sort-orders="['ascending', 'descending']"
+          >
+            <template slot="header" >
+              <span v-if="item.type == 'tag'" :title="item.label" class="tag-header"><span class="tag-value">{{item.label}}</span><span style="color:orange;">&nbsp;[Notification]</span></span>
+              <span v-else><span>{{item.label}}</span></span>
             </template>
-            <span v-else>{{scope.row[item.prop]}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" width="28">
-          <template slot="header" :resizable="false">
-            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
+            <template slot-scope="scope" :column="item">
+              <div v-if="item.prop == 'option'" class="content-right-options">
+                <template v-if="scope.row.buildIn != 1">
+                  <span :id="'roles-edit-'+scope.row.id" v-has="'role_toEdit'" :title="$t('overall.edit')" class="content-right-option" @click="edit(scope.row)"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-edit"></i></span>
+                  &nbsp;
+                  <span :id="'roles-del-'+scope.row.id" v-has="'role_delete'" :title="$t('overall.delete')" class="content-right-option" @click="del(scope.row)"><i :class="{'gray-filter':scope.row.buildIn == 1}" class="nz-icon nz-icon-delete"></i></span>
+                </template>
+                <template v-else>
+                  <span :id="'roles-detail-'+scope.row.id" :title="$t('overall.view')" class="content-right-option" @click="detail(scope.row)"><i class="nz-icon nz-icon-view"></i></span>
+                </template>
+              </div>
+              <template v-if="item.prop == 'name'">
+                <template v-if="scope.row.i18n">
+                  <span>{{$t(scope.row.i18n)}}</span>
+                </template>
+                <template v-else-if="scope.row.name">
+                  <span>{{scope.row.name}}</span>
+                </template>
+                <template v-else>
+                  <span>-</span>
+                </template>
+              </template>
+              <span v-else>{{scope.row[item.prop]}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :resizable="false"
+            fixed="right"
+            width="165">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
+              <button class="table-operation-item" @click="showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                <div class="table-operation-item table-operation-item--more">
+                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['edit', scope.row]" ><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row]" ><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </el-table-column>
+        </el-table>
+      </div>
       <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
       <div class="pagination-bottom" >
         <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
@@ -161,12 +174,6 @@ export default {
           label: this.$t('config.roles.description'),
           prop: 'remark',
           show: true
-        }, {
-          label: this.$t('config.roles.option'),
-          prop: 'option',
-          show: true,
-          width: 120,
-          fixed: 'right'
         }
       ],
       tableData: [],

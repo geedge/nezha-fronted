@@ -1,7 +1,8 @@
 @font-face {
   font-family: 'NotoSans';   /*字体名称*/
-  src: url('font/NotoSansSC-6.ttf');
+  src: url('~@/assets/css/font/NotoSansSC-6.ttf');
 }
+/* 覆盖element的loading样式 */
 .el-loading-spinner .circular{
   width: 42px;
   height: 42px;
@@ -9,7 +10,7 @@
   display: none;
 }
 .el-loading-mask .el-loading-spinner{
-  background: url(../img/loading.gif) no-repeat;
+  background: url(~@/assets/img/loading.gif) no-repeat;
   background-size: 48px 48px;
   width: 48px;
   height: 48px;

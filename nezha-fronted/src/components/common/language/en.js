@@ -642,7 +642,7 @@ const en = {
       language: 'Language', // "语言"
       receiver: 'Receiver', // "用户组"
       createTime: 'Create time', // "创建时间"
-      enable: 'Available', // "可用"
+      enable: 'Enable', // "可用"
       option: 'Operation', // "操作"
       // 侧滑框//
       accountId: 'Account ID', // "用户ID"

@@ -1,0 +1,29 @@
+:root {
+  --theme-color: #FA901C; // 默认主题色
+}
+$--theme-color: var(--theme-color); // 主题色
+
+/* 按钮 */
+$--button-primary-color: #FFF; // 普通按钮字色
+$--button-primary-background-color: var(--theme-color); // 普通按钮背景色
+$--button-hover-tint-percent: 20%; // 非灰色按钮在鼠标hover时背景色变浅的幅度
+$--button-active-shade-percent: 0; // 非灰色按钮在focus时背景色变深的幅度
+
+$--button-gray-color: #666; // 灰色按钮字色
+$--button-gray-hover-color: $--button-gray-color; // 灰色按钮hover字色
+$--button-gray-active-color: var(--theme-color); // 灰色按钮focus字色
+$--button-gray-background-color: #F9F9F9; // 灰色按钮背景色
+$--button-gray-hover-background-color: #FFF; // 灰色按钮hover背景色
+$--button-gray-active-background-color: $--button-gray-hover-background-color; // 灰色按钮focus背景色
+$--button-gray-border-color: #DEDEDE; // 灰色按钮边框色
+$--button-gray-hover-border-color: $--button-gray-border-color; // 灰色按钮hover边框色
+$--button-gray-active-border-color-tint-percent: 30%; // 灰色按钮在focus时边框色相对于主题色变浅的幅度
+
+/* element-ui变量覆盖 */
+/*$--color-primary: red; // 覆盖element-ui的主题色
+$--box-shadow-base: none; // 取消box-shadow
+$--box-shadow-dark: none;
+$--box-shadow-light: 0 28px 32px 0 red;
+$--input-focus-border: red;
+
+@import "~element-ui/packages/theme-chalk/src/index";*/

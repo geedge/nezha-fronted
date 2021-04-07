@@ -1,0 +1,160 @@
+import bus from '@/libs/bus'
+export default {
+  data () {
+    return {
+      // 侧滑
+      rightBox: {
+        show: false
+      },
+
+      /* 工具参数 */
+      tools: {
+        loading: false, // 是否显示table加载动画
+        customTableTitle: [] // 自定义列工具的数据
+      },
+      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      batchDeleteObjs: [],
+      object: {},
+
+      tableData: [],
+      searchLabel: {}, // 搜索参数
+      scrollbarWrap: null,
+      delFlag: false
+    }
+  },
+  methods: {
+    tableOperation ([command, row]) {
+      switch (command) {
+        case 'edit': {
+          this.edit(row)
+          break
+        }
+        case 'delete': {
+          this.del(row)
+          break
+        }
+        default:
+          break
+      }
+    },
+    newObject () {
+      return JSON.parse(JSON.stringify(this.blankObject))
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.getTableData()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.getTableData()
+    },
+    add () {
+      this.object = this.newObject()
+      this.rightBox.show = true
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
+    edit (u) {
+      this.object = JSON.parse(JSON.stringify(u))
+      this.rightBox.show = true
+    },
+    esc () {
+      this.rightBox.show = false
+    },
+    dragend () {
+      this.$nextTick(() => {
+        this.$refs.dataTable.doLayout()
+      })
+    },
+    search (searchObj) {
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (searchObj[item]) {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (this.$refs.dataTable) {
+        this.$refs.dataTable.bodyWrapper.scrollTop = 0
+      }
+      this.getTableData()
+    },
+    tableDataSort (item) {
+      let orderBy = ''
+      if (item.order === 'ascending') {
+        orderBy = item.prop
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + item.prop
+      }
+      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.getTableData()
+    },
+    tableTitleReset (src, dist) {
+      dist.forEach(item => {
+        const title = src.find(t => t.prop === item.prop)
+        if (title && title.label) {
+          item.label = title.label
+        }
+      })
+    },
+    toTop (wrap) {
+      let currentTop = wrap.scrollTop
+      const interval = currentTop / 10
+      const intervalFunc = setInterval(function () { // 花200ms分10次回到顶部，模拟动画效果
+        if (currentTop === 0) {
+          clearInterval(intervalFunc)
+        } else {
+          currentTop = (currentTop - interval) < interval * 0.5 ? 0 : currentTop - interval
+          wrap.scrollTop = currentTop
+        }
+      }, 20)
+    },
+    toTopBtnHandler (wrap) {
+      const vm = this
+      wrap.addEventListener('scroll', bus.debounce(function () {
+        vm.tools.showTopBtn = wrap.scrollTop > 50
+        vm.tools.tableHover = wrap.scrollTop > 50
+      }, 100))
+    }
+  },
+  watch: {
+    tableData: {
+      deep: true,
+      handler (n) {
+        if (n.length === 0 && this.pageObj.pageNo > 1) {
+          this.pageNo(this.pageObj.pageNo - 1)
+        }
+
+        if (!this.delFlag) { // 不是删除时回到顶部
+          this.$refs.dataTable.bodyWrapper.scrollTop = 0
+        } else {
+          this.delFlag = false
+        }
+      }
+    },
+    'tools.customTableTitle': {
+      deep: true,
+      handler (n) {
+        this.dragend()
+      }
+    }
+  },
+  mounted () {
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    if (pageSize != 'undefined' && pageSize != null) {
+      this.pageObj.pageSize = pageSize
+    }
+    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
+      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+      : this.tableTitle
+    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
+    this.getTableData()
+  }
+}

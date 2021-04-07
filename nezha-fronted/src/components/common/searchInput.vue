@@ -185,7 +185,7 @@
                 </ul>
             </div>
         </div>
-        <button @click="select" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right" id="search-input-search"><i class="nz-icon nz-icon-search"></i></button>
+        <button id="search-input-search" class="search-btn float-right" type="button" @click="select"><i class="nz-icon nz-icon-search"></i></button>
         <!--<div class="new-search-btn" @click="select">
             <i class="nz-icon nz-icon-search"></i>
         </div>-->
@@ -1342,26 +1342,43 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.search-btn {
+  height: 30px;
+  width: 32px;
+  border: none;
+  outline: none;
+  border-left: 1px solid #DEDEDE;
+  background-color: #F9F9F9;
 
-    .new-search{
-        display: flex;
-        position: relative;
-        line-height: 25px;
+  i {
+    color: #666;
+    font-size: 14px;
+  }
+}
+.search-btn:focus:not(.nz-btn-disabled) {
+  background-color: $btn-light-background-color-hover;
+  i {
+    color: $btn-normal-background-color-new;
+  }
+}
+.top-tools input {
+  background-color: white;
+}
+.new-search{
+      display: flex;
+      position: relative;
+      line-height: 25px;
       border-radius: 2px;
       border: 1px solid #D8D8D8;
       /*box-shadow: inset 0 0 5px 0 rgba(184,184,184,0.80);*/
     }
-    .new-search .nz-btn {
-      box-shadow: 0 0 1px 1px #d8d8d8;
-      border-radius: 0 2px 2px 0;
-    }
     .new-search .search-input-all{
         width: 226px !important;
         min-width: 226px;
-        background-color: $content-right-background-color;
+        background-color: white;
         color: rgba(0,0,0,.55);
-        height: 28px;
-        line-height: 28px;
+        height: 30px;
+        line-height: 30px;
         border-bottom-left-radius: 2px;
         border-top-left-radius: 2px;
         display: flex;
@@ -1371,13 +1388,13 @@ export default {
         background-color: $content-right-background-color;
     }
     .search-input-all .btn-retract{
-        padding: 0px 4px;
+        padding: 0 4px;
         text-align: center;
     }
     .search-input-all .search-history{
         padding: 0px 7px;
-        height: 16px;
-        line-height: 16px;
+        height: 18px;
+        line-height: 18px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         margin-top: 6px;
@@ -1388,20 +1405,6 @@ export default {
         height: 100%;
         overflow: hidden;
     }
-    /*.input-center-box::-webkit-scrollbar {
-        width: 4px;
-        height: 6px;
-    }
-    .input-center-box::-webkit-scrollbar-thumb {
-        border-radius: 3px;
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        background: rgba(0,0,0,0.2);
-    }
-    .input-center-box::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        border-radius: 0;
-        background: rgba(0,0,0,0.1);
-    }*/
     .search-input-all .clear-search{
         padding: 0 5px;
         text-align: center;
@@ -1412,10 +1415,6 @@ export default {
     }
     .none{
         display: none !important;
-    }
-    .new-search-btn {
-      padding: 0 4px;
-      cursor: pointer;
     }
     .search-text{
         display: inline-block;
