@@ -238,7 +238,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('panel?ids=' + u.id).then(response => {
+        this.$delete('visual/panel?ids=' + u.id).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 1000,
@@ -317,7 +317,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('panel/' + data.panelId + '/charts?ids=' + data.id).then(response => {
+        this.$delete('visual/panel/chart?ids=' + data.id).then(response => {
           if (response.code === 200) {
             this.$message({
               duration: 2000,
@@ -434,7 +434,7 @@ export default {
       if (!this.hasButton('panel_view')) {
         return
       }
-      this.$get('panel').then(response => {
+      this.$get('visual/panel?pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           for (let i = 0; i < this.panelData.length; i++) {
@@ -450,7 +450,7 @@ export default {
     getTableData (clearShowPanel) {
       const vm = this
 
-      this.$get('panel?type=dashboard').then(response => {
+      this.$get('visual/panel?type=dashboard&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
           let isInitData = false

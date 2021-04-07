@@ -170,6 +170,21 @@
                             :panel-id="filter.panelId"
                             @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                             :chart-index="index"></chart-pie>
+        <chart-group  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'group'"
+                      @on-refresh-data="refreshChart"
+                      @on-search-data="searchData"
+                      @on-remove-chart-block="removeChart"
+                      @on-duplicate-chart-block="duplicateChart"
+                      @on-drag-chart="editChartForDrag"
+                      :is-lock="panelLock"
+                      :panelLock="panelLock"
+                      :filter="filter"
+                      @on-edit-chart-block="editData"
+                      :panel-id="filter.panelId"
+                      :chart-data="item"
+                      :dataList='dataList'
+                      @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                      :chart-index="index"></chart-group>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -190,6 +205,7 @@ import chartDataFormat from './chartDataFormat'
 import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
 import chartPie from './chart-pie'
+import chartGroup from './chart-group'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -199,7 +215,8 @@ export default {
     draggable: { type: Boolean, default: true },
     detail: Object,
     from: { type: String },
-    panelLock: { type: Boolean, default: false }
+    panelLock: { type: Boolean, default: false },
+    hasGroup: { type: Boolean, default: true }
   },
 
   components: {
@@ -211,7 +228,8 @@ export default {
     chartSingleStat,
     draggable,
     textChart,
-    chartPie
+    chartPie,
+    chartGroup
     // visNetwork,
   },
   data () {
@@ -573,7 +591,7 @@ export default {
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      this.$get('panel/' + params.panelId + '/charts').then(response => {
+      this.$get('visual/panel/chart?id=' + params.panelId).then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
@@ -600,6 +618,28 @@ export default {
           this.dataTotalList = [...chartListTmp]
 
           this.dataList = [...this.dataTotalList]
+          console.log(this.dataList)
+          // this.dataList.push({
+          //   ...this.dataList[0],
+          //   group: {
+          //     id: 1,
+          //     name: 'chart group'
+          //   },
+          //   type: 'group',
+          //   span: 12,
+          //   height: 600,
+          //   id: 999999,
+          //   children: [...this.dataList]
+          // })
+          let addGroupIndex = 0
+          this.dataList.forEach((item) => {
+            if (item.type === 'group') {
+              item.children.forEach(chart => {
+                addGroupIndex++
+                chart.chartIndex = this.dataList.length + addGroupIndex
+              })
+            }
+          })
           // this.showShadow=false;
           this.$nextTick(() => {
             if (this.dataList.length > 0) {
@@ -721,6 +761,9 @@ export default {
     // 获取一个图表具体数据,图表信息，图表位置index
     getChartData (chartInfo, pos, filterType) {
       const chartItem = chartInfo
+      if (chartItem.type === 'group') {
+        return
+      }
       if (chartItem.type === 'assetInfo') {
         if (chartItem.from != this.$CONSTANTS.fromRoute.endpoint) {
           this.$set(chartItem, 'draggable', true)
@@ -938,6 +981,7 @@ export default {
                               host = chartItem.elements[innerPos].expression
                             }
                             // 处理legend别名
+                            console.log(chartItem.id)
                             let alias = this.$refs['editChart' + chartItem.id][0].dealLegendAlias(host, chartItem.elements[innerPos].legend)
                             if (!alias || alias === '') {
                               alias = host
@@ -1497,6 +1541,9 @@ export default {
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
           chartBox.style.height = `${item.height}px`
+          if (item.type === 'group') {
+            chartBox.style.height = 'auto'
+          }
         }
       })
     },

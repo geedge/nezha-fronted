@@ -221,6 +221,9 @@ const cn = {
           },
           text: {
             label: '文本'
+          },
+          group: {
+            label: '组'
           }
         },
         statisticsVal: {

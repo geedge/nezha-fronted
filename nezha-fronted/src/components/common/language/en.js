@@ -234,6 +234,9 @@ const en = {
           },
           text: {
             label: 'Text'
+          },
+          group: {
+            label: 'group'
           }
         },
         statisticsVal: {

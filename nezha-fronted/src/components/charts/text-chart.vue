@@ -208,6 +208,7 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area) {
+      console.log(chartItem);
       this.$nextTick(() => {
         this.resize(chartItem)
       })

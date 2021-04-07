@@ -142,7 +142,6 @@ export default {
       this.$get('sys/menu').then(response => {
         if (response.code == 200) {
           this.menus = response.data.list
-
         } else {
           this.$message.error('load menu faild')
         }

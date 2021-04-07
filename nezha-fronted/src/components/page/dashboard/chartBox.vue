@@ -183,7 +183,7 @@
 
           </el-form-item>
           <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-            <el-input maxlength="64" show-word-limit size="small" v-model="editChart.title" id="chart-box-title"></el-input>
+            <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
           </el-form-item>
 
           <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
@@ -192,6 +192,15 @@
           <!-- type unit start-->
           <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
             <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType" id="chart-box-type">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <!--group-->
+          <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="type">
+            <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType" id="chart-box-group">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -260,9 +269,9 @@
             <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last" id="chart-box-last"></el-switch>
           </el-form-item>-->
 
-          <!--<el-form-item :label="$t('dashboard.panel.chartForm.sync')" v-if="showPanel.type && showPanel.type == 'model'">-->
-          <!--<el-switch class="exporter-switch" v-model="editChart.sync" active-color="#ee9d3f" :active-value="1" :inactive-value="0"></el-switch>-->
-          <!--</el-form-item>-->
+          <el-form-item :label="$t('dashboard.panel.chartForm.remark')">
+           <el-input type="textarea" v-model="editChart.remark"/>
+          </el-form-item>
 
           <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="!isUrl&&!isAlert&& editChart.type != 'text'">
             <span>{{$t('alert.config.expr')}}</span>
@@ -498,7 +507,7 @@ export default {
         panelName: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
-        title: [
+        name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         url: [
@@ -511,6 +520,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
+      groupArr: [],
       chartTypeList: [
         {
           id: 'line',
@@ -547,6 +557,10 @@ export default {
         {
           id: 'url',
           name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
+        },
+        {
+          id: 'group',
+          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
         }
 
       ],
@@ -634,7 +648,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('panel?ids=' + panel.id).then(response => {
+        this.$delete('visual/panel?ids=' + panel.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             if (this.panelId == panel.id) {
@@ -701,7 +715,7 @@ export default {
       this.$refs.chartForm.validate((valid) => {
         if (valid) {
           if (this.editChart.id) { // 修改
-            this.$put('panel/' + this.editChart.id + '/charts').then(response => {
+            this.$put('visual/panel/chart', this.editChart).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -710,7 +724,7 @@ export default {
               }
             })
           } else { // 新增
-            this.$post('panel/charts', this.editChart).then(response => {
+            this.$post('visual/panel/chart', this.editChart).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -850,12 +864,18 @@ export default {
 
       // panelPromise.then(()=>{
       if (this.panelId) {
-        this.$post('panel/' + this.panelId + '/charts', params || this.editChart).then(response => {
+        const chartParams = params || this.editChart
+        chartParams.panelId = this.panelId
+        if (!chartParams.groupId) {
+          chartParams.groupId = -1
+        }
+        delete chartParams.panel
+        this.$post('visual/panel/chart', chartParams).then(response => {
           if (response.code === 200) {
             this.esc()
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
             this.$refs.chartForm.resetFields()// 清空表单
-            this.$emit('on-create-success', 'create', response.data, params, { id: this.panelId, name: this.panelName })
+            this.$emit('on-create-success', 'create', response.data, chartParams, { id: this.panelId, name: this.panelName })
           } else {
             if (response.msg) {
               this.$message.error(response.msg)
@@ -871,12 +891,18 @@ export default {
     // 更新图表
     updateCharts (params) {
       const panelId = this.panelId ? this.panelId : this.chart.panelId
-      this.$put('panel/' + panelId + '/charts', params || this.editChart).then(response2 => {
+      const chartParams = params || this.editChart
+      chartParams.panelId = panelId
+      if (!chartParams.groupId) {
+        chartParams.groupId = -1
+      }
+      delete chartParams.panel
+      this.$put('visual/panel/chart', chartParams).then(response2 => {
         if (response2.code === 200) {
           this.esc()
           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
           // this.$refs.chartForm.resetFields();//清空表单
-          this.$emit('on-create-success', 'update', response2.data, params)
+          this.$emit('on-create-success', 'update', response2.data, chartParams)
         } else {
           if (response2.msg) {
             this.$message.error(response2.msg)
@@ -895,7 +921,7 @@ export default {
           const params = {
             // productId: this.productId,
             // panelId: this.panelId,
-            title: this.editChart.title, // this.editChart
+            name: this.editChart.name, // this.editChart
             span: this.editChart.span,
             height: this.editChart.height,
             type: this.editChart.type,
@@ -960,13 +986,14 @@ export default {
     getAlertParam: function (param, opType) {
       this.$refs.chartForm.validate((valid) => {
         const params = {
-          title: this.editChart.title, // this.editChart
+          name: this.editChart.name, // this.editChart
           span: this.editChart.span,
           height: this.editChart.height,
           type: this.editChart.type,
           unit: this.editChart.unit,
           param: param,
-          sync: this.editChart.sync
+          sync: this.editChart.sync,
+          remark: this.editChart.remark
         }
         if (valid) {
           if (opType === 'preview') {
@@ -1025,7 +1052,7 @@ export default {
         if (this.editChart.type == 'url') {
           this.$refs.chartForm.validate((valid) => {
             const params = {
-              title: this.editChart.title, // this.editChart
+              name: this.editChart.name, // this.editChart
               span: this.editChart.span,
               height: this.editChart.height,
               type: this.editChart.type,
@@ -1033,7 +1060,8 @@ export default {
               param: {
                 url: this.editChart.param.url
               },
-              sync: this.editChart.sync
+              sync: this.editChart.sync,
+              remark: this.editChart.remark
             }
 
             if (valid) {
@@ -1053,14 +1081,15 @@ export default {
               valid = false
             }
             const params = {
-              title: this.editChart.title, // this.editChart
+              name: this.editChart.name, // this.editChart
               span: this.editChart.span,
               height: this.editChart.height,
               type: this.editChart.type,
               param: {
                 text: text
               },
-              sync: this.editChart.sync
+              sync: this.editChart.sync,
+              remark: this.editChart.remark
             }
 
             if (valid) {
@@ -1193,11 +1222,12 @@ export default {
       this.editInfo = data
       // 图表信息获取
       this.editChart.id = data.id
-      this.editChart.title = data.title
+      this.editChart.name = data.name
       this.editChart.span = data.span
       this.editChart.height = data.height + ''
       this.editChart.type = data.type
       this.editChart.unit = data.unit
+      this.editChart.remark = data.remark
       this.editChart.elements = data.elements
       if (this.editChart.type === 'url') {
         this.editChart.param.url = data.param.url
@@ -1252,11 +1282,13 @@ export default {
 
     // 初始化信息
     initInfo (unit) {
-      this.editChart.title = ''
+      this.editChart.name = ''
       this.editChart.type = 'line'
       this.editChart.span = 12
       this.editChart.height = 400 + ''
       this.editChart.unit = unit || 2
+      this.editChart.remark = ''
+      this.editChart.groupId = ''
       const param = {}
       param.last = 0
       param.url = ''
@@ -1394,13 +1426,15 @@ export default {
             const params = {
               // productId: this.productId,
               // panelId: this.panelId,
-              title: this.editChart.title, // this.editChart
+              name: this.editChart.name, // this.editChart
               span: this.editChart.span,
               height: this.editChart.height,
               type: this.editChart.type,
               unit: this.editChart.unit,
               param: this.editChart.param,
-              sync: this.editChart.sync
+              sync: this.editChart.sync,
+              remark: this.editChart.remark,
+              groupId: this.editChart.groupId
             }
             if (this.editChart.type === 'singleStat' || this.editChart.type === 'table') {
               // params.param.statistics=this.statistics;
@@ -1439,14 +1473,16 @@ export default {
       } else if (this.editChart.type == 'url') {
         this.$refs.chartForm.validate((valid) => {
           const params = {
-            title: this.editChart.title, // this.editChart
+            name: this.editChart.name, // this.editChart
             span: this.editChart.span,
             height: this.editChart.height,
             type: this.editChart.type,
             unit: this.editChart.unit,
             param: {
               url: this.editChart.param.url
-            }
+            },
+            remark: this.editChart.remark,
+            groupId: this.editChart.groupId
           }
 
           if (valid) {
@@ -1463,14 +1499,16 @@ export default {
             valid = false
           }
           const params = {
-            title: this.editChart.title, // this.editChart
+            name: this.editChart.name, // this.editChart
             span: this.editChart.span,
             height: this.editChart.height,
             type: this.editChart.type,
             unit: this.editChart.unit,
             param: {
               text: text
-            }
+            },
+            remark: this.editChart.remark,
+            groupId: this.editChart.groupId
           }
 
           if (valid) {
@@ -1626,10 +1664,14 @@ export default {
           })
         }
 
-        if (n.title) {
+        if (n.name) {
           this.isEdit = true
         }
+
         this.editChart = JSON.parse(JSON.stringify(n))
+        if (!n.groupId || n.groupId == -1) {
+          this.editChart.groupId = ''
+        }
         if (!n.param.nullType) {
           this.editChart.param.nullType = 'connected'
         }

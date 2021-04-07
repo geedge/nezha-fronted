@@ -349,6 +349,7 @@ export const chartResizeTool = {
     return height - this.chartBlankHeight
   },
   start (vm, originalData, event, chartIndexs) {
+    console.log(vm, originalData, event, chartIndexs)
     const $self = this
     const data = JSON.parse(JSON.stringify(originalData)) // 将初始对象复制，后续操作使用复制对象
     let shadow = vm.$refs.resizeShadow // 缩放时底部阴影dom

@@ -69,7 +69,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('panel?ids=' + u.id).then(response => {
+        this.$delete('visual/panel?ids=' + u.id).then(response => {
           if (response.code === 200) {
             this.esc()
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
@@ -85,7 +85,7 @@ export default {
         if (valid) {
           this.prevent_opt.save = true
           if (this.panel.id) {
-            this.$put('panel', this.panel).then(response => {
+            this.$put('visual/panel', this.panel).then(response => {
               if (response.code === 200) {
                 this.esc()
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -96,7 +96,7 @@ export default {
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('panel', this.panel).then(response => {
+            this.$post('visual/panel', this.panel).then(response => {
               if (response.code === 200) {
                 this.esc()
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
