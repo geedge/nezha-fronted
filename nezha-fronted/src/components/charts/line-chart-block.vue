@@ -74,16 +74,16 @@
                 </th>
               </template>
               <tbody>
-                <tr v-for="(item, index) in legendListMore" :key="'legend_' + item.name+'_'+index">
-                  <td>
-                    <div :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" >
-                      <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
-                    </div>
-                  </td>
-                  <template v-for="(legendOption, i) in legendOptions">
-                    <td v-if="legendOption.value == 'on'" :key="i" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
-                  </template>
-                </tr>
+              <tr v-for="(item, index) in legendListMore" :key="'legend_' + item.name+'_'+index">
+                <td>
+                  <div :title="item.alias?item.alias:item.name"  @click="clickLegend(item.name,index)" class="legend-item" :class="{'ft-gr':isGrey[index]}" >
+                    <span class="legend-shape" :style="{background:(isGrey[index]?'#D3D3D3':item.color)}"></span>{{item.alias?item.alias:item.name}}
+                  </div>
+                </td>
+                <template v-for="(legendOption, i) in legendOptions">
+                  <td v-if="legendOption.value == 'on'" :key="i" class="legend-option-cell">{{formatLegendData(item[legendOption.option])}}</td>
+                </template>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -131,10 +131,10 @@
             <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
             <div class="float-right panel-calendar dialog-tool">
 
-<!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
+              <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" :showMultiple="true" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
             </div>
-<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
+            <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
@@ -267,8 +267,8 @@ export default {
       firstLoad: false, // 是否第一次加载
       divFirstShow: false,
       /* highchartStore: null, // 保存图表数据
-        echartStore:null,// 保存图表数据
-        echartModalStore: null, // 全屏查看时数据 */
+          echartStore:null,// 保存图表数据
+          echartModalStore: null, // 全屏查看时数据 */
       chartType: 'line', // 图表类型
       screenModal: false,
       // 查询数据使用
@@ -279,8 +279,8 @@ export default {
       },
       stableFilter: {}, // 保存数据使用,初始化起止时间,单图or多图等
       /* legend:[],
-        legendList:[],
-        screenLegendList:[], */
+          legendList:[],
+          screenLegendList:[], */
       isGrey: [],
       isGreyScreen: [],
       bgColorList: [],
@@ -360,10 +360,10 @@ export default {
     },
     clickLegend (legendName, index) {
       /* 点击legend
-        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
-        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
-        * 3.否则只改变被点击的legend状态
-        * */
+          * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+          * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+          * 3.否则只改变被点击的legend状态
+          * */
       let highlightNum = 0 // 高亮数量
       this.isGrey.forEach(g => {
         if (!g) {
@@ -449,10 +449,10 @@ export default {
     },
     clickScreenLegend (legendName, index) {
       /* 点击legend
-        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
-        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
-        * 3.否则只改变被点击的legend状态
-        * */
+          * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+          * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+          * 3.否则只改变被点击的legend状态
+          * */
       let highlightNum = 0 // 高亮数量
       this.isGreyScreen.forEach(g => {
         if (!g) {
@@ -740,6 +740,9 @@ export default {
                 str += '</div>'
               }
               if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
+                if (i !== 0) {
+                  str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
+                }
                 const value = item.data[0] - self.minusTime
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
@@ -747,6 +750,7 @@ export default {
                 str += '</div>'
                 minusFlag = false
               }
+              const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
               let val = item.data[1] ? parseFloat(Number(item.data[1]).toFixed(2)) : ''
               if (val === 0) {
                 val = Number(item.data[1]).toExponential(2)
@@ -756,6 +760,27 @@ export default {
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
               str += '<div style="padding-left: 10px;">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, oldDot)
+              if (previousItem) {
+                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+                if (previousval === 0) {
+                  previousval = Number(item.data[1]).toExponential(2)
+                }
+                let minusVal = 0
+                if (previousval <= val) {
+                  minusVal = val - previousval
+                  str += '+'
+                } else {
+                  minusVal = previousval - val
+                  str += '-'
+                }
+
+                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                str += '</span>'
+              } else if (tip.alias.indexOf('Previous ') !== -1) {
+                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                str += '</span>'
+              }
               str += '</div>'
               str += '</div>'
             })
@@ -940,7 +965,6 @@ export default {
           window.addEventListener('resize', this.chartResize)
           getChart(this.chartIndex).on('magictypechanged', function (params) {
             self.isStackArea = !self.isStackArea
-            console.log(params,self.isStackArea);
             if (self.isStackArea) {
               getChart(self.chartIndex).setOption({
                 toolbox: {
@@ -1154,6 +1178,9 @@ export default {
                         str += '</div>'
                       }
                       if (tip.alias.indexOf('Previous ') !== -1 && minusFlag) {
+                        if (i !== 0) {
+                          str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
+                        }
                         const value = item.data[0] - self.minusTime
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px;margin-top: 5px">'
@@ -1161,6 +1188,7 @@ export default {
                         str += '</div>'
                         minusFlag = false
                       }
+                      const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
                       let val = parseFloat(Number(item.data[1]).toFixed(2))
                       if (val === 0) {
                         val = Number(item.data[1]).toExponential(2)
@@ -1170,7 +1198,46 @@ export default {
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
                       str += '<div style="padding-left: 10px;">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                      if (previousItem) {
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+                        if (previousval === 0) {
+                          previousval = Number(item.data[1]).toExponential(2)
+                        }
+                        let minusVal = 0
+                        if (previousval <= val) {
+                          minusVal = val - previousval
+                          str += '+'
+                        } else {
+                          minusVal = previousval - val
+                          str += '-'
+                        }
+
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                        str += '</span>'
+                      } else if (tip.alias.indexOf('Previous ') !== -1) {
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        str += '</span>'
+                      }
                       str += '</div>'
+                      if (previousItem) {
+                        str += '<div style="padding-left: 10px;">'
+                        let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+                        if (previousval === 0) {
+                          previousval = Number(item.data[1]).toExponential(2)
+                        }
+                        let minusVal = 0
+                        if (previousval <= val) {
+                          minusVal = val - previousval
+                          str += '+'
+                        } else {
+                          minusVal = previousval - val
+                          str += '-'
+                        }
+
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                        str += '</div>'
+                      }
                       str += '</div>'
                     })
                     if (self.data.type === 'stackArea' || self.isStackArea) {
@@ -1264,14 +1331,14 @@ export default {
       }
       if (area === 'showFullScreen') { // 全屏按时间查询
         /*
-          this.legend = legend;
-          this.data = chartItem;
-          this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
-          this.searchTime[1] = filter.end_time;
-          this.seriesItemScreen = seriesItem;
-          //this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
-          this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'screen',legend);
-          */
+            this.legend = legend;
+            this.data = chartItem;
+            this.searchTime[0] = filter.start_time;//将列表的查询时间复制给全屏的查询时间
+            this.searchTime[1] = filter.end_time;
+            this.seriesItemScreen = seriesItem;
+            //this.$refs['localLoadingScreen'+this.chartIndex].endLoading();
+            this.initChart(chartItem, seriesItem, this.$refs.lineChartArea, 'screen',legend);
+            */
       } else {
         this.legend = legend
         this.$refs['localLoading' + this.chartIndex].startLoading()
@@ -1352,11 +1419,11 @@ export default {
       this.initChart(this.data, this.seriesItem, this.$refs.screenShowArea, 'screen', this.legend)
       // 日期组件同步时间
       /*
-        this.$refs.calendar.initTime({
-          start: this.stableFilter.start_time,
-          end: this.stableFilter.end_time,
-        });
-        */
+          this.$refs.calendar.initTime({
+            start: this.stableFilter.start_time,
+            end: this.stableFilter.end_time,
+          });
+          */
     },
     closeDialog () {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
@@ -1393,12 +1460,12 @@ export default {
       this.seriesItemScreen = this.seriesItem
       // this.seriesItemScreen = this.seriesItem;
       /*
-                this.searchTime = [];
-                this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
-                this.searchTime[1] = this.oldSearchTime[1];
-                this.seriesItemScreen = this.seriesItem;
-                this.screenModal = true;
-                */
+                  this.searchTime = [];
+                  this.searchTime[0] = this.oldSearchTime[0];//将列表的查询时间复制给全屏的查询时间
+                  this.searchTime[1] = this.oldSearchTime[1];
+                  this.seriesItemScreen = this.seriesItem;
+                  this.screenModal = true;
+                  */
       // this.dateChange();
     },
     duplicate () {
@@ -1444,10 +1511,10 @@ export default {
     // 查询数据,修改日期查询全屏数据
     getQueryChart (type) {
       /*
-        if (this.echartModalStore) {
-          this.echartModalStore.showLoading();
-        }
-        */
+          if (this.echartModalStore) {
+            this.echartModalStore.showLoading();
+          }
+          */
       let axiosArr = []
       this.$nextTick(() => {
         let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
@@ -1509,11 +1576,11 @@ export default {
             const series = []
             const legend = []
             /* const sumData = {
-              name: 'sum',
-              data: [],
-              visible: true,
-              threshold: null
-            } */
+                name: 'sum',
+                data: [],
+                visible: true,
+                threshold: null
+              } */
             if (!this.data.type) {
               this.data.type = 'line'
             }
@@ -1616,14 +1683,14 @@ export default {
                     } else if (this.data.elements && this.data.elements[innerPos]) {
                       // 无数据提示
                       /*
-                        const currentInfo = chartItem.elements[innerPos];
-                        const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
-                        this.$message.warning({
-                          duration: 15,
-                          content: errorMsg,
-                          closable: true,
-                        });
-                        */
+                          const currentInfo = chartItem.elements[innerPos];
+                          const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                          this.$message.warning({
+                            duration: 15,
+                            content: errorMsg,
+                            closable: true,
+                          });
+                          */
                     }
                   })
                 }

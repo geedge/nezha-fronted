@@ -137,8 +137,8 @@ export default {
         const windowWidth = window.innerWidth
         /* const windowHeight = window.innerHeight
 
-        const scaleWidth = roomWidth / 1200
-        const scaleHeight = roomHeight / 700 */
+          const scaleWidth = roomWidth / 1200
+          const scaleHeight = roomHeight / 700 */
 
         const kazCenter = [67.45, 44]
         if (windowWidth > 2000) {
@@ -249,10 +249,10 @@ export default {
     },
     clickLegend (legendName, index) {
       /* 点击legend
-        * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
-        * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
-        * 3.否则只改变被点击的legend状态
-        * */
+          * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+          * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+          * 3.否则只改变被点击的legend状态
+          * */
       let highlightNum = 0 // 高亮数量
       this.legend.forEach(g => {
         if (!g.isGray) {
@@ -300,20 +300,20 @@ export default {
         }
       }
       /* let curIsGrey=this.legend[index].isGray;
-        if(this.chart){
-          if(curIsGrey){
-            this.chart.dispatchAction({
-              type: 'legendSelect',
-              name: legendName
-            });
-          }else{
-            this.chart.dispatchAction({
-              type: 'legendUnSelect',
-              name: legendName
-            });
-          }
-          this.$set(this.legend[index],'isGray',!curIsGrey)
-        } */
+          if(this.chart){
+            if(curIsGrey){
+              this.chart.dispatchAction({
+                type: 'legendSelect',
+                name: legendName
+              });
+            }else{
+              this.chart.dispatchAction({
+                type: 'legendUnSelect',
+                name: legendName
+              });
+            }
+            this.$set(this.legend[index],'isGray',!curIsGrey)
+          } */
     },
     clickLegend2 (legendName, index) {
       const curIsGrey = this.legend[index].isGray
@@ -362,7 +362,7 @@ export default {
       const pointY = point[1]
       // 外层div大小
       /* const viewWidth = size.viewSize[0]
-      const viewHeight = size.viewSize[1] */
+        const viewHeight = size.viewSize[1] */
       // 提示框大小
       const boxWidth = size.contentSize[0]
       // const boxHeight = size.contentSize[1]
@@ -422,10 +422,13 @@ export default {
           str += '<br/>'
         }
         if (alias.indexOf('Previous ') !== -1 && minusFlag) {
+          if (i !== 0) {
+            str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
+          }
           const value = item.data[0] - this.minusTime
           const tData = new Date(value)
           str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
-            [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
+              [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
           str += '<br/>'
           minusFlag = false
         }
@@ -434,7 +437,30 @@ export default {
         str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
         str += '<div style="padding-left: 10px;">'
         str += chartDataFormat.getUnit(this.unit).compute(val, null, 2)
+        const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
+        if (previousItem) {
+          str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+          let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+          if (previousval === 0) {
+            previousval = Number(item.data[1]).toExponential(2)
+          }
+          let minusVal = 0
+          if (previousval <= val) {
+            minusVal = val - previousval
+            str += '+'
+          } else {
+            minusVal = previousval - val
+            str += '-'
+          }
+
+          str += chartDataFormat.getUnit(this.unit).compute(minusVal, null, 2)
+          str += '</span>'
+        } else if (alias.indexOf('Previous ') !== -1) {
+          str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+          str += '</span>'
+        }
         str += '</div>'
+
         str += '</div>'
       })
       str += '</div>'
@@ -567,8 +593,8 @@ export default {
     if (this.chart) {
       this.chart.clear()
       /* this.chart.off('mouseover');
-        this.chart.off('mouseout');
-        EleResize.off(this.$el, this.resize, this.chartType); */
+          this.chart.off('mouseout');
+          EleResize.off(this.$el, this.resize, this.chartType); */
     }
   }
 }
