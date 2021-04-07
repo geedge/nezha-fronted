@@ -31,8 +31,8 @@
         <export-excel
           id="panel-tab"
           export-file-name="chart"
-          export-url="/panel/export"
-          import-url="/panel/import"
+          export-url="/visual/panel/export"
+          import-url="/visual/panel/import"
           :params="filter"
           :from="$CONSTANTS.fromRoute.asset"
           :link="obj"

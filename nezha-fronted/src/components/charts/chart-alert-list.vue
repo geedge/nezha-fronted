@@ -23,7 +23,7 @@
           <el-dropdown trigger="click" v-show="!isPreview" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartInfo.title}}</span>
+              <span class="chart-title-text">{{chartInfo.name}}</span>
               <span class="chart-title-icon" v-if="data.editable"><i class="nz-icon nz-icon-xialaxuanze  "  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow" v-if="data.editable" :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
@@ -60,7 +60,7 @@
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenDialogClose" >
           <div slot="title">
-            <span class="nz-dialog-title">{{data.title}}</span>
+            <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :show-time-picker="false" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="alert-chart"></pick-time>
             </div>

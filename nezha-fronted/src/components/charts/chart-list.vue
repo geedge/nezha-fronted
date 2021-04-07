@@ -180,6 +180,9 @@
                       :panelLock="panelLock"
                       :filter="filter"
                       @on-edit-chart-block="editData"
+                      @on-edit-group-chart="editDataGroup"
+                      @on-remove-group-chart="removeChartGroup"
+                      @moveGroupItem="moveGroupItem"
                       :panel-id="filter.panelId"
                       :chart-data="item"
                       :dataList='dataList'
@@ -293,12 +296,41 @@ export default {
     end (event) {
       if (event.oldIndex !== event.newIndex) {
         const newWeights = []
+        let i = 0
         this.dataList.forEach((item, index) => {
           item.weight = index
           newWeights.push({ id: item.id, weight: index })
+          if (item.type === 'group') {
+            item.children.forEach(chart => {
+              i++
+              newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
+            })
+          }
         })
-        this.$put('panel/' + this.pagePanelId + '/charts/weights', newWeights)
+        const panelId = this.pagePanelId
+        this.$put('/visual/panel/chart/weights', { panelId, charts: newWeights })
       }
+    },
+    moveGroupItem (group) {
+      const newWeights = []
+      let i = 0
+      this.dataList.forEach((item, index) => {
+        item.weight = index
+        newWeights.push({ id: item.id, weight: index })
+        if (item.type === 'group' && group.groupId!==item.id) {
+          item.children.forEach(chart => {
+            i++
+            newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
+          })
+        } else if (item.type === 'group' && group.groupId == item.id){
+          group.children.forEach(chart => {
+            i++
+            newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
+          })
+        }
+      })
+      const panelId = this.pagePanelId
+      this.$put('/visual/panel/chart/weights', { panelId, charts: newWeights })
     },
     move (event, orgin) {
       const dragClass = document.querySelector('.drag-chart-class')// drag-chart-class:yellow chart-ghost:green  fallback-class choose-class:purple
@@ -591,12 +623,19 @@ export default {
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      this.$get('visual/panel/chart?id=' + params.panelId).then(response => {
+      this.$get('visual/panel/chart?panelId=' + params.panelId).then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
 
+          response.data.list.forEach((item, index) => { // 把chart放入对应的group
+            if (item.type === 'group') {
+              item.children = response.data.list.filter(item1 => item1.groupId === item.id)
+            }
+          })
+          response.data.list = response.data.list.filter((item) => item.groupId === -1 || !item.groupId) // 处理外层存在的groupItem
+          console.log(response.data.list)
           if (response.data.list) {
             this.dataTotalListBak = response.data.list
           } else {
@@ -762,6 +801,7 @@ export default {
     getChartData (chartInfo, pos, filterType) {
       const chartItem = chartInfo
       if (chartItem.type === 'group') {
+        this.$refs['editChart' + chartItem.id][0].setData(chartItem)
         return
       }
       if (chartItem.type === 'assetInfo') {
@@ -1559,6 +1599,12 @@ export default {
         this.$emit('on-remove-chart', chart)
       }
     },
+    // 删除图表
+    removeChartGroup (chart) { // from 区分从哪里点击的删除 1.从图表面板 2.从编辑框
+      if (chart) {
+        this.$emit('on-remove-chart', chart)
+      }
+    },
     // 复制图表
     duplicateChart (chartId, duplicateChartBack) {
       const duplicateChartId = duplicateChartBack.id
@@ -1642,12 +1688,19 @@ export default {
     // 编辑图表
     editData (chartId) {
       // 获取该id下chart的相关信息
-      const chart = this.dataList.find(item => item.id === chartId)
+      const chart = this.dataList.find(item => {
+        return item.id === chartId
+      })
       if (chart) {
         this.$emit('on-edit-chart', chart)
       }
     },
-
+    // 编辑 group下的图表
+    editDataGroup (chart) {
+      if (chart) {
+        this.$emit('on-edit-chart', chart)
+      }
+    },
     editChartForDrag (chartItem) {
       const chart = this.dataList.find(item => item.id === chartItem.id)
       chart.span = chartItem.span

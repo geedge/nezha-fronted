@@ -199,15 +199,15 @@
           </el-form-item>
 
           <!--group-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="type">
-            <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType" id="chart-box-group">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+          <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="group" v-if="editChart.type!=='group'">
+            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.groupId" value-key="chartType" id="chart-box-group">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in groupArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'">
+          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'">
             <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable id="chart-box-unit"
                          placeholder=""
                          popper-class="dc-dropdown"
@@ -220,7 +220,7 @@
           <!--type unit end-->
 
           <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="half-form-item" prop="span">
-            <el-select class="right-box-row-with-btn"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan" id="chart-box-span">
+            <el-select class="right-box-row-with-btn" :disabled="isGroup"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan" id="chart-box-span">
               <el-option :key="item" :label="'span-' + item" :value="item" v-for="item in spanList">
                 <span class="panel-dropdown-label-txt" > span-{{item}}</span>
               </el-option>
@@ -232,6 +232,7 @@
               id="chart-box-height"
               :fetch-suggestions="querySearch"
               @select="handleSelect"
+              :disabled="isGroup"
               placeholder=""
               popper-class="popper-z-index no-style-class"
               size="mini"
@@ -273,7 +274,7 @@
            <el-input type="textarea" v-model="editChart.remark"/>
           </el-form-item>
 
-          <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="!isUrl&&!isAlert&& editChart.type != 'text'">
+          <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="!isUrl&&!isAlert&& editChart.type != 'text'&& editChart.type != 'group'">
             <span>{{$t('alert.config.expr')}}</span>
             <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" v-if="!isSingleStat">
             <span class="create-square-box">
@@ -291,7 +292,7 @@
             <alert-chart-param @on-enter-complate="getAlertParam" ref="alertParamBox"></alert-chart-param>
           </el-row>
           <div id="chart-box-expression-box" style="margin-bottom: 20px">
-            <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'">
+            <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'&& editChart.type != 'group'">
               <promql-input
                 :expression-list="expressions"
                 :id="promqlKeys[index-1]"
@@ -488,7 +489,10 @@ export default {
       optionBtn: {
         save: false
       },
-      editChart: {},
+      editChart: {
+        name: '',
+        remark: ''
+      },
       filterPanel: '',
       statisticsList: this.$CONSTANTS.statisticsList,
 
@@ -503,6 +507,7 @@ export default {
       isUrl: false,
       isSingleStat: false,
       isAlert: false,
+      isGroup: false,
       rules: {
         panelName: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -870,12 +875,20 @@ export default {
           chartParams.groupId = -1
         }
         delete chartParams.panel
+        if (chartParams.type === 'group') {
+          chartParams.elements = [{
+            expression: 'Hadoop_DataNode_BlockChecksumOpNumOps',
+            id: '',
+            legend: '',
+            type: 'expert'
+          }]
+        }
         this.$post('visual/panel/chart', chartParams).then(response => {
           if (response.code === 200) {
-            this.esc()
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-            this.$refs.chartForm.resetFields()// 清空表单
+            // this.$refs.chartForm.resetFields()// 清空表单
             this.$emit('on-create-success', 'create', response.data, chartParams, { id: this.panelId, name: this.panelName })
+            this.esc()
           } else {
             if (response.msg) {
               this.$message.error(response.msg)
@@ -1195,21 +1208,31 @@ export default {
       this.isUrl = true
       this.isSingleStat = false
       this.isAlert = false
+      this.isGroup = false
     },
     setIsSingleStat () {
       this.isUrl = false
       this.isSingleStat = true
       this.isAlert = false
+      this.isGroup = false
     },
     setIsAlertList () {
       this.isAlert = true
       this.isUrl = false
       this.isSingleStat = false
+      this.isGroup = false
     },
     setIsOtherChart () {
       this.isSingleStat = false
       this.isUrl = false
       this.isAlert = false
+      this.isGroup = false
+    },
+    setIsGroup () {
+      this.isSingleStat = false
+      this.isUrl = false
+      this.isAlert = false
+      this.isGroup = true
     },
     // 编辑chart时使用, set_tdata
     editData (data, panelId) {
@@ -1355,6 +1378,10 @@ export default {
           }
         }
         this.showPicker = [{ bac: false, text: false }]
+      } else if (chartType === 'group') {
+        this.editChart.span = 12
+        this.editChart.height = -1
+        this.setIsGroup()
       } else {
         this.setIsOtherChart()
         if (chartType === 'bar' || chartType === 'line' || chartType === 'stackArea') {
@@ -1669,8 +1696,12 @@ export default {
         }
 
         this.editChart = JSON.parse(JSON.stringify(n))
+        this.editChart.name = this.editChart.name || ''
         if (!n.groupId || n.groupId == -1) {
           this.editChart.groupId = ''
+        }
+        if (typeof (this.editChart.param) === 'string') {
+          this.editChart.param = JSON.parse(this.editChart.param)
         }
         if (!n.param.nullType) {
           this.editChart.param.nullType = 'connected'
@@ -1699,6 +1730,16 @@ export default {
         if (this.showPanel.id) {
           this.panelId = this.showPanel.id
         }
+        this.$get('visual/panel/chart?id= ' + this.panelId).then(response => {
+          if (response.code === 200) {
+            this.groupArr = []
+            response.data.list.forEach((item, index) => {
+              if (item.type === 'group') {
+                this.groupArr.push({ id: item.id, name: item.name })
+              }
+            })
+          }
+        })
         if (n.id) {
           this.editData(this.editChart, this.showPanel.id)
         } else {

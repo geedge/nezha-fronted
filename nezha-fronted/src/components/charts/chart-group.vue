@@ -11,7 +11,7 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartData.title}}</span>
+              <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"><i class="nz-icon nz-icon-xialaxuanze  "  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
@@ -30,7 +30,7 @@
 
         </div>
         <div :id="'chartUrl'+chartIndex" class="mt-10 url-container">
-          <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :class="{'show-top':false}" :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId"></chart-list-group>
+          <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :class="{'show-top':false}" :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId" @on-edit-group-chart="editGroupItem" @on-remove-chart="removeChartGroup" @moveGroupItem="moveGroupItem"></chart-list-group>
         </div>
         <div style="position: absolute;width: 100%; top:calc(50% - 50px);text-align: center;" v-if="showStatic">
           <div  :id="'staticContainer'+chartIndex" class="center-content"></div>
@@ -103,6 +103,9 @@ export default {
     resize (chartItem) {
       const chartBox = document.getElementById('chartUrlDiv' + this.chartIndex)
       chartBox.querySelector('.url-container').style.height = `calc(100% - ${this.$chartResizeTool.titleHeight}px)`
+    },
+    setData (chartItem) {
+      this.data = chartItem
     },
     showLoad (chartItem) {
       this.data = chartItem
@@ -196,10 +199,17 @@ export default {
       this.dropdownMenuShow = false
       this.$emit('on-edit-chart-block', this.data.id)
     },
+    editGroupItem (chart) {
+      this.$emit('on-edit-group-chart', chart)
+    },
     // 删除该图表
     removeChart () {
       this.dropdownMenuShow = false
       this.$emit('on-remove-chart-block', this.data.id)
+    },
+    // 删除该图表
+    removeChartGroup (chart) {
+      this.$emit('on-remove-group-chart', chart)
     },
     clickos () {
       this.dropdownMenuShow = false
@@ -236,6 +246,9 @@ export default {
           }
         })
       })
+    },
+    moveGroupItem (groupList) {
+      this.$emit('moveGroupItem', { groupId: this.data.id, children: groupList })
     },
     setLoadFrameFull () {
       const that = this

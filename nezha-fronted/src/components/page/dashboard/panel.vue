@@ -7,7 +7,7 @@
       <template v-else>
         <div class="top-tool-main-left">
           <select-panel :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'" :show-panel="showPanel"
-                        @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;">
+                        @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;display: inline-block">
             <template v-slot:header>
               <div class="panel-select-header">
                 <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel" id="panel-list-search"></el-input>
@@ -74,8 +74,8 @@
           <export-excel
             id="panel"
             export-file-name="chart"
-            export-url="/panel/export"
-            import-url="/panel/import"
+            export-url="/visual/panel/export"
+            import-url="/visual/panel/import"
             :params="filter"
             :permissions="{
               import: 'panel_chart_import',
@@ -149,18 +149,17 @@ export default {
       chart: {},
       blankChart: {
         id: '',
-        title: '',
+        name: '',
         type: 'line',
         span: 12,
         height: '400',
         unit: 2,
-        param: {
-          url: '',
-          threshold: ''
-        },
+        param: { url: '', threshold: '' },
         elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
         panel: '',
-        sync: 0
+        sync: 0,
+        remark: '',
+        groupId: -1
       },
       pageObj: {
         pageNo: 1,
@@ -286,6 +285,7 @@ export default {
     addChart () {
       this.chart = this.newChart()
       this.rightBox.chart.show = true
+      console.log(123123123)
     },
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))

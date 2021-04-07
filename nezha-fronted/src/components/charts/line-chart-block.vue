@@ -37,7 +37,7 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartData.title}}</span>
+              <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon" v-if="filter.from != $CONSTANTS.fromRoute.rule&&chartTitleShow"><i :class="{'visible':caretShow,'hidden':!caretShow}" class="nz-icon nz-icon-xialaxuanze  "></i></span>
             </span>
             <ul :class="{'el-dropdown-menu nz-chart-dropdown':!isExplore,'el-dropdown-menu nz-chart-dropdown-one':isExplore}" :id="'dropdownUl'+chartIndex" slot="dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" v-if="filter.from != $CONSTANTS.fromRoute.rule&&chartTitleShow"    v-show="dropdownMenuShow" >
@@ -1555,7 +1555,7 @@ export default {
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
-            let query = encodeURIComponent(this.data.title)
+            let query = encodeURIComponent(this.data.name)
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
               query += '&nullType=' + this.chartInfo.param.nullType

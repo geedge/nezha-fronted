@@ -24,7 +24,7 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex" v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartData.title}}</span>
+              <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"><i class="nz-icon nz-icon-xialaxuanze  "
                                                 :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
@@ -78,7 +78,7 @@
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal"
                    width="96%" @close="screenModal = false">
           <div slot="title">
-            <span class="nz-dialog-title">{{data.title}}</span>
+            <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
 <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"-->
 <!--                           @change="dateChange"></time-picker>-->

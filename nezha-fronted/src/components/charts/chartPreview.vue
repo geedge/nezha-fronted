@@ -54,7 +54,7 @@
           </span>
       </el-popover>
       <div slot="title" class="chart-title">
-        <span class="nz-dialog-title chart-title-text">{{chart.title}}</span>
+        <span class="nz-dialog-title chart-title-text">{{chart.name}}</span>
         <div class="float-right panel-calendar dialog-tool"  v-if="chart.type!=='url' && chart.type !=='alertList'">
 
 <!--          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange" v-if="chart.type !='text'"></time-picker>-->
@@ -473,7 +473,7 @@ export default {
                         }
                         if (chartItem.type === 'stackArea') {
                           seriesItem.theData.type = 'line'
-                          seriesItem.theData.stack = chartItem.title
+                          seriesItem.theData.stack = chartItem.name
                           seriesItem.theData.areaStyle = { opacity: 0.3 }
                         }
                         if (chartItem.type === 'endpointInfo') {
@@ -1411,7 +1411,7 @@ export default {
                     }
                     if (this.chart.type === 'stackArea') {
                       seriesItem.theData.type = 'line'
-                      seriesItem.theData.stack = this.chart.title
+                      seriesItem.theData.stack = this.chart.name
                       seriesItem.theData.areaStyle = { opacity: 0.3 }
                     }
                     // 图表中每条线的名字,后半部分

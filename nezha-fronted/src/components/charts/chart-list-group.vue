@@ -57,7 +57,7 @@
                  dragClass:'drag-chart-class',
                  fallbackClass:'fallback-class',
                  forceFallback:true,
-                 ghostClass:'chart-group-ghost',
+                 ghostClass:'chart-ghost',
                  chosenClass:'choose-class',
                  scroll:true,
                  filter: '.drag-disabled',
@@ -66,7 +66,7 @@
                  handle: '.chart-title'
                }"
     style="width: 100%;height: 100%">
-      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-group-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
+      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
@@ -220,14 +220,15 @@ export default {
   },
   watch: {
     groupList: {
+      immediate: true,
       handler (n) {
         this.dataList = [...n]
-        console.log(this.dataList)
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
             if (item.type === 'text') {
               console.log(item)
             }
+            console.log(item, index, this.filter)
             this.getChartData(item, index, this.filter)
             this.setChartSize(item, index)
           })
@@ -303,12 +304,7 @@ export default {
     },
     end (event) {
       if (event.oldIndex !== event.newIndex) {
-        const newWeights = []
-        this.dataList.forEach((item, index) => {
-          item.weight = index
-          newWeights.push({ id: item.id, weight: index })
-        })
-        this.$put('panel/' + this.pagePanelId + '/charts/weights', newWeights)
+        this.$emit('moveGroupItem', this.dataList)
         // 处理所有group数据后 调用上层移动 保存
       }
     },
@@ -430,7 +426,7 @@ export default {
             this.setChartSize(item.span, index)// 设置该图表宽度
             if (!item.isLoaded) {
               // 获得当前显示在浏览器的图表，从后台获取数据
-              const chartBox = document.getElementById('chart-group-' + item.id)// this.$refs['editChart'+item.id][0];
+              const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
               this.handleElementInViewport(chartBox, 0, item, index, true)
             }
           })
@@ -536,7 +532,7 @@ export default {
           this.dataList.forEach((item, index) => {
             this.$set(item, 'from', params.from)
             this.setChartSize(item, index)// 设置该图表宽度
-            const chartBox = document.getElementById('chart-group-' + item.id)
+            const chartBox = document.getElementById('chart-' + item.id)
             this.handleElementInViewport(chartBox, 0, item, index)
           })
         })
@@ -595,7 +591,7 @@ export default {
           this.dataList.forEach((item, index) => {
             this.$set(item, 'from', params.from)
             this.setChartSize(item, index)// 设置该图表宽度
-            const chartBox = document.getElementById('chart-group-' + item.id)
+            const chartBox = document.getElementById('chart-' + item.id)
             this.handleElementInViewport(chartBox, 0, item, index)
           })
         })
@@ -665,7 +661,7 @@ export default {
                 }
                 if (!item.isLoaded) {
                   // 获得当前显示在浏览器的图表，从后台获取数据
-                  const chartBox = document.getElementById('chart-group-' + item.id)
+                  const chartBox = document.getElementById('chart-' + item.id)
                   this.handleElementInViewport(chartBox, 0, item, index)
                 }
               })
@@ -679,7 +675,7 @@ export default {
         this.dataList.forEach((item, index) => {
           if (!item.isLoaded) {
             // 获得当前显示在浏览器的图表，从后台获取数据
-            const chartBox = document.getElementById('chart-group-' + item.id)// this.$refs['editChart'+item.id][0];
+            const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
             this.handleElementInViewport(chartBox, scrollTop, item, index)
           }
         })
@@ -1536,7 +1532,7 @@ export default {
     // 设置图表的尺寸
     setChartSize (item, index) {
       this.$nextTick(() => {
-        const chartBox = document.getElementById('chart-group-' + item.id)
+        const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
           chartBox.style.height = `${item.height}px`
@@ -1639,8 +1635,9 @@ export default {
     editData (chartId) {
       // 获取该id下chart的相关信息
       const chart = this.dataList.find(item => item.id === chartId)
+      console.log(chart)
       if (chart) {
-        this.$emit('on-edit-chart', chart)
+        this.$emit('on-edit-group-chart', chart)
       }
     },
 

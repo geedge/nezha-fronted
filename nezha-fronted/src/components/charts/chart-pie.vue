@@ -23,7 +23,7 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title" @click.stop="dropdownMenuShow=!dropdownMenuShow">
-              <span class="chart-title-text">{{chartData.title}}</span>
+              <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"><i class="nz-icon nz-icon-xialaxuanze  "  :class="{'visible':caretShow,'hidden':!caretShow}"></i></span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="position: absolute; top: 30px; left: calc(50% - 79px); transform-origin: center top; z-index: 1000;" >
@@ -52,7 +52,7 @@
                    :visible.sync="screenModal"
                    width="96%"  @close="screenModal = false" :modal-append-to-body="false">
           <div slot="title">
-            <span class="nz-dialog-title">{{data.title}}</span>
+            <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
 <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>-->
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="single-chart"></pick-time>
@@ -423,10 +423,10 @@ export default {
             const boxWidth = size.contentSize[0]
             const boxHeight = size.contentSize[1]
             if (!self.screenModal) { // 本地显示
-              const chartDom = document.getElementById(self.chartData.title + '_' + self.chartData.id)
+              const chartDom = document.getElementById(self.chartData.name + '_' + self.chartData.id)
               if (chartDom) {
                 // const parTop = document.getElementById(self.chartData.title + '_' + self.chartData.id).offsetTop
-                const parleft = document.getElementById(self.chartData.title + '_' + self.chartData.id).offsetLeft
+                const parleft = document.getElementById(self.chartData.name + '_' + self.chartData.id).offsetLeft
 
                 const parent = document.getElementById('tableList')
                 // const parClientHeight = parent.clientHeight// 可视高度
