@@ -69,8 +69,8 @@
                 <el-form-item :label="$t('setup.username')" prop="username" key="dbusername">
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="password" key="dbpassword">
-                  <el-input v-model="database.password" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.password')"  prop="pin" key="dbpassword">
+                  <el-input v-model="database.pin" type="password" show-password></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
@@ -92,8 +92,8 @@
                 <el-form-item :label="$t('setup.port')" prop="port" key="rdport">
                   <el-input v-model="redis.port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="password" key="rdpassword">
-                  <el-input v-model="redis.password" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.password')"  prop="pin" key="rdpassword">
+                  <el-input v-model="redis.pin" type="password" show-password></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
@@ -112,8 +112,8 @@
                 <el-form-item :label="$t('setup.username')" prop="host" key="syshost">
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="password" key="syspassword">
-                  <el-input v-model="system.password" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.password')"  prop="pin" key="syspassword">
+                  <el-input v-model="system.pin" type="password" show-password></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setup.alertPath')"  prop="alertPath" key="sysalertPath">
                   <el-input v-model="system.alertPath" ></el-input>
@@ -174,7 +174,7 @@ export default {
         port: 3306,
         name: 'nz',
         username: '',
-        password: ''
+        pin: ''
       },
       dbRules: {
         host: [
@@ -184,12 +184,12 @@ export default {
         port: [{ validator: port, trigger: 'blur' }],
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       redis: {
         host: '',
         port: 6379,
-        password: ''
+        pin: ''
       },
       redisRules: {
         host: [
@@ -200,7 +200,7 @@ export default {
       },
       system: {
         username: '',
-        password: '',
+        pin: '',
         alertPath: '',
         alertPrefix: '',
         haMode: 1,
@@ -208,7 +208,7 @@ export default {
       },
       sysRules: {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
