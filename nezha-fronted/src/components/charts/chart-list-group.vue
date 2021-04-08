@@ -67,7 +67,7 @@
                }"
     style="width: 100%;height: 100%">
       <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
-        <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
+        <line-chart-block v-if="item.type === 'line' || (item.type === 'bar' && (!item.param.statistics || item.param.statistics === 'null')) ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
                           @on-remove-chart-block="removeChart"
@@ -158,7 +158,18 @@
                           @on-edit-chart-block="editData"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
         ></chart-alert-list>
-
+        <chartBarStatis  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="(item.type === 'bar'&& item.param.statistics && item.param.statistics !== 'null')" :temp-dom="tempDom"
+                         @on-refresh-data="refreshChart"
+                         @on-search-data="searchData"
+                         @on-remove-chart-block="removeChart"
+                         @on-duplicate-chart-block="duplicateChart"
+                         @on-drag-chart="editChartForDrag"
+                         @on-edit-chart-block="editData"
+                         :chart-data="item"
+                         :is-lock="panelLock"
+                         :panel-id="filter.panelId"
+                         @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                         :chart-index="item.chartIndex"></chartBarStatis>
         <chart-pie  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'pie'" :temp-dom="tempDom"
                             @on-refresh-data="refreshChart"
                             @on-search-data="searchData"
@@ -191,6 +202,7 @@ import chartDataFormat from './chartDataFormat'
 import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
 import chartPie from './chart-pie'
+import chartBarStatis from './chart-bar-statistics'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -203,7 +215,7 @@ export default {
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
     groupList: {},
-    filterParent: {},
+    filterParent: {}
   },
 
   components: {
@@ -215,7 +227,8 @@ export default {
     chartSingleStat,
     draggable,
     textChart,
-    chartPie
+    chartPie,
+    chartBarStatis
     // visNetwork,
   },
   watch: {
@@ -225,10 +238,6 @@ export default {
         this.dataList = [...n]
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
-            if (item.type === 'text') {
-              console.log(item)
-            }
-            console.log(item, index, this.filter)
             this.getChartData(item, index, this.filter)
             this.setChartSize(item, index)
           })
@@ -238,7 +247,6 @@ export default {
     filterParent: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.filter = { ...n }
         this.pagePanelId = this.filter.panelId
       }
@@ -626,7 +634,6 @@ export default {
           this.dataTotalList = [...chartListTmp]
 
           this.dataList = [...this.dataTotalList]
-          console.log(this.dataList)
           this.dataList.push({
             ...this.dataList[0],
             group: {
@@ -886,6 +893,26 @@ export default {
                     data: []
                   }
                 }
+                if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
+                  pieSeries = {
+                    type: 'bar',
+                    // roseType: 'radius',
+                    itemStyle: {
+                      borderRadius: 5,
+                      borderColor: '#fff',
+                      borderWidth: 1
+                    },
+                    label: {
+                      show: false
+                    },
+                    emphasis: {
+                      label: {
+                        show: false
+                      }
+                    },
+                    data: []
+                  }
+                }
                 res.forEach((response, innerPos) => {
                   if (response.status === 'success') {
                     errorMsg = ''
@@ -1011,6 +1038,8 @@ export default {
                             })
                             if (chartInfo.type === 'pie') {
                               pieSeries.data.push({ value: bus.getSingleStatRlt(chartInfo.param.statistics, seriesItem.theData.data), name: host + '-' + chartItem.elements[innerPos].id + '-' + resIndex })
+                            } else if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
+                              pieSeries.data.push({ value: bus.getSingleStatRlt(chartInfo.param.statistics, seriesItem.theData.data), name: host + '-' + chartItem.elements[innerPos].id + '-' + resIndex })
                             } else {
                               series.push(seriesItem.theData)
                               seriesItem = null
@@ -1046,6 +1075,9 @@ export default {
 
                 if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
                   if (chartInfo.type === 'pie') {
+                    series.push(pieSeries)
+                  }
+                  if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
                     series.push(pieSeries)
                   }
                   const chartData = {
@@ -1475,7 +1507,6 @@ export default {
       if (this.additionalInfo) {
         this.$set(chartInfo, 'param', { endpointId: this.additionalInfo.id })
       }
-      console.log(this.$refs['editChart' + chartInfo.id])
       this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
     },
     getAlertRuleChartData (chartInfo) {

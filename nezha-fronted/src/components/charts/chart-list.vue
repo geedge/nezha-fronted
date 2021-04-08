@@ -67,7 +67,7 @@
                  handle: '.chart-title'
                }"  >
       <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
-        <line-chart-block v-if="item.type === 'line' || item.type === 'bar' ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
+        <line-chart-block v-if="item.type === 'line' || (item.type === 'bar' && (!item.param.statistics || item.param.statistics === 'null')) ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
                           @on-remove-chart-block="removeChart"
@@ -170,6 +170,18 @@
                             :panel-id="filter.panelId"
                             @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                             :chart-index="index"></chart-pie>
+        <chartBarStatis  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="(item.type === 'bar'&& item.param.statistics && item.param.statistics !== 'null')" :temp-dom="tempDom"
+                    @on-refresh-data="refreshChart"
+                    @on-search-data="searchData"
+                    @on-remove-chart-block="removeChart"
+                    @on-duplicate-chart-block="duplicateChart"
+                    @on-drag-chart="editChartForDrag"
+                    @on-edit-chart-block="editData"
+                    :chart-data="item"
+                    :is-lock="panelLock"
+                    :panel-id="filter.panelId"
+                    @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                    :chart-index="index"></chartBarStatis>
         <chart-group  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'group'"
                       @on-refresh-data="refreshChart"
                       @on-search-data="searchData"
@@ -183,6 +195,7 @@
                       @on-edit-group-chart="editDataGroup"
                       @on-remove-group-chart="removeChartGroup"
                       @on-duplicate-group-chart="duplicateChartGroup"
+                      @on-add-group-item-chart="addGroupItem"
                       @moveGroupItem="moveGroupItem"
                       :panel-id="filter.panelId"
                       :chart-data="item"
@@ -209,6 +222,7 @@ import chartDataFormat from './chartDataFormat'
 import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
 import chartPie from './chart-pie'
+import chartBarStatis from './chart-bar-statistics'
 import chartGroup from './chart-group'
 // import visNetwork from './visNetwork'
 export default {
@@ -233,7 +247,8 @@ export default {
     draggable,
     textChart,
     chartPie,
-    chartGroup
+    chartGroup,
+    chartBarStatis
     // visNetwork,
   },
   data () {
@@ -629,14 +644,8 @@ export default {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
-
-          response.data.list.forEach((item, index) => { // 把chart放入对应的group
-            if (item.type === 'group') {
-              item.children = response.data.list.filter(item1 => item1.groupId === item.id)
-            }
-          })
-          response.data.list = response.data.list.filter((item) => item.groupId === -1 || !item.groupId) // 处理外层存在的groupItem
-          console.log(response.data.list)
+          // response.data.list = response.data.list.filter((item) => item.groupId === -1 || !item.groupId) // 处理外层存在的groupItem
+          // console.log(response.data.list)
           if (response.data.list) {
             this.dataTotalListBak = response.data.list
           } else {
@@ -658,19 +667,6 @@ export default {
           this.dataTotalList = [...chartListTmp]
 
           this.dataList = [...this.dataTotalList]
-          console.log(this.dataList)
-          // this.dataList.push({
-          //   ...this.dataList[0],
-          //   group: {
-          //     id: 1,
-          //     name: 'chart group'
-          //   },
-          //   type: 'group',
-          //   span: 12,
-          //   height: 600,
-          //   id: 999999,
-          //   children: [...this.dataList]
-          // })
           let addGroupIndex = 0
           this.dataList.forEach((item) => {
             if (item.type === 'group') {
@@ -932,6 +928,26 @@ export default {
                     data: []
                   }
                 }
+                if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
+                  pieSeries = {
+                    type: 'bar',
+                    // roseType: 'radius',
+                    itemStyle: {
+                      borderRadius: 5,
+                      borderColor: '#fff',
+                      borderWidth: 1
+                    },
+                    label: {
+                      show: false
+                    },
+                    emphasis: {
+                      label: {
+                        show: false
+                      }
+                    },
+                    data: []
+                  }
+                }
                 res.forEach((response, innerPos) => {
                   if (response.status === 'success') {
                     errorMsg = ''
@@ -1022,7 +1038,6 @@ export default {
                               host = chartItem.elements[innerPos].expression
                             }
                             // 处理legend别名
-                            console.log(chartItem.id)
                             let alias = this.$refs['editChart' + chartItem.id][0].dealLegendAlias(host, chartItem.elements[innerPos].legend)
                             if (!alias || alias === '') {
                               alias = host
@@ -1057,6 +1072,8 @@ export default {
                               return [dpsItem[0] * 1000, dpsItem[1]]
                             })
                             if (chartInfo.type === 'pie') {
+                              pieSeries.data.push({ value: bus.getSingleStatRlt(chartInfo.param.statistics, seriesItem.theData.data), name: host + '-' + chartItem.elements[innerPos].id + '-' + resIndex })
+                            } else if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
                               pieSeries.data.push({ value: bus.getSingleStatRlt(chartInfo.param.statistics, seriesItem.theData.data), name: host + '-' + chartItem.elements[innerPos].id + '-' + resIndex })
                             } else {
                               series.push(seriesItem.theData)
@@ -1093,6 +1110,9 @@ export default {
 
                 if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
                   if (chartInfo.type === 'pie') {
+                    series.push(pieSeries)
+                  }
+                  if (chartInfo.type === 'bar' && chartInfo.param.statistics && chartInfo.param.statistics !== 'null') {
                     series.push(pieSeries)
                   }
                   const chartData = {
@@ -1183,6 +1203,9 @@ export default {
         const txtWidth = parseFloat(window.getComputedStyle(span).width)
         return Number('-' + (txtWidth + 5))
       }
+    },
+    addGroupItem (id) {
+      this.$emit('on-add-group-item-chart', id)
     },
     modelStaticData (chartInfo, filterType) {
       const series = []
@@ -1596,6 +1619,7 @@ export default {
     // 删除图表
     removeChart (chartId) { // from 区分从哪里点击的删除 1.从图表面板 2.从编辑框
       const chart = this.dataList.find(item => item.id === chartId)
+      console.log(chart)
       if (chart) {
         this.$emit('on-remove-chart', chart)
       }

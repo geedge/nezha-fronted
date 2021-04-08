@@ -193,6 +193,8 @@ const cn = {
         last: 'Last',
         threshold: '阈值',
         thresholds: '阈值',
+        group: '组',
+        remark: '描述',
         typeVal: {
           line: {
             label: '曲线图'
@@ -235,7 +237,7 @@ const cn = {
           last: 'Last',
           range: 'Range',
           different: 'Different',
-          null: 'Null'
+          null: 'None'
         },
         width: '宽',
         high: '高',

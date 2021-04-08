@@ -206,12 +206,14 @@ const en = {
         last: 'Last',
         threshold: 'Threshold',
         thresholds: 'Thresholds',
+        group: 'Group',
+        remark: 'Description',
         typeVal: {
           line: {
             label: 'Line Chart' // "曲线图"
           },
           bar: {
-            label: 'Bar' // "柱状图"
+            label: 'Bar Chart' // "柱状图"
           },
           table: {
             label: 'Table' // "表格"
@@ -227,7 +229,7 @@ const en = {
             label: 'Single value'
           },
           pie: {
-            label: 'Pie'
+            label: 'Pie Chart'
           },
           alertList: {
             label: 'Alert list'
@@ -248,7 +250,7 @@ const en = {
           last: 'Last',
           range: 'Range',
           different: 'Different',
-          null: 'Null'
+          null: 'None'
         },
         width: 'Width', // "宽"
         high: 'High', // "高"

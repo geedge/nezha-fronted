@@ -762,10 +762,10 @@ export default {
               sum += self.numberWithEConvent(val)
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-              str += '<div style="padding-left: 10px;">'
+              str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, oldDot)
               if (previousItem) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
                 let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
                 if (previousval === 0) {
                   previousval = Number(item.data[1]).toExponential(2)
@@ -782,7 +782,7 @@ export default {
                 str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
                 str += '</span>'
               } else if (tip.alias.indexOf('Previous ') !== -1) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
                 str += '</span>'
               }
               str += '</div>'
@@ -1200,10 +1200,10 @@ export default {
                       sum += self.numberWithEConvent(val)
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
-                      str += '<div style="padding-left: 10px;">'
+                      str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
                       if (previousItem) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
                         let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
                         if (previousval === 0) {
                           previousval = Number(item.data[1]).toExponential(2)
@@ -1220,7 +1220,7 @@ export default {
                         str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
                         str += '</span>'
                       } else if (tip.alias.indexOf('Previous ') !== -1) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
                         str += '</span>'
                       }
                       str += '</div>'

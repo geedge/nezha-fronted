@@ -156,7 +156,10 @@
       <!-- begin--表单-->
       <div class="right-box-form-box" ref="scrollbar">
         <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" ref="chartForm">
-          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'dashboard' && showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
+          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+            <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
             <!--<el-autocomplete
               :fetch-suggestions="panelSuggestion"
               @input="inputPanel"
@@ -168,31 +171,22 @@
               value-key="name"
             >
             </el-autocomplete>-->
-            <select-panel :filter-panel="filterPanel" :panel-lock="true" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel" ref="selectPanel"
-                          v-if="!editChart.id">
+            <select-panel :filter-panel="filterPanel" :panel-lock="true" :disabled="showPanel.type==='dashboard'" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel" ref="selectPanel">
               <template v-slot:header>
                 <div class="panel-select-header">
                   <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel" id="chart-box-panelname"></el-input>
                 </div>
               </template>
               <template v-slot:trigger>
-                <el-input placeholder="" readonly="readonly" size="small" v-model="panelName"></el-input>
+                <el-input placeholder="" readonly="readonly" size="small" v-model="panelName" :disabled="showPanel.type==='dashboard'"></el-input>
               </template>
             </select-panel>
-            <el-input :value="editChart.panelName" readonly="readonly" size="small" v-if="editChart.id"></el-input>
 
           </el-form-item>
-          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
-            <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
-          </el-form-item>
-
-          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
-          <div style="margin-bottom: 20px;width: 100%"></div>
-
-          <!-- type unit start-->
+          <!-- type -->
           <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-            <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType" id="chart-box-type">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+            <el-select @change="chartTypeChange" class="right-box-row-with-btn" placeholder="" popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.type" value-key="chartType" id="chart-box-type" :disabled="editChart.type==='group'&&editChart.children&&editChart.children.length">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList" :disabled=" item.id==='group' && editChart.isGroup">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
@@ -206,7 +200,9 @@
               </el-option>
             </el-select>
           </el-form-item>
-
+          <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
+          <div style="margin-bottom: 20px;width: 100%"></div>
+          <!-- unit -->
           <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'">
             <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable id="chart-box-unit"
                          placeholder=""
@@ -258,8 +254,8 @@
             <el-input size="mini" type="input" v-model="editChart.param.threshold" id="chart-box-threshold"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' ">
-              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.param.statistics" id="chart-box-panelname">
+          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'">
+              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.param.statistics" id="chart-box-statistics" @change="$forceUpdate">
                 <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
@@ -867,13 +863,15 @@ export default {
         }); */
 
       // panelPromise.then(()=>{
+      console.log(this.editChart)
       if (this.panelId) {
         const chartParams = params || this.editChart
         chartParams.panelId = this.panelId
         if (!chartParams.groupId) {
-          chartParams.groupId = -1
+          chartParams.groupId = 0
         }
         delete chartParams.panel
+        delete chartParams.children
         this.$post('visual/panel/chart', chartParams).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -901,6 +899,7 @@ export default {
         chartParams.groupId = -1
       }
       delete chartParams.panel
+      delete chartParams.children
       this.$put('visual/panel/chart', chartParams).then(response2 => {
         if (response2.code === 200) {
           this.esc()
@@ -935,7 +934,7 @@ export default {
             },
             sync: this.editChart.sync
           }
-          if (this.editChart.type === 'singleStat' || this.editChart.type == 'pie') {
+          if (this.editChart.type === 'singleStat' || this.editChart.type === 'pie' || this.editChart.type === 'bar') {
             // params.param.statistics=this.statistics;
           } else {
             delete params.param.statistics
@@ -1036,7 +1035,7 @@ export default {
           this.$refs.alertParamBox.saveParam()
           return
         }
-        if (this.editChart.type == 'singleStat' || this.editChart.type == 'pie' || this.editChart.type == 'table') {
+        if (this.editChart.type == 'singleStat' || this.editChart.type == 'pie' || this.editChart.type == 'table' || this.editChart.type == 'bar') {
           // this.$set(this.editChart.param, "statistics", this.statistics);
         } else {
           delete this.editChart.param.statistics
@@ -1222,6 +1221,7 @@ export default {
     },
     // 编辑chart时使用, set_tdata
     editData (data, panelId) {
+      console.log(data, this.editChart)
       if (!panelId) {
         this.panelId = 0
       } else {
@@ -1260,6 +1260,9 @@ export default {
         if ((this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'singleStat') && data.param) {
           this.editChart.param.threshold = data.param.threshold
           this.editChart.param.statistics = this.statistics = data.param.statistics
+          if (this.editChart.type === 'bar') {
+            this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
+          }
         } else {
           this.editChart.param.threshold = ''
         }
@@ -1299,7 +1302,7 @@ export default {
       this.editChart.height = 400 + ''
       this.editChart.unit = unit || 2
       this.editChart.remark = ''
-      this.editChart.groupId = ''
+      this.editChart.groupId = this.editChart.groupId || ''
       const param = {}
       param.last = 0
       param.url = ''
@@ -1344,6 +1347,7 @@ export default {
     chartTypeChange () {
       const chartType = this.editChart.type
       this.editChart.param.url = ''
+      this.editChart.height = 400
       if (chartType === 'url') {
         this.setIsUrl()
         /* if(this.$refs.chartTag){
@@ -1368,12 +1372,17 @@ export default {
         this.showPicker = [{ bac: false, text: false }]
       } else if (chartType === 'group') {
         this.editChart.span = 12
-        this.editChart.height = -1
+        this.editChart.height = ''
         this.setIsGroup()
       } else {
         this.setIsOtherChart()
         if (chartType === 'bar' || chartType === 'line' || chartType === 'stackArea') {
           this.editChart.param = { nullType: 'connected', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
+          if (chartType === 'bar') {
+            this.editChart.param = { statistics: 'last', nullType: 'connected', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
+            this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
+            this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
+          }
         } else if (chartType == 'table') {
           this.$set(this.editChart.param, 'last', 0)
           this.editChart.param = {
@@ -1684,6 +1693,8 @@ export default {
         }
 
         this.editChart = JSON.parse(JSON.stringify(n))
+        this.panelName = this.editChart.panelName
+        this.panelId = this.editChart.panelId
         this.editChart.name = this.editChart.name || ''
         if (!n.groupId || n.groupId == -1) {
           this.editChart.groupId = ''

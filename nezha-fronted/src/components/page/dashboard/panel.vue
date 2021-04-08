@@ -100,7 +100,7 @@
     <div class="table-list" id="tableList">
       <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
-          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"  :class="{'show-top':showTopBtn}"></chart-list>
+          <chart-list :from="$CONSTANTS.fromRoute.panel" @on-edit-chart="editChart" @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"  :class="{'show-top':showTopBtn}" @on-add-group-item-chart="addGroupItem"></chart-list>
         </div>
       </div>
     </div>
@@ -140,7 +140,8 @@ export default {
       interval: 0,
       showPanel: { // panel下拉列表
         id: '',
-        name: ''
+        name: '',
+        type: 'panel'
       },
       panel: { // 新增panel
         id: '',
@@ -221,6 +222,7 @@ export default {
       this.filter.searchName = ''
       // this.$refs.searchInput.select();
       this.showPanel = val
+      this.showPanel.type = 'panel'
       this.filter.panelId = this.showPanel.id
       // let curTime = this.$refs.calendarPanel.getCurrentTime();
       const curTime = this.searchTime
@@ -284,8 +286,19 @@ export default {
     /* 图表相关操作--start */
     addChart () {
       this.chart = this.newChart()
+      this.chart.panelId = this.showPanel.id
+      this.chart.panelName = this.showPanel.name
       this.rightBox.chart.show = true
       console.log(123123123)
+    },
+    addGroupItem (groupId) {
+      console.log(groupId)
+      this.chart = this.newChart()
+      this.chart.groupId = groupId
+      this.chart.panelId = this.showPanel.id
+      this.chart.panelName = this.showPanel.name
+      this.chart.isGroup = true
+      this.rightBox.chart.show = true
     },
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
@@ -296,6 +309,8 @@ export default {
         data.param = { url: '', threshold: '' }
       }
       this.chart = JSON.parse(JSON.stringify(data))
+      this.chart.panelId = this.showPanel.id
+      this.chart.panelName = this.showPanel.name
       this.rightBox.chart.show = true
     },
     closeChartBox (refresh) {

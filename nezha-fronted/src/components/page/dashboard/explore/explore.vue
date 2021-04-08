@@ -570,7 +570,7 @@ export default {
     },
     saveChart () {
       const chart = {
-        title: '',
+        name: '',
         type: 'line',
         span: 12,
         height: '400',
@@ -581,7 +581,9 @@ export default {
         },
         elements: [],
         panel: '',
-        sync: 0
+        sync: 0,
+        groupId: '',
+        remark: '',
       }
       this.expressions.forEach((exp) => {
         chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '' })
@@ -606,7 +608,7 @@ export default {
       })
     },
     getPanelData () { // 获取panel数据
-      this.$get('panel?pageNo=1&pageSize=-1').then(response => {
+      this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.panelData = response.data.list
         }

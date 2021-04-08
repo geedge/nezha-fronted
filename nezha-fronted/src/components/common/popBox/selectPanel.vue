@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" width="400">
+  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" width="400" :disabled="disabled">
     <div>
       <div class="pop-item-wider">
 
@@ -46,6 +46,7 @@ export default {
     panelData: { type: Array },
     showPanel: { type: Object },
     panelLock: { type: Boolean, default: true },
+    disabled: { type: Boolean, default: false },
     filterPanel: { type: String }
   },
   mounted () {

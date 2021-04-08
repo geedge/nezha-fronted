@@ -16,16 +16,16 @@
                   <i class="nz-icon nz-icon-arrow-down" :class="showList?'':'is-active'"/>
                 </span>
                 {{chartData.name}}
-                <span v-show="!showList">{{dataList.length}} panel collapse</span>
+                <span v-show="!showList" class="collapse-content">({{chartData.children.length}} charts)</span>
               </span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
-<!--                <span  @click="refreshChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">-->
-<!--                  <i class="nz-icon nz-icon-replay"></i>-->
-<!--                </span>-->
+                <span  @click="addGroupItemChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
+                  <i class="nz-icon nz-icon-plus"></i>
+                </span>
 <!--                 <span  @click="showAllScreen" class="" :title="$t('dashboard.screen')">-->
 <!--                  <i class="nz-icon nz-icon-maxview"></i>-->
 <!--                 </span>-->
-<!--                <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>-->
+                <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
 
               </span>
             </span>
@@ -214,9 +214,11 @@ export default {
       this.$emit('on-edit-chart-block', this.data.id)
     },
     editGroupItem (chart) {
+      chart.isGroup = true
       this.$emit('on-edit-group-chart', chart)
     },
     duplicateGroupItem (chart) {
+      chart.isGroup = true
       this.$emit('on-duplicate-group-chart', chart)
     },
     // 删除该图表
@@ -224,9 +226,12 @@ export default {
       this.dropdownMenuShow = false
       this.$emit('on-remove-chart-block', this.data.id)
     },
-    // 删除该图表
+    // 删除group 下的该图表
     removeChartGroup (chart) {
       this.$emit('on-remove-group-chart', chart)
+    },
+    addGroupItemChart () {
+      this.$emit('on-add-group-item-chart', this.data.id)
     },
     clickos () {
       this.dropdownMenuShow = false
@@ -313,5 +318,9 @@ export default {
     transform: rotate(
       -90deg
     );
+  }
+  .collapse-content{
+    font-size: 12px;
+    color: #999999;
   }
 </style>
