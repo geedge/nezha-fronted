@@ -79,11 +79,11 @@ export default new Router({
         },
         {
           path: '/terminalLog',
-          component: resolve => require(['../components/page/config/terminallog.vue'], resolve)
+          component: resolve => require(['../components/page/config/terminalLog.vue'], resolve)
         },
         {
           path: '/operationLog',
-          component: resolve => require(['../components/page/config/operationlog.vue'], resolve)
+          component: resolve => require(['../components/page/config/operationLog.vue'], resolve)
         },
         {
           path: '/about',

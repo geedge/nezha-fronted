@@ -1,10 +1,11 @@
 <template>
   <div class="export-xlsx">
-    <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-      <slot name="optionZone"></slot><button @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go" style="padding: 0" v-has="[permissions.import, permissions.export]">
-        <i class="nz-icon nz-icon-arrow-down"></i>
+    <div class="top-tool-btn-group">
+      <slot name="optionZone"></slot>
+      <button id="browser-go" v-has="[permissions.import, permissions.export]" class="top-tool-btn" style="position: relative" @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)">
+        <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
-          <ul class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown" style="z-index: 101" v-show="exportShow">
+          <ul v-show="exportShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown">
             <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.import" :id="id+'-xlsx-import'"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
             <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.export" :id="id+'-xlsx-export'"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>
@@ -26,13 +27,13 @@
         </div>
         <div slot="footer" class="footer">
           <div class="el-message-box__btns" style="text-align: right;">
-            <button @click="downloadTemplate"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-import-template'">
+            <button :id="id+'-xlsx-import-template'" class="el-button el-button--default el-button--small" @click="downloadTemplate">
               <span>{{$t('overall.template')}}</span>
             </button>
-            <button  @click="importExcel"  class="nz-btn el-button el-button--default el-button--small" :disabled="prevent_opt.import" :class="{'nz-btn-disabled':prevent_opt.import}" :id="id+'-xlsx-import-add'">
+            <button  :id="id+'-xlsx-import-add'" :class="{'nz-btn-disabled':prevent_opt.import}" :disabled="prevent_opt.import" class="nz-btn el-button el-button--default el-button--small" @click="importExcel">
               <span>{{$t('overall.importExcel')}}</span>
             </button>
-            <button @click="closeDialog"  class="el-button el-button--default el-button--small" :id="id+'-xlsx-import-esc'">
+            <button :id="id+'-xlsx-import-esc'" class="el-button el-button--default el-button--small" @click="closeDialog">
               <span>{{$t('overall.cancel')}}</span>
             </button>
           </div>
@@ -365,5 +366,83 @@ export default {
   }
   .import-result-item .line-num{
     width: 55px;
+  }
+
+  .export-dropdown-btn {
+    position: relative;
+  }
+  .endpoint-query-dropdown {
+    position: absolute;
+    right: 0;
+    top: 31px;
+  }
+  .export-dropdown {
+    width: 90px;
+    right: 0;
+    left: unset !important;
+    top: 35px;
+  }
+  .endpoint-query-dropdown::after, .export-dropdown::after {
+    content: '';
+    display: block;
+    width:0;
+    height:0;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    border: 5px;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #fff transparent;
+    position: absolute;
+    right: 3px;
+    bottom: 0;
+
+  }
+  .export-dropdown::after {
+    transform: translate(-50%, -54px);
+  }
+  .endpoint-query-dropdown::after {
+    transform: translate(-50%, -45px);
+  }
+  .export-xlsx .el-dialog__body{
+    padding: 10px 20px 20px 20px;
+  }
+  .export-xlsx .el-button:focus, .export-xlsx .el-button:hover {
+    color: unset;
+    border-color: unset;
+    background-color:unset;
+  }
+  .dropdownBtn .el-button--primary{
+    top:2px;
+    padding: 0 8px;
+    background-image: linear-gradient(180deg, #fff 0%, #E0E0E0 100%);
+    border: 0px;
+    color: #666;
+    -webkit-box-shadow: 0 0 1px 1px rgba(162,162,162,0.5);
+    box-shadow: 0 0 1px 1px rgba(162,162,162,0.5);
+    letter-spacing: 0;
+    background-color: unset;
+  }
+  .dropdownBtn .el-button--primary:hover{
+    background-image: linear-gradient(180deg, #F0F0F0 0%, #D8D8D8 99%) !important;
+  }
+  .dropdownBtn .el-button--mini{
+    font-size: 12px;
+    height: 24px;
+  }
+  .dropdownBtn .el-button--mini:first-of-type {
+    right: 3px;
+  }
+  .el-dropdown .el-button-group{
+    display: block;
+    position: relative;
+    top:-2px;
+  }
+  .export-xlsx .el-dropdown .el-dropdown__caret-button {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-left: none;
+    top: 0;
+    left: -1px;
   }
 </style>

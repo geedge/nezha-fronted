@@ -4,6 +4,8 @@
 $--theme-color: var(--theme-color); // 主题色
 
 /* 按钮 */
+$--button-border-radius: 2px; // 按钮圆角
+
 $--button-primary-color: #FFF; // 普通按钮字色
 $--button-primary-background-color: var(--theme-color); // 普通按钮背景色
 $--button-hover-tint-percent: 20%; // 非灰色按钮在鼠标hover时背景色变浅的幅度

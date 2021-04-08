@@ -182,10 +182,18 @@ export const fromRoute = {
   message: 'message',
   rule: 'rule',
   model: 'model',
+  mib: 'mib',
   asset: 'asset',
+  assetType: 'assetType',
+  assetState: 'assetState',
+  expressionTemplate: 'expressionTemplate',
+  account: 'account',
+  promServer: 'promServer',
   dc: 'dc',
+  role: 'role',
   endpoint: 'endpoint',
   project: 'project',
   endpointQuery: 'endpointQuery',
-  terminalLog: 'terminal'
+  terminalLog: 'terminalLog',
+  operationLog: 'operationLog'
 }

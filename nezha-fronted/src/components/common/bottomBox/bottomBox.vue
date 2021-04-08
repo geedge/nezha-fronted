@@ -18,24 +18,27 @@
 
     <!------TAB区------>
       <!--机柜-->
-      <cabinet-tab v-if="from === $CONSTANTS.fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+      <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
       <!--告警信息-->
-      <alert-message-tab v-if="((from === $CONSTANTS.fromRoute.rule || from === $CONSTANTS.fromRoute.asset || from === $CONSTANTS.fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
       <!--asset页的endpoint列表-->
-      <endpoint-tab v-if="from === $CONSTANTS.fromRoute.asset && targetTab === $CONSTANTS.fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
+      <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
       <!--endpoint-query-->
-      <endpoint-query-tab v-if="(from === $CONSTANTS.fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
+      <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
 
       <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="(from === $CONSTANTS.fromRoute.model || from === $CONSTANTS.fromRoute.asset || from === $CONSTANTS.fromRoute.project || from === $CONSTANTS.fromRoute.rule || from === $CONSTANTS.fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :from="from" :obj="obj"
+      <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :from="from" :obj="obj"
                  @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
 
       <!--terminal-log的记录和回放-->
-      <terminal-log-cmd-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
-      <terminal-log-record-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
+      <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
+      <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
 
-      <terminal-log-monitor-tab v-if="from === $CONSTANTS.fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+      <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
 
+      <!--user列表的两个日志-->
+      <operation-log-tab v-if="from === fromRoute.account && targetTab === 'operationLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></operation-log-tab>
+      <terminal-log-tab v-if="from === fromRoute.account && targetTab === 'terminalLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-tab>
     </div>
   </div>
 </template>
@@ -49,18 +52,23 @@ import panelTab from './tabs/panelTab'
 import terminalLogRecordTab from './tabs/terminalLogRecordTab'
 import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from './tabs/terminalLogCMDTab'
+import operationLogTab from './tabs/operationLogTab'
+import terminalLogTab from './tabs/terminalLogTab'
+import { fromRoute } from '@/components/common/js/constants'
 
 export default {
   name: 'bottomBox',
   components: {
-    'cabinet-tab': cabinetTab,
-    'alert-message-tab': alertMessageTab,
-    'endpoint-query-tab': endpointQueryTab,
-    'endpoint-tab': endpointTab,
-    'panel-tab': panelTab,
+    cabinetTab,
+    alertMessageTab,
+    endpointQueryTab,
+    endpointTab,
+    panelTab,
     terminalLogRecordTab,
-    'terminal-log-cmd-tab': terminalLogCMDTab,
-    terminalLogMonitorTab
+    terminalLogMonitorTab,
+    operationLogTab,
+    terminalLogTab,
+    'terminal-log-cmd-tab': terminalLogCMDTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -75,7 +83,9 @@ export default {
     assetDetail: Object // endpoint页的asset详情
   },
   data () {
-    return {}
+    return {
+      fromRoute: fromRoute
+    }
   },
   methods: {
     exitFullScreen () {
@@ -97,9 +107,9 @@ export default {
       this.$emit('update:targetTab', tab)
     },
     afterResize () {
-      if (this.from === this.$CONSTANTS.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
+      if (this.from === this.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
         this.$refs.endpointQuery.tableReload()
-      } else if (this.from === this.$CONSTANTS.fromRoute.terminalLog && this.targetTab === 'record') {
+      } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'record') {
         setTimeout(() => {
           this.$refs.reminalLogRecordTab.consoleResize()
         }, 600)

@@ -5,11 +5,14 @@
       <!-- 顶部工具栏 -->
       <div class="main-modal"></div>
       <div v-show="bottomBox.mainResizeShow" class="top-tools">
+        <div class="top-tool-main-left" style="width: 300px">
+          <slot name="top-tool-left"></slot>
+        </div>
         <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-main-right">
           <div v-if="components.indexOf('searchInput') > -1" class="top-tool-search">
             <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
-          <slot name="top-tool"></slot>
+          <slot name="top-tool-right"></slot>
           <button v-if="components.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-l-10"
                   type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
             <i class="nz-icon-gear nz-icon"></i>
@@ -33,7 +36,7 @@
       <div v-show="bottomBox.mainResizeShow" class="nz-table2">
         <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
       </div>
-      <div v-show="!bottomBox.showSubList" class="pagination-bottom">
+      <div class="pagination-bottom">
         <slot name="pagination"></slot>
       </div>
     </div>
@@ -45,16 +48,23 @@
                   :obj="bottomBox.object"
                   :sub-resize-show="bottomBox.subResizeShow"
                   :target-tab.sync="bottomBox.targetTab"
-                  @closeSubList="bottomBox.showSubList = false" @exitFullScreen="exitFullScreen" @fullScreen="fullScreen" @listResize="listResize" ></bottom-box>
+                  @closeSubList="bottomBox.showSubList = false"
+                  @exitFullScreen="exitFullScreen"
+                  @fullScreen="fullScreen"
+                  @listResize="listResize" ></bottom-box>
     </transition>
   </div>
 </template>
 
 <script>
+import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 
 export default {
   name: 'nzDataList',
+  components: {
+    bottomBox
+  },
   props: {
     from: {
       type: String,

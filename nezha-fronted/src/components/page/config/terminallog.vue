@@ -1,169 +1,133 @@
-<style scoped>
-  .terminallog {
-    height: 100%;
-  }
-</style>
 <template>
-  <div class="terminallog">
-    <div :class="{'main-list-with-sub': bottomBox.showSubList}" class="main-list">
-      <!-- 顶部工具栏 -->
-      <div class="main-modal"></div>
-      <div class="top-tools" v-show="bottomBox.mainResizeShow">
-        <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-main-right">
-          <div class="top-tool-search margin-r-5">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- 自定义table列 -->
-      <transition name="el-zoom-in-top">
-        <element-set
-          :custom-table-title.sync="tools.customTableTitle"
-          :original-table-title="tableTitle"
-          @close="tools.showCustomTableTitle = false"
-          ref="customTableTitle"
-          v-if="tools.showCustomTableTitle"
-        ></element-set>
-      </transition>
-      <el-table
-        :cell-class-name="messageStyle"
-        :data="tableData"
-        :height="$tableHeight.normal"
-        @sort-change="tableDataSort"
-        border
-        class="nz-table"
-        ref="terminalLogTable"
-        style="width: 100%;"
-        v-loading="tools.loading">
-        <el-table-column
-          :key="`col-${index}`"
-          :label="item.label"
-          :prop="$tableSet.propTitle(item.prop,'temrminallog')"
-          :resizable="true"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="$tableSet.sortableShow(item.prop,'temrminallog')"
-          v-for="(item, index) in tools.customTableTitle"
-          v-if="item.show"
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.terminalLog"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:default="slotProps">
+        <el-table
+          id="terminal-log-list-table"
+          ref="dataTable"
+          v-loading="tools.loading"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @header-dragend="dragend"
+          @sort-change="tableDataSort"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
         >
-          <template :column="item" slot-scope="scope">
-            <span v-if="item.prop == 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-            <template v-else-if="item.prop == 'status'">
-              <span>{{getStatusText(scope.row.status)}}</span>
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :fixed="item.fixed"
+            :label="item.label"
+            :prop="item.prop"
+            :resizable="true"
+            :sort-orders="['ascending', 'descending']"
+            :width="`${item.width}`"
+            class="data-column"
+          >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
             </template>
-            <template v-else-if="item.prop == 'uuid'">
-              <span>{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
+            <template slot-scope="scope" :column="item">
+              <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+              <template v-else-if="item.prop === 'status'">
+                <span>{{getStatusText(scope.row.status)}}</span>
+              </template>
+              <template v-else-if="item.prop === 'uuid'">
+                <span>{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
+              </template>
+              <template v-else-if="item.prop === 'remote'">
+                <span>{{getRemoteText(scope.row)}}</span>
+              </template>
+              <template v-else-if="item.prop === 'duration'">
+                <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
+                  <div slot="content">
+                    {{$t('config.terminallog.endTime')}}<br/>
+                    {{scope.row.endTime}}
+                  </div>
+                  <span>{{getDuration(scope.row)}}</span>
+                </el-tooltip>
+              </template>
+              <template v-else-if="item.prop === 'authType'">
+                <span v-if="scope.row.authType == 1">{{$t('config.terminallog.password')}}</span>
+                <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
+              </template>
+              <span v-else>{{scope.row[item.prop]}}</span>
             </template>
-            <template v-else-if="item.prop == 'remote'">
-              <span>{{getRemoteText(scope.row)}}</span>
-            </template>
-            <template v-else-if="item.prop == 'duration'">
-              <el-tooltip placement="right" effect="light" :disabled="!scope.row.status">
-                <div slot="content">
-                 {{$t('config.terminallog.endTime')}}<br/>
-                  {{scope.row.endTime}}
-                </div>
-                <span>{{getDuration(scope.row)}}</span>
-              </el-tooltip>
-            </template>
-            <template v-else-if="item.prop == 'option'">
+          </el-table-column>
+          <el-table-column
+            :resizable="false"
+            :width="operationWidth"
+            fixed="right">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
               <template v-if="scope.row.status == 0">
-                <span :id="'terminalLog-shutdown-'+scope.row.id" @click="shutdown(scope.row)" class="content-right-option" title="Kill"><i class="nz-icon nz-icon-ZD"></i></span>
-                &nbsp;
-                <span :id="'terminalLog-monitor-'+scope.row.id" :title="$t('config.terminallog.monitor.monitor')" @click="monitor(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-JC"></i></span>
+                <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="$refs.dataList.showBottomBox('monitor', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
+                <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                  <div class="table-operation-item table-operation-item--more">
+                    <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                  </div>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">Kill</span></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </template>
               <template v-else>
-                <span :id="'terminalLog-replay-'+scope.row.id" :title="$t('config.terminallog.record.record')" @click="showRecord(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-replay2"></i></span>
-                &nbsp;
-                <span :id="'terminalLog-log-'+scope.row.id" :title="$t('config.terminallog.log')" @click="showHistoryCMD(scope.row)" class="content-right-option"><i class="nz-icon nz-icon-terminal-log"></i></span>
+                <button class="table-operation-item" @click="$refs.dataList.showBottomBox('cmd', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+                <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                  <div class="table-operation-item table-operation-item--more">
+                    <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                  </div>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item :command="['record', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('config.terminallog.record.record')}}</span></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
               </template>
-
-            </template>
-            <template v-else-if="item.prop == 'authType'">
-              <span v-if="scope.row.authType==1">{{$t('config.terminallog.password')}}</span>
-              <span v-else-if="scope.row.authType==2">{{$t('config.terminallog.key')}}</span>
-            </template>
-            <span v-else>{{scope.row[item.prop]}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column width="28">
-          <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-            <i class="nz-icon nz-icon-gear"></i>
-          </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
-      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-        <Pagination :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
-    </div>
-
-    <!-- 底部上滑框 -->
-    <transition name="el-zoom-in-bottom">
-      <bottom-box :detail="bottomBox.terminalLog" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.terminalLog" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" @closeSubList="closeSubList" @exitFullScreen="exitFullScreen"
-                  @fullScreen="fullScreen" @listResize="listResize" from="terminal" v-if="bottomBox.showSubList" ></bottom-box>
-    </transition>
+            </div>
+          </el-table-column>
+        </el-table>
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
   </div>
 </template>
 <script>
-import bus from '../../../libs/bus'
-import { terminalLog } from '../../common/js/constants'
-import { calcDurationByStringTimeB } from '../../common/js/tools'
+import { terminalLog } from '@/components/common/js/constants'
+import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
 
 export default {
-  name: 'terminallog',
+  name: 'terminalLog',
+  components: {
+    nzDataList
+  },
+  mixins: [tableMixin],
   data () {
     return {
       tableId: 'terminalLogTable', // 需要分页的table的id，用于记录每页数量
 
-      /* 二级页面相关 */
-      bottomBox: {
-        terminalLog: {},
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      rightBox: { // 弹出框相关
-        show: false,
-        isEdit: false, // false查看，true编辑
-        title: ''
-
-      },
-      rightBoxResize: { // resize弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      rightBoxDownload: { // 下载弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      rightBoxUpload: { // 上传弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
-      },
       tableTitle: [
         {
           label: this.$t('config.terminallog.id'),
@@ -214,16 +178,8 @@ export default {
           prop: 'status',
           show: true,
           width: 100
-        },
-        {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          width: 120,
-          fixed: 'right'
         }
       ],
-      tableData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
@@ -242,8 +198,6 @@ export default {
           }
         ]
       },
-      searchLabel: {}, // 搜索参数
-      scrollbarWrap: null,
       nowTime: ''
     }
   },
@@ -267,13 +221,18 @@ export default {
       }
     }
   },
-  watch: {
-    'bottomBox.showSubList': function (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    }
-  },
   methods: {
+    tableOperation ([command, row]) {
+      switch (command) {
+        case 'shutdown': {
+          this.shutdown(row)
+          break
+        }
+        default:
+          this.$refs.dataList.showBottomBox(command, row)
+          break
+      }
+    },
     getTableData () {
       const params = {
         ...this.searchLabel,
@@ -288,28 +247,12 @@ export default {
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.terminalLogTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
-    },
-
-    showRecord (record) {
-      this.bottomBox.targetTab = 'record'
-      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
-      this.bottomBox.showSubList = true
-    },
-    showHistoryCMD (record) {
-      this.bottomBox.targetTab = 'cmd'
-      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
-      this.bottomBox.showSubList = true
-    },
-    monitor (record) {
-      this.bottomBox.targetTab = 'monitor'
-      this.bottomBox.terminalLog = JSON.parse(JSON.stringify(record))
-      this.bottomBox.showSubList = true
     },
     shutdown (record) {
       this.$confirm(this.$t('tip.killTerm'), {
@@ -328,21 +271,6 @@ export default {
         })
       })
     },
-    // 全屏
-    fullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.fullScreen(vm)
-    },
-    // 退出全屏
-    exitFullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.exitFullScreen(vm)
-    },
-    // 鼠标拖动二级列表
-    listResize (e) {
-      const vm = this
-      this.$bottomBoxWindow.listResize(vm, e)
-    },
     messageStyle (e) {
       if (e.column.label == this.$t('config.terminallog.status')) {
         if (e.row.status == '0') {
@@ -358,72 +286,7 @@ export default {
         }
       }
       return ''
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
-    },
-    search: function (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      this.getTableData()
-    },
-    closeSubList () {
-      this.bottomBox.showSubList = false
-      if (this.bottomBox.targetTab == 'monitor') {
-        this.getTableData()
-      }
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
     }
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-  },
-  mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-
-    this.getTableData()
   }
 }
 </script>

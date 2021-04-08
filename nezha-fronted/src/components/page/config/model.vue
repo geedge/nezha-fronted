@@ -1,49 +1,30 @@
-<style lang="scss">
-@import '@/assets/css/common/tableCommon.scss';
-</style>
 <template>
-  <div class="model list-page">
-    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-      <div class="main-modal"></div>
-      <div class="top-tools" v-show="bottomBox.mainResizeShow">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left-small': bottomBox.showSubList}">
-          <div class="top-tool-search">
-            <search-input :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <button id="model-add" v-has="'model_toAdd'" :title="$t('overall.createModel')" class="top-tool-btn margin-l-20" @click="add">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="model" v-has="'model_delete'" id="model-list-batch-delete"></delete-button>
-          <button id="account-column-setting" class="top-tool-btn margin-l-10"
-                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
-            <i class="nz-icon-gear nz-icon"></i>
-          </button>
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- 自定义table列 -->
-      <transition name="el-zoom-in-top">
-        <element-set
-          id="model-list"
-          v-if="tools.showCustomTableTitle"
-          @close="tools.showCustomTableTitle = false"
-          :custom-table-title.sync="tools.customTableTitle"
-          :original-table-title="tableTitle"
-          ref="customTableTitle"
-        ></element-set>
-      </transition>
-      <div class="nz-table2">
-        <el-table v-show="bottomBox.mainResizeShow"
-                  id="model-list-table"
-                  ref="modelTable"
-                  v-loading="tools.loading"
-                  :cell-class-name="assetStatClassName"
-                  :data="tableData"
-                  :height="mainTableHeight"
-                  border
-                  @sort-change="tableDataSort"
-                  @row-dblclick="panel"
-                  @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.model"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:top-tool-right>
+        <button id="model-add" v-has="'model_toAdd'" :title="$t('overall.createModel')" class="top-tool-btn margin-l-20" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <delete-button id="model-list-batch-delete" v-has="'model_delete'" :delete-objs="batchDeleteObjs" api="model" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:default="slotProps">
+        <el-table
+          id="model-list-table"
+          ref="dataTable"
+          v-loading="tools.loading"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @header-dragend="dragend"
+          @sort-change="tableDataSort"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
         >
           <el-table-column
             :resizable="false"
@@ -51,89 +32,94 @@
             type="selection"
             width="55">
           </el-table-column>
-          <el-table-column v-for="(item, index) in tools.customTableTitle"
-                           v-if="item.show"
-                           :key="`col-${index}`"
-                           :label="item.label"
-                           :prop="$tableSet.propTitle(item.prop,'model')"
-                           :resizable="true"
-                           :sort-orders="['ascending', 'descending']"
-                           :sortable="$tableSet.sortableShow(item.prop,'model')">
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :fixed="item.fixed"
+            :label="item.label"
+            :prop="item.prop"
+            :resizable="true"
+            :sort-orders="['ascending', 'descending']"
+            :width="`${item.width}`"
+            class="data-column"
+          >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
+            </template>
             <template slot-scope="scope" :column="item">
-              <template v-if="item.prop == 'vendor'" >{{scope.row[item.prop].value}}</template>
-              <template v-else-if="item.prop == 'type'" >{{scope.row[item.prop].value}}</template>
-              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat" >
+              <template v-if="item.prop === 'vendor'" >{{scope.row[item.prop].value}}</template>
+              <template v-else-if="item.prop === 'type'" >{{scope.row[item.prop].value}}</template>
+              <template v-else-if="item.prop === 'assetStat' && scope.row.assetStat" >
                 <el-popover
                   :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended"
                   placement="top"
                   trigger="hover">
-                    <div slot="reference" class="dc-asset-states">
-                      <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-                      <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-                      <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-                      <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
-                    </div>
-                  </el-popover>
+                  <div slot="reference" class="dc-asset-states">
+                    <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
+                    <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
+                    <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
+                  </div>
+                </el-popover>
               </template>
               <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
               <template v-else>-</template>
             </template>
           </el-table-column>
+          <el-table-column
+            :resizable="false"
+            :width="operationWidth"
+            fixed="right">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                <div class="table-operation-item table-operation-item--more">
+                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row, `sys/role?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </el-table-column>
         </el-table>
-      </div>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="model-list-totop"><i class="nz-icon nz-icon-top"></i></button>
-      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
-    </div>
-    <transition name="el-zoom-in-bottom">
-      <bottom-box :from="$CONSTANTS.fromRoute.model" :is-fullscreen="bottomBox.isFullScreen" :obj="bottomBox.model" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
-                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ref="panelBox"></bottom-box>
-    </transition>
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
     <transition name="right-box">
-      <model-box v-if="rightBox.show" ref="modelBox" :model="model" @close="closeRightBox" @reload="getTableData"></model-box>
+      <model-box v-if="rightBox.show" ref="modelBox" :model="object" @close="closeRightBox" @reload="getTableData"></model-box>
     </transition>
   </div>
-
 </template>
 <script>
-import bus from '../../../libs/bus'
-import deleteButton from '../../common/deleteButton'
+import modelBox from '@/components/common/rightBox/modelBox'
+import deleteButton from '@/components/common/deleteButton'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
 export default {
   name: 'model',
   components: {
-    'delete-button': deleteButton
+    deleteButton,
+    modelBox,
+    nzDataList
   },
+  mixins: [tableMixin],
   data () {
     return {
-      /* 二级页面相关 */
-      bottomBox: {
-        modelDetail: {}, // asset详情
-        model: {}, // 告警信息对应的asset对象
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      batchDeleteObjs: [],
       tableId: 'modelTable', // 需要分页的table的id，用于记录每页数量
 
-      rightBox: { show: false },
-
-      model: {},
-      blankModel: {
+      blankObject: {
         id: '',
         name: '',
         vendor: { id: '', value: '', code: '', type: '' },
@@ -143,11 +129,6 @@ export default {
         vendorCode: '',
         typeCode: '',
         uSize: 1
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
       },
       tableTitle: [
         {
@@ -173,7 +154,6 @@ export default {
           show: true
         }
       ],
-      tableData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -189,10 +169,7 @@ export default {
           label: 'dc',
           disabled: false
         }]
-      },
-      searchLabel: {}, // 搜索参数
-      scrollbarWrap: null,
-      delFlag: false
+      }
     }
   },
   methods: {
@@ -210,65 +187,6 @@ export default {
       this.bottomBox.model = obj
       this.bottomBox.targetTab = 'panel'
     },
-    // 全屏
-    fullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.fullScreen(vm)
-    },
-    // 退出全屏
-    exitFullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.exitFullScreen(vm)
-    },
-    // 鼠标拖动二级列表
-    listResize (e) {
-      const vm = this
-      this.$bottomBoxWindow.listResize(vm, e)
-    },
-    edit (u) {
-      this.model = Object.assign({}, u)
-      this.rightBox.show = true
-    },
-    del (u) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('model?ids=' + u.id).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
-    },
-    add () {
-      this.model = this.newModel()
-      this.rightBox.show = true
-    },
-    newModel () {
-      return JSON.parse(JSON.stringify(this.blankModel))
-    },
-    closeRightBox (refresh) {
-      this.rightBox.show = false
-      if (refresh) {
-        this.delFlag = true
-        this.getTableData()
-      }
-    },
-    jumpTo (data, id) {
-      bus.$emit('menu-change', data)
-      this.$router.push({
-        path: '/' + data,
-        query: {
-          t: +new Date()
-        }
-      })
-    },
     getTableData () {
       if (!this.hasButton('model_view')) {
         this.$message.error(this.$t('tip.noAccess'))
@@ -285,94 +203,12 @@ export default {
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.modelTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
-    },
-    pageNo (val) {
-      console.info(val)
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
-    },
-    search (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.pageObj.pageNo = 1
-      this.searchLabel = {}
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      if (this.$refs.modelTable && this.$refs.modelTable.bodyWrapper) {
-        this.$refs.modelTable.bodyWrapper.scrollTop = 0
-      }
-      this.getTableData()
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
-    }
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-  },
-  mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-
-    this.getTableData()
-  },
-  watch: {
-    'bottomBox.showSubList': function (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    },
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-        if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.modelTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        }
-      }
-    }
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     }
   }
 }

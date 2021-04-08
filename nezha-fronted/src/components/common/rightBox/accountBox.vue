@@ -5,7 +5,7 @@ $--input-focus-border: red;
   <div class="right-box right-box-account" v-clickoutside="{obj:editUser,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" type="button" v-has="'account_delete'" v-if="editUser.userId&&editUser.userId!==1"
+      <button v-if="editUser.id&&editUser.id!==1" v-has="'account_delete'" type="button" @click="del"
               class="nz-btn nz-btn-size-normal nz-btn-size-alien"
               id="account-edit-del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
@@ -15,16 +15,16 @@ $--input-focus-border: red;
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editUser.userId ? ($t("config.account.editAccount") + "  ID：" + editUser.userId) : $t("config.account.createAccount")}}</div>
+    <div class="right-box-title">{{editUser.id ? ($t("config.account.editAccount") + "  ID：" + editUser.id) : $t("config.account.createAccount")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form :model="editUser" :rules="editUser.userId ? rules2 : rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" ref="accountForm">
+      <el-form ref="accountForm" :model="editUser" :rules="editUser.id ? rules2 : rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
           <el-input autocomplete="new-password" type="text" placeholder="" id="account-input-username"
-                    v-model="editUser.username" maxlength="64" show-word-limit size="small" :disabled="editUser.username==='admin' && editUser.userId==1"></el-input>
+                    v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1" maxlength="64" show-word-limit size="small"></el-input>
         </el-form-item>
         <!--password-->
         <el-form-item :label="$t('config.account.password')" prop="pin">
@@ -42,19 +42,19 @@ $--input-focus-border: red;
         </el-form-item>
         <!--enable-->
         <el-form-item :label="$t('config.account.enable')">
-          <el-switch v-model="editUser.status" active-color="#ee9d3f" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.userId==1) " active-value="1" id="account-input-status"
+          <el-switch id="account-input-status" v-model="editUser.status" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.id==1) " active-color="#ee9d3f" active-value="1"
                      inactive-value="0">
           </el-switch>
         </el-form-item>
         <!--roles-->
         <el-form-item :label="$t('config.account.roles')" prop="roleIds">
-          <el-select @change="()=>{this.$forceUpdate()}" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.userId==1" id="account-input-roleIds">
+          <el-select id="account-input-roleIds" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.id==1" clearable collapse-tags placeholder="" popper-class="config-dropdown" size="small" @change="()=>{this.$forceUpdate()}">
             <template v-for="role in roles">
               <el-option :key="role.id" :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
             </template>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('config.account.createTime')" v-if="editUser.userId">
+        <el-form-item v-if="editUser.id" :label="$t('config.account.createTime')">
           <div class="right-box-form-content-txt">{{editUser.createTime}}</div>
         </el-form-item>
 
@@ -180,8 +180,8 @@ export default {
         if (valid) {
           const editUser = JSON.parse(JSON.stringify(this.editUser))
           editUser.roleIds = [editUser.roleIds]
-          if (this.editUser.userId) {
-            this.$put('sys/user/update', editUser).then(response => {
+          if (this.editUser.id) {
+            this.$put('sys/user', editUser).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -192,7 +192,7 @@ export default {
             })
           } else {
             editUser.roleIds = this.roles.find(t => t.name == 'common').id
-            this.$post('sys/user/save', editUser).then(response => {
+            this.$post('sys/user', editUser).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -217,7 +217,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('sys/user/delete?userIds=' + this.editUser.userId).then(response => {
+        this.$delete('sys/user?ids=' + this.editUser.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.esc(true)

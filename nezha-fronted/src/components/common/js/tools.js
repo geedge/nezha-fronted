@@ -242,7 +242,7 @@ export const bottomBoxWindow = {
       vm.tools.toTopBtnTop = vm.$tableHeight.toTopBtnTop
       vm.bottomBox.isFullScreen = false
       // 移动分页组件的位置
-      const paginationTop = document.querySelector('.pagination-top')
+      /* const paginationTop = document.querySelector('.pagination-top')
       const paginationBottom = document.querySelector('.pagination-bottom')
       paginationTop.classList.remove('display-none')
       if (paginationTop.classList.contains('pagination-top-show')) {
@@ -254,7 +254,7 @@ export const bottomBoxWindow = {
       setTimeout(() => {
         paginationTop.classList.add('display-none')
         paginationBottom.appendChild(paginationTop.removeChild(document.querySelector('.pagination')))
-      }, 210)
+      }, 210) */
 
       // 主列表恢复全屏
       vm.bottomBox.mainResizeShow = vm.bottomBox.subResizeShow = true
@@ -265,7 +265,7 @@ export const bottomBoxWindow = {
       vm.mainTableHeight = vm.$tableHeight.openSubList.mainList // 重置table高度
       vm.tools.toTopBtnTop = vm.$tableHeight.openSubList.toTopBtnTop
       // 移动分页组件的位置
-      const paginationTop = document.querySelector('.pagination-top')
+      /* const paginationTop = document.querySelector('.pagination-top')
       paginationTop.appendChild(document.querySelector('.pagination-bottom').removeChild(document.querySelector('.pagination')))
       paginationTop.classList.remove('display-none')
       setTimeout(() => {
@@ -275,7 +275,7 @@ export const bottomBoxWindow = {
         if (!paginationTop.classList.contains('pagination-top-show')) {
           paginationTop.classList.add('pagination-top-show')
         }
-      }, 210)
+      }, 210) */
     }
   }
 }

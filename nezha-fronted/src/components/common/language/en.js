@@ -63,6 +63,7 @@ const en = {
     createMib: 'Create MIB',
     createAssetType: 'Create asset type',
     createAssetState: 'Create asset state',
+    createTemplate: 'Create template',
     exportExcel: 'Export',
     importExcel: 'Import',
     importExcelLower: 'import',
@@ -640,19 +641,24 @@ const en = {
   config: {
     config: 'Settings', // "设置"
     account: {
-      accountList: 'Account list', // "用户列表"
+      accountList: 'User list', // "用户列表"
+      account: 'User',
       // 列表表头
-      account: 'Account', // "用户"
+      name: 'Name', // "用户"
+      username: 'Username', // 登录名
       roles: 'Role',
       language: 'Language', // "语言"
       receiver: 'Receiver', // "用户组"
       createTime: 'Create time', // "创建时间"
       enable: 'Enable', // "可用"
       option: 'Operation', // "操作"
+      lastLoginTime: 'Last login time', // 最后登录时间
+      lastLoginIp: 'Last login IP', // 最后登录IP
+      source: 'Source',
       // 侧滑框//
-      accountId: 'Account ID', // "用户ID"
-      createAccount: 'New account', // "新增用户"
-      editAccount: 'Edit account', // "编辑用户"
+      accountId: 'User ID', // "用户ID"
+      createAccount: 'New user', // "新增用户"
+      editAccount: 'Edit user', // "编辑用户"
       notCurrentlySupport: 'Not available', // '暂不支持'
       password: 'Password', // '密码'
       oldPwd: 'Old password',
@@ -1010,6 +1016,7 @@ const en = {
       exprTempImport: 'expression template import',
       exprTempExport: 'expression template export',
       exprTempImportCancel: 'expression template import rollback',
+      copy: 'Copy',
       name: 'Name',
       gname: 'Group',
       expression: 'Expression',

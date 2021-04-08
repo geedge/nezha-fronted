@@ -7,13 +7,13 @@
       :search-msg="searchMsg"
       :table-id="tableId"
       :table-title="tableTitle"
-      from="account">
-      <template v-slot:top-tool>
+      :from="fromRoute.account">
+      <template v-slot:top-tool-right>
         <button id="account-add" v-has="'account_toAdd'" :title="$t('overall.createAccount')" class="top-tool-btn margin-l-20"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'account_delete'" :delete-objs="batchDeleteObjs" :filter-function="(arr)=>{return '?userIds='+arr.map(t=>t.userId).join(',')}" api="sys/user/delete" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button id="account-list-batch-delete" v-has="'account_delete'" :delete-objs="batchDeleteObjs" api="sys/user" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <el-table
@@ -43,14 +43,12 @@
             :resizable="true"
             :sort-orders="['ascending', 'descending']"
             :width="`${item.width}`"
+            :min-width="`${item.minWidth}`"
             class="data-column"
           >
             <template slot="header">
-              <span v-if="item.type == 'tag'" :title="item.label" class="tag-header"><span class="tag-value">{{item.label}}</span><span class="tag-mark">&nbsp;[Tag]</span></span>
-              <span v-else>
-                  <span>{{item.label}}</span>
-                  <div class="col-resize-area"></div>
-                </span>
+              <span>{{item.label}}</span>
+              <div class="col-resize-area"></div>
             </template>
             <template slot-scope="scope" :column="item">
               <template v-if="item.prop === 'roles'">
@@ -63,35 +61,34 @@
                   <span>-</span>
                 </template>
               </template>
-              <template v-else-if="item.prop == 'status'">
+              <template v-else-if="item.prop === 'status'">
                 <el-switch
                   v-model="scope.row.status"
-                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_toAdd') || (scope.row.username==='admin' && scope.row.userId==1)"
+                  :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_toAdd') || (scope.row.username==='admin' && scope.row.id==1)"
                   active-color="#ee9d3f"
                   active-value="1"
                   inactive-value="0"
                   @change="(val)=>{statusChange(scope.row)}">
                 </el-switch>
               </template>
-              <span v-else-if="item.prop == 'tags'">{{filterTags(item, scope)}}</span>
-              <span v-else-if="item.prop == 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+              <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
               <span v-else>{{scope.row[item.prop]}}</span>
             </template>
           </el-table-column>
           <el-table-column
             :resizable="false"
             fixed="right"
-            width="165">
+            :width="operationWidth">
             <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
             <div slot-scope="scope" class="table-operation-items">
-              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLogTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
               <el-dropdown size="medium" trigger="hover" @command="tableOperation">
                 <div class="table-operation-item table-operation-item--more">
                   <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="['edit', scope.row]" ><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-                  <el-dropdown-item :command="['delete', scope.row]" ><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row, `sys/user?ids=${scope.row.id}`]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -111,10 +108,9 @@
   </div>
 </template>
 <script>
-import deleteButton from '../../common/deleteButton'
-import accountBox from '../../common/rightBox/accountBox'
+import deleteButton from '@/components/common/deleteButton'
+import accountBox from '@/components/common/rightBox/accountBox'
 import nzDataList from '@/components/common/table/nzDataList'
-import bus from '../../../libs/bus'
 import tableMixin from '@/components/common/mixin/table'
 export default {
   name: 'account',
@@ -128,7 +124,8 @@ export default {
     return {
       tableId: 'accountTable', // 需要分页的table的id，用于记录每页数量
       blankObject: { // 空白对象
-        userId: '',
+        id: '',
+        name: '',
         username: '',
         email: '',
         status: '1',
@@ -139,36 +136,47 @@ export default {
         lang: '',
         notifications: []
       },
-      pageObj: { // 分页对象
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
-      },
       tableTitle: [ // 原table列
         {
           label: 'ID',
-          prop: 'userId',
+          prop: 'id',
           show: true,
           width: 80
         }, {
-          label: this.$t('config.account.account'),
+          label: this.$t('config.account.name'),
+          prop: 'name',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('config.account.username'),
           prop: 'username',
           show: true,
-          width: 200
+          width: 150
         }, {
           label: this.$t('config.account.roles'),
           prop: 'roles',
           show: true,
-          width: 200
+          width: 150
         }, {
           label: 'E-mail',
           prop: 'email',
-          show: true
+          show: true,
+          minWidth: 150
         }, {
-          label: this.$t('config.account.createTime'),
-          prop: 'createTime',
+          label: this.$t('config.account.lastLoginTime'),
+          prop: 'lastLoginTime',
           show: true,
           width: 200
+        }, {
+          label: this.$t('config.account.lastLoginIp'),
+          prop: 'lastLoginIp',
+          show: true,
+          width: 150
+        }, {
+          label: this.$t('config.account.source'),
+          prop: 'source',
+          show: true,
+          width: 150
         }, {
           label: this.$t('config.account.enable'),
           prop: 'status',
@@ -190,24 +198,6 @@ export default {
     }
   },
   methods: {
-    del (u) {
-      if (u.userId == 1 && u.username === 'admin') { return }
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('sys/user/delete?userIds=' + u.userId).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
-    },
     getTableData () {
       if (!this.hasButton('account_view')) {
         this.$message.error(this.$t('tip.noAccess'))
@@ -216,7 +206,7 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      this.$get('sys/user/list', this.searchLabel).then(response => {
+      this.$get('sys/user', this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
@@ -233,25 +223,11 @@ export default {
         }
       })
     },
-    /* add () {
-      this.object = this.newObject()
-      if (!this.user.userId) {
-        this.user.roleIds = this.roles.find(t => t.name == 'common').id
-      }
-      this.rightBox.show = true
-    },
-    edit (u) {
-      this.object = JSON.parse(JSON.stringify(u))
-      if (!this.object.userId) {
-        this.object.roleIds = this.roles.find(t => t.name == 'common').id
-      }
-      this.rightBox.show = true
-    }, */
     statusChange (user) {
       if (user.roles) {
         user.roleIds = user.roles.map(t => t.id)
       }
-      this.$put('sys/user/update', user).then(response => {
+      this.$put('sys/user', user).then(response => {
         if (response.code === 200) {
           this.rightBox.show = false
           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -291,7 +267,7 @@ export default {
         result = result.concat(keepTags).concat(newTags)
         this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
       })
-    },
+    }/* ,
     filterTags (head, scope) {
       if (scope.row.notifications) {
         const notification = scope.row.notifications.find(item => {
@@ -301,12 +277,7 @@ export default {
           return notification.account
         }
       }
-    }
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    }
+    } */
   },
   computed: {
     isCurrentUser () {
@@ -315,44 +286,9 @@ export default {
       }
     }
   },
-  /*watch: {
-    'bottomBox.showSubList': function (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    },
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-
-        if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.dataTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        }
-      }
-    }
-  },*/
-  created () {
-    // 是否存在分页缓存
-    /*const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }*/
-  },
   mounted () {
     this.getRoles()
     this.resetTableTitle()
-    // 初始化表头
-    /*this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-
-    this.resetTableTitle()
-    this.getTableData()*/
   }
 }
 </script>

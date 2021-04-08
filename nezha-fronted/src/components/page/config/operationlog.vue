@@ -1,112 +1,82 @@
-<style scoped>
-  .operationlog {
-    height: 100%;
-  }
-</style>
 <template>
-  <div class="operationlog">
-    <div class="top-tools">
-      <div></div>
-      <div>
-        <div class="top-tool-search margin-r-5">
-          <search-input :searchMsg="searchMsg" @search="search"></search-input>
-        </div>
-      </div>
-    </div>
-    <!-- 自定义table列 -->
-    <transition name="el-zoom-in-top">
-      <element-set
-        id="operation-log-list"
-        v-if="tools.showCustomTableTitle"
-        @close="tools.showCustomTableTitle = false"
-        :custom-table-title.sync="tools.customTableTitle"
-        :original-table-title="tableTitle"
-        ref="customTableTitle"
-      ></element-set>
-    </transition>
-    <el-table
-      id="operation-log-list-table"
-      class="nz-table"
-      :data="tableData"
-      border
-      ref="operationLogTable"
-      :height="$tableHeight.normal"
-      v-loading="tools.loading"
-      :cell-class-name="messageStyle"
-      style="width: 100%;"
-      @sort-change="tableDataSort"
-    >
-      <el-table-column
-        :resizable="true"
-        v-for="(item, index) in tools.customTableTitle"
-        v-if="item.show"
-        :key="`col-${index}`"
-        :label="item.label"
-        :sortable="$tableSet.sortableShow(item.prop,'operationlog')"
-        :prop="$tableSet.propTitle(item.prop,'operationlog')"
-        :sort-orders="['ascending', 'descending']"
-      >
-        <template slot-scope="scope" :column="item">
-          <span v-if="item.prop == 'time'">
-            {{scope.row[item.prop]}} ms
-          </span>
-          <span v-else-if="item.prop == 'username'">{{formatUsername(scope.row)}}</span>
-          <span v-else-if="item.prop == 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <span v-else>{{scope.row[item.prop]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="28">
-        <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-            <i class="nz-icon nz-icon-gear"></i>
-          </span>
-        </template>
-      </el-table-column>
-    </el-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="operation-log-totop"><i class="nz-icon nz-icon-top"></i></button>
-    <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.operationLog"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:default="slotProps">
+        <el-table
+          id="role-list-table"
+          ref="dataTable"
+          v-loading="tools.loading"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @header-dragend="dragend"
+          @sort-change="tableDataSort"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
+        >
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :fixed="item.fixed"
+            :label="item.label"
+            :prop="item.prop"
+            :resizable="true"
+            :sort-orders="['ascending', 'descending']"
+            :width="`${item.width}`"
+            class="data-column"
+          >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
+            </template>
+            <template slot-scope="scope" :column="item">
+              <span v-if="item.prop === 'time'">
+                {{scope.row[item.prop]}} ms
+              </span>
+              <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
+              <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+              <span v-else>{{scope.row[item.prop]}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
   </div>
 </template>
 <script>
-import bus from '../../../libs/bus'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
+
 export default {
   name: 'oparetionlog',
+  components: {
+    nzDataList
+  },
+  mixins: [tableMixin],
   data () {
     return {
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量
-
-      rightBox: { // 弹出框相关
-        show: false
-      },
-      rightBoxResize: { // resize弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      rightBoxDownload: { // 下载弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      rightBoxUpload: { // 上传弹出框相关
-        show: false,
-        isAdd: false, // false，true：resize
-        title: ''
-      },
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
-      },
       tableTitle: [
         {
           label: this.$t('config.operationlog.id'),
@@ -169,7 +139,6 @@ export default {
           show: false
         }
       ],
-      tableData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
@@ -193,15 +162,13 @@ export default {
             disabled: false
           }
         ]
-      },
-      searchLabel: {}, // 搜索参数
-      scrollbarWrap: null
+      }
     }
   },
   methods: {
     messageStyle (e) {
-      if (e.column.label == this.$t('config.operationlog.state')) {
-        if (e.row.state == 'success') {
+      if (e.column.label === this.$t('config.operationlog.state')) {
+        if (e.row.state === 'success') {
           return 'success'
         } else {
           return 'danger'
@@ -209,7 +176,7 @@ export default {
       }
       return ''
     },
-    getTableData: function () {
+    getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
@@ -220,21 +187,12 @@ export default {
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.operationLogTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
     },
     formatUsername (row) {
       if (row.username) {
@@ -244,70 +202,7 @@ export default {
       } else {
         return '-'
       }
-    },
-    search: function (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      this.getTableData()
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
     }
-  },
-  watch: {
-    tableData () {
-      if (this.$refs.operationLogTable && this.$refs.operationLogTable.bodyWrapper) {
-        this.$refs.operationLogTable.bodyWrapper.scrollTop = 0
-      }
-    }
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
-  },
-  computed: {
-    isCurrentUser () {
-      return function (username) {
-        return localStorage.getItem('nz-username') == username
-      }
-    }
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-  },
-  mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-    this.getTableData()
   }
 }
 </script>

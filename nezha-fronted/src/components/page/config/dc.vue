@@ -1,55 +1,32 @@
-<style lang="scss">
-@import '@/assets/css/common/tableCommon.scss';
-</style>
 <template>
-  <div class="dc list-page">
-    <!--dc table start-->
-    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-      <div class="main-modal"></div>
-      <div class="top-tools" v-show="bottomBox.mainResizeShow">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left-small': bottomBox.showSubList}">
-          <div class="top-tool-search">
-            <search-input ref="searchInput" :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input>
-          </div>
-          <button :title="$t('overall.createDatacenter')" @click="add" type="button" v-has="'dc_toAdd'"
-                  id="dc-add" class="top-tool-btn margin-l-20">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <button :title="$t('overall.createDatacenter')" @click="toDownloadAgent" type="button" id="load-agent" class="top-tool-btn margin-l-20">
-            <i class="nz-icon-download nz-icon"></i>
-          </button>
-          <delete-button :delete-objs="batchDeleteObjs" @before="delFlag=true" @after="getTableData" api="idc" v-has="'dc_delete'" id="dc-list-batch-delete"></delete-button>
-          <button id="account-column-setting" class="top-tool-btn margin-l-10"
-                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
-            <i class="nz-icon-gear nz-icon"></i>
-          </button>
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- 自定义table列 -->
-      <transition name="el-zoom-in-top">
-        <element-set
-          id="dc-list"
-          v-if="tools.showCustomTableTitle"
-          @close="tools.showCustomTableTitle = false"
-          :custom-table-title.sync="tools.customTableTitle"
-          :original-table-title="tableTitle"
-          ref="customTableTitle"
-        ></element-set>
-      </transition>
-      <div class="nz-table2">
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.dc"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:top-tool-right>
+        <button id="dc-add" v-has="'dc_toAdd'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-l-20"
+                type="button" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <delete-button id="account-list-batch-delete" v-has="'dc_delete'" :delete-objs="batchDeleteObjs" api="dc" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:default="slotProps">
         <el-table
-          v-show="bottomBox.mainResizeShow"
           id="dc-list-table"
-          ref="dcTable"
+          ref="dataTable"
           v-loading="tools.loading"
-          :cell-class-name="assetStatClassName"
           :data="tableData"
           :height="mainTableHeight"
+          :cell-class-name="assetStatClassName"
           border
-          tooltip-effect="light"
+          @header-dragend="dragend"
           @sort-change="tableDataSort"
-          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
         >
           <el-table-column
             :resizable="false"
@@ -61,14 +38,23 @@
             v-for="(item, index) in tools.customTableTitle"
             v-if="item.show"
             :key="`col-${index}`"
+            :fixed="item.fixed"
             :label="item.label"
-            :prop="$tableSet.propTitle(item.prop,'dc')"
+            :prop="item.prop"
             :resizable="true"
-            :sortable="sortableShow(item.prop,'dc')"
-            show-overflow-tooltip
+            :sort-orders="['ascending', 'descending']"
+            :sortable="sortableShow(item.prop, fromRoute.dc)"
+            :width="`${item.width}`"
+            class="data-column"
           >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
+            </template>
             <template slot-scope="scope" :column="item">
-              <template v-if="item.prop == 'principal'">
+              <template v-if="item.prop === 'principal'">
                 <template v-if="scope.row.principal">
                   <template v-for="item in userData">
                     <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
@@ -76,7 +62,7 @@
                 </template>
                 <template v-else>-</template>
               </template>
-              <template v-else-if="item.prop == 'state'">
+              <template v-else-if="item.prop === 'state'">
                 <el-switch
                   v-model="scope.row.state"
                   :disabled="!hasButton('dc_toEdit') || !hasButton('dc_toEdit')"
@@ -86,15 +72,15 @@
                   @change="(val)=>{statusChange(scope.row)}"
                 />
               </template>
-              <template v-else-if="item.prop == 'longitude'">
+              <template v-else-if="item.prop === 'longitude'">
                 <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
                 <template v-else>-</template>
               </template>
-              <template v-else-if="item.prop == 'latitude'">
+              <template v-else-if="item.prop === 'latitude'">
                 <template v-if="regNumTest(scope.row.latitude)">{{scope.row.latitude}}</template>
                 <template v-else>-</template>
               </template>
-              <template v-else-if="item.prop == 'assetStat' && scope.row.assetStat">
+              <template v-else-if="item.prop === 'assetStat' && scope.row.assetStat">
                 <el-popover
                   :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended"
                   placement="top"
@@ -108,30 +94,45 @@
                 </el-popover>
 
               </template >
-              <template v-else-if="item.prop == 'cabinetNum'">
-                <span class="link" @click="showCabinet(scope.row)">{{scope.row[item.prop]}}</span>
+              <template v-else-if="item.prop === 'cabinetNum'">
+                <span class="link" @click="$refs.dataList.showBottomBox('cabinet', scope.row)">{{scope.row[item.prop]}}</span>
               </template>
               <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
               <template v-else>-</template>
             </template>
           </el-table-column>
+          <el-table-column
+            :resizable="false"
+            :width="operationWidth"
+            fixed="right">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                <div class="table-operation-item table-operation-item--more">
+                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row, `dc?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </el-table-column>
         </el-table>
-      </div>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow" id="dc-list-totop"><i class="nz-icon nz-icon-top"></i></button>
-      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-        <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
-    </div>
-    <transition name="el-zoom-in-bottom">
-      <bottom-box :detail="bottomBox.dcDetail" :from="$CONSTANTS.fromRoute.dc" :is-full-screen="bottomBox.isFullScreen" :obj="bottomBox.dc" :sub-resize-show="bottomBox.subResizeShow" :target-tab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
-                  @closeSubList="bottomBox.showSubList = false" @fullScreen="fullScreen" @exitFullScreen="exitFullScreen" @listResize="listResize" ></bottom-box>
-    </transition>
-    <!--dc table end-->
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="dc-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
     <transition name="right-box">
-      <dc-box @close="closeDcBox" :dc="dc" :user-data="userData" @reload="getTableData" v-if="rightBox.dc.show"></dc-box>
+      <dc-box v-if="rightBox.dc.show" :dc="object" :user-data="userData" @close="closeDcBox" @reload="getTableData"></dc-box>
     </transition>
     <transition name="right-box">
-      <traffic-setting-box @close="closeTrafficBox" :dc="dc" ref="trafficBox" v-if="rightBox.trafficSetting.show"></traffic-setting-box>
+      <traffic-setting-box v-if="rightBox.trafficSetting.show" ref="trafficBox" :dc="object" @close="closeTrafficBox"></traffic-setting-box>
     </transition>
     <span v-if="dcDataRefresh" style="display: none"></span>
     <el-dialog :visible.sync="showAgentDownload" width="620px" append-to-body class="nz-dialog agent-dialog" @close="closeDialog" :title="$t('config.dc.agent.title')">
@@ -181,54 +182,32 @@
   </div>
 </template>
 <script>
-import bus from '../../../libs/bus'
-import dcBox from '../../common/rightBox/dcBox' // dc弹框
-import trafficSettingBox from '../../common/rightBox/trafficSetting/trafficSettingBox'
-import deleteButton from '../../common/deleteButton'
+import bus from '@/libs/bus'
+import dcBox from '@/components/common/rightBox/dcBox' // dc弹框
+import trafficSettingBox from '@/components/common/rightBox/trafficSetting/trafficSettingBox'
+import deleteButton from '@/components/common/deleteButton'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
 const regNum = /^[0-9]+.?[0-9]*/
 export default {
   name: 'dc',
   components: {
-    'traffic-setting-box': trafficSettingBox,
-    'dc-box': dcBox,
-    'delete-button': deleteButton
+    trafficSettingBox,
+    dcBox,
+    deleteButton,
+    nzDataList
   },
+  mixins: [tableMixin],
   data () {
     return {
-      /* 二级页面相关 */
-      bottomBox: {
-        dcDetail: {},
-        dc: {},
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      batchDeleteObjs: [],
       tableId: 'dcTable', // 需要分页的table的id，用于记录每页数量
-      dc: {},
-      blankDc: {
+      object: {},
+      blankObject: {
         id: '',
         name: '',
         location: '',
         tel: '',
         principal: '',
-        // area: {
-        //   id: 0,
-        //   name: ''
-        // }
         state: 'ON',
         longitude: undefined,
         latitude: undefined
@@ -236,11 +215,6 @@ export default {
       rightBox: {
         dc: { show: false },
         trafficSetting: { show: false }
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
       },
       tableTitle: [
         {
@@ -286,8 +260,6 @@ export default {
           show: true
         }
       ],
-      tableData: [],
-      userData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -298,9 +270,7 @@ export default {
           disabled: false
         }]
       },
-      searchLabel: {}, // 搜索参数
       tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
-      scrollbarWrap: null,
       delFlag: false,
       showAgentDownload:false,
       token:'',
@@ -319,7 +289,8 @@ export default {
         osType:"Centos",
         dc:"",
         type:1,
-      }
+      },
+      userData: []
     }
   },
   computed: {
@@ -369,15 +340,6 @@ export default {
       }
       return ''
     },
-    jumpTo (data, id) {
-      bus.$emit('menu-change', data)
-      this.$router.push({
-        path: '/' + data,
-        query: {
-          t: +new Date()
-        }
-      })
-    },
     edit (u) {
       this.dc = JSON.parse(JSON.stringify(u))
       if (!regNum.test(this.dc.longitude)) {
@@ -391,67 +353,23 @@ export default {
       }
       this.rightBox.dc.show = true
     },
-    configTraffic (u) {
-      this.dc = JSON.parse(JSON.stringify(u))
-      this.rightBox.trafficSetting.show = true
-    },
     detail (u) {
-      this.bottomBox.dc = JSON.parse(JSON.stringify(u))
-      if (!this.bottomBox.dc.area) {
-        this.$set(this.bottomBox.dc, 'area', { id: '', name: '' })
+      this.bottomBox.object = JSON.parse(JSON.stringify(u))
+      if (!this.bottomBox.object.area) {
+        this.$set(this.bottomBox.object, 'area', { id: '', name: '' })
       }
       this.bottomBox.targetTab = 'detail'
       this.bottomBox.showSubList = true
     },
-    // 全屏
-    fullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.fullScreen(vm)
-    },
-    // 退出全屏
-    exitFullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.exitFullScreen(vm)
-    },
-    // 鼠标拖动二级列表
-    listResize (e) {
-      const vm = this
-      this.$bottomBoxWindow.listResize(vm, e)
-    },
-    convertToDetail (obj) {
-      const detail = JSON.parse(JSON.stringify(obj))
-      return detail
-      /* let detail = [];
-        detail.push({label: this.$t("overall.name"), value: obj.name});
-        detail.push({label: this.$t("config.dc.area"), value: obj.area.name});
-        detail.push({label: this.$t("asset.location"), value: obj.location});
-        detail.push({label: this.$t("config.dc.cabinetNum"), value: obj.cabinetNum});
-        let assets = this.$t('overall.result.total') + ' ' + obj.assetStat.total + '，' + this.$t('asset.inStock') + ' ' + obj.assetStat.inStock + '，' + this.$t('asset.notInStock') + ' ' + obj.assetStat.outStock;
-        detail.push({label: this.$t("config.dc.assets"), value: assets});
-        detail.push({label: this.$t("asset.tel"), value: obj.tel});
-        let principal = '';
-        for (let i = 0; i < this.userData.length; i++) {
-          if (this.userData[i].userId == obj.principal) {
-            principal = this.userData[i].username;
-            break;
-          }
-        }
-        detail.push({label: this.$t("asset.principal"), value: principal});
-        return detail; */
-    },
     add () {
-      this.dc = this.newDc()
+      this.object = this.newObject()
       this.rightBox.dc.show = true
-    },
-    newDc () {
-      return JSON.parse(JSON.stringify(this.blankDc))
     },
     closeDcBox (refresh) {
       this.rightBox.dc.show = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
-        bus.$emit('dc-list-change')
       }
     },
     closeTrafficBox (refresh) {
@@ -460,24 +378,6 @@ export default {
         this.delFlag = true
         this.getTableData()
       }
-    },
-    del (u) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('dc?ids=' + u.id).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-            bus.$emit('dc-list-change')
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
     },
     statusChange (idc) {
       this.$put('dc', idc).then(response => {
@@ -498,14 +398,14 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      this.$get('idc', this.searchLabel).then(response => {
+      this.$get('dc', this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dcTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
@@ -522,58 +422,6 @@ export default {
         })
       })
     },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.pageObj.pageSize = val
-      this.getTableData()
-    },
-    search (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      if (this.$refs.dcTable && this.$refs.dcTable.bodyWrapper) {
-        this.$refs.dcTable.bodyWrapper.scrollTop = 0
-      }
-      this.getTableData()
-    },
-    showCabinet (dc) {
-      this.bottomBox.targetTab = 'cabinet'
-      this.bottomBox.dc = JSON.parse(JSON.stringify(dc))
-      this.bottomBox.showSubList = true
-    },
-    sortableShow (label, form) {
-      if (label === 'state') {
-        return false
-      }
-      return this.$tableSet.sortableShow(label, form)
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
-    },
     regNumTest (val) { // 校验是否是数字
       return regNum.test(val)
     },
@@ -583,59 +431,11 @@ export default {
       })
     }
   },
-  watch: {
-    'bottomBox.dc': {
-      deep: true,
-      handler (n) {
-        if (n.id) {
-          this.bottomBox.dcDetail = this.convertToDetail(n)
-        }
-      }
-    },
-    'bottomBox.showSubList': function (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    },
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-
-        if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.dcTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        }
-      }
-    }
-  },
   beforeDestroy () {
     bus.$off('dc-list-change')
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-  },
-  destroyed () {
-
   },
   mounted () {
     this.getUserData()
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    // this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-    this.getTableData()
-    this.getAllDc();
   }
 }
 </script>

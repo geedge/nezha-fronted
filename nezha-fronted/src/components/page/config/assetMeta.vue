@@ -1,129 +1,74 @@
 <template>
-  <div class="main-list main-and-sub-transition" :class="{'main-list-with-sub': bottomBox.showSubList}">
-    <!--工具组-->
-    <div class="top-tools" v-show="bottomBox.mainResizeShow">
-      <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-        <div class="top-tool-search margin-r-20">
-          <search-input :searchMsg="searchMsg" @search="search"
-                        :inTransform="bottomBox.inTransform" :single="true"></search-input>
-        </div>
-        <button :title="$t('overall.exportExcelLower')" @click="addMeta" type="button" v-has="'expr_temp_save'"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light" id="meta-add-meta">
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.role"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:top-tool-left>
+        <select-group ref="selectGroup" :filter-object="filterGroup" :object-data="groupData" :placement="'bottom-start'"
+                      :show-object="showGroup" style="width: 300px;" @del="delGroup" @edit="editGroup" @selectObject="groupChange">
+          <template v-slot:header>
+            <div class="panel-select-header">
+              <el-input id="panel-list-search" v-model="filterGroup" :placeholder="$t('overall.search')" clearable size="mini" style="width: 240px; margin-right: 5px;"></el-input>
+              <span id="panel-list-toadd" v-has="'panel_toAdd'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-plus"></i></span>
+            </div>
+          </template>
+          <template v-slot:trigger>
+            <el-input v-model="showGroup.name" class="panel-name" placeholder="" readonly="readonly" size="small"></el-input>
+          </template>
+        </select-group>
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="meta-add-meta" v-has="'expr_temp_save'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-l-20"
+                type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-
-        <delete-button :delete-objs="batchDeleteObjs" @after="getAssetMeta"
+        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
                        :api="'asset/field/meta'" v-has="'expr_temp_delete'" id="meta-msg-batch-delete"></delete-button>
-      </div>
-      <div class="pagination-top pagination-top-hide display-none"></div>
-    </div>
-    <!-- content -->
-    <div class="content">
-      <div class="asset-meta-group">
-        <div class="group-title">
-          <span>
-            <button @click="addGroup" type="button" v-has="'asset:fieldgroup:add'" :disabled="metaGroupLock"
-                    :class="{'nz-btn-disabled' : metaGroupLock}"
-                    class="nz-btn nz-btn-size-normal nz-btn-style-light" id="meta-list-export">
-              <i class="nz-icon nz-icon-create-square"></i>
-            </button>
-             <button @click="metaGroupLock=!metaGroupLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':metaGroupLock,'nz-icon nz-icon-unlock':!metaGroupLock}"></i></button>
-        </span>
-        </div>
-        <el-tree
-          :data="groupData"
-          :props="defaultProps"
-          :node-key="'id'"
-          @node-click="changeGroup"
-          ref="groupTree"
-          check-on-click-node
-          check-strictly
-        >
-          <div class="meta-group" slot-scope="{ node, data }">
-        <div>
-          <i class="nz-icon nz-icon-reading" v-if="!data.children"></i>
-          <i class="el-icon-folder-opened" v-if="data.children"></i>
-          {{ node.label }}
-        </div>
-        <div v-if="!data.children&&!metaGroupLock" class="icon-box">
-          <span :id="'asset-group-edit-'+node.id" :title="$t('overall.edit')" @click.stop="editGroup(data)"
-                                    class="content-right-option" v-has="'asset:fieldgroup:update'">
-            <i class="nz-icon nz-icon-edit"></i>
-          </span>
-          <span
-            :id="'asset-group-del-'+node.id"
-            :title="$t('overall.delete')"
-            @click.stop="delGroup(data)"
-            class="content-right-option"
-            v-has="'asset:fieldgroup:delete'">
-            <i  class="nz-icon nz-icon-delete"></i>
-          </span>
-        </div>
-      </div>
-        </el-tree>
-      </div>
-      <div class="asset-meta-table">
-        <!--表格开始-->
-        <transition name="el-zoom-in-top">
-          <element-set
-            id="meta-rule-element-set"
-            v-if="tools.showCustomTableTitle"
-            @close="tools.showCustomTableTitle = false"
-            :custom-table-title.sync="tools.customTableTitle"
-            :original-table-title="tableTitle"
-            ref="customTableTitle"
-          ></element-set>
-        </transition>
+      </template>
+      <template v-slot:default="slotProps">
         <el-table
-          id="meta-rule-table"
-          class="nz-table"
-          :data="tableData"
-          border
-          v-show="bottomBox.mainResizeShow"
-          ref="assetMetaTable"
-          tooltip-effect="light"
-          :height="mainTableHeight"
+          id="role-list-table"
+          ref="dataTable"
           v-loading="tools.loading"
-          style="width: 100%;"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @header-dragend="dragend"
           @sort-change="tableDataSort"
-          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
         >
           <el-table-column
             :resizable="false"
+            align="center"
             type="selection"
-            width="40"
-            align="center">
+            width="55">
           </el-table-column>
-
           <el-table-column
-            :resizable="true"
             v-for="(item, index) in tools.customTableTitle"
             v-if="item.show"
             :key="`col-${index}`"
+            :fixed="item.fixed"
             :label="item.label"
-            :show-overflow-tooltip="item.prop!=='matchers'"
+            :prop="item.prop"
+            :resizable="true"
             :sort-orders="['ascending', 'descending']"
-            :sortable="$tableSet.sortableShow(item.prop,'assetMeta')"
-            :prop="$tableSet.propTitle(item.prop,'assetMeta')"
-            :width="item.width"
+            :width="`${item.width}`"
+            class="data-column"
           >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
+            </template>
             <template slot-scope="scope" :column="item">
-              <div v-if="item.prop === 'option'" class="content-right-options">
-            <span :id="'meta-edit-'+scope.row.id" :title="$t('overall.edit')" @click.stop="edit(scope.row)"
-                  class="content-right-option" v-has="'expr_temp_update'">
-              <i class="nz-icon nz-icon-edit"></i>
-            </span>
-                <span
-                  :id="'meta-del-'+scope.row.id"
-                  :title="$t('overall.delete')"
-                  @click="del(scope.row)"
-                  class="content-right-option"
-                  v-has="'expr_temp_delete'">
-              <i  class="nz-icon nz-icon-delete"></i>
-            </span>
-              </div>
-              <div v-else-if=" item.prop === 'group' ">
-                {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
+              <div v-if="item.prop === 'group'">
+                {{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}
               </div>
               <div v-else-if=" item.prop === 'display' ">
                 <el-switch
@@ -147,51 +92,63 @@
               <template v-else>-</template>
             </template>
           </el-table-column>
-
-          <el-table-column width="28" :resizable="false">
-            <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)"
-                class="nz-table-gear">
-            <i class="nz-icon nz-icon-gear"></i>
-          </span>
-            </template>
+          <el-table-column
+            :resizable="false"
+            :width="operationWidth"
+            fixed="right">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                <div class="table-operation-item table-operation-item--more">
+                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row, `asset/field/meta?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
           </el-table-column>
         </el-table>
-        <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}"
-                @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"
-                id="meta-rule-toTop"><i class="nz-icon nz-icon-top"></i></button>
-        <!--表格结束-->
-        <!--分页部分-->
-        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-          <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize'
-                      ref="Pagination"></Pagination>
-        </div>
-      </div>
-    </div>
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
     <!--侧滑-->
     <transition name="right-box">
-      <assetMetaBox v-if="rightBox.metaShow" :assetMeta="assetMeta" @close="closeRightBox"
-                   ref="assetMetaBox"></assetMetaBox>
+      <assetMetaBox v-if="rightBox.metaShow" ref="assetMetaBox" :asset-meta="object"
+                    @close="closeRightBox"></assetMetaBox>
     </transition>
     <transition name="right-box">
       <assetMetaGroup v-if="rightBox.groupShow" :metaGroup="metaGroup" @close="closeRightBox"
-                    ref="assetMetaBox"></assetMetaGroup>
+                      ref="assetMetaBox"></assetMetaGroup>
     </transition>
   </div>
 </template>
 
 <script>
-import deleteButton from '../../common/deleteButton'
-import assetMetaGroup from '../../common/rightBox/assetMetaGroup'
-import assetMetaBox from '../../common/rightBox/assetMetaBox'
+import deleteButton from '@/components/common/deleteButton'
+import assetMetaGroup from '@/components/common/rightBox/assetMetaGroup'
+import assetMetaBox from '@/components/common/rightBox/assetMetaBox'
+import selectGroup from '@/components/common/popBox/selectAssetMetaGroup'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
 
 export default {
   name: 'assetMeta',
   components: {
-    'delete-button': deleteButton,
+    deleteButton,
     assetMetaGroup,
-    assetMetaBox
+    assetMetaBox,
+    selectGroup,
+    nzDataList
   },
+  mixins: [tableMixin],
   data () {
     return {
       tableId: 'assetMeta',
@@ -200,7 +157,6 @@ export default {
         metaShow: false,
         groupShow: false
       },
-      metaGroupLock: true,
       tableTitle: [
         {
           label: 'ID',
@@ -251,31 +207,6 @@ export default {
         children: 'children',
         label: 'name'
       },
-      tableData: [],
-      /* 二级列表相关 */
-      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
-      /* 二级页面相关 */
-      bottomBox: {
-        tabList: [], // 二级列表的标签
-        tabDetailList: [], // 多个详情
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      /* 批量删除相关 */
-      batchDeleteObjs: [],
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -295,14 +226,8 @@ export default {
           }
         ]
       },
-      searchLabel: {}, // 搜索参数
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
-      },
       // 创建修改相关
-      blackAssetMeta: {
+      blankObject: {
         id: '',
         name: '',
         metaKey: '',
@@ -313,44 +238,33 @@ export default {
         param: {},
         remark: ''
       },
-      assetMeta: {
-
-      },
-      blackMetaGroup: {
+      object: {},
+      blankMetaGroup: {
         id: '',
         name: '',
         remark: ''
       },
-      activeGroupId: -1,
-      metaGroup: {
-
-      }
+      filterGroup: '',
+      showGroup: { name: '' },
+      metaGroup: {}
     }
   },
   mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-    this.initEvent()
+    this.getGroup()
+    this.showGroup = this.groupData[0]
   },
   methods: {
-    initEvent () {
-      this.$refs.groupTree.setCurrentKey(this.activeGroupId)
-      this.getGroup()
-      this.getAssetMeta()
-    },
     getGroup () {
       this.$get('asset/field/group', { pageSize: -1 }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
-          this.groupData[0].children = response.data.list
+          this.groupData = [this.groupData[0]]
+          this.groupData = this.groupData.concat(response.data.list)
           this.$forceUpdate()
         }
       })
     },
-    getAssetMeta () {
+    getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
@@ -363,60 +277,21 @@ export default {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
-          // console.info(this.$refs.assetMetaTable)
+          // console.info(this.$refs.dataTable)
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.assetMetaTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
     },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getAssetMeta()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getAssetMeta()
-    },
-    search (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      this.$refs.assetMetaTable.bodyWrapper.scrollTop = 0
-      this.getAssetMeta()
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getAssetMeta()
-    },
     afterTableListChange () {
-      this.getAssetMeta()
+      this.getTableData()
     },
     addGroup () {
-      this.metaGroup = JSON.parse(JSON.stringify(this.blackMetaGroup))
+      this.metaGroup = JSON.parse(JSON.stringify(this.blankMetaGroup))
       this.rightBox.groupShow = true
     },
     editGroup (group) {
@@ -424,11 +299,10 @@ export default {
       this.rightBox.groupShow = true
     },
     delGroup (group) {
-      const selectKey = this.$refs.groupTree.getCurrentKey()
+      const selectKey = this.$refs.selectGroup.$refs.tree.getCurrentKey()
       if (this.prevent_opt.save) {
         return
       }
-      ;
       this.prevent_opt.save = true
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
@@ -442,10 +316,10 @@ export default {
             this.getGroup()
 
             if (selectKey === group.id) {
-              this.activeGroupId = -1
+              this.showGroup = -1
               this.searchLabel.groupId = ''
-              this.getAssetMeta()
-              this.$refs.groupTree.setCurrentKey(this.activeGroupId)
+              this.getTableData()
+              this.$refs.selectGroup.$refs.tree.setCurrentKey(this.showGroup)
             }
           } else {
             this.$message.error(response.msg)
@@ -455,13 +329,13 @@ export default {
         this.prevent_opt.save = false
       })
     },
-    changeGroup (item) {
-      this.activeGroupId = item.id
+    groupChange (item) {
+      this.showGroup = item
       this.searchLabel.groupId = item.id !== -1 ? item.id : ''
-      this.getAssetMeta()
+      this.getTableData()
     },
-    addMeta () {
-      this.assetMeta = JSON.parse(JSON.stringify(this.blackAssetMeta))
+    add () {
+      this.assetMeta = JSON.parse(JSON.stringify(this.blankObject))
       this.rightBox.metaShow = true
     },
     edit (row) {
@@ -479,31 +353,7 @@ export default {
         } else {
           this.$message.error(response.msg)
         }
-        this.getAssetMeta()
-      })
-    },
-    del (row) {
-      if (this.prevent_opt.save) {
-        return
-      }
-      ;
-      this.prevent_opt.save = true
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('asset/field/meta?ids=' + row.id).then(response => {
-          this.prevent_opt.save = false
-          if (response.code === 200) {
-            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getAssetMeta()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      }).catch(() => {
-        this.prevent_opt.save = false
+        this.getTableData()
       })
     },
     closeRightBox (refresh) {
@@ -511,7 +361,7 @@ export default {
       this.rightBox.groupShow = false
       if (refresh) {
         this.delFlag = true
-        this.getAssetMeta()
+        this.getTableData()
         this.getGroup()
       }
     }
@@ -570,5 +420,9 @@ export default {
   }
   .meta-group:hover .icon-box{
     display: inline-block;
+  }
+
+  .panel-select-header {
+    padding: 0 0 10px 16px;
   }
 </style>

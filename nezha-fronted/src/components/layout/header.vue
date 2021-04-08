@@ -343,7 +343,7 @@ export default {
     },
     getUserData () {
       return new Promise(resolve => {
-        this.$get('sys/user/list', { pageSize: -1, pageNo: 1 }).then(response => {
+        this.$get('sys/user', { pageSize: -1, pageNo: 1 }).then(response => {
           if (response.code === 200) {
             this.userData = response.data.list
           }

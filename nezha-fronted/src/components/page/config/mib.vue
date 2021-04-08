@@ -1,154 +1,164 @@
-<style scoped>
-  .mib {
-    height: 100%;
-  }
-</style>
 <template>
-  <div class="mib">
-    <template v-if="showTab == 'file'">
-      <div class="top-tools">
-        <div class="nz-tab top-tool-main-right top-tool-main-right-to-left-little" style="width: 300px">
-          <div class="nz-tab-item-box" id="module-type-1">
-            <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
-          </div>
-          <div @click="showTab = 'browser'" class="nz-tab-item-box" id="module-type-2" v-has="'snmp_browser_view'">
-            <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
-          </div>
+  <div style="height: 100%">
+    <nz-data-list
+      v-if="showTab === 'file'"
+      ref="dataList"
+      :components="['searchInput', 'elementSet']"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.mib"
+      :search-msg="searchMsg"
+      :table-id="tableId"
+      :table-title="tableTitle">
+      <template v-slot:top-tool-left>
+        <div id="module-type-1" class="nz-tab-item-box">
+          <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
         </div>
-        <div class="top-tool-main-right">
-          <div class="top-tool-search">
-            <search-input :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <button :title="$t('overall.createMib')" @click="add" class="nz-btn nz-btn-size-normal nz-btn-style-light  margin-l-20" id="mib-add"  type="button" v-has="'snmp_file_toAdd'">
-            <i class="nz-icon-create-square nz-icon"></i>
-          </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="mib" v-has="'snmp_file_delete'" id="mib-list-batch-delete"></delete-button>
+        <div id="module-type-2" v-has="'snmp_browser_view'" class="nz-tab-item-box" @click="showTab = 'browser'">
+          <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
         </div>
-      </div>
-      <!-- 自定义table列 -->
-      <transition name="el-zoom-in-top">
-        <element-set
-          id="mib-list"
-          v-if="tools.showCustomTableTitle"
-          @close="tools.showCustomTableTitle = false"
-          :custom-table-title.sync="tools.customTableTitle"
-          :original-table-title="tableTitle"
-          ref="customTableTitle"
-        ></element-set>
-      </transition>
-      <el-table :data="tableData" :height="$tableHeight.normal" @sort-change="tableDataSort" border class="nz-table mib-table" ref="mibTable" style="width: 100%;" v-loading="tools.loading" id="mib-list-table"
-                @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-      >
-        <el-table-column
-          :resizable="false"
-          type="selection"
-          width="40"
-          align="center">
-        </el-table-column>
-        <el-table-column :resizable="true" v-for="(item, index) in tools.customTableTitle" v-if="item.show"  :class-name="item.prop == 'modelsDetail'?'detail-column':''"
-                         :key="`col-${index}`" :label="item.label" :sortable="$tableSet.sortableShow(item.prop,'mib')"
-                         :prop="$tableSet.propTitle(item.prop,'mib')"
-                         :sort-orders="['ascending', 'descending']">
-          <template slot-scope="scope" :column="item">
-            <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
-            <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
-              <span @click="downloadMib(scope.row)" class="link">{{scope.row[item.prop]}}</span>
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="mib-add" v-has="'snmp_file_toAdd'" :title="$t('overall.createMib')" class="top-tool-btn margin-l-20" type="button" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <delete-button id="mib-list-batch-delete" v-has="'snmp_file_delete'" :delete-objs="batchDeleteObjs" api="mib" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:default="slotProps">
+        <el-table
+          id="role-list-table"
+          ref="dataTable"
+          v-loading="tools.loading"
+          :data="tableData"
+          :height="mainTableHeight"
+          border
+          @header-dragend="dragend"
+          @sort-change="tableDataSort"
+          @selection-change="(selection)=>{batchDeleteObjs=selection}"
+        >
+          <el-table-column
+            :resizable="false"
+            align="center"
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in tools.customTableTitle"
+            v-if="item.show"
+            :key="`col-${index}`"
+            :fixed="item.fixed"
+            :label="item.label"
+            :prop="item.prop"
+            :resizable="true"
+            :sort-orders="['ascending', 'descending']"
+            :width="`${item.width}`"
+            class="data-column"
+          >
+            <template slot="header">
+              <span>
+                <span>{{item.label}}</span>
+                <div class="col-resize-area"></div>
+              </span>
             </template>
-            <template v-else-if="item.prop == 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
-              <div style="height: 100%">
-                <div style="height: 100%; overflow: auto;">
-                  <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
-                    <el-popover trigger="hover" placement="top" >
-                      <div>
+            <template slot-scope="scope" :column="item">
+              <template v-if="item.prop == 'updateUser'" >{{scope.row[item.prop].name}}</template>
+              <template v-else-if="item.prop == 'fileName' && scope.row[item.prop]" >
+                <span class="link" @click="downloadMib(scope.row)">{{scope.row[item.prop]}}</span>
+              </template>
+              <template v-else-if="item.prop === 'modelsDetail' && scope.row['modelsDetail'] && scope.row['modelsDetail'].length >0" >
+                <div style="height: 100%">
+                  <div style="height: 100%; overflow: auto;">
+                    <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
+                      <el-popover placement="top" trigger="hover" >
                         <div>
-                          <span>{{$t('overall.name')}}:</span>
-                          <span>{{n.name}}</span>
+                          <div>
+                            <span>{{$t('overall.name')}}:</span>
+                            <span>{{n.name}}</span>
+                          </div>
+                          <div>
+                            <span>{{$t('config.mib.vendor')}}:</span>
+                            <span>{{n.vendor}}</span>
+                          </div>
+                          <div>
+                            <span>{{$t('config.mib.type')}}:</span>
+                            <span>{{n.type}}</span>
+                          </div>
                         </div>
-                        <div>
-                          <span>{{$t('config.mib.vendor')}}:</span>
-                          <span>{{n.vendor}}</span>
-                        </div>
-                        <div>
-                          <span>{{$t('config.mib.type')}}:</span>
-                          <span>{{n.type}}</span>
-                        </div>
-                      </div>
-                      <template slot="reference">
-                        <div  class="detail-item-content" v-if="i < scope.row['modelsDetail'].length-1">{{n.name}},</div>
-                        <div  class="detail-item-content" v-else>{{n.name}}</div>
-                      </template>
-                    </el-popover>
+                        <template slot="reference">
+                          <div v-if="i < scope.row['modelsDetail'].length-1" class="detail-item-content">{{n.name}},</div>
+                          <div v-else class="detail-item-content">{{n.name}}</div>
+                        </template>
+                      </el-popover>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </template>
+              <span v-else-if="item.prop === 'updateAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+              <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+              <template v-else>-</template>
             </template>
-            <span v-else-if="item.prop == 'updateAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-            <div v-else-if="item.prop == 'option'" class="content-right-options">
-              <span :id="'mib-download-'+scope.row.id" :title="$t('overall.download')" @click="downloadMib(scope.row)" class="content-right-option" v-has="'snmp_file_download'"><i class="nz-icon nz-icon-download1"></i></span>
-              &nbsp;
-              <span :id="'mib-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'snmp_file_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
-              &nbsp;
-              <span :id="'mib-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'snmp_file_delete'"><i class="nz-icon nz-icon-delete"></i></span>
+          </el-table-column>
+          <el-table-column
+            :resizable="false"
+            :width="operationWidth"
+            fixed="right">
+            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+            <div slot-scope="scope" class="table-operation-items">
+              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+                <div class="table-operation-item table-operation-item--more">
+                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item v-has="'snmp_file_download'" :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['download', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-download1"></i><span class="operation-dropdown-text">{{$t('overall.download')}}</span></el-dropdown-item>
+                  <el-dropdown-item :command="['delete', scope.row, `mib?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
-            <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <template v-else>-</template>
-          </template>
-        </el-table-column>
-        <el-table-column :resizable="false" width="28">
-          <template slot="header">
-            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn" id="mib-list-totop"><i class="nz-icon nz-icon-top"></i></button>
-      <Pagination :tableId="tableId" :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-    </template>
+          </el-table-column>
+        </el-table>
+        <!-- 回到table顶部的按钮 -->
+        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
     <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
     <transition name="right-box">
-      <mib-box v-if="rightBox.show" ref="mibBox" :mib="mib" @reload="getTableData" @close="closeRightBox"></mib-box>
+      <mib-box v-if="rightBox.show" ref="mibBox" :mib="object" @close="closeRightBox" @reload="getTableData"></mib-box>
     </transition>
   </div>
-
 </template>
 <script>
 import axios from 'axios'
-import bus from '../../../libs/bus'
 import mibBrowser from './mibBrowser'
-import deleteButton from '../../common/deleteButton'
+import mibBox from '@/components/common/rightBox/mibBox'
+import deleteButton from '@/components/common/deleteButton'
+import nzDataList from '@/components/common/table/nzDataList'
+import tableMixin from '@/components/common/mixin/table'
+
 export default {
   name: 'mib',
   components: {
-    'mib-browser': mibBrowser,
-    'delete-button': deleteButton
+    mibBox,
+    mibBrowser,
+    deleteButton,
+    nzDataList
   },
+  mixins: [tableMixin],
   data () {
     return {
       showTab: 'file', // file/browser
-      rightBox: { show: false },
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      batchDeleteObjs: [],
       tableId: 'mibTable', // 需要分页的table的id，用于记录每页数量
-      mib: {},
-      blankMib: {
+      object: {},
+      blankObject: {
         id: null,
         name: '',
         remark: '',
         models: '',
         file: null
-      },
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
       },
       tableTitle: [
         {
@@ -180,14 +190,8 @@ export default {
           label: this.$t('config.mib.updateAt'),
           prop: 'updateAt',
           show: true
-        }, {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          width: 120
         }
       ],
-      tableData: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -203,60 +207,10 @@ export default {
           label: 'name',
           disabled: false
         }]
-      },
-      searchLabel: {}, // 搜索参数
-      scrollbarWrap: null,
-      delFlag: false
+      }
     }
   },
   methods: {
-    clickOutside () {
-      this.rightBox.show = false
-    },
-    edit (u) {
-      this.mib = JSON.parse(JSON.stringify(u))
-      this.rightBox.show = true
-    },
-    closeRightBox (refresh) {
-      this.rightBox.show = false
-      if (refresh) {
-        this.delFlag = true
-        this.getTableData()
-      }
-    },
-    del (u) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('mib?ids=' + u.id).then(response => {
-          if (response.code === 200) {
-            this.delFlag = true
-            this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
-          }
-        })
-      })
-    },
-    add () {
-      this.mib = this.newMib()
-      this.rightBox.show = true
-    },
-    newMib () {
-      return JSON.parse(JSON.stringify(this.blankMib))
-    },
-    jumpTo (data, id) {
-      bus.$emit('menu-change', data)
-      this.$router.push({
-        path: '/' + data,
-        query: {
-          t: +new Date()
-        }
-      })
-    },
     getTableData () {
       if (!this.hasButton('snmp_file_view')) {
         this.$message.error(this.$t('tip.noAccess'))
@@ -273,41 +227,12 @@ export default {
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.mibTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
-    },
-    search (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.pageObj.pageNo = 1
-      this.searchLabel = {}
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      if (this.$refs.mibTable && this.$refs.mibTable.bodyWrapper) {
-        this.$refs.mibTable.bodyWrapper.scrollTop = 0
-      }
-      this.getTableData()
     },
     downloadMib (mib) {
       if (!this.hasButton('snmp_file_download')) {
@@ -335,55 +260,7 @@ export default {
           window.URL.revokeObjectURL(link.href)
         }
       })
-    },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
     }
-  },
-  watch: {
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-        if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.mibTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        }
-      }
-    }
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-  },
-  mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-
-    this.getTableData()
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
   }
 }
 </script>

@@ -1,12 +1,19 @@
 import bus from '@/libs/bus'
+import { tableSet } from '@/components/common/js/tools'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   data () {
     return {
+      fromRoute: fromRoute,
       // 侧滑
       rightBox: {
         show: false
       },
-
+      pageObj: { // 分页对象
+        pageNo: 1,
+        pageSize: this.$CONSTANTS.defaultPageSize,
+        total: 0
+      },
       /* 工具参数 */
       tools: {
         loading: false, // 是否显示table加载动画
@@ -19,23 +26,50 @@ export default {
       tableData: [],
       searchLabel: {}, // 搜索参数
       scrollbarWrap: null,
-      delFlag: false
+      delFlag: false,
+
+      operationWidth: "165" // 操作列宽
     }
   },
   methods: {
-    tableOperation ([command, row]) {
+    sortableShow: tableSet.sortableShow,
+    propTitle: tableSet.propTitle,
+    asce: tableSet.asce,
+    desc: tableSet.desc,
+    strTodate: tableSet.strTodate,
+    tableOperation ([command, row, url]) {
       switch (command) {
         case 'edit': {
           this.edit(row)
           break
         }
         case 'delete': {
-          this.del(row)
+          this.del(row, url)
           break
         }
         default:
           break
       }
+    },
+    isBuildIn (row) {
+      return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)
+    },
+    del (row, url) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(url).then(response => {
+          if (response.code === 200) {
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
     },
     newObject () {
       return JSON.parse(JSON.stringify(this.blankObject))
@@ -156,5 +190,10 @@ export default {
       : this.tableTitle
     this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
     this.getTableData()
+  },
+  beforeDestroy () {
+    if (this.scrollbarWrap) {
+      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
+    }
   }
 }

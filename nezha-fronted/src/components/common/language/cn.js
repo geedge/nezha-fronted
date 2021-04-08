@@ -48,6 +48,7 @@ const cn = {
     createAlertRule: '新增告警规则',
     createAccount: '新增用户名',
     createRole: '新增角色',
+    createTemplate: '新增模板',
     createPrometheusServer: '新增prometheus服务',
     createDatacenter: '新增数据中心',
     active: '活跃',
@@ -641,12 +642,17 @@ const cn = {
     account: {
       accountList: '用户列表',
       account: '用户',
+      name: '姓名', // "用户"
+      username: '登录名', // 登录名
       roles: '角色',
       language: '语言',
       receiver: '接收人',
       createTime: '创建时间',
       enable: '可用',
       option: '操作',
+      lastLoginTime: '最后登录时间', // 最后登录时间
+      lastLoginIp: '最后登录IP', // 最后登录IP
+      source: '来源',
       accountId: '用户ID',
       createAccount: '新增用户',
       editAccount: '编辑用户',
@@ -1000,6 +1006,7 @@ const cn = {
       exprTempImport: 'expression模板导入',
       exprTempExport: 'expression模板导出',
       exprTempImportCancel: 'expression模板导入撤销',
+      copy: '复制',
       name: '名称',
       gname: '组名',
       expression: '表达式',

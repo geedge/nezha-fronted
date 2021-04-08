@@ -27,42 +27,14 @@ import Pagination from './components/common/pagination' // 引入全局分页组
 import searchInput from './components/common/searchInput' // 搜索框组件
 import elementSet from './components/common/elementSet' // 自定义表头组件
 
-import projectBox from './components/common/rightBox/projectBox' // project弹框组件
-import moduleBox from './components/common/rightBox/moduleBox' // module弹框组件
-import editEndpointBox from './components/common/rightBox/editEndpointBox' // endpoint弹框组件
-import addEndpointBox from './components/common/rightBox/addEndpointBox' // endpoint弹框组件
-import assetBox from './components/common/rightBox/assetBox' // 资产添加组件
-import batchEditAsset from './components/common/rightBox/batchEditAsset' // 资产批量修改组件
-import alertConfigBox from './components/common/rightBox/alertConfigBox' // 告警规则弹框组件
-import panelBox from './components/common/rightBox/panelBox' // 面板弹框组件
-import moduleListPop from './components/page/asset/moduleListPop' // 面板弹框组件
-import cabinetConfigBox from './components/common/popBox/cabinetConfig' // 面板弹框组件
-import modelBox from './components/common/rightBox/modelBox' // model弹框
-import bottomBox from './components/common/bottomBox/bottomBox' // 上滑框
-import loading from './components/common/loading'
-import mibBox from './components/common/rightBox/mibBox'
-import leftMenu from './components/common/leftMenu'
-import pickTime from './components/common/pickTime'
-import bus from './libs/bus'
+import loading from '@/components/common/loading'
+import pickTime from '@/components/common/pickTime'
+import bus from '@/libs/bus'
 
 Vue.component('Pagination', Pagination)
 Vue.component('searchInput', searchInput)
 Vue.component('element-set', elementSet)
-Vue.component('project-box', projectBox)
-Vue.component('module-box', moduleBox)
-Vue.component('edit-endpoint-box', editEndpointBox)
-Vue.component('add-endpoint-box', addEndpointBox)
-Vue.component('asset-box', assetBox)
-Vue.component('batch-edit-asset', batchEditAsset)
-Vue.component('alert-config-box', alertConfigBox)
-Vue.component('panel-box', panelBox)
-Vue.component('module-list-pop', moduleListPop)
-Vue.component('cabinet-config-box', cabinetConfigBox)
-Vue.component('model-box', modelBox)
 Vue.component('loading', loading)
-Vue.component('bottom-box', bottomBox)
-Vue.component('mib-box', mibBox)
-Vue.component('left-menu', leftMenu)
 Vue.component('pick-time', pickTime)
 
 Vue.prototype.$axios = axios
