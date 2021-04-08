@@ -729,7 +729,14 @@ const en = {
       state: 'State',
       longitude: 'Longitude',
       latitude: 'Latitude',
-      lnglat: 'Coordinate'
+      lnglat: 'Coordinate',
+      agent:{
+        title:"Download agent",
+        download:"Download",
+        osType:"OS type",
+        autoScript:"Auto install script",
+        type:"Agent type"
+      }
     },
     model: {
       model: 'Asset model',

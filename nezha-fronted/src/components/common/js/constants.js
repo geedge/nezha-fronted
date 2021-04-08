@@ -87,7 +87,21 @@ export const promServer = {
   ]
 
 }
+export const promServer2 = {
+  theData: [
+    {
+      label: 'Global',
+      value: 1,
+      text: 'Global'
+    },
+    {
+      label: 'Per-datacenter',
+      value: 2,
+      text: 'Per-datacenter'
+    }
+  ]
 
+}
 export const asset = {
   pingData: [
     { value: 1, label: 'up' },
