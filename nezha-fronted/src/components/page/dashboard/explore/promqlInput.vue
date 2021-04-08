@@ -330,6 +330,10 @@ export default {
           })
         } else {
           this.dropDownVisible = false
+          if (!data.value) {
+            this.metricChange(data.expression)
+            return
+          }
           this.$get('/expression/tmpl/' + data.id).then(res => {
             if (res.code === 200) {
               res.data.vars.forEach(item => {
