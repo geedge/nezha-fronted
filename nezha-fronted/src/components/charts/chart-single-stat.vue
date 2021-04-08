@@ -25,6 +25,11 @@
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
+               <span>
+                  <el-tooltip :content="chartData.remark" placement="top" effect="light">
+                     <i class="nz-icon nz-icon-info-normal"></i>
+                  </el-tooltip>
+                </span>
                 <span  @click="refreshChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
                   <i class="nz-icon nz-icon-replay"></i>
                 </span>

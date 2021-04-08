@@ -200,21 +200,15 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <!--   remark   -->
+          <el-form-item :label="$t('dashboard.panel.chartForm.remark')">
+            <el-input type="textarea" v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"/>
+          </el-form-item>
+          <!--title-->
           <div class="right-box-sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
-          <!-- unit -->
-          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'">
-            <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable id="chart-box-unit"
-                         placeholder=""
-                         popper-class="dc-dropdown"
-                         size="mini"
-                         style="width: 100%"
-                         v-model="editChart.unit"
-            >
-            </el-cascader>
-          </el-form-item>
-          <!--type unit end-->
 
+          <!--width-->
           <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="half-form-item" prop="span">
             <el-select class="right-box-row-with-btn" :disabled="editChart.type === 'group'"  placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.span" value-key="chartSpan" id="chart-box-span">
               <el-option :key="item" :label="'span-' + item" :value="item" v-for="item in spanList">
@@ -223,6 +217,7 @@
             </el-select>
           </el-form-item>
 
+          <!--height-->
           <el-form-item :label="$t('dashboard.panel.chartForm.high')" class="half-form-item"  prop="hight">
             <el-autocomplete
               id="chart-box-height"
@@ -240,6 +235,19 @@
             </el-autocomplete>
           </el-form-item>
 
+          <!-- unit -->
+          <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit" v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'">
+            <el-cascader :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }" :show-all-levels="false" @change="unitSelected"  filterable id="chart-box-unit"
+                         placeholder=""
+                         popper-class="dc-dropdown"
+                         size="mini"
+                         style="width: 100%"
+                         v-model="editChart.unit"
+            >
+            </el-cascader>
+          </el-form-item>
+
+
           <el-form-item :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url" v-if="isUrl">
             <el-input maxlength="1024" show-word-limit size="small" type="textarea" v-model="editChart.param.url" id="chart-box-url"></el-input>
           </el-form-item>
@@ -250,25 +258,22 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'">
+            <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.param.statistics" id="chart-box-statistics" @change="$forceUpdate">
+              <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
+                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item :label='$t("dashboard.panel.chartForm.threshold")' class="half-form-item" prop="param.threshold"  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
             <el-input size="mini" type="input" v-model="editChart.param.threshold" id="chart-box-threshold"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('dashboard.panel.chartForm.statistics')" class="half-form-item" prop="param.statistics" v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'">
-              <el-select placeholder="" popper-class="chart-box-dropdown-mini" size="mini" v-model="editChart.param.statistics" id="chart-box-statistics" @change="$forceUpdate">
-                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statisticsList">
-                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-                </el-option>
-              </el-select>
-          </el-form-item>
 
           <!--<el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
             <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last" id="chart-box-last"></el-switch>
           </el-form-item>-->
-
-          <el-form-item :label="$t('dashboard.panel.chartForm.remark')">
-           <el-input type="textarea" v-model="editChart.remark"/>
-          </el-form-item>
 
           <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="!isUrl&&!isAlert&& editChart.type != 'text'&& editChart.type != 'group'">
             <span>{{$t('alert.config.expr')}}</span>
@@ -569,9 +574,6 @@ export default {
       alertParams: {},
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       nullTypeList: [{
-        label: 'connected',
-        value: 'connected'
-      }, {
         label: 'null',
         value: 'null'
       }, {
@@ -1309,7 +1311,7 @@ export default {
       param.threshold = ''
       param.valueMapping = { type: 'text', mapping: [{ value: '', text: '', color: { bac: '#fff', text: '#000' } }] }
       param.legendValue = { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' }
-      param.nullType = 'connected'
+      param.nullType = 'null'
       this.$set(this.editChart, 'param', param)
       this.elements = [1]
       this.elementTarget = []
@@ -1377,9 +1379,9 @@ export default {
       } else {
         this.setIsOtherChart()
         if (chartType === 'bar' || chartType === 'line' || chartType === 'stackArea') {
-          this.editChart.param = { nullType: 'connected', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
+          this.editChart.param = { nullType: 'null', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
           if (chartType === 'bar') {
-            this.editChart.param = { statistics: 'last', nullType: 'connected', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
+            this.editChart.param = { statistics: 'last', nullType: 'null', threshold: '', legendValue: { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' } }
             this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
             this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
           }
@@ -1387,7 +1389,7 @@ export default {
           this.$set(this.editChart.param, 'last', 0)
           this.editChart.param = {
             statistics: 'last',
-            nullType: 'connected',
+            nullType: 'null',
             valueMapping: {
               type: 'value',
               mapping: [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
@@ -1703,7 +1705,7 @@ export default {
           this.editChart.param = JSON.parse(this.editChart.param)
         }
         if (!n.param.nullType) {
-          this.editChart.param.nullType = 'connected'
+          this.editChart.param.nullType = 'null'
         }
         if (n.type === 'url') {
           this.setIsUrl()

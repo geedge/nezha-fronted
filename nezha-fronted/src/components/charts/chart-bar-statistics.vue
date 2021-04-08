@@ -25,6 +25,11 @@
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
+                <span>
+                  <el-tooltip :content="chartData.remark" placement="top" effect="light">
+                     <i class="nz-icon nz-icon-info-normal"></i>
+                  </el-tooltip>
+                </span>
                 <span  @click="refreshChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
                   <i class="nz-icon nz-icon-replay"></i>
                 </span>
@@ -161,10 +166,6 @@ export default {
         legend: {
           show: false
         },
-        grid: {
-          left: 'center',
-          top: 'middle'
-        },
         tooltip: {
           trigger: 'item',
           backgroundColor: 'rgba(221,228,237,1)',
@@ -290,41 +291,53 @@ export default {
       if (chartItem.type === 'bar') {
         this.option.xAxis = {
           type: 'category',
+          axisLabel: {
+            margin: 8,
+            formatter: function (params) {
+              let val = ''
+              if (params.length > 4) {
+                val = params.substr(0, 4) + '...'
+                return val
+              } else {
+                return params
+              }
+            }
+          }
         }
         const maxValueCopies = this.getMaxValue(seriesItem, chartItem)
         console.log(maxValueCopies)
-        const dot = maxValueCopies.dot
-        const maxValue = maxValueCopies.dot
-        const copies = maxValueCopies.dot
+        let dot = maxValueCopies.dot
+        const maxValue = maxValueCopies.maxValue
+        const copies = maxValueCopies.copies
         const unit = maxValueCopies.unit
         this.option.yAxis = {
-          type: 'value'
+          type: 'value',
           // maxInterval:{},
           // 去掉y轴--start
-          // minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
-          // maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(seriesItem.length / 5),
-          // // 去掉y轴--end
-          // axisLabel: {
-          //   show: true,
-          //   fontSize: 10,
-          //   formatter: function (val, index) {
-          //     let value = val
-          //     if (val !== 0) {
-          //       value = parseFloat(Number(val).toFixed(2))
-          //       if (value === 0) {
-          //         value = Number(val).toExponential(2)
-          //       }
-          //     }
-          //     const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
-          //     if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
-          //       dot = 2
-          //     }
-          //     if (flag || dot == 0) {
-          //       dot = 1
-          //     }
-          //     return unit.compute(value, index, -1, dot)
-          //   }
-          // }
+          minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+          maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(seriesItem.length / 5),
+          // 去掉y轴--end
+          axisLabel: {
+            show: true,
+            fontSize: 10,
+            formatter: function (val, index) {
+              let value = val
+              if (val !== 0) {
+                value = parseFloat(Number(val).toFixed(2))
+                if (value === 0) {
+                  value = Number(val).toExponential(2)
+                }
+              }
+              const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
+              if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
+                dot = 2
+              }
+              if (flag || dot == 0) {
+                dot = 1
+              }
+              return unit.compute(value, index, -1, dot)
+            }
+          }
           // boundaryGap:[0,0.2]
         }
         const nweSeriesItem = []
@@ -508,6 +521,7 @@ export default {
           if (self.pieData[0].data.length > 0) {
             getChart(self.chartIndex).clear()
             getChart(self.chartIndex).setOption(self.option)// 创建图表
+            console.log(self.option)
             self.noData = false
           } else {
             self.noData = true
@@ -694,11 +708,7 @@ export default {
                         <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.dataIndex].alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value, null, -1, 2)}</div>
-                        </div>
-                        <div style="font-size:12px;display:flex;justify-content: space-between;">
-                            <div>percent</div>
-                            <div style="display: ${chartInfo.type === 'pie' ? 'block' : 'none'}">${params.percent}%</div>
+                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, 2)}</div>
                         </div>
                     </div>
                 </div>

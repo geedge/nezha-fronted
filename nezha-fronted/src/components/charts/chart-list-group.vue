@@ -3,7 +3,7 @@
     float:left;
     padding: 0px 10px 10px 0;
     position:relative;
-    box-sizing: border-box;
+    box-sizing: content-box;
   }
   .noData{
     text-align: center
@@ -150,6 +150,7 @@
                           :editChartId="'editChartId' + item.id"
                            :is-lock="panelLock"
                           :chart-info="item"
+                           :chartData="item"
                           @on-refresh-data="refreshChart"
                           @on-search-data="searchData"
                           @on-remove-chart-block="removeChart"
@@ -844,8 +845,8 @@ export default {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele
               let query = encodeURIComponent(filterItem.expression)
-              if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给connected
-                chartInfo.param.nullType = chartInfo.param.nullType || 'connected'
+              if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
+                chartInfo.param.nullType = chartInfo.param.nullType || 'null'
                 query += '&nullType=' + chartInfo.param.nullType
               }
               // if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
@@ -1308,7 +1309,7 @@ export default {
         this.$nextTick(() => {
           let query = chartInfo.elements[0].expression
           if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea') && chartInfo.param) {
-            chartInfo.param.nullType = chartInfo.param.nullType || 'connected'
+            chartInfo.param.nullType = chartInfo.param.nullType || 'null'
             query += '&nullType=' + chartInfo.param.nullType
           }
           this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {

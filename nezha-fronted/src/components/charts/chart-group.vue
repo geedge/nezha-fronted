@@ -19,6 +19,11 @@
                 <span v-show="!showList" class="collapse-content">({{chartData.children.length}} charts)</span>
               </span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
+                <span>
+                  <el-tooltip :content="chartData.remark" placement="top" effect="light">
+                     <i class="nz-icon nz-icon-info-normal"></i>
+                  </el-tooltip>
+                </span>
                 <span  @click="addGroupItemChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
                   <i class="nz-icon nz-icon-plus"></i>
                 </span>

@@ -39,6 +39,11 @@
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
+                <span>
+                  <el-tooltip :content="chartData.remark" placement="top" effect="light">
+                     <i class="nz-icon nz-icon-info-normal"></i>
+                  </el-tooltip>
+                </span>
                 <span  @click="refreshChart" class="" v-has="`${from}_chart_toEdit`" :title="$t('dashboard.refresh')">
                   <i class="nz-icon nz-icon-replay"></i>
                 </span>
@@ -765,7 +770,7 @@ export default {
               str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, oldDot)
               if (previousItem) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
+                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
                 let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
                 if (previousval === 0) {
                   previousval = Number(item.data[1]).toExponential(2)
@@ -782,7 +787,7 @@ export default {
                 str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
                 str += '</span>'
               } else if (tip.alias.indexOf('Previous ') !== -1) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
+                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
                 str += '</span>'
               }
               str += '</div>'
@@ -1203,7 +1208,7 @@ export default {
                       str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
                       if (previousItem) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
                         let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
                         if (previousval === 0) {
                           previousval = Number(item.data[1]).toExponential(2)
@@ -1220,7 +1225,7 @@ export default {
                         str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
                         str += '</span>'
                       } else if (tip.alias.indexOf('Previous ') !== -1) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 75px;text-align: right">'
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
                         str += '</span>'
                       }
                       str += '</div>'
@@ -1511,9 +1516,9 @@ export default {
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele
             let query = encodeURIComponent(filterItem.expression)
-            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
+            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               !this.chartInfo.param && (this.chartInfo.param = {})
-              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
+              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
@@ -1524,9 +1529,9 @@ export default {
             this.data.elements.forEach((ele) => {
               const filterItem = ele
               let query = encodeURIComponent(filterItem.expression)
-              if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
+              if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
                 !this.chartInfo.param && (this.chartInfo.param = {})
-                this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
+                this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
                 query += '&nullType=' + this.chartInfo.param.nullType
               }
               axiosArr.push(this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
@@ -1536,15 +1541,15 @@ export default {
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
             let query = encodeURIComponent(this.data.name)
-            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
-              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
+            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
+              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
             axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           } else {
             let query = encodeURIComponent(this.data.elements[0].expression)
-            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给connected
-              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'connected'
+            if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
+              this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
             axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
