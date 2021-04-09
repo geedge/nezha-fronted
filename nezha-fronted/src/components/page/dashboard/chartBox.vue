@@ -883,6 +883,11 @@ export default {
         }
         delete chartParams.panel
         delete chartParams.children
+        if (chartParams.elements) {
+          chartParams.elements.forEach(item => {
+            delete item.id
+          })
+        }
         this.$post('visual/panel/chart', chartParams).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
