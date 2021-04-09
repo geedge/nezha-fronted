@@ -129,21 +129,17 @@
           </el-form-item>
         </el-form>
         <div class="download-url" v-if="loadFinish">
-<!--          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px); height: 100%;">-->
-<!--            <pre><code id="download-url-curl">curl -o- -H "Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>-->
-<!--          </el-scrollbar>-->
           <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
-            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
+            <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')">
+              <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
+            </el-popover>
           </el-input>
-<!--          <span @click="copyUrl('download-url-curl')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>-->
         </div>
         <div class="download-url" v-if="loadFinish">
-          <!--<el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px);height: 100%;">
-            <pre><code id="download-url-wget">wget -qO- &#45;&#45;header="Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
-          </el-scrollbar>
-          <span @click="copyUrl('download-url-wget')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>-->
           <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl">
-            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
+            <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')">
+              <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
+            </el-popover>
           </el-input>
         </div>
       </div>
@@ -269,7 +265,9 @@ export default {
         osType: 'centos',
         dc: '',
         type: 1
-      }
+      },
+      wgetVisible:false,
+      curlVisible:false,
     }
   },
   methods: {
@@ -293,7 +291,7 @@ export default {
       })
     },
     copyUrl: function (id) {
-      // const text = document.querySelector('#' + id).innerText
+
       const input = document.createElement('input')
       const text = document.getElementById(id).value;
       document.body.appendChild(input)
@@ -303,7 +301,36 @@ export default {
         document.execCommand('copy')
       }
       document.body.removeChild(input)
-      this.$message({ duration: 1000, type: 'success', message: this.$t('tip.copySuccess') })
+
+      if(id.indexOf('curl') != -1){
+        this.curlVisible = true
+        console.log("open curl")
+        // let timeout = setTimeout(()=>{
+        //   this.curlVisible = false;
+        //   clearTimeout(timeout)
+        // },1000)
+      }else{
+        this.wgetVisible = true
+        // let timeout = setTimeout(()=>{
+        //   this.wgetVisible = false;
+        //   clearTimeout(timeout)
+        // },1000)
+
+      }
+    },
+    popShow:function(where){
+      const self = this
+      if(where == 'curl'){
+        let timeout = setTimeout(()=>{
+          self.curlVisible = false;
+          clearTimeout(timeout)
+        },1000)
+      }else{
+        let timeout = setTimeout(()=>{
+          self.wgetVisible = false;
+          clearTimeout(timeout)
+        },1000)
+      }
     },
     downloadAgent: function () {
       axios.get('agent/download?os=' + this.agentParam.osType, { responseType: 'blob' }).then(data => {
@@ -328,6 +355,9 @@ export default {
           window.URL.revokeObjectURL(link.href)
         }
       })
+    },
+    propShow:function(){
+
     },
     getTableData () {
       if (!this.hasButton('prom_view')) {
