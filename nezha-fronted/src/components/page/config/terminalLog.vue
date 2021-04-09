@@ -4,10 +4,10 @@
       ref="dataList"
       :components="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.terminalLog"
       :search-msg="searchMsg"
       :table-id="tableId"
-      :table-title="tableTitle"
-      :from="fromRoute.terminalLog">
+      :table-title="tableTitle">
       <template v-slot:default="slotProps">
         <el-table
           id="terminal-log-list-table"
@@ -56,7 +56,7 @@
                 <span>{{getRemoteText(scope.row)}}</span>
               </template>
               <template v-else-if="item.prop === 'duration'">
-                <el-tooltip placement="right" effect="light" :disabled="!scope.row.status">
+                <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
                   <div slot="content">
                     {{$t('config.terminallog.endTime')}}<br/>
                     {{scope.row.endTime}}
@@ -73,12 +73,12 @@
           </el-table-column>
           <el-table-column
             :resizable="false"
-            fixed="right"
-            :width="operationWidth">
+            :width="operationWidth"
+            fixed="right">
             <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
             <div slot-scope="scope" class="table-operation-items">
               <template v-if="scope.row.status == 0">
-                <button class="table-operation-item" @click="$refs.dataList.showBottomBox('monitor', scope.row)" :title="$t('config.terminallog.monitor.monitor')"><i class="nz-icon nz-icon-JC"></i></button>
+                <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="$refs.dataList.showBottomBox('monitor', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
                 <el-dropdown size="medium" trigger="hover" @command="tableOperation">
                   <div class="table-operation-item table-operation-item--more">
                     <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>

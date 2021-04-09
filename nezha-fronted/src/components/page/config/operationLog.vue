@@ -4,10 +4,10 @@
       ref="dataList"
       :components="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.operationLog"
       :search-msg="searchMsg"
       :table-id="tableId"
-      :table-title="tableTitle"
-      :from="fromRoute.operationLog">
+      :table-title="tableTitle">
       <template v-slot:default="slotProps">
         <el-table
           id="role-list-table"
