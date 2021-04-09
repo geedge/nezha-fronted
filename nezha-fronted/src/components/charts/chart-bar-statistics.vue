@@ -294,7 +294,6 @@ export default {
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
       this.data = chartItem
-      const self = this
       if (chartItem.type === 'bar') {
         this.option.xAxis = {
           type: 'category',
@@ -366,6 +365,24 @@ export default {
           obj.name = legend[index].name
           obj.data = [[legendShow, item.value]]
           obj.stack = true
+          obj.markLine = {
+            silent: true,
+            symbol: ['circle', 'circle'],
+            label: {
+              distance: this.computeDistance(chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(chartItem.param.threshold)),
+              formatter: function (params) {
+                return chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(params.value)
+              }
+            },
+            lineStyle: {
+              color: '#d64f40',
+              width: 2,
+              type: 'dotted',
+            },
+            data: [{
+              yAxis: Number(chartItem.param.threshold)
+            }]
+          }
           nweSeriesItem.push(obj)
         })
         seriesItem = nweSeriesItem
@@ -416,6 +433,12 @@ export default {
         }
         this.endLoading()
       }
+    },
+    computeDistance: function (str) {
+      const span = document.querySelector('.temp-dom')
+      span.textContent = str
+      const txtWidth = parseFloat(window.getComputedStyle(span).width)
+      return Number('-' + (txtWidth + 5))
     },
     formatLegend (chartWidth, name) {
       if (!name) {

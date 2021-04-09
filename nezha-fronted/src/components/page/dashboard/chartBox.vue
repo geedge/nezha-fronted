@@ -627,6 +627,17 @@ export default {
     selectPanel (panel) {
       this.panelName = panel.name
       this.panelId = panel.id
+      this.editChart.groupId = ''
+      this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {
+        if (response.code === 200) {
+          this.groupArr = []
+          response.data.list.forEach((item, index) => {
+            if (item.type === 'group') {
+              this.groupArr.push({ id: item.id, name: item.name })
+            }
+          })
+        }
+      })
     },
     toAddPanel () {
       this.$refs.panelBox2.show(true)
@@ -1261,6 +1272,7 @@ export default {
           this.editChart.param.threshold = data.param.threshold
           this.editChart.param.statistics = this.statistics = data.param.statistics
           if (this.editChart.type === 'bar') {
+            this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
             this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
           }
         } else {

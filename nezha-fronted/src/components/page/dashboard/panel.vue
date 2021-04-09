@@ -790,6 +790,8 @@ export default {
 <style scoped lang="scss">
   .panel {
     height: 100%;
+    display: flex;
+    flex-direction:column;
   }
 
   .panel .el-table {
@@ -855,6 +857,7 @@ export default {
     margin-top: 0px;
     overflow-y: auto;
     height: calc(100% - 50px);
+    flex: 1;
   }
 
   .box-content {
