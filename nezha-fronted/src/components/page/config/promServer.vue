@@ -129,16 +129,22 @@
           </el-form-item>
         </el-form>
         <div class="download-url" v-if="loadFinish">
-          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px); height: 100%;">
-            <pre><code id="download-url-curl">curl -o- -H "Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
-          </el-scrollbar>
-          <span @click="copyUrl('download-url-curl')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
+<!--          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px); height: 100%;">-->
+<!--            <pre><code id="download-url-curl">curl -o- -H "Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>-->
+<!--          </el-scrollbar>-->
+          <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
+            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
+          </el-input>
+<!--          <span @click="copyUrl('download-url-curl')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>-->
         </div>
         <div class="download-url" v-if="loadFinish">
-          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px);height: 100%;">
-            <pre><code id="download-url-wget">wget -qO- --header="Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
+          <!--<el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px);height: 100%;">
+            <pre><code id="download-url-wget">wget -qO- &#45;&#45;header="Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
           </el-scrollbar>
-          <span @click="copyUrl('download-url-wget')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
+          <span @click="copyUrl('download-url-wget')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>-->
+          <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl">
+            <i slot="suffix" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
+          </el-input>
         </div>
       </div>
     </el-dialog>
@@ -160,6 +166,14 @@ export default {
     deleteButton
   },
   mixins: [tableMixin],
+  computed:{
+    wgetUrl:function(){
+      return 'wget -qO- --header="Authorization:'+this.token+'" http://'+this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+    },
+    curlUrl:function(){
+      return 'curl -o- -H "Authorization:'+this.token+'" http://'+this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+    }
+  },
   data () {
     return {
       tableId: 'promTable', // 需要分页的table的id，用于记录每页数量
@@ -279,8 +293,9 @@ export default {
       })
     },
     copyUrl: function (id) {
-      const text = document.querySelector('#' + id).innerText
+      // const text = document.querySelector('#' + id).innerText
       const input = document.createElement('input')
+      const text = document.getElementById(id).value;
       document.body.appendChild(input)
       input.setAttribute('value', text)
       input.select()
@@ -391,6 +406,7 @@ export default {
   .agent-box .download-url{
     height: 40px;
     position: relative;
+    margin-bottom: 10px;
   }
   .agent-box .download-url .url-copy{
     position: absolute;
@@ -405,7 +421,7 @@ export default {
     border-radius: 0;
     font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
     line-height: 40px;
-    padding: 5px;
+    padding: 5px 20px 5px 5px;
     white-space: nowrap;
     background-color: #F6F8FA;;
     color: #333;
@@ -413,5 +429,22 @@ export default {
 
   .agent-box .download-url code {
     color: #333;
+  }
+
+</style>
+<style>
+  .download-url > .el-input.is-disabled .el-input__inner{
+    background-color: #F6F8FA;;
+    border-color: #E4E7ED;
+    color: #333;
+    cursor: text;
+  }
+  .download-url  .el-input__suffix {
+    position: absolute;
+    top: 8px;
+    -webkit-transition: all .3s;
+    height: 100%;
+    color: #333;
+    text-align: center;
   }
 </style>
