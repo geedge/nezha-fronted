@@ -39,15 +39,25 @@
         </el-form-item>
         <!--type-->
         <el-form-item :label="$t('config.promServer.type')" prop="type">
-          <el-cascader
-            id="prom-box-input-type"
-            style="width: 100%"
-            v-model="editPromServer.type"
-            placeholder=""
-            size="small"
-            :options="$CONSTANTS.promServer.theData"
-            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"
-            clearable></el-cascader>
+<!--          <el-cascader-->
+<!--            id="prom-box-input-type"-->
+<!--            style="width: 100%"-->
+<!--            v-model="editPromServer.type"-->
+<!--            placeholder=""-->
+<!--            size="small"-->
+<!--            :options="$CONSTANTS.promServer.theData"-->
+<!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
+<!--            clearable></el-cascader>-->
+          <el-select  placeholder="" v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" popper-class="config-dropdown" value-key="value" size="small">
+            <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in $CONSTANTS.promServer2.theData">
+              <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Token" prop="token">
+          <el-input class="right-box-row-with-btn" type="text" placeholder="" v-model="editPromServer.token" size="small" id="prom-box-input-token">
+            <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>
+          </el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -96,6 +106,19 @@ export default {
     }
   },
   methods: {
+    refreshToken: function () {
+      if(!this.editPromServer.token||this.editPromServer.token == ''){
+        this.$message.error("The token is empty")
+        return;
+      }
+      this.$post('agent/token/refresh' , this.editPromServer).then(response=>{
+        if(response.code == 200){
+          this.editPromServer.token = response.data.token;
+        }else{
+          this.$message.error(response.msg)
+        }
+      })
+    },
     /* 关闭弹框 */
     esc (refresh) {
       this.$emit('close', refresh)

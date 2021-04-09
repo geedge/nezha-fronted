@@ -28,7 +28,7 @@ export default {
       scrollbarWrap: null,
       delFlag: false,
 
-      operationWidth: "165" // 操作列宽
+      operationWidth: '165' // 操作列宽
     }
   },
   methods: {

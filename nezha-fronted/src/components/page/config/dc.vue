@@ -135,50 +135,7 @@
       <traffic-setting-box v-if="rightBox.trafficSetting.show" ref="trafficBox" :dc="object" @close="closeTrafficBox"></traffic-setting-box>
     </transition>
     <span v-if="dcDataRefresh" style="display: none"></span>
-    <el-dialog :visible.sync="showAgentDownload" width="620px" append-to-body class="nz-dialog agent-dialog" @close="closeDialog" :title="$t('config.dc.agent.title')">
-      <div class="agent-box" v-if="showAgentDownload">
-        <el-form size="small" v-model="agentParam" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" style="width: 100%">
-          <div class="right-box-sub-title">{{$t('config.dc.agent.download')}}</div>
-          <div style="margin-bottom: 20px;width: 100%"></div>
-          <el-form-item :label="$t('config.dc.agent.osType')" prop="osType" class="half-form-item">
-            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.osType">
-              <el-option :key="item.name" :label="item.label" :value="item.name" v-for="item in osTypes">
-                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <div class="right-box-sub-title">{{$t('config.dc.agent.autoScript')}}</div>
-          <div style="margin-bottom: 20px;width: 100%"></div>
 
-          <el-form-item :label="$t('config.dc.agent.dc')" prop="dc" class="half-form-item">
-            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.dc">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in allDc">
-                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('config.dc.agent.type')" prop="type" class="half-form-item">
-            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.type">
-              <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in $CONSTANTS.promServer2.theData">
-                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <div class="download-url" v-if="loadFinish">
-          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px); height: 100%;">
-            <pre><code id="download-url-curl">curl -o- -H "Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
-          </el-scrollbar>
-          <span @click="copyUrl('download-url-curl')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
-        </div>
-        <div class="download-url" v-if="loadFinish">
-          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px);height: 100%;">
-            <pre><code id="download-url-wget">wget -qO- --header="Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
-          </el-scrollbar>
-          <span @click="copyUrl('download-url-wget')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -272,24 +229,6 @@ export default {
       },
       tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
       delFlag: false,
-      showAgentDownload:false,
-      token:'',
-      ipAddr:'',
-      allDc:[],
-      loadFinish :false,
-      osTypes:[{
-          label:"Centos",
-          name:"centos",
-        },
-        {
-          label:"Ubuntu",
-          name:"ubuntu"
-        }],
-      agentParam:{
-        osType:"Centos",
-        dc:"",
-        type:1,
-      },
       userData: []
     }
   },
@@ -302,38 +241,6 @@ export default {
     }
   },
   methods: {
-    toDownloadAgent:function(){
-      this.showAgentDownload = true;
-      this.token = sessionStorage.getItem('nz-token');
-      let reg = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/;
-      this.ipAddr = reg.exec(window.location.href)[0];
-    },
-    closeDialog:function(){
-      this.showAgentDownload = false;
-    },
-    getAllDc:function(){
-      this.$get('idc?pageSize=-1', ).then(response => {
-        console.log('load dc data....')
-        this.tools.loading = false
-        if (response.code === 200) {
-          this.allDc  = response.data.list
-          console.log(this.allDc)
-          this.loadFinish = true;
-          this.agentParam.dc = this.allDc[0].id;
-        }
-      })
-    },
-    copyUrl:function(id){
-      let text = document.querySelector("#"+id).innerText;
-      const input = document.createElement('input');
-      document.body.appendChild(input);
-      input.setAttribute('value', text);
-      input.select();
-      if (document.execCommand('copy')) {
-        document.execCommand('copy');
-      }
-      document.body.removeChild(input);
-    },
     assetStatClassName (param) {
       if (param.column.label == this.$t('config.dc.assets')) {
         return 'asset-state'
@@ -442,42 +349,5 @@ export default {
 <style scoped>
   /deep/ td .nz-icon-gear:before{
     color: #606266;
-  }
-  .agent-dialog .agent-box{
-    padding:10px;
-  }
-
-  .agent-box >.right-box-form>.el-form-item.half-form-item{
-    width: 220px;
-  }
-  .agent-box >.right-box-form>.el-form-item.half-form-item:nth-child(odd){
-    width: 220px;
-  }
-
-  .agent-box .download-url{
-    height: 40px;
-    position: relative;
-  }
-  .agent-box .download-url .url-copy{
-    position: absolute;
-    right: 10px;
-    top: 5px;
-  }
-  .agent-box .download-url .url-copy i{
-    font-size: 20px;
-  }
-  .agent-box .download-url pre code {
-    border: 1px solid #ddd;
-    border-radius: 0;
-    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
-    line-height: 40px;
-    padding: 5px;
-    white-space: nowrap;
-    background-color: #F6F8FA;;
-    color: #333;
-  }
-
-  .agent-box .download-url code {
-    color: #333;
   }
 </style>
