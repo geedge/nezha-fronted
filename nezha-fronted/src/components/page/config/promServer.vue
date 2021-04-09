@@ -154,6 +154,7 @@ import { promServer } from '@/components/common/js/constants'
 import nzDataList from '@/components/common/table/nzDataList'
 import tableMixin from '@/components/common/mixin/table'
 import axios from 'axios'
+import Vue from 'vue'
 export default {
   name: 'promServer',
   components: {
@@ -275,7 +276,14 @@ export default {
       this.showAgentDownload = true
       this.token = sessionStorage.getItem('nz-token')
       const reg = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
-      this.ipAddr = reg.exec(window.location.href)[0]
+      const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
+      Vue.http.get(configUrl).then(res => {
+        if(reg.test(res.body.baseUrl)){
+          this.ipAddr = reg.exec(res.body.baseUrl)[0]
+        }else{
+          this.ipAddr = reg.exec(window.location.href)[0]
+        }
+      })
     },
     closeDialog: function () {
       this.showAgentDownload = false
