@@ -166,6 +166,13 @@ export default {
         legend: {
           show: false
         },
+        grid: {
+          top: 30,
+          left: 10,
+          right: 30,
+          containLabel: true,
+          bottom: 8// 156
+        },
         tooltip: {
           trigger: 'item',
           backgroundColor: 'rgba(221,228,237,1)',
@@ -286,17 +293,34 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
-      console.log(chartItem, seriesItem, this.option,this.chartIndex);
+      console.log(chartItem, seriesItem, this.option, this.chartIndex)
       this.data = chartItem
+      const self = this
       if (chartItem.type === 'bar') {
         this.option.xAxis = {
           type: 'category',
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          showAllSymbol: false,
+          axisPointer: { // y轴上显示指针对应的值
+            show: false
+          },
           axisLabel: {
             margin: 8,
             formatter: function (params) {
+              console.log(self.chartIndex);
+              console.log(document.getElementById('chart-' + self.chartIndex))
+              const dataLength = seriesItem.length || 1
+              const chartWidth = (document.getElementById('chart-' + chartItem.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
+              const length = Math.ceil((chartWidth) / 16)
+              console.log(chartWidth, length, dataLength , seriesItem.length)
               let val = ''
-              if (params.length > 4) {
-                val = params.substr(0, 4) + '...'
+              if (params.length > length) {
+                val = params.substr(0, length) + '...'
                 return val
               } else {
                 return params

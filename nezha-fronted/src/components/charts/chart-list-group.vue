@@ -3,7 +3,7 @@
     float:left;
     padding: 0px 10px 10px 0;
     position:relative;
-    box-sizing: content-box;
+    box-sizing: border-box;
   }
   .noData{
     text-align: center

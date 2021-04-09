@@ -1733,7 +1733,8 @@ export default {
         if (this.showPanel.id) {
           this.panelId = this.showPanel.id
         }
-        this.$get('visual/panel/chart?id= ' + this.panelId).then(response => {
+        console.log(this.panelId)
+        this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {
           if (response.code === 200) {
             this.groupArr = []
             response.data.list.forEach((item, index) => {
