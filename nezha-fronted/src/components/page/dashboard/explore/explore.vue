@@ -583,7 +583,7 @@ export default {
         panel: '',
         sync: 0,
         groupId: '',
-        remark: '',
+        remark: ''
       }
       this.expressions.forEach((exp) => {
         chart.elements.push({ expression: exp, legend: '', type: 'expert', id: '' })

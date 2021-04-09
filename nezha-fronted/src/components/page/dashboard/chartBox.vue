@@ -247,7 +247,6 @@
             </el-cascader>
           </el-form-item>
 
-
           <el-form-item :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url" v-if="isUrl">
             <el-input maxlength="1024" show-word-limit size="small" type="textarea" v-model="editChart.param.url" id="chart-box-url"></el-input>
           </el-form-item>
@@ -269,7 +268,6 @@
           <el-form-item :label='$t("dashboard.panel.chartForm.threshold")' class="half-form-item" prop="param.threshold"  v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'">
             <el-input size="mini" type="input" v-model="editChart.param.threshold" id="chart-box-threshold"></el-input>
           </el-form-item>
-
 
           <!--<el-form-item :label="$t('dashboard.panel.chartForm.last')" v-if="editChart.type == 'table'">
             <el-switch :active-value="1" :inactive-value="0" active-color="#ee9d3f" class="exporter-switch" v-model="editChart.param.last" id="chart-box-last"></el-switch>

@@ -487,7 +487,8 @@ const cn = {
     noImportFile: '没有可导入的文件',
     noAccess: '无访问权限',
     confirmDuplicate: '确认复制吗？',
-    confirmCancel: '您所做的修改将不会被保存？'
+    confirmCancel: '您所做的修改将不会被保存？',
+    copySuccess: '复制成功'
   },
   asset: {
     asset: '资产',
@@ -705,7 +706,14 @@ const cn = {
       editProm: '修改Prometheus服务',
       type: '类别',
       checkTime: '检查时间',
-      dataCenter: '数据中心'
+      dataCenter: '数据中心',
+      agent: {
+        title: '下载Agent',
+        download: '下载',
+        osType: 'OS 类型',
+        autoScript: '自动安装脚本',
+        type: 'Agent类型'
+      }
     },
     terminallog: {
       terminallog: '终端日志',

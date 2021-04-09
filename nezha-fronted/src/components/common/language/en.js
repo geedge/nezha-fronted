@@ -490,7 +490,8 @@ const en = {
     noImportFile: 'No import file found',
     noAccess: 'No access',
     confirmDuplicate: 'Are you sure to duplicate this chart?',
-    confirmCancel: 'Changes you made are not saved?'
+    confirmCancel: 'Changes you made are not saved?',
+    copySuccess: 'Copy success'
   },
   asset: {
     asset: 'Asset',
@@ -709,7 +710,14 @@ const en = {
       editProm: 'Edit prometheus server', // "修改Prometheus Server"
       type: 'Type', // "类别"
       checkTime: 'Check time',
-      dataCenter: 'Data center'
+      dataCenter: 'Data center',
+      agent: {
+        title: 'Download agent',
+        download: 'Download',
+        osType: 'OS type',
+        autoScript: 'Auto install script',
+        type: 'Agent type'
+      }
     },
     dc: {
       dc: 'Data center',
@@ -736,13 +744,6 @@ const en = {
       longitude: 'Longitude',
       latitude: 'Latitude',
       lnglat: 'Coordinate',
-      agent:{
-        title:"Download agent",
-        download:"Download",
-        osType:"OS type",
-        autoScript:"Auto install script",
-        type:"Agent type"
-      }
     },
     model: {
       model: 'Asset model',

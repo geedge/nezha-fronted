@@ -13,6 +13,9 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
+        <button :title="$t('overall.createDatacenter')" @click="toDownloadAgent" type="button" id="load-agent" class="top-tool-btn margin-l-20">
+          <i class="nz-icon-download nz-icon"></i>
+        </button>
         <delete-button id="promserver-list-batch-delete" v-has="'prom_delete'" :delete-objs="batchDeleteObjs" api="agent" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot:default="slotProps">
@@ -92,6 +95,53 @@
     <transition name="right-box">
       <prom-server-box v-if="rightBox.show" :prom-server="object" @close="closeRightBox"></prom-server-box>
     </transition>
+    <el-dialog :visible.sync="showAgentDownload" width="620px" append-to-body class="nz-dialog agent-dialog" @close="closeDialog" :title="$t('config.promServer.agent.title')">
+      <div class="agent-box" v-if="showAgentDownload">
+        <el-form size="small" v-model="agentParam" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" style="width: 100%">
+          <div class="right-box-sub-title">{{$t('config.promServer.agent.download')}}</div>
+          <div style="margin-bottom: 20px;width: 100%"></div>
+          <el-form-item :label="$t('config.promServer.agent.osType')" prop="osType" class="half-form-item">
+            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.osType">
+              <el-option :key="item.name" :label="item.label" :value="item.name" v-for="item in osTypes">
+                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item   class="half-form-item">
+            <button type="button" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="downloadAgent">{{$t('config.promServer.agent.download')}}</button>
+          </el-form-item>
+          <div class="right-box-sub-title">{{$t('config.promServer.agent.autoScript')}}</div>
+          <div style="margin-bottom: 20px;width: 100%"></div>
+
+          <el-form-item :label="$t('config.dc.dc')" prop="dc" class="half-form-item">
+            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.dc">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in allDc">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('config.promServer.agent.type')" prop="type" class="half-form-item">
+            <el-select class="right-box-row-with-btn" placeholder="" v-model="agentParam.type">
+              <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in $CONSTANTS.promServer2.theData">
+                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div class="download-url" v-if="loadFinish">
+          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px); height: 100%;">
+            <pre><code id="download-url-curl">curl -o- -H "Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
+          </el-scrollbar>
+          <span @click="copyUrl('download-url-curl')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
+        </div>
+        <div class="download-url" v-if="loadFinish">
+          <el-scrollbar class="el-scrollbar-small" style="width: calc(100% - 40px);height: 100%;">
+            <pre><code id="download-url-wget">wget -qO- --header="Authorization:{{token}}" http://{{ipAddr}}/agent/{{agentParam.dc}}/{{agentParam.type}}/install.sh | bash</code></pre>
+          </el-scrollbar>
+          <span @click="copyUrl('download-url-wget')" class="url-copy"><i class="nz-icon nz-icon-override"></i></span>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -101,6 +151,7 @@ import promServerBox from '@/components/common/rightBox/promServerBox'
 import { promServer } from '@/components/common/js/constants'
 import nzDataList from '@/components/common/table/nzDataList'
 import tableMixin from '@/components/common/mixin/table'
+import axios from 'axios'
 export default {
   name: 'promServer',
   components: {
@@ -186,10 +237,83 @@ export default {
           disabled: false
         }]
       },
-      promServerType: null
+      promServerType: null,
+      showAgentDownload: false,
+      token: '',
+      ipAddr: '',
+      allDc: [],
+      loadFinish: false,
+      osTypes: [{
+        label: 'Centos',
+        name: 'centos'
+      },
+      {
+        label: 'Ubuntu',
+        name: 'ubuntu'
+      }],
+      agentParam: {
+        osType: 'centos',
+        dc: '',
+        type: 1
+      }
     }
   },
   methods: {
+    toDownloadAgent: function () {
+      this.showAgentDownload = true
+      this.token = sessionStorage.getItem('nz-token')
+      const reg = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
+      this.ipAddr = reg.exec(window.location.href)[0]
+    },
+    closeDialog: function () {
+      this.showAgentDownload = false
+    },
+    getAllDc: function () {
+      this.$get('idc?pageSize=-1').then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          this.allDc = response.data.list
+          this.loadFinish = true
+          this.agentParam.dc = this.allDc[0].id
+        }
+      })
+    },
+    copyUrl: function (id) {
+      const text = document.querySelector('#' + id).innerText
+      const input = document.createElement('input')
+      document.body.appendChild(input)
+      input.setAttribute('value', text)
+      input.select()
+      if (document.execCommand('copy')) {
+        document.execCommand('copy')
+      }
+      document.body.removeChild(input)
+      this.$message({ duration: 1000, type: 'success', message: this.$t('tip.copySuccess') })
+    },
+    downloadAgent: function () {
+      axios.get('agent/download?os=' + this.agentParam.osType, { responseType: 'blob' }).then(data => {
+        let fileName = 'confagent'
+        const disposition = data.headers['content-disposition']
+        if (disposition) {
+          fileName = disposition.split(';')[1].split('filename=')[1]
+        }
+        // 由于ie不支持download属性，故需要做兼容判断
+        if (navigator.appVersion.toString().indexOf('.NET') > 0) {
+          // ie独有的msSaveBlob属性，data.data为Blob文件流
+          window.navigator.msSaveBlob(data.data, fileName)
+        } else {
+          // 以下流程即为文章开始的下载流程
+          const url = window.URL.createObjectURL(data.data)
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.download = fileName
+          document.body.appendChild(link)
+          link.click()
+          window.URL.revokeObjectURL(link.href)
+        }
+      })
+    },
     getTableData () {
       if (!this.hasButton('prom_view')) {
         this.$message.error(this.$t('tip.noAccess'))
@@ -248,6 +372,46 @@ export default {
     Promise.all([this.getDcData()]).then(response => {
       this.getTableData()
     })
+    this.getAllDc()
   }
 }
 </script>
+<style scoped>
+  .agent-dialog .agent-box{
+    padding:10px;
+  }
+
+  .agent-box >.right-box-form>.el-form-item.half-form-item{
+    width: 220px;
+  }
+  .agent-box >.right-box-form>.el-form-item.half-form-item:nth-child(odd){
+    width: 220px;
+  }
+
+  .agent-box .download-url{
+    height: 40px;
+    position: relative;
+  }
+  .agent-box .download-url .url-copy{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+  .agent-box .download-url .url-copy i{
+    font-size: 20px;
+  }
+  .agent-box .download-url pre code {
+    border: 1px solid #ddd;
+    border-radius: 0;
+    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+    line-height: 40px;
+    padding: 5px;
+    white-space: nowrap;
+    background-color: #F6F8FA;;
+    color: #333;
+  }
+
+  .agent-box .download-url code {
+    color: #333;
+  }
+</style>
