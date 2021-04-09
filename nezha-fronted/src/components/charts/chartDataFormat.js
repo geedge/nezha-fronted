@@ -623,7 +623,7 @@ window.onload = function () {
   if (units.length < 1) {
     unitOptions.forEach((item, index) => {
       item.children.forEach((n, i) => {
-        units.push(n)
+        units.push({ ...n, type: item.label })
       })
     })
   }
