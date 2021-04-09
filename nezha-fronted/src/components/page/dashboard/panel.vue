@@ -122,6 +122,7 @@ import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
 import exportXLSX from '../../common/exportXLSX'
 import selectPanel from '../../common/popBox/selectPanel'
+import panelBox from '@/components/common/rightBox/panelBox'
 
 export default {
   name: 'panel',
@@ -204,7 +205,8 @@ export default {
     'chart-list': ChartList,
     'pick-time': pickTime,
     'export-excel': exportXLSX,
-    selectPanel
+    selectPanel,
+    'panel-box': panelBox
   },
   methods: {
     // 刷新
@@ -1061,5 +1063,8 @@ export default {
 <style>
   .box-content .show-top .chartBox:last-child{
     margin-bottom: 50px !important;
+  }
+  .box-content .show-top .chart-group .chartBox:last-child{
+    margin-bottom: 0px !important;
   }
 </style>

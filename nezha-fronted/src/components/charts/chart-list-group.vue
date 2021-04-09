@@ -46,7 +46,7 @@
   }
 </style>
 <template>
-  <div class="list-width"  id="listContainer" ref="listContainer"><!--v-drag-->
+  <div class="list-width chart-group"  id="listContainer" ref="listContainer"><!--v-drag-->
 
     <span class="temp-dom"></span>
 
