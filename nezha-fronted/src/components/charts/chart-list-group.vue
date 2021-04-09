@@ -66,7 +66,7 @@
                  handle: '.chart-title'
                }"
     style="width: 100%;height: 100%">
-      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
+      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.name" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || (item.type === 'bar' && (!item.param.statistics || item.param.statistics === 'null')) ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
@@ -237,10 +237,13 @@ export default {
       immediate: true,
       handler (n) {
         this.dataList = [...n]
+        this.dataTotalListBak = [...n]
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
-            this.getChartData(item, index, this.filter)
+            // this.getChartData(item, index, this.filter)
             this.setChartSize(item, index)
+            const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
+            this.handleElementInViewport(chartBox, 0, item, index, true)
           })
         })
       }
@@ -300,7 +303,6 @@ export default {
       this.tempDom.width = span.offsetWidth
     },
     start (event) {
-      // console.log('start', event, this.dataList);
       event.item.querySelector('.chartTitle').style.background = '#d8dce1'
       const projectAndAssetFeatureInfos = event.item.querySelectorAll('.feature-content')
       if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {
@@ -324,12 +326,9 @@ export default {
       chartTitle.style.background = '#d8dce1'
     },
     clone (event) {
-      // console.log('clone',event );
       const canvas = event.item.querySelector('canvas')
-      // console.log('clone-canvas',canvas);
       const canvasclone = event.clone.querySelector('canvas')
       canvasclone.style.border = 'solid 1px yellow'
-      // console.log('clone-canvasclone',canvasclone);
       if (canvas && canvasclone) {
         const image = new Image()
         image.src = canvas.toDataURL()
@@ -407,7 +406,7 @@ export default {
       const chartListTmp = []
       if (searchName && searchName.trim() !== '') {
         this.dataTotalListBak.forEach((item) => {
-          if (item.title.indexOf(searchName) > -1) {
+          if (item.name.indexOf(searchName) > -1) {
             item.isLoaded = false
             item.isHide = false
             chartListTmp.push(item)
@@ -496,186 +495,11 @@ export default {
 
     // 获取panel详情数据,获取panel下所有chart列表
     getData (params) {
-      const param = {
-        panelId: params.panelId,
-        query: params.query,
-        from: params.from
-      }
-      // alert-rule单独处理
-      if (param.from == this.$CONSTANTS.fromRoute.rule) {
-        this.dataList = []
-        this.dataList.push({
-          id: -10,
-          panelId: 0,
-          title: this.$t('alert.config.chart.affectEntity'),
-          span: 4,
-          height: 350,
-          type: 'alertRuleInfo',
-          prev: 0,
-          next: -9,
-          buildIn: 1,
-          draggable: false,
-          resizable: false,
-          editable: false
-        })
-        this.dataList.push({
-          id: -9,
-          panelId: 0,
-          title: this.$t('alert.config.chart.alertNumTrend'),
-          span: 8,
-          height: 350,
-          type: 'line',
-          prev: -10,
-          next: -1,
-          unit: 1,
-          buildIn: 1,
-          elements: [{
-            id: '',
-            expression: `nz_alert_nums{id="${this.detail.id}"}`,
-            type: ''
-          }]
-        })
-        this.$set(this.filter, 'start_time', bus.timeFormate(new Date().getTime() - 24 * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss'))
-        this.$set(this.filter, 'end_time', bus.timeFormate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss'))
-        this.$nextTick(() => {
-          this.dataList.forEach((item, index) => {
-            this.$set(item, 'from', params.from)
-            this.setChartSize(item, index)// 设置该图表宽度
-            const chartBox = document.getElementById('chart-' + item.id)
-            this.handleElementInViewport(chartBox, 0, item, index)
-          })
-        })
-        return
-      }
-      // endpoint单独处理
-      if (param.from == this.$CONSTANTS.fromRoute.endpoint) {
-        this.dataList = []
-        // this.dataList.push({
-        //   id: -8,
-        //   panelId: 0,
-        //   title: this.$t("alert.alertList"),
-        //   span: 8,
-        //   height: 700,
-        //   type: "alertList",
-        //   prev: -9,
-        //   next: -1,
-        //   buildIn: 1,
-        //   draggable: false,
-        //   resizable: false,
-        //   editable: false,
-        // });
-        this.dataList.push({
-          id: -10,
-          panelId: 0,
-          dataId: this.additionalInfo.id,
-          title: this.$t('project.chart.endpointInfo'),
-          span: 6,
-          height: 350,
-          type: 'endpointInfo',
-          prev: 0,
-          next: -9,
-          buildIn: 1,
-          elements: [{
-            expression: `up{endpoint="${this.additionalInfo.id}"}`
-          }],
-          draggable: false,
-          resizable: false,
-          editable: false
-        })
-        this.dataList.push({
-          id: -9,
-          panelId: 0,
-          title: this.$t('asset.assetInfo'),
-          span: 6,
-          height: 350,
-          type: 'assetInfo',
-          prev: -10,
-          next: -8,
-          buildIn: 1,
-          draggable: false,
-          resizable: false,
-          editable: false
-        })
-        this.$nextTick(() => {
-          this.dataList.forEach((item, index) => {
-            this.$set(item, 'from', params.from)
-            this.setChartSize(item, index)// 设置该图表宽度
-            const chartBox = document.getElementById('chart-' + item.id)
-            this.handleElementInViewport(chartBox, 0, item, index)
-          })
-        })
-        return
-      }
-      if (!param.query) delete param.query
-      // 根据panelId获得panel下的所有图表
-      this.$get('panel/' + params.panelId + '/charts').then(response => {
-        if (response.code === 200) {
-          response.data.list.forEach((item, index) => {
-            item.isLoaded = false
-          })
-
-          if (response.data.list) {
-            this.dataTotalListBak = response.data.list
-          } else {
-            this.dataTotalListBak = response.data
-          }
-
-          let chartListTmp = []
-          // 查询条件带name
-          if (this.filter.searchName && this.filter.searchName != '') {
-            const searchTitleStr = this.filter.searchName
-            this.dataTotalListBak.forEach((item) => {
-              if (item.title.indexOf(searchTitleStr) > -1) {
-                chartListTmp.push(item)
-              }
-            })
-          } else {
-            chartListTmp = this.dataTotalListBak
-          }
-          this.dataTotalList = [...chartListTmp]
-
-          this.dataList = [...this.dataTotalList]
-          this.dataList.push({
-            ...this.dataList[0],
-            group: {
-              id: 1,
-              name: 'chart group'
-            },
-            type: 'group',
-            span: 12,
-            height: -1,
-            children: [...this.dataList]
-          })
-          // this.showShadow=false;
-          this.$nextTick(() => {
-            if (this.dataList.length > 0) {
-              this.dataList.forEach((item, index) => {
-                this.setChartSize(item, index)// 设置该图表宽度
-                this.$set(item, 'from', params.from)
-                if (param.from == this.$CONSTANTS.fromRoute.asset) {
-                  if (item.type == 'assetInfo') {
-                    this.$set(item, 'draggable', true)
-                    this.$set(item, 'resizable', true)
-                  }
-                } else if (param.from == this.$CONSTANTS.fromRoute.project) {
-                  if (item.type == 'projectInfo') {
-                    this.$set(item, 'draggable', true)
-                    this.$set(item, 'resizable', true)
-                  }
-                } else if (!param.from) {
-                  this.$set(item, 'draggable', true)
-                  this.$set(item, 'resizable', true)
-                  this.$set(item, 'editable', true)
-                }
-                if (!item.isLoaded) {
-                  // 获得当前显示在浏览器的图表，从后台获取数据
-                  const chartBox = document.getElementById('chart-' + item.id)
-                  this.handleElementInViewport(chartBox, 0, item, index)
-                }
-              })
-            }
-          })
-        }
+      this.dataList.forEach((item, index) => {
+        // this.getChartData(item, index, this.filter)
+        this.setChartSize(item, index)
+        const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
+        this.handleElementInViewport(chartBox, 0, item, index, true)
       })
     },
     loadChartData (scrollTop) {
@@ -780,7 +604,7 @@ export default {
         return
       }
       if (chartItem.type == 'projectInfo') {
-        chartItem.title = this.$t('project.chart.projectInfo')
+        chartItem.name = this.$t('project.chart.projectInfo')
         this.getProjectInfoChartData(chartItem)
         return
       }
@@ -950,7 +774,7 @@ export default {
 
                           if (chartInfo.type === 'stackArea') {
                             seriesItem.theData.type = 'line'
-                            seriesItem.theData.stack = chartInfo.title
+                            seriesItem.theData.stack = chartInfo.name
                             seriesItem.theData.areaStyle = { opacity: 0.3 }
                           }
                           if ((chartInfo.type === 'line' || chartInfo.type === 'stackArea' || chartInfo.type === 'bar') && chartInfo.param && chartInfo.param.threshold) {
@@ -1049,7 +873,7 @@ export default {
                             // 无数据提示
                             /*
                               const currentInfo = chartItem.elements[innerPos];
-                              const errorMsg = `图表 ${chartItem.title} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
+                              const errorMsg = `图表 ${chartItem.name} 中 ${currentInfo.metric},${currentInfo.tags} 无数据`;
                               this.$message.warning({
                                 duration: 15,
                                 content: errorMsg,
@@ -1198,7 +1022,7 @@ export default {
         }
         if (chartInfo.type === 'stackArea') {
           seriesItem.theData.type = 'line'
-          seriesItem.theData.stack = chartInfo.title
+          seriesItem.theData.stack = chartInfo.name
           seriesItem.theData.areaStyle = { opacity: 0.3 }
         }
         // 图表中每条线的名字,后半部分
@@ -1298,7 +1122,7 @@ export default {
     getEndpointInfoChartData (chartInfo) {
       const detail = []
       this.$refs['editChart' + chartInfo.id][0].showLoad()
-      chartInfo.title = this.$t('project.chart.endpointInfo')
+      chartInfo.name = this.$t('project.chart.endpointInfo')
 
       const basicInfo = JSON.parse(JSON.stringify(this.detail))
       const basicInfoReq = new Promise((resolve, reject) => {
@@ -1378,7 +1202,7 @@ export default {
     },
     getAssetInfoChartData (chartInfo) {
       const vm = this
-      chartInfo.title = this.$t('asset.assetInfo')
+      chartInfo.name = this.$t('asset.assetInfo')
       const detail = []
       if (!this.isModel) {
         this.$refs['editChart' + chartInfo.id][0].showLoad()
@@ -1660,7 +1484,7 @@ export default {
           console.log("___isInView____","元素高度mainHeight="+mainHeight)//不变
           console.log("___isInView____","scrollTop页面滚动的距离windowScrollTop="+windowScrollTop)//变
           console.log("___isInView____","浏览器可见区域高度windowHeight="+windowHeight)//不变
-          console.log(item.title,(mainOffsetTop+mainHeight/3),"<",(windowScrollTop+windowHeight),((mainOffsetTop+mainHeight/3) < (windowScrollTop+windowHeight))) */
+          console.log(item.name,(mainOffsetTop+mainHeight/3),"<",(windowScrollTop+windowHeight),((mainOffsetTop+mainHeight/3) < (windowScrollTop+windowHeight))) */
         if ((mainOffsetTop + mainHeight / 3) < (windowScrollTop + windowHeight)) {
           const chartType = item.type
           item.isLoaded = true

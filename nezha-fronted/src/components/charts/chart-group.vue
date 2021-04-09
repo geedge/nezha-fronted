@@ -133,15 +133,6 @@ export default {
       this.$nextTick(() => {
         this.resize(chartItem)
       })
-      this.startLoading()
-
-      if (/\{\{.*?\}\}/g.test(this.data.param.url)) {
-        this.showStatic = true
-        this.setStaticContent()
-      } else {
-        this.showStatic = false
-        this.setLoadFrame()
-      }
       this.divFirstShow = true
     },
     setStaticContent: function () {

@@ -193,8 +193,8 @@
           </el-form-item>
 
           <!--group-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="group" v-if="editChart.type!=='group'">
-            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.groupId" value-key="chartType" id="chart-box-group">
+          <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="group">
+            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.groupId" value-key="chartType" id="chart-box-group" :disabled="editChart.type==='group'">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in groupArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -896,7 +896,7 @@ export default {
       const chartParams = params || this.editChart
       chartParams.panelId = panelId
       if (!chartParams.groupId) {
-        chartParams.groupId = -1
+        chartParams.groupId = 0
       }
       delete chartParams.panel
       delete chartParams.children
@@ -1372,7 +1372,7 @@ export default {
         this.showPicker = [{ bac: false, text: false }]
       } else if (chartType === 'group') {
         this.editChart.span = 12
-        this.editChart.height = ''
+        this.editChart.height = 100
         this.setIsGroup()
       } else {
         this.setIsOtherChart()

@@ -756,7 +756,6 @@ export default {
         const len = dataArg[0].data.length - 1
         minTime = dataArg[0].data[0][0]
         maxTime = dataArg[0].data[len][0]
-        // console.log('time==========',minTime,maxTime)
       }
       this.chartType = '' // 图表类型
       if (chartInfo.type === 4) { // line,bar

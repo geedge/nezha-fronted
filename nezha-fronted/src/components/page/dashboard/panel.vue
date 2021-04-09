@@ -224,7 +224,7 @@ export default {
       this.filter.searchName = ''
       // this.$refs.searchInput.select();
       this.showPanel = val
-      this.showPanel.type = 'panel'
+      this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
       // let curTime = this.$refs.calendarPanel.getCurrentTime();
       const curTime = this.searchTime

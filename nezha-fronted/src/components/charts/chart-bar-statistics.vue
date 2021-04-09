@@ -293,7 +293,6 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
-      console.log(chartItem, seriesItem, this.option, this.chartIndex)
       this.data = chartItem
       const self = this
       if (chartItem.type === 'bar') {
@@ -312,12 +311,9 @@ export default {
           axisLabel: {
             margin: 8,
             formatter: function (params) {
-              console.log(self.chartIndex);
-              console.log(document.getElementById('chart-' + self.chartIndex))
               const dataLength = seriesItem.length || 1
               const chartWidth = (document.getElementById('chart-' + chartItem.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
               const length = Math.ceil((chartWidth) / 16)
-              console.log(chartWidth, length, dataLength , seriesItem.length)
               let val = ''
               if (params.length > length) {
                 val = params.substr(0, length) + '...'
@@ -329,7 +325,6 @@ export default {
           }
         }
         const maxValueCopies = this.getMaxValue(seriesItem, chartItem)
-        console.log(maxValueCopies)
         let dot = maxValueCopies.dot
         const maxValue = maxValueCopies.maxValue
         const copies = maxValueCopies.copies
@@ -365,7 +360,6 @@ export default {
           // boundaryGap:[0,0.2]
         }
         const nweSeriesItem = []
-        console.log(legend)
         seriesItem[0].data.forEach((item, index) => {
           const obj = { ...seriesItem[0] }
           const legendShow = legend[index].alias ? legend[index].alias : legend[index].name
@@ -374,7 +368,6 @@ export default {
           obj.stack = true
           nweSeriesItem.push(obj)
         })
-        console.log(nweSeriesItem)
         seriesItem = nweSeriesItem
       }
       if (filter) {
@@ -545,7 +538,6 @@ export default {
           if (self.pieData[0].data.length > 0) {
             getChart(self.chartIndex).clear()
             getChart(self.chartIndex).setOption(self.option)// 创建图表
-            console.log(self.option)
             self.noData = false
           } else {
             self.noData = true

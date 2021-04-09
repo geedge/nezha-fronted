@@ -611,7 +611,6 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       const oldDot = maxValueCopies.oldDot
-      console.log(copies,maxValue,unit, chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5))
       let option = {
         title: {
           show: false
@@ -1176,7 +1175,6 @@ export default {
                     let str = '<div>'
                     let sum = 0
                     let minusFlag = true
-                    // console.log(params ,legend);
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
@@ -1899,7 +1897,6 @@ export default {
       }
       const chartUnit = chartInfo.unit ? chartInfo.unit : 2
       const unit = chartDataFormat.getUnit(chartUnit)
-      console.log(unit);
       minValue = minValue > 0 ? 0 : minValue
       maxValue = maxValue - minValue
       maxValue = chartDataFormat.formatDatas(maxValue, unit.type, 'ceil', unit.ascii)

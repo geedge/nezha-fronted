@@ -66,7 +66,7 @@
                  animation: 150,
                  handle: '.chart-title'
                }"  >
-      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.title" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
+      <div :class="{'drag-disabled': !draggable,'chartBox':true}" :id="'chart-' + item.id" :key="item.id" :name="item.name" :ref="'chart' + item.id" :style="{marginBottom: extraMarginBottom}" v-for="(item, index) in dataList" v-show="!item.isHide">
         <line-chart-block v-if="item.type === 'line' || (item.type === 'bar' && (!item.param.statistics || item.param.statistics === 'null')) ||item.type == 'stackArea' || item.type === 4" :key="'inner' + item.id"
                           :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
                           @on-refresh-data="refreshChart"
@@ -439,14 +439,24 @@ export default {
       const chartListTmp = []
       if (searchName && searchName.trim() !== '') {
         this.dataTotalListBak.forEach((item) => {
-          if (item.title.indexOf(searchName) > -1) {
+          if (item.name.indexOf(searchName) > -1) {
             item.isLoaded = false
             item.isHide = false
             chartListTmp.push(item)
           } else {
             item.isLoaded = true
             item.isHide = true
-            chartListTmp.push(item)
+            if (item.type === 'group') {
+              item.children.forEach(groupItem => {
+                if (groupItem.name.indexOf(searchName) > -1) {
+                  item.isLoaded = false
+                  item.isHide = false
+                  chartListTmp.push(item)
+                }
+              })
+            } else {
+              chartListTmp.push(item)
+            }
           }
         })
       } else {
@@ -469,6 +479,9 @@ export default {
               // 获得当前显示在浏览器的图表，从后台获取数据
               const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
               this.handleElementInViewport(chartBox, 0, item, index, true)
+            }
+            if (item.type === 'group') {
+              this.$refs['editChart' + item.id][0].$refs.listGroup.searchCharts(searchName)
             }
           })
         }
@@ -575,6 +588,9 @@ export default {
             this.setChartSize(item, index)// 设置该图表宽度
             const chartBox = document.getElementById('chart-' + item.id)
             this.handleElementInViewport(chartBox, 0, item, index)
+            if (item.type === 'group') {
+              this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
+            }
           })
         })
         return
@@ -634,6 +650,9 @@ export default {
             this.setChartSize(item, index)// 设置该图表宽度
             const chartBox = document.getElementById('chart-' + item.id)
             this.handleElementInViewport(chartBox, 0, item, index)
+            if (item.type === 'group') {
+              this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
+            }
           })
         })
         return
@@ -658,7 +677,7 @@ export default {
           if (this.filter.searchName && this.filter.searchName != '') {
             const searchTitleStr = this.filter.searchName
             this.dataTotalListBak.forEach((item) => {
-              if (item.title.indexOf(searchTitleStr) > -1) {
+              if (item.name.indexOf(searchTitleStr) > -1) {
                 chartListTmp.push(item)
               }
             })
@@ -703,6 +722,9 @@ export default {
                   const chartBox = document.getElementById('chart-' + item.id)
                   this.handleElementInViewport(chartBox, 0, item, index)
                 }
+                if (item.type === 'group') {
+                  this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
+                }
               })
             }
           })
@@ -716,6 +738,9 @@ export default {
             // 获得当前显示在浏览器的图表，从后台获取数据
             const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
             this.handleElementInViewport(chartBox, scrollTop, item, index)
+          }
+          if (item.type === 'group') {
+            this.$refs['editChart' + item.id][0].$refs.listGroup.loadChartData(scrollTop)
           }
         })
       }
@@ -815,7 +840,7 @@ export default {
         return
       }
       if (chartItem.type == 'projectInfo') {
-        chartItem.title = this.$t('project.chart.projectInfo')
+        chartItem.name = this.$t('project.chart.projectInfo')
         this.getProjectInfoChartData(chartItem)
         return
       }
@@ -985,7 +1010,7 @@ export default {
 
                           if (chartInfo.type === 'stackArea') {
                             seriesItem.theData.type = 'line'
-                            seriesItem.theData.stack = chartInfo.title
+                            seriesItem.theData.stack = chartInfo.name
                             seriesItem.theData.areaStyle = { opacity: 0.3 }
                           }
                           if ((chartInfo.type === 'line' || chartInfo.type === 'stackArea' || chartInfo.type === 'bar') && chartInfo.param && chartInfo.param.threshold) {
@@ -1236,7 +1261,7 @@ export default {
         }
         if (chartInfo.type === 'stackArea') {
           seriesItem.theData.type = 'line'
-          seriesItem.theData.stack = chartInfo.title
+          seriesItem.theData.stack = chartInfo.name
           seriesItem.theData.areaStyle = { opacity: 0.3 }
         }
         // 图表中每条线的名字,后半部分
@@ -1336,7 +1361,7 @@ export default {
     getEndpointInfoChartData (chartInfo) {
       const detail = []
       this.$refs['editChart' + chartInfo.id][0].showLoad()
-      chartInfo.title = this.$t('project.chart.endpointInfo')
+      chartInfo.name = this.$t('project.chart.endpointInfo')
 
       const basicInfo = JSON.parse(JSON.stringify(this.detail))
       const basicInfoReq = new Promise((resolve, reject) => {
@@ -1416,7 +1441,7 @@ export default {
     },
     getAssetInfoChartData (chartInfo) {
       const vm = this
-      chartInfo.title = this.$t('asset.assetInfo')
+      chartInfo.name = this.$t('asset.assetInfo')
       const detail = []
       if (!this.isModel) {
         this.$refs['editChart' + chartInfo.id][0].showLoad()
