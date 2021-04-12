@@ -9,17 +9,17 @@
           <slot name="top-tool-left"></slot>
         </div>
         <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-main-right">
-          <div v-if="components.indexOf('searchInput') > -1" class="top-tool-search">
+          <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search">
             <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
           <slot name="top-tool-right"></slot>
-          <button v-if="components.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-l-10"
-                  type="button" @click="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
+          <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-l-10"
+                  type="button" @click="tools.showCustomTableTitle = true">
             <i class="nz-icon-gear nz-icon"></i>
           </button>
         </div>
         <!-- 顶部分页组件，当打开底部上滑框时出现 -->
-        <div v-if="components.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>
+        <div v-if="layout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
@@ -76,7 +76,7 @@ export default {
     customTableTitle: {
       type: Array
     },
-    components: {
+    layout: {
       type: Array,
       default () { return [] }
     },
@@ -114,7 +114,6 @@ export default {
     // 全屏
     fullScreen () {
       const vm = this
-      // this.$bottomBoxWindow.fullScreen(vm)
       bottomBoxWindow.fullScreen(vm)
     },
     // 退出全屏

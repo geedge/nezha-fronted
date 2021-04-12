@@ -1,5 +1,5 @@
 <template>
-  <div class="panel">
+  <div class="panel list-page">
     <div class="top-tools">
       <div class="top-tool-main-left" v-if="panelData.length == 0" style="margin-left: 10px;">
         <button @click="toAdd" class="nz-btn nz-btn-style-light nz-btn-size-small" id="panel-add-panel"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
@@ -10,12 +10,12 @@
                         @deletePanel="del" @editPanel="edit" @selectPanel="panelChange" ref="selectPanel" style="width: 300px;display: inline-block">
             <template v-slot:header>
               <div class="panel-select-header">
-                <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterPanel" id="panel-list-search"></el-input>
+                <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px;"></el-input>
                 <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_toAdd'" id="panel-list-toadd"><i class="nz-icon nz-icon-plus"></i></span>
               </div>
             </template>
             <template v-slot:trigger>
-              <el-input class="panel-name input-x-mini-26" placeholder="" readonly="readonly" v-model="showPanel.name">
+              <el-input v-model="showPanel.name" class="panel-name" placeholder="" readonly="readonly" size="small">
                 <i class="el-icon-menu" slot="prefix"></i>
               </el-input>
             </template>
@@ -64,8 +64,8 @@
           </el-dropdown>-->
         </div>
         <div class="top-tool-main-right">
-          <div class="top-tool-search relative-position margin-r-20">
-            <el-input ref="queryPanel" @clear="clearInput" id="queryPanel" @focus="focusInput"  @blur="blurInput" v-model="filter.searchName" class="query-input-inactive" size="mini" clearable  >
+          <div class="top-tool-search margin-r-20">
+            <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
               <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" @click="focusInput" style="float: right"></i>
             </el-input>
           </div>
@@ -82,18 +82,16 @@
               export: 'panel_chart_export'
             }"
             @afterImport="dateChange"
-            class="margin-r-20"
+            class="top-tool-export margin-l-10"
           >
             <template slot="optionZone">
               <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_toAdd'"
-                      class="nz-btn nz-btn-size-normal nz-btn-style-light " id="panel-add-chart">
+                      id="panel-add-chart" class="top-tool-btn">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
             </template>
           </export-excel>
-          <div class="relative-position ">
-            <button @click="panelLock=!panelLock" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
-          </div>
+          <button id="panel-lock" class="top-tool-btn margin-l-10" type="button" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
         </div>
       </template>
     </div>
@@ -788,7 +786,7 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
   .panel {
     height: 100%;
     display: flex;
@@ -797,60 +795,6 @@ export default {
 
   .panel .el-table {
     border-radius: 5px;
-  }
-
-  .panel-list-width {
-    width: 400px;
-  }
-
-  .panel-dropdown-title {
-    line-height:24px;
-    padding-left:5px;
-    /*margin-left:10px;*/
-    margin-top: 3px;
-    text-align:left;
-    border-radius:4px;
-    width:260px;
-    height:24px;
-    border:solid 1px  #d8dce1;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-  }
-  .panel-list-title {
-    min-height:24px;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .panel-list-item {
-    width:190px;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .content-right-option {
-    cursor: pointer;
-    display: inline-block;
-    margin-right: 6px;
-  }
-
-  .content-right-option .nz-icon-delete {
-    color: #F98D9A;
-  }
-
-  .content-right-option .nz-icon-delete:hover {
-    color: #D96D7A;
-  }
-
-  .content-right-option .nz-icon-view {
-    color: #60BEFF;
-  }
-
-  .content-right-option .nz-icon-view:hover {
-    color: #409EFF;
   }
 
   /* begin-chart list*/
@@ -863,212 +807,26 @@ export default {
 
   .box-content {
     position: relative;
-    min-height: 100%;
+    height: 100%;
   }
 
-  /* end-chart list*/
-  /* begin--Panel-自定义可编辑的el-select下拉框样式*/
-  .panel-dropdown-btn {
-    display: inline-block;
-    margin-left: 7px;
-    float: right;
-    color: #60BEFF;
-    font-size: 13px
-  }
-
-  .panel-dropdown-btn:hover {
-    color: #409EFF;
-  }
-
-  .panel-dropdown-btn-create {
-    display: inline-block;
-    float: left;
-    font-size: 13px;
-    color: #F98D9A;
-    width: 100%;
-  }
-
-  .panel-dropdown-btn-create:hover {
-    color: #D96D7A;
-  }
-
-  .panel-dropdown-btn-delete {
-    color: #F98D9A;
-    font-size: 13px
-  }
-
-  .panel-dropdown-btn-delete:hover {
-    color: #D96D7A;
-  }
-
-  .panel-dropdown-error-message {
-    color: #F98D9A;
-  }
-
-  /* end--Panel-自定义可编辑的el-select下拉框样式*/
-  .panel-refresh-interval {
-    margin-right: 5px;
-    float: right;
-  }
-
-  .panel-refresh-interval-select {
-    width: 95px;
-  }
-
-  .panel-calendar {
-    float: right;
-    margin-right: 1px;
-  }
-
-  .top-tools {
-    button {
-      background: $btn-light-background-color;
-      outline: none;
-      border: 1px solid #ccc;
-    }
-
-    button:hover {
-    }
-  }
-
-  .nz-dashboard-dropdown {
-    height: 300px;
-    overflow-y: hidden;
-    li {
-      /*padding: 0 20px !important;*/
-      padding-left:20px !important;
-      padding-right:0px !important;
-      width:240px;
-      white-space:nowrap;
-      overflow-x:hidden;
-      text-overflow:ellipsis;
-    }
-  }
-
-  .nz-dashboard-dropdown-bg {
-    background: $global-text-color-active;
-    color: #fff;
-  }
-
-  .el-dropdown-link {
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  .refresh {
-    display: flex;
-    background: #fff;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: center;
-    margin: 0 10px;
-    border: 1px solid #ccc;
-    background: $btn-light-background-color;
-
-    span {
-      display: inline-block;
-      padding: 1px 8px;
-    }
-  }
-
-  .popover_ul li {
-    padding: 10px 3px;
-    cursor: pointer;
-  }
-
-  .popover_ul li:hover {
-    background: $dropdown-hover-background-color !important;
-    color: $global-text-color-active !important;
-  }
-
-  .nz-dashboard-refresh {
-    border-right: 1px solid #ccc;
-    color: #F0BF84;
-  }
-
-  .nz-dashboard-picker {
-  }
-  .move-area:hover{
-    cursor: move;
-  }
-</style>
-<style lang="scss">
   .panel-name {
-    position: relative;
-
-    .el-input__prefix i {
-      position: absolute;
-      left: 3px;
-      top: calc(50% + 1px);
-      transform: translateY(-50%);
+    .el-input__prefix {
+      line-height: 32px;
+      left: 10px;
     }
-  }
-  .panel-name>input {
-    cursor: pointer;
-    padding-left: 27px !important;
   }
   .panel-select-header {
-    padding: 0 0 10px 16px;
-    width: 400px;
-  }
-  .panel-select-add {
-    cursor: pointer;
-  }
-  .panel-select-add:hover {
-    color: $global-text-color-active;
-  }
-
-  .panel .top-tools input {
-    background-color: $content-right-background-color;
-  }
-  .panel .top-tools  .el-input__inner {
-    background-color: $content-right-background-color;
-  }
-  .panel-calendar .el-range-editor--mini.el-input__inner {
-    height: 25px !important;
-    border-color: #d8d8d8;
-  }
-
-  .panel-calendar .el-range-editor--mini .el-range__close-icon {
-    line-height: 18px;
-  }
-
-  .panel-calendar .el-range-editor--mini .el-range__icon {
-    display: none;
-  }
-
-  .panel-calendar .el-range-editor--mini .el-range-separator {
-    line-height: 17px;
-  }
-
-  .panel-calendar .el-date-editor--datetimerange.el-input, .panel-calendar .el-date-editor--datetimerange.el-input__inner {
-    padding-right: 0;
-    vertical-align: top;
-  }
-
-  .nz-dashboard-dropdown .nz-icon-edit {
-    font-size: 16px;
-    vertical-align: middle;
-  }
-  .nz-dashboard-dropdown .nz-icon-delete {
-    vertical-align: middle;
-  }
-  .panel-title-li{
-    .panel-dropdown-btn{
-      visibility: hidden;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 15px;
+    .panel-select-add {
+      line-height: 26px;
+      cursor: pointer;
     }
   }
-  .panel-title-li:hover{
-    .panel-dropdown-btn{
-      visibility: visible;
-    }
-  }
+  /* end-chart list*/
 </style>
-<style>
-  .box-content .show-top .chartBox:last-child{
-    margin-bottom: 50px !important;
-  }
-  .box-content .show-top .chart-group .chartBox:last-child{
-    margin-bottom: 0px !important;
-  }
+<style lang="scss">
+  @import '@/assets/css/common/tableCommon.scss';
 </style>

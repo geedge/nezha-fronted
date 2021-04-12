@@ -37,8 +37,8 @@
       <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
 
       <!--user列表的两个日志-->
-      <operation-log-tab v-if="from === fromRoute.account && targetTab === 'operationLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></operation-log-tab>
-      <terminal-log-tab v-if="from === fromRoute.account && targetTab === 'terminalLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-tab>
+      <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></operation-log-tab>
+      <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-tab>
     </div>
   </div>
 </template>

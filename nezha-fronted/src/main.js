@@ -30,6 +30,7 @@ import elementSet from './components/common/elementSet' // 自定义表头组件
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
 import bus from '@/libs/bus'
+import theme from '@/assets/css/theme.scss'
 
 Vue.component('Pagination', Pagination)
 Vue.component('searchInput', searchInput)
@@ -66,11 +67,12 @@ Vue.mixin({
       prevent_opt: {
         save: false,
         import: false,
-        dumplicate: false,
+        duplicate: false,
         delete: false,
         refresh: false,
         query: false
-      }
+      },
+      theme: theme // scss主题变量
     }
   },
   methods: {

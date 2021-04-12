@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import tableMixin from '@/components/common/mixin/table'
+import tableMixin from '@/components/common/mixin/dataList'
 export default {
   name: 'operationLogTab',
   mixins: [tableMixin],

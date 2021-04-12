@@ -53,7 +53,7 @@ const en = {
     createEndpoint: 'Create endpoint',
     createAsset: 'Create asset',
     createAlertRule: 'Create alert rule',
-    createAccount: 'Create account',
+    createUser: 'Create user',
     createRole: 'Create role',
     createPrometheusServer: 'Create prometheus server',
     createDatacenter: 'Create Data center',
@@ -641,9 +641,9 @@ const en = {
   },
   config: {
     config: 'Settings', // "设置"
-    account: {
-      accountList: 'User list', // "用户列表"
-      account: 'User',
+    user: {
+      userList: 'User list', // "用户列表"
+      user: 'User',
       // 列表表头
       name: 'Name', // "用户"
       username: 'Username', // 登录名
@@ -657,9 +657,9 @@ const en = {
       lastLoginIp: 'Last login IP', // 最后登录IP
       source: 'Source',
       // 侧滑框//
-      accountId: 'User ID', // "用户ID"
-      createAccount: 'New user', // "新增用户"
-      editAccount: 'Edit user', // "编辑用户"
+      userId: 'User ID', // "用户ID"
+      createUser: 'New user', // "新增用户"
+      editUser: 'Edit user', // "编辑用户"
       notCurrentlySupport: 'Not available', // '暂不支持'
       password: 'Password', // '密码'
       oldPwd: 'Old password',

@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="scss" scoped>
   .chartBox {
     float:left;
     padding: 0px 10px 10px 0;
@@ -9,11 +9,16 @@
     text-align: center
   }
   .list-width{
-    width: calc(100% - 2px);
-    padding: 5px 5px 5px 0px;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px 5px 20px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
-    min-height: calc(100vh - 150px);
+
+    &>div {
+      height: 100%;
+      overflow-y: auto;
+    }
   }
 </style>
 <style lang="scss">

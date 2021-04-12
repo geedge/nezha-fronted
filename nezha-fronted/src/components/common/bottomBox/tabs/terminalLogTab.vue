@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import tableMixin from '@/components/common/mixin/table'
+import tableMixin from '@/components/common/mixin/dataList'
 import { terminalLog } from '@/components/common/js/constants'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 

@@ -191,11 +191,6 @@ export default {
           label: this.$t('config.assetMeta.params'),
           prop: 'param',
           show: false
-        }, {
-          label: this.$t('alert.config.option'),
-          prop: 'option',
-          show: true,
-          width: 120
         }
       ],
       groupData: [{

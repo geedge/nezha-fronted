@@ -115,7 +115,7 @@
     <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
 <!--    name="multiple-time-datepicker"-->
     <transition>
-      <div class="calendar top-tools" id="panel-calender" v-show="showDropdown">
+      <div v-show="showDropdown" id="panel-calender" class="calendar">
         <el-date-picker prefix-icon=" " size="mini" ref="calendar"
                         format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
                         popper-class="panel-time-picker-popper"

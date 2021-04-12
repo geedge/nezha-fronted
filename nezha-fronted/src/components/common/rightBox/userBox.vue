@@ -2,12 +2,12 @@
 $--input-focus-border: red;
 </style>
 <template>
-  <div class="right-box right-box-account" v-clickoutside="{obj:editUser,func:clickOutside}">
+  <div v-clickoutside="{obj:editUser,func:clickOutside}" class="right-box right-box-account">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="editUser.id&&editUser.id!==1" v-has="'account_delete'" type="button" @click="del"
-              class="nz-btn nz-btn-size-normal nz-btn-size-alien"
-              id="account-edit-del">
+      <button v-if="editUser.id&&editUser.id!==1" id="account-edit-del" v-has="'account_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien"
+              type="button"
+              @click="del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -23,22 +23,22 @@ $--input-focus-border: red;
       <el-form ref="accountForm" :model="editUser" :rules="editUser.id ? rules2 : rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
         <!--username-->
         <el-form-item :label="$t('config.account.account')" prop="username">
-          <el-input autocomplete="new-password" type="text" placeholder="" id="account-input-username"
-                    v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1" maxlength="64" show-word-limit size="small"></el-input>
+          <el-input id="account-input-username" v-model="editUser.username" :disabled="editUser.username==='admin' && editUser.id==1" autocomplete="new-password"
+                    maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
         </el-form-item>
         <!--password-->
         <el-form-item :label="$t('config.account.password')" prop="pin">
-          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.pin" id="account-input-password"
-                    maxlength="16" show-word-limit size="small" @blur="passwordBlur"></el-input>
+          <el-input id="account-input-password" v-model="editUser.pin" autocomplete="new-password" maxlength="16" placeholder=""
+                    show-word-limit size="small" type="password" @blur="passwordBlur"></el-input>
         </el-form-item>
         <!--passwordChange-->
         <el-form-item :label="$t('config.account.confirmPwd')" label-width="200px" prop="passwordChange">
-          <el-input autocomplete="new-password" type="password" placeholder="" v-model="editUser.pinChange" id="account-input-passwordChange"
-                    maxlength="16" show-word-limit size="small"></el-input>
+          <el-input id="account-input-passwordChange" v-model="editUser.pinChange" autocomplete="new-password" maxlength="16" placeholder=""
+                    show-word-limit size="small" type="password"></el-input>
         </el-form-item>
         <!--email-->
         <el-form-item label="E-mail" prop="email">
-          <el-input type="text" placeholder="" v-model="editUser.email" size="small" id="account-input-email"></el-input>
+          <el-input id="account-input-email" v-model="editUser.email" placeholder="" size="small" type="text"></el-input>
         </el-form-item>
         <!--enable-->
         <el-form-item :label="$t('config.account.enable')">
@@ -59,7 +59,7 @@ $--input-focus-border: red;
         </el-form-item>
 
         <div class="right-box-sub-title">{{$t('config.account.notification')}}
-          <button @click="addNotification" id="add-notification" type="button" class="float-right" :disabled="addDisabled">
+          <button id="add-notification" :disabled="addDisabled" class="float-right" type="button" @click="addNotification">
             <span><i class="nz-icon nz-icon-create-square"></i></span>
           </button>
         </div>
@@ -67,11 +67,11 @@ $--input-focus-border: red;
         <div class="right-box-line"></div>
         <div id="account-input-box">
           <el-form-item v-for="(notification, index) in editUser.notifications" :key="index" class="notification-item">
-            <el-select placeholder="" popper-class="no-style-class" size="small" v-model="notification.scriptId" style="display: inline-block;width: 100px;margin-left: 15px">
-              <el-option v-for="(item, i) in selectableScripts" :label="item.name" :key="i" :value="item.id" :disabled="item.disabled"></el-option>
+            <el-select v-model="notification.scriptId" placeholder="" popper-class="no-style-class" size="small" style="display: inline-block;width: 100px;margin-left: 15px">
+              <el-option v-for="(item, i) in selectableScripts" :key="i" :disabled="item.disabled" :label="item.name" :value="item.id"></el-option>
             </el-select>
-            <el-input placeholder="" v-model="notification.account" size="small" style="width: calc(100% - 157px);"></el-input>
-            <span @click="removeNotification(index)" style="padding-left: 5px;"><i class="nz-icon nz-icon-shanchu1"></i></span>
+            <el-input v-model="notification.account" placeholder="" size="small" style="width: calc(100% - 157px);"></el-input>
+            <span style="padding-left: 5px;" @click="removeNotification(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
           </el-form-item>
         </div>
       </el-form>
@@ -83,9 +83,9 @@ $--input-focus-border: red;
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="account-save"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
-              :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
+      <button id="account-save" :class="{'nz-btn-disabled':prevent_opt.save}"
+              :disabled="prevent_opt.save"
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save"
       >
         <span>{{$t('overall.save')}}</span>
       </button>

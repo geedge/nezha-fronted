@@ -3,8 +3,11 @@
 }
 $--theme-color: var(--theme-color); // 主题色
 
+$--primary-border-color: #DEDEDE;
+$--primary-border-radius: 2px;
+
 /* 按钮 */
-$--button-border-radius: 2px; // 按钮圆角
+$--button-border-radius: $--primary-border-radius; // 按钮圆角
 
 $--button-primary-color: #FFF; // 普通按钮字色
 $--button-primary-background-color: var(--theme-color); // 普通按钮背景色
@@ -17,10 +20,13 @@ $--button-gray-active-color: var(--theme-color); // 灰色按钮focus字色
 $--button-gray-background-color: #F9F9F9; // 灰色按钮背景色
 $--button-gray-hover-background-color: #FFF; // 灰色按钮hover背景色
 $--button-gray-active-background-color: $--button-gray-hover-background-color; // 灰色按钮focus背景色
-$--button-gray-border-color: #DEDEDE; // 灰色按钮边框色
+$--button-gray-border-color: $--primary-border-color; // 灰色按钮边框色
 $--button-gray-hover-border-color: $--button-gray-border-color; // 灰色按钮hover边框色
 $--button-gray-active-border-color-tint-percent: 30%; // 灰色按钮在focus时边框色相对于主题色变浅的幅度
 
+:export {
+  themeColor: $--theme-color
+}
 /* element-ui变量覆盖 */
 /*$--color-primary: red; // 覆盖element-ui的主题色
 $--box-shadow-base: none; // 取消box-shadow

@@ -19,3 +19,27 @@
   margin-top: 0;
   transform: translate(-50%, -50%);
 }
+
+/* 自定义的dropdown */
+.nz-dropdown {
+  width: 90px;
+  right: 0;
+  left: unset !important;
+  top: 35px;
+}
+.nz-dropdown::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed dashed solid dashed;
+  border-color: transparent transparent #fff transparent;
+  position: absolute;
+  right: 3px;
+  top: 44px;
+  transform: translate(-50%, -54px);
+}

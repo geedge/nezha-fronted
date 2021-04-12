@@ -1364,13 +1364,12 @@ export default {
 .top-tools input {
   background-color: white;
 }
-.new-search{
+    .new-search{
       display: flex;
       position: relative;
       line-height: 25px;
       border-radius: 2px;
-      border: 1px solid #D8D8D8;
-      /*box-shadow: inset 0 0 5px 0 rgba(184,184,184,0.80);*/
+      border: 1px solid $--primary-border-color;
     }
     .new-search .search-input-all{
         width: 226px !important;

@@ -43,7 +43,7 @@ export default new Router({
         },
         {
           path: '/account',
-          component: resolve => require(['../components/page/config/account2.vue'], resolve)
+          component: resolve => require(['../components/page/config/user.vue'], resolve)
         },
         {
           path: '/menu',

@@ -1,26 +1,39 @@
-<style scoped lang="scss">
+<style lang="scss">
   .loading-font{
     color:#232f3e !important;
   }
   popper-z-index{
     z-index: 3000 !important;
   }
-  .calendar{
+  .calendar {
+    line-height: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1px solid $--primary-border-color;
+    border-radius: $--primary-border-radius;
+  }
+  .calendar.calendar--small {
+    line-height: 32px;
+    height: 32px;
+
+    .calendar-dropdown-title {
+      line-height: 30px;
+    }
   }
   .nz-dashboard-dropdown-bg {
     background: $global-text-color-active;
     color: #fff;
   }
   .calendar-dropdown-title {
-    line-height:28px;
+    /*line-height:28px;
     padding-left:5px;
-    margin-left:0px;
-    margin-top: 0px !important;
+    margin-left:0;
+    margin-top: 0 !important;
     text-align:left;
     border-radius:2px;
-    min-width:80px;
-    height:28px;
-    border:solid 1px  #d8dce1;
+    min-width: 80px;
+    height: 28px;
+    border:solid 1px  #d8dce1;*/
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -74,7 +87,7 @@
   }
 </style>
 <template>
-  <div class="calendar top-tools" id="panel-calender">
+  <div id="panel-calender" :class="{'calendar--small': size === 'small'}" class="calendar">
     <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                     format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
                     popper-class="panel-time-picker-popper"
@@ -87,7 +100,7 @@
             class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
       <i style="font-size: 12px" class="el-icon-arrow-right"></i>
     </button>-->
-    <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
+    <el-dropdown ref="timePickerDropdown" class="calendar-dropdown-title" trigger="click" @command="timeChange" @visible-change="popoverClick">
       <el-popover
         placement="bottom-end"
         min-width="120px"
@@ -132,13 +145,16 @@
 </template>
 
 <script>
-import bus from '../../libs/bus'
+import bus from '@/libs/bus'
 
 export default {
   name: 'timePicker',
   props: {
     defaultPick: Number,
-    showEmpty: { default: false, type: Boolean }
+    showEmpty: { default: false, type: Boolean },
+    size: {
+      type: String
+    }
   },
   data () {
     return {

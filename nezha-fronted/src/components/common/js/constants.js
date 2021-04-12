@@ -187,7 +187,7 @@ export const fromRoute = {
   assetType: 'assetType',
   assetState: 'assetState',
   expressionTemplate: 'expressionTemplate',
-  account: 'account',
+  user: 'user',
   promServer: 'promServer',
   dc: 'dc',
   role: 'role',

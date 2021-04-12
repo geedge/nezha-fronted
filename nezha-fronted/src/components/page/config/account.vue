@@ -134,7 +134,7 @@
 </template>
 <script>
 import deleteButton from '../../common/deleteButton'
-import accountBox from '../../common/rightBox/accountBox'
+import accountBox from '../../common/rightBox/userBox'
 import bus from '../../../libs/bus'
 
 export default {

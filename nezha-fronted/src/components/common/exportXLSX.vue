@@ -2,10 +2,10 @@
   <div class="export-xlsx">
     <div class="top-tool-btn-group">
       <slot name="optionZone"></slot>
-      <button id="browser-go" v-has="[permissions.import, permissions.export]" class="top-tool-btn" style="position: relative" @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)">
+      <button id="browser-go" v-has="[permissions.import, permissions.export]" class="top-tool-btn top-tool-btn--dropdown" @mouseenter="exportMenuHandler(true)" @mouseleave="exportMenuHandler(false)">
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
-          <ul v-show="exportShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini export-dropdown">
+          <ul v-show="exportShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown">
             <li @click="showImportBox(1)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.import" :id="id+'-xlsx-import'"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</li>
             <li @click="showImportBox(2)" class="el-dropdown-menu__item dropdown-content" v-has="permissions.export" :id="id+'-xlsx-export'"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</li>
           </ul>
@@ -112,7 +112,7 @@ export default {
     showCur: { type: Boolean, default: true },
     id: { type: String, default: 'export' }
   },
-  data: function () {
+  data () {
     return {
       importBox: { show: false, title: this.$t('overall.importExcel'), type: 1 },
       importFile: null,
@@ -137,17 +137,17 @@ export default {
       }
     }, */
   methods: {
-    importChange: function (file, fileList) {
+    importChange (file, fileList) {
       if (fileList.length > 0) {
         this.importFileList = [fileList[fileList.length - 1]]
       }
       this.importFile = this.importFileList[0]
       this.validateFile()
     },
-    validateFile: function () {
+    validateFile () {
 
     },
-    rollbackImport: function () {
+    rollbackImport () {
       let url
       if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/cancelImport'
@@ -170,7 +170,7 @@ export default {
         this.closeDialog()
       })
     },
-    importExcel: function () {
+    importExcel () {
       if (this.importFile && this.importFile.raw) {
         this.prevent_opt.import = true
         const form = new FormData()
@@ -207,13 +207,13 @@ export default {
         }, 700)
       }
     },
-    closeDialog: function () {
+    closeDialog () {
       this.importBox.show = false
       this.importResult = null
       this.importFileList = []
       this.importFile = null
     },
-    downloadTemplate: function () {
+    downloadTemplate () {
       const language = localStorage.getItem('nz-language') || 'en' // 初始未选择默认 en 英文
       const fileName = this.exportFileName + '-' + this.$t('overall.template') + '-' + this.getTimeString() + '.xlsx'
 
@@ -239,13 +239,13 @@ export default {
     formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
-    exportCur: function () {
+    exportCur () {
       const params = Object.assign({}, this.params)
       params.language = localStorage.getItem('nz-language') || 'en'
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
-    exportAll: function () {
+    exportAll () {
       const params = JSON.parse(JSON.stringify(this.params))
       params.pageSize = -1
       if (this.importUrl.indexOf('panel') > -1) {
@@ -259,7 +259,7 @@ export default {
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
-    exportExcel: function (url, params, fileName) {
+    exportExcel (url, params, fileName) {
       if (this.paramsType) {
         params.type = this.paramsType
       }
@@ -293,7 +293,7 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    showImportBox: function (type) {
+    showImportBox (type) {
       this.importBox.show = true
       this.importBox.type = type
       if (type == 2 && (!this.showCur)) {
@@ -308,7 +308,7 @@ export default {
         this.importBox.width = '300px'
       }
     },
-    getTimeString: function () {
+    getTimeString () {
       const split = '-'
       const date = new Date()
       const year = date.getFullYear()
@@ -319,7 +319,7 @@ export default {
       const seconds = this.formatNum(date.getSeconds())
       return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
     },
-    formatNum: function (num) {
+    formatNum (num) {
       return num > 9 ? num : '0' + num
     },
     getParamsType () {
@@ -368,21 +368,18 @@ export default {
     width: 55px;
   }
 
-  .export-dropdown-btn {
-    position: relative;
-  }
   .endpoint-query-dropdown {
     position: absolute;
     right: 0;
     top: 31px;
   }
-  .export-dropdown {
+  .nz-dropdown {
     width: 90px;
     right: 0;
     left: unset !important;
     top: 35px;
   }
-  .endpoint-query-dropdown::after, .export-dropdown::after {
+  .endpoint-query-dropdown::after {
     content: '';
     display: block;
     width:0;
@@ -396,10 +393,6 @@ export default {
     position: absolute;
     right: 3px;
     bottom: 0;
-
-  }
-  .export-dropdown::after {
-    transform: translate(-50%, -54px);
   }
   .endpoint-query-dropdown::after {
     transform: translate(-50%, -45px);

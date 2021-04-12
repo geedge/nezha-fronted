@@ -1,24 +1,34 @@
 <template>
-  <div class="interval-refresh ">
-    <time-picker v-if="showTimePicker" ref="timePicker" class="time-picker" @change="dateChange" :default-pick="defaultPick" :show-empty="showEmpty" v-model="this.searchTime"></time-picker>
+  <div class="interval-refresh">
+    <time-picker v-if="showTimePicker" ref="timePicker" v-model="searchTime" :default-pick="defaultPick" :show-empty="showEmpty" class="time-picker margin-r-10" size="small" @change="dateChange"></time-picker>
     <multipleTime ref="multipleTime" v-if="showMultiple" :stepSearchTime="searchTime" @change="dateChange(searchTime)" class="multiple-time"/>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
-      <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light margin-r-20" style="height: 28px;line-height: 28px;vertical-align: middle;" v-show="useRefresh">
-        <button style="border-right: 1px solid rgba(162,162,162,0.50);" type="button" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="refreshDataFunc" :id="id+'-refresh'">
-          <i style="font-size: 14px" class="global-active-color nz-icon nz-icon-refresh"></i>&nbsp;
-          <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
-        </button>
-        <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
-          <ul class="popover_ul">
-            <li v-for="i in $CONSTANTS.intervalList" :style="{color:interval == i.value ? '#31749C' : ''}" :key="i.value + i.label" @click="selectInterval(i)">
+    <div v-show="useRefresh" class="top-tool-btn-group">
+      <button :id="id+'-refresh'" class="top-tool-btn" @click="refreshDataFunc">
+        <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;
+        <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
+      </button>
+      <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)">
+        <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
+        <transition name="el-zoom-in-top">
+          <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown">
+            <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i)">
               {{i.label}}
             </li>
           </ul>
-          <button type="button" style="border-radius: 0 4px 4px 0;padding:0px;" class="nz-btn nz-btn-size-normal nz-btn-style-light" slot="reference">
-            <span class="nz-btn nz-btn-text" style="padding-left: 10px;" v-if="interval.value && interval.value != -1">{{interval.label}}</span><i class="nz-icon nz-icon-arrow-down" style="font-size: 14px"></i>
-          </button>
-        </el-popover>
-      </div>
+        </transition>
+      </button>
+<!--      <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
+        <ul class="popover_ul">
+          <li v-for="i in $CONSTANTS.intervalList" :style="{color:interval == i.value ? '#31749C' : ''}" :key="i.value + i.label" @click="selectInterval(i)">
+            {{i.label}}
+          </li>
+        </ul>
+        <button type="button" class="top-tool-btn" slot="reference">
+          <span v-if="interval.value && interval.value != -1">{{interval.label}}</span><i class="nz-icon nz-icon-arrow-down" style="font-size: 14px"></i>
+        </button>
+      </el-popover>-->
+    </div>
   </div>
 </template>
 
@@ -27,6 +37,7 @@ import bus from '../../libs/bus'
 import timePicker from './timePicker'
 import multipleTime from './multipleTime'
 import chartUnit from './chartUnit'
+let timeout
 export default {
   name: 'intervalRefresh',
   components: {
@@ -73,7 +84,8 @@ export default {
       visible: false,
       intervalTimer: null,
       interval: -1,
-      unit: 2
+      unit: 2,
+      dropdownShow: false
     }
   },
   created () {
@@ -83,8 +95,8 @@ export default {
   methods: {
     selectInterval (val) {
       this.visible = false
-      clearInterval(this.intervalTimer)
-      this.interval = val
+      this.interval = val.value
+      console.info(this.interval, val)
       if (!this.showTimePicker && val && val.value != -1) {
         this.intervalTimer = setInterval(() => {
           this.$emit('change', this.searchTime)
@@ -102,6 +114,16 @@ export default {
         this.intervalTimer = setInterval(() => {
           this.getIntervalData(this.interval.value)
         }, val.value * 1000)
+      }
+    },
+    dropdownHandler (show) {
+      if (show) {
+        clearTimeout(timeout)
+        this.dropdownShow = true
+      } else {
+        timeout = setTimeout(() => {
+          this.dropdownShow = false
+        }, 700)
       }
     },
     getIntervalData (interval) { // interval:结束时间到现在的秒数
@@ -141,35 +163,8 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.interval-refresh{
+<style lang="scss">
+.interval-refresh {
   display: flex;
-  align-items: center;
 }
-.interval-refresh .time-picker{
-  margin-right: 20px;
-}
-.popover_ul{
-  text-align: center;
-}
-.popover_ul li {
-  padding: 10px 3px;
-  cursor: pointer;
-}
-.popover_ul li:hover {
-  background: $dropdown-hover-background-color !important;
-  color: $global-text-color-active !important;
-}
-</style>
-<style>
-  .interval-refresh-popover{
-    min-width: unset !important;
-    z-index:3000 !important;
-  }
-  .sub-top-tools .interval-refresh {
-    margin-top: -1px;
-  }
-  .multiple-time{
-    margin-right: 20px;
-  }
 </style>

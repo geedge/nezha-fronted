@@ -46,7 +46,7 @@ const cn = {
     createEndpoint: '新增Endpoint',
     createAsset: '新增资产',
     createAlertRule: '新增告警规则',
-    createAccount: '新增用户名',
+    createUser: '新增用户',
     createRole: '新增角色',
     createTemplate: '新增模板',
     createPrometheusServer: '新增prometheus服务',
@@ -640,9 +640,9 @@ const cn = {
   },
   config: {
     config: '设置',
-    account: {
-      accountList: '用户列表',
-      account: '用户',
+    user: {
+      userList: '用户列表',
+      user: '用户',
       name: '姓名', // "用户"
       username: '登录名', // 登录名
       roles: '角色',
@@ -654,9 +654,9 @@ const cn = {
       lastLoginTime: '最后登录时间', // 最后登录时间
       lastLoginIp: '最后登录IP', // 最后登录IP
       source: '来源',
-      accountId: '用户ID',
-      createAccount: '新增用户',
-      editAccount: '编辑用户',
+      userId: '用户ID',
+      createUser: '新增用户',
+      editUser: '编辑用户',
       notCurrentlySupport: '暂不支持',
       password: '密码',
       oldPwd: '旧密码',
