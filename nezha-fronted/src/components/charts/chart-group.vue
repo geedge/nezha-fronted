@@ -47,7 +47,7 @@
         </div>
         <el-collapse-transition>
           <div :id="'chartUrl'+chartIndex" class="mt-10 url-container" v-show="showList">
-            <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId" @on-edit-group-chart="editGroupItem" @on-duplicate-group-chart="duplicateGroupItem" @on-remove-chart="removeChartGroup" @moveGroupItem="moveGroupItem" @on-remove-group-chart="removeGroupItem"></chart-list-group>
+            <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId" @on-edit-group-chart="editGroupItem" @on-duplicate-group-chart="duplicateGroupItem" @on-remove-chart="removeChartGroup" @moveGroupItem="moveGroupItem" @on-remove-group-chart="removeGroupItem" :groupId="chartData.id"></chart-list-group>
           </div>
         </el-collapse-transition>
         <div style="position: absolute;width: 100%; top:calc(50% - 50px);text-align: center;" v-if="showStatic">

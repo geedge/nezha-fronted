@@ -46,7 +46,7 @@
   }
 </style>
 <template>
-  <div class="list-width chart-group"  id="listContainer" ref="listContainer"><!--v-drag-->
+  <div class="list-width chart-group"  :id="'listContainer' + groupId" ref="listContainer"><!--v-drag-->
 
     <span class="temp-dom"></span>
 
@@ -216,7 +216,8 @@ export default {
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
     groupList: {},
-    filterParent: {}
+    filterParent: {},
+    groupId: {}
   },
 
   components: {
