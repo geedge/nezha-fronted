@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <template v-if="chart.type==='line'||chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo' ||chart.type =='pie'">
+      <template v-if="chart.type==='line' || chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo' ||chart.type =='pie'">
         <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
           <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>
@@ -434,6 +434,26 @@ export default {
                   data: []
                 }
               }
+              if (chartItem.type === 'bar' && chartItem.param.statistics && chartItem.param.statistics !== 'null') {
+                pieSeries = {
+                  type: 'bar',
+                  // roseType: 'radius',
+                  itemStyle: {
+                    borderRadius: 5,
+                    borderColor: '#fff',
+                    borderWidth: 1
+                  },
+                  label: {
+                    show: false
+                  },
+                  emphasis: {
+                    label: {
+                      show: false
+                    }
+                  },
+                  data: []
+                }
+              }
               res.forEach((response, innerPos) => {
                 if (response.status === 'success') {
                   this.isError = false
@@ -529,6 +549,8 @@ export default {
                           })
                           if (chartItem.type === 'pie') {
                             pieSeries.data.push({ value: bus.getSingleStatRlt(chartItem.param.statistics, seriesItem.theData.data), name: host + resInnerPos })
+                          } else if (chartItem.type === 'bar' && chartItem.param.statistics && chartItem.param.statistics !== 'null') {
+                            pieSeries.data.push({ value: bus.getSingleStatRlt(chartItem.param.statistics, seriesItem.theData.data), name: host + resInnerPos })
                           } else {
                             series.push(seriesItem.theData)
                           }
@@ -561,6 +583,14 @@ export default {
               // if(this.$refs.editChart&&this.$refs.editChart[index]) {
               if (chartItem.type === 'table') { // 表格
                 this.setTableData(tableData)
+              } else if (chartItem.type === 'bar' && chartItem.param.statistics && chartItem.param.statistics !== 'null') {
+                series.push(pieSeries)
+                if (series[0].data.length < 1) {
+                  this.noData = true
+                } else {
+                  this.noData = false
+                }
+                this.setData(chartItem, series, legend)
               } else if (chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 4 || chartItem.from == 'endpoint') {
                 if (series.length && chartItem.type === 4) { // 曲线汇总
                 }
@@ -1063,6 +1093,164 @@ export default {
         }
       })
     },
+    initStaticsBar: function (chartInfo, dataArg, legend) {
+      const self = this
+      const option = {
+        title: {
+          show: false
+        },
+        legend: {
+          show: false
+        },
+        grid: {
+          top: 30,
+          left: 10,
+          right: 30,
+          containLabel: true,
+          bottom: 8// 156
+        },
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: 'rgba(221,228,237,1)',
+          borderColor: 'rgba(255,255,255,0)',
+          textStyle: {
+            color: '#000'
+          },
+          axisPointer: {
+            snap: false,
+            animation: false
+          },
+          extraCssText: 'z-index:1000;'
+        },
+        series: null
+      }
+      option.xAxis = {
+        type: 'category',
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        showAllSymbol: false,
+        axisPointer: { // y轴上显示指针对应的值
+          show: false
+        },
+        axisLabel: {
+          margin: 8,
+          formatter: function (params) {
+            const dataLength = dataArg.length || 1
+            const chartWidth = (document.getElementById('chartEchartPreview').offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
+            const length = Math.ceil((chartWidth) / 16)
+            let val = ''
+            if (params.length > length) {
+              val = params.substr(0, length) + '...'
+              return val
+            } else {
+              return params
+            }
+          }
+        }
+      }
+      const nweSeriesItem = []
+      dataArg[0].data.forEach((item, index) => {
+        const obj = { ...dataArg[0] }
+        const legendShow = legend[index].alias ? legend[index].alias : legend[index].name
+        obj.name = legend[index].name
+        obj.data = [[legendShow, item.value]]
+        obj.stack = true
+        if (chartInfo.param.threshold) {
+          obj.markLine = {
+            silent: true,
+            symbol: ['circle', 'circle'],
+            label: {
+              distance: this.computeDistance(chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(chartInfo.param.threshold)),
+              formatter: function (params) {
+                return chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value)
+              }
+            },
+            lineStyle: {
+              color: '#d64f40',
+              width: 2,
+              type: 'dotted'
+            },
+            data: [{
+              yAxis: Number(chartInfo.param.threshold)
+            }]
+          }
+        }
+        nweSeriesItem.push(obj)
+      })
+      dataArg = nweSeriesItem
+      option.yAxis = {
+        type: 'value',
+        minInterval: 1,
+        splitLine: {
+          show: true
+        },
+        // 去掉y轴--start
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        // 去掉y轴--end
+        axisLabel: {
+          formatter: function (value, index) {
+            if (self.chart.from && self.chart.from == 'endpoint') {
+              if (value == 1) {
+                return 'up'
+              } else {
+                return 'down'
+              }
+            }
+            let chartUnit = chartInfo.unit
+            chartUnit = chartUnit || 2
+            const unit = chartDataFormat.getUnit(chartUnit)
+            return unit.compute(value, index)
+          }
+        }
+        // boundaryGap:[0,0.2]
+      }
+      option.series = dataArg
+      option.color = this.bgColorList
+      option.tooltip.formatter = this.barFormatterFunc
+      const dom = document.getElementById('screenShowArea')
+      this.echartModalStore = echarts.init(dom)
+      this.showLegend = true
+      if (legend) {
+        this.screenLegendList = []
+        legend.forEach((item, i) => {
+          const _legend = {
+            name: item.name,
+            alias: item.alias,
+            color: item.color,
+            showText: this.formatLegend(dom.clientWidth, item.alias ? item.alias : item.name)
+          }
+          this.screenLegendList.push(_legend)
+          this.isGreyScreen.push(false)
+        })
+      }
+      this.$nextTick(() => {
+        const divHeight = this.$refs.screenLegendArea.offsetHeight
+        this.echartModalStore.resize({ height: (chartInfo.height - this.chartSpaceHeight - divHeight - this.titleHeight) })
+        this.echartModalStore.clear()
+        if (dataArg[0].data.length < 1) {
+          this.echartModalStore.setOption(chartConfig.getOption('noData'))
+        } else {
+          this.echartModalStore.setOption(option)// 创建图表
+        }
+
+        this.$refs.loadingPreview.endLoading()
+      })
+    },
+    computeDistance: function (str) {
+      const span = document.querySelector('.temp-dom')
+      span.textContent = str
+      const txtWidth = parseFloat(window.getComputedStyle(span).width)
+      return Number('-' + (txtWidth + 5))
+    },
     initPie: function (chartInfo, dataArg, legend) {
       const option = {
         title: {
@@ -1161,6 +1349,10 @@ export default {
       }
       if (chartItem.type == 'pie') {
         this.initPie(chartItem, seriesItem, legend)
+        return
+      }
+      if (chartItem.type === 'bar' && chartItem.param.statistics && chartItem.param.statistics !== 'null') {
+        this.initStaticsBar(chartItem, seriesItem, legend)
         return
       }
       this.initChart(chartItem, seriesItem, this.$refs.screenShowArea, legend)
@@ -1637,6 +1829,20 @@ export default {
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>percent</div>
                             <div>${params.percent}%</div>
+                        </div>
+                    </div>
+                </div>
+               `
+    },
+    barFormatterFunc: function (params, ticket, callback) {
+      const chartInfo = this.chart
+      return `
+                <div>
+                    <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
+                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.dataIndex].alias}</div>
+                        <div style="font-size:12px;display:flex;justify-content: space-between;">
+                            <div>value</div>
+                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, 2)}</div>
                         </div>
                     </div>
                 </div>

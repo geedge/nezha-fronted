@@ -291,10 +291,8 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.rightBox.chart.show = true
-      console.log(123123123)
     },
     addGroupItem (groupId) {
-      console.log(groupId)
       this.chart = this.newChart()
       this.chart.groupId = groupId
       this.chart.panelId = this.showPanel.id

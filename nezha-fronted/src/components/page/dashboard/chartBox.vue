@@ -874,7 +874,6 @@ export default {
         }); */
 
       // panelPromise.then(()=>{
-      console.log(this.editChart,params)
       if (this.panelId) {
         const chartParams = params || this.editChart
         chartParams.panelId = this.panelId
@@ -1241,7 +1240,6 @@ export default {
     },
     // 编辑chart时使用, set_tdata
     editData (data, panelId) {
-      console.log(data, this.editChart)
       if (!panelId) {
         this.panelId = 0
       } else {
@@ -1468,7 +1466,7 @@ export default {
               item.saveTarget(index,'preview');
             }); */
           this.$refs.chartForm.validate((valid) => {
-            const params = {
+            let params = {
               // productId: this.productId,
               // panelId: this.panelId,
               name: this.editChart.name, // this.editChart
@@ -1481,6 +1479,7 @@ export default {
               remark: this.editChart.remark,
               groupId: this.editChart.groupId
             }
+            params = JSON.parse(JSON.stringify(params))
             if (this.editChart.type === 'singleStat' || this.editChart.type === 'table') {
               // params.param.statistics=this.statistics;
               params.param.valueMapping = this.editChart.param.valueMapping
@@ -1488,11 +1487,9 @@ export default {
             if (this.editChart.type != 'singleStat' && this.editChart.type != 'pie' && this.editChart.type != 'table') {
               delete params.param.statistics
             }
-
-            if(this.editChart.type === 'bar' && this.editChart.param.statistics && this.editChart.param.statistics !== 'null'){
+            if (this.editChart.type === 'bar' && this.editChart.param.statistics && this.editChart.param.statistics !== 'null'){
               params.param.statistics = this.editChart.param.statistics
             }
-
             if (this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'table') {
               params.param.threshold = this.editChart.param.threshold
               if (this.editChart.type === 'table') {
@@ -1757,7 +1754,6 @@ export default {
         if (this.showPanel.id) {
           this.panelId = this.showPanel.id
         }
-        console.log(this.panelId)
         this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {
           if (response.code === 200) {
             this.groupArr = []
