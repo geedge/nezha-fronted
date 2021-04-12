@@ -54,7 +54,7 @@ export default {
     isBuildIn (row) {
       return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)
     },
-    getTableData () {
+    getTableData (callBack) {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
@@ -71,6 +71,9 @@ export default {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
+          }
+          if (callBack) {
+            callBack(response.data)
           }
         }
       })
