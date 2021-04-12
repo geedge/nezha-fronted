@@ -25,7 +25,7 @@
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span>
+                <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
@@ -365,23 +365,25 @@ export default {
           obj.name = legend[index].name
           obj.data = [[legendShow, item.value]]
           obj.stack = true
-          obj.markLine = {
-            silent: true,
-            symbol: ['circle', 'circle'],
-            label: {
-              distance: this.computeDistance(chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(chartItem.param.threshold)),
-              formatter: function (params) {
-                return chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(params.value)
-              }
-            },
-            lineStyle: {
-              color: '#d64f40',
-              width: 2,
-              type: 'dotted',
-            },
-            data: [{
-              yAxis: Number(chartItem.param.threshold)
-            }]
+          if (chartItem.param.threshold) {
+            obj.markLine = {
+              silent: true,
+              symbol: ['circle', 'circle'],
+              label: {
+                distance: this.computeDistance(chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(chartItem.param.threshold)),
+                formatter: function (params) {
+                  return chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(params.value)
+                }
+              },
+              lineStyle: {
+                color: '#d64f40',
+                width: 2,
+                type: 'dotted'
+              },
+              data: [{
+                yAxis: Number(chartItem.param.threshold)
+              }]
+            }
           }
           nweSeriesItem.push(obj)
         })

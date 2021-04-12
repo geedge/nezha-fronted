@@ -19,7 +19,7 @@
                 <span v-show="!showList" class="collapse-content">({{chartData.children.length}} charts)</span>
               </span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span>
+                <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
@@ -47,7 +47,7 @@
         </div>
         <el-collapse-transition>
           <div :id="'chartUrl'+chartIndex" class="mt-10 url-container" v-show="showList">
-            <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId" @on-edit-group-chart="editGroupItem" @on-duplicate-group-chart="duplicateGroupItem" @on-remove-chart="removeChartGroup" @moveGroupItem="moveGroupItem"></chart-list-group>
+            <chart-list-group :groupList.sync="chartData.children" :panel-lock="panelLock" :filterParent="filter"  :hasGroup="false" :from="from" ref="listGroup" :panelId="panelId" @on-edit-group-chart="editGroupItem" @on-duplicate-group-chart="duplicateGroupItem" @on-remove-chart="removeChartGroup" @moveGroupItem="moveGroupItem" @on-remove-group-chart="removeGroupItem"></chart-list-group>
           </div>
         </el-collapse-transition>
         <div style="position: absolute;width: 100%; top:calc(50% - 50px);text-align: center;" v-if="showStatic">
@@ -222,8 +222,8 @@ export default {
       this.dropdownMenuShow = false
       this.$emit('on-remove-chart-block', this.data.id)
     },
-    // 删除group 下的该图表
-    removeChartGroup (chart) {
+    removeGroupItem (chart) {
+      this.dropdownMenuShow = false
       this.$emit('on-remove-group-chart', chart)
     },
     addGroupItemChart () {
