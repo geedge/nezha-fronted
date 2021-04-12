@@ -874,7 +874,7 @@ export default {
         }); */
 
       // panelPromise.then(()=>{
-      console.log(this.editChart)
+      console.log(this.editChart,params)
       if (this.panelId) {
         const chartParams = params || this.editChart
         chartParams.panelId = this.panelId
@@ -948,7 +948,8 @@ export default {
             param: {
 
             },
-            sync: this.editChart.sync
+            sync: this.editChart.sync,
+            groupId: this.editChart.groupId
           }
           if (this.editChart.type === 'singleStat' || this.editChart.type === 'pie' || this.editChart.type === 'bar') {
             // params.param.statistics=this.statistics;
@@ -1012,7 +1013,8 @@ export default {
           unit: this.editChart.unit,
           param: param,
           sync: this.editChart.sync,
-          remark: this.editChart.remark
+          remark: this.editChart.remark,
+          groupId: this.editChart.groupId,
         }
         if (valid) {
           if (opType === 'preview') {
@@ -1080,7 +1082,8 @@ export default {
                 url: this.editChart.param.url
               },
               sync: this.editChart.sync,
-              remark: this.editChart.remark
+              remark: this.editChart.remark,
+              groupId: this.editChart.groupId,
             }
 
             if (valid) {
@@ -1108,7 +1111,8 @@ export default {
                 text: text
               },
               sync: this.editChart.sync,
-              remark: this.editChart.remark
+              remark: this.editChart.remark,
+              groupId: this.editChart.groupId
             }
 
             if (valid) {
@@ -1484,6 +1488,11 @@ export default {
             if (this.editChart.type != 'singleStat' && this.editChart.type != 'pie' && this.editChart.type != 'table') {
               delete params.param.statistics
             }
+
+            if(this.editChart.type === 'bar' && this.editChart.param.statistics && this.editChart.param.statistics !== 'null'){
+              params.param.statistics = this.editChart.param.statistics
+            }
+
             if (this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'table') {
               params.param.threshold = this.editChart.param.threshold
               if (this.editChart.type === 'table') {

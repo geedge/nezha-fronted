@@ -347,6 +347,9 @@ export default {
               if (chartList[i].id === data.id) {
                 chartList.splice(i, 1)
               }
+              if (chartList[i].type === 'group') {
+                chartList[i].children = chartList[i].children.filter((item) => item.id !== data.id)
+              }
               // if(data.next != -1){
               //   if(chartList[i].id === data.next){
               //     nextChart = chartList[i]

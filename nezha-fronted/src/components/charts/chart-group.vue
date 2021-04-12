@@ -19,7 +19,7 @@
                 <span v-show="!showList" class="collapse-content">({{chartData.children.length}} charts)</span>
               </span>
               <span class="chart-title-icon"   :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span v-if="chartData.remark">
+                <span>
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
@@ -224,6 +224,10 @@ export default {
     },
     removeGroupItem (chart) {
       this.dropdownMenuShow = false
+      this.$emit('on-remove-group-chart', chart)
+    },
+    // 删除group 下的该图表
+    removeChartGroup (chart) {
       this.$emit('on-remove-group-chart', chart)
     },
     addGroupItemChart () {
