@@ -165,10 +165,10 @@ export default {
   mixins: [tableMixin],
   computed:{
     wgetUrl:function(){
-      return 'wget -qO- --header="Authorization:'+this.token+'" http://'+this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+      return 'wget -qO- --header="Authorization:'+this.token+'" '+ this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
     },
     curlUrl:function(){
-      return 'curl -o- -H "Authorization:'+this.token+'" http://'+this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+      return 'curl -o- -H "Authorization:'+this.token+'" '+ this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
     }
   },
   data () {
@@ -275,14 +275,9 @@ export default {
     toDownloadAgent: function () {
       this.showAgentDownload = true
       this.token = sessionStorage.getItem('nz-token')
-      const reg = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
-      const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
-      Vue.http.get(configUrl).then(res => {
-        if(reg.test(res.body.baseUrl)){
-          this.ipAddr = reg.exec(res.body.baseUrl)[0]
-        }else{
-          this.ipAddr = reg.exec(window.location.href)[0]
-        }
+      axios.get('/healthy').then(response=>{
+        let url = response.request.responseURL
+        this.ipAddr = url.split('/healthy')[0];
       })
     },
     closeDialog: function () {
