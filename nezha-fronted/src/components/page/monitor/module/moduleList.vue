@@ -112,10 +112,10 @@ export default {
     edit (u) {
       this.object = JSON.parse(JSON.stringify(u))
       this.object.configs = JSON.parse(this.object.configs)
-      this.object.walk = JSON.parse(this.object.configs.walk)
-      this.object.port = JSON.parse(this.object.configs.port)
+      this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.rightBox.show = true
-    },
+    }
   },
   computed: {
   },
