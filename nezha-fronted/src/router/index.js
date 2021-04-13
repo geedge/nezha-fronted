@@ -38,6 +38,10 @@ export default new Router({
           component: resolve => require(['../components/page/monitor/project/index.vue'], resolve)
         },
         {
+          path: '/monitor/module',
+          component: resolve => require(['../components/page/monitor/module/moduleList.vue'], resolve)
+        },
+        {
           path: '/asset',
           component: resolve => require(['../components/page/asset/asset.vue'], resolve)
         },

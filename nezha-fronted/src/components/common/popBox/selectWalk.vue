@@ -22,18 +22,20 @@
           :default-checked-keys="currentWalk"
         >
           <div slot-scope="data" :class="getClass(data.data.objectID)" class="walk-tree-item">
-            <span v-if="!data.data.type"><i class="nz-icon nz-icon-reading"></i></span>
-            <span v-else>
-              <i v-if="data.data.type.toUpperCase() === 'IDENTIFIER'" class="el-icon-folder-opened"></i>
-              <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length > 0" class="el-icon-folder-opened"></i>
-              <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
-              <i v-if="data.data.type.toUpperCase() === 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
-              <i v-if="data.data.type.toUpperCase() === 'TABLE'" class="nz-icon nz-icon-table"></i>
-              <span style="position: relative;" @click.stop="showDetail(data.data, $event)">
-                <i class="nz-icon nz-icon-info-normal metric-tip-icon"></i>
+            <span>
+              <span v-if="!data.data.type"><i class="nz-icon nz-icon-reading"></i></span>
+              <span v-else>
+                <i v-if="data.data.type.toUpperCase() === 'IDENTIFIER'" class="el-icon-folder-opened"></i>
+                <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length > 0" class="el-icon-folder-opened"></i>
+                <i v-if="data.data.type.toUpperCase() === 'OBJECT' && data.data.subTree.length == 0" class="nz-icon nz-icon-leaf"></i>
+                <i v-if="data.data.type.toUpperCase() === 'ENTRY'" class="nz-icon nz-icon-table-edit"></i>
+                <i v-if="data.data.type.toUpperCase() === 'TABLE'" class="nz-icon nz-icon-table"></i>
+                <span style="position: relative;" @click.stop="showDetail(data.data, $event)">
+                  <i class="nz-icon nz-icon-info-normal metric-tip-icon"></i>
+                </span>
               </span>
             </span>
-            {{data.name}}
+            {{data.data.name}}
           </div>
         </el-tree>
       </div>
@@ -64,6 +66,9 @@ export default {
   computed: {
     getClass () {
       return (value) => {
+        if (!value) {
+          return ''
+        }
         return this.currentWalk.indexOf(value) == -1 ? '' : 'walk-active'
       }
     },
@@ -98,7 +103,8 @@ export default {
     show () {
       this.popBox.show = true
     },
-    hideDetail () {
+    hideDetail (data,num) {
+      console.log(data,num)
       this.tempWalk.detailShow = false
     },
     showDetail (data, e) {

@@ -432,7 +432,7 @@ export default {
           this.topologyLoading = false
         }
         res.data.list.forEach((item) => {
-          axiosAll.push(axios.get(`/project/topo?projectId=${item.id}`))
+          axiosAll.push(axios.get(`monitor/project/topo?projectId=${item.id}`))
         })
         axios.all(axiosAll).then(res2 => {
           res2 = res2.map((item, index) => {
@@ -460,7 +460,7 @@ export default {
           this.$get('/module/stat', { id: item.id }).then(res => {
             item.state = res.data
           })
-          promiseArr.push(this.dealImg(`/project/topo/icon/${item.iconId}`))
+          promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.iconId}`))
         })
         Promise.all(promiseArr).then(res => {
           arr.forEach((item, index) => {

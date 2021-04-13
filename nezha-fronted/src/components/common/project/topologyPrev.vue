@@ -797,7 +797,7 @@
           if (this.fromPrev) {
             resolve(this.topoPrevDataS)
           }
-          this.$get('/project/topo', { projectId: this.obj.id }).then(res => {
+          this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
             let data = res.data.topo
             if (!res.data.topo || !data.pens) {
               data = {
@@ -1587,11 +1587,11 @@
           form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
         }
         form.append('unit', this.uploadPic.unit)
-        this.$post('/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+        this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
           if (res.code == 200) {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
             this.uploadPicShow = false
-            this.dealImg(`/project/topo/icon/${res.data.id}`).then((data) => {
+            this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               if (group) {
                 group.children.push({
@@ -1627,7 +1627,7 @@
       },
 
       delImg (item) {
-        this.$delete('/project/topo/icon?ids=' + item.data.imageId).then(res => {
+        this.$delete('monitor/project/topo/icon?ids=' + item.data.imageId).then(res => {
           if (res.code == 200) {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.addNodeInit()
@@ -1639,7 +1639,7 @@
 
       addNodeInit (imgidList) {
         if (!this.fromOverView) {
-          this.$get('/project/topo/icon').then(res => {
+          this.$get('monitor/project/topo/icon').then(res => {
             this.imgageLoading = true
             // this.tools[1].children=[];
             const imgArr = []
@@ -1647,7 +1647,7 @@
             res.data.list.forEach((item, index) => {
               item.imageName = item.name
               delete item.name
-              promiseArr.push(this.dealImg(`/project/topo/icon/${item.id}`))
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
               imgArr.push({ ...item })
             })
             Promise.all(promiseArr).then((res2) => {
@@ -1691,7 +1691,7 @@
           const promiseArr = []
           imgidList.forEach((item, index) => {
             if (item.data.imageId) {
-              promiseArr.push(this.dealImg(`/project/topo/icon/${item.data.imageId}`))
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
             } else {
               promiseArr.push('')
             }
@@ -1872,7 +1872,7 @@
           if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
             getTopology(this.topologyIndex).data.scale = this.oldScale
           }
-          this.$put('/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
+          this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
             this.prevent_opt.save = false
             if (res.code === 200) {
               this.$message({

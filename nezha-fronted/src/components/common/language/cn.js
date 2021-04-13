@@ -1129,6 +1129,7 @@ const cn = {
         defaultEndpointSet: '默认的Endpoint设置',
         relation: '模块关联的Endpoint将默认配置以下端口/路径/参数'
       },
+      type: '类型',
       version: '版本',
       walk: 'Walk',
       maxRepetitions: '最大迭代次数',
@@ -1139,6 +1140,7 @@ const cn = {
       authProtocol: '认证协议',
       privProtocol: '隐私协议',
       contextName: '内容名称',
+      alerts: 'Alerts',
       privPassword: '隐私密码'
     },
     endpoint: {
@@ -1163,7 +1165,20 @@ const cn = {
       stateInfo_230010: 'Prometheus服务可用',
       stateInfo_230011: 'Endpoint 连接错误',
       alerts: '告警',
-      labels: '标签'
+      labels: '标签',
+      pattern: 'Name pattern',
+      credentials: '资格证书',
+      scrape_interval: '时间间隔',
+      scrape_interval_placeholder: '默认全局时间间隔',
+      scrape_timeout: '超时时间',
+      scrape_timeout_placeholder: '默认全局超时时间',
+      type: '类型',
+      bearer_token: 'Token',
+      username: '用户名',
+      password: '密码',
+      authTypeNull: '无',
+      authTypeWord: '用户名密码',
+      authTypeToken: 'Token',
     },
     metrics: {
       metrics: '指标',

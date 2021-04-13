@@ -113,7 +113,11 @@
       <div style="width: 100%;display: flex;justify-content: space-between" v-if="!editTopologyFlag&&!fromOverView">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
-
+<button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
+        style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
+>
+                  <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
+        </button>
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
         >
@@ -128,12 +132,7 @@
             :showTimePicker="false"
             ref="pickTime">
           </pick-time>
-          <button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                  style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
-                  :class="topoScreen?'':''"
-          >
-                  <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
-        </button>
+
       </span>
       </div>
     </div>
@@ -758,7 +757,7 @@ export default {
         if (this.fromPrev) {
           resolve(this.topoPrevDataS)
         }
-        this.$get('/project/topo', { projectId: this.obj.id }).then(res => {
+        this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           let data = res.data.topo
           if (!res.data.topo || !data.pens) {
             data = {
@@ -806,9 +805,17 @@ export default {
                   item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
                 }
                 if (item.type === 0) {
-                  promiseArr.push(this.$get('/module/stat', { id: item.data.moduleId }))
+                  // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
+                  item.data.state = {}
+                  item.data.state.asset = false
+                  item.data.state.endpoint = false
+                  item.data.state.alert = false
                 } else {
-                  promiseArr.push({ type: 1 })
+                  // promiseArr.push({ type: 1 })
+                  item.data.state = {}
+                  item.data.state.asset = false
+                  item.data.state.endpoint = false
+                  item.data.state.alert = false
                 }
               })
 
@@ -1547,11 +1554,11 @@ export default {
         form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
       }
       form.append('unit', this.uploadPic.unit)
-      this.$post('/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+      this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`/project/topo/icon/${res.data.id}`).then((data) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1587,7 +1594,7 @@ export default {
     },
 
     delImg (item) {
-      this.$delete('/project/topo/icon?ids=' + item.data.imageId).then(res => {
+      this.$delete('monitor/project/topo/icon?ids=' + item.data.imageId).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
           this.addNodeInit()
@@ -1599,7 +1606,7 @@ export default {
 
     addNodeInit (imgidList) {
       if (!this.fromOverView) {
-        this.$get('/project/topo/icon').then(res => {
+        this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
           // this.tools[1].children=[];
           const imgArr = []
@@ -1607,7 +1614,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`/project/topo/icon/${item.id}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2) => {
@@ -1651,7 +1658,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`/project/topo/icon/${item.data.imageId}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
           } else {
             promiseArr.push('')
           }
@@ -1832,7 +1839,7 @@ export default {
         if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
           getTopology(this.topologyIndex).data.scale = this.oldScale
         }
-        this.$put('/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
+        this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
           this.prevent_opt.save = false
           if (res.code === 200) {
             this.$message({

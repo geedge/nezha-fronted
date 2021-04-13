@@ -8,11 +8,11 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'project_toAdd'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+        <button id="account-add" v-has="'project_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'account_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button id="account-list-batch-delete" v-has="'project_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot="slotProps">
         <project-table
@@ -47,7 +47,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import projectTable from '@/components/common/table/settings/projectTable'
 
 export default {
-  name: 'user',
+  name: 'projectList',
   components: {
     nzDataList,
     projectBox,

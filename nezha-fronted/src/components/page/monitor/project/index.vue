@@ -1,7 +1,7 @@
 <template>
   <div class="main-list">
     <projectList  :class="showList?'projectList':'hide'" />
-    <projectTopo class="projectTopo"/>
+    <projectTopo  :class="showList?'projectTopo':'projectTopo ml10'" />
   </div>
 </template>
 
@@ -44,6 +44,9 @@ export default {
   }
   .hide{
     display: none;
+  }
+  .ml10{
+    margin-left: 10px;
   }
 }
 </style>

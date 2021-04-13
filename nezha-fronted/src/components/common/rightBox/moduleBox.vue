@@ -16,27 +16,40 @@
     <!-- begin--表单-->
     <div class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editModule" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
-        <el-form-item :label='$t("project.project.project")' prop="project">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.project" placeholder="" size="small" id="module-box-input-project">
-            <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item"></el-option>
-          </el-select>
-        </el-form-item>
+        <!--name-->
         <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="125px">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
+        <!--project-->
+        <el-form-item :label='$t("project.project.project")' prop="projectId">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.projectId" placeholder="" size="small" id="module-box-input-project">
+            <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--remark-->
+        <el-form-item :label='$t("project.module.description")' prop="remark">
+          <el-input
+            type="textarea"
+            placeholder=""
+            maxlength="1024"
+            v-model="editModule.remark"
+            size="small"
+            :autosize="{ minRows: 1, maxRows: 6}"
+            class="not-fixed-height no-resize"
+            id="module-box-input-remark"></el-input>
+        </el-form-item>
 
-        <div class="nz-tab module-box-type" style="margin-bottom: 15px;">
-          <div class="nz-tab-item-box" @click="changeType('http')" id="module-type-1">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : editModule.type.toLowerCase() == 'http', 'unclickable': editModule.id}">HTTP</div>
-          </div>
-          <div @click="changeType('snmp')" class="nz-tab-item-box" id="module-type-2">
-            <div class="nz-tab-item" :class="{'nz-tab-item-active' : editModule.type.toLowerCase() == 'snmp', 'unclickable': editModule.id}">SNMP</div>
-          </div>
-        </div>
+        <!--type-->
+        <el-form-item :label='$t("project.endpoint.type")' prop="type">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.type" placeholder="" size="small" id="module-box-input-type" :disabled="!!editModule.id" @change="changeAuthType">
+            <el-option :id="'module-type-'+item.id" v-for="item in typetList" :key="item.value" :label="item.name" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
 
         <!-- snmp表单 -->
         <span class="snmp-form" v-if="editModule.type && editModule.type == 'snmp'">
-          <div class="right-box-sub-title">SNMP settings</div>
+          <div class="right-box-sub-title">SNMP settings
+          </div>
           <div class="right-box-line"></div>
 
           <el-row>
@@ -67,239 +80,158 @@
               </el-form-item>
             </el-col>
           </el-row>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label">{{$t('project.module.version')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="version">
-                <el-radio-group v-model.number="editModule.version" size="small" id="module-box-input-version">
-                  <el-radio-button :label="2"></el-radio-button>
-                  <el-radio-button :label="3"></el-radio-button>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label">{{$t('project.module.maxRepetitions')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="max_repetitions">
-                <el-input v-model.number="editModule.max_repetitions" size="small" id="module-box-input-max_repetitions"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label">{{$t('project.module.retries')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="retries">
-                <el-input v-model.number="editModule.retries" size="small" id="module-box-input-retries"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label">{{$t('project.module.timeout')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="timeout">
-                <el-input v-model.number="editModule.timeout" size="small" id="module-box-input-timeout">
-                  <template slot="append">second</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="24">
-              <div class="right-box-sub-title">Auth</div>
-              <div class="right-box-line"></div>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label sub-label-required">{{$t('project.module.community')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="community">
-                <el-input v-model.trim="editModule.community" maxlength="64" show-word-limit size="small" id="module-box-input-community"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <!--SNMP V3 setting-->
-          <template v-if="editModule.version == 3">
-            <el-row>
-              <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('login.username')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="username">
-                  <el-input v-model.trim="editModule.username" maxlength="64" show-word-limit size="small" id="module-box-input-username"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.securityLevel')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="security_level">
-                  <el-radio-group size="small" v-model="editModule.security_level" id="module-box-input-security_level">
-                    <el-radio-button label="noAuthNoPriv"></el-radio-button>
-                    <el-radio-button label="authNoPriv"></el-radio-button>
-                    <el-radio-button label="authPriv"></el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row v-if="editModule.security_level == 'authNoPriv' || editModule.security_level == 'authPriv'">
-              <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('login.password')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="password">
-                  <el-input v-model.trim="editModule.password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-password"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row class="same-label-width" v-if="editModule.security_level == 'authNoPriv' || editModule.security_level == 'authPriv'">
-              <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.authProtocol')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="auth_protocol">
-                  <el-radio-group v-model="editModule.auth_protocol" size="small" id="module-box-input-auth_protocol">
-                    <el-radio-button label="MD5"></el-radio-button>
-                    <el-radio-button label="SHA"></el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row class="same-label-width" v-if="editModule.security_level == 'authPriv'">
-              <el-col :span="6">
-                <div class="sub-label">{{$t('project.module.privProtocol')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="priv_protocol">
-                  <el-radio-group v-model="editModule.priv_protocol" size="small" id="module-box-input-priv_protocol">
-                    <el-radio-button label="DES"></el-radio-button>
-                    <el-radio-button label="AES"></el-radio-button>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row v-if="editModule.security_level == 'authPriv'">
-              <el-col :span="6">
-                <div class="sub-label sub-label-required">{{$t('project.module.privPassword')}}</div>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item prop="priv_password">
-                  <el-input v-model.trim="editModule.priv_password" type="password" show-password maxlength="64" show-word-limit size="small" id="module-box-input-priv_password"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </template>
-
-          <el-row v-if="editModule.version == 3">
-            <el-col :span="6">
-              <div class="sub-label">{{$t('project.module.contextName')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="context_name">
-                <el-input v-model.trim="editModule.context_name" maxlength="64" show-word-limit size="small" id="module-box-input-context_name"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <!--credentials-->
+        <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.configs.snmpCredentialsId" placeholder="" size="small" id="module-box-input-credentials">
+            <el-option :id="'module-type-'+item.id" v-for="item in credentialList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
         </span>
 
-        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'15px':'0'}">
-          {{$t('project.module.tip.defaultEndpointSet')}}
-          <div></div>
-          {{$t('project.module.tip.relation')}}
+        <!--Enpoint template-->
+        <div class="right-box-sub-title">Enpoint template
+          <el-tooltip placement="top" effect="light">
+            <div slot="content">
+              {{$t('project.module.tip.defaultEndpointSet')}}
+              <div></div>
+              {{$t('project.module.tip.relation')}}
+            </div>
+            <i class="nz-icon nz-icon-info-normal"></i>
+          </el-tooltip>
+        </div>
+        <div class="right-box-line"></div>
+
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Basic" name="Basic">
+            <!--path-->
+            <el-form-item :label='$t("project.endpoint.path")' prop="configs.metrics_path" class="half-form-item">
+              <el-input placeholder="" v-model="editModule.configs.metrics_path" size="small" id="module-box-input-path"></el-input>
+            </el-form-item>
+            <!--port-->
+            <el-form-item :label='$t("project.endpoint.port")' prop="port" class="half-form-item">
+              <el-input placeholder="" v-model.number="editModule.port" size="small" id="module-box-input-port"></el-input>
+            </el-form-item>
+            <!--name pattern-->
+            <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">
+<!--              <el-input placeholder="" v-model=""></el-input>-->
+              <el-autocomplete
+                class="inline-input"
+                size="small"
+                id="module-box-input-pattern"
+                v-model="editModule.endpointNameTmpl"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+              ></el-autocomplete>
+            </el-form-item>
+            <!--host-->
+            <el-form-item :label='$t("project.endpoint.host")' prop="host" class="half-form-item">
+              <el-input placeholder="" v-model.number="editModule.configs.host" size="small" id="module-box-input-host"></el-input>
+            </el-form-item>
+            <transition name="el-zoom-in-top">
+              <div v-show="showAllBasicOption" >
+                <!--scrape_interval-->
+                <el-form-item :label='$t("project.endpoint.scrape_interval")' prop="scrape_interval" class="half-form-item">
+                  <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editModule.configs.scrape_interval" size="small" id="module-box-input-scrape_interval"></el-input>
+                </el-form-item>
+                <!--scrape_timeout-->
+                <el-form-item :label='$t("project.endpoint.scrape_timeout")' prop="scrape_timeout" class="half-form-item">
+                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editModule.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout"></el-input>
+                </el-form-item>
+              </div>
+            </transition>
+
+            <div style="text-align: center"><i class="nz-icon nz-icon-drop-down need-rotate" :class="showAllBasicOption?'is-active':''" @click="showAllBasicOption=!showAllBasicOption"></i></div>
+          </el-tab-pane>
+          <el-tab-pane label="Labels" name="Labels">
+            <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param label-position">
+
+              <div style="text-align: right;margin-bottom: 5px">
+                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+                <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
+                <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
+                <!--</button>-->
+                <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+              </div>
+
+              <div class="param-box param-box-module">
+                <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
+                  <div v-for="(item, index) in editModule.configs.labelModule" :key="index" class="param-box-row">
+                    <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
+                      <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-eq">=</span>
+                    <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.value'">
+                      <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="Parameter" name="Parameter">
+            <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param label-position">
+
+              <div style="text-align: right;margin-bottom: 5px">
+                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
+                <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
+                <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
+                <!--</button>-->
+                <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+              </div>
+
+              <div class="param-box param-box-module">
+                <div style="height: 100%; overflow: auto;" id="module-box-params">
+                  <div v-for="(item, index) in editModule.configs.paramObj" :key="index" class="param-box-row">
+                    <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
+                      <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-eq">=</span>
+                    <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
+                      <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="Auth" name="Auth" v-if="editModule.type !== 'snmp'">
+            <!--authtype-->
+            <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
+              <el-select @change="changeAuthType" value-key="id" popper-class="config-dropdown" v-model="authType" placeholder="" size="small" id="module-box-input-auth-type">
+                <el-option :id="'module-type-'+item.id" v-for="item in authTypeList" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <!--authtype 1-->
+            <el-form-item :label='$t("project.endpoint.username")' prop="authtype" v-if="authType === 1" class="half-form-item">
+              <el-input placeholder='' v-model.number="editModule.configs.basic_auth.username" size="small" id="module-box-input-uername"></el-input>
+            </el-form-item>
+
+            <el-form-item :label='$t("project.endpoint.password")' prop="authtype" v-if="authType === 1" class="half-form-item">
+              <el-input placeholder='' v-model.number="editModule.configs.basic_auth.password" size="small" id="module-box-input-password"></el-input>
+            </el-form-item>
+
+            <!--authtype 2-->
+            <el-form-item :label='$t("project.endpoint.bearer_token")' prop="authtype" v-if="authType === 2">
+              <el-input placeholder='' v-model.number="editModule.configs.bearer_token" size="small" id="module-box-input-bearer_token"></el-input>
+            </el-form-item>
+
+          </el-tab-pane>
+        </el-tabs>
+
+        <div>
+          asd
         </div>
 
-        <el-form-item :label='$t("project.endpoint.port")' prop="port" >
-          <el-input placeholder="" v-model.number="editModule.port" size="small" id="module-box-input-port"></el-input>
-        </el-form-item>
+        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'15px':'0'}">
 
-        <el-form-item v-if="editModule.type && editModule.type.toLowerCase() == 'http'" :label='$t("project.endpoint.path")' prop="path">
-          <el-input placeholder="" v-model="editModule.path" size="small" id="module-box-input-path"></el-input>
-        </el-form-item>
-
-        <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param label-position" v-if="editModule.type.toLowerCase() == 'http'">
-
-          <div style="text-align: right;margin-bottom: 5px">
-            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-            <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
-            <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
-            <!--</button>-->
-            <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add">
-              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
-            </span>
-          </div>
-
-          <div class="param-box param-box-module">
-            <div style="height: 100%; overflow: auto;" id="module-box-params">
-              <div v-for="(item, index) in editModule.paramObj" :key="index" class="param-box-row">
-                <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
-                </el-form-item>
-                <span class="param-box-row-eq">=</span>
-                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
-                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-              </div>
-            </div>
-          </div>
-        </el-form-item>
-
-        <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param label-position">
-
-          <div style="text-align: right;margin-bottom: 5px">
-            <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-            <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
-            <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
-            <!--</button>-->
-            <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add">
-              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
-            </span>
-          </div>
-
-          <div class="param-box param-box-module">
-            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
-              <div v-for="(item, index) in editModule.labelModule" :key="index" class="param-box-row">
-                <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                </el-form-item>
-                <span class="param-box-row-eq">=</span>
-                <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.value'">
-                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-              </div>
-            </div>
-          </div>
-        </el-form-item>
-
-        <el-form-item :label='$t("project.module.description")' prop="remark">
-          <el-input type="textarea" placeholder="" maxlength="1024" show-word-limit v-model="editModule.remark" size="small" id="module-box-input-project"></el-input>
-        </el-form-item>
-
+        </div>
       </el-form>
     </div>
 
@@ -331,14 +263,21 @@ export default {
   data () {
     return {
       walkData: [],
+      activeName: 'Basic',
       expandedWalkData: [],
+      radio: 'password',
       editModule: {},
+      restaurants: [
+        { value: '{{module.name}}-{{asset.name}}' },
+        { value: '{{module.name}}-{{asset.manageIp}}' }
+      ],
+      showAllBasicOption: false,
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: noSpecialChar, trigger: 'change' }
         ],
-        project: [
+        projectId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         walk: [
@@ -366,7 +305,24 @@ export default {
           { validator: nzNumber, trigger: 'blur' }
         ]
       },
-      projectList: []
+      projectList: [],
+      credentialList: [],
+      typetList: [
+        {
+          value: 'http',
+          name: 'HTTP'
+        },
+        {
+          value: 'snmp',
+          name: 'SNMP'
+        }
+      ],
+      authType: 0,
+      authTypeList: [
+        { name: this.$t('project.endpoint.authTypeNull'), value: 0 },
+        { name: this.$t('project.endpoint.authTypeWord'), value: 1 },
+        { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
+      ]
     }
   },
   methods: {
@@ -437,11 +393,13 @@ export default {
       this.$get('mib/tree', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           const obj = JSON.parse(response.data)
+          console.log(obj)
           this.walkData = []
           for (const item in obj) {
             setAttr(obj[item], 'detailShow', false)
             this.walkData.push({ name: item, detailShow: false, subTree: obj[item] })
           }
+          console.log(this.walkData)
         }
       })
       function setAttr (tree, name, value) {
@@ -478,79 +436,26 @@ export default {
         this.editModule.port = 161
       }
     },
-    // 转化snmpParam属性
-    parseSnmpParam (module) {
-      const snmpObj = { // 下划线命名是因为业务需求
-        walk: module.walk,
-        version: module.version, // 2/3
-        max_repetitions: module.max_repetitions ? module.max_repetitions : 25,
-        retries: module.retries ? module.retries : 3,
-        timeout: module.timeout ? module.timeout + 's' : '10s', // s
-        auth: {
-          community: module.community
-        }
-      }
-      if (module.version == 3) {
-        snmpObj.auth.username = module.username
-        snmpObj.auth.security_level = module.security_level
-        snmpObj.auth.context_name = module.context_name
-      }
-      if (module.security_level == 'authNoPriv' || module.security_level == 'authPriv') {
-        snmpObj.auth.password = module.password
-        snmpObj.auth.auth_protocol = module.auth_protocol
-        if (module.security_level != 'authNoPriv') {
-          snmpObj.auth.priv_password = module.priv_password
-          snmpObj.auth.priv_protocol = module.priv_protocol
-        }
-      }
-      module.snmpParam = JSON.stringify(snmpObj)
-    },
-    // 回显时解析snmpParam
-    reparseSnmpParam (module) {
-      if (!module.snmpParam) {
-        return
-      }
-      const snmpObj = JSON.parse(module.snmpParam)
-      module.walk = snmpObj.walk
-      module.version = snmpObj.version
-      module.max_repetitions = snmpObj.max_repetitions
-      module.retries = snmpObj.retries
-      module.timeout = parseInt(snmpObj.timeout.replace('s', ''))
-      module.community = snmpObj.auth.community
-      if (snmpObj.version == 3) {
-        module.username = snmpObj.auth.username
-        module.security_level = snmpObj.auth.security_level
-        module.context_name = snmpObj.auth.context_name
-      }
-      if (snmpObj.auth.security_level == 'authNoPriv' || snmpObj.auth.security_level == 'authPriv') {
-        module.password = snmpObj.auth.password
-        module.auth_protocol = snmpObj.auth.auth_protocol
-        if (snmpObj.auth.security_level != 'authNoPriv') {
-          module.priv_password = snmpObj.auth.priv_password
-          module.priv_protocol = snmpObj.auth.priv_protocol
-        }
-      }
-    },
     /* 保存 */
     save () {
-      if (this.editModule.type.toLowerCase() == 'snmp') {
-        this.editModule.paramObj = []// 处理snmp可能会带有param的问题
+      this.editModule.configs.param = this.paramToJson(this.editModule.configs.paramObj)
+      this.editModule.configs.labels = this.labelsToJson(this.editModule.configs.labelModule)
+      const params = { ...this.editModule }
+      params.configs.walk = params.walk
+      params.configs.prot = params.prot
+      params.configs = JSON.stringify(params.configs)
+      if (this.authType === 2 && !this.editModule.configs.bearer_token) {
+        this.$message.error("'token' is required")
+      } else if (this.authType === 1 && !(this.editModule.configs.basic_auth.username && this.editModule.configs.basic_auth.password)) {
+        this.$message.error("'username' and 'password' is required")
+      } else {
+        this.authType = 0
       }
-      this.editModule.param = this.paramToJson(this.editModule.paramObj)
-      this.editModule.labels = this.labelsToJson(this.editModule.labelModule)
       this.$refs.moduleForm.validate((valid) => {
         if (valid) {
           this.prevent_opt.save = true
-          if (this.editModule.type.toLowerCase() == 'snmp') {
-            this.parseSnmpParam(this.editModule)
-          } else {
-            if (this.editModule.snmpParam) {
-              this.editModule.snmpParam = ''
-            }
-          }
-          this.editModule.projectId = this.editModule.project.id
           if (this.editModule.id) {
-            this.$put('module', this.editModule).then(response => {
+            this.$put('monitor/module', params).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.$store.commit('setReloadFacade')
@@ -561,7 +466,7 @@ export default {
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('module', this.editModule).then(response => {
+            this.$post('monitor/module', params).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.$store.commit('setReloadFacade')
@@ -584,7 +489,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('module?ids=' + this.editModule.id).then(response => {
+        this.$delete('monitor/module?ids=' + this.editModule.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.$store.commit('setReloadFacade')
@@ -598,33 +503,40 @@ export default {
 
     /* 获取project列表 */
     getProjectList () {
-      this.$get('project', { pageSize: -1, pageNo: 1 }).then(response => {
+      this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           this.projectList = response.data.list
         }
       })
     },
-
+    // get snmp
+    getCredential () {
+      this.$get('/snmp/credential', { pageSize: -1, pageNo: 1 }).then(response => {
+        if (response.code === 200) {
+          this.credentialList = response.data.list
+        }
+      })
+    },
     // 清除param
     clearAllParam () {
-      this.editModule.paramObj = []
+      this.editModule.configs.paramObj = []
     },
 
     // 新增param
     addParam () {
-      this.editModule.paramObj.push({ key: '', value: '' })
+      this.editModule.configs.paramObj.push({ key: '', value: '' })
     },
     // 移除单个param
     removeParam (index) {
-      this.editModule.paramObj.splice(index, 1)
+      this.editModule.configs.paramObj.splice(index, 1)
     },
     // 新增label
     addLabel () {
-      this.editModule.labelModule.push({ key: '', value: '' })
+      this.editModule.configs.labelModule.push({ key: '', value: '' })
     },
     // 移除单个Label
     removeLabel (index) {
-      this.editModule.labelModule.splice(index, 1)
+      this.editModule.configs.labelModule.splice(index, 1)
     },
     // 将param转为json字符串格式
     paramToJson (param) {
@@ -651,6 +563,25 @@ export default {
       } else {
         return jsonString
       }
+    },
+    // 输入建议
+    querySearch (queryString, cb) {
+      const restaurants = this.restaurants
+      const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    changeAuthType () {
+      this.editModule.configs.bearer_token = ''
+      this.editModule.configs.basic_auth = {
+        username: '',
+        password: ''
+      }
     }
   },
   mounted () {
@@ -658,6 +589,7 @@ export default {
   },
   created () {
     this.getProjectList()
+    this.getCredential()
   },
   computed: {
     mibName () {
@@ -672,16 +604,30 @@ export default {
       deep: true,
       handler (n, o) {
         this.editModule = JSON.parse(JSON.stringify(n))
-        if (n.id) {
-          this.reparseSnmpParam(this.editModule)
+        this.activeName = 'Basic'
+
+        if (this.editModule.configs.bearer_token) {
+          this.authType = 2
+        } else if (this.editModule.configs.basic_auth.username) {
+          this.authType = 1
         } else {
-          if (n.type && n.type.toLowerCase() == 'snmp') {
-            this.$refs.selectWalk.show()
-            for (let i = 0; i < this.editModule.walk.length; i++) {
-              this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf('.')))
-            }
+          this.authType = 0
+        }
+        if (n.type && n.type.toLowerCase() == 'snmp') {
+          this.$refs.selectWalk.show()
+          for (let i = 0; i < this.editModule.walk.length; i++) {
+            this.expandedWalkData.push(this.editModule.configs.walk[i].substring(0, this.editModule.configs.walk[i].lastIndexOf('.')))
           }
         }
+        // if (n.id) {
+        // } else {
+        //   if (n.type && n.type.toLowerCase() == 'snmp') {
+        //     this.$refs.selectWalk.show()
+        //     for (let i = 0; i < this.editModule.walk.length; i++) {
+        //       this.expandedWalkData.push(this.editModule.walk[i].substring(0, this.editModule.walk[i].lastIndexOf('.')))
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -732,6 +678,40 @@ export default {
   .right-box-form-tip{
     color: #999999;
     line-height: 21px;
+  }
+  .half-form-item {
+    width: calc(50% - 30px);
+    display: inline-block;
+    padding: 0 18px 0 8px;
+  }
+  /deep/ .el-tabs__item{
+    width: 90px;
+    padding: 0;
+    text-align: center;
+  }
+  /deep/ .el-tabs__item.is-active{
+    color: #FA901C
+  }
+  /deep/ .el-tabs__active-bar{
+    background-color: #FA901C
+  }
+  /deep/ .el-radio-group{
+    width: 100%;
+  }
+  /deep/ .el-radio{
+    width: 100%;
+  }
+  /deep/ .el-autocomplete{
+    width: 100%;
+  }
+  .need-rotate.nz-icon-drop-down{
+    display: inline-block;
+    transition: transform .3s;
+  }
+  .need-rotate.nz-icon-drop-down.is-active{
+    transform: rotate(
+      -180deg
+    );
   }
 </style>
 <style>

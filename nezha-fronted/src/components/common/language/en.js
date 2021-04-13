@@ -1132,6 +1132,7 @@ const en = {
       createModule: 'New module', // "新增组件"
       version: 'Version',
       walk: 'Walk',
+      type: 'Type',
       maxRepetitions: 'Max repetitions',
       retries: 'Retries',
       timeout: 'Timeout',
@@ -1141,6 +1142,7 @@ const en = {
       privProtocol: 'Priv protocol',
       contextName: 'Context name',
       privPassword: 'Priv password',
+      alerts: 'Alerts',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"
@@ -1168,7 +1170,20 @@ const en = {
       stateInfo_230010: 'Promserver can be used',
       stateInfo_230011: 'Endpoint connection refused',
       alerts: 'Alerts',
-      labels: 'Labels'
+      labels: 'Labels',
+      pattern: 'Name pattern',
+      credentials: 'Credentials',
+      scrape_interval: 'Scrape interval',
+      scrape_interval_placeholder: 'default global scrape interval',
+      scrape_timeout: 'Scrape timeout',
+      scrape_timeout_placeholder: 'default global scrape timeout',
+      type: 'Type',
+      bearer_token: 'Token',
+      username: 'Username',
+      password: 'Password',
+      authTypeNull: 'None',
+      authTypeWord: 'Username and password',
+      authTypeToken: 'Token',
     },
     metrics: {
       metrics: 'Metrics', // "指标"
