@@ -153,7 +153,8 @@ const en = {
     reloadTimeout: 'It took too much time to restart the server, there may be some problems when you install',
     hadConfig: 'Someone has started to configure the system',
     invalidCode: "The authentication is invalid ,please follow the description in {page} 'To continue'",
-    welcomePage: 'Welcome page'
+    welcomePage: 'Welcome page',
+    inited:'The system has been initialized',
   },
   webshell: {
     shellTitle: 'Local Shell',

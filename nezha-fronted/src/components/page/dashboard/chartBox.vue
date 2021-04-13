@@ -439,7 +439,7 @@
       <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
         <span>{{$t('overall.preview')}}</span>
       </button>
-      <button id="chart-box-save" v-has="'panel_chart_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="confirmAdd" >
+      <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="confirmAdd" >
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

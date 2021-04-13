@@ -147,7 +147,8 @@ const cn = {
     reloadTimeout: '重新启动服务器花了太多时间，安装可能有一些问题',
     hadConfig: '已经有人开始配置系统',
     invalidCode: '身份验证无效，请按照{page}中的描述继续',
-    welcomePage: '欢迎页面'
+    welcomePage: '欢迎页面',
+    inited: '系统已经被初始化',
   },
   webshell: {
     shellTitle: '本地 Shell',
