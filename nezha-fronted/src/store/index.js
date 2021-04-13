@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     },
     idcArr: [],
     overViewProject: {},
-    dcDataRefresh: false
+    dcDataRefresh: false,
+    showTopoScreen: false,
   },
   getters: {
     getLinkData (state) {
@@ -51,6 +52,12 @@ const store = new Vuex.Store({
     },
     getDcDataRefresh (state) {
       return state.dcDataRefresh
+    },
+    getCurrentProject (state) {
+      return state.currentProject
+    },
+    getShowTopoScreen (state) {
+      return state.showTopoScreen
     }
   },
   mutations: {
@@ -125,6 +132,9 @@ const store = new Vuex.Store({
       setTimeout(() => {
         state.dcDataRefresh = false
       }, 100)
+    },
+    setShowTopoScreen (state) {
+      state.showTopoScreen = !state.showTopoScreen
     }
   },
   actions: {

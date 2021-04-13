@@ -99,7 +99,7 @@ export default {
           className = 'nz-icon nz-icon-menu-assets'
           break
         }
-        case 'project': {
+        case 'monitor': {
           className = 'nz-icon nz-icon-menu-project'
           break
         }

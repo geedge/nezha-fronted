@@ -1,5 +1,5 @@
 <style lang="scss">
-  @import '../../charts/chart';
+  @import '../../../charts/chart';
 
   .project-calendar .el-input__inner {
     height: 24px;
@@ -25,161 +25,7 @@
 </style>
 <template>
   <div class="project">
-    <template v-if="pageType == 'endpoint'">
-      <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-        <div class="main-modal"></div>
-        <div class="top-tools" v-show="bottomBox.mainResizeShow">
-          <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-            <div class="top-tool-search">
-              <search-input :searchMsg="endpointSearchMsg" @search="endpointSearch" ref="projectSearch"></search-input>
-            </div>
-            <export-excel
-              id="endpoint-list"
-              export-file-name="endpoint"
-              export-url="/endpoint/export"
-              import-url="/endpoint/import"
-              :params="endpointSearchLabel"
-              :permissions="{import: 'project_endpoint_import', export: 'project_endpoint_export'}"
-              @afterImport="afterCloseImport"
-              class="margin-l-20"
-            >
-              <template slot="optionZone">
-                <button :title="$t('overall.createEndpoint')" @click.stop="addEndpoint" v-has="'project_endpoint_toAdd'"
-                        class="nz-btn nz-btn-size-normal nz-btn-style-light" id="project-create-project">
-                  <i class="nz-icon nz-icon-create-square"></i>
-                </button>
-              </template>
-            </export-excel>
-            <delete-button :delete-objs="batchDeleteObjs" @after="afterCloseImport" @before="delFlag=true" api="endpoint" v-has="'project_endpoint_delete'"></delete-button>
-          </div>
-          <div class="pagination-top pagination-top-hide display-none"></div>
-        </div>
-        <!-- 自定义table列 -->
-        <transition name="el-zoom-in-top">
-          <element-set
-            id="endpoint-list"
-            v-if="tools.showCustomTableTitle"
-            @close="tools.showCustomTableTitle = false"
-            :custom-table-title.sync="tools.customTableTitle"
-            :original-table-title="tableTitle"
-            ref="customTableTitle"
-          ></element-set>
-        </transition>
-        <el-table
-          id="endpoint-list-table"
-          :data="endpointTableData"
-          border
-          class="nz-table endpoint-table"
-          :height="mainTableHeight"
-          v-show="bottomBox.mainResizeShow"
-          ref="endpointTable"
-          :cell-class-name="messageStyle"
-          v-loading="tools.loading"
-          style="width: 100%;"
-          @sort-change="tableDataSort"
-          @row-dblclick="detailEndpoint"
-          @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-          @header-dragend="()=>{this.$refs.endpointTable.doLayout();}"
-        >
-          <el-table-column
-            :resizable="false"
-            type="selection"
-            width="40"
-            align="center">
-          </el-table-column>
-          <el-table-column
-            :resizable="true"
-            v-for="(item, index) in tools.customTableTitle"
-            v-if="item.show"
-            :key="`col-${index}`"
-            :label="item.label"
-            :min-width="item.width || item.minWidth"
-            :sortable="$tableSet.sortableShow(item.prop,'project')"
-            :prop="$tableSet.propTitle(item.prop,'project')"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item">
-              <span v-if="item.prop === 'asset' && scope.row[item.prop]" class="link" @click="detailEndpoint(scope.row)">
-                {{scope.row[item.prop].sn}} :
-                ({{scope.row[item.prop].host}})
-              </span>
-              <span v-else-if="item.prop === 'param'">
-              <template v-if="scope.row.paramObj">
-                <span v-for="(p, i) in scope.row.paramObj" :key="i">{{p.key}}={{p.value}}<span
-                  v-if="i < scope.row.paramObj.length-1">，</span></span>
-              </template>
-              <template v-else>-</template>
-            </span>
-              <span v-else-if="item.prop === 'labels'">
-                <template v-if="scope.row.labelModule">
-                  <span v-for="(p, i) in scope.row.labelModule" :key="i">{{p.key}}={{p.value}}<span
-                    v-if="i < scope.row.labelModule.length-1">，</span></span>
-                </template>
-                <template v-else>-</template>
-              </span>
-              <template v-else-if="item.prop === 'alerts'">
-                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light"
-                            :disabled=" scope.row.alertNum < 99">
-                  <span :id="'endpoint-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
-                    {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                      <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                    {{' ' + $t('overall.active')}}
-                  </span>
-                </el-tooltip>
-              </template>
-              <template v-else-if="item.prop === 'type'">{{currentModule.type}}</template>
-              <div v-else-if="item.prop === 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option"
-                      :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                &nbsp;
-                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option"
-                      :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" v-has="'project_endpoint_toEdit'"
-                      :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-
-                <span :title="$t('overall.delete')" @click.stop="delEndpoint(scope.row)" class="content-right-option" v-has="'project_endpoint_delete'"
-                      :id="'asset-del-'+scope.row.id"><i class="nz-icon nz-icon-delete"></i></span>
-              </div>
-              <span v-else-if="item.prop === 'state'">
-              <el-popover placement="right" width="50" trigger="hover"
-                          :popper-class="scope.row.state == '1'?'small-pop':''">
-                <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.state == '1', 'active-icon red':scope.row.state == '0', 'active-icon gray':scope.row.state == '2'}"></div>
-                </div>
-                <div>
-                  <div v-if="scope.row.state == '1'">up</div>
-                  <div v-else-if="scope.row.state == '0'">down:<br/>{{getStateErrorMsg(scope.row)}}</div>
-                  <div v-else-if="scope.row.state == '2'">suspended</div>
-                </div>
-              </el-popover>
-            </span>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-          <el-table-column width="28" :resizable="true">
-            <template slot="header">
-            <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)"
-                  class="nz-table-gear">
-              <i class="nz-icon nz-icon-gear"></i>
-            </span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <button class="to-top" :style="{top: tools.toTopBtnTop}" id="endpoint-list-totop"
-                :class="{'to-top-is-hover': tools.tableHover}"
-                @click="toTop(scrollbarWrap)" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i
-          class="nz-icon nz-icon-top"></i></button>
-        <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-          <Pagination :tableId="tableId" v-cloak :pageObj="endpointPageObj" @pageNo='endpointPageNo'
-                      @pageSize='endpointPageSize' ref="endpointPagination"></Pagination>
-        </div>
-      </div>
-    </template>
-    <template v-else-if="pageType == 'project'">
-      <!--<panel-tab from="project" :obj="currentProject" targetTab.sync="panel"></panel-tab>-->
-      <!--<facade :obj="currentProject" targetTab.sync="panel" ref="facade" v-if="reloadFacade"/>-->
+    <template>
       <topologyL5 :obj="currentProject" targetTab.sync="panel" ref="facade" :topologyIndexF="topologyIndexF" v-if="reloadFacade" @changeTopologyIndexF="changeTopologyIndexF"/>
     </template>
 
@@ -212,10 +58,10 @@
 </template>
 
 <script>
-import exportXLSX from '../../common/exportXLSX'
-import bus from '../../../libs/bus'
+import exportXLSX from '@/components/common/exportXLSX'
+import bus from '@/libs/bus'
 import topologyL5 from '@/components/common/project/topologyL5'
-import deleteButton from '../../common/deleteButton'
+import deleteButton from '@/components/common/deleteButton'
 
 export default {
   name: 'project2',
@@ -777,7 +623,6 @@ export default {
     if (pageSize) {
       this.endpointPageObj.pageSize = pageSize
     }
-    this.getModuleList()
     this.getUserData()
     this.getProjectList()
   },
@@ -786,7 +631,6 @@ export default {
     this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
       ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
       : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
     setTimeout(() => {
       this.ready = true
     }, 300)
@@ -854,6 +698,12 @@ export default {
         } else {
           this.delFlag = false
         }
+      }
+    },
+    currentProjectChange: {
+      deep: true,
+      handler (n) {
+        this.currentProject = this.$store.state.currentProject
       }
     }
   },

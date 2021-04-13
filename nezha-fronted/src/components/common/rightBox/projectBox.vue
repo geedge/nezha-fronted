@@ -68,7 +68,7 @@ export default {
         if (valid) {
           this.prevent_opt.save = true
           if (this.editProject.id) {
-            this.$put('project', this.editProject).then(response => {
+            this.$put('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.$store.commit('projectListChange')
@@ -80,7 +80,7 @@ export default {
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('project', this.editProject).then(response => {
+            this.$post('monitor/project', this.editProject).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.$store.commit('projectListChange')
@@ -104,7 +104,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('project?ids=' + this.editProject.id).then(response => {
+        this.$delete('monitor/project?ids=' + this.editProject.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.$store.commit('projectListChange')

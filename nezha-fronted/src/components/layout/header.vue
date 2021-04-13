@@ -322,7 +322,7 @@ export default {
       }
     },
     getProjectList () {
-      this.$get('project', { pageSize: -1 }).then(response => {
+      this.$get('monitor/project', { pageSize: -1 }).then(response => {
         if (response.code == 200) {
           this.projectData = response.data.list
           let flag = false

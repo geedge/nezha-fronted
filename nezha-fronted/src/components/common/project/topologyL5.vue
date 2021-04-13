@@ -3,7 +3,7 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
+  <div class="project-box" v-loading="topologyLoading">
     <!--project主要信息-->
     <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
@@ -100,7 +100,7 @@
              {{$t('project.topology.preview')}}
            </button>
            <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
-                   v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                   :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
              {{$t('project.topology.save')}}
@@ -111,68 +111,11 @@
          </span>
       </div>
       <div style="width: 100%;display: flex;justify-content: space-between" v-if="!editTopologyFlag&&!fromOverView">
-        <div class="facade-top">
-          <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
-            <div class="facade-top-title">
-              Project information
-            </div>
-            <div>
-              <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
-              <span><span class="label">Name :</span>{{projectInfo.name}}</span>
-            </div>
-            <div>
-              <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
-            </div>
-            <!--<div>-->
-            <!--<span>-->
-            <!--<span class="label">Alert state :</span>-->
-            <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
-            <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
-            <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <div>
-              <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
-            </div>
-          </div>
-          <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
-            <div class="facade-top-title">
-              <span class="label" style="padding-left: 0;">Alert :</span>
-              {{projectInfo.total}}
-            </div>
-            <div class="facade-top-right-content">
-              <div>
-                <div class="content-P1-title">
-                  {{returnSeverityLabel('P1')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[0] || 0}}
-                </div>
-              </div>
-              <div>
-                <div class="content-P2-title">
-                  {{returnSeverityLabel('P2')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[1] || 0}}
-                </div>
-              </div>
-              <div style="margin-bottom: 20px;">
-                <div class="content-P3-title">
-                  {{returnSeverityLabel('P3')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[2] || 0}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div  :style="{flex:1,'padding-right': '15px','text-align':topologyInfo.align,'font-size':topologyInfo.fontSize,'color':topologyInfo.fontColor,opacity:topologyInfo.opacity}">{{topologyInfo.name}}</div>
+        <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
 
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button" v-has="'project_topo_save'"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
@@ -182,12 +125,19 @@
             :refresh-data-func="dateChange"
             v-model="searchTime"
             :use-chart-unit="false"
+            :showTimePicker="false"
             ref="pickTime">
           </pick-time>
+          <button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
+                  style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
+                  :class="topoScreen?'':''"
+          >
+                  <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
+        </button>
       </span>
       </div>
     </div>
-    <div :class="['page',fromOverView?'overview-page':'']">
+    <div :class="['page',fromOverView?'overview-page':'']" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
       <!--画布部分-->
       <div :id="'topology-canvas' + topologyIndexF" class="full" :ref="'topology-canvas'+ topologyIndexF"></div>
       <!--设置属性-->
@@ -579,6 +529,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        console.log(n, '123123123')
         if (n.id) {
           if (getTopology(this.topologyIndex)) {
             getTopology(this.topologyIndex).destroy()
@@ -636,7 +587,17 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    topoScreen () {
+      this.$nextTick(() => {
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        if (getTopology(this.topologyIndex)) {
+          getTopology(this.topologyIndex).canvasPos = domRect
+        }
+      })
+      return this.$store.getters.getShowTopoScreen
+    }
+  },
   created () {
     canvasRegister()
     if (process.client) {
@@ -1016,10 +977,10 @@ export default {
     getProjectData (n) {
       // 获取projectInfo
       this.projectInfo.loading = true
-      this.$get('project/info', { id: n.id }).then(response => {
+      this.$get('monitor/project/' + n.id).then(response => {
         if (response.code === 200) {
           this.projectInfo.loading = false
-          this.projectInfo = { ...this.projectInfo, ...response.data.basic, moduleMum: response.data.module.length }
+          this.projectInfo = { ...this.projectInfo, ...response.data }
           this.projectInfo.total = this.projectInfo.alertStat[0] + this.projectInfo.alertStat[1] + this.projectInfo.alertStat[2]
           if (!this.projectInfo.total) {
             this.projectInfo.total = 0
@@ -1034,11 +995,10 @@ export default {
     // 获取module
     getModule () {
       this.projectInfo.loading = true
-      this.$get('project/info', { id: this.obj.id }).then(response => {
+      this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
         if (response.code === 200) {
           this.projectInfo.loading = false
-          this.projectInfo = { ...this.projectInfo, ...response.data.basic, moduleMum: response.data.module.length }
-          this.allModules = response.data.module
+          this.allModules = response.data.list
           this.modulesDiff()
         }
       })
@@ -2052,6 +2012,9 @@ export default {
     },
     penToBottom () {
       getTopology(this.topologyIndex).bottom()
+    },
+    changeScreen () {
+      this.$store.commit('setShowTopoScreen')
     }
   },
   destroyed () {
@@ -2506,7 +2469,6 @@ export default {
     height: calc(100% - 20px);
     margin-top: 10px;
     position: relative;
-    border: 1px solid #eeeeee;
     border-radius: 2px;
     overflow: hidden;
     .pickTime{
@@ -2533,7 +2495,7 @@ export default {
 
   .page {
     display: flex;
-    height: calc(100% - 60px);
+    height: calc(100% - 55px);
     width: 100%;
     position: relative;
 

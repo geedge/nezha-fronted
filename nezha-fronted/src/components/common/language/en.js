@@ -9,6 +9,7 @@ const en = {
   overall: {
     dashboard: 'Dashboards', // '仪表盘'
     project: 'Projects', // '系统'
+    monitor: 'Monitor', // 监控
     alert: 'Alerts', // "告警"
     asset: 'Assets', // '资产'
     config: 'Settings', // '设置'

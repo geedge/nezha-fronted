@@ -3,6 +3,7 @@ const cn = {
   overall: {
     dashboard: '仪表盘',
     project: '系统',
+    monitor: '监控',
     alert: '告警',
     asset: '资产',
     config: '设置',
