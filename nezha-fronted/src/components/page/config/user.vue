@@ -26,6 +26,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></user-table>
       </template>
       <template v-slot:pagination>
@@ -33,7 +34,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <user-box v-if="rightBox.show" :roles="roles" :user="object" @close="closeRightBox"></user-box>
+      <user-box v-if="rightBox.show" :user="object" @close="closeRightBox"></user-box>
     </transition>
   </div>
 </template>
@@ -80,8 +81,7 @@ export default {
           label: 'username',
           disabled: false
         }]
-      },
-      roles: []
+      }
     }
   },
   methods: {
@@ -98,16 +98,6 @@ export default {
         }
         this.getTableData()
       })
-    },
-    getRoles () {
-      this.roles = []
-      this.$get('sys/role?pageSize=-1').then(response => {
-        if (response.code === 200) {
-          this.roles = response.data.list
-        } else {
-          this.$message.error('load roles faild')
-        }
-      })
     }
   },
   computed: {
@@ -116,9 +106,6 @@ export default {
         return localStorage.getItem('nz-username') === username
       }
     }
-  },
-  mounted () {
-    this.getRoles()
   }
 }
 </script>

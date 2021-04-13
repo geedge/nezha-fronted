@@ -5,8 +5,6 @@
       <Header></Header>
       <container v-if="containerShow" ref="container"></container>
     </div>
-    <!--菜单列表-->
-    <menus v-if="isMenuPage"></menus>
     <!--web-ssh-->
     <web-ssh ref="webSsh"></web-ssh>
     <!--table悬浮提示容器-->
@@ -18,13 +16,11 @@
 import Header from './header'
 import webSSH from '../cli/webSSH'
 import leftMenu from './leftMenu'
-import menus from '../page/config/menus'
 import container from './container'
 export default {
   name: 'home',
   components: {
     Header,
-    menus,
     leftMenu,
     container,
     'web-ssh': webSSH
@@ -32,11 +28,6 @@ export default {
   data () {
     return {
       containerShow: true
-    }
-  },
-  computed: {
-    isMenuPage: function () {
-      return this.$route.path === '/menu'
     }
   },
   methods: {

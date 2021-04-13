@@ -16,7 +16,6 @@ export default {
   },
   data () {
     return {
-      batchDeleteObjs: [],
       operationWidth: '165' // 操作列宽
     }
   },
@@ -34,6 +33,9 @@ export default {
         default:
           break
       }
+    },
+    selectionChange (objs) {
+      this.$emit('selectionChange', objs)
     },
     isBuiltIn (row) {
       return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)

@@ -149,7 +149,7 @@ export default {
     .el-submenu.is-active .el-submenu__title, .el-submenu.is-active .el-submenu__title>i {
       color: white !important;
     }
-    .el-submenu.is-opened .el-menu-item:not(.is-active) {
+    .el-submenu.is-opened .el-menu-item:not(.is-active), .el-submenu.is-opened .el-submenu__title {
       background-color: #182534 !important;
     }
     .el-menu-item.is-active {

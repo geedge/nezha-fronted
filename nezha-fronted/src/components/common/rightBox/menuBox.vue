@@ -85,7 +85,9 @@ export default {
     'tree-select': Treeselect
   },
   props: {
-    menu: Object
+    menu: {
+      type: Object
+    }
   },
   computed: {
     isCurrentUser () {

@@ -13,6 +13,8 @@ const en = {
     alert: 'Alerts', // "告警"
     asset: 'Assets', // '资产'
     config: 'Settings', // '设置'
+    administration: 'Administration',
+    configuration: 'configuration',
     create: 'New', // '新增'
     edit: 'Edit', // '编辑'
     delete: 'Delete', // '删除'
@@ -839,7 +841,7 @@ const en = {
       }
     },
     mib: {
-      mib: 'SNMP MIB',
+      mib: 'MIB file',
       fileName: 'File name',
       remark: 'Remark',
       updateUser: 'Update user',
@@ -967,14 +969,14 @@ const en = {
       createAssetState: 'Create asset state',
       editAssetState: 'Edit asset state'
     },
-    assetMeta: {
+    assetLabel: {
       example: 'Example',
-      assetMeta: 'Asset meta',
+      assetLabel: 'Asset labels',
       all: 'All',
       addGroup: 'Create group',
       editGroup: 'Edit group',
-      addMeta: 'Create meta',
-      editMeta: 'Edit meta',
+      addLabel: 'Create label',
+      editLabel: 'Edit label',
       groupName: 'Name',
       key: 'Key',
       name: 'Name',
@@ -983,9 +985,9 @@ const en = {
       display: 'Display',
       type: 'Type',
       params: 'Params',
-      updateMeta: 'Update Meta',
-      deleteMeta: 'Delete Meta',
-      infoMeta: 'Meta Info',
+      updateLabel: 'Update label',
+      deleteLabel: 'Delete label',
+      infoLabel: 'Label Info',
       text: 'TEXT',
       multitext: 'MULTITEXT',
       textarea: 'TEXTAREA',
@@ -1008,7 +1010,7 @@ const en = {
       decimals: 'Decimals',
       moreOptionsError: 'There are up to 20 options',
       onlyOptionError: 'You need at least one option',
-      metaOptionNull: 'Please input option'
+      labelOptionNull: 'Please input option'
     },
     exprTemp: {
       exprTemp: 'Expression template',
@@ -1284,230 +1286,10 @@ const en = {
     }
   },
   buttons: {
-    panel: {
-      view: 'View panel',
-      toAdd: 'Add panel',
-      toEdit: 'Edit panel',
-      delete: 'Delete panel',
-      save: 'Save panel',
-      chart: {
-        toAdd: 'Add chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        toEdit: 'Edit chart',
-        save: 'Save chart',
-        delete: 'Delete chart',
-        duplicate: 'Duplicate chart'
-      }
-    },
-    explore: {
-      view: 'View explore',
-      toAdd: 'Add chart',
-      save: 'Save chart'
-    },
-    asset: {
-      view: 'View asset',
-      toAdd: 'Add asset',
-      toEdit: 'Edit asset',
-      toBatchEdit: 'Batch edit asset',
-      delete: 'Delete asset',
-      save: 'Save asset',
-      import: 'Import asset',
-      export: 'Export asset',
-      connect: 'Connect to asset',
-      endpoint: {
-        view: 'View endpoint',
-        toAdd: 'Add endpoint',
-        toEdit: 'Edit endpoint',
-        delete: 'Delete endpoint',
-        save: 'Save endpoint',
-        import: 'Import endpoint',
-        export: 'Export endpoint'
-      },
-      alerts: {
-        view: 'View alerts',
-        delete: 'Delete alerts',
-        export: 'Export alerts'
-      },
-      chart: {
-        toAdd: 'Add chart',
-        toEdit: 'Edit chart',
-        delete: 'Delete chart',
-        save: 'Save chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        duplicate: 'Duplicate chart',
-        sync: 'Sync chart'
-      },
-      vendor: {
-        toAdd: 'Add vendor',
-        save: 'Save chart'
-      }
-    },
-    project: {
-      view: 'View project',
-      toEdit: 'Edit project',
-      delete: 'Delete project',
-      save: 'Save project',
-      topo: {
-        edit: 'Edit topo',
-        save: 'Save topo'
-      },
-      module: {
-        toEdit: 'Edit module',
-        delete: 'Delete module',
-        save: 'Save module'
-      },
-      endpoint: {
-        toAdd: 'Add endpoint',
-        toEdit: 'Edit endpoint',
-        delete: 'Delete endpoint',
-        save: 'Save endpoint',
-        import: 'Import endpoint',
-        export: 'Export endpoint',
-        alerts: {
-          view: 'View alerts',
-          delete: 'Delete alerts',
-          export: 'Export alerts'
-        },
-        query: {
-          view: 'View query',
-          toAdd: 'Add chart',
-          save: 'Save chart'
-        }
-      }
-    },
-    message: {
-      view: 'View alerts',
-      delete: 'Delete alerts',
-      export: 'Export alerts'
-    },
-    rule: {
-      view: 'View rule',
-      toAdd: 'Add rule',
-      toEdit: 'Edit rule',
-      delete: 'Delete rule',
-      save: 'Save rule',
-      alerts: {
-        view: 'View alerts',
-        delete: 'Delete alerts',
-        export: 'Export alerts'
-      }
-    },
-    account: {
-      view: 'View account',
-      toAdd: 'Add account',
-      toEdit: 'Edit account',
-      delete: 'Delete account',
-      save: 'Save account'
-    },
-    role: {
-      view: 'View role',
-      toAdd: 'Add role',
-      toEdit: 'Edit role',
-      delete: 'Delete role',
-      save: 'Save role'
-    },
-    prom: {
-      view: 'View prom',
-      toAdd: 'Add prom',
-      toEdit: 'Edit prom',
-      delete: 'Delete prom',
-      save: 'Save prom'
-    },
-    dc: {
-      view: 'View data center',
-      toAdd: 'Add data center',
-      toEdit: 'Edit data center',
-      delete: 'Delete data center',
-      save: 'Save data center',
-      trafficSetting: 'Traffic setting',
-      trafficSettingSave: 'Save traffic setting',
-      cabinet: {
-        view: 'View cabinet',
-        toAdd: 'Add cabinet',
-        toEdit: 'Edit cabinet',
-        delete: 'Delete cabinet',
-        save: 'Save cabinet'
-      }
-    },
-    model: {
-      view: 'View model',
-      toAdd: 'Add model',
-      toEdit: 'Edit model',
-      delete: 'Delete model',
-      save: 'Save model',
-      panel: 'View panel',
-      chart: {
-        view: 'View chart',
-        toAdd: 'Add chart',
-        toEdit: 'Edit chart',
-        delete: 'Delete chart',
-        save: 'Save chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        duplicate: 'Duplicate chart',
-        sync: 'Sync chart'
-      }
-    },
-    snmp: {
-      view: 'View mib file',
-      toAdd: 'Add mib file',
-      toEdit: 'Edit mib file',
-      delete: 'Delete mib file',
-      save: 'Save mib file',
-      download: 'Download mib file',
-      browserExport: 'Export mib browser',
-      browserView: 'View mib browser'
-    },
-    system: {
-      basic: 'Basic save',
-      email: 'Email save',
-      terminal: 'Terminal save',
-      ldap: 'LDAP save',
-      notification: {
-        add: 'Add notification',
-        toEdit: 'Edit notification',
-        delete: 'Delete notification',
-        save: 'Save notification'
-      },
-      link: {
-        add: 'Add link',
-        toEdit: 'Edit link',
-        delete: 'Delete link',
-        save: 'Save link'
-      },
-      reset: 'Reset system config'
-    },
-    header: {
-      header: 'Header',
-      link: 'Link',
-      terminal: 'Terminal',
-      terminalUpload: 'Upload in terminal',
-      terminalDownload: 'Download in terminal',
-      add: {
-        view: 'View add button',
-        project: 'Add project',
-        module: 'Add module',
-        endpoint: 'Add endpoint',
-        rule: 'Add rule',
-        asset: 'Add asset'
-      }
-    },
-    assetType: {
-      view: 'View',
-      toAdd: 'Add asset type',
-      toEdit: 'Edit asset type',
-      delete: 'Delete asset type',
-      save: 'Save asset type'
-    },
-    assetState: {
-      view: 'View',
-      toAdd: 'Add asset state',
-      toEdit: 'Edit asset state',
-      delete: 'Delete asset state',
-      save: 'Save asset state'
-    }
+    view: 'View',
+    add: 'Add',
+    edit: 'Edit',
+    delete: 'Delete'
   },
   ...enLocale
 }

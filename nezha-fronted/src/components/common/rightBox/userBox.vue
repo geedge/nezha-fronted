@@ -1,6 +1,3 @@
-<style lang="scss">
-$--input-focus-border: red;
-</style>
 <template>
   <div v-clickoutside="{obj:editUser,func:clickOutside}" class="right-box right-box-account">
     <!-- begin--顶部按钮-->
@@ -96,8 +93,7 @@ $--input-focus-border: red;
 export default {
   name: 'accountBox',
   props: {
-    user: Object,
-    roles: Array
+    user: Object
   },
   computed: {
     isCurrentUser () {
@@ -159,7 +155,8 @@ export default {
       editUser: {},
       scripts: [],
       selectableScripts: [],
-      pinChange: ''
+      pinChange: '',
+      roles: []
     }
   },
   methods: {
@@ -241,14 +238,6 @@ export default {
         this.scripts = response.data.list
         this.getSelectableScripts()
       })
-      /* this.scripts = [
-          {id: 1, name: "DOLBY"},
-          {id: 2, name: "IMAX"},
-          {id: 3, name: "CGS"},
-          {id: 4, name: "LUXE"},
-          {id: 5, name: "DST:X"},
-        ];
-        this.getSelectableScripts(); */
     },
 
     getSelectableScripts () {
@@ -283,13 +272,23 @@ export default {
         this.editUser.notifications.push({ scriptId: scripts.id, account: '' })
       }
     },
-
+    getRoles () {
+      this.roles = []
+      this.$get('sys/role?pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.roles = response.data.list
+        } else {
+          this.$message.error('load roles faild')
+        }
+      })
+    },
     removeNotification (index) {
       this.editUser.notifications.splice(index, 1)
     }
   },
   mounted () {
     this.getScripts()
+    this.getRoles()
   },
   watch: {
     // 将prop里的user转为组件内部对象

@@ -7,7 +7,7 @@
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
-    @selection-change="(selection) => { batchDeleteObjs = selection }"
+    @selection-change="selectionChange"
   >
     <el-table-column
       :resizable="false"
@@ -26,7 +26,6 @@
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
       :width="`${item.width}`"
-      class="data-column"
     >
       <template slot="header">
         <span>{{item.label}}</span>
@@ -70,7 +69,7 @@
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item :command="['delete', scope.row, `sys/user?ids=${scope.row.id}`]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item :command="['delete', scope.row]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
