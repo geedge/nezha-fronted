@@ -6,6 +6,8 @@ const cn = {
     alert: '告警',
     asset: '资产',
     config: '设置',
+    administration: '行政管理',
+    configuration: '设置',
     create: '新增',
     edit: '编辑',
     delete: '删除',
@@ -835,7 +837,7 @@ const cn = {
       response: '响应'
     },
     mib: {
-      mib: 'SNMP MIB',
+      mib: 'MIB文件',
       fileName: '文件名称',
       remark: '备注',
       updateUser: '更新用户',
@@ -963,14 +965,14 @@ const cn = {
       createAssetState: '新增资产状态',
       editAssetState: '编辑资产状态'
     },
-    assetMeta: {
+    assetLabel: {
       example: '示例',
-      assetMeta: '资产元数据',
+      assetLabel: '资产标签',
       all: '全部',
       addGroup: '创建分组',
       editGroup: '编辑分组',
-      addMeta: '创建Meta',
-      editMeta: '编辑Meta',
+      addLabel: '创建标签',
+      editLabel: '编辑标签',
       groupName: '名称',
       key: '键名',
       name: '名称',
@@ -979,9 +981,9 @@ const cn = {
       display: '显示',
       type: '类型',
       params: '参数',
-      updateMeta: '编辑Meta',
-      deleteMeta: '删除 Meta',
-      infoMeta: 'Meta 信息',
+      updateLabel: '编辑标签',
+      deleteLabel: '删除标签',
+      infoLabel: '标签信息',
       text: '单行文本',
       multitext: '多行文本',
       textarea: '文本域',
@@ -1004,7 +1006,7 @@ const cn = {
       decimals: '精度',
       moreOptionsError: '选项最多20条',
       onlyOptionError: '至少需要一个选项',
-      metaOptionNull: '请填写选项信息'
+      labelOptionNull: '请填写选项信息'
     },
     exprTemp: {
       exprTemp: 'expression模板',
@@ -1399,216 +1401,10 @@ const cn = {
     }
   },
   buttons: {
-    panel: {
-      view: 'View panel',
-      toAdd: 'Add panel',
-      toEdit: 'Edit panel',
-      delete: 'Delete panel',
-      save: 'Save panel',
-      chart: {
-        toAdd: 'Add chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        toEdit: 'Edit chart',
-        save: 'Save chart',
-        delete: 'Delete chart',
-        duplicate: 'Duplicate chart'
-      }
-    },
-    explore: {
-      view: 'View explore',
-      toAdd: 'Add chart',
-      save: 'Save chart'
-    },
-    asset: {
-      view: 'View asset',
-      toAdd: 'Add asset',
-      toEdit: 'Edit asset',
-      toBatchEdit: 'Batch edit asset',
-      delete: 'Delete asset',
-      save: 'Save asset',
-      import: 'Import asset',
-      export: 'Export asset',
-      connect: 'Connect to asset',
-      endpoint: {
-        view: 'View endpoint',
-        toAdd: 'Add endpoint',
-        toEdit: 'Edit endpoint',
-        delete: 'Delete endpoint',
-        save: 'Save endpoint',
-        import: 'Import endpoint',
-        export: 'Export endpoint'
-      },
-      alerts: {
-        view: 'View alerts',
-        delete: 'Delete alerts',
-        export: 'Export alerts'
-      },
-      chart: {
-        toAdd: 'Add chart',
-        toEdit: 'Edit chart',
-        delete: 'Delete chart',
-        save: 'Save chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        duplicate: 'Duplicate chart',
-        sync: 'Sync chart'
-      },
-      vendor: {
-        toAdd: 'Add vendor',
-        save: 'Save chart'
-      }
-    },
-    project: {
-      view: 'View project',
-      toEdit: 'Edit project',
-      delete: 'Delete project',
-      save: 'Save project',
-      topo: {
-        edit: 'Edit topo',
-        save: 'Save topo'
-      },
-      module: {
-        toEdit: 'Edit module',
-        delete: 'Delete module',
-        save: 'Save module'
-      },
-      endpoint: {
-        toAdd: 'Add endpoint',
-        toEdit: 'Edit endpoint',
-        delete: 'Delete endpoint',
-        save: 'Save endpoint',
-        import: 'Import endpoint',
-        export: 'Export endpoint',
-        alerts: {
-          view: 'View alerts',
-          delete: 'Delete alerts',
-          export: 'Export alerts'
-        },
-        query: {
-          view: 'View query',
-          toAdd: 'Add chart',
-          save: 'Save chart'
-        }
-      }
-    },
-    message: {
-      view: 'View alerts',
-      delete: 'Delete alerts',
-      export: 'Export alerts'
-    },
-    rule: {
-      view: 'View rule',
-      toAdd: 'Add rule',
-      toEdit: 'Edit rule',
-      delete: 'Delete rule',
-      save: 'Save rule',
-      alerts: {
-        view: 'View alerts',
-        delete: 'Delete alerts',
-        export: 'Export alerts'
-      }
-    },
-    account: {
-      view: 'View account',
-      toAdd: 'Add account',
-      toEdit: 'Edit account',
-      delete: 'Delete account',
-      save: 'Save account'
-    },
-    role: {
-      view: 'View role',
-      toAdd: 'Add role',
-      toEdit: 'Edit role',
-      delete: 'Delete role',
-      save: 'Save role'
-    },
-    prom: {
-      view: 'View prom',
-      toAdd: 'Add prom',
-      toEdit: 'Edit prom',
-      delete: 'Delete prom',
-      save: 'Save prom'
-    },
-    dc: {
-      view: 'View data center',
-      toAdd: 'Add data center',
-      toEdit: 'Edit data center',
-      delete: 'Delete data center',
-      save: 'Save data center',
-      trafficSetting: 'Traffic setting',
-      trafficSettingSave: 'Save traffic setting',
-      cabinet: {
-        view: 'View cabinet',
-        toAdd: 'Add cabinet',
-        toEdit: 'Edit cabinet',
-        delete: 'Delete cabinet',
-        save: 'Save cabinet'
-      }
-    },
-    model: {
-      view: 'View model',
-      toAdd: 'Add model',
-      toEdit: 'Edit model',
-      delete: 'Delete model',
-      save: 'Save model',
-      panel: 'View panel',
-      chart: {
-        view: 'View chart',
-        toAdd: 'Add chart',
-        toEdit: 'Edit chart',
-        delete: 'Delete chart',
-        save: 'Save chart',
-        import: 'Import chart',
-        export: 'Export chart',
-        duplicate: 'Duplicate chart',
-        sync: 'Sync chart'
-      }
-    },
-    snmp: {
-      view: 'View mib file',
-      toAdd: 'Add mib file',
-      toEdit: 'Edit mib file',
-      delete: 'Delete mib file',
-      save: 'Save mib file',
-      download: 'Download mib file',
-      browserExport: 'Export mib browser',
-      browserView: 'View mib browser'
-    },
-    system: {
-      basic: 'Basic save',
-      email: 'Email save',
-      terminal: 'Terminal save',
-      ldap: 'LDAP save',
-      notification: {
-        add: 'Add notification',
-        toEdit: 'Edit notification',
-        delete: 'Delete notification',
-        save: 'Save notification'
-      },
-      link: {
-        add: 'Add link',
-        toEdit: 'Edit link',
-        delete: 'Delete link',
-        save: 'Save link'
-      },
-      reset: 'Reset system config'
-    },
-    header: {
-      header: 'Header',
-      link: 'Link',
-      terminal: 'Terminal',
-      terminalUpload: 'Upload in terminal',
-      terminalDownload: 'Download in terminal',
-      add: {
-        view: 'View add button',
-        project: 'Add project',
-        module: 'Add module',
-        endpoint: 'Add endpoint',
-        rule: 'Add rule',
-        asset: 'Add asset'
-      }
-    }
+    view: '查看',
+    add: '新增',
+    edit: '修改',
+    delete: '删除'
   },
   ...zhLocale
 }

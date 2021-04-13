@@ -37,14 +37,14 @@ export default {
     asce: tableSet.asce,
     desc: tableSet.desc,
     strTodate: tableSet.strTodate,
-    tableOperation ([command, row, url]) {
+    tableOperation ([command, row]) {
       switch (command) {
         case 'edit': {
           this.edit(row)
           break
         }
         case 'delete': {
-          this.del(row, url)
+          this.del(row)
           break
         }
         default:
@@ -53,6 +53,9 @@ export default {
     },
     isBuildIn (row) {
       return (row.buildIn && row.buildIn == 1) || (row.builtIn && row.builtIn == 1)
+    },
+    selectionChange (objs) {
+      this.batchDeleteObjs = objs
     },
     getTableData (callBack) {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
@@ -84,7 +87,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url).then(response => {
+        this.$delete(this.url + '?ids=' + row.id).then(response => {
           if (response.code === 200) {
             this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })

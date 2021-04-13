@@ -42,7 +42,7 @@ export default new Router({
           component: resolve => require(['../components/page/asset/asset.vue'], resolve)
         },
         {
-          path: '/account',
+          path: '/user',
           component: resolve => require(['../components/page/config/user.vue'], resolve)
         },
         {
@@ -54,7 +54,7 @@ export default new Router({
           component: resolve => require(['../components/page/config/roles.vue'], resolve)
         },
         {
-          path: '/promServer',
+          path: '/agent',
           component: resolve => require(['../components/page/config/promServer.vue'], resolve)
         },
         {
@@ -66,7 +66,7 @@ export default new Router({
           component: resolve => require(['../components/page/config/assetState.vue'], resolve)
         },
         {
-          path: '/assetMeta',
+          path: '/assetLabel',
           component: resolve => require(['../components/page/config/assetMeta.vue'], resolve)
         },
         {
