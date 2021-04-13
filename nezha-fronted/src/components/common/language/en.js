@@ -706,8 +706,7 @@ const en = {
       editMenu: 'Edit menu',
       orderNum: 'Order'
     },
-    promServer: {
-      promServerList: 'Prometheus server', // "Prometheus Server"
+    agent: {
       // 侧滑框
       promId: 'Prometheus server ID', // "Prometheus Server ID"
       createProm: 'New prometheus server', // "新增Prometheus Server"
@@ -716,6 +715,7 @@ const en = {
       checkTime: 'Check time',
       dataCenter: 'Data center',
       agent: {
+        agent: 'Agent',
         title: 'Download agent',
         download: 'Download',
         osType: 'OS type',
@@ -747,7 +747,7 @@ const en = {
       state: 'State',
       longitude: 'Longitude',
       latitude: 'Latitude',
-      lnglat: 'Coordinate',
+      lnglat: 'Coordinate'
     },
     model: {
       model: 'Asset model',
@@ -1036,8 +1036,8 @@ const en = {
     alert: 'Alerts', // "告警"
     message: 'Message', // '信息'
     rule: 'Rule', // '规则'
-    alertList: 'Alert message', // "告警信息"
-    alertConfig: 'Alert rule', // "告警规则"
+    alertMessage: 'Alert message', // "告警信息"
+    alertRule: 'Alert rule', // "告警规则"
     alertName: 'Alert name', // "告警名称"
     severity: 'Priority', // "等级"
     description: 'Description', // "描述"
@@ -1305,7 +1305,8 @@ const en = {
     view: 'View',
     add: 'Add',
     edit: 'Edit',
-    delete: 'Delete'
+    delete: 'Delete',
+    expire: 'Expire'
   },
   ...enLocale
 }

@@ -8,11 +8,11 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'account_toAdd'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+        <button id="account-add" v-has="'user_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'account_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button id="account-list-batch-delete" v-has="'user_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot="slotProps">
         <user-table
@@ -71,7 +71,6 @@ export default {
         notifications: []
       },
       tableId: 'userTable',
-      queryPermission: 'account_view',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{

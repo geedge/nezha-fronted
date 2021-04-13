@@ -1,8 +1,8 @@
 <template>
-  <div class="right-box right-box-alert-config" v-clickoutside="{obj:editAlertRule,func:clickOutside}">
+  <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-config">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="alert-box-del" type="button" v-has="'rule_delete'" v-if="alertRule.id">
+      <button v-if="alertRule.id" id="alert-box-del" v-has="'rule_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -15,54 +15,54 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editAlertRule" label-position = "top" label-width="120px" :rules="rules" ref="alertRuleForm">
-        <!--alertName-->
-        <el-form-item :label='$t("alert.config.name")' prop="alertName">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model="editAlertRule.alertName" size="small" id="alert-box-input-name"></el-input>
+      <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
+        <!--name-->
+        <el-form-item :label='$t("alert.config.name")' prop="name">
+          <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
         </el-form-item>
-        <el-form-item style="width: calc(100% - 15px);margin-left: 15px" :label='$t("alert.config.expr")' prop="expr">
+        <el-form-item :label='$t("alert.config.expr")' prop="expr" style="width: calc(100% - 15px);margin-left: 15px">
           <promql-input
+            id="alert-box-input-promql"
             ref="promql"
             :expression-list.sync="expressions"
             :index="0"
-            :styleType="2"
-            :required="true"
-            @change="metricChange"
             :plugins="['metric-selector','metric-input']"
-            id="alert-box-input-promql"
+            :required="true"
+            :styleType="2"
+            @change="metricChange"
           ></promql-input>
         </el-form-item>
         <!--threshold-->
         <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
-          <el-input type="text" placeholder="" v-model="editAlertRule.threshold" size="small" id="alert-box-input-threshold">
-            <el-select popper-class="config-dropdown threshold-dropdown" v-model="editAlertRule.operator" placeholder=""  size="small" id="alert-box-input-operator" slot="prepend" class="input-with-select">
-              <el-option :id="'operator-'+item.key" v-for="item in operators" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text">
+            <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator"  class="input-with-select" placeholder="" popper-class="config-dropdown threshold-dropdown" size="small">
+              <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
         <!--unit-->
         <el-form-item :label="$t('alert.config.unit')" prop="unit">
-          <el-cascader filterable placeholder="" popper-class="no-style-class unit-popper-class" size="small" style="width: 100%" id="alert-box-input-unit"
-                       :options="unitOptions"
-                       :props="{ expandTrigger: 'click',emitPath:false }"
-                       :show-all-levels="false"
-                       v-model="editAlertRule.unit"
+          <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
+                       placeholder=""
+                       popper-class="no-style-class unit-popper-class"
+                       size="small"
+                       style="width: 100%"
           >
           </el-cascader>
         </el-form-item>
         <!--last-->
         <el-form-item :label="$t('alert.config.for')" prop="last">
-          <el-input type="text" placeholder="" v-model.number="editAlertRule.last" size="small" id="alert-box-input-last">
+          <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" type="text">
             <template slot="append">{{$t('alert.config.second')}}</template>
           </el-input>
         </el-form-item>
         <!--severity-->
         <el-form-item :label="$t('alert.severity')" prop="severity">
-          <el-select popper-class="config-dropdown" v-model="editAlertRule.severity" placeholder=""  size="small" id="alert-box-input-severity">
-            <el-option :id="'alert-severity-'+item.value" v-for="item in $CONSTANTS.alertMessage.severityData" :key="item.value" :label="item.label" :value="item.value">
+          <el-select id="alert-box-input-severity" v-model="editAlertRule.severity" placeholder=""  popper-class="config-dropdown" size="small">
+            <el-option v-for="item in $CONSTANTS.alertMessage.severityData" :id="'alert-severity-'+item.value" :key="item.value" :label="item.label" :value="item.value">
               <template v-if="!item.isEdit">{{item.label}}</template>
-              <span class="config-dropdown-label-input" v-if="item.isEdit" @click.stop>
-                <el-input type="text" v-model="item.value" size="mini"></el-input>
+              <span v-if="item.isEdit" class="config-dropdown-label-input" @click.stop>
+                <el-input v-model="item.value" size="mini" type="text"></el-input>
               </span>
             </el-option>
           </el-select>
@@ -76,16 +76,16 @@
           </div>
         </div>
         <!--receiver-->
-        <el-form-item :label="$t('config.account.receiver')" prop="receiver">
+        <el-form-item :label="$t('config.user.receiver')" prop="receiver">
           <el-select
             id="alert-box-input-receiver"
             v-model.trim="editAlertRule.receiverShow"
-            placeholder=""
-            multiple
             filterable
+            multiple
+            placeholder=""
+            popper-class="no-style-class"
             size="small"
             value-key="userId"
-            popper-class="no-style-class"
           >
             <el-option
               v-for="item in userData"
@@ -97,11 +97,11 @@
         </el-form-item>
         <!--summary-->
         <el-form-item :label="$t('alert.summary')" prop="summary">
-          <el-input maxlength="512" rows="3" type="textarea" show-word-limit placeholder="" v-model="editAlertRule.summary" size="small" id="alert-box-input-summary"></el-input>
+          <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
         </el-form-item>
         <!--description-->
         <el-form-item :label="$t('alert.description')" prop="description">
-          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editAlertRule.description" size="small" id="alert-box-input-description"></el-input>
+          <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="512" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -109,10 +109,10 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editAlertRule,func:esc}" id="alert-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button id="alert-box-esc" v-cancel="{obj:editAlertRule,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save">
+      <button id="alert-box-save" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -140,7 +140,7 @@ export default {
 
       editAlertRule: {},
       rules: {
-        alertName: [
+        name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         expr: [

@@ -1,9 +1,9 @@
 <template>
-  <div class="right-box right-box-alert-config" v-clickoutside="{obj:editExprTemp,func:clickOutside}">
+  <div v-clickoutside="{obj:editExprTemp,func:clickOutside}" class="right-box right-box-alert-config">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="alert-box-del" type="button"
-              v-has="'alert_silence_delete'" v-if="editExprTemp.id">
+      <button v-if="editExprTemp.id" id="alert-box-del" v-has="'alert_silence_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien"
+              type="button" @click="del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -18,44 +18,44 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editExprTemp" label-position="top"
-               label-width="120px" :rules="rules" ref="ExprTempForm">
-        <el-form-item prop="name" :label="$t('config.exprTemp.name')">
-          <el-input v-model="editExprTemp.name" size="small" :placeholder="$t('overall.placeHolder')"></el-input>
+      <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules"
+               class="right-box-form right-box-form-left" label-position="top" label-width="120px">
+        <el-form-item :label="$t('config.exprTemp.name')" prop="name">
+          <el-input v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
         </el-form-item>
-        <el-form-item prop="gname" :label="$t('config.exprTemp.gname')">
+        <el-form-item :label="$t('config.exprTemp.gname')" prop="gname">
           <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
           <el-autocomplete
-            class="inline-input"
             v-model="editExprTemp.gname"
             :fetch-suggestions="querySearch"
             :placeholder="$t('overall.placeHolder')"
+            class="inline-input"
             size="small"
             style="width: 100%;"
           ></el-autocomplete>
         </el-form-item>
-        <el-form-item prop="expression" :label="$t('config.exprTemp.expression')">
+        <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
           <!--<el-input v-model="editExprTemp.expression" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
           <promql-input
-            :expression-list="editExprTemp.expression"
             :id="'promqlKeys0'"
-            :index="0"
             :key="'promqlKeys0'"
+            :expression-list="editExprTemp.expression"
+            :index="0"
             :plugins="['metric-selector', 'metric-input', 'remove']"
+            :show-temp="false"
             :showRemove="false"
             :styleType="2"
-            :show-temp="false"
             @change="expressionChange"
           ></promql-input>
         </el-form-item>
-        <el-form-item prop="remark" :label="$t('config.exprTemp.remark')">
+        <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
           <el-input
-            type="textarea"
-            :placeholder="$t('alert.description')"
             v-model="editExprTemp.remark"
-            size="small"
+            :placeholder="$t('alert.description')"
             maxlength="512"
             show-word-limit
+            size="small"
+            type="textarea"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -65,12 +65,12 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editExprTemp,func:esc}" id="alert-box-esc"
+      <button id="alert-box-esc" v-cancel="{obj:editExprTemp,func:esc}"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save">
+      <button id="alert-box-save" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save"
+              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -227,7 +227,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 /deep/ .metric-selector-title{
   margin-left: 0 !important;
 }

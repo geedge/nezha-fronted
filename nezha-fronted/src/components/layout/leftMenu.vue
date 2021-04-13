@@ -8,7 +8,7 @@
         </div>
       </el-menu-item>
     </el-menu>
-    <el-menu :collapse="isShrink" :default-active="route" active-text-color="#FA901C" background-color="#202F3F" class="menu-list" mode="vertical" text-color="#BEBEBE" @select="jump">
+    <el-menu :collapse="isShrink" :default-active="route" active-text-color="#FA901C" background-color="#202F3F" class="menu-list" mode="vertical" text-color="#BEBEBE" unique-opened @select="jump">
       <template v-for="(menu, index) in menuList">
         <el-submenu v-if="menu.children && menu.children.length > 0" :key="index" :index="`${index}`">
           <template slot="title">

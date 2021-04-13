@@ -267,14 +267,14 @@ export default {
     clearSelectedMetrics () {
       this.$refs.endpointQueryTable.clearSelection()
     },
-    changeTime: function (size, unit) {
+    changeTime (size, unit) {
       this.formatTime = this.getTime(size, unit)
       this.showEndpoint()
     },
-    pickTime: function () {
+    pickTime () {
       this.showEndpoint()
     },
-    getTime: function (size, unit) { // 计算时间
+    getTime (size, unit) { // 计算时间
       const now = !this.formatTime ? new Date(bus.computeTimezone(new Date().getTime())) : new Date(this.formatTime)
       if (unit) {
         switch (unit) {
@@ -383,17 +383,17 @@ export default {
       }
       return tableData
     },
-    selectChange: function (selection) { // selection 选中的row的数组
+    selectChange (selection) { // selection 选中的row的数组
       this.selectedEndpoints = selection
     },
-    selectable: function (row, index) {
+    selectable (row, index) {
       if (this.selectedEndpoints.length >= 20 && !this.selectedEndpoints.includes(row)) {
         return false
       } else {
         return true
       }
     },
-    viewGraph: function () {
+    viewGraph () {
       if (this.selectedEndpoints.length < 1) {
         return
       }
@@ -412,7 +412,7 @@ export default {
         this.queryChartDate()
       })
     },
-    dialogClose: function () {
+    dialogClose () {
       this.$refs.pickTime.$refs.multipleTime.searchTime = []
       this.$refs.pickTime.$refs.multipleTime.showTime = {
         id: 12,
@@ -421,13 +421,13 @@ export default {
       this.$refs.pickTime.$refs.multipleTime.showDropdown = false
       this.graphShow = false
     },
-    chartUnitChange: function (unit) {
+    chartUnitChange (unit) {
       this.chartUnit = unit
       this.$nextTick(() => {
         this.queryChartDate()
       })
     },
-    queryChartDate: function () {
+    queryChartDate () {
       const start = this.searchTime[0] ? this.searchTime[0] : this.getTime(-1, 'h')
       const end = this.searchTime[1] ? this.searchTime[1] : this.getTime(0, 'h')
       this.searchTime = [start, end]
@@ -572,7 +572,7 @@ export default {
         return element.indexOf(this.queryExpression) !== -1
       })
     },
-    tableFilterHistory: function (expression) {
+    tableFilterHistory (expression) {
       let metric = ''
       let labels = []
       if (/\w*\{.*\}.*/i.test(expression)) {
@@ -640,13 +640,13 @@ export default {
         }
       }
     },
-    focusInput: function () {
+    focusInput () {
       let classVal = document.getElementById('elementQuery').parentElement.getAttribute('class')
       classVal = classVal.replace('query-input-inactive', 'query-input-active')
       document.getElementById('elementQuery').parentElement.setAttribute('class', classVal)
       this.$refs.elementQuery.focus()
     },
-    blurInput: function () {
+    blurInput () {
       if (!this.queryExpression || this.queryExpression == '') {
         setTimeout(function () {
           let classVal = document.getElementById('elementQuery').parentElement.getAttribute('class')
@@ -655,7 +655,7 @@ export default {
         }, 100)
       }
     },
-    clearInput: function () {
+    clearInput () {
       this.$refs.elementQuery.focus()
     },
     queryElementTips: async function () {
@@ -667,7 +667,7 @@ export default {
         }
       }
     },
-    getStateContent: function (row) {
+    getStateContent (row) {
       if (row) {
         if (row.state == 1) {
           return 'up' + '[' + this.formatUpdateTime(row.lastUpdate) + ']'
@@ -676,14 +676,14 @@ export default {
         }
       }
     },
-    formatUpdateTime: function (date) {
+    formatUpdateTime (date) {
       const time = new Date(date)
       const hours = time.getHours() > 9 ? time.getHours() : '0' + time.getHours()
       const minutes = time.getMinutes() > 9 ? time.getMinutes() : '0' + time.getMinutes()
 
       return hours + ':' + minutes
     },
-    getStateErrorMsg: function (row) {
+    getStateErrorMsg (row) {
       const errCodes = [230009, 230010, 230011]
       if (row) {
         if (row.state == 0) {

@@ -1,27 +1,26 @@
 <template>
-  <div style="height: 100%">
+  <div>
     <nz-data-list
       ref="dataList"
-      :components="['searchInput', 'elementSet']"
+      :api="url"
+      :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.expressionTemplate"
-      :search-msg="searchMsg"
-      :table-id="tableId"
-      :table-title="tableTitle">
+      :search-msg="searchMsg">
       <template v-slot:top-tool-right>
         <export-excel
           id="expression-template-list"
-          class="top-tool-export margin-l-20"
+          v-has="'expressionTemplate_add'"
           export-url="expression/tmpl/export"
           import-url="expression/tmpl/import"
           export-file-name="expression-template"
           :params="searchLabel"
           :permissions="{import: 'asset_import', export: 'asset_export'}"
           @afterImport="getTableData"
-          v-has="'expr_temp_save'"
+          class="top-tool-export margin-r-10"
         >
           <template slot="optionZone">
-            <button id="expr-tmpl-list-export" v-has="'expr_temp_save'" :title="$t('overall.createTemplate')" class="top-tool-btn"
+            <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
                     type="button" @click="add">
               <i class="nz-icon nz-icon-create-square"></i>
             </button>
@@ -29,75 +28,30 @@
         </export-excel>
 
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       :api="'expression/tmpl'" v-has="'expr_temp_delete'" id="alert-msg-batch-delete"></delete-button>
-      </template>
+                       id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>
       <template v-slot:default="slotProps">
-        <el-table
-          id="role-list-table"
+        <expr-tmpl-table
           ref="dataTable"
-          v-loading="tools.loading"
-          :data="tableData"
+          v-loading="slotProps.loading"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
-          border
-          @header-dragend="dragend"
-          @sort-change="tableDataSort"
-          @selection-change="(selection)=>{batchDeleteObjs=selection}"
-        >
-          <el-table-column
-            :resizable="false"
-            align="center"
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in tools.customTableTitle"
-            v-if="item.show"
-            :key="`col-${index}`"
-            :fixed="item.fixed"
-            :label="item.label"
-            :prop="item.prop"
-            :resizable="true"
-            :sort-orders="['ascending', 'descending']"
-            :width="`${item.width}`"
-            class="data-column"
-          >
-            <template slot="header">
-              <span>{{item.label}}</span>
-              <div class="col-resize-area"></div>
-            </template>
-            <template slot-scope="scope" :column="item">
-              <span v-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-          <el-table-column
-            :resizable="false"
-            :width="operationWidth"
-            fixed="right">
-            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-            <div slot-scope="scope" class="table-operation-items">
-              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
-                <div class="table-operation-item table-operation-item--more">
-                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
-                </div>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-                  <el-dropdown-item :command="['copy', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('config.exprTemp.copy')}}</span></el-dropdown-item>
-                  <el-dropdown-item :command="['delete', scope.row, `sys/role?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </div>
-          </el-table-column>
-        </el-table>
-        <!-- 回到table顶部的按钮 -->
-        <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
+          :table-data="tableData"
+          @del="del"
+          @edit="edit"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange"
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></expr-tmpl-table>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
+    <transition name="right-box">
+      <expr-tmpl-box v-if="rightBox.show" :exprTemp="object" @close="closeRightBox"></expr-tmpl-box>
+    </transition>
     <!--导出-->
     <div class="export-xlsx">
       <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false'
@@ -112,34 +66,31 @@
         </div>
       </el-dialog>
     </div>
-    <!--侧滑-->
-    <transition name="right-box">
-      <exprTempBox v-if="rightBox.show" ref="exprTempBox" :exprTemp="object"
-                   @close="closeRightBox"></exprTempBox>
-    </transition>
   </div>
 </template>
 
 <script>
 import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
-import exprTempBox from '@/components/common/rightBox/exprTempBox'
-import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import exprTmplBox from '@/components/common/rightBox/exprTmplBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
-import tableMixin from '@/components/common/mixin/table'
+import dataListMixin from '@/components/common/mixin/dataList'
+import exprTmplTable from '@/components/common/table/settings/exprTmplTable'
 
 export default {
   name: 'exprTemp',
   components: {
     deleteButton,
-    exprTempBox,
+    exprTmplBox,
     nzDataList,
+    exprTmplTable,
     'export-excel': exportXLSX
   },
-  mixins: [tableMixin],
+  mixins: [dataListMixin],
   data () {
     return {
+      url: 'expression/tmpl',
       tableId: 'exprTemp',
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
@@ -166,31 +117,6 @@ export default {
           }
         ]
       },
-      /* 表格相关 */
-      tableTitle: [
-        {
-          label: 'ID',
-          prop: 'id',
-          show: true,
-          width: 80
-        }, {
-          label: this.$t('config.exprTemp.name'),
-          prop: 'name',
-          show: true
-        }, {
-          label: this.$t('config.exprTemp.gname'),
-          prop: 'gname',
-          show: true
-        }, {
-          label: this.$t('config.exprTemp.expression'),
-          prop: 'expression',
-          show: true
-        }, {
-          label: this.$t('config.exprTemp.remark'),
-          prop: 'remark',
-          show: true
-        }
-      ],
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
@@ -203,16 +129,6 @@ export default {
         remark: ''
       },
       nowTime: ''
-    }
-  },
-  computed: {
-    getDuration () {
-      return function (record) {
-        if (record.endAt) {
-          return calcDurationByStringTimeB(record.startAt, record.endAt)
-        }
-        return calcDurationByStringTimeB(record.startAt, this.nowTime)
-      }
     }
   },
   mounted () {
@@ -228,29 +144,6 @@ export default {
       })
       bus.$on('alert-message-change', () => {
         this.getTableData()
-      })
-    },
-    getTableData () {
-      if (!this.hasButton('rule_view')) {
-        this.$message.error(this.$t('tip.noAccess'))
-        return
-      }
-      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.tools.loading = true
-      this.$get('expression/tmpl', this.searchLabel).then(response => {
-        this.tools.loading = false
-        if (response.code == 200) {
-          this.tableData = response.data.list
-          this.pageObj.total = response.data.total
-          this.nowTime = this.utcTimeToTimezoneStr(response.time)
-          if (!this.scrollbarWrap) {
-            this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
-              this.toTopBtnHandler(this.scrollbarWrap)
-            })
-          }
-        }
       })
     },
     showExportDialog () {

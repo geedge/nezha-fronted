@@ -59,7 +59,7 @@ export default new Router({
         },
         {
           path: '/agent',
-          component: resolve => require(['../components/page/config/promServer.vue'], resolve)
+          component: resolve => require(['../components/page/config/agent.vue'], resolve)
         },
         {
           path: '/assetType',
@@ -102,16 +102,16 @@ export default new Router({
           component: resolve => require(['../components/page/config/system.vue'], resolve)
         },
         {
-          path: '/alertList',
-          component: resolve => require(['../components/page/alert/list.vue'], resolve)
+          path: '/alertMessage',
+          component: resolve => require(['../components/page/alert/alertMessage.vue'], resolve)
         },
         {
-          path: '/alertConfig',
-          component: resolve => require(['../components/page/alert/config.vue'], resolve)
+          path: '/alertRule',
+          component: resolve => require(['../components/page/alert/alertRule.vue'], resolve)
         },
         {
           path: '/alertSilence',
-          component: resolve => require(['../components/page/alert/silence.vue'], resolve)
+          component: resolve => require(['../components/page/alert/alertSilence.vue'], resolve)
         },
         {
           path: '/exprtemp',

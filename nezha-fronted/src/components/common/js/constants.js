@@ -2,40 +2,7 @@ import i18n from '../i18n'
 
 export const defaultPageSize = 20
 
-export const staticMenus = {
-  settings: {
-    title: i18n.t('overall.config'),
-    menu: [
-      { route: '/account', name: i18n.t('config.account.account') },
-      { route: '/roles', name: i18n.t('config.roles.roles') },
-      { route: '/promServer', name: i18n.t('config.promServer.promServerList') },
-      { route: '/dc', name: i18n.t('config.dc.dc') },
-      { route: '/model', name: i18n.t('config.model.model') },
-      { route: '/mib', name: i18n.t('config.mib.mib') },
-      { route: '/system', name: i18n.t('config.system.system') },
-      { route: '/terminalLog', name: i18n.t('config.terminallog.terminallog') },
-      { route: '/operationLog', name: i18n.t('config.operationlog.operationlog') },
-      { route: '/about', name: i18n.t('overall.about') }
-    ]
-  },
-  alerts: {
-    title: i18n.t('alert.alert'),
-    menu: [
-      { route: '/alertList', name: i18n.t('alert.alertList') },
-      { route: '/alertConfig', name: i18n.t('alert.alertConfig') }
-    ]
-  },
-  dashboards: {
-    title: i18n.t('dashboard.title'),
-    menu: [
-      { route: '/overview', name: i18n.t('dashboard.overview.title') },
-      { route: '/panel', name: i18n.t('dashboard.panel.title') },
-      { route: '/explore', name: i18n.t('dashboard.metricPreview.title') }
-    ]
-  }
-}
-
-export const promServer = {
+export const agent = {
   theData: [
     {
       label: 'Federation',
@@ -87,7 +54,7 @@ export const promServer = {
   ]
 
 }
-export const promServer2 = {
+export const agent2 = {
   theData: [
     {
       label: 'Global',
@@ -179,8 +146,9 @@ export const terminalLog = {
 export const fromRoute = {
   panel: 'panel',
   explore: 'explore',
-  message: 'message',
-  rule: 'rule',
+  alertMessage: 'alertMessage',
+  alertRule: 'alertRule',
+  alertSilence: 'alertSilence',
   model: 'model',
   mib: 'mib',
   asset: 'asset',
@@ -188,7 +156,7 @@ export const fromRoute = {
   assetState: 'assetState',
   expressionTemplate: 'expressionTemplate',
   user: 'user',
-  promServer: 'promServer',
+  agent: 'agent',
   dc: 'dc',
   role: 'role',
   endpoint: 'endpoint',

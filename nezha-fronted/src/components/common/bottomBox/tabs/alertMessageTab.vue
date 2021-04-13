@@ -89,13 +89,13 @@
 <script>
 import axios from 'axios'
 import bus from '../../../../libs/bus'
-import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
+import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import deleteButton from '../../deleteButton'
 export default {
   name: 'alertMessageTab',
   components: {
-    alertMessageTable: alertMessageTable,
-    'delete-button': deleteButton
+    alertMessageTable,
+    deleteButton
   },
   props: {
     from: String, // 来自哪个主页面，有："asset"、"alertRule"

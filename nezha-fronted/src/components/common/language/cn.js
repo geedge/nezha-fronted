@@ -7,7 +7,7 @@ const cn = {
     alert: '告警',
     asset: '资产',
     config: '设置',
-    administration: '行政管理',
+    administration: '系统管理',
     configuration: '设置',
     create: '新增',
     edit: '编辑',
@@ -712,6 +712,7 @@ const cn = {
       checkTime: '检查时间',
       dataCenter: '数据中心',
       agent: {
+        agent: 'Agent',
         title: '下载Agent',
         download: '下载',
         osType: 'OS 类型',
@@ -1421,7 +1422,8 @@ const cn = {
     view: '查看',
     add: '新增',
     edit: '修改',
-    delete: '删除'
+    delete: '删除',
+    expire: '过期'
   },
   ...zhLocale
 }

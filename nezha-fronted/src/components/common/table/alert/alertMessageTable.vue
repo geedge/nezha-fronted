@@ -1,62 +1,46 @@
 <style lang="scss">
-  @import '../../charts/chart';
+  @import '../../../charts/chart';
 </style>
 <template>
-  <div :class="{'contentTable':!projectAlertId,'relative-position':true,'contentProject':projectAlertId}">
-    <!-- 自定义table列 -->
-    <transition name="el-zoom-in-top">
-      <element-set
-        :id="id+'-element-set'"
-        v-if="tools.showCustomTableTitle"
-        @close="tools.showCustomTableTitle = false"
-        :custom-table-title.sync="tools.customTableTitle"
-        :original-table-title="tableTitle"
-        ref="customTableTitle"
-        :path="'/alertList'"
-      ></element-set>
-    </transition>
+  <div>
     <!--表格-->
     <el-table
-      class="nz-table tabelH100"
-      :data="tableData"
-      border
-      v-show="bottomBox.mainResizeShow"
-      ref="alertListTable"
-      tooltip-effect="light"
-      :height="tableHeight"
-      v-loading="tools.loading"
+      id="alertMessageTable"
+      ref="dataTable"
       :cell-class-name="labelsClassName"
-      @selection-change="selectChange"
-      style="width: 100%;height: 100%"
+      :data="tableData"
+      :height="height"
+      border
+      @header-dragend="dragend"
       @sort-change="tableDataSort"
-      :id="id+'-table'"
+      @selection-change="selectChange"
     >
       <el-table-column
         :resizable="false"
-        type="selection"
-        width="40"
         align="center"
-      >
+        type="selection"
+        width="55">
       </el-table-column>
       <el-table-column
-        :resizable="true"
-        v-for="(item, index) in tools.customTableTitle"
+        v-for="(item, index) in customTableTitle"
         v-if="item.show"
         :key="`col-${index}`"
+        :fixed="item.fixed"
         :label="item.label"
-        :show-overflow-tooltip="item.prop !== 'labels' && item.prop !== 'alertRule'"
-        :min-width="item.minWidth || item.width"
-        :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
-        :prop="$tableSet.propTitle(item.prop,'alertMessage')"
+        :min-width="`${item.minWidth}`"
+        :prop="item.prop"
+        :resizable="true"
         :sort-orders="['ascending', 'descending']"
+        :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
+        :width="`${item.width}`"
       >
         <template slot-scope="scope" :column="item">
           <template v-if="item.prop === 'alertRule'">
-            <div v-if="scope.row.alertRule.alertName" >
+            <div v-if="scope.row.alertRule.name" >
               <span
-                @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)"
-                @mouseleave="alertMessagehover(scope.row.alertRule, false)"
-              >{{scope.row.alertRule.alertName}}</span>
+                @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
+                @mouseleave="alertMessageHover(scope.row.alertRule, false)"
+              >{{scope.row.alertRule.name}}</span>
               <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
             </div>
             <template v-else>-</template>
@@ -75,15 +59,12 @@
           </template>
           <span v-else-if="item.prop === 'severity'" class="severity">
             <span v-if="scope.row[item.prop] === 'P1'" class="P1">P1</span>
-            <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
             <span v-if="scope.row[item.prop] === 'P2'" class="P2">P2</span>
-            <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
             <span v-if="scope.row[item.prop] === 'P3'" class="P3">P3</span>
-            <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
           </span>
           <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <template v-else-if="item.prop === 'duration'">
-            <el-tooltip placement="right" effect="light" :disabled="!scope.row.endAt">
+            <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
               <div slot="content">
                 {{$t('config.terminallog.endTime')}}<br/>
                 {{scope.row.endAt}}
@@ -97,10 +78,10 @@
                 @mouseenter="labelHover(scope.row, item.label, true, $event)"
                 @mouseleave="labelHover(scope.row, item.label, false)">
                 <nz-alert-tag
-                   :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                   v-if="item.label !== 'alertname' && item.label !== 'severity'"
-                   :key="item.label"
-                   :cursor-point="tagType(item.label) !== 'info'"
+                   v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
+                   :label="item.label"
+                   :type="tagType(item.label)"
+                   style="margin: 5px 0 5px 5px;"
                 >
                  {{item.value}}
                 </nz-alert-tag>
@@ -112,33 +93,6 @@
                 :type="item.label"
               ></alertLabel>
             </span>
-
-            <!--<el-tooltip
-              v-for="(item,i) in labelsSort(scope.row.labels)"
-              :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
-              effect="light"
-              :disabled="!(item.label === 'asset' ||item.label === 'module' || item.label === 'project')"
-              :key="item.label"
-            >
-              <alertLabel
-                v-if="item.label === 'asset' ||item.label === 'module' || item.label === 'project'"
-                slot="content"
-                :id="scope.row[item.label].id"
-                :type="item.label"
-                :labelLoading="scope.row[item.label].loading"
-              ></alertLabel>
-              <span @mouseover="labelHover(scope.row,scope.$index,item.label)" >
-                     <nz-alert-tag
-                       :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                       :cursor-point="tagType(item.label) == 'info' ? false : true"
-                       :key="item.label"
-                       v-if="item.label != 'alertname' && item.label != 'severity'"
-                     >
-                       {{item.value}}
-                     </nz-alert-tag>
-              </span>
-            </el-tooltip>-->
-
           </template>
           <span v-else-if="item.prop === 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
               {{scope.row['state'] == 1 ? "Pending" : ""}}
@@ -148,141 +102,56 @@
             <span v-if="!scope.row.current || scope.row.alertRule.buildIn == 1">-</span>
             <el-popover v-else placement="right" trigger="hover">
               <div slot="reference">
-                <span class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
+                <span :id="'alert-list-detail-'+scope.row.id" class="content-right-option"><i class="nz-icon nz-icon-chart"></i></span>
                 <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
               </div>
               <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
             </el-popover>
           </div>
-          <div v-else-if="item.prop === 'option'" class="content-right-options">
-            <span :id="'alert-list-delete-'+scope.row.id" :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" v-has="`${from}_delete`"><i  class="nz-icon nz-icon-delete"></i></span>
-          </div>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
         </template>
       </el-table-column>
-
-      <el-table-column width="28" :resizable="true">
-        <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-            <i class="nz-icon nz-icon-gear"></i>
-          </span>
-        </template>
+      <el-table-column
+        :resizable="false"
+        :width="operationWidth"
+        fixed="right">
+        <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+        <div slot-scope="scope" class="table-operation-items">
+          <button class="table-operation-item" @click="toDeleteMessage(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
+        </div>
       </el-table-column>
     </el-table>
-    <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow &&showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
-    <!--<弹窗>-->
-    <!--导出-->
-    <div class="export-xlsx">
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
-        <div class="upload-body">
-          <button @click="exportCur" class="el-button el-button--default el-button--small">
-            <span>{{$t('overall.exportCur')}}</span>
-          </button>
-          <button @click="exportAll" class="el-button el-button--default el-button--small">
-            <span>{{$t('overall.exportAll')}}</span>
-          </button>
-        </div>
-      </el-dialog>
-    </div>
-    <!--删除弹窗-->
-    <div class="export-xlsx">
-      <el-dialog :visible.sync="deleteBox.show" :title="$t('alert.list.remark')" :modal-append-to-body='false' :show-close="true" width="450px"  @close="closeDialog" class="nz-message" @opened="openedDialog">
-        <div class="upload-body">
-          <el-form ref="remarkForm" :model="deleteBox">
-            <el-form-item prop="remark" :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]">
-              <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
-            </el-form-item>
-          </el-form>
-          <div style="text-align: right; margin-top: 10px;">
-            <button @click="closeDialog" class="el-button el-button--default el-button--small">
-              <span>{{$t('tip.no')}}</span>
-            </button>
-            <button @click="deleteMessage" class="el-button el-button--default el-button--small el-button--primary">
-              <span>{{$t('tip.yes')}}</span>
-            </button>
-          </div>
-        </div>
-      </el-dialog>
-    </div>
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('overall.detail')"
-               :visible.sync="graphShow"
-               width="90%"
-               id="viewGraphDialog"
-               @close="dialogClose"
-               :modal-append-to-body='false'>
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-        </div>
-      </div>
-      <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import bus from '../../../libs/bus'
+import bus from '../../../../libs/bus'
 import axios from 'axios'
-import nzAlertTag from '../../page/alert/nzAlertTag'
-import chart from '../../page/dashboard/overview/chart'
-import chartDataFormat from '../../charts/chartDataFormat'
-import alertRuleInfo from '../../common/alert/alertRuleInfo'
-import alertLabel from '../../common/alert/alertLabel'
-import { calcDurationByStringTimeB } from '../js/tools'
+import table from '@/components/common/mixin/table'
+import nzAlertTag from '../../../page/alert/nzAlertTag'
+import chartDataFormat from '../../../charts/chartDataFormat'
+import alertRuleInfo from '../../alert/alertRuleInfo'
+import alertLabel from '../../alert/alertLabel'
+import { calcDurationByStringTimeB } from '../../js/tools'
 export default {
   name: 'alertMessageTable',
   components: {
-    'nz-alert-tag': nzAlertTag,
-    chart: chart,
+    nzAlertTag,
     alertRuleInfo: alertRuleInfo,
     alertLabel: alertLabel
   },
-  mixins: [bus],
   props: {
-    tableData: {},
-    loading: {},
-    tableHeight: {},
-    tableId: {},
-    projectAlertId: {},
-    showTopBtn: {
-      type: Boolean,
-      default: true
-    },
-    from: { type: String },
-    id: String,
-    nowTime: {}
+    nowTime: {
+      type: String
+    }
   },
+  mixins: [table, bus],
   data () {
     return {
       /* 二级列表相关 */
       tabList: [], // 二级列表的标签
       tabDetailList: [], // 多个详情
-      bottomBox: {
-        tabList: [], // 二级列表的标签
-        tabDetailList: [], // 多个详情
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-
-      // 导出相关
-      importBox: { show: false, title: this.$t('overall.exportExcel') },
-      deleteBox: { show: false, ids: '', remark: '', state: 2 },
 
       // 详情相关
       graphShow: false,
@@ -292,11 +161,6 @@ export default {
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
       chartUnit: 5,
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0
-      },
       tableTitle: [
         {
           label: 'ID',
@@ -344,13 +208,7 @@ export default {
           prop: 'startAt',
           show: true,
           width: 150
-        }, /* {
-            label: this.$t('alert.endAt'),
-            prop: 'endAt',
-            show: true,
-            width: 150
-          }, */
-        {
+        }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
           show: true,
@@ -360,19 +218,9 @@ export default {
           prop: 'current',
           show: true,
           width: 100
-        }, {
-          label: this.$t('overall.option'),
-          prop: 'option',
-          show: true,
-          width: 90
         }
       ],
-      viewProjectData: { id: '', name: '', remark: '' },
-      viewModuleData: { id: '', name: '', project: {}, port: '', path: '', param: '', paramObj: [] },
       viewAssetState: false,
-
-      scrollbarWrap: null,
-      delFlag: false,
       tableDataInitNum: 0
     }
   },
@@ -410,7 +258,7 @@ export default {
     }
   },
   methods: {
-    labelsSort: function (obj) {
+    labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
       if (typeof obj === 'string') obj = JSON.parse(obj)
       const labels = JSON.parse(JSON.stringify(obj))
@@ -426,14 +274,7 @@ export default {
       })
       return result
     },
-    chartUnitChange: function (unit) {
-      this.chartUnit = unit
-      this.$nextTick(() => {
-        this.queryChartDate()
-      })
-    },
-
-    formatThreshold: function (value, unit) {
+    formatThreshold (value, unit) {
       const unitMethod = chartDataFormat.getUnit(unit)
       if (unitMethod && value) {
         return unitMethod.compute(value, null, 2)
@@ -485,7 +326,7 @@ export default {
                         symbol: ['circle', 'circle'],
                         label: {
                           distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                          formatter: function (params) {
+                          formatter (params) {
                             return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
                           }
                         },
@@ -548,7 +389,7 @@ export default {
         })
       }
     },
-    computeDistance: function (str) {
+    computeDistance (str) {
       let width = 0
       const html = document.createElement('span')
       html.innerText = str
@@ -558,7 +399,7 @@ export default {
       document.querySelector('.getTextWidth').remove()
       return Number('-' + (width + 5))
     },
-    returnMarkArea: function () {
+    returnMarkArea () {
       if (this.currentMsg) {
         if (this.currentMsg.alertRule.operator == '>' || this.currentMsg.alertRule.operator == '>=') {
           return [{ yAxis: this.currentMsg.alertRule.threshold }, {}]
@@ -578,9 +419,7 @@ export default {
         this.queryChartDate()
       })
     },
-    dialogClose () {
-      this.graphShow = false
-    },
+
     getAlertList () {
       if (!this.scrollbarWrap) {
         this.$nextTick(() => {
@@ -653,23 +492,7 @@ export default {
       }
     },
     toDeleteMessage (obj) {
-      if (obj) {
-        this.deleteBox.ids = obj.id + ''
-      }
-      this.deleteBox.remark = ''
-      this.deleteBox.show = true
-    },
-    deleteMessage () {
-      this.$refs.remarkForm.validate(valid => {
-        if (valid) {
-          this.delFlag = true
-          this.$emit('deleteMessage', this.deleteBox, () => {
-            this.deleteBox.ids = []
-            bus.$emit('alert-message-change')
-          })
-          this.deleteBox.show = false
-        }
-      })
+      this.$emit('toDelete', obj)
     },
     selectChange (s) {
       const ids = []
@@ -680,30 +503,11 @@ export default {
       this.deleteBox.ids = ids.join(',')
       this.$emit('select-change', s)
     },
-    showExportDialog () {
-      this.importBox.show = true
-    },
-    openedDialog () {
-      this.$refs.remarkForm.clearValidate()
-    },
     closeDialog () {
       this.importBox.show = false
       this.deleteBox.show = false
     },
-    exportCur: function () {
-      const searchLabel = Object.assign({}, this.searchLabel)
-      this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(searchLabel)
-      this.closeDialog()
-    },
-    exportAll: function () {
-      const temp = JSON.parse(JSON.stringify(this.searchLabel))
-      temp.pageSize = -1
-      this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(temp)
-      this.closeDialog()
-    },
-    getTimeString: function () {
+    getTimeString () {
       const split = '-'
       const date = new Date()
       const year = date.getFullYear()
@@ -714,73 +518,8 @@ export default {
       const seconds = this.formatNum(date.getSeconds())
       return year + split + month + split + day + ' ' + hours + split + minutes + split + seconds
     },
-    formatNum: function (num) {
+    formatNum (num) {
       return num > 9 ? num : '0' + num
-    },
-    exportExcel: function (params) {
-      for (const item in params) {
-        if (params[item]) {
-          if (item == 'alertMessageState') {
-            this.$set(params, 'state', params[item])
-          } else {
-            this.$set(params, item, params[item])
-          }
-        }
-      }
-      const temp = this
-      if (!params) {
-        params = temp.params
-      }
-      axios.get('alert/message/export', { responseType: 'blob', params: params }).then(res => {
-        const fileName = 'alert-message-' + temp.getTimeString() + '.xlsx'
-        if (window.navigator.msSaveOrOpenBlob) {
-          // 兼容ie11
-          const blobObject = new Blob([res.data])
-          window.navigator.msSaveOrOpenBlob(blobObject, fileName)
-        } else {
-          const url = URL.createObjectURL(new Blob([res.data]))
-          const a = document.createElement('a')
-          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
-          a.href = url
-          a.download = fileName
-          a.target = '_blank'
-          a.click()
-          a.remove() // 将a标签移除
-        }
-      })
-    },
-    // 全屏
-    fullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.fullScreen(vm)
-    },
-    // 退出全屏
-    exitFullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.exitFullScreen(vm)
-    },
-    // 鼠标拖动二级列表
-    listResize (e) {
-      const vm = this
-      this.$bottomBoxWindow.listResize(vm, e)
-    },
-    showTagDetail (data, key) {
-      let open = false
-      if (key == 'asset' || key == 'project' || key == 'module' || key == 'endpoint' || key == 'datacenter') {
-        open = true
-      }
-      if (open) {
-        const labelList = []
-        const detailList = []
-        for (const item in data) {
-          if (item == 'asset' || item == 'project' || item == 'module' || item == 'endpoint' || item == 'dc') {
-            labelList.push(item)
-            detailList.push(data[item])
-          }
-        }
-        this.bottomBox.showSubList = true
-        this.tabList = labelList
-      }
     },
     labelsClassName (row) {
       if (row.column.label == this.$t('alert.list.labels')) {
@@ -795,26 +534,11 @@ export default {
         return ''
       }
     },
-    fillProject: function (module) {
-      this.$get('project', { id: module.projectId }).then(response => {
-        if (response.code == 200) {
-          module.project = response.data.list[0]
-        }
-      })
-    },
-    closeViews: function () {
+    closeViews () {
       this.$refs.alertConfigBox.show(false, false)
       this.$refs.projectBox.show(false, false)
       this.$refs.moduleBox.show(false, false)
       this.viewAssetState = false
-    },
-    // 数据排序
-    tableDataSort (item) {
-      this.$emit('tableDataSort', item)
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
     },
     // label tooltip是否显示
     labelToolTipDis (labelType) {
@@ -827,8 +551,8 @@ export default {
         default: return true
       }
     },
-    // alertNmae鼠标划入
-    alertMessagehover (item, loading, e) {
+    // alertName鼠标划入
+    alertMessageHover (item, loading, e) {
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
@@ -864,74 +588,6 @@ export default {
           self.tools.tableHover = false;
         }
       }, */
-  },
-  watch: {
-    showSubList (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    },
-    loading: {
-      handler: function (n, o) {
-        this.tools.loading = n
-      },
-      immediate: true,
-      deep: true
-    },
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-        if (!this.delFlag) {
-          this.$refs.alertListTable.bodyWrapper.scrollTop = 0
-        }
-        this.tableDataInitNum++// 因为异步加载的问题导致该表格加载三次 只有最后一次是稳定 故只有第三次是去除是否删除的标记
-        if (this.tableDataInitNum === 2) {
-          this.tableDataInitNum = 0
-          this.delFlag = false
-        }
-      }
-
-    }
-  },
-  mounted () {
-    // 初始化表头
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + '/alertList')
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + '/alertList'))
-      : this.tableTitle
-    this.tableTitleReset(this.tableTitle, this.tools.customTableTitle)
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
-
-    this.getAlertList()
-    /* if(this.from=='alertMessage'){
-        this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-          ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-          : this.tableTitle;
-        this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path)
-          ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-" + this.$route.path))
-          : this.tableTitle;
-      }
-      if(this.from=='alertMessageTab'  || this.from=='chartList'){
-        this.tablelable = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
-          ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
-          : this.tableTitle;
-        this.dropCol = localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList")
-          ? JSON.parse(localStorage.getItem("nz-tableTitle-" + localStorage.getItem("nz-username") + "-/alertList"))
-          : this.tableTitle;
-      }
-    */
-  },
-  beforeDestroy () {
-    if (this.scrollbarWrap) {
-      if (this.scrollbarWrap) {
-        this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-      }
-    }
   }
 }
 

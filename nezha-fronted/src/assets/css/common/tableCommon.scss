@@ -94,6 +94,16 @@
       border: 1px solid #E7EAED;
       border-bottom: none;
 
+      .caret-wrapper {
+        height: 23px;
+        .sort-caret.ascending {
+          top: 1px;
+        }
+        .sort-caret.descending {
+          bottom: 0;
+        }
+      }
+
       .el-table-column--selection {
         width: 55px !important;
       }
@@ -145,15 +155,16 @@
           border: none;
           border-radius: $--button-border-radius;
           background-color: $--button-primary-background-color;
-          opacity: .8;
+          opacity: 1;
           cursor: pointer;
-
+          transition: all .2s;
           i {
             color: $--button-primary-color;
             font-size: 12px;
           }
         }
         >.table-operation-item:hover {
+          opacity: .8;
         }
         .table-operation-item.table-operation-item--more {
           justify-content: space-between;
@@ -186,10 +197,11 @@
   .el-table--border td {
     border-right: none !important;
   }
-  .el-table--border .el-table__body-wrapper td:nth-last-child(2) {
+  /* 最后一列用box-shadow模拟边框 */
+  .el-table:not(.no-operation).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
     box-shadow: 1px 0 #E7EAED;
   }
-  .el-table--border .el-table__header-wrapper th:nth-last-child(3) {
+  .el-table:not(.no-operation).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
     border-right: none !important;
     box-shadow: 1px 0 #E7EAED;
   }

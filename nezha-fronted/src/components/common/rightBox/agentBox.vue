@@ -1,10 +1,10 @@
 <template>
-  <div class="right-box right-box-prom" v-clickoutside="{obj:editPromServer,func:clickOutside}">
+  <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" type="button" v-has="'prom_delete'" v-if="editPromServer.id"
-              class="nz-btn nz-btn-size-normal nz-btn-size-alien"
-              id="promServer-edit-del">
+      <button v-if="editPromServer.id" id="promServer-edit-del" v-has="'prom_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien"
+              type="button"
+              @click="del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
@@ -17,12 +17,12 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form class="right-box-form right-box-form-left" :model="editPromServer" label-position = "top" label-width="120px" :rules="rules" ref="promServerForm">
+      <el-form ref="promServerForm" :model="editPromServer" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
         <!--DC-->
-        <el-form-item :label="$t('config.dc.dc')" prop="idc.name">
+        <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
           <div class="right-box-form-content">
-            <el-select value-key="id" popper-class="config-dropdown" v-model="editPromServer.idc" placeholder="" size="small" id="prom-box-input-idc">
-              <el-option v-for="item in dcData" :key="item.id" :label="item.name" :value="item" :id="'prom-edit-idc-op-'+item.id">
+            <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" popper-class="config-dropdown" size="small" value-key="id">
+              <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
                 <span class="config-dropdown-label-txt">{{item.name}}</span>
               </el-option>
             </el-select>
@@ -31,11 +31,11 @@
 
         <!--host-->
         <el-form-item label="Host" prop="host">
-          <el-input type="text" placeholder="" v-model="editPromServer.host" size="small" id="prom-box-input-host"></el-input>
+          <el-input id="prom-box-input-host" v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
         </el-form-item>
         <!--Port-->
         <el-form-item label="Port" prop="port">
-          <el-input type="text" placeholder="" v-model.number="editPromServer.port" size="small" id="prom-box-input-port"></el-input>
+          <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
         </el-form-item>
         <!--type-->
         <el-form-item :label="$t('config.promServer.type')" prop="type">
@@ -48,14 +48,14 @@
 <!--            :options="$CONSTANTS.promServer.theData"-->
 <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
 <!--            clearable></el-cascader>-->
-          <el-select  placeholder="" v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" popper-class="config-dropdown" value-key="value" size="small">
-            <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in $CONSTANTS.promServer2.theData">
+          <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" popper-class="config-dropdown" size="small" value-key="value">
+            <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value">
               <span class="panel-dropdown-label-txt" >{{item.label}}</span>
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Token" prop="token">
-          <el-input class="right-box-row-with-btn" type="text" placeholder="" v-model="editPromServer.token" size="small" id="prom-box-input-token">
+          <el-input id="prom-box-input-token" v-model="editPromServer.token" class="right-box-row-with-btn" placeholder="" size="small" type="text">
             <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>
           </el-input>
         </el-form-item>
@@ -64,12 +64,12 @@
     <!-- end--表单-->
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editPromServer,func:esc}" id="prom-esc"
+      <button id="prom-esc" v-cancel="{obj:editPromServer,func:esc}"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" id="prom-save"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">
+      <button id="prom-save" :class="{'nz-btn-disabled':prevent_opt.save}"
+              :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -77,16 +77,17 @@
 </template>
 <script>
 import { host, port } from '../../common/js/validate'
-
+import { agent2 } from '@/components/common/js/constants'
 export default {
-  name: 'promServerBox',
+  name: 'agentBox',
   props: {
     promServer: Object
   },
   data () {
     return {
+      agent2: agent2,
       rules: {
-        'idc.name': [
+        'dc.name': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         host: [
@@ -176,7 +177,7 @@ export default {
     },
     // 获取dc下拉列表数据
     getDcData () {
-      this.$get('idc', { pageSize: -1 }).then(response => {
+      this.$get('dc', { pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.dcData = response.data.list
         }
@@ -192,8 +193,8 @@ export default {
         this.editPromServer = JSON.parse(JSON.stringify(n))
       }
     },
-    'editPromServer.idc': function (n, o) {
-      this.editPromServer.idcId = n.id
+    'editPromServer.dc': function (n, o) {
+      this.editPromServer.dcId = n.id
     }
   },
   mounted () {

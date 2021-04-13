@@ -12,124 +12,34 @@
         </div>
       </div>
     </div>
-    <el-table
-      id="role-list-table"
+    <operation-log-table
       ref="dataTable"
       v-loading="tools.loading"
-      :data="tableData"
+      :api="url"
+      :custom-table-title="tools.customTableTitle"
       :height="mainTableHeight"
-      border
-      @header-dragend="dragend"
-      @sort-change="tableDataSort"
-      @selection-change="(selection)=>{batchDeleteObjs=selection}"
-    >
-      <el-table-column
-        :resizable="false"
-        align="center"
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        v-for="(item, index) in tools.customTableTitle"
-        v-if="item.show"
-        :key="`col-${index}`"
-        :fixed="item.fixed"
-        :label="item.label"
-        :prop="item.prop"
-        :resizable="true"
-        :sort-orders="['ascending', 'descending']"
-        :width="`${item.width}`"
-        class="data-column"
-      >
-        <template slot="header">
-              <span>
-                <span>{{item.label}}</span>
-                <div class="col-resize-area"></div>
-              </span>
-        </template>
-        <template slot-scope="scope" :column="item">
-              <span v-if="item.prop === 'time'">
-                {{scope.row[item.prop]}} ms
-              </span>
-          <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
-          <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <span v-else>{{scope.row[item.prop]}}</span>
-        </template>
-      </el-table-column>
-    </el-table>
+      :table-data="tableData"
+      @del="del"
+      @edit="edit"
+      @orderBy="tableDataSort"
+      @reload="getTableData"
+      @selectionChange="selectionChange"></operation-log-table>
   </div>
 </template>
 
 <script>
-import tableMixin from '@/components/common/mixin/dataList'
+import dataListMixin from '@/components/common/mixin/dataList'
+import operationLogTable from '@/components/common/table/settings/operationLogTable'
 export default {
   name: 'operationLogTab',
-  mixins: [tableMixin],
+  mixins: [dataListMixin],
+  components: {
+    operationLogTable
+  },
   data () {
     return {
-      tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量
-      tableTitle: [
-        {
-          label: this.$t('config.operationlog.id'),
-          prop: 'id',
-          show: true,
-          width: 80
-        }, {
-          label: this.$t('config.operationlog.username'),
-          prop: 'username',
-          show: true
-        },
-        {
-          label: this.$t('config.operationlog.ip'),
-          prop: 'ip',
-          show: true
-        },
-        {
-          label: this.$t('config.operationlog.operation'),
-          prop: 'operation',
-          show: true
-        },
-        {
-          label: this.$t('config.operationlog.type'),
-          prop: 'type',
-          show: true
-        },
-        {
-          label: this.$t('config.operationlog.state'),
-          prop: 'state',
-          show: true
-        },
-        // {
-        //   label: this.$t('config.operationlog.userId'),
-        //   prop: 'userId',
-        //   show: false,
-        // },
-        {
-          label: this.$t('config.operationlog.operaId'),
-          prop: 'operaId',
-          show: false
-        },
-        {
-          label: this.$t('config.operationlog.createDate'),
-          prop: 'createDate',
-          show: true
-        },
-        {
-          label: this.$t('config.operationlog.time'),
-          prop: 'time',
-          show: false
-        },
-        {
-          label: this.$t('config.operationlog.params'),
-          prop: 'params',
-          show: false
-        },
-        {
-          label: this.$t('config.operationlog.response'),
-          prop: 'response',
-          show: false
-        }
-      ],
+      url: 'sys/log/list',
+      tableId: 'operationLogTable',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [

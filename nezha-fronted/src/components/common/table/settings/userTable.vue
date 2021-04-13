@@ -46,7 +46,7 @@
           <el-switch
             v-model="scope.row.status"
             :active-color="theme.themeColor"
-            :disabled="isCurrentUser(scope.row.username) || !hasButton('account_toEdit') || !hasButton('account_toAdd') || (scope.row.username === 'admin' && scope.row.id === 1)"
+            :disabled="isCurrentUser(scope.row.username) || !hasButton('user_edit') || (scope.row.username === 'admin' && scope.row.id === 1)"
             active-value="1"
             inactive-value="0"
             @change="val => {statusChange(scope.row)}">

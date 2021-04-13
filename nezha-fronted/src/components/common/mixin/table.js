@@ -30,6 +30,10 @@ export default {
           this.$emit('del', row)
           break
         }
+        case 'record': {
+          this.$emit('showBottomBox', 'record', row)
+          break
+        }
         default:
           break
       }

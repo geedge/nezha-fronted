@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
   .delete-button{
-    margin-left: 10px;
+    margin-right: 10px;
     opacity: 0.7;
     border-radius: 2px;
   }

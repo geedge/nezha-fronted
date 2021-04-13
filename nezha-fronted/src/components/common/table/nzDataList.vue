@@ -9,11 +9,11 @@
           <slot name="top-tool-left"></slot>
         </div>
         <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-main-right">
-          <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search">
+          <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
             <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
           </div>
           <slot name="top-tool-right"></slot>
-          <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-l-10"
+          <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn"
                   type="button" @click="tools.showCustomTableTitle = true">
             <i class="nz-icon-gear nz-icon"></i>
           </button>

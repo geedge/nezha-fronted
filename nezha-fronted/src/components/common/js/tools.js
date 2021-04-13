@@ -1,6 +1,7 @@
 import { getChart } from './common'
 import MessageBox from 'element-ui/packages/message-box/src/main'
 import i18n from '../i18n'
+import bus from '@/libs/bus'
 /* 弹窗点击外部后关闭 */
 const exceptClassName = ['config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'asset-dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
@@ -282,6 +283,47 @@ export const bottomBoxWindow = {
 export function stringTimeParseToUnix (stringTime) {
   const time = new Date(stringTime).getTime()
   return time / 1000
+}
+export function getTime (size, unit) { // 计算时间
+  const now = new Date(bus.computeTimezone(new Date().getTime()))
+  if (unit) {
+    switch (unit) {
+      case 'y':
+        now.setFullYear(now.getFullYear() + size)
+        break
+      case 'M':
+        now.setMonth(now.getMonth() + size)
+        break
+      case 'd':
+        now.setDate(now.getDate() + size)
+        break
+      case 'h':
+        now.setHours(now.getHours() + size)
+        break
+      case 'm':
+        now.setMinutes(now.getMinutes() + size)
+        break
+      case 's':
+        now.setSeconds(now.getSeconds() + size)
+        break
+      default:
+        console.error('unit error')
+    }
+  } else {
+    now.setSeconds(now.getSeconds() + size)
+  }
+  const year = now.getFullYear()
+  let month = now.getMonth() + 1
+  month = month < 10 ? '0' + month : month
+  let day = now.getDate()
+  day = day < 10 ? '0' + day : day
+  let hour = now.getHours()
+  hour = hour < 10 ? '0' + hour : hour
+  let minute = now.getMinutes()
+  minute = minute < 10 ? '0' + minute : minute
+  let second = now.getSeconds()
+  second = second < 10 ? '0' + second : second
+  return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
 }
 export function calcDurationByStringTime (startTime, endTime) {
   const durationSecond = stringTimeParseToUnix(endTime) - stringTimeParseToUnix(startTime)

@@ -8,11 +8,11 @@
       :from="fromRoute.role"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="roles-add" v-has="'role_toAdd'" :title="$t('overall.createRole')" class="top-tool-btn margin-l-20"
+        <button id="roles-add" v-has="'role_add'" :title="$t('overall.createRole')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="role-list-batch-delete" v-has="'role_delete'" :delete-objs="batchDeleteObjs" api="sys/role" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button id="role-list-batch-delete" v-has="'role_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <role-table

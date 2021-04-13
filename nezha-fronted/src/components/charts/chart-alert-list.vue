@@ -133,7 +133,7 @@ import loading from '../common/loading'
 import axios from 'axios'
 import pickTime from '../common/pickTime'
 import chart from '../page/dashboard/overview/chart'
-import alertMessageTable from '@/components/common/alert/alertMessageTable.vue'
+import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 export default {
   name: 'chartTable',
   components: {
