@@ -133,8 +133,8 @@ const store = new Vuex.Store({
         state.dcDataRefresh = false
       }, 100)
     },
-    setShowTopoScreen (state) {
-      state.showTopoScreen = !state.showTopoScreen
+    setShowTopoScreen (state, boolean) {
+      state.showTopoScreen = boolean
     }
   },
   actions: {

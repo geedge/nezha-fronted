@@ -481,7 +481,8 @@ export default {
         name: '',
         unit: ''
       },
-      unitArr: []
+      unitArr: [],
+      topoScreenState: '' // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
     }
   },
   components: {
@@ -528,7 +529,6 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        console.log(n, '123123123')
         if (n.id) {
           if (getTopology(this.topologyIndex)) {
             getTopology(this.topologyIndex).destroy()
@@ -1717,6 +1717,8 @@ export default {
 
     editTopology (val) {
       this.editTopologyFlag = true
+      this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
+      this.$store.commit('setShowTopoScreen', true)
       setTimeout(() => {
         getTopology(this.topologyIndex).lock(0)
         getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
@@ -1846,6 +1848,7 @@ export default {
               message: this.$t('tip.saveSuccess'),
               type: 'success'
             })
+            this.$store.commit('setShowTopoScreen', this.topoScreenState)
             this.$nextTick(() => {
               getTopology(this.topologyIndex).lock(1)
               const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
@@ -1879,6 +1882,7 @@ export default {
         this.toolShow.attrCord = [domRect.width - 350, 0]
         this.toolShow.height = domRect.height
         getTopology(this.topologyIndex).canvasPos = domRect
+        this.$store.commit('setShowTopoScreen', this.topoScreenState)
       })
       this.reload()
     },
@@ -2021,7 +2025,7 @@ export default {
       getTopology(this.topologyIndex).bottom()
     },
     changeScreen () {
-      this.$store.commit('setShowTopoScreen')
+      this.$store.commit('setShowTopoScreen', !this.topoScreen)
     }
   },
   destroyed () {
