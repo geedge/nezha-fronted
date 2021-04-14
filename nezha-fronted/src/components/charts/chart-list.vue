@@ -552,7 +552,7 @@ export default {
         from: params.from
       }
       // alert-rule单独处理
-      if (param.from == this.$CONSTANTS.fromRoute.rule) {
+      if (param.from == this.$CONSTANTS.fromRoute.alertRule) {
         this.dataList = []
         this.dataList.push({
           id: -10,
