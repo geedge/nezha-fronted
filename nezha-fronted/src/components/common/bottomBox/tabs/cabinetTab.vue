@@ -9,11 +9,11 @@
         <div class="top-tool-search">
           <search-input :searchMsg="searchMsg" @search="search" position="cabinet-bottom"></search-input>
         </div>
-        <button :title="$t('overall.createCabinet')" @click="add" type="button" v-has="'dc_cabinet_toAdd'"
+        <button v-has="'dc_add'" :title="$t('overall.createCabinet')" type="button" @click="add"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light float-right margin-l-20" id="cab-add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button :delete-objs="batchDeleteObjs" @after="allDelAfter" api="cabinet" v-has="'dc_cabinet_delete'" id="cabinet-list-batch-delete"></delete-button>
+        <delete-button id="cabinet-list-batch-delete" v-has="'dc_delete'" :delete-objs="batchDeleteObjs" api="cabinet" @after="allDelAfter"></delete-button>
       </div>
     </div>
     <el-table
@@ -43,8 +43,8 @@
       >
         <template slot-scope="scope" :column="item">
           <div v-if="item.prop == 'option'" class="content-right-options">
-            <span :id="'dc-edit-'+scope.row.id" :title="$t('overall.edit')" @click="edit(scope.row)" class="content-right-option" v-has="'dc_cabinet_toEdit'"><i class="nz-icon nz-icon-edit"></i></span>
-            <span :id="'dc-del-'+scope.row.id" :title="$t('overall.delete')" @click="del(scope.row)" class="content-right-option" v-has="'dc_cabinet_delete'"><i class="nz-icon nz-icon-delete"></i></span>
+            <span :id="'dc-edit-'+scope.row.id" v-has="'dc_edit'" :title="$t('overall.edit')" class="content-right-option" @click="edit(scope.row)"><i class="nz-icon nz-icon-edit"></i></span>
+            <span :id="'dc-del-'+scope.row.id" v-has="'dc_delete'" :title="$t('overall.delete')" class="content-right-option" @click="del(scope.row)"><i class="nz-icon nz-icon-delete"></i></span>
           </div>
           <template v-else-if="item.prop == 'assetStat'">
             <el-popover
@@ -207,10 +207,6 @@ export default {
       this.rightBox.show = true
     },
     getTableData () {
-      if (!this.hasButton('dc_cabinet_view')) {
-        this.$message.error(this.$t('tip.noAccess'))
-        return
-      }
       this.tableData = []
       this.loading = true
       this.$set(this.searchLabel, 'pageNo', 1)

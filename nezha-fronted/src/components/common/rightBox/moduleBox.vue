@@ -2,7 +2,7 @@
   <div class="right-box right-box-module" v-clickoutside="{obj:editModule,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="module-del" type="button" v-has="'project_module_delete'" v-if="editModule.id">
+      <button v-if="editModule.id" id="module-del" v-has="'module_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
         <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
         <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
       </button>
