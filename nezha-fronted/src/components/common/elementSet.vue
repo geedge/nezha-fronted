@@ -20,17 +20,17 @@
       </div>
     </div>
     <div class="custom-bottom-btns">
-      <button v-if="isCancel" type="button" @click="batchHandler(false)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel" :id="id+'-element-set-none'">
+      <button v-if="isCancel" :id="tableId+'-element-set-none'" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new is-cancel" type="button" @click="batchHandler(false)">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
-      <button v-if="!isCancel" type="button" @click="batchHandler(true)" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" :id="id+'-element-set-all'">
+      <button v-if="!isCancel" :id="tableId+'-element-set-all'" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" type="button" @click="batchHandler(true)">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button type="button" @click="esc" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" :id="id+'-element-set-esc'">
+        <button :id="tableId+'-element-set-esc'" class="nz-btn nz-btn-size-small-new nz-btn-style-light-new" type="button" @click="esc">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
-        <button type="button" @click="save" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" :id="id+'-element-set-save'">
+        <button :id="tableId+'-element-set-save'" class="nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" @click="save">
           <span class="top-tool-btn-txt">{{$t('overall.save')}}</span>
         </button>
       </div>
@@ -43,9 +43,8 @@ export default {
   props: {
     customTableTitle: Array, // 自定义的title
     originalTableTitle: Array, // 原始title
-    path: String,
-    allowedAll: { default: false },
-    id: { type: String, default: 'table' }
+    tableId: String,
+    allowedAll: { default: false }
   },
   data () {
     return {
@@ -53,7 +52,7 @@ export default {
     }
   },
   created () {
-    const localStorageTitle = JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
+    const localStorageTitle = JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
     if (localStorageTitle) {
       for (const title of this.originalTableTitle) {
         for (const lsTitle of localStorageTitle) {
@@ -62,7 +61,7 @@ export default {
           }
         }
       }
-      localStorage.setItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path, JSON.stringify(localStorageTitle))
+      localStorage.setItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId, JSON.stringify(localStorageTitle))
     }
   },
   watch: {
@@ -103,7 +102,7 @@ export default {
     save () {
       this.$emit('update', this.custom)
       localStorage.setItem(
-        'nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + ((typeof this.path !== 'undefined') ? this.path : this.$route.path),
+        'nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId,
         JSON.stringify(this.custom)
       )
       this.esc()

@@ -11,34 +11,36 @@
         <!--退出全屏-->
         <div class="window-control-btn" v-if="isFullScreen" @click="exitFullScreen" :id="from+'-bottom-exit-full'"><i class="nz-icon nz-icon-exit-full-screen" ></i></div>
         <!--全屏-->
-        <div class="window-control-btn" v-if="!isFullScreen" @click="fullScreen" :id="from+'-bottom-full'"><i class="el-icon-full-screen"></i></div>
+        <div v-if="!isFullScreen" :id="from+'-bottom-full'" class="window-control-btn" @click="fullScreen"><i class="nz-icon nz-icon-full-screen"></i></div>
         <!--关闭-->
         <div class="window-control-btn" @click="closeSubList" :id="from+'-bottom-close'"><i class="nz-icon nz-icon-close"></i></div>
       </div>
 
-    <!------TAB区------>
-      <!--机柜-->
-      <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
-      <!--告警信息-->
-      <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
-      <!--asset页的endpoint列表-->
-      <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
-      <!--endpoint-query-->
-      <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
+      <!------TAB区------>
+      <div class="sub-list__tabs">
+        <!--机柜-->
+        <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+        <!--告警信息-->
+        <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+        <!--asset页的endpoint列表-->
+        <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
+        <!--endpoint-query-->
+        <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
 
-      <!-- model-panel/asset-detail/project-overview的panel-->
-      <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :from="from" :obj="obj"
-                 @changeTab="changeTab" :targetTab.sync="targetTab" :detail="detail"></panel-tab>
+        <!-- model-panel/asset-detail/project-overview的panel-->
+        <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :detail="detail" :from="from"
+                   :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab>
 
-      <!--terminal-log的记录和回放-->
-      <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
-      <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
+        <!--terminal-log的记录和回放-->
+        <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
+        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
 
-      <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+        <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
 
-      <!--user列表的两个日志-->
-      <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></operation-log-tab>
-      <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-tab>
+        <!--user列表的两个日志-->
+        <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
+        <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
+      </div>
     </div>
   </div>
 </template>
@@ -84,7 +86,19 @@ export default {
   },
   data () {
     return {
-      fromRoute: fromRoute
+      fromRoute: fromRoute,
+      tabs: {
+        user: {
+          operationLog: [
+            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: true },
+            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: false }
+          ],
+          terminalLog: [
+            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
+            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
+          ]
+        }
+      }
     }
   },
   methods: {

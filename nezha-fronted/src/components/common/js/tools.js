@@ -135,7 +135,7 @@ export const bottomBoxWindow = {
     const mainListDom = document.querySelector('.main-list') // 主列表
     const subBoxDom = document.querySelector('.sub-box') // 副列表
     const subListDom = document.querySelector('.sub-list') // 副列表
-    const contentRightDom = document.querySelector('.content-right') // 右侧内容区
+    const contentRightDom = document.querySelector('.list-page') // 右侧内容区
     const resizeBarHeight = 9 // resize横条高度
     const minHeight = 15 // 主、副列表最小高度限制为15
     const contentHideHeight = 100 // 主、副列表高度低于100时隐藏内容
@@ -205,7 +205,7 @@ export const bottomBoxWindow = {
   },
   exitFullScreen (vm) {
     window.resizing = true
-    const contentRightDom = document.querySelector('.content-right') // 右侧内容区
+    const contentRightDom = document.querySelector('.list-page') // 右侧内容区
     const contentRightHeight = contentRightDom.offsetHeight// 可视高度
     // 主列表
     document.querySelector('.main-list-with-sub').style.height = vm.bottomBox.mainListHeight ? vm.bottomBox.mainListHeight + 'px' : 'calc(50% - 4px)'
@@ -225,7 +225,7 @@ export const bottomBoxWindow = {
   },
   fullScreen (vm) {
     window.resizing = true
-    const contentRightDom = document.querySelector('.content-right') // 右侧内容区
+    const contentRightDom = document.querySelector('.list-page') // 右侧内容区
     const contentRightHeight = contentRightDom.offsetHeight// 可视高度
     vm.bottomBox.isFullScreen = true
     // 主列表

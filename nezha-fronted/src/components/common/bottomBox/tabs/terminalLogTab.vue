@@ -1,177 +1,51 @@
 <template>
-  <div style="height: 100%">
-    <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">{{obj.id}}</div><div
-        id="endpoint-tab-change-panel" class="sub-list-tab" @click="changeTab('operationLogTab')">{{$t("config.operationlog.operationlog")}}</div><div
-        id="endpoint-tab-change-alertmsg" class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.terminallog")}}</div>
-      </div>
-      <div class="top-tool-right">
-        <div class="top-tool-search">
-          <search-input :searchMsg="searchMsg" position="endpoint-bottom" @search="search"></search-input>
-        </div>
-      </div>
-    </div>
-    <el-table
-      id="terminal-log-list-table"
-      ref="dataTable"
-      v-loading="tools.loading"
-      :data="tableData"
-      :height="mainTableHeight"
-      border
-      @header-dragend="dragend"
-      @sort-change="tableDataSort"
-      @selection-change="(selection)=>{batchDeleteObjs=selection}"
-    >
-      <el-table-column
-        :resizable="false"
-        align="center"
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        v-for="(item, index) in tools.customTableTitle"
-        v-if="item.show"
-        :key="`col-${index}`"
-        :fixed="item.fixed"
-        :label="item.label"
-        :prop="item.prop"
-        :resizable="true"
-        :sort-orders="['ascending', 'descending']"
-        :width="`${item.width}`"
-        class="data-column"
-      >
-        <template slot="header">
-              <span>
-                <span>{{item.label}}</span>
-                <div class="col-resize-area"></div>
-              </span>
-        </template>
-        <template slot-scope="scope" :column="item">
-          <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-          <template v-else-if="item.prop === 'status'">
-            <span>{{getStatusText(scope.row.status)}}</span>
-          </template>
-          <template v-else-if="item.prop === 'uuid'">
-            <span>{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
-          </template>
-          <template v-else-if="item.prop === 'remote'">
-            <span>{{getRemoteText(scope.row)}}</span>
-          </template>
-          <template v-else-if="item.prop === 'duration'">
-            <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
-              <div slot="content">
-                {{$t('config.terminallog.endTime')}}<br/>
-                {{scope.row.endTime}}
-              </div>
-              <span>{{getDuration(scope.row)}}</span>
-            </el-tooltip>
-          </template>
-          <template v-else-if="item.prop === 'authType'">
-            <span v-if="scope.row.authType == 1">{{$t('config.terminallog.password')}}</span>
-            <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
-          </template>
-          <span v-else>{{scope.row[item.prop]}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :resizable="false"
-        :width="operationWidth"
-        fixed="right">
-        <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-        <div slot-scope="scope" class="table-operation-items">
-          <template v-if="scope.row.status == 0">
-            <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="$refs.dataList.showBottomBox('monitor', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
-            <el-dropdown size="medium" trigger="hover" @command="tableOperation">
-              <div class="table-operation-item table-operation-item--more">
-                <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
-              </div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">Kill</span></el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
-          <template v-else>
-            <button class="table-operation-item" @click="$refs.dataList.showBottomBox('cmd', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-            <el-dropdown size="medium" trigger="hover" @command="tableOperation">
-              <div class="table-operation-item table-operation-item--more">
-                <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
-              </div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="['record', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('config.terminallog.record.record')}}</span></el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
-        </div>
-      </el-table-column>
-    </el-table>
-  </div>
+  <nz-bottom-data-list
+    :api="url"
+    :custom-table-title.sync="tools.customTableTitle"
+    :layout="['searchInput', 'elementSet']"
+    :search-msg="searchMsg"
+    :tabs="tabs"
+    @changeTab="changeTab"
+  >
+    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot>
+      <terminal-log-table
+        ref="dataTable"
+        v-loading="tools.loading"
+        :api="url"
+        :custom-table-title="tools.customTableTitle"
+        :height="subTableHeight"
+        :now-time="nowTime"
+        :table-data="tableData"
+        @del="del"
+        @edit="edit"
+        @orderBy="tableDataSort"
+        @reload="getTableData"
+        @selectionChange="selectionChange"></terminal-log-table>
+    </template>
+    <template v-slot:pagination>
+      <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+    </template>
+  </nz-bottom-data-list>
 </template>
 
 <script>
-import tableMixin from '@/components/common/mixin/dataList'
-import { terminalLog } from '@/components/common/js/constants'
-import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import dataListMixin from '@/components/common/mixin/dataList'
+import subDataListMixin from '@/components/common/mixin/subDataList'
+import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
+import terminalLogTable from '@/components/common/table/settings/terminalLogTable'
 
 export default {
   name: 'terminalLogTab',
-  mixins: [tableMixin],
+  mixins: [dataListMixin, subDataListMixin],
+  components: {
+    nzBottomDataList,
+    terminalLogTable
+  },
   data () {
     return {
+      url: 'terminal/session',
       tableId: 'terminalLogTable', // 需要分页的table的id，用于记录每页数量
-
-      tableTitle: [
-        {
-          label: this.$t('config.terminallog.id'),
-          prop: 'id',
-          show: true,
-          width: 80
-        }, {
-          label: 'Session ID',
-          prop: 'uuid',
-          show: true
-        }, {
-          label: 'Username',
-          prop: 'username',
-          show: true
-        },
-        {
-          label: this.$t('config.terminallog.source'),
-          prop: 'remoteAddr',
-          show: true
-        },
-        {
-          label: this.$t('config.terminallog.remote'),
-          prop: 'remote',
-          show: true
-        },
-        {
-          label: this.$t('config.terminallog.protocol'),
-          prop: 'protocol',
-          show: true
-        },
-        {
-          label: this.$t('config.terminallog.startTime'),
-          prop: 'startTime',
-          show: true
-        },
-        {
-          label: this.$t('config.terminallog.duration'),
-          prop: 'duration',
-          show: true
-        },
-        {
-          label: 'AuthType',
-          prop: 'authType',
-          show: false
-        },
-        {
-          label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
-          prop: 'status',
-          show: true,
-          width: 100
-        }
-      ],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
@@ -193,52 +67,14 @@ export default {
       nowTime: ''
     }
   },
-  computed: {
-    getStatusText () {
-      return function (status) {
-        return terminalLog.status[status]
-      }
-    },
-    getRemoteText () {
-      return function (record) {
-        return `${record.loginUser}@${record.host}:${record.port}`
-      }
-    },
-    getDuration () {
-      return function (record) {
-        if (record.endTime) {
-          return calcDurationByStringTimeB(record.startTime, record.endTime)
-        }
-        return calcDurationByStringTimeB(record.startTime, this.nowTime)
-      }
-    }
-  },
-  props: {
-    obj: Object // 关联的实体对象
-  },
   methods: {
-    // 切换tab
-    changeTab (tab) {
-      this.$emit('changeTab', tab)
-    },
-    tableOperation ([command, row]) {
-      switch (command) {
-        case 'shutdown': {
-          this.shutdown(row)
-          break
-        }
-        default:
-          this.$refs.dataList.showBottomBox(command, row)
-          break
-      }
-    },
     getTableData () {
       const params = {
         ...this.searchLabel,
         pageNo: this.pageObj.pageNo,
         pageSize: this.pageObj.pageSize
       }
-      this.$get('terminal/session', params).then(response => {
+      this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list
@@ -246,7 +82,7 @@ export default {
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
@@ -269,22 +105,6 @@ export default {
           }
         })
       })
-    },
-    messageStyle (e) {
-      if (e.column.label == this.$t('config.terminallog.status')) {
-        if (e.row.status == '0') {
-          return 'success'
-        } else if (e.row.status == '1') {
-          return 'warning'
-        } else if (e.row.status == '2') {
-          return 'suspended'
-        } else if (e.row.status == '3') {
-          return 'danger'
-        } else if (e.row.status == '4') {
-          return 'danger'
-        }
-      }
-      return ''
     }
   }
 }

@@ -1,39 +1,43 @@
 <template>
-  <div style="height: 100%">
-    <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">{{obj.id}}</div><div
-        id="endpoint-tab-change-panel" class="sub-list-tab sub-list-tab-active">{{$t("config.operationlog.operationlog")}}</div><div
-        id="endpoint-tab-change-alertmsg" class="sub-list-tab" @click="changeTab('terminalLogTab')">{{$t("config.terminallog.terminallog")}}</div>
-      </div>
-      <div class="top-tool-right">
-        <div class="top-tool-search">
-          <search-input :searchMsg="searchMsg" position="endpoint-bottom" @search="search"></search-input>
-        </div>
-      </div>
-    </div>
-    <operation-log-table
-      ref="dataTable"
-      v-loading="tools.loading"
-      :api="url"
-      :custom-table-title="tools.customTableTitle"
-      :height="mainTableHeight"
-      :table-data="tableData"
-      @del="del"
-      @edit="edit"
-      @orderBy="tableDataSort"
-      @reload="getTableData"
-      @selectionChange="selectionChange"></operation-log-table>
-  </div>
+  <nz-bottom-data-list
+    :api="url"
+    :custom-table-title.sync="tools.customTableTitle"
+    :layout="['searchInput', 'elementSet']"
+    :search-msg="searchMsg"
+    :tabs="tabs"
+    @changeTab="changeTab"
+  >
+    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot>
+      <operation-log-table
+        ref="dataTable"
+        v-loading="tools.loading"
+        :api="url"
+        :custom-table-title="tools.customTableTitle"
+        :height="subTableHeight"
+        :table-data="tableData"
+        @del="del"
+        @edit="edit"
+        @orderBy="tableDataSort"
+        @reload="getTableData"
+        @selectionChange="selectionChange"></operation-log-table>
+    </template>
+    <template v-slot:pagination>
+      <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+    </template>
+  </nz-bottom-data-list>
 </template>
 
 <script>
 import dataListMixin from '@/components/common/mixin/dataList'
+import subDataListMixin from '@/components/common/mixin/subDataList'
+import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import operationLogTable from '@/components/common/table/settings/operationLogTable'
 export default {
   name: 'operationLogTab',
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, subDataListMixin],
   components: {
+    nzBottomDataList,
     operationLogTable
   },
   data () {
@@ -66,14 +70,7 @@ export default {
       }
     }
   },
-  props: {
-    obj: Object // 关联的实体对象
-  },
   methods: {
-    // 切换tab
-    changeTab (tab) {
-      this.$emit('changeTab', tab)
-    },
     messageStyle (e) {
       if (e.column.label === this.$t('config.operationlog.state')) {
         if (e.row.state === 'success') {
@@ -101,15 +98,6 @@ export default {
           }
         }
       })
-    },
-    formatUsername (row) {
-      if (row.username) {
-        return row.username
-      } else if (row.operation === 'login' && !row.username) { // 如果是登录 且登录失败
-        return JSON.parse(row.params).username
-      } else {
-        return '-'
-      }
     }
   }
 }

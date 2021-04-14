@@ -4,28 +4,36 @@
     <div :class="{'main-list-with-sub': bottomBox.showSubList}" class="main-list">
       <!-- 顶部工具栏 -->
       <div class="main-modal"></div>
-      <div v-show="bottomBox.mainResizeShow" class="top-tools">
-        <div class="top-tool-main-left" style="width: 300px">
-          <slot name="top-tool-left"></slot>
-        </div>
-        <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-main-right">
-          <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
-            <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
+      <div class="main-container">
+        <div v-show="bottomBox.mainResizeShow" class="top-tools">
+          <div class="top-tool-left" style="width: 300px">
+            <slot name="top-tool-left"></slot>
           </div>
-          <slot name="top-tool-right"></slot>
-          <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn"
-                  type="button" @click="tools.showCustomTableTitle = true">
-            <i class="nz-icon-gear nz-icon"></i>
-          </button>
+          <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">
+            <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
+              <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
+            </div>
+            <slot name="top-tool-right"></slot>
+            <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn"
+                    type="button" @click="tools.showCustomTableTitle = true">
+              <i class="nz-icon-gear nz-icon"></i>
+            </button>
+          </div>
+          <!-- 顶部分页组件，当打开底部上滑框时出现 -->
+          <!-- <div v-if="layout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
-        <!-- 顶部分页组件，当打开底部上滑框时出现 -->
-        <div v-if="layout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>
+        <div v-show="bottomBox.mainResizeShow" class="nz-table2">
+          <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
+        </div>
+        <div v-show="bottomBox.mainResizeShow" class="pagination-bottom">
+          <slot name="pagination"></slot>
+        </div>
       </div>
       <!-- 自定义table列 -->
       <transition name="el-zoom-in-top">
         <element-set
           v-if="tools.showCustomTableTitle"
-          id="account-list"
+          :tableId="tableId"
           ref="customTableTitle"
           :custom-table-title="customTableTitle"
           :original-table-title="tableTitle"
@@ -33,12 +41,6 @@
           @update="updateCustomTableTitle"
         ></element-set>
       </transition>
-      <div v-show="bottomBox.mainResizeShow" class="nz-table2">
-        <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
-      </div>
-      <div class="pagination-bottom">
-        <slot name="pagination"></slot>
-      </div>
     </div>
     <transition name="el-zoom-in-bottom">
       <bottom-box v-if="bottomBox.showSubList"
