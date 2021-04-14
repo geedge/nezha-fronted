@@ -3,7 +3,7 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box" v-loading="topologyLoading" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
+  <div class="project-box" v-loading="topologyLoading">
     <!--project主要信息-->
     <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
@@ -100,7 +100,7 @@
              {{$t('project.topology.preview')}}
            </button>
            <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
-                   v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                   :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
              {{$t('project.topology.save')}}
@@ -111,68 +111,15 @@
          </span>
       </div>
       <div style="width: 100%;display: flex;justify-content: space-between" v-if="!editTopologyFlag&&!fromOverView">
-        <div class="facade-top">
-          <div class="facade-top-left" v-loading="projectInfo.loading" v-if="projectInfoShow">
-            <div class="facade-top-title">
-              Project information
-            </div>
-            <div>
-              <!--<span><span class="label">Id :</span>{{projectInfo.id}}</span>-->
-              <span><span class="label">Name :</span>{{projectInfo.name}}</span>
-            </div>
-            <div>
-              <span><span class="label">Description :</span>{{projectInfo.remark?projectInfo.remark:'--'}}</span>
-            </div>
-            <!--<div>-->
-            <!--<span>-->
-            <!--<span class="label">Alert state :</span>-->
-            <!--<div class="active-icon" style="background: #B7464A 100%;"></div>{{projectInfo.alertStat[0]}}-->
-            <!--<div class="active-icon" style="background: #E64E4E 100%;"></div>{{projectInfo.alertStat[1]}}-->
-            <!--<div class="active-icon" style="background: #F7B500 100%;"></div>{{projectInfo.alertStat[2]}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <div>
-              <span><span class="label">Module Num :</span>{{projectInfo.moduleMum}}</span>
-            </div>
-          </div>
-          <div class="facade-top-right" v-loading="projectInfo.loading" v-if="projectAlertShow" style="padding: 20px 20px 0 20px;height: calc(100% - 20px);">
-            <div class="facade-top-title">
-              <span class="label" style="padding-left: 0;">Alert :</span>
-              {{projectInfo.total}}
-            </div>
-            <div class="facade-top-right-content">
-              <div>
-                <div class="content-P1-title">
-                  {{returnSeverityLabel('P1')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[0] || 0}}
-                </div>
-              </div>
-              <div>
-                <div class="content-P2-title">
-                  {{returnSeverityLabel('P2')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[1] || 0}}
-                </div>
-              </div>
-              <div style="margin-bottom: 20px;">
-                <div class="content-P3-title">
-                  {{returnSeverityLabel('P3')}}
-                </div>
-                <div>
-                  {{projectInfo.alertStat[2] || 0}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div  :style="{flex:1,'padding-right': '15px','text-align':topologyInfo.align,'font-size':topologyInfo.fontSize,'color':topologyInfo.fontColor,opacity:topologyInfo.opacity}">{{topologyInfo.name}}</div>
+        <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
-
+<button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
+        style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
+>
+                  <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
+        </button>
         <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button" v-has="'project_topo_save'"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
@@ -182,12 +129,14 @@
             :refresh-data-func="dateChange"
             v-model="searchTime"
             :use-chart-unit="false"
+            :showTimePicker="false"
             ref="pickTime">
           </pick-time>
+
       </span>
       </div>
     </div>
-    <div :class="['page',fromOverView?'overview-page':'']">
+    <div :class="['page',fromOverView?'overview-page':'']" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
       <!--画布部分-->
       <div :id="'topology-canvas' + topologyIndexF" class="full" :ref="'topology-canvas'+ topologyIndexF"></div>
       <!--设置属性-->
@@ -532,7 +481,8 @@
           name: '',
           unit: ''
         },
-        unitArr: []
+        unitArr: [],
+        topoScreenState: '' // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
       }
     },
     components: {
@@ -634,9 +584,17 @@
             }
           }
         }
+      },
+      topoScreen (n) {
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView(20)
       }
     },
-    computed: {},
+    computed: {
+      topoScreen () {
+        return this.$store.getters.getShowTopoScreen
+      }
+    },
     created () {
       canvasRegister()
       if (process.client) {
@@ -742,8 +700,9 @@
       },
 
       dateChange () {
-        const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        this.setSearchTime(nowTimeType.type, nowTimeType.value)
+        // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        // this.setSearchTime(nowTimeType.type, nowTimeType.value)
+        this.searchTime = bus.getTimezontDateRange()
         this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
         this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
         this.reload()
@@ -845,9 +804,17 @@
                     item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
                   }
                   if (item.type === 0) {
-                    promiseArr.push(this.$get('/module/stat', { id: item.data.moduleId }))
+                    // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
+                    item.data.state = {}
+                    item.data.state.asset = false
+                    item.data.state.endpoint = false
+                    item.data.state.alert = false
                   } else {
-                    promiseArr.push({ type: 1 })
+                    // promiseArr.push({ type: 1 })
+                    item.data.state = {}
+                    item.data.state.asset = false
+                    item.data.state.endpoint = false
+                    item.data.state.alert = false
                   }
                 })
 
@@ -1016,10 +983,10 @@
       getProjectData (n) {
         // 获取projectInfo
         this.projectInfo.loading = true
-        this.$get('project/info', { id: n.id }).then(response => {
+        this.$get('monitor/project/' + n.id).then(response => {
           if (response.code === 200) {
             this.projectInfo.loading = false
-            this.projectInfo = { ...this.projectInfo, ...response.data.basic, moduleMum: response.data.module.length }
+            this.projectInfo = { ...this.projectInfo, ...response.data }
             this.projectInfo.total = this.projectInfo.alertStat[0] + this.projectInfo.alertStat[1] + this.projectInfo.alertStat[2]
             if (!this.projectInfo.total) {
               this.projectInfo.total = 0
@@ -1034,11 +1001,10 @@
       // 获取module
       getModule () {
         this.projectInfo.loading = true
-        this.$get('project/info', { id: this.obj.id }).then(response => {
+        this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
           if (response.code === 200) {
             this.projectInfo.loading = false
-            this.projectInfo = { ...this.projectInfo, ...response.data.basic, moduleMum: response.data.module.length }
-            this.allModules = response.data.module
+            this.allModules = response.data.list
             this.modulesDiff()
           }
         })
@@ -1412,8 +1378,6 @@
               break
             case 'resize': {
               const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-              this.toolShow.attrCord = [domRect.width - 350, 0]
-              this.toolShow.height = domRect.height
               if (getTopology(this.topologyIndex)) {
                 getTopology(this.topologyIndex).canvasPos = domRect
               }
@@ -1750,6 +1714,8 @@
 
       editTopology (val) {
         this.editTopologyFlag = true
+        this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
+        this.$store.commit('setShowTopoScreen', true)
         setTimeout(() => {
           getTopology(this.topologyIndex).lock(0)
           getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
@@ -1786,10 +1752,6 @@
               item.fontColor = '#000000'
             }
           })
-          const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-          this.toolShow.attrCord = [domRect.width - 350, 0]
-          this.toolShow.height = domRect.height
-          getTopology(this.topologyIndex).canvasPos = domRect
           getTopology(this.topologyIndex).caches = {
             index: 0,
             list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
@@ -1879,11 +1841,10 @@
                 message: this.$t('tip.saveSuccess'),
                 type: 'success'
               })
+              this.$store.commit('setShowTopoScreen', this.topoScreenState)
               this.$nextTick(() => {
                 getTopology(this.topologyIndex).lock(1)
                 const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-                this.toolShow.attrCord = [domRect.width - 350, 0]
-                this.toolShow.height = domRect.height
                 getTopology(this.topologyIndex).canvasPos = domRect
                 this.reload()
               })
@@ -1909,9 +1870,8 @@
         this.$nextTick(() => {
           getTopology(this.topologyIndex).lock(1)
           const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-          this.toolShow.attrCord = [domRect.width - 350, 0]
-          this.toolShow.height = domRect.height
           getTopology(this.topologyIndex).canvasPos = domRect
+          this.$store.commit('setShowTopoScreen', this.topoScreenState)
         })
         this.reload()
       },
@@ -1943,8 +1903,6 @@
       winResize () {
         setTimeout(() => {
           const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
-          // this.toolShow.attrCord=[domRect.width-350,0];
-          // this.toolShow.height=domRect.height;
           getTopology(this.topologyIndex).canvasPos = domRect
           if (this.fromOverView) {
             getTopology(this.topologyIndex).open(this.oldTopologyData)
@@ -2052,6 +2010,9 @@
       },
       penToBottom () {
         getTopology(this.topologyIndex).bottom()
+      },
+      changeScreen () {
+        this.$store.commit('setShowTopoScreen', !this.topoScreen)
       }
     },
     destroyed () {
@@ -2506,7 +2467,6 @@
     height: calc(100% - 20px);
     margin-top: 10px;
     position: relative;
-    border: 1px solid #eeeeee;
     border-radius: 2px;
     overflow: hidden;
     .pickTime{
@@ -2533,7 +2493,7 @@
 
   .page {
     display: flex;
-    height: calc(100% - 60px);
+    height: calc(100% - 55px);
     width: 100%;
     position: relative;
 

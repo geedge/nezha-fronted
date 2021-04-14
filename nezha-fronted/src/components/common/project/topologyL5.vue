@@ -584,16 +584,14 @@ export default {
           }
         }
       }
+    },
+    topoScreen (n) {
+      getTopology(this.topologyIndex).resize()
+      getTopology(this.topologyIndex).centerView(20)
     }
   },
   computed: {
     topoScreen () {
-      this.$nextTick(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
-        if (getTopology(this.topologyIndex)) {
-          getTopology(this.topologyIndex).canvasPos = domRect
-        }
-      })
       return this.$store.getters.getShowTopoScreen
     }
   },
@@ -702,8 +700,9 @@ export default {
     },
 
     dateChange () {
-      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-      this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      // this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.searchTime = bus.getTimezontDateRange()
       this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
       this.reload()
@@ -1379,8 +1378,6 @@ export default {
             break
           case 'resize': {
             const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-            this.toolShow.attrCord = [domRect.width - 350, 0]
-            this.toolShow.height = domRect.height
             if (getTopology(this.topologyIndex)) {
               getTopology(this.topologyIndex).canvasPos = domRect
             }
@@ -1755,10 +1752,6 @@ export default {
             item.fontColor = '#000000'
           }
         })
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-        this.toolShow.attrCord = [domRect.width - 350, 0]
-        this.toolShow.height = domRect.height
-        getTopology(this.topologyIndex).canvasPos = domRect
         getTopology(this.topologyIndex).caches = {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
@@ -1852,8 +1845,6 @@ export default {
             this.$nextTick(() => {
               getTopology(this.topologyIndex).lock(1)
               const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-              this.toolShow.attrCord = [domRect.width - 350, 0]
-              this.toolShow.height = domRect.height
               getTopology(this.topologyIndex).canvasPos = domRect
               this.reload()
             })
@@ -1879,8 +1870,6 @@ export default {
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-        this.toolShow.attrCord = [domRect.width - 350, 0]
-        this.toolShow.height = domRect.height
         getTopology(this.topologyIndex).canvasPos = domRect
         this.$store.commit('setShowTopoScreen', this.topoScreenState)
       })
@@ -1914,8 +1903,6 @@ export default {
     winResize () {
       setTimeout(() => {
         const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
-        // this.toolShow.attrCord=[domRect.width-350,0];
-        // this.toolShow.height=domRect.height;
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
