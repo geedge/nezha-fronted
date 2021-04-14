@@ -42,6 +42,10 @@ export default new Router({
           component: resolve => require(['../components/page/monitor/module/moduleList.vue'], resolve)
         },
         {
+          path: '/monitor/endpoint',
+          component: resolve => require(['../components/page/monitor/endpoint/endpointList.vue'], resolve)
+        },
+        {
           path: '/asset',
           component: resolve => require(['../components/page/asset/asset.vue'], resolve)
         },

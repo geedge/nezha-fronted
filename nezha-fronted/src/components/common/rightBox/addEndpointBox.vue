@@ -29,47 +29,6 @@
             <!--begin--标题-->
             <div class="right-child-box-title">{{$t('asset.asset')}}</div>
             <!--end--标题-->
-            <!--begin--搜索框-->
-            <div style="padding-left: 15px; display: inline-block;">
-              <div class="nz-btn-group nz-btn-group-size-small nz-btn-group-light endpoint-asset-search">
-                <button id="search-asset-drop" style="width: 62px;" type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="assetSearch.dropdownShow = !assetSearch.dropdownShow">
-                  <span class="endpoint-asset-label-txt">{{assetSearch.label}}</span>
-                  <span>
-                    <i v-if="assetSearch.dropdownShow" class="nz-icon nz-icon-caret-up"></i>
-                    <i v-if="!assetSearch.dropdownShow" class="nz-icon nz-icon-caret-bottom"></i>
-                  </span>
-                </button><el-input style="width: 100px;" v-if="assetSearch.label === 'Host' || assetSearch.label === 'SN'" @keydown.enter.native="searchAssetKeydown" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" id="add-endpoint-filter-input">
-                </el-input><el-select placeholder="" v-else-if="assetSearch.label === 'DC'" v-model="assetSearch.idcId" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class" id="add-endpoint-filter-select">
-                  <el-option v-for="item in dcList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select><el-cascader
-                  id="add-endpoint-filter-cascader"
-                  v-else-if="assetSearch.label === 'Model'"
-                  :options="vendorAndModelOptionData"
-                  :props="{emitPath: false}"
-                  style="width: 100px;"
-                  v-model="assetSearch.text"
-                  size="mini"
-                  clearable
-                  placeholder=""
-                  class="nz-input-group-middle"
-                  @change="selectModel"
-                >
-                </el-cascader><el-select placeholder="" v-else-if="assetSearch.label === 'Type'" v-model="assetSearch.typeIds" class="input-x-mini-24 nz-input-group-middle" popper-class="no-style-class" id="add-endpoint-filter-typeIds">
-                  <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select><!--<el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'DC'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterDCValue" @select="selectDC" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
-                </el-autocomplete><el-autocomplete style="width: 100px;" v-else-if="assetSearch.label === 'Type'" @keydown.enter.native="searchAssetKeydown" :fetch-suggestions="filterTypeValue" @select="selectType" class="input-x-mini-24 nz-input-group-middle" placeholder="" v-model="assetSearch.text" value-key="name">
-                </el-autocomplete>--><button type="button" class="nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-append" id="search-asset"><i @click="searchAsset" class="nz-icon nz-icon-search"></i></button>
-                <div class="endpoint-asset-search-dropdown" v-if="assetSearch.dropdownShow">
-                  <div @click="dropdownSelect('Host')" class="endpoint-asset-search-dropdown-item" id="search-asset-ip">Host</div>
-                  <div @click="dropdownSelect('SN')" class="endpoint-asset-search-dropdown-item" id="search-asset-sn">SN</div>
-                  <div @click="dropdownSelect('DC')" class="endpoint-asset-search-dropdown-item" id="search-asset-dc">DC</div>
-                  <div @click="dropdownSelect('Model')" class="endpoint-asset-search-dropdown-item" id="search-asset-model">Model</div>
-                  <div @click="dropdownSelect('Type')" class="endpoint-asset-search-dropdown-item" id="search-asset-type">Type</div>
-                </div>
-              </div>
-            </div>
-            <!--end--搜索框-->
-
             <!-- begin--table-->
             <div class="endpoint-sub-table" v-loading="assetLoading">
               <div ref="assetScrollbar" style="overflow: auto; height: 100%; width: 100%;">
@@ -585,7 +544,7 @@ export default {
 
     /* 获取project列表 */
     getProjectList () {
-      this.$get('project', { pageSize: -1, pageNo: 1 }).then(response => {
+      this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           this.projectList = response.data.list
           this.getModuleList(this.currentProjectCopy.id)
@@ -595,7 +554,7 @@ export default {
 
     /* 获取型号列表 */
     getModelList () {
-      this.$get('model', { pageSize: -1, pageNo: 1 }).then(response => {
+      this.$get('monitor/module', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           const resultData = []
           const modelData = response.data.list
@@ -823,7 +782,7 @@ export default {
 
     // 获取endpoint弹框中module下拉框数据
     getModuleList (projectId) {
-      this.$get('module', { projectId: projectId, pageSize: -1 }).then(response => {
+      this.$get('module', { projectIds: projectId, pageSize: -1 }).then(response => {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             try {

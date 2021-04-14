@@ -8,7 +8,7 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20 margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
