@@ -67,24 +67,32 @@ export default {
         type: 'http',
         port: 9100,
         configs: {
+          walk: [],
+          snmpCredentialsId: '',
+          metrics_path: '',
+          port: '',
+          host: '{{asset.manageIp}}',
           scrape_interval: '',
           scrape_timeout: '',
-          metrics_path: '',
+          params: '',
+          labels: '',
+          paramObj: [],
+          labelModule: [],
           basic_auth: {
             username: '',
             password: ''
           },
-          bearer_token: '',
-          labels: '',
-          params: '',
-          paramObj: [],
-          labelModule: [],
-          walk: [],
-          host: '{{asset.manageIp}}',
-          port: '',
-          snmpCredentialsId: 'public'
+          bearer_token: ''
         },
-        walk: []
+        walk: [],
+        labelModule: [{
+          key: '',
+          value: ''
+        }],
+        paramObj: [{
+          key: '',
+          value: []
+        }]
       }, // 新增/编辑的module
       tableId: 'moduleTable',
       queryPermission: 'account_view',
@@ -114,6 +122,22 @@ export default {
       this.object.configs = JSON.parse(this.object.configs)
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.object.paramObj = []
+      this.object.labelModule = []
+      if (this.object.configs.labels !== '{}'&&this.object.configs.labels) {
+        Object.keys(this.object.configs.labels).forEach(key => {
+          this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+        })
+      } else {
+        this.object.labelModule.push({ key: '', value: '' })
+      }
+      if (this.object.configs.param !== '{}'&&this.object.configs.param) {
+        Object.keys(this.object.configs.param).forEach(key => {
+          this.object.paramObj.push({ key, value: this.object.configs.param[key] })
+        })
+      } else {
+        this.object.paramObj.push({ key: '', value: [] })
+      }
       this.rightBox.show = true
     }
   },

@@ -111,24 +111,24 @@
             <el-form-item :label='$t("project.endpoint.port")' prop="port" class="half-form-item">
               <el-input placeholder="" v-model.number="editModule.port" size="small" id="module-box-input-port"></el-input>
             </el-form-item>
-            <!--name pattern-->
-            <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">
-<!--              <el-input placeholder="" v-model=""></el-input>-->
-              <el-autocomplete
-                class="inline-input"
-                size="small"
-                id="module-box-input-pattern"
-                v-model="editModule.endpointNameTmpl"
-                :fetch-suggestions="querySearch"
-                placeholder="请输入内容"
-              ></el-autocomplete>
-            </el-form-item>
             <!--host-->
-            <el-form-item :label='$t("project.endpoint.host")' prop="host" class="half-form-item">
+            <el-form-item :label='$t("project.endpoint.host")' prop="host">
               <el-input placeholder="" v-model.number="editModule.configs.host" size="small" id="module-box-input-host"></el-input>
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="showAllBasicOption" >
+                <!--name pattern-->
+                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">
+                  <!--              <el-input placeholder="" v-model=""></el-input>-->
+                  <el-autocomplete
+                    class="inline-input"
+                    size="small"
+                    id="module-box-input-pattern"
+                    v-model="editModule.endpointNameTmpl"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入内容"
+                  ></el-autocomplete>
+                </el-form-item>
                 <!--scrape_interval-->
                 <el-form-item :label='$t("project.endpoint.scrape_interval")' prop="scrape_interval" class="half-form-item">
                   <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editModule.configs.scrape_interval" size="small" id="module-box-input-scrape_interval"></el-input>
@@ -142,63 +142,54 @@
 
             <div style="text-align: center"><i class="nz-icon nz-icon-drop-down need-rotate" :class="showAllBasicOption?'is-active':''" @click="showAllBasicOption=!showAllBasicOption"></i></div>
           </el-tab-pane>
-          <el-tab-pane label="Labels" name="Labels">
-            <el-form-item :label="$t('project.endpoint.labels')" class="right-box-form-param label-position">
-
-              <div style="text-align: right;margin-bottom: 5px">
-                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
-                <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
-                <!--</button>-->
-                <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add">
-              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
-            </span>
-              </div>
-
-              <div class="param-box param-box-module">
-                <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
-                  <div v-for="(item, index) in editModule.configs.labelModule" :key="index" class="param-box-row">
-                    <el-form-item class="param-box-row-key" :rules="[{required: true, message: $t('validate.required'), trigger: 'blur'},{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
-                      <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                    </el-form-item>
-                    <span class="param-box-row-eq">=</span>
-                    <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'labelModule.' + index + '.value'">
-                      <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                    </el-form-item>
-                    <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-                  </div>
-                </div>
-              </div>
-            </el-form-item>
-          </el-tab-pane>
           <el-tab-pane label="Parameter" name="Parameter">
-            <el-form-item :label="$t('project.endpoint.param')" class="right-box-form-param label-position">
-
-              <div style="text-align: right;margin-bottom: 5px">
-                <button style="display: none;">第一个button会出现意料之外的hover样式，找不到原因，只好加个不可见的button规避问题</button>
-                <!--<button id="module-clear-all" type="button" @click="clearAllParam" class="nz-btn nz-btn-size-normal nz-btn-style-light">-->
-                <!--<span><i class="nz-icon nz-icon-delete"></i></span>-->
-                <!--</button>-->
-                <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-params">
+              <div v-for="(item, index) in editModule.paramObj" :key="index" class="param-box-row">
+                <el-form-item class="param-box-row-key" :prop="'paramObj.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
+                </el-form-item>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :prop="'paramObj.' + index + '.value'">
+                  <el-select
+                    v-model="item.value"
+                    multiple
+                    filterable
+                    allow-create
+                    :ref="'select'+ index"
+                    placeholder="value" size="mini"
+                    default-first-option
+                    popper-class="config-dropdown hide-element"
+                  >
+                    <span slot="empty" class=""></span>
+                  </el-select>
+                </el-form-item>
+                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+              </div>
+            </div>
+            <div style="text-align: center">
+               <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add module-add-label">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="Labels" name="Labels">
+            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
+              <div v-for="(item, index) in editModule.labelModule" :key="index" class="param-box-row">
+                <el-form-item class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
+                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
+                </el-form-item>
+                <span class="param-box-row-eq">=</span>
+                <el-form-item class="param-box-row-value" :prop="'labelModule.' + index + '.value'">
+                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
+                </el-form-item>
+                <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-
-              <div class="param-box param-box-module">
-                <div style="height: 100%; overflow: auto;" id="module-box-params">
-                  <div v-for="(item, index) in editModule.configs.paramObj" :key="index" class="param-box-row">
-                    <el-form-item class="param-box-row-key" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.key'">
-                      <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
-                    </el-form-item>
-                    <span class="param-box-row-eq">=</span>
-                    <el-form-item class="param-box-row-value" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}" :prop="'paramObj.' + index + '.value'">
-                      <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                    </el-form-item>
-                    <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-                  </div>
-                </div>
-              </div>
-            </el-form-item>
+            </div>
+            <div style="text-align: center">
+               <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add module-add-label">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="Auth" name="Auth" v-if="editModule.type !== 'snmp'">
             <!--authtype-->
@@ -225,9 +216,10 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div>
-          asd
-        </div>
+        <pre class="configs-copy-value">
+          {{configsCopyValue}}
+         <i class="nz-icon nz-icon-override copy-value-content" @click="copyValue"></i>
+        </pre>
 
         <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'15px':'0'}">
 
@@ -322,10 +314,14 @@ export default {
         { name: this.$t('project.endpoint.authTypeNull'), value: 0 },
         { name: this.$t('project.endpoint.authTypeWord'), value: 1 },
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
-      ]
+      ],
+      configsCopyValue: ''
     }
   },
   methods: {
+    change(){
+      console.log(this.$refs['select'+0])
+    },
     selectWalk (walk) {
       if (this.editModule.walk.indexOf(walk) != -1) {
         this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
@@ -438,11 +434,12 @@ export default {
     },
     /* 保存 */
     save () {
-      this.editModule.configs.param = this.paramToJson(this.editModule.configs.paramObj)
-      this.editModule.configs.labels = this.labelsToJson(this.editModule.configs.labelModule)
+      this.editModule.configs.param = this.paramToJson(this.editModule.paramObj)
+      console.log(this.editModule.paramObj, this.editModule.configs.param)
+      this.editModule.configs.labels = this.labelsToJson(this.editModule.labelModule)
       const params = { ...this.editModule }
       params.configs.walk = params.walk
-      params.configs.prot = params.prot
+      params.configs.port = params.port
       params.configs = JSON.stringify(params.configs)
       if (this.authType === 2 && !this.editModule.configs.bearer_token) {
         this.$message.error("'token' is required")
@@ -519,50 +516,49 @@ export default {
     },
     // 清除param
     clearAllParam () {
-      this.editModule.configs.paramObj = []
+      this.editModule.paramObj = []
     },
 
     // 新增param
     addParam () {
-      this.editModule.configs.paramObj.push({ key: '', value: '' })
+      this.editModule.paramObj.push({ key: '', value: [] ,showList: false})
     },
     // 移除单个param
     removeParam (index) {
-      this.editModule.configs.paramObj.splice(index, 1)
+      this.editModule.paramObj.splice(index, 1)
     },
     // 新增label
     addLabel () {
-      this.editModule.configs.labelModule.push({ key: '', value: '' })
+      this.editModule.labelModule.push({ key: '', value: '' })
     },
     // 移除单个Label
     removeLabel (index) {
-      this.editModule.configs.labelModule.splice(index, 1)
+      if (this.editModule.labelModule.length === 1) {
+        return
+      }
+      this.editModule.labelModule.splice(index, 1)
     },
     // 将param转为json字符串格式
     paramToJson (param) {
       const tempParam = {}
       for (let i = 0; i < param.length; i++) {
-        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
+        if (!param[i].key || !param[i].value.length) {
+          continue
+        }
+        tempParam[param[i].key] = param[i].value
       }
-      const jsonString = JSON.stringify(tempParam)
-      if (jsonString == '{}') {
-        return ''
-      } else {
-        return jsonString
-      }
+      return tempParam
     },
     // 将labels转为json字符串格式
     labelsToJson (param) {
       const tempParam = {}
       for (let i = 0; i < param.length; i++) {
+        if (!param[i].key || !param[i].value) {
+          continue
+        }
         eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
       }
-      const jsonString = JSON.stringify(tempParam)
-      if (jsonString == '{}') {
-        return ''
-      } else {
-        return jsonString
-      }
+      return tempParam
     },
     // 输入建议
     querySearch (queryString, cb) {
@@ -582,6 +578,40 @@ export default {
         username: '',
         password: ''
       }
+    },
+    copyValue () {
+      const domUrl = document.createElement('input')
+      domUrl.value = this.configsCopyValue
+      domUrl.id = 'creatDom'
+      document.body.appendChild(domUrl)
+      domUrl.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      const creatDom = document.getElementById('creatDom')
+      creatDom.parentNode.removeChild(creatDom)
+      this.$message(this.$t('overall.copySuccess'))
+    },
+    syntaxHighlight (json) {
+      if (typeof json != 'string') {
+        json = JSON.stringify(json, undefined, 2)
+      }
+      json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>')
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        function (match) {
+          let cls = 'number'
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'key'
+            } else {
+              cls = 'string'
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'boolean'
+          } else if (/null/.test(match)) {
+            cls = 'null'
+          }
+          return '<span class="' + cls + '">' + match + '</span>'
+        }
+      )
     }
   },
   mounted () {
@@ -628,6 +658,42 @@ export default {
         //     }
         //   }
         // }
+      }
+    },
+    editModule: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        console.log(n)
+        if (n && n.configs) {
+          const params = Object.assign({}, n.configs)
+          params.param = this.paramToJson(this.editModule.paramObj)
+          params.labels = this.labelsToJson(this.editModule.labelModule)
+          params.walk = n.walk
+          params.port = n.port
+          Object.keys(params).forEach(key => {
+            console.log(key, !params[key] || !params[key].length)
+            if (!params[key]) {
+              delete params[key]
+            }
+            if (Array.isArray(params[key]) && !params[key].length) {
+              delete params[key]
+            }
+          })
+          if (params.basic_auth && !params.basic_auth.username) {
+            delete params.basic_auth
+          }
+          if (params.basic_auth && !params.basic_auth.password) {
+            delete params.basic_auth
+          }
+          if (!Object.keys(params.param).length) {
+            delete params.param
+          }
+          if (!Object.keys(params.labels).length) {
+            delete params.labels
+          }
+          this.configsCopyValue = JSON.stringify(params, null, 2)
+        }
       }
     }
   }
@@ -684,6 +750,9 @@ export default {
     display: inline-block;
     padding: 0 18px 0 8px;
   }
+  .half-form-item:nth-child(even){
+    padding-left: 0;
+  }
   /deep/ .el-tabs__item{
     width: 90px;
     padding: 0;
@@ -704,6 +773,9 @@ export default {
   /deep/ .el-autocomplete{
     width: 100%;
   }
+  /deep/ .el-tabs__content{
+    padding-left: 18px;
+  }
   .need-rotate.nz-icon-drop-down{
     display: inline-block;
     transition: transform .3s;
@@ -712,6 +784,36 @@ export default {
     transform: rotate(
       -180deg
     );
+  }
+  .module-add-label{
+    display: inline-block;
+    width: 300px;
+    height: 18px;
+    background: #FFFCF9;
+    border: 1px solid #FFE0BD;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 80px;
+  }
+  .configs-copy-value{
+    opacity: 0.9;
+    background: #F6F8FA;
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    height: 140px;
+    overflow-y: auto;
+    position: relative;
+    margin-top: 10px;
+    padding: 10px 15px;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+  }
+  .configs-copy-value .copy-value-content{
+    position: absolute;
+    right: 20px;
+    top: 14px;
+    cursor: pointer;
   }
 </style>
 <style>
@@ -738,5 +840,8 @@ export default {
   }
   .walk-close {
     font-size: 12px;
+  }
+  .config-dropdown.hide-element{
+    border: none!important;
   }
 </style>

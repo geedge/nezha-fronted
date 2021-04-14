@@ -102,7 +102,8 @@ const en = {
       stack: 'Show stack chart',
       stackBack: 'Back to original chart'
     },
-    SyncSave: 'Save&Sync'
+    SyncSave: 'Save&Sync',
+    copySuccess: 'Copy success'
   },
   pageSize: '/page',
   setup: {
@@ -1179,12 +1180,12 @@ const en = {
       scrape_timeout: 'Scrape timeout',
       scrape_timeout_placeholder: 'default global scrape timeout',
       type: 'Type',
-      bearer_token: 'Token',
+      bearer_token: 'bearer token',
       username: 'Username',
       password: 'Password',
       authTypeNull: 'None',
-      authTypeWord: 'Username and password',
-      authTypeToken: 'Token',
+      authTypeWord: 'basic auth',
+      authTypeToken: 'bearer token',
     },
     metrics: {
       metrics: 'Metrics', // "指标"

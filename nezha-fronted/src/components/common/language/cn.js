@@ -97,7 +97,8 @@ const cn = {
       stack: '查看堆叠图',
       stackBack: '返回原始图'
     },
-    SyncSave: '保存同时更新 Assets'
+    SyncSave: '保存同时更新 Assets',
+    copySuccess: '复制成功'
   },
   setup: {
     step0: '欢迎',
@@ -1175,12 +1176,12 @@ const cn = {
       scrape_timeout: '超时时间',
       scrape_timeout_placeholder: '默认全局超时时间',
       type: '类型',
-      bearer_token: 'Token',
+      bearer_token: 'bearer token',
       username: '用户名',
       password: '密码',
-      authTypeNull: '无',
-      authTypeWord: '用户名密码',
-      authTypeToken: 'Token',
+      authTypeNull: 'none',
+      authTypeWord: 'basic auth',
+      authTypeToken: 'bearer token',
     },
     metrics: {
       metrics: '指标',
