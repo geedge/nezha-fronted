@@ -8,6 +8,9 @@
         <div class="nz-tab-item-box" id="module-type-4">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibBrowser")}}</div>
         </div>
+        <div class="nz-tab-item-box" id="module-type-5" @click="toCredentialTab">
+          <div class="nz-tab-item ">{{$t("config.mib.credentials")}}</div>
+        </div>
       </div>
       <div class="top-tool-main-right">
         <div class="top-tool-search host-input">
@@ -331,6 +334,9 @@ export default {
   methods: {
     toFileTab () {
       this.$emit('toFileTab')
+    },
+    toCredentialTab () {
+      this.$emit('toCredentialTab')
     },
     showDetail (data, node) {
       this.currentWalk = data

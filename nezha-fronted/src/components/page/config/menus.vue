@@ -63,7 +63,8 @@ export default {
         type: 1,
         route: '',
         orderNum: 1,
-        perms: ''
+        perms: '',
+        icon:''
       },
       tableTitle: [ // 原table列
         {
@@ -86,6 +87,10 @@ export default {
         }, {
           label: this.$t('config.menus.type'),
           prop: 'type',
+          show: true
+        },{
+          label: this.$t('config.menus.icon'),
+          prop: 'icon',
           show: true
         }, {
           label: this.$t('config.menus.route'),

@@ -701,11 +701,13 @@ const en = {
       perms: 'Permission',
       button: 'Button',
       menu: 'Menu',
+      tab:'Tab',
       parent: 'Previous menu',
       mainMenu: 'Primary menu',
       createMenu: 'Create menu',
       editMenu: 'Edit menu',
-      orderNum: 'Order'
+      orderNum: 'Order',
+      icon:'Icon'
     },
     agent: {
       // 侧滑框
@@ -858,7 +860,19 @@ const en = {
       vendor: 'Vendor',
       type: 'Type',
       mibBrowser: 'MIB browser',
-      noData: 'No Data'
+      credentials: 'Credentials',
+      noData: 'No Data',
+      credential:{
+        type:"Protocol type",
+        port:"Port",
+        remark:"Description",
+        edit:"Edit",
+        create:"Create",
+        auth:'Authentication',
+        method:'Method',
+        encryption:"Encryption",
+        pin:"Password"
+      }
     },
     system: {
       system: 'System',

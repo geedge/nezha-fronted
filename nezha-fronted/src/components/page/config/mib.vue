@@ -8,14 +8,17 @@
       :from="fromRoute.mib"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
-<!--      <template v-slot:top-tool-left>
+      <template v-slot:top-tool-left>
         <div id="module-type-1" class="nz-tab-item-box">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
         </div>
-        <div id="module-type-2" v-has="'snmp_browser_view'" class="nz-tab-item-box" @click="showTab = 'browser'">
+        <div id="module-type-2"  class="nz-tab-item-box" @click="showTab = 'browser'"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
         </div>
-      </template>-->
+        <div id="module-type-3"  class="nz-tab-item-box" @click="showTab = 'credentials'">
+          <div class="nz-tab-item">{{$t("config.mib.credentials")}}</div>
+        </div>
+      </template>
       <template v-slot:top-tool-right>
         <button id="mib-add" v-has="'snmp_mibFile_add'" :title="$t('overall.createMib')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
@@ -43,7 +46,8 @@
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
-    <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'"></mib-browser>
+    <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'" @toCredentialTab="showTab = 'credentials'"></mib-browser>
+    <credentials :show-tab="showTab" v-if="showTab == 'credentials'" @toFileTab="showTab = 'file'" @toBrowserTab="showTab = 'browser'"></credentials>
     <transition name="right-box">
       <mib-box v-if="rightBox.show" ref="mibBox" :mib="object" @close="closeRightBox" @reload="getTableData"></mib-box>
     </transition>
@@ -56,10 +60,11 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import mibTable from '@/components/common/table/settings/mibTable'
-
+import credentials from "./credentials";
 export default {
   name: 'mib',
   components: {
+    credentials,
     mibBox,
     mibBrowser,
     deleteButton,

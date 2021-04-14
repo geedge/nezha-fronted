@@ -971,7 +971,7 @@ li{
 /*此处自定义弹框尺寸，不同功能可能需要的尺寸不一样，需自行添加*/
 .right-box-menu ,.right-box-role ,.right-box-account, .right-box-prom, .right-box-alert-config, .right-box-project, .right-box-module, .right-box-cabinet,
 .right-box-edit-endpoint, .right-box-panel, .right-box-dc, .right-box-model, .right-box-mib, .right-box-asset, .right-box-add-chart, .right-box-asset-type,
-.right-box-asset-state {
+.right-box-asset-state , .right-box-credential{
   width: 850px;
 }
 .right-box-chart .el-input__inner, .right-box-chart input {

@@ -698,11 +698,13 @@ const cn = {
       perms: '权限',
       button: '按钮',
       menu: '菜单',
+      tab:'Tab',
       parent: '上级菜单',
       mainMenu: '主菜单',
       createMenu: '新增菜单',
       editMenu: '编辑菜单',
-      orderNum: '排序'
+      orderNum: '排序',
+      icon:'图标',
     },
     promServer: {
       promServerList: 'Prometheus服务',
@@ -856,7 +858,17 @@ const cn = {
       vendor: '厂商',
       type: '类型',
       mibBrowser: 'MIB浏览器',
-      noData: '暂无数据'
+      credentials: '证书',
+      noData: '暂无数据',
+      credential:{
+        type:"协议类型",
+        port:"端口",
+        remark:"备注",
+        auth:"认证",
+        method:'方式',
+        encryption:"加密",
+        pin:"密码"
+      }
     },
     system: {
       system: '系统设置',

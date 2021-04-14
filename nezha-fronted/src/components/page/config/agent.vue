@@ -12,7 +12,7 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent">
+        <button id="load-agent" class="top-tool-btn margin-r-10" type="button" @click="toDownloadAgent" v-has="'agent_add'">
           <i class="nz-icon-download nz-icon"></i>
         </button>
         <delete-button id="promserver-list-batch-delete" v-has="'agent_delete'" :delete-objs="batchDeleteObjs" api="agent" @after="getTableData" @before="delFlag=true"></delete-button>
@@ -72,21 +72,21 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="cURL"  v-if="loadFinish" class="download-url">
+            <el-input id="download-url-curl" :disabled="true" v-model="curlUrl">
+              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="curlVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('curl')">
+                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
+              </el-popover>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Wget"  v-if="loadFinish" class="download-url">
+            <el-input id="download-url-wget" :disabled="true" v-model="wgetUrl">
+              <el-popover :content="$t('tip.copySuccess')" placement="top" trigger="manual" v-model="wgetVisible" popper-class="small-pop" slot="suffix" @after-enter="popShow('wget')">
+                <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
+              </el-popover>
+            </el-input>
+          </el-form-item>
         </el-form>
-        <div v-if="loadFinish" class="download-url">
-          <el-input id="download-url-curl" v-model="curlUrl" :disabled="true">
-            <el-popover slot="suffix" v-model="curlVisible" :content="$t('tip.copySuccess')" placement="top" popper-class="small-pop" trigger="manual" @after-enter="popShow('curl')">
-              <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-curl')"></i>
-            </el-popover>
-          </el-input>
-        </div>
-        <div v-if="loadFinish" class="download-url">
-          <el-input id="download-url-wget" v-model="wgetUrl" :disabled="true">
-            <el-popover slot="suffix" v-model="wgetVisible" :content="$t('tip.copySuccess')" placement="top" popper-class="small-pop" trigger="manual" @after-enter="popShow('wget')">
-              <i slot="reference" class="nz-icon nz-icon-override" @click="copyUrl('download-url-wget')"></i>
-            </el-popover>
-          </el-input>
-        </div>
       </div>
     </el-dialog>
   </div>
@@ -203,8 +203,10 @@ export default {
         this.tools.loading = false
         if (response.code === 200) {
           this.allDc = response.data.list
-          this.loadFinish = true
-          this.agentParam.dc = this.allDc[0].id
+          if(this.allDc&&this.allDc.length>0){
+            this.loadFinish = true
+            this.agentParam.dc = this.allDc[0].id
+          }
         }
       })
     },
@@ -291,14 +293,10 @@ export default {
   }
 
   .agent-box .download-url{
-    height: 40px;
-    position: relative;
-    margin-bottom: 10px;
+      margin-left: 12px !important;
   }
   .agent-box .download-url .url-copy{
-    position: absolute;
-    right: 10px;
-    top: 5px;
+
   }
   .agent-box .download-url .url-copy i{
     font-size: 20px;
@@ -320,7 +318,7 @@ export default {
 
 </style>
 <style>
-  .download-url > .el-input.is-disabled .el-input__inner{
+  .download-url  .el-input.is-disabled .el-input__inner{
     background-color: #F6F8FA;;
     border-color: #E4E7ED;
     color: #333;
@@ -328,7 +326,6 @@ export default {
   }
   .download-url  .el-input__suffix {
     position: absolute;
-    top: 8px;
     -webkit-transition: all .3s;
     height: 100%;
     color: #333;
