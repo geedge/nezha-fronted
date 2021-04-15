@@ -12,10 +12,10 @@
         <div id="module-type-1" class="nz-tab-item-box">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>
         </div>
-        <div id="module-type-2"  class="nz-tab-item-box" @click="showTab = 'browser'"><!--v-has="'snmp_browser_view'"-->
+        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab(['mib','browser'],'browser')"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
         </div>
-        <div id="module-type-3"  class="nz-tab-item-box" @click="showTab = 'credentials'">
+        <div id="module-type-3"  class="nz-tab-item-box" @click="clickTab(['mib','credentials'],'credentials')">
           <div class="nz-tab-item">{{$t("config.mib.credentials")}}</div>
         </div>
       </template>
@@ -46,36 +46,32 @@
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
-    <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @toFileTab="showTab = 'file'" @toCredentialTab="showTab = 'credentials'"></mib-browser>
-    <credentials :show-tab="showTab" v-if="showTab == 'credentials'" @toFileTab="showTab = 'file'" @toBrowserTab="showTab = 'browser'"></credentials>
     <transition name="right-box">
       <mib-box v-if="rightBox.show" ref="mibBox" :mib="object" @close="closeRightBox" @reload="getTableData"></mib-box>
     </transition>
   </div>
 </template>
 <script>
-import mibBrowser from './mibBrowser'
 import mibBox from '@/components/common/rightBox/mibBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import mibTable from '@/components/common/table/settings/mibTable'
-import credentials from './credentials'
 export default {
   name: 'mib',
   components: {
-    credentials,
     mibBox,
-    mibBrowser,
     deleteButton,
     nzDataList,
     mibTable
   },
   mixins: [dataListMixin],
+  props: {
+    showTab: String
+  },
   data () {
     return {
       url: 'mib',
-      showTab: 'file', // file/browser
       tableId: 'mibTable', // 需要分页的table的id，用于记录每页数量
       blankObject: {
         id: null,
@@ -100,6 +96,14 @@ export default {
           disabled: false
         }]
       }
+    }
+  },
+  methods: {
+    toCredentialTab () {
+      this.$emit('toCredentialTab')
+    },
+    toBrowserTab () {
+      this.$emit('toBrowserTab')
     }
   }
 }

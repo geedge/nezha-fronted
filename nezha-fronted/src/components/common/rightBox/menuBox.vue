@@ -25,6 +25,7 @@
           <el-radio-group v-model="editMenu.type" id="menu-box-input-type">
             <el-radio :label="1">{{$t('config.menus.menu')}}</el-radio>
             <el-radio :label="2">{{$t('config.menus.button')}}</el-radio>
+            <el-radio :label="3">{{$t('config.menus.tab')}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <!--name-->
@@ -39,6 +40,9 @@
         </el-form-item>
         <el-form-item :label="$t('config.menus.route')" prop="route">
           <el-input  placeholder="" type="text" v-model="editMenu.route" id="menu-box-input-route"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('config.menus.icon')" prop="icon">
+          <el-input  placeholder="" type="text" v-model="editMenu.icon" id="menu-box-input-icon"></el-input>
         </el-form-item>
         <!--<el-form-item :label="$t('config.menus.perms')" prop="perms">
           <el-input  type="text" placeholder="" v-model="editMenu.perms" ></el-input>

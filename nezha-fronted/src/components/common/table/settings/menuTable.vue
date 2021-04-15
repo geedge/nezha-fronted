@@ -49,6 +49,9 @@
         <template v-else-if="item.prop === 'type'">
           <span>{{scope.row[item.prop] === 2?$t('config.menus.button'):$t('config.menus.menu')}}</span>
         </template>
+        <template v-else-if="item.prop === 'icon'">
+          <span><i :class="scope.row[item.prop]"></i>{{scope.row[item.prop]}}</span>
+        </template>
         <span v-else>{{scope.row[item.prop]}}</span>
       </template>
     </el-table-column>
@@ -100,6 +103,10 @@ export default {
         }, {
           label: this.$t('config.menus.type'),
           prop: 'type',
+          show: true
+        }, {
+          label: this.$t('config.menus.icon'),
+          prop: 'icon',
           show: true
         }, {
           label: this.$t('config.menus.route'),

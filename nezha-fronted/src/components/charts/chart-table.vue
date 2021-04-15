@@ -434,7 +434,6 @@ export default {
       if (!seriesItem || !seriesItem.length > 0) return []
       if (!statistics) return seriesItem
       const copy = JSON.parse(JSON.stringify(seriesItem))
-      copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })[0]
       const classifies = []
       let maxGroup = 0
       const map = new Map()// 用于记录在第几组
@@ -452,6 +451,7 @@ export default {
       let result
       switch (statistics) {
         case 'null': {
+          copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })
           result = copy.map(item => {
             return {
               element: item.element,
