@@ -108,14 +108,14 @@ export default {
   },
   methods: {
     refreshToken: function () {
-      if(!this.editPromServer.token||this.editPromServer.token == ''){
-        this.$message.error("The token is empty")
-        return;
+      if (!this.editPromServer.token || this.editPromServer.token == '') {
+        this.$message.error('The token is empty')
+        return
       }
-      this.$post('agent/token/refresh' , this.editPromServer).then(response=>{
-        if(response.code == 200){
-          this.editPromServer.token = response.data.token;
-        }else{
+      this.$post('agent/token/refresh', this.editPromServer).then(response => {
+        if (response.code == 200) {
+          this.editPromServer.token = response.data.token
+        } else {
           this.$message.error(response.msg)
         }
       })

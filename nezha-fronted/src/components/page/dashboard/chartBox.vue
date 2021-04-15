@@ -1013,7 +1013,7 @@ export default {
           param: param,
           sync: this.editChart.sync,
           remark: this.editChart.remark,
-          groupId: this.editChart.groupId,
+          groupId: this.editChart.groupId
         }
         if (valid) {
           if (opType === 'preview') {
@@ -1082,7 +1082,7 @@ export default {
               },
               sync: this.editChart.sync,
               remark: this.editChart.remark,
-              groupId: this.editChart.groupId,
+              groupId: this.editChart.groupId
             }
 
             if (valid) {
@@ -1487,7 +1487,7 @@ export default {
             if (this.editChart.type != 'singleStat' && this.editChart.type != 'pie' && this.editChart.type != 'table') {
               delete params.param.statistics
             }
-            if (this.editChart.type === 'bar' && this.editChart.param.statistics && this.editChart.param.statistics !== 'null'){
+            if (this.editChart.type === 'bar' && this.editChart.param.statistics && this.editChart.param.statistics !== 'null') {
               params.param.statistics = this.editChart.param.statistics
             }
             if (this.editChart.type === 'line' || this.editChart.type === 'bar' || this.editChart.type === 'stackArea' || this.editChart.type === 'table') {

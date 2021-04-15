@@ -124,14 +124,14 @@ export default {
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.object.paramObj = []
       this.object.labelModule = []
-      if (this.object.configs.labels !== '{}'&&this.object.configs.labels) {
+      if (this.object.configs.labels !== '{}' && this.object.configs.labels) {
         Object.keys(this.object.configs.labels).forEach(key => {
           this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
         })
       } else {
         this.object.labelModule.push({ key: '', value: '' })
       }
-      if (this.object.configs.param !== '{}'&&this.object.configs.param) {
+      if (this.object.configs.param !== '{}' && this.object.configs.param) {
         Object.keys(this.object.configs.param).forEach(key => {
           this.object.paramObj.push({ key, value: this.object.configs.param[key] })
         })

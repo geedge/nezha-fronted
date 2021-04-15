@@ -110,10 +110,10 @@ export default {
   mixins: [dataListMixin],
   computed: {
     wgetUrl () {
-      return 'wget -qO- --header="Authorization:'+this.token+'" '+ this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+      return 'wget -qO- --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | bash'
     },
     curlUrl () {
-      return 'curl -o- -H "Authorization:'+this.token+'" '+ this.ipAddr+'/agent/'+this.agentParam.dc+'/'+this.agentParam.type+'/install.sh | bash'
+      return 'curl -o- -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | bash'
     }
   },
   data () {
@@ -203,7 +203,7 @@ export default {
         this.tools.loading = false
         if (response.code === 200) {
           this.allDc = response.data.list
-          if(this.allDc&&this.allDc.length>0){
+          if (this.allDc && this.allDc.length > 0) {
             this.loadFinish = true
             this.agentParam.dc = this.allDc[0].id
           }
@@ -221,33 +221,32 @@ export default {
       }
       document.body.removeChild(input)
 
-      if(id.indexOf('curl') != -1){
+      if (id.indexOf('curl') != -1) {
         this.curlVisible = true
         // let timeout = setTimeout(()=>{
         //   this.curlVisible = false;
         //   clearTimeout(timeout)
         // },1000)
-      }else{
+      } else {
         this.wgetVisible = true
         // let timeout = setTimeout(()=>{
         //   this.wgetVisible = false;
         //   clearTimeout(timeout)
         // },1000)
-
       }
     },
-    popShow:function(where){
+    popShow: function (where) {
       const self = this
-      if(where == 'curl'){
-        let timeout = setTimeout(()=>{
-          self.curlVisible = false;
+      if (where == 'curl') {
+        const timeout = setTimeout(() => {
+          self.curlVisible = false
           clearTimeout(timeout)
-        },1000)
-      }else{
-        let timeout = setTimeout(()=>{
-          self.wgetVisible = false;
+        }, 1000)
+      } else {
+        const timeout = setTimeout(() => {
+          self.wgetVisible = false
           clearTimeout(timeout)
-        },1000)
+        }, 1000)
       }
     },
     downloadAgent: function () {

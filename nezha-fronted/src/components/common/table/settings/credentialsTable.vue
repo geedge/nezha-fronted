@@ -86,37 +86,37 @@
 </template>
 
 <script>
-  import table from '@/components/common/mixin/table'
-  export default {
-    name: "credentialsTable",
-    mixins: [table],
-    data(){
-      return{
-        tableTitle:[{
-          label: 'ID',
-          prop: 'id',
-          show: true,
-          width: 80
-        }, {
-          label: this.$t('overall.name'),
-          prop: 'name',
-          show: true
-        },{
-          label:this.$t('config.mib.credential.type'),
-          prop: 'type',
-          show: true
-        },{
-          label:this.$t('config.mib.credential.port'),
-          prop: 'port',
-          show: true
-        },{
-          label:this.$t('config.mib.credential.remark'),
-          prop: 'remark',
-          show: true
-        }]
-      }
+import table from '@/components/common/mixin/table'
+export default {
+  name: 'credentialsTable',
+  mixins: [table],
+  data () {
+    return {
+      tableTitle: [{
+        label: 'ID',
+        prop: 'id',
+        show: true,
+        width: 80
+      }, {
+        label: this.$t('overall.name'),
+        prop: 'name',
+        show: true
+      }, {
+        label: this.$t('config.mib.credential.type'),
+        prop: 'type',
+        show: true
+      }, {
+        label: this.$t('config.mib.credential.port'),
+        prop: 'port',
+        show: true
+      }, {
+        label: this.$t('config.mib.credential.remark'),
+        prop: 'remark',
+        show: true
+      }]
     }
   }
+}
 </script>
 
 <style scoped>

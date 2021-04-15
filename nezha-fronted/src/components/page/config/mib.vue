@@ -60,7 +60,7 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import mibTable from '@/components/common/table/settings/mibTable'
-import credentials from "./credentials";
+import credentials from './credentials'
 export default {
   name: 'mib',
   components: {

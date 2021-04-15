@@ -237,15 +237,15 @@ export default {
           } else {
             this.getValidateCode()
             this.$get('setup/checkCode?code=' + this.validateCode).then(response => {
-              if(response.status == 404){
+              if (response.status == 404) {
                 this.$alert(this.$t('setup.hadConfig'), { type: 'warning' })
-                const self = this;
-                setTimeout(()=>{
+                const self = this
+                setTimeout(() => {
                   self.$router.push({
                     path: '/'
                   })
-                },2000)
-                return;
+                }, 2000)
+                return
               }
               if (response.code == 200) {
                 this.activeStep = 1

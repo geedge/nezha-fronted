@@ -106,7 +106,7 @@ export default {
           prop: 'endpointNum',
           show: true,
           width: 150
-        },{
+        }, {
           label: this.$t('project.module.alerts'),
           prop: 'alertNum',
           show: true,
@@ -124,7 +124,7 @@ export default {
   methods: {
     showBottomBox (project) {
       this.$store.commit('currentProjectChange', project)
-    },
+    }
   },
   computed: {
     isCurrentUser () {

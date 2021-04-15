@@ -32,7 +32,7 @@ const store = new Vuex.Store({
     idcArr: [],
     overViewProject: {},
     dcDataRefresh: false,
-    showTopoScreen: false,
+    showTopoScreen: false
   },
   getters: {
     getLinkData (state) {

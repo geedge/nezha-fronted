@@ -11,8 +11,8 @@ import projectTopo from './project'
 export default {
   name: 'index',
   props: {},
-  computed:{
-    showList(){
+  computed: {
+    showList () {
       return !this.$store.getters.getShowTopoScreen
     }
   },

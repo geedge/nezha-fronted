@@ -155,7 +155,7 @@ const en = {
     hadConfig: 'Someone has started to configure the system',
     invalidCode: "The authentication is invalid ,please follow the description in {page} 'To continue'",
     welcomePage: 'Welcome page',
-    inited:'The system has been initialized',
+    inited: 'The system has been initialized'
   },
   webshell: {
     shellTitle: 'Local Shell',
@@ -701,13 +701,13 @@ const en = {
       perms: 'Permission',
       button: 'Button',
       menu: 'Menu',
-      tab:'Tab',
+      tab: 'Tab',
       parent: 'Previous menu',
       mainMenu: 'Primary menu',
       createMenu: 'Create menu',
       editMenu: 'Edit menu',
       orderNum: 'Order',
-      icon:'Icon'
+      icon: 'Icon'
     },
     agent: {
       // 侧滑框
@@ -862,16 +862,16 @@ const en = {
       mibBrowser: 'MIB browser',
       credentials: 'Credentials',
       noData: 'No Data',
-      credential:{
-        type:"Protocol type",
-        port:"Port",
-        remark:"Description",
-        edit:"Edit",
-        create:"Create",
-        auth:'Authentication',
-        method:'Method',
-        encryption:"Encryption",
-        pin:"Password"
+      credential: {
+        type: 'Protocol type',
+        port: 'Port',
+        remark: 'Description',
+        edit: 'Edit',
+        create: 'Create',
+        auth: 'Authentication',
+        method: 'Method',
+        encryption: 'Encryption',
+        pin: 'Password'
       }
     },
     system: {
@@ -1199,7 +1199,7 @@ const en = {
       password: 'Password',
       authTypeNull: 'None',
       authTypeWord: 'basic auth',
-      authTypeToken: 'bearer token',
+      authTypeToken: 'bearer token'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

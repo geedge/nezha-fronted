@@ -129,22 +129,22 @@ export const setting = {
     { value: 'OFF', label: i18n.t('config.dc.suspended') }
   ]
 }
-export const snmpProtocolTypes=[
+export const snmpProtocolTypes = [
   // {label:'V1',value:1},
-  {label:'V2',value:2},
-  {label:'V3',value:3}
+  { label: 'V2', value: 2 },
+  { label: 'V3', value: 3 }
 ]
-export const snmpAuthMethod=[
-  {label:'None',value:''},
-  {label:'MD5',value:'MD5'},
-  {label:'SHA',value:'SHA'},
+export const snmpAuthMethod = [
+  { label: 'None', value: '' },
+  { label: 'MD5', value: 'MD5' },
+  { label: 'SHA', value: 'SHA' }
 ]
-export const snmpEncryptionMethod=[
-  {label:'None',value:''},
-  {label:'DES',value:'DES'},
-  {label:'AES-128',value:'AES-128'},
-  {label:'AES-192',value:'AES-192'},
-  {label:'AES-256',value:'AES-256'},
+export const snmpEncryptionMethod = [
+  { label: 'None', value: '' },
+  { label: 'DES', value: 'DES' },
+  { label: 'AES-128', value: 'AES-128' },
+  { label: 'AES-192', value: 'AES-192' },
+  { label: 'AES-256', value: 'AES-256' }
 ]
 export const terminalLog = {
   status: {

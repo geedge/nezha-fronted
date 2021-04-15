@@ -376,13 +376,13 @@ export default {
           let mapping
           if (type == 'value') {
             mapping = mappings.find(t => {
-              let mappingValue = t.value ===''?'':Number(t.value) //Number('') 值为0
+              const mappingValue = t.value === '' ? '' : Number(t.value) // Number('') 值为0
               return mappingValue === value
             })
           } else {
             mapping = mappings.find(t => {
-              let mappingFrom = t.from ===''?'':Number(t.from)
-              let mappingTo = t.to ===''?'':Number(t.to)
+              const mappingFrom = t.from === '' ? '' : Number(t.from)
+              const mappingTo = t.to === '' ? '' : Number(t.to)
               return Number(mappingFrom) <= value && Number(mappingTo) >= value
             })
           }
@@ -433,26 +433,25 @@ export default {
     getStatisticsResult: function (statistics, seriesItem) {
       if (!seriesItem || !seriesItem.length > 0) return []
       if (!statistics) return seriesItem
-      let copy = JSON.parse(JSON.stringify(seriesItem))
+      const copy = JSON.parse(JSON.stringify(seriesItem))
       copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })[0]
-      let classifies=[];
-      let maxGroup=0
-      let map = new Map();//用于记录在第几组
+      const classifies = []
+      let maxGroup = 0
+      const map = new Map()// 用于记录在第几组
       copy.forEach(item => {
-        let element = item.element.element;
-        let group = map.get(element);
-        if(typeof group != "undefined"){
+        const element = item.element.element
+        const group = map.get(element)
+        if (typeof group != 'undefined') {
           classifies[group].push(item)
-        }else{
-          classifies.push([item]);
-          map.set(element,maxGroup++)
+        } else {
+          classifies.push([item])
+          map.set(element, maxGroup++)
         }
       })
 
       let result
       switch (statistics) {
         case 'null': {
-
           result = copy.map(item => {
             return {
               element: item.element,
@@ -463,22 +462,22 @@ export default {
           break
         }
         case 'min': {
-          result = classifies.map(group=>{
-              let groupMin = group.sort((x, y) => {
-                return parseFloat(x.data[1]) - parseFloat(y.data[1])
-              })[0]
+          result = classifies.map(group => {
+            const groupMin = group.sort((x, y) => {
+              return parseFloat(x.data[1]) - parseFloat(y.data[1])
+            })[0]
 
-              return {
-                element: groupMin.element,
-                time: bus.timeFormate(new Date(groupMin.data[0]), 'yyyy-MM-dd hh:mm:ss'),
-                value: groupMin.data[1]
-              }
+            return {
+              element: groupMin.element,
+              time: bus.timeFormate(new Date(groupMin.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value: groupMin.data[1]
+            }
           })
           break
         }
         case 'max': {
-          result = classifies.map(group=>{
-            let groupMax = group.sort((x, y) => {
+          result = classifies.map(group => {
+            const groupMax = group.sort((x, y) => {
               return parseFloat(y.data[1]) - parseFloat(x.data[1])
             })[0]
 
@@ -491,11 +490,11 @@ export default {
           break
         }
         case 'average': {
-          result = classifies.map(group=>{
-            let groupData=group.map(t => parseFloat(t.data[1]))
+          result = classifies.map(group => {
+            const groupData = group.map(t => parseFloat(t.data[1]))
             const sum = eval(groupData.join('+'))
             const avg = sum / groupData.length
-            let last = group.sort((x, y) => {
+            const last = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })[0]
             return {
@@ -507,10 +506,10 @@ export default {
           break
         }
         case 'total': {
-          result = classifies.map(group=>{
-            let groupData=group.map(t => parseFloat(t.data[1]))
+          result = classifies.map(group => {
+            const groupData = group.map(t => parseFloat(t.data[1]))
             const total = eval(groupData.join('+'))
-            let last = group.sort((x, y) => {
+            const last = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })[0]
             return {
@@ -522,8 +521,8 @@ export default {
           break
         }
         case 'first': {
-          result = classifies.map(group=>{
-            let first = group.sort((x, y) => {
+          result = classifies.map(group => {
+            const first = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })[copy.length - 1]
 
@@ -536,9 +535,8 @@ export default {
           break
         }
         case 'last': {
-          result = classifies.map(group=>{
-
-            let last = group.sort((x, y) => {
+          result = classifies.map(group => {
+            const last = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })[0]
             return {
@@ -550,17 +548,16 @@ export default {
           break
         }
         case 'range': {
-          result = classifies.map(group=>{
-
+          result = classifies.map(group => {
             const sort = JSON.parse(JSON.stringify(group)).sort((x, y) => {
               return parseFloat(y.data[1]) - parseFloat(x.data[1])
             })
-            let last = group.sort((x, y) => {
+            const last = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })[0]
             const max = sort[0]
             const min = sort[sort.length - 1]
-            let range = max.data[1] - min.data[1];
+            const range = max.data[1] - min.data[1]
             return {
               element: last.element,
               time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),
@@ -570,13 +567,12 @@ export default {
           break
         }
         case 'different': {
-          result = classifies.map(group=>{
-
+          result = classifies.map(group => {
             const sort = group.sort((x, y) => {
               return parseFloat(y.data[0]) - parseFloat(x.data[0])
             })
-            let last = sort[0]
-            let first = sort[copy.length - 1]
+            const last = sort[0]
+            const first = sort[copy.length - 1]
             return {
               element: last.element,
               time: bus.timeFormate(new Date(last.data[0]), 'yyyy-MM-dd hh:mm:ss'),

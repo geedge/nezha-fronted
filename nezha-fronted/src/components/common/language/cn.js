@@ -149,7 +149,7 @@ const cn = {
     hadConfig: '已经有人开始配置系统',
     invalidCode: '身份验证无效，请按照{page}中的描述继续',
     welcomePage: '欢迎页面',
-    inited: '系统已经被初始化',
+    inited: '系统已经被初始化'
   },
   webshell: {
     shellTitle: '本地 Shell',
@@ -698,13 +698,13 @@ const cn = {
       perms: '权限',
       button: '按钮',
       menu: '菜单',
-      tab:'Tab',
+      tab: 'Tab',
       parent: '上级菜单',
       mainMenu: '主菜单',
       createMenu: '新增菜单',
       editMenu: '编辑菜单',
       orderNum: '排序',
-      icon:'图标',
+      icon: '图标'
     },
     promServer: {
       promServerList: 'Prometheus服务',
@@ -860,14 +860,14 @@ const cn = {
       mibBrowser: 'MIB浏览器',
       credentials: '证书',
       noData: '暂无数据',
-      credential:{
-        type:"协议类型",
-        port:"端口",
-        remark:"备注",
-        auth:"认证",
-        method:'方式',
-        encryption:"加密",
-        pin:"密码"
+      credential: {
+        type: '协议类型',
+        port: '端口',
+        remark: '备注',
+        auth: '认证',
+        method: '方式',
+        encryption: '加密',
+        pin: '密码'
       }
     },
     system: {
@@ -1193,7 +1193,7 @@ const cn = {
       password: '密码',
       authTypeNull: 'none',
       authTypeWord: 'basic auth',
-      authTypeToken: 'bearer token',
+      authTypeToken: 'bearer token'
     },
     metrics: {
       metrics: '指标',

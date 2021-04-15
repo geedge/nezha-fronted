@@ -89,13 +89,13 @@
 
 <script>
 
-  import {port} from "../js/validate";
+import { port } from '../js/validate'
 
-  export default {
+export default {
   name: 'credentialBox',
 
   props: {
-    credential: Object,
+    credential: Object
   },
   data () {
     return {
@@ -108,14 +108,14 @@
         remark: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        type:[
+        type: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        port:[
+        port: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: port, trigger: 'blur' }
         ]
-      },
+      }
     }
   },
   methods: {
@@ -128,21 +128,21 @@
       this.esc(false)
     },
 
-    typeChange:function(type){
-      if(type === 1 || type === 2){
-        this.$set(this.editCredential,'config',{
-          readCommunity:'',
-          writeCommunity:'',
+    typeChange: function (type) {
+      if (type === 1 || type === 2) {
+        this.$set(this.editCredential, 'config', {
+          readCommunity: '',
+          writeCommunity: ''
         })
-      }else{
-        this.$set(this.editCredential,'config',{
-          username:'',
-          contextname:'',
-          securityLevel:'',
-          authProtocol:'',
-          authPin:'',
-          privProtocol:'',
-          privPin:'',
+      } else {
+        this.$set(this.editCredential, 'config', {
+          username: '',
+          contextname: '',
+          securityLevel: '',
+          authProtocol: '',
+          authPin: '',
+          privProtocol: '',
+          privPin: ''
         })
       }
     },
@@ -154,19 +154,19 @@
       this.prevent_opt.save = true
       this.$refs.credentialForm.validate((valid) => {
         if (valid) {
-          if(this.editCredential.type === 3 ){
-            if(this.editCredential.config.authProtocol && !this.editCredential.config.privProtocol){
+          if (this.editCredential.type === 3) {
+            if (this.editCredential.config.authProtocol && !this.editCredential.config.privProtocol) {
               this.editCredential.securityLevel = 'authNoPriv'
-            }else if(this.editCredential.config.authProtocol && this.editCredential.config.privProtocol){
+            } else if (this.editCredential.config.authProtocol && this.editCredential.config.privProtocol) {
               this.editCredential.securityLevel = 'authPriv'
-            }else{
+            } else {
               this.editCredential.securityLevel = 'noAuthNoPriv'
             }
           }
-          let param = JSON.parse(JSON.stringify(this.editCredential))
+          const param = JSON.parse(JSON.stringify(this.editCredential))
           param.config = JSON.stringify(param.config)
           if (this.editCredential.id) {
-            this.$put('/snmp/credential',param).then(response=>{
+            this.$put('/snmp/credential', param).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -176,7 +176,7 @@
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('/snmp/credential',param).then(response=>{
+            this.$post('/snmp/credential', param).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -213,7 +213,7 @@
       }).catch(() => {
         this.prevent_opt.save = false
       })
-    },
+    }
   },
   mounted () {
 
@@ -225,7 +225,7 @@
       handler (n, o) {
         this.editCredential = JSON.parse(JSON.stringify(n))
         this.editCredential.config = JSON.parse(this.editCredential.config)
-        console.log('edit',this.editCredential)
+        console.log('edit', this.editCredential)
       }
     }
   }

@@ -131,11 +131,14 @@
                 </el-form-item>
                 <!--scrape_interval-->
                 <el-form-item :label='$t("project.endpoint.scrape_interval")' prop="scrape_interval" class="half-form-item">
-                  <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editModule.configs.scrape_interval" size="small" id="module-box-input-scrape_interval"></el-input>
+                  <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editModule.configs.scrape_interval" size="small" id="module-box-input-scrape_interval">
+                   <template slot="append">s</template>
+                  </el-input>
                 </el-form-item>
                 <!--scrape_timeout-->
                 <el-form-item :label='$t("project.endpoint.scrape_timeout")' prop="scrape_timeout" class="half-form-item">
                   <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editModule.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout"></el-input>
+                   <template slot="append">s</template>
                 </el-form-item>
               </div>
             </transition>
@@ -215,14 +218,9 @@
 
           </el-tab-pane>
         </el-tabs>
-
-        <pre class="configs-copy-value">
-          {{configsCopyValue}}
-         <i class="nz-icon nz-icon-override copy-value-content" @click="copyValue"></i>
-        </pre>
-
-        <div class="right-box-form-tip" :style="{'margin-bottom': '15px','margin-left':editModule.type.toLowerCase()=='snmp'?'15px':'0'}">
-
+        <div class="configs-copy-value">
+          <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+          <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
         </div>
       </el-form>
     </div>
@@ -319,8 +317,8 @@ export default {
     }
   },
   methods: {
-    change(){
-      console.log(this.$refs['select'+0])
+    change () {
+      console.log(this.$refs['select' + 0])
     },
     selectWalk (walk) {
       if (this.editModule.walk.indexOf(walk) != -1) {
@@ -521,7 +519,7 @@ export default {
 
     // 新增param
     addParam () {
-      this.editModule.paramObj.push({ key: '', value: [] ,showList: false})
+      this.editModule.paramObj.push({ key: '', value: [], showList: false })
     },
     // 移除单个param
     removeParam (index) {
@@ -693,6 +691,7 @@ export default {
             delete params.labels
           }
           this.configsCopyValue = JSON.stringify(params, null, 2)
+          console.log(this.configsCopyValue)
         }
       }
     }
@@ -802,10 +801,9 @@ export default {
     border: 1px solid #E7EAED;
     border-radius: 2px;
     height: 140px;
-    overflow-y: auto;
     position: relative;
     margin-top: 10px;
-    padding: 10px 15px;
+    padding: 10px 0px 10px 15px;
     width: calc(100% - 40px);
     margin-left: 20px;
   }

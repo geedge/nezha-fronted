@@ -53,72 +53,72 @@
 </template>
 
 <script>
-  import mibBrowser from './mibBrowser'
-  import deleteButton from '@/components/common/deleteButton'
-  import nzDataList from '@/components/common/table/nzDataList'
-  import dataListMixin from '@/components/common/mixin/dataList'
-  import credentialsTable from '@/components/common/table/settings/credentialsTable'
-  import snmpCredentialBox from "../../common/rightBox/snmpCredentialBox";
-  export default {
-    name: "credentials",
-    props: {
-      showTab: String
-    },
-    components: {
-      mibBrowser,
-      deleteButton,
-      nzDataList,
-      credentialsTable,
-      snmpCredentialBox
-    },
-    mixins: [dataListMixin],
-    data(){
-      return{
-        url:'snmp/credential',
-        tableId: 'credentialTable', // 需要分页的table的id，用于记录每页数量
-        blankObject: {
-          id: null,
-          name: '',
-          type:2,
-          port:161,
-          remark: '',
-          config:{
+import mibBrowser from './mibBrowser'
+import deleteButton from '@/components/common/deleteButton'
+import nzDataList from '@/components/common/table/nzDataList'
+import dataListMixin from '@/components/common/mixin/dataList'
+import credentialsTable from '@/components/common/table/settings/credentialsTable'
+import snmpCredentialBox from '../../common/rightBox/snmpCredentialBox'
+export default {
+  name: 'credentials',
+  props: {
+    showTab: String
+  },
+  components: {
+    mibBrowser,
+    deleteButton,
+    nzDataList,
+    credentialsTable,
+    snmpCredentialBox
+  },
+  mixins: [dataListMixin],
+  data () {
+    return {
+      url: 'snmp/credential',
+      tableId: 'credentialTable', // 需要分页的table的id，用于记录每页数量
+      blankObject: {
+        id: null,
+        name: '',
+        type: 2,
+        port: 161,
+        remark: '',
+        config: {
 
-          },
-        },
-        searchMsg: { // 给搜索框子组件传递的信息
-          zheze_none: true,
-          searchLabelList: [{
-            id: 1,
-            name: 'ID',
-            type: 'input',
-            label: 'id',
-            disabled: false
-          }, {
-            id: 5,
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          },{
-            id:6,
-            name: 'Type',
-            type: 'input',
-            label: 'types',
-            disabled: false
-          }]
         }
-      }
-    },
-    methods:{
-      toFileTab () {
-        this.$emit('toFileTab')
       },
-      toBrowserTab(){
-        this.$emit('toBrowserTab')
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 5,
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }, {
+          id: 6,
+          name: 'Type',
+          type: 'input',
+          label: 'types',
+          disabled: false
+        }]
       }
     }
+  },
+  methods: {
+    toFileTab () {
+      this.$emit('toFileTab')
+    },
+    toBrowserTab () {
+      this.$emit('toBrowserTab')
+    }
   }
+}
 </script>
 
 <style scoped>
