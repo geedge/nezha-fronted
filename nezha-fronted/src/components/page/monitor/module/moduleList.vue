@@ -8,10 +8,24 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20 margin-r-10"
-                type="button" @click="add">
-          <i class="nz-icon-create-square nz-icon"></i>
-        </button>
+        <export-excel
+          id="expression-template-list"
+          v-has="''"
+          export-url="monitor/module/export"
+          import-url="monitor/module/import"
+          export-file-name="expression-template"
+          :params="searchLabel"
+          :permissions="{import: 'asset_add', export: 'asset_add'}"
+          @afterImport="getTableData"
+          class="top-tool-export margin-r-10"
+        >
+          <template slot="optionZone">
+            <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+                    type="button" @click="add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </template>
+        </export-excel>
         <delete-button id="account-list-batch-delete" v-has="'monitor_module_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot="slotProps">
@@ -45,7 +59,7 @@ import moduleBox from '@/components/common/rightBox/moduleBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
-
+import exportXLSX from '@/components/common/exportXLSX'
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发
     localStorage.removeItem('moduleProjectId')
@@ -56,7 +70,8 @@ export default {
     nzDataList,
     moduleBox,
     deleteButton,
-    moduleTable
+    moduleTable,
+    'export-excel': exportXLSX
   },
   mixins: [dataListMixin],
   data () {

@@ -8,10 +8,24 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20 margin-r-20"
-                type="button" @click="add">
-          <i class="nz-icon-create-square nz-icon"></i>
-        </button>
+        <export-excel
+          id="expression-template-list"
+          v-has="''"
+          export-url="monitor/endpoint/export"
+          import-url="monitor/endpoint/import"
+          export-file-name="expression-template"
+          :params="searchLabel"
+          :permissions="{import: 'asset_add', export: 'asset_add'}"
+          @afterImport="getTableData"
+          class="top-tool-export margin-r-10"
+        >
+          <template slot="optionZone">
+            <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+                    type="button" @click="add">
+              <i class="nz-icon-create-square nz-icon"></i>
+            </button>
+          </template>
+        </export-excel>
         <delete-button id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot="slotProps">
@@ -45,6 +59,7 @@
 <script>
 import deleteButton from '@/components/common/deleteButton'
 import addEndpointBox from '@/components/common/rightBox/addEndpointBox'
+import exportXLSX from '@/components/common/exportXLSX'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
@@ -61,7 +76,8 @@ export default {
     nzDataList,
     addEndpointBox,
     deleteButton,
-    endpointTable
+    endpointTable,
+    'export-excel': exportXLSX
   },
   mixins: [dataListMixin],
   data () {

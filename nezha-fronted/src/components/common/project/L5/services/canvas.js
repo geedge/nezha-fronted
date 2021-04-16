@@ -19,19 +19,19 @@ export const Tools = [
     group: 'General',
     children: [
       // {
-      //   name:'rectangleImg',
-      //   icon:'icon-rect',
-      //   data:{
-      //     text:'rect',
-      //     rect:{
-      //       width:100,
-      //       height:100
+      //   name: 'rectangle',
+      //   icon: 'icon-rect',
+      //   data: {
+      //     text: 'rect',
+      //     rect: {
+      //       width: 100,
+      //       height: 100
       //     },
-      //     paddingLeft:10,
-      //     paddingRight:10,
-      //     paddingTop:10,
-      //     paddingBottom:10,
-      //     name:'rectangleImg',
+      //     paddingLeft: 10,
+      //     paddingRight: 10,
+      //     paddingTop: 10,
+      //     paddingBottom: 10,
+      //     name: 'rectangleImg',
       //     icon: '\ue680',
       //     iconFamily: 'nz-icon',
       //     iconColor: ''

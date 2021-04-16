@@ -41,7 +41,7 @@
 
         <!--type-->
         <el-form-item :label='$t("project.endpoint.type")' prop="type">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.type" placeholder="" size="small" id="module-box-input-type" @change="changeAuthType">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.type" placeholder="" size="small" id="module-box-input-type" @change="changeAuthType" :disabled="!!editModule.id">
             <el-option :id="'module-type-'+item.id" v-for="item in typetList" :key="item.value" :label="item.name" :value="item.value"></el-option>
           </el-select>
         </el-form-item>

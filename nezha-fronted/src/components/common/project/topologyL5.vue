@@ -113,12 +113,12 @@
       <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
-<button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
+<button @click="changeScreen" class="top-tool-btn float-right"
         style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
 >
                   <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
         </button>
-        <button @click="editTopology" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
+        <button @click="editTopology" class="top-tool-btn float-right"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
@@ -2604,5 +2604,26 @@ export default {
     .el-icon-plus{
       color: #FA901C;
     }
+  }
+  .top-tool-btn{
+    height: 32px;
+    width: 32px;
+    border: 1px solid #DEDEDE;
+    outline: none;
+    border-radius: 2px;
+    background-color: #F9F9F9;
+    -webkit-transition: background-color linear .1s;
+    transition: background-color linear .1s;
+    padding: 0;
+  }
+  .top-tool-btn:hover{
+    background-color: #fff;
+  }
+  .top-tool-btn:focus{
+    background-color: #fff;
+    border-color: #FBCEA4;
+  }
+  .top-tool-btn:focus .nz-icon{
+    color: #FBCEA4;
   }
 </style>
