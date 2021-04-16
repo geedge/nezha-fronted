@@ -46,7 +46,7 @@ export default {
     }
   },
   watch: {
-    route: {
+    $routePath: {
       immediate: true,
       handler (n, o) {
         if (n.indexOf('mib') != -1 && this.$route.params.tab) {

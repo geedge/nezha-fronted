@@ -173,7 +173,8 @@ const en = {
   login: {
     username: 'Username',
     password: 'Password',
-    login: 'Login'
+    login: 'Login',
+    upload: 'Upload license'
   },
   dashboard: {
     title: 'Dashboard',
@@ -898,7 +899,7 @@ const en = {
         second: 'second',
         day: 'day',
         maxSeries: 'Query max series',
-        unsaved: 'Unsaved tip',
+        unsaved: 'Unsaved prompt',
         mapConfig: 'Map center',
         mapTitle: 'Configurate map',
         lat: 'latitude',
@@ -950,19 +951,26 @@ const en = {
         update: 'Update',
         del: 'Delete',
         nameMaxLength: 'The length should be less than 64',
-        uriRequired: 'Please fill in the correct url'
+        uriRequired: 'Please fill in the correct url',
+        create: 'Creator'
       },
       notification: {
         notification: 'Notification',
         name: 'Name',
         filePath: 'File path',
         operation: 'Operation',
+        account: 'Account',
+        state: 'State',
+        buildIn: 'Build in',
         add: 'Add',
         update: 'Update',
         del: 'Delete',
         nameMaxLength: 'The length should be less than 64',
         uriRequired: 'Required',
-        filePathReg: 'Please enter the correct file path'
+        filePathReg: 'Please enter the correct file path',
+        create: 'Create notification',
+        invalid: 'Invalid',
+        valid: 'Valid'
       },
       reset: {
         reset: 'Reset',
@@ -975,6 +983,13 @@ const en = {
         promptTitle: 'Confirm',
         yes: 'Yes',
         no: 'No'
+      },
+      apiKey: {
+        apiKey: 'API key',
+        role: 'Role',
+        create: 'Creator',
+        creatAt: 'Create at',
+        expireAt: 'Expire at'
       }
     },
     assetType: {

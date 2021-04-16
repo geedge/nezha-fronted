@@ -492,6 +492,7 @@ export default {
           } else {
             if (getBreadCrumb(list[i].children, crumb)) {
               crumb.unshift(list[i])
+              return true
             }
           }
         }

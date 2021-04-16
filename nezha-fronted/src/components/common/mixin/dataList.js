@@ -57,7 +57,12 @@ export default {
     selectionChange (objs) {
       this.batchDeleteObjs = objs
     },
-    getTableData () {
+    getTableData (params) {
+      if (params && Object.keys(params).length > 0) {
+        for (const key in params) {
+          this.$set(this.searchLabel, key, params[key])
+        }
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true

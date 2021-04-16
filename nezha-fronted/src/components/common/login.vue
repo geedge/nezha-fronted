@@ -14,7 +14,7 @@
         <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
       </div>
       <div class="login-foot">
-        <button @click="login" class="login-btn" id="login" v-loading="loading">{{$t("login.login")}}</button>
+        <button @click="login" class="login-btn" id="login" v-loading="loading" :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed':!license.valid}">{{$t("login.login")}}</button>
         <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
           <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
           <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
@@ -23,6 +23,22 @@
         <div class="login-foot-lang-list" v-show="langListShow">
           <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>
           <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
+        </div>
+      </div>
+      <div class="login-license">
+        <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
+        <div class="license-info" v-if="!license.valid">INSTALLATION ID:{{license.token}}</div>
+        <div class="license-upload" v-if="!license.valid">
+          <el-upload
+            ref="upload"
+            accept=".xml"
+            action=""
+            :file-list="uploadFileList"
+            :auto-upload="false"
+            :on-change="handleChange"
+            >
+            <button type="button" class="login-btn" ><span style="margin-right: 5px"><i class="nz-icon nz-icon-upload"></i></span>{{$t('login.upload')}}</button>
+          </el-upload>
         </div>
       </div>
     </div>
@@ -43,6 +59,13 @@ export default {
         pin: '',
         remember: false
       },
+      license: {
+        warnInfo: '',
+        token: '',
+        valid: false
+      },
+      uploadFileList: [],
+      uploadFile: { file: '', path: '', uuid: '' },
       loading: false,
       lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', // en/cn
       langListShow: false
@@ -54,7 +77,7 @@ export default {
       if (this.loading) {
         return
       }
-      if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
+      if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
@@ -85,6 +108,36 @@ export default {
       } else {
         return true
       }
+    },
+    licenseStat: function () {
+      this.$get('/sys/license/state').then(response => {
+        if (response.code === 200) {
+          this.license.warnInfo = ''
+          this.license.valid = true
+        } else {
+          this.license.valid = false
+          this.license.warnInfo = response.msg
+        }
+        this.license.token = response.token
+      })
+    },
+    handleChange: function (file, fileList) {
+      if (fileList.length > 0) {
+        this.uploadFileList = [fileList[fileList.length - 1]]
+      }
+      this.uploadFile.file = this.uploadFileList[0]
+      this.upload()
+    },
+    upload () {
+      const form = new FormData()
+      form.append('file', this.uploadFile.file.raw)
+      this.$post('/sys/license/upload', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+        if (res.code == 200) {
+          this.licenseStat()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   watch: {
@@ -105,6 +158,7 @@ export default {
       }
     }
     document.getElementById('usernameInput').focus()
+    this.licenseStat()
   }
 }
 </script>
@@ -247,4 +301,31 @@ export default {
   right: 0;
   transform: translateY(-50%);
 }
+.login-license{
+  margin-top: 40px;
+  text-align: center;
+  line-height: 30px;
+  .license-warn{
+    color: #EF7458;
+  }
+  .license-info{
+    white-space: nowrap;
+  }
+  .login-btn{
+    height: 30px;
+    width: 120px;
+  }
+}
+.login-btn.nz-btn-disabled{
+  background-image: none;
+  color: #e5e5e5;
+  background-color: #ffffff;
+  border-color: #e5e5e5 ;
+  cursor: default;
+}
+</style>
+<style>
+  .license-upload .el-upload-list{
+    display: none;
+  }
 </style>

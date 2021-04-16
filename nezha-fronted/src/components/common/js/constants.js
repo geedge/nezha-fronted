@@ -180,5 +180,8 @@ export const fromRoute = {
   endpointQuery: 'endpointQuery',
   terminalLog: 'terminalLog',
   operationLog: 'operationLog',
-  menus: 'menus'
+  menus: 'menus',
+  notify: 'notify',
+  link: 'link',
+  apiKey: 'apiKey'
 }

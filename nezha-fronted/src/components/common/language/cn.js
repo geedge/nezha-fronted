@@ -946,7 +946,8 @@ const cn = {
         update: '更新',
         del: '删除',
         nameMaxLength: '长度应小于64',
-        uriRequired: '请填写正确的网址'
+        uriRequired: '请填写正确的网址',
+        create: '创建人'
       },
       notification: {
         notification: 'Notification',
@@ -958,7 +959,10 @@ const cn = {
         del: '删除',
         nameMaxLength: '长度应小于64',
         uriRequired: '必填项',
-        filePathReg: '请输入正确的文件路径'
+        filePathReg: '请输入正确的文件路径',
+        create: '新建通知方式',
+        invalid: '停用',
+        valid: '可用'
       },
       reset: {
         reset: '重置',
@@ -971,6 +975,13 @@ const cn = {
         promptTitle: '确认密码',
         yes: '是',
         no: '否'
+      },
+      apiKey: {
+        apiKey: 'API key',
+        role: '角色',
+        create: '创建人',
+        creatAt: '创建时间',
+        expireAt: '过期时间'
       }
     },
     assetType: {

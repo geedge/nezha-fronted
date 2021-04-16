@@ -1,6 +1,6 @@
 <template>
   <div class="system">
-    <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" >
+    <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
@@ -156,172 +156,14 @@
           </el-form>
         </div>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.notification.notification')" name="notification"><!--$t('config.system.reset.reset')-->
-        <div class="linkBox notificationMessage">
-          <i class="nz-icon nz-icon-info-normal"></i>
-          <div style="margin-left: 15px">
-            <div>. Please make sure the script file exists and has executable permissions</div>
-            <div>. The script file receives two parameters:</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;① Notification account</div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;② Alert message(json)
-              <el-tooltip placement="right" effect="light">
-              <pre slot="content" style="word-break: break-all">
-               {
-                  "assetId": 1,
-                  "dcId": 1,
-                  "description": "The endpoint is down, the detailed information
-                  Asset : 192.168.40.161, Project: system, Module: node_exporter,
-                  Data center: center, EndpointId: 1",
-                  "endAt": 1606240496000,
-                  "endpointId": 1,
-                  "hashKey": "34a17b57f289592a94ff65ee0864094b",
-                  "id": 1,
-                  "labels": "{\"severity\":\"P2\",\"endpoint\":\"1\",\"alertname\":\"1\",
-                  \"module\":\"node_exporter\",\"project\":\"system\",\"datacenter\":
-                  \"center\",\"asset\":\"192.168.40.161\"}",
-                  "moduleId": 1,
-                  "projectId": 1,
-                  "ruleId": 1,
-                  "severity": "P2",
-                  "startAt": 1606009916000,
-                  "state": 2,
-                  "summary": "The endpoint is down, endpointId is 1"
-              }
-              </pre>
-                <span class="more">...</span>
-              </el-tooltip>
-            </div>
-          </div>
-        </div>
-        <div class="linkBox" >
-          <div class="linkTitle">
-            <span class="linkTitleHandle"></span>
-            <div class="linkTitleName">{{$t('config.system.notification.name')}}</div>
-            <div class="linkTitleUrl">{{$t('config.system.notification.filePath')}}</div>
-            <div class="linkTitleBtn">{{$t('config.system.notification.operation')}}</div>
-          </div>
-          <!--linkAdd-->
-          <div class="linkContent linkAddBox">
-            <span class="linkTitleHandle"></span>
-            <el-form :inline="true"  :model="notificationTemp"  :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" label-width="160px" ref="notificationTempForm" size="small">
-              <el-form-item  prop="name">
-                <el-input v-model="notificationTemp.name"  class="linkName" id="system-notification-name"/>
-              </el-form-item>
-              <el-form-item  prop="filePath">
-                <el-input  v-model="notificationTemp.filePath" class="linkUrl" id="system-notification-filepath"/>
-              </el-form-item>
-              <el-form-item  prop="btn">
-                <i @click="notificationAdd" id="system-notification-add" class="nz-icon-create-square nz-icon" v-has="'system_notification_add'"></i>
-              </el-form-item>
-            </el-form>
-          </div>
-          <!--notificationEdit-->
-          <div class="scrollBox">
-            <draggable v-model="notification"
-                       :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
-                       @change="change"
-                       @start="start"
-                       @end="notificationEnd"
-                       :move="move"
-                       handle=".handle"
-            >
-              <div v-for="(item,index) in notification" :id="'notificationDiv'+item.id" :key="index" class="linkContent">
-                <i class="nz-icon nz-icon-sort4 handle" style="display:none"></i>
-                <span style="display: inline-block;width: 26px"></span>
-                <el-form v-if="item.isEdit"  :key="index" :ref="'notificationForm'+item.id" :inline="true" :model="notification[index]" :rules="notificationRules" :validate-on-rule-change="false" class="reset-form" label-width="180px" size="small" >
-                  <el-form-item  prop="name" class="linkName">
-                    <el-input v-model="item.name" width="140px" />
-                  </el-form-item>
-                  <el-form-item  prop="filePath" class="linkUrl">
-                    <el-input  v-model="item.filePath" width="460px" />
-                  </el-form-item>
-                  <el-form-item  prop="btn">
-                    <button @click="notificationUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_notification_save'">Update</button>
-                    <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="notificationCancel(item)">Cancel</button>
-                  </el-form-item>
-                </el-form>
-                <div class="linkFormContent" v-else>
-                  <div class="linkTitleName" :title="item.name">{{item.name}}</div>
-                  <div class="linkTitleUrl">
-                    <!--<span class="linkTitleUrlContent" @click="openUrl(item)" @dblclick.stop="linkEdit(item)">-->
-                      <!--<el-tooltip class="item" effect="dark" :content="item.url" placement="top" popper-class="linkUrlTip">-->
-                      <span>{{item.filePath}}</span>
-                      <!--</el-tooltip>-->
-                    <!--</span>-->
-                  </div>
-                  <div class="linkFormBtn">
-                    <i @click.stop="notificationEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_notification_toEdit'"></i>
-                    <i @click="notificationDel(item)" class="nz-icon nz-icon-delete" v-has="'system_notification_delete'"></i>
-                  </div>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
+      <el-tab-pane :label="$t('config.system.notification.notification')" name="notification" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+        <notify-method v-if="activeTab === 'notification'"></notify-method>
       </el-tab-pane>
-      <el-tab-pane :label="$t('config.system.link.link')" name="link"><!--$t('config.system.reset.reset')-->
-        <div class="linkBox" >
-          <div class="linkTitle">
-            <span class="linkTitleHandle"></span>
-            <div class="linkTitleName">{{$t('config.system.link.name')}}</div>
-            <div class="linkTitleUrl">{{$t('config.system.link.url')}}</div>
-            <div class="linkTitleBtn">{{$t('config.system.link.operation')}}</div>
-          </div>
-          <!--linkAdd-->
-          <div class="linkContent linkAddBox">
-            <span class="linkTitleHandle"></span>
-            <el-form :inline="true"  :model="linkTemp"  label-width="180px" size="small" ref="linkTempForm" :rules="linkRules" :validate-on-rule-change="false" class="reset-form">
-              <el-form-item  prop="name">
-                <el-input v-model="linkTemp.name"  class="linkName" id="system-link-name"/>
-              </el-form-item>
-              <el-form-item  prop="url">
-                <el-input  v-model="linkTemp.url" class="linkUrl"  id="system-link-url"/>
-              </el-form-item>
-              <el-form-item  prop="btn">
-                <i @click="linkAdd" class="nz-icon-create-square nz-icon" v-has="'system_link_add'" id="system-link-add"></i>
-              </el-form-item>
-            </el-form>
-          </div>
-          <!--linkEdit-->
-          <div class="scrollBox">
-            <draggable v-model="link"
-                       :options="{group:'people',animation:150,ghostClass:'sortable-ghost',chosenClass:'chosenClass',scroll:true,scrollSensitivity:200}"
-                       @change="change"
-                       @start="start"
-                       @end="end"
-                       :move="move"
-                       handle=".handle"
-            >
-              <div v-for="(item,index) in link" :id="'linkDiv'+item.id" :key="index" class="linkContent">
-                <i class="nz-icon nz-icon-sort4 handle"></i>
-                <el-form v-if="item.isEdit"  :key="index" :ref="'linkForm'+item.id" :inline="true" :model="link[index]" :rules="linkRules" :validate-on-rule-change="false" class="reset-form" label-width="180px" size="small" >
-                <el-form-item  prop="name" class="linkName">
-                  <el-input v-model="item.name" width="140px" />
-                </el-form-item>
-                <el-form-item  prop="url" class="linkUrl">
-                  <el-input  v-model="item.url" width="460px" />
-                </el-form-item>
-                <el-form-item  prop="btn">
-                  <button @click="linkUpdate(item)" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-normal-new" type="button" v-has="'system_link_save'">Update</button>
-                  <button type="button" class="linkBtn nz-btn nz-btn-size-small-new nz-btn-style-light-new" @click="linkCancel(item)">Cancel</button>
-                </el-form-item>
-              </el-form>
-                <div class="linkFormContent" v-else>
-                  <div class="linkTitleName" :title="item.name">{{item.name}}</div>
-                  <div class="linkTitleUrl">
-                    <span @click="openUrl(item)" @dblclick.stop="linkEdit(item)" class="linkTitleUrlContent" v-has="'system_link_toEdit'">
-                      <span>{{item.url}}</span>
-                    </span>
-                  </div>
-                  <div class="linkFormBtn">
-                    <i @click.stop="linkEdit(item)" class="nz-icon nz-icon-edit" v-has="'system_link_toEdit'" v-if="item.buildIn=='0'"></i>
-                    <i @click="linkDel(item)" class="nz-icon nz-icon-delete" v-has="'system_link_delete'" v-if="item.buildIn=='0'"></i>
-                  </div>
-                </div>
-              </div>
-            </draggable>
-          </div>
-        </div>
+      <el-tab-pane :label="$t('config.system.link.link')" name="link" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+        <link-tab v-if="activeTab === 'link'"></link-tab>
+      </el-tab-pane>
+      <el-tab-pane :label="$t('config.system.apiKey.apiKey')" name="apiKey" style="height: 100%;"><!--$t('config.system.reset.reset')-->
+        <api-key-tab v-if="activeTab === 'apiKey'"></api-key-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form">
@@ -359,10 +201,12 @@ import { positiveInteger, port, hostPlus, host, uSize } from '../../common/js/va
 import latlngPicker from '../../common/latlngPicker'
 import bus from '../../../libs/bus'
 import draggable from 'vuedraggable'
-
+import notifyMethod from './system/notifyMethodTab'
+import linkTab from './system/linkTab'
+import apiKeyTab from './system/apiKeyTab'
 export default {
   name: 'system',
-  components: { draggable, latlngPicker },
+  components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab },
   data () {
     return {
       basic: {
@@ -501,11 +345,6 @@ export default {
           // { type: 'url', message: this.$t('config.system.link.uriRequired'), trigger: 'blur' } /*检验网址是否正确*/
         ]
       },
-      notificationTemp: {
-        name: '', filePath: ''
-      },
-      notification: [],
-      notificationReserved: [],
       notificationRules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
@@ -535,7 +374,7 @@ export default {
           value: 'sysconfig'
         }
       ],
-      activeTab: 'basic'
+      activeTab: 'notification'
     }
   },
   methods: {
@@ -547,15 +386,7 @@ export default {
         console.error('type is required')
         return
       }
-      if (type == 'reset') {
-        return
-      }
-      if (type == 'link') {
-        this.getLinkData()
-        return
-      }
-      if (type == 'notification') {
-        this.getNotificationData()
+      if (type == 'reset' || type == 'link' || type == 'notification' || type == 'apiKey') {
         return
       }
       this.$get('sysConfig?type=' + type).then(response => {
@@ -727,12 +558,7 @@ export default {
       // console.log(originalEvent) //鼠标位置
     },
     getLinkData () {
-      this.linkTemp = { name: '', url: '' }
-      this.$refs.linkTempForm.clearValidate()
-      this.$get('/link').then(response => {
-        this.link = response.data
-        this.linkReserved = [...this.link]
-      })
+
     },
     // link add
     linkAdd () {
@@ -821,12 +647,7 @@ export default {
     },
 
     getNotificationData () {
-      this.notificationTemp = { name: '', filePath: '' }
-      this.$refs.notificationTempForm.clearValidate()
-      this.$get('/alert/script').then(response => {
-        this.notification = response.data.list
-        this.notificationReserved = [...this.notification]
-      })
+
     },
     // link add
     notificationAdd () {
@@ -919,7 +740,7 @@ export default {
     }
   },
   mounted () {
-    this.querySetInfo('basic')
+    this.querySetInfo(this.activeTab)
   }
 }
 </script>
@@ -1041,27 +862,16 @@ export default {
   .system-config-form  /deep/ .el-input input{
     text-align: left;
   }
-  .notificationMessage{
-    display: flex;
-    width: 780px;
-    background: #F6F6F6;
-    color: #999999;
-    margin-bottom: 10px;
-    padding: 10px 10px 5px 10px;
-    font-size: 14px;
-    justify-content: left;
-    justify-items: center;
-    align-items: center;
-  }
-  .notificationMessage .more{
-    font-size: 14px;
-    cursor: pointer;
-  }
 </style>
 <style lang="scss">
   .system {
-    .el-tabs__nav-scroll {
-      background-color: #eee;
+    background-color: #FFF;
+    padding: 10px;
+    .el-tabs__nav-scroll{
+      background-color: #FFFFFF;
+    }
+    .el-tabs__nav-scroll,.el-tabs__header,。el-tabs__nav-wrap{
+      border-bottom: 0;
     }
     .el-form-item:last-of-type {
 
@@ -1073,8 +883,20 @@ export default {
         margin: 0 10px;
       }
     }
+    .full-table {
+      .el-tabs__content{
+        height: 90%;
+      }
+      .list-page .main-container{
+        padding: unset;
+      }
+      .table-column-setting,.pagination-bottom{
+        display: none;
+      }
+    }
     .el-tabs__content {
       padding-top: 25px;
+      border: 1px solid #E7EAED;
     }
     .el-tabs__item {
       outline: none;
@@ -1082,20 +904,24 @@ export default {
     }
     .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
       color: $global-text-color-active;
+      background: #FFFFFF;
       border-bottom: none;
-      border-left: none;
-      border-right: none;
-      border-top: 4px solid $global-text-color-active;
+      margin-left: .1px;
     }
     .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
       color: $global-text-color-active;
       opacity: .8;
     }
     .el-tabs--border-card>.el-tabs__header .el-tabs__item {
-      border-bottom: none;
-      border-left: none;
-      border-right: none;
-      border-top: 4px solid transparent;
+      height: 40px;
+      background:  #F6F6F6;
+      border: 1px solid #E7EAED;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      margin-top: 0px;
+    }
+    .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(:first-child) {
+     margin-left: 5px;
     }
   }
   .system-config-form .el-form-item__content{
@@ -1113,7 +939,9 @@ export default {
   }
   .system-tabs {
     box-shadow: unset !important;
-    border-color: #eee !important;
+    border:unset;
+    border-top: unset;
+    height: 100%;
   }
   .system-tabs .el-tabs--border-card{
     webkit-box-shadow: unset !important;
@@ -1168,5 +996,19 @@ export default {
   .el-form-item.has-tip--two-row {
     margin-bottom: 54px;
   }
-
+  @keyframes warnBackground {
+    0% {background-color: #FFFFFF;}
+    25% {background-color: #EF7458;}
+    50% {background-color: #FFFFFF;}
+    75% {background-color: #EF7458;}
+    100% {background-color: #FFFFFF;}
+  }
+  .warn-pop {
+    background-color: #FEF0F0;
+    border-color: #FEF0F0;
+    color:#F66C6C;
+  }
+  .warn-pop .popper__arrow:after{
+    border-top-color: #FEF0F0 !important;
+  }
 </style>

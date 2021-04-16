@@ -10,7 +10,10 @@ export default {
       type: String,
       default: '100%'
     },
-    url: {
+    api: {
+      type: String
+    },
+    tableId: {
       type: String
     }
   },

@@ -1,0 +1,141 @@
+<template>
+  <div style="height: 100%">
+    <nz-data-list
+      ref="dataList"
+      class="notify-table"
+      :api="url"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.notify"
+      :layout="['searchInput', 'elementSet']"
+      :search-msg="searchMsg">
+      <template v-slot:top-tool-left>
+
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="notify-add" v-has="'snmp_mibFile_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addNotify">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+      </template>
+      <template v-slot:default="slotProps">
+        <notify-method-table
+          ref="dataTable"
+          v-loading="slotProps.loading"
+          :table-id="tableId"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
+          :height="mainTableHeight"
+          :table-data="tableData"
+          @del="del"
+          @edit="edit"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange"
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
+        ></notify-method-table>
+      </template>
+    </nz-data-list>
+    <div class="notificationMessage">
+      <i class="nz-icon nz-icon-info-normal"></i>
+      <div style="margin-left: 15px">
+        <div>. Please make sure the script file exists and has executable permissions</div>
+        <div>. The script file receives two parameters:</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;① Notification account</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;② Alert message(json)
+          <el-tooltip placement="top" effect="light">
+              <pre slot="content" style="word-break: break-all">
+               {
+                  "assetId": 1,
+                  "dcId": 1,
+                  "description": "The endpoint is down, the detailed information
+                  Asset : 192.168.40.161, Project: system, Module: node_exporter,
+                  Data center: center, EndpointId: 1",
+                  "endAt": 1606240496000,
+                  "endpointId": 1,
+                  "hashKey": "34a17b57f289592a94ff65ee0864094b",
+                  "id": 1,
+                  "labels": "{\"severity\":\"P2\",\"endpoint\":\"1\",\"alertname\":\"1\",
+                  \"module\":\"node_exporter\",\"project\":\"system\",\"datacenter\":
+                  \"center\",\"asset\":\"192.168.40.161\"}",
+                  "moduleId": 1,
+                  "projectId": 1,
+                  "ruleId": 1,
+                  "severity": "P2",
+                  "startAt": 1606009916000,
+                  "state": 2,
+                  "summary": "The endpoint is down, endpointId is 1"
+              }
+              </pre>
+            <span class="more">...</span>
+          </el-tooltip>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { parentTableCommon } from './systemCommon'
+import notifyMethodTable from './notifyMethodTable'
+import dataListMixin from '@/components/common/mixin/dataList'
+import nzDataList from '@/components/common/table/nzDataList'
+
+export default {
+  name: 'notifyMethodTab',
+  components: { nzDataList, notifyMethodTable },
+  mixins: [dataListMixin, parentTableCommon],
+  data () {
+    return {
+      url: 'alert/notify/method',
+      tableId: 'notifyTable',
+      searchMsg: { // 给搜索框子组件传递的信息
+        zheze_none: true,
+        searchLabelList: [{
+          id: 1,
+          name: 'ID',
+          type: 'input',
+          label: 'id',
+          disabled: false
+        }, {
+          id: 5,
+          name: this.$t('overall.name'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }]
+      }
+    }
+  },
+  methods: {
+    addNotify: function () {
+      this.$refs.dataTable.addNotify()
+    }
+  }
+}
+</script>
+
+<style scoped>
+  .notify-table{
+    height: 90%;
+
+  }
+  .notify-table .el-table{
+    height: calc(100% - 10px) !important;
+  }
+  .notificationMessage{
+    margin-left: 20px;
+    display: flex;
+    width: calc(100% - 60px);
+    background: #F6F6F6;
+    color: #999999;
+    margin-bottom: 10px;
+    padding: 10px 10px 5px 10px;
+    font-size: 14px;
+    justify-content: left;
+    justify-items: center;
+    align-items: center;
+  }
+  .notificationMessage .more{
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>

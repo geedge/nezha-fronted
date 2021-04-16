@@ -167,7 +167,7 @@ Vue.mixin({
     getButtonList () {
       return this.$store.state.buttonList
     },
-    route: function () {
+    $routePath: function () {
       return this.$route.path
     }
   }
