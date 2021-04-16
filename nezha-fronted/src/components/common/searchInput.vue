@@ -2,7 +2,7 @@
     <div class="new-search"  v-clickoutside="clickout">
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
-            <div class="search-history">
+            <div class="search-history" v-if="showHistory">
                 <i class="nz-icon nz-icon-time" @click="look_history" id="search-view-history"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
                     <div class="list_box_title">
@@ -27,7 +27,7 @@
             </div>
 <!--            搜索框-->
             <div class="input-center-box" id="input-center-box">
-              <el-scrollbar style="height: 100%;width: 200px; overflow-y: hidden" ref="searchScrollbar">
+              <el-scrollbar style="height: 100%;width: 100%; overflow-y: hidden" ref="searchScrollbar">
                 <ul class="sreach_fixe_left" id="search-ul">
                     <li class="selectinfo_box" v-if="select_list.length>0" v-for="(val,ind) in select_list" :key="ind" @click="update_sreach(ind,$event)">
                         <div class="select_condition">
@@ -166,7 +166,7 @@
                     </li>
 <!-- 最开始的input框-->
                     <li class="select_input" v-if="change_sreach_show">
-                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" >
+                        <input type="text" @click="read_input" v-model="no_condition" @keyup="enter_one" id="one-input" @keydown="clear_search_list" :placeholder="placeholder">
                     </li>
                 </ul>
               </el-scrollbar>
@@ -185,7 +185,7 @@
                 </ul>
             </div>
         </div>
-        <button id="search-input-search" class="search-btn float-right" type="button" @click="select"><i class="nz-icon nz-icon-search"></i></button>
+        <button id="search-input-search" class="search-btn float-right" type="button" @click="select" v-if="showSearch"><i class="nz-icon nz-icon-search"></i></button>
         <!--<div class="new-search-btn" @click="select">
             <i class="nz-icon nz-icon-search"></i>
         </div>-->
@@ -386,7 +386,26 @@ export default {
       }
     }
   },
-  props: ['searchMsg', 'defaultItem', 'defaultValue', 'inTransform', 'position', 'single'],
+  props: {
+    searchMsg: {},
+    defaultItem: {},
+    defaultValue: {},
+    inTransform: {},
+    position: {},
+    single: {},
+    showHistory: {
+      type: Boolean,
+      default: true
+    },
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    }
+  },
   methods: {
     // dc
     clearSearch () {
@@ -1360,6 +1379,12 @@ export default {
   i {
     color: $btn-normal-background-color-new;
   }
+}
+.search-input-placeholder{
+  font-size: 12px;
+  color: #999999;
+  position: absolute;
+  left: 7px;
 }
 .top-tools input {
   background-color: white;

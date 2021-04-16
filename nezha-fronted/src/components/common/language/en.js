@@ -632,7 +632,14 @@ const en = {
       procurementDate: 'Purchase date', // '购买日期'
       principal: 'Administrator', // '负责人'
       principalTel: 'Telephone', // '电话'
-      option: 'Operation'// "操作"
+      option: 'Operation', // "操作"
+      sn: 'SN',
+      name: 'Name',
+      manageIp: 'manageIp',
+      brand: 'BrandID',
+      dc: 'DataCenter',
+      type: 'typeIds',
+      state: 'state'
     },
     tagTableTitle: {
       projectName: 'Project name', // '系统名称'
@@ -1159,6 +1166,7 @@ const en = {
       contextName: 'Context name',
       privPassword: 'Priv password',
       alerts: 'Alerts',
+      asset: 'Asset',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"

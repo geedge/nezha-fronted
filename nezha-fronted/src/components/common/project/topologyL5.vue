@@ -110,7 +110,7 @@
            </button>
          </span>
       </div>
-      <div style="width: 100%;display: flex;justify-content: space-between" v-if="!editTopologyFlag&&!fromOverView">
+      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
 <button @click="changeScreen" class="nz-btn nz-btn-size-normal nz-btn-style-light float-right"
@@ -2469,13 +2469,14 @@ export default {
     position: relative;
     border-radius: 2px;
     overflow: hidden;
+    background: #fff;
     .pickTime{
       margin-top: -13px;
     }
     .project-title {
       height: 34px;
-      padding-top: 8px;
-      padding-bottom: 8px;
+      padding-top: 20px;
+      padding-bottom: 0px;
     }
 
     .drag-header {
@@ -2493,8 +2494,9 @@ export default {
 
   .page {
     display: flex;
-    height: calc(100% - 55px);
-    width: 100%;
+    height: calc(100% - 65px);
+    width: calc(100% - 10px);
+    margin: 5px;
     position: relative;
 
     .tools {

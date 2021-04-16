@@ -49,4 +49,7 @@ export default {
     margin-left: 10px;
   }
 }
+  /deep/ .main-container{
+    padding-right: 0px !important;
+  }
 </style>

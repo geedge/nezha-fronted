@@ -8,7 +8,7 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20 margin-r-20"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
@@ -37,6 +37,9 @@
     <transition name="right-box">
       <addEndpointBox v-if="rightBox.show" :endpoint="object" @close="closeRightBox"></addEndpointBox>
     </transition>
+    <transition name="right-box">
+      <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :type="'edit'"></edit-endpoint-box-new>
+    </transition>
   </div>
 </template>
 <script>
@@ -45,10 +48,12 @@ import addEndpointBox from '@/components/common/rightBox/addEndpointBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
+import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 
 export default {
   name: 'endpointList',
   components: {
+    EditEndpointBoxNew,
     nzDataList,
     addEndpointBox,
     deleteButton,
@@ -78,12 +83,51 @@ export default {
           disabled: false
         }]
       },
-      roles: []
+      roles: [],
+      rightBox: {
+        editShow: false,
+        show: false
+      }
     }
   },
   methods: {
-    edit (u) {
-      this.rightBox.show = true
+    edit (row) {
+      this.$get('monitor/endpoint/' + row.id).then(res => {
+        const u = res.data
+        this.object = JSON.parse(JSON.stringify(u))
+        this.object.configs = JSON.parse(this.object.configs)
+        this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+        this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+        this.object.paramObj = []
+        this.object.labelModule = []
+        if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
+          Object.keys(this.object.configs.labels).forEach(key => {
+            this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+          })
+        } else {
+          this.object.labelModule.push({ key: '', value: '' })
+        }
+        if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
+          Object.keys(this.object.configs.params).forEach(key => {
+            this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+          })
+        } else {
+          this.object.paramObj.push({ key: '', value: [] })
+        }
+        this.object.assetName = this.object.asset.name
+        this.object.projectId = this.object.project.id
+        this.object.moduleId = this.object.module.id
+        this.object.type = this.object.module.type
+        this.rightBox.editShow = true
+        console.log(this.rightBox.editShow)
+      })
+    },
+    closeRightEditBox (refresh) {
+      this.rightBox.editShow = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
     }
   },
   computed: {

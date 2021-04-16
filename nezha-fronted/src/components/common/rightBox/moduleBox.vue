@@ -41,7 +41,7 @@
 
         <!--type-->
         <el-form-item :label='$t("project.endpoint.type")' prop="type">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.type" placeholder="" size="small" id="module-box-input-type" :disabled="!!editModule.id" @change="changeAuthType">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.type" placeholder="" size="small" id="module-box-input-type" @change="changeAuthType">
             <el-option :id="'module-type-'+item.id" v-for="item in typetList" :key="item.value" :label="item.name" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
@@ -432,12 +432,13 @@ export default {
     },
     /* 保存 */
     save () {
-      this.editModule.configs.param = this.paramToJson(this.editModule.paramObj)
+      this.editModule.configs.params = this.paramToJson(this.editModule.paramObj)
       console.log(this.editModule.paramObj, this.editModule.configs.param)
       this.editModule.configs.labels = this.labelsToJson(this.editModule.labelModule)
       const params = { ...this.editModule }
       params.configs.walk = params.walk
       params.configs.port = params.port
+      console.log({ ...params })
       params.configs = JSON.stringify(params.configs)
       if (this.authType === 2 && !this.editModule.configs.bearer_token) {
         this.$message.error("'token' is required")
@@ -523,6 +524,9 @@ export default {
     },
     // 移除单个param
     removeParam (index) {
+      if (this.editModule.paramObj.length === 1) {
+        this.editModule.paramObj = [{ key: '', value: [] }]
+      }
       this.editModule.paramObj.splice(index, 1)
     },
     // 新增label
@@ -532,7 +536,7 @@ export default {
     // 移除单个Label
     removeLabel (index) {
       if (this.editModule.labelModule.length === 1) {
-        return
+        this.editModule.labelModule = [{ key: '', value: '' }]
       }
       this.editModule.labelModule.splice(index, 1)
     },
@@ -665,7 +669,7 @@ export default {
         console.log(n)
         if (n && n.configs) {
           const params = Object.assign({}, n.configs)
-          params.param = this.paramToJson(this.editModule.paramObj)
+          params.params = this.paramToJson(this.editModule.paramObj)
           params.labels = this.labelsToJson(this.editModule.labelModule)
           params.walk = n.walk
           params.port = n.port
@@ -684,8 +688,8 @@ export default {
           if (params.basic_auth && !params.basic_auth.password) {
             delete params.basic_auth
           }
-          if (!Object.keys(params.param).length) {
-            delete params.param
+          if (!Object.keys(params.params).length) {
+            delete params.params
           }
           if (!Object.keys(params.labels).length) {
             delete params.labels

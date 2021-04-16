@@ -33,14 +33,25 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'moduleNum'">
-          moduleNum
+        <template v-if="item.prop === 'name'">
+          <span class="module-num">
+            {{scope.row[item.prop]}}
+          </span>
+        </template>
+        <template v-else-if="item.prop === 'moduleNum'">
+          <span class="module-num">
+            {{scope.row[item.prop]}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
-          endpointNum
+          <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'">
+            {{scope.row[item.prop]}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          alertNum
+         <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'">
+            {{scope.row[item.prop]}} active
+          </span>
         </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
       </template>
@@ -123,3 +134,24 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .moduleNum{
+    font-size: 14px;
+    color: #3C92F1;
+    font-weight: 400;
+  }
+  .endpoint-num{
+    padding: 0 3px;
+  }
+  .module-num{
+    padding: 0 3px;
+  }
+  .bagEF7458{
+    background: #EF7458;
+    color: #fff;
+  }
+  .bag23BF9A{
+    background: #23BF9A;
+    color: #fff;
+  }
+</style>

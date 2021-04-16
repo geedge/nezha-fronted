@@ -725,6 +725,7 @@ export default {
 <style scoped lang="scss">
   .project {
     height: 100%;
+    background: #f6f6f6;
   }
 
   /*  .content-right-option {

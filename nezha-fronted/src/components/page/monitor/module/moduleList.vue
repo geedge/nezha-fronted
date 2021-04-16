@@ -63,7 +63,6 @@ export default {
         projectId: '',
         name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
-        endpointHostTmpl: '',
         type: 'http',
         port: 9100,
         configs: {
@@ -76,8 +75,6 @@ export default {
           scrape_timeout: '',
           params: '',
           labels: '',
-          paramObj: [],
-          labelModule: [],
           basic_auth: {
             username: '',
             password: ''
@@ -124,16 +121,16 @@ export default {
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.object.paramObj = []
       this.object.labelModule = []
-      if (this.object.configs.labels !== '{}' && this.object.configs.labels) {
+      if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
         Object.keys(this.object.configs.labels).forEach(key => {
           this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
         })
       } else {
         this.object.labelModule.push({ key: '', value: '' })
       }
-      if (this.object.configs.param !== '{}' && this.object.configs.param) {
-        Object.keys(this.object.configs.param).forEach(key => {
-          this.object.paramObj.push({ key, value: this.object.configs.param[key] })
+      if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
+        Object.keys(this.object.configs.params).forEach(key => {
+          this.object.paramObj.push({ key, value: this.object.configs.params[key] })
         })
       } else {
         this.object.paramObj.push({ key: '', value: [] })

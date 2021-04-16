@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" @mousedown="()=>{showEditParamBox(false);showEditLabelsBox(false)}" v-clickoutside="{obj:endpoint,func:clickOutside}">
+  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns"></div>
     <!-- end--顶部按钮-->
@@ -19,23 +19,36 @@
         </el-form-item>
         <!--module-->
         <el-form-item :label='$t("project.module.module")' prop="moduleId" class="select-warp">
-          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small" id="add-endpoint-module">
+          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small" id="add-endpoint-module" :disabled="!currentProjectCopy.id">
             <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
           </el-select>
         </el-form-item>
         <!--asset和endpoint-->
-        <div class="asset-and-endponit">
+        <div class="asset-and-endpoint">
+          <!--asset-->
           <div class="right-box-asset-table">
-            <div>
-              <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
+            <div v-show="!currentModuleCopy.id" class="disabled-asset-table">
+            </div>
+            <div class="search-box">
+              <search-input
+                ref="searchInput"
+                :searchMsg="searchMsg"
+                @search="search"
+                style="width:100%"
+                :show-history="false"
+                :show-search="false"
+                :placeholder="$t('overall.placeHolder')"
+              ></search-input>
             </div>
             <el-table
               ref="multipleTable"
               :data="assetTableData"
               tooltip-effect="dark"
+              class="asset-table"
+              :row-class-name="setRowShow"
               style="width: 100%"
-              height="100%"
-              @selection-change="handleSelectionChange">
+              height="calc(100% - 97px)"
+              @selection-change="handleSelectionChangeAsset">
                <el-table-column
                 type="selection"
                 width="55">
@@ -79,13 +92,126 @@
                 </template>
               </el-table-column>
             </el-table>
+            <div class="table-bottom">
+                <el-pagination
+                  style="padding-top:10px"
+                  small
+                  @size-change="handleSizeChange"
+                  @current-change="handleSizeChange"
+                  :current-page.sync="pageObj.pageNo"
+                  :page-size="pageObj.pageSize"
+                  layout="prev, slot, next"
+                  :total="pages.total">
+                  <template>
+                    <el-input ref="jumpInput" class="jump-input" v-model.number="pages.pageNo" size="small" @change="handleCurrentChange" @keyup.enter.native="handleCurrentChange"/>
+                    <span class="jump-pages">/&nbsp{{pages.pages}}</span>
+                  </template>
+                </el-pagination>
+              <span class="add-endpoint" @click="addEndpoint">
+                <i class="nz-icon nz-icon-arrow-right"></i>
+              </span>
+            </div>
+            <div v-if="selectAssetAll" class="asset-allselect">
+              '当前页已全部选择'
+            </div>
           </div>
+          <!--endpoint-->
           <div class="right-box-endpoint-table">
-
+            <div class="search-box" style="display: flex;justify-content: flex-end">
+              <el-button @click="showRightBox" class="top-tool-btn" type="button">
+                <i class="nz-icon-gear nz-icon"></i>
+              </el-button>
+              <el-button @click="editAllEndpoint" class="top-tool-btn" type="button">
+                <i class="nz-icon-batch-edit nz-icon"></i>
+              </el-button>
+            </div>
+            <el-table
+              :data="endpointTableData"
+              ref="endpointTable"
+              style="width:100%;border-radius: 4px;"
+              height="calc(100% - 95px)"
+              id="add-endpoint-asset-table"
+              @selection-change="handleSelectionChangeEndpoint"
+              empty-text=" ">
+              <el-table-column
+                type="selection"
+                width="25"
+                style="padding: 0 1px;">
+              </el-table-column>
+              <el-table-column
+                label-class-name="endpoints-box-endpoints-title"
+                v-for="(title, index) in endpointTableTitle"
+                v-if="title.show"
+                :width="title.width"
+                :key="`col-${index}`"
+                :label="title.label"
+              >
+                <template slot-scope="scope" :column="title">
+                  <span v-if="title.prop == 'asset'">{{scope.row.assetName}}</span>
+                  <span v-else-if="title.prop == 'params'">
+                      <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover"
+                      >
+                        <div class="endpoint-param-pop">
+                          <div v-for="p in scope.row.paramObj" :key="p">{{p.key}}={{p.value}}</div>
+                        </div>
+                        <span slot="reference">
+                          <span @mousedown.stop>{{scope.row.configs.params.length > 8 ? scope.row.configs.params.substring(0, 8) + '...' : scope.row.configs.params}}</span>
+                        </span>
+                      </el-popover>
+                    </span>
+                  <span v-else-if="title.prop == 'labels'">
+                      <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="hover"
+                      >
+                        <div class="endpoint-param-pop">
+                          <div v-for="p in scope.row.labelModule" :key="p">{{p.key}}={{p.value}}</div>
+                        </div>
+                        <span slot="reference">
+                          <span @mousedown.stop>{{scope.row.configs.labels.length > 8 ? scope.row.configs.labels.substring(0, 8) + '...' : scope.row.configs.labels}}</span>
+                        </span>
+                      </el-popover>
+                    </span>
+                  <span v-else-if="title.prop == 'path'">
+                      <el-popover
+                        placement="bottom"
+                        width="100"
+                        trigger="hover"
+                        :content="scope.row.configs[title.prop]"
+                      >
+                        <span slot="reference" >
+                          <span>{{scope.row.configs.metrics_path.length > 5 ? scope.row.configs.metrics_path.substring(0, 5) + '...' : scope.row.configs.metrics_path}}</span>
+                        </span>
+                      </el-popover>
+                    </span>
+                  <span v-else-if="title.prop == 'port'">
+                      <span >{{scope.row.configs.port}}</span>
+                  </span>
+                  <span v-else-if="title.prop == 'host'">
+                      <span>{{scope.row.configs.host}}</span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="" width="56"  fixed="right">
+                <template slot-scope="scope" style="text-align: center">
+                  <span @click="editEndpointRow(scope.row, scope.$index)">
+                    <i class="nz-icon-gear nz-icon"></i>
+                  </span>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="table-bottom">
+              <span class="add-endpoint" @click="removeEndpoint" style="margin-left: 10px">
+                <i class="nz-icon nz-icon-arrow-left"></i>
+              </span>
+            </div>
           </div>
         </div>
       </el-form>
-
     </div>
 
     <!--底部按钮-->
@@ -97,51 +223,23 @@
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
-
-    <!--start--param编辑框-->
-    <transition name="right-sub-box">
-      <div @mousedown.stop class="right-sub-box" v-if="editParamBox.show" :style="'top: ' + editParamBox.top + 'px; left: ' + editParamBox.left + 'px;'">
-        <div class="param-box">
-          <div v-for="(item, index) in tempParamObj" :key="index" class="param-box-row">
-            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" v-model="item.key"></el-input>
-            <span class="param-box-row-eq">=</span>
-            <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
-          </div>
-        </div>
-        <div style="width: 100%; text-align: center; height: 25px;">
-          <el-button @click="addParam" id="add-param" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
-        </div>
-      </div>
+<!--    edit endpoint-->
+    <transition name="right-box">
+      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightBox" :disabled="true" :type="'add'"></edit-endpoint-box-new>
     </transition>
-    <!--end--param编辑框-->
-    <!--start--labels编辑框-->
-    <transition name="right-sub-box">
-      <div @mousedown.stop class="right-sub-box" v-if="editLabelsBox.show" :style="'top: ' + editLabelsBox.top + 'px; left: ' + editLabelsBox.left + 'px;'">
-        <div class="param-box">
-          <div v-for="(item, index) in tempLabelModule" :key="index" class="param-box-row" style="position: relative">
-            <el-input placeholder="key" class="param-box-row-key input-x-mini-22" :class="{'input-error':inputKeyErr[index]}" v-model="item.key"  @input="validateInput(item.key,index)"></el-input>
-            <span style="color: #F56C6C;font-size: 12px;position: absolute;top:25px;left: 10px" v-if="inputKeyErr[index]">{{$t('validate.key')}}</span>
-            <span class="param-box-row-eq">=</span>
-            <el-input placeholder="value" class="param-box-row-value input-x-mini-22" v-model="item.value"></el-input>
-            <span class="param-box-row-symbol" :id="'remove-param-'+index" @click="removeLabels(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
-          </div>
-        </div>
-        <div style="width: 100%; text-align: center; height: 25px;">
-          <el-button @click="addLabels" id="add-labels" style="height: 18px; line-height: 18px; padding-top: 0; padding-bottom: 0;" size="mini"><i class="nz-icon nz-icon-plus"></i></el-button>
-        </div>
-      </div>
-    </transition>
-    <!--end--param编辑框-->
   </div>
 </template>
 
 <script>
+import editEndpointBoxNew from './editEndpointBoxNew'
 export default {
   name: 'endpointBox',
   props: {
     currentProject: Object,
     currentModule: Object
+  },
+  components: {
+    'edit-endpoint-box-new': editEndpointBoxNew
   },
   data () {
     return {
@@ -155,8 +253,14 @@ export default {
       },
       pageObj: {
         pageNo: 1,
-        pageSize: 10
+        pageSize: 2
       },
+      pages: {
+        total: 0,
+        pages: 0,
+        pageNo: 1
+      },
+      object: {},
       vendorAndModelOptionData: [],
       paramBorderColor: '#dcdfe6',
       endpointTouch: false,
@@ -170,11 +274,45 @@ export default {
       tempEndpoint2: {},
       assetLoading: true,
       rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
+      blankEndpoint: {
+        id: '',
+        projectId: '',
+        name: '',
+        endpointNameTmpl: '{{module.name}}-{{asset.name}}',
+        type: 'http',
+        port: 9100,
+        configs: {
+          walk: [],
+          snmpCredentialsId: '',
+          metrics_path: '',
+          port: '',
+          host: '{{asset.manageIp}}',
+          scrape_interval: '',
+          scrape_timeout: '',
+          params: '',
+          labels: '',
+          paramObj: [],
+          labelModule: [],
+          basic_auth: {
+            username: '',
+            password: ''
+          },
+          bearer_token: ''
+        },
+        walk: [],
+        labelModule: [{
+          key: '',
+          value: ''
+        }],
+        paramObj: [{
+          key: '',
+          value: []
+        }]
+      },
       editParamBox: { show: false, top: 0, left: 0, type: 0 }, // param编辑弹框
       editLabelsBox: { show: false, top: 0, left: 0, type: 0 }, // param编辑弹框
       moduleParamShow: false, // module默认参数param悬浮窗
       assetSearch: { host: '', sn: '', text: '', label: 'Host', typeIds: '', modelId: '', idcId: '', dropdownShow: false }, // 侧滑框中asset的搜索相关
-      assetPageObj: { pageNo: 1, pageSize: 10 },
       selectedAssets: [], // 侧滑框中选中的asset
       projectList: [],
       moduleList: [],
@@ -184,12 +322,12 @@ export default {
         {
           label: this.$t('project.endpoint.asset'),
           prop: 'asset',
-          width: 76,
+          width: 150,
           show: true
         }, {
           label: this.$t('project.endpoint.host'),
           prop: 'host',
-          width: 76,
+          width: 80,
           show: true
         }, {
           label: this.$t('project.endpoint.port'),
@@ -203,8 +341,8 @@ export default {
           show: true
         }, {
           label: this.$t('project.endpoint.param'),
-          prop: 'param',
-          width: 90,
+          prop: 'params',
+          width: 100,
           show: true
         }, {
           label: this.$t('project.endpoint.path'),
@@ -219,157 +357,129 @@ export default {
         {
           label: this.$t('asset.tableTitle.sn'),
           prop: 'sn',
-          show: true
+          show: true,
+          minWidth: '200'
         },
         {
           label: this.$t('asset.tableTitle.name'),
           prop: 'name',
           show: false,
-          allowed: true
+          allowed: true,
+          minWidth: '200'
         }, {
           label: this.$t('asset.tableTitle.manageIp'),
           prop: 'manageIp',
-          show: true
+          show: true,
+          minWidth: '200'
         }, {
           label: this.$t('asset.tableTitle.brand'),
           prop: 'brand',
-          show: true
+          show: true,
+          minWidth: '100'
         }, {
           label: this.$t('asset.tableTitle.model'),
           prop: 'model',
-          show: true
+          show: true,
+          minWidth: '100'
         }, {
           label: this.$t('asset.tableTitle.dc'),
           prop: 'dc',
-          show: true
+          show: true,
+          minWidth: '100'
         }, {
           label: this.$t('asset.tableTitle.cabinet'),
           prop: 'cabinet',
-          show: true
+          show: true,
+          minWidth: '100'
         }, {
           label: this.$t('asset.tableTitle.type'),
           prop: 'type',
-          show: true
+          show: true,
+          minWidth: '100'
         }, {
           label: this.$t('asset.tableTitle.state'),
           prop: 'state',
-          show: true
+          show: true,
+          minWidth: '100'
         }],
       typeList: [],
       dcList: [],
       modelList: [],
       assetTableData: [],
+      assetSelection: [],
+      endpointSelection: [],
+      selectAssetAll: 0,
+      endpointTableData: [],
       seachLabel: [],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
           id: 10,
-          name: 'Project name',
+          name: this.$t('asset.tableTitle.sn'),
+          type: 'input',
+          label: 'sn',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.name'),
           type: 'input',
           label: 'name',
           disabled: false
         },
         {
-          id: 10,
-          name: 'Project id',
+          id: 11,
+          name: this.$t('asset.tableTitle.manageIp'),
           type: 'input',
-          label: 'id',
+          label: 'manageIp',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.brand'),
+          type: 'input',
+          label: 'brand',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.model'),
+          type: 'input',
+          label: 'model',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.dc'),
+          type: 'input',
+          label: 'dc',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.cabinet'),
+          type: 'input',
+          label: 'cabinet',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.type'),
+          type: 'input',
+          label: 'type',
+          disabled: false
+        },
+        {
+          id: 11,
+          name: this.$t('asset.tableTitle.state'),
+          type: 'input',
+          label: 'state',
           disabled: false
         }]
       }
     }
   },
   methods: {
-    // 子弹框控制  obj: module或endpoint对象  type:1module2endpoint
-    showEditParamBox (show, obj, type, e) {
-      if (show) {
-        const position = e.target.getBoundingClientRect()
-        this.editParamBox.type = type
-        if (this.editParamBox.type == 2) {
-          this.tempEndpoint = obj
-        }
-        this.editParamBox.top = position.top - 227
-        this.editParamBox.left = position.left - 48
-        if (!obj.param) {
-          this.$set(obj, 'paramObj', [])
-          this.tempParamObj = []
-        } else {
-          this.tempParamObj = JSON.parse(JSON.stringify(obj.paramObj))
-        }
-      } else {
-        if (!this.editParamBox.show) {
-          return
-        }
-        for (let i = 0; i < this.tempParamObj.length; i++) {
-          if (!this.tempParamObj[i].key || !this.tempParamObj[i].value) {
-            this.tempParamObj.splice(i, 1)
-            i--
-          }
-        }
-        if (this.editParamBox.type == 1) {
-          this.currentModuleCopy.paramObj = this.tempParamObj
-          this.currentModuleCopy.param = this.paramToJson(this.tempParamObj)
-        } else if (this.editParamBox.type == 2) {
-          for (let i = 0; i < this.endpointList.length; i++) {
-            if (this.endpointList[i].asset.id == this.tempEndpoint.asset.id) {
-              this.endpointList[i].param = this.paramToJson(this.tempParamObj)
-              this.endpointList[i].paramObj = this.tempParamObj
-              break
-            }
-          }
-        }
-        this.tempParamObj = []
-      }
-      this.editParamBox.show = show
-    },
-
-    // 子弹框控制  obj: module或endpoint对象  type:1module2endpoint
-    showEditLabelsBox (show, obj, type, e) {
-      // editLabelsBox tempLabelModule labelModule
-      if (show) {
-        this.inputKeyErr = []
-        const position = e.target.getBoundingClientRect()
-        this.editLabelsBox.type = type
-        if (this.editLabelsBox.type == 2) {
-          this.tempEndpoint = obj
-        }
-        this.editLabelsBox.top = position.top - 227
-        this.editLabelsBox.left = position.left - 48
-        if (!obj.labels) {
-          this.$set(obj, 'labelModule', [])
-          this.tempLabelModule = []
-        } else {
-          this.tempLabelModule = JSON.parse(JSON.stringify(obj.labelModule))
-        }
-        this.tempLabelModule.forEach((item, index) => {
-          this.inputKeyErr.push(false)
-        })
-      } else {
-        if (!this.editLabelsBox.show) {
-          return
-        }
-        for (let i = 0; i < this.tempLabelModule.length; i++) {
-          if (!this.tempLabelModule[i].key || !this.tempLabelModule[i].value || this.inputKeyErr[i]) {
-            this.tempLabelModule.splice(i, 1)
-            i--
-          }
-        }
-        if (this.editLabelsBox.type == 1) {
-          this.currentModuleCopy.labelModule = this.tempLabelModule
-          this.currentModuleCopy.labels = this.paramToJson(this.tempLabelModule)
-        } else if (this.editLabelsBox.type == 2) {
-          for (let i = 0; i < this.endpointList.length; i++) {
-            if (this.endpointList[i].asset.id == this.tempEndpoint.asset.id) {
-              this.endpointList[i].labels = this.paramToJson(this.tempLabelModule)
-              this.endpointList[i].labelModule = this.tempLabelModule
-              break
-            }
-          }
-        }
-        this.tempLabelModule = []
-      }
-      this.editLabelsBox.show = show
-    },
     clickOutside () {
       this.esc(false)
     },
@@ -378,69 +488,6 @@ export default {
     esc (refresh) {
       this.prevent_opt.save = false
       this.$emit('close', refresh)
-    },
-
-    // 新增param
-    addParam () {
-      this.tempParamObj.push({ key: '', value: '' })
-    },
-
-    // 移除单个param
-    removeParam (index) {
-      this.tempParamObj.splice(index, 1)
-    },
-    // 新增labels
-    addLabels () {
-      this.tempLabelModule.push({ key: '', value: '' })
-      this.inputKeyErr.push(false)
-    },
-
-    // 移除单个param
-    removeLabels (index) {
-      this.tempLabelModule.splice(index, 1)
-      this.inputKeyErr.splice(index, 1)
-    },
-    validateInput: function (value, index) {
-      if (!/[a-zA-Z_:][a-zA-Z0-9_:]*/.test(value)) {
-        this.inputKeyErr.splice(index, 1, true)
-      } else {
-        this.inputKeyErr.splice(index, 1, false)
-      }
-    },
-    // 编辑endpoint
-    toEditEndpoint (endpoint) {
-      for (let i = 0; i < this.endpointList.length; i++) {
-        if (this.endpointList[i].isEdit) {
-          this.endpointList.splice(i, 1, JSON.parse(JSON.stringify(this.tempEndpoint2)))
-          this.endpointList[i].isEdit = false
-          break
-        }
-      }
-      endpoint.isEdit = true
-      this.tempEndpoint2 = JSON.parse(JSON.stringify(endpoint))
-    },
-    editEndpoint (endpoint) {
-      this.$refs.addEndpoint.validate((valid) => {
-        if (valid) {
-          endpoint.isEdit = false
-          this.tempEndpoint2 = {}
-        } else {
-          return false
-        }
-      })
-    },
-
-    // 移除endpoint
-    removeEndpoint (endpoint) {
-      endpoint.isEdit = false
-      for (let i = 0; i < this.endpointList.length; i++) {
-        if (this.endpointList[i].assetId == endpoint.assetId) {
-          this.endpointList.splice(i, 1)
-          this.assetList.unshift(endpoint.asset)
-          i--
-          break
-        }
-      }
     },
 
     /* 获取project列表 */
@@ -452,128 +499,6 @@ export default {
         }
       })
     },
-
-    /* 获取型号列表 */
-    getModelList () {
-      this.$get('monitor/module', { pageSize: -1, pageNo: 1 }).then(response => {
-        if (response.code === 200) {
-          const resultData = []
-          const modelData = response.data.list
-          for (let i = 0; i < modelData.length; i++) {
-            if (!modelData[i].vendor) {
-              continue
-            }
-            const obj = {}
-            obj.id = modelData[i].vendor.id
-            obj.code = modelData[i].vendor.code
-            obj.value = 'vendor-' + modelData[i].vendor.code
-            obj.label = modelData[i].vendor.value
-            obj.children = []
-            resultData.push(obj)
-          }
-          const result = []
-          const obj1 = {}
-          for (let i = 0; i < resultData.length; i++) {
-            if (!obj1[resultData[i].id]) {
-              result.push(resultData[i])
-              obj1[resultData[i].id] = true
-            }
-          }
-          for (let x = 0; x < result.length; x++) {
-            for (let y = 0; y < modelData.length; y++) {
-              if (!modelData[y].vendor) {
-                continue
-              }
-              if (result[x].code === modelData[y].vendor.code) {
-                const obj2 = {}
-                obj2.value = modelData[y].id
-                obj2.label = modelData[y].name
-                result[x].children.push(obj2)
-              }
-            }
-          }
-          this.vendorAndModelOptionData = result
-        }
-      })
-    },
-
-    // 获取endpoint弹框中的asset子弹框里asset列表数据
-    getAssetList () {
-      this.assetLoading = true
-      const params = {
-        ...this.assetPageObj,
-        ...this.seachLabel
-      }
-      this.$get('asset/asset', params).then(response => {
-        if (response.code === 200) {
-          this.assetTableData = response.data.list
-        }
-      }).finally(() => {
-        setTimeout(() => {
-          this.assetLoading = false
-        }, 200)
-      })
-    },
-    // 回车搜索searchAsset
-    searchAssetKeydown (e) {
-      e = e || window.event
-      const keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode
-      if (keyCode === 13) {
-        this.searchAsset()
-      }
-    },
-    // endpoint弹框中的asset子弹框搜索
-    searchAsset () {
-      this.assetSearch.host = ''
-      this.assetSearch.sn = ''
-      if (this.assetSearch.label == 'Host') {
-        this.assetSearch.host = this.assetSearch.text
-        this.assetSearch.modelId = ''
-        this.assetSearch.typeIds = ''
-        this.assetSearch.idcId = ''
-      } else if (this.assetSearch.label == 'SN') {
-        this.assetSearch.sn = this.assetSearch.text
-        this.assetSearch.modelId = ''
-        this.assetSearch.typeIds = ''
-        this.assetSearch.idcId = ''
-      }
-      this.assetPageObj = Object.assign({}, this.assetPageObj, this.assetSearch)
-      this.getAssetList()
-    },
-
-    changeProject (project) {
-      this.currentModuleCopy = {}
-      this.endpoint.moduleId = ''
-      this.endpoint.projectId = project.id
-      this.editParamBox.show = false
-      this.editLabelsBox.show = false
-      this.tempParamObj = []
-      this.endpointList = []
-      this.getAssetList()
-      this.getModuleList(project.id)
-    },
-
-    changeModule (module) {
-      this.endpoint.moduleId = module.id
-      this.editParamBox.show = false
-      this.editLabelsBox.show = false
-      this.tempParamObj = []
-    },
-
-    // 将param转为json字符串格式
-    paramToJson (param) {
-      const tempParam = {}
-      for (let i = 0; i < param.length; i++) {
-        eval('tempParam["' + param[i].key + '"]="' + param[i].value + '"')
-      }
-      const jsonString = JSON.stringify(tempParam)
-      if (jsonString == '{}') {
-        return ''
-      } else {
-        return jsonString
-      }
-    },
-
     // 获取endpoint弹框中module下拉框数据
     getModuleList (projectId) {
       this.$get('monitor/module', { projectIds: projectId, pageSize: -1 }).then(response => {
@@ -601,21 +526,92 @@ export default {
       })
     },
 
+    changeProject (project) {
+      this.currentModuleCopy = {}
+      this.endpoint.moduleId = ''
+      this.endpoint.projectId = project.id
+      this.editParamBox.show = false
+      this.editLabelsBox.show = false
+      this.tempParamObj = []
+      this.endpointTableData = []
+      this.getAssetList()
+      this.getModuleList(project.id)
+    },
+
+    changeModule (module) {
+      this.endpoint.moduleId = module.id
+      this.editParamBox.show = false
+      this.editLabelsBox.show = false
+      this.tempParamObj = []
+      this.endpointTableData = []
+    },
+    handleSizeChange (val) {
+      console.log(val)
+      this.getAssetList()
+    },
+    handleCurrentChange () {
+      this.$refs.jumpInput.blur()
+      if (this.pages.pageNo > this.pages.pages) {
+        this.pages.pageNo = this.pageObj.pageNo
+        return
+      }
+      this.pageObj.pageNo = this.pages.pageNo
+      this.getAssetList()
+    },
+    search (seachLabel) {
+      console.log(seachLabel)
+      this.seachLabel = { ...seachLabel }
+      this.getAssetList()
+    },
+    // 获取endpoint弹框中的asset子弹框里asset列表数据
+    getAssetList () {
+      this.assetLoading = true
+      const params = {
+        ...this.pageObj,
+        ...this.seachLabel
+      }
+      this.$get('asset/asset', params).then(response => {
+        if (response.code === 200) {
+          this.assetTableData = response.data.list
+          this.pages.pages = response.data.pages
+          this.pages.total = response.data.total
+          this.pages.pageNo = response.data.pageNo
+        }
+      }).finally(() => {
+        setTimeout(() => {
+          this.assetLoading = false
+        }, 200)
+      })
+    },
+    handleSelectionChangeAsset (val) {
+      this.assetSelection = val
+      console.log(val)
+    },
+    handleSelectionChangeEndpoint (val) {
+      this.endpointSelection = val
+      console.log(val)
+    },
     // 保存endpoint
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
       this.endpoint.projectId = this.currentProjectCopy.id
       this.endpoint.moduleId = this.currentModuleCopy.id
-      if (this.endpointList.length == 0) {
+      if (this.endpointTableData.length == 0) {
         this.endpointTouch = true
         this.$refs.addEndpoint.validate()
         return false
       }
       // 对endpointList进行处理，避免携带过多无用数据
       const endpointList = []
-      this.endpointList.forEach((item, index) => {
-        const endpoint = { moduleId: item.moduleId, assetId: item.assetId, port: item.port, param: item.param, path: item.path, host: item.host, labels: item.labels }
+      this.endpointTableData.forEach((item, index) => {
+        const endpoint = {
+          moduleId: item.moduleId,
+          assetId: item.assetId,
+          name: item.name,
+          configs: JSON.stringify(item.configs),
+          port: 9100
+        }
         endpointList.push(endpoint)
       })
       this.$refs.addEndpoint.validate((valid) => {
@@ -634,21 +630,6 @@ export default {
           return false
         }
       })
-    },
-
-    // 覆盖endpoint的port/path/param
-    coverEndpoint () {
-      if (this.endpointList.length > 0) {
-        for (let i = 0; i < this.endpointList.length; i++) {
-          this.endpointList[i].port = this.currentModuleCopy.port
-          this.endpointList[i].param = this.currentModuleCopy.param
-          this.endpointList[i].paramObj = this.currentModuleCopy.paramObj
-          this.endpointList[i].labels = this.currentModuleCopy.labels
-          this.endpointList[i].labelModule = this.currentModuleCopy.labelModule
-          this.endpointList[i].path = this.currentModuleCopy.path
-        }
-        this.$message({ duration: 1000, type: 'success', message: this.$t('tip.coverSuccess') })
-      }
     },
 
     // 删除endpoint
@@ -672,14 +653,99 @@ export default {
       }).catch(() => {
         this.prevent_opt.save = false
       })
+    },
+    addEndpoint () {
+      this.assetSelection.forEach(item => {
+        if (this.endpointTableData.find(endpoint => endpoint.assetId === item.id)) {
+          return
+        }
+        const obj = {
+          assetId: item.id,
+          assetName: item.name,
+          asset: item,
+          type: this.currentModuleCopy.type,
+          projectId: this.currentModuleCopy.projectId,
+          configs: { ...JSON.parse(this.currentModuleCopy.configs), host: item.manageIp },
+          moduleId: this.currentModuleCopy.id
+        }
+        if (obj.configs.labels !== '{}' && obj.configs.labels) {
+          obj.labelModule = []
+          Object.keys(obj.configs.labels).forEach(key => {
+            obj.labelModule.push({ key, value: obj.configs.labels[key] })
+          })
+        } else {
+          obj.labelModule.push({ key: '', value: '' })
+        }
+        if (obj.configs.params !== '{}' && obj.configs.params) {
+          obj.paramObj = []
+          Object.keys(obj.configs.params).forEach(key => {
+            obj.paramObj.push({ key, value: obj.configs.params[key] })
+          })
+        } else {
+          obj.paramObj.push({ key: '', value: [] })
+        }
+        this.endpointTableData.push(obj)
+      })
+      console.log(this.endpointTableData)
+      this.assetTableData = [...this.assetTableData]
+      this.$refs.multipleTable.clearSelection()
+    },
+    removeEndpoint () {
+      if (this.endpointSelection.length === 0) {
+        return
+      }
+      this.endpointTableData = this.endpointTableData.filter(item => !this.endpointSelection.find(item1 => item1.assetId === item.assetId))
+      this.assetTableData = [...this.assetTableData]
+    },
+    setRowShow ({ row }) {
+      if (this.endpointTableData.find(endpoint => endpoint.assetId === row.id)) {
+        return 'hide-row'
+      }
+      return ''
+    },
+    editEndpointRow (u) {
+      console.log(u)
+      this.object = JSON.parse(JSON.stringify(u))
+      this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.rightBox.show = true
+    },
+    showRightBox () {
+      console.log(this.blankEndpoint)
+      this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModuleCopy.projectId, moduleId: this.currentModuleCopy.id, assetName: '', type: this.currentModuleCopy.type }
+      this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.rightBox.show = true
+    },
+    editAllEndpoint () {
+      this.endpointTableData.forEach((item, index) => {
+        this.endpointTableData[index] = { ...this.endpointTableData[index], ...this.blankEndpoint }
+      })
+      this.endpointTableData = [...this.endpointTableData]
+      console.log(this.endpointTableData)
+    },
+    closeRightBox (isEdit, endpoint, isAll) {
+      console.log(isEdit, endpoint, isAll)
+      this.rightBox.show = false
+      if (!isEdit) { return }
+      if (isAll) {
+        Object.keys(this.blankEndpoint).forEach(key => {
+          this.blankEndpoint[key] = endpoint[key]
+        })
+      } else {
+        this.endpointTableData.forEach((item, index) => {
+          if (item.assetId === endpoint.assetId) {
+            this.endpointTableData[index] = { ...endpoint }
+          }
+        })
+        this.endpointTableData = [...this.endpointTableData]
+        console.log(this.endpointTableData)
+      }
     }
   },
   created () {
     this.getProjectList()
     this.getAssetList()
-    this.getDCList()
-    this.getModelList()
-    this.getTypeList()
   },
   watch: {
     endpointList (n, o) {
@@ -690,12 +756,25 @@ export default {
         this.paramBorderColor = '#F56C6C'
       }
     },
+    assetTableData: {
+      handler (n) {
+        if (n) {
+          this.$nextTick(() => {
+            const domarr = document.getElementsByClassName('hide-row')
+            console.log(domarr.length, 'domArr')
+            this.selectAssetAll = domarr.length === this.pageObj.pageSize
+          })
+        }
+      }
+    },
     currentProject: {
       immediate: true,
       handler (n, o) {
-        this.currentProjectCopy = Object.assign({}, n)
-        this.endpoint.projectId = n.id
-        this.getModuleList(n.id)
+        if (n) {
+          this.currentProjectCopy = Object.assign({}, n)
+          this.endpoint.projectId = n.id
+          this.getModuleList(n.id)
+        }
       }
     },
     currentModule: {
@@ -710,6 +789,7 @@ export default {
     currentModuleCopy: {
       immediate: true,
       handler (n, o) {
+        console.log(n)
         if (n.type && n.type.toLowerCase() == 'snmp') {
           this.endpointTableTitle[4].show = false
           this.endpointTableTitle[5].show = false
@@ -1007,7 +1087,7 @@ export default {
   .endpoints-clear-btn {
     margin: 6px 0 0 7px;
   }
-  .asset-and-endponit{
+  .asset-and-endpoint{
     width: 100%;
     display: flex;
     height: 480px;
@@ -1018,9 +1098,27 @@ export default {
     background: #FFFFFF;
     border: 1px solid #E7EAED;
     border-radius: 2px;
+    position: relative;
+  }
+  .disabled-asset-table{
+    position: absolute;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    z-index: 2;
+    background: #999999;
+    left: 1px;
+    top: 1px;
+    opacity: 0.1;
+  }
+  .asset-allselect{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
   }
   .right-box-endpoint-table{
-    flex: 1;
+
+    width: 60%;
     background: #FFFFFF;
     border: 1px solid #E7EAED;
     border-radius: 2px;
@@ -1028,15 +1126,92 @@ export default {
   /* end--table*/
 
   /* end--子弹框*/
+  .search-box{
+    width: calc(100% - 10px);
+    padding: 10px 5px;
+    border-bottom: 1px solid #E7EAED;
+    display: flex;
+  }
+  /deep/ .new-search .search-input-all{
+    width: auto;
+    flex: 1;
+  }
+  .jump-input{
+    width: 38px;
+    height: 24px;
+  }
+  .jump-pages{
+    font-size: 14px;
+    color: #333333;
+    text-align: left;
+    line-height: 24px !important;
+    height: 24px !important;
+    font-weight: 400;
+    margin-left: 5px;
+    min-width: auto !important;
+  }
+  /deep/ .jump-input .el-input__inner{
+    padding: 0 5px;
+    height: 24px;
+    line-height: 24px;
+  }
+  .table-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  /deep/ .el-pagination .btn-next, /deep/ .el-pagination .btn-prev{
+    margin-top: 3px;
+  }
+  .add-endpoint{
+    display: inline-block;
+    background: #F9F9F9;
+    border: 1px solid #DEDEDE;
+    border-radius: 2px;
+    width: 28px;
+    height: 28px;
+    margin: 7px 7px 0 0;
+    text-align: center;
+    line-height: 28px;
+  }
+  .top-tool-btn{
+    height: 32px;
+    width: 32px;
+    border: 1px solid #DEDEDE;
+    outline: none;
+    border-radius: 2px;
+    background-color: #F9F9F9;
+    -webkit-transition: background-color linear .1s;
+    transition: background-color linear .1s;
+    padding: 0;
+  }
+  .top-tool-btn:hover{
+    background-color: #fff;
+  }
+  .top-tool-btn:focus{
+    background-color: #fff;
+    border-color: #FBCEA4;
+  }
+  .top-tool-btn:focus .nz-icon{
+    color: #FBCEA4;
+  }
+  .endpoint-table-btn{
+
+  }
 </style>
 <style lang="scss">
-
+  .el-table__row.hide-row{
+    display: none !important;
+  }
   .right-box-add-endpoint {
     .right-box-form>.el-form-item {
       margin-left: 0;
     }
     .right-box-form-left.right-box-form .el-form-item .el-form-item__label {
       width: 100px;
+    }
+    .asset-table /deep/ .el-table td ,.asset-table /deep/ .el-table th{
+      padding: 3px 0 !important;
     }
   }
 
@@ -1060,10 +1235,8 @@ export default {
     color: black;
     font-weight: 400;
   }
-  .endpoints-box-endpoints .el-table td, .endpoints-box-endpoints .el-table th {
-    padding: 5px 0 !important;
-  }
-  .endpoints-box-endpoints .cell {
+
+  .right-box-endpoint-table .cell {
     padding: 0 2px 0 10px;
   }
   .endpoints-box-endpoints .el-table .el-table__row td{

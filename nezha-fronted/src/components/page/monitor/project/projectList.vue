@@ -96,7 +96,7 @@ export default {
 <style lang="scss">
   .project-list{
     .project-page{
-      margin: 0 20px;
+      margin: 0 10px 0 20px;
       border: 1px solid #eeeeee;
       border-top: none;
       /deep/ .pagination{

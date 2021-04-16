@@ -582,7 +582,14 @@ const cn = {
       option: '操作',
       assetPing: 'Ping',
       lastReply: 'Ping最后应答',
-      vendor: '厂商'
+      vendor: '厂商',
+      sn: 'SN',
+      name: 'Name',
+      manageIp: 'manageIp',
+      brand: '品牌ID',
+      dc: '数据中心',
+      type: '主机地址',
+      state: '主机状态'
     },
     tagTableTitle: {
       projectName: '系统名称',
@@ -1156,7 +1163,8 @@ const cn = {
       privProtocol: '隐私协议',
       contextName: '内容名称',
       alerts: 'Alerts',
-      privPassword: '隐私密码'
+      privPassword: '隐私密码',
+      asset: 'Asset'
     },
     endpoint: {
       createEndpoint: '新增Endpoint',
