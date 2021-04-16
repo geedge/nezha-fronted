@@ -51,6 +51,10 @@ import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 
 export default {
+  beforeRouteLeave (to, from, next) { // 路由离开之前触发
+    localStorage.removeItem('endpointProjectId')
+    next()
+  },
   name: 'endpointList',
   components: {
     EditEndpointBoxNew,
@@ -69,14 +73,20 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
-          id: 10,
+          id: 11,
+          name: 'project id',
+          type: 'input',
+          label: 'projectIds',
+          disabled: false
+        }, {
+          id: 12,
           name: 'endpoint name',
           type: 'input',
           label: 'name',
           disabled: false
         },
         {
-          id: 10,
+          id: 13,
           name: 'endpoint id',
           type: 'input',
           label: 'id',
@@ -119,7 +129,6 @@ export default {
         this.object.moduleId = this.object.module.id
         this.object.type = this.object.module.type
         this.rightBox.editShow = true
-        console.log(this.rightBox.editShow)
       })
     },
     closeRightEditBox (refresh) {
@@ -128,11 +137,53 @@ export default {
         this.delFlag = true
         this.getTableData()
       }
+    },
+    getTableData () {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.searchLabel.projectIds) {
+        localStorage.setItem('endpointProjectId', this.searchLabel.projectIds)
+      } else {
+        localStorage.removeItem('endpointProjectId')
+      }
+      this.tools.loading = true
+      this.$get(this.url, this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
     }
   },
   computed: {
   },
+  created () {
+    if (localStorage.getItem('endpointProjectId')) {
+      this.searchLabel.projectIds = localStorage.getItem('endpointProjectId')
+    }
+  },
   mounted () {
+    if (localStorage.getItem('endpointProjectId')) {
+      this.$refs.dataList.$refs.searchInput.select_list.push({
+        id: 11,
+        name: 'project id',
+        type: 'input',
+        label: 'projectIds',
+        disabled: false,
+        val: localStorage.getItem('endpointProjectId')
+      })
+      this.$refs.dataList.$refs.searchInput.sreach_num = 1
+    }
   }
 }
 </script>

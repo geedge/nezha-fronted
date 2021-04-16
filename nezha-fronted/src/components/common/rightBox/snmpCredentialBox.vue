@@ -225,7 +225,6 @@ export default {
       handler (n, o) {
         this.editCredential = JSON.parse(JSON.stringify(n))
         this.editCredential.config = JSON.parse(this.editCredential.config)
-        console.log('edit', this.editCredential)
       }
     }
   }

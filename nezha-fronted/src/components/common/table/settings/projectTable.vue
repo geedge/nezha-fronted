@@ -38,13 +38,13 @@
             {{scope.row[item.prop]}}
           </span>
         </template>
-        <template v-else-if="item.prop === 'moduleNum'">
-          <span class="module-num">
+        <template v-else-if="item.prop === 'moduleNum'" >
+          <span class="module-num" @click="jumpModule(scope.row)">
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
-          <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'">
+          <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'"  @click="jumpEndpoint(scope.row)">
             {{scope.row[item.prop]}}
           </span>
         </template>
@@ -123,6 +123,14 @@ export default {
   methods: {
     changeProjectTopo (project) {
       this.$store.commit('currentProjectChange', project)
+    },
+    jumpModule (row) {
+      localStorage.setItem('moduleProjectId', row.id)
+      this.$router.push({ path: '/monitor/module' })
+    },
+    jumpEndpoint (row) {
+      localStorage.setItem('endpointProjectId', row.id)
+      this.$router.push({ path: '/monitor/endpoint' })
     }
   },
   computed: {
@@ -135,16 +143,18 @@ export default {
 }
 </script>
 <style scoped>
-  .moduleNum{
+  .module-num{
     font-size: 14px;
     color: #3C92F1;
     font-weight: 400;
+    cursor: pointer;
+    padding: 0 3px;
+    cursor: pointer;
   }
   .endpoint-num{
     padding: 0 3px;
-  }
-  .module-num{
-    padding: 0 3px;
+    cursor: pointer;
+    border-radius: 2px;
   }
   .bagEF7458{
     background: #EF7458;

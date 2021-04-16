@@ -317,9 +317,6 @@ export default {
     }
   },
   methods: {
-    change () {
-      console.log(this.$refs['select' + 0])
-    },
     selectWalk (walk) {
       if (this.editModule.walk.indexOf(walk) != -1) {
         this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
@@ -387,13 +384,11 @@ export default {
       this.$get('mib/tree', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           const obj = JSON.parse(response.data)
-          console.log(obj)
           this.walkData = []
           for (const item in obj) {
             setAttr(obj[item], 'detailShow', false)
             this.walkData.push({ name: item, detailShow: false, subTree: obj[item] })
           }
-          console.log(this.walkData)
         }
       })
       function setAttr (tree, name, value) {
@@ -433,12 +428,10 @@ export default {
     /* 保存 */
     save () {
       this.editModule.configs.params = this.paramToJson(this.editModule.paramObj)
-      console.log(this.editModule.paramObj, this.editModule.configs.param)
       this.editModule.configs.labels = this.labelsToJson(this.editModule.labelModule)
       const params = { ...this.editModule }
       params.configs.walk = params.walk
       params.configs.port = params.port
-      console.log({ ...params })
       params.configs = JSON.stringify(params.configs)
       if (this.authType === 2 && !this.editModule.configs.bearer_token) {
         this.$message.error("'token' is required")
@@ -666,7 +659,6 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        console.log(n)
         if (n && n.configs) {
           const params = Object.assign({}, n.configs)
           params.params = this.paramToJson(this.editModule.paramObj)
@@ -674,7 +666,6 @@ export default {
           params.walk = n.walk
           params.port = n.port
           Object.keys(params).forEach(key => {
-            console.log(key, !params[key] || !params[key].length)
             if (!params[key]) {
               delete params[key]
             }
@@ -695,7 +686,6 @@ export default {
             delete params.labels
           }
           this.configsCopyValue = JSON.stringify(params, null, 2)
-          console.log(this.configsCopyValue)
         }
       }
     }

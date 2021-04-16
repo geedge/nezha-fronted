@@ -196,7 +196,6 @@ export default {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
             this.esc(false)
           } else {
-            console.error(response.msg)
             this.$message.error(response.msg)
           }
         })

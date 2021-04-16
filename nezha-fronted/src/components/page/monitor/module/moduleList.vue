@@ -47,6 +47,10 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
 
 export default {
+  beforeRouteLeave (to, from, next) { // 路由离开之前触发
+    localStorage.removeItem('moduleProjectId')
+    next()
+  },
   name: 'moduleList',
   components: {
     nzDataList,
@@ -103,10 +107,17 @@ export default {
           disabled: false
         },
         {
-          id: 10,
+          id: 11,
+          name: 'project id',
+          type: 'input',
+          label: 'projectIds',
+          disabled: false
+        },
+        {
+          id: 12,
           name: 'module id',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }]
       },
@@ -136,11 +147,54 @@ export default {
         this.object.paramObj.push({ key: '', value: [] })
       }
       this.rightBox.show = true
+    },
+    getTableData () {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.searchLabel.projectIds) {
+        localStorage.setItem('moduleProjectId', this.searchLabel.projectIds)
+      } else {
+        localStorage.removeItem('moduleProjectId')
+      }
+      this.tools.loading = true
+      this.$get(this.url, this.searchLabel).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
     }
   },
   computed: {
   },
+  created () {
+    if (localStorage.getItem('moduleProjectId')) {
+
+      this.searchLabel.projectIds = localStorage.getItem('moduleProjectId')
+    }
+  },
   mounted () {
+    if (localStorage.getItem('moduleProjectId')) {
+      this.$refs.dataList.$refs.searchInput.select_list.push({
+        id: 11,
+        name: 'project id',
+        type: 'input',
+        label: 'projectIds',
+        disabled: false,
+        val: localStorage.getItem('moduleProjectId')
+      })
+      this.$refs.dataList.$refs.searchInput.sreach_num = 1
+    }
   }
 }
 </script>

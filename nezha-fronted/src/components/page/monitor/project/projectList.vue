@@ -78,7 +78,7 @@ export default {
           id: 10,
           name: 'Project id',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }]
       },

@@ -35,6 +35,10 @@ export default {
       this.containerShow = false
       this.$nextTick(() => { this.containerShow = true })
     }
+  },
+  destroyed () {
+    localStorage.removeItem('moduleProjectId')
+    localStorage.removeItem('endpointProjectId')
   }
 }
 </script>

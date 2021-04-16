@@ -633,6 +633,7 @@ export default {
     },
     // 点击搜索
     select () {
+      console.log(this.select_list);
       const objectInfo = {}
       this.change_sreach_show = true
       this.name = '', this.id = ''

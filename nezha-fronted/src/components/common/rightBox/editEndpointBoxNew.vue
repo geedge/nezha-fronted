@@ -418,12 +418,10 @@ export default {
     },
     /* 保存 */
     save () {
-      console.log(this.editEndpoint)
       this.editEndpoint.configs.params = this.paramToJson(this.editEndpoint.paramObj)
       this.editEndpoint.configs.labels = this.labelsToJson(this.editEndpoint.labelModule)
       this.editEndpoint.paramObj = this.editEndpoint.paramObj.filter(item => item.value && item.value.length)
       this.editEndpoint.labelModule = this.editEndpoint.labelModule.filter(item => item.value)
-      console.log(1)
       const params = { ...this.editEndpoint }
       params.configs.walk = params.walk
       params.configs.port = params.port
@@ -474,7 +472,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('monitor/module?ids=' + this.editEndpoint.id).then(response => {
+        this.$delete('monitor/endpoint?ids=' + this.editEndpoint.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.$store.commit('setReloadFacade')

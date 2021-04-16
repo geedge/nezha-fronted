@@ -546,7 +546,6 @@ export default {
       this.endpointTableData = []
     },
     handleSizeChange (val) {
-      console.log(val)
       this.getAssetList()
     },
     handleCurrentChange () {
@@ -559,7 +558,6 @@ export default {
       this.getAssetList()
     },
     search (seachLabel) {
-      console.log(seachLabel)
       this.seachLabel = { ...seachLabel }
       this.getAssetList()
     },
@@ -585,11 +583,9 @@ export default {
     },
     handleSelectionChangeAsset (val) {
       this.assetSelection = val
-      console.log(val)
     },
     handleSelectionChangeEndpoint (val) {
       this.endpointSelection = val
-      console.log(val)
     },
     // 保存endpoint
     save () {
@@ -686,7 +682,6 @@ export default {
         }
         this.endpointTableData.push(obj)
       })
-      console.log(this.endpointTableData)
       this.assetTableData = [...this.assetTableData]
       this.$refs.multipleTable.clearSelection()
     },
@@ -704,14 +699,12 @@ export default {
       return ''
     },
     editEndpointRow (u) {
-      console.log(u)
       this.object = JSON.parse(JSON.stringify(u))
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.rightBox.show = true
     },
     showRightBox () {
-      console.log(this.blankEndpoint)
       this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModuleCopy.projectId, moduleId: this.currentModuleCopy.id, assetName: '', type: this.currentModuleCopy.type }
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
@@ -722,10 +715,8 @@ export default {
         this.endpointTableData[index] = { ...this.endpointTableData[index], ...this.blankEndpoint }
       })
       this.endpointTableData = [...this.endpointTableData]
-      console.log(this.endpointTableData)
     },
     closeRightBox (isEdit, endpoint, isAll) {
-      console.log(isEdit, endpoint, isAll)
       this.rightBox.show = false
       if (!isEdit) { return }
       if (isAll) {
@@ -739,7 +730,6 @@ export default {
           }
         })
         this.endpointTableData = [...this.endpointTableData]
-        console.log(this.endpointTableData)
       }
     }
   },
@@ -761,7 +751,6 @@ export default {
         if (n) {
           this.$nextTick(() => {
             const domarr = document.getElementsByClassName('hide-row')
-            console.log(domarr.length, 'domArr')
             this.selectAssetAll = domarr.length === this.pageObj.pageSize
           })
         }
@@ -789,7 +778,6 @@ export default {
     currentModuleCopy: {
       immediate: true,
       handler (n, o) {
-        console.log(n)
         if (n.type && n.type.toLowerCase() == 'snmp') {
           this.endpointTableTitle[4].show = false
           this.endpointTableTitle[5].show = false

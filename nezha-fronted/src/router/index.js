@@ -39,6 +39,7 @@ export default new Router({
         },
         {
           path: '/monitor/module',
+          name: '/monitor/module',
           component: resolve => require(['../components/page/monitor/module/moduleList.vue'], resolve)
         },
         {
