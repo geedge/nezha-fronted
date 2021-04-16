@@ -1207,7 +1207,10 @@ const en = {
       password: 'Password',
       authTypeNull: 'None',
       authTypeWord: 'basic auth',
-      authTypeToken: 'bearer token'
+      authTypeToken: 'bearer token',
+      name: 'Name',
+      configs: 'Configs',
+      state: 'State'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

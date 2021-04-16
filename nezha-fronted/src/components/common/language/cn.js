@@ -1201,7 +1201,10 @@ const cn = {
       password: '密码',
       authTypeNull: 'none',
       authTypeWord: 'basic auth',
-      authTypeToken: 'bearer token'
+      authTypeToken: 'bearer token',
+      name: '名称',
+      configs: 'Configs',
+      state: '状态'
     },
     metrics: {
       metrics: '指标',

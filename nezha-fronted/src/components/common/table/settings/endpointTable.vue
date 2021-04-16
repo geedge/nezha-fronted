@@ -37,15 +37,26 @@
           {{scope.row[item.prop]}}
         </template>
         <template v-else-if="item.prop === 'type'">
-          {{scope.row[item.prop]}}
+          {{scope.row.module.type}}
         </template>
         <template v-else-if="item.prop === 'project'">
           {{scope.row[item.prop].name}}
         </template>
-        <template v-else-if="item.prop === 'endpointNum'">
-          {{scope.row[item.prop]}}
+        <template v-else-if="item.prop === 'module'">
+          {{scope.row[item.prop].name}}
         </template>
-        <template v-else-if="item.prop === 'alertNum'">
+        <template v-else-if="item.prop === 'alerts'">
+          <span class="endpoint-num" :class="scope.row.alertNum>0?'bagEF7458':'bag23BF9A'">
+            {{scope.row.alertNum}} active
+          </span>
+        </template>
+        <template v-else-if="item.prop === 'configs'">
+          <el-tooltip placement="right" effect="light">
+            <span class="configs-endpoint">{}</span>
+            <div slot="content">{{scope.row[item.prop]}}</div>
+          </el-tooltip>
+        </template>
+        <template v-else-if="item.prop === 'state'">
           {{scope.row[item.prop]}}
         </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
@@ -86,37 +97,36 @@ export default {
           show: true,
           width: 80
         }, {
-          label: this.$t('project.module.moduleName'),
+          label: this.$t('project.endpoint.name'),
           prop: 'name',
-          show: true,
-          width: 150
+          show: true
         }, {
           label: this.$t('project.module.type'),
           prop: 'type',
-          show: true,
-          width: 150
+          show: true
         }, {
           label: this.$t('project.project.project'),
           prop: 'project',
-          show: true,
-          width: 150
+          show: true
         },
         {
-          label: this.$t('project.endpoint.endpoint'),
-          prop: 'endpointNum',
-          show: true,
-          width: 150
+          label: this.$t('project.module.module'),
+          prop: 'module',
+          show: true
         }, {
-          label: this.$t('project.module.alerts'),
-          prop: 'alertNum',
-          show: true,
-          width: 150
+          label: this.$t('project.endpoint.alerts'),
+          prop: 'alerts',
+          show: true
         },
         {
-          label: this.$t('overall.remark'),
-          prop: 'remark',
-          show: true,
-          minWidth: 150
+          label: this.$t('project.endpoint.configs'),
+          prop: 'configs',
+          show: true
+        },
+        {
+          label: this.$t('project.endpoint.state'),
+          prop: 'state',
+          show: true
         }
       ]
     }
@@ -129,3 +139,24 @@ export default {
   computed: {}
 }
 </script>
+<style scoped>
+  .endpoint-num{
+    padding: 0 3px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .bagEF7458{
+    background: #EF7458;
+    color: #fff;
+  }
+  .bag23BF9A{
+    background: #23BF9A;
+    color: #fff;
+  }
+  .configs-endpoint{
+    background: #FA901C;
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: #fff;
+  }
+</style>
