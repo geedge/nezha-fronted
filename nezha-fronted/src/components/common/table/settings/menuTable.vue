@@ -47,7 +47,7 @@
           </template>
         </template>
         <template v-else-if="item.prop === 'type'">
-          <span>{{scope.row[item.prop] === 2?$t('config.menus.button'):$t('config.menus.menu')}}</span>
+          <span>{{scope.row[item.prop] === 1?$t('config.menus.menu'):scope.row[item.prop] ===2?$t('config.menus.button'):$t('config.menus.tab')}}</span>
         </template>
         <template v-else-if="item.prop === 'icon'">
           <span><i :class="scope.row[item.prop]"></i>{{scope.row[item.prop]}}</span>
