@@ -27,7 +27,7 @@ export default {
       searchLabel: {}, // 搜索参数
       scrollbarWrap: null,
       delFlag: false,
-
+      fromBottom: false,
       operationWidth: '165' // 操作列宽
     }
   },
@@ -84,6 +84,7 @@ export default {
       })
     },
     del (row) {
+      const self = this
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
@@ -91,9 +92,9 @@ export default {
       }).then(() => {
         this.$delete(this.url + '?ids=' + row.id).then(response => {
           if (response.code === 200) {
-            this.delFlag = true
+            self.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
+            self.getTableData()
           } else {
             this.$message.error(response.msg)
           }
@@ -210,7 +211,10 @@ export default {
     this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
       ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
       : this.$refs.dataTable.tableTitle
-    this.getTableData()
+    console.log(this.fromBottom)
+    if (!this.fromBottom) {
+      this.getTableData()
+    }
   },
   beforeDestroy () {
     if (this.scrollbarWrap) {

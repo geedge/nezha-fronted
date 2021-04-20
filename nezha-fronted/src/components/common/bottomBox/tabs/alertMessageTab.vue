@@ -1,7 +1,12 @@
 <template>
   <span>
     <div class="sub-top-tools">
-      <div class="sub-list-tabs">
+      <div class="sub-list-tabs" v-if="from===fromRoute.module">
+        <div class="sub-list-tab-title">{{obj.name}}</div>
+        <div @click="changeTab('endpoint')" class="sub-list-tab" id="endpoint-tab-change-endpoint">{{$t("asset.tableTitle.modules")}}</div>
+        <div class="sub-list-tab sub-list-tab-active" >{{$t("asset.tableTitle.alerts")}}</div>
+      </div>
+      <div class="sub-list-tabs" v-else>
         <div class="sub-list-tab-title">
           <template v-if="from == $CONSTANTS.fromRoute.asset">{{obj.host}}</template>
           <template v-if="from == $CONSTANTS.fromRoute.rule">{{obj.alertName}}</template>
@@ -91,6 +96,7 @@ import axios from 'axios'
 import bus from '../../../../libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import deleteButton from '../../deleteButton'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'alertMessageTab',
   components: {
@@ -104,6 +110,7 @@ export default {
   data () {
     return {
       // 详情相关
+      fromRoute: fromRoute,
       graphShow: false,
       chartDatas: [],
       legend: [],
@@ -686,29 +693,33 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        if (n.alertNum === 0) {
-          this.defaultPick = 8
+        if (this.from === fromRoute.module) {
+          this.searchLabel.moduleIds = n.id
         } else {
-          this.defaultPick = 12
-        }
-        if (this.from === this.$CONSTANTS.fromRoute.rule) {
-          this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
-            return item.label !== 'alertName' && item.label !== 'severity'
-          })
-          this.searchLabel.ruleId = n.id
-        } else if (this.from === this.$CONSTANTS.fromRoute.asset) {
-          this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
-            return item.label !== 'alertType' && item.label !== 'asset'
-          })
-          this.searchLabel.assetId = n.id
-        } else if (this.from === this.$CONSTANTS.fromRoute.endpoint) {
-          this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
-            return item.label !== 'alertType' && item.label !== 'endpoint'
-          })
-          this.searchLabel.endpointId = n.id
-        }
-        if (n.alertNum) {
-          this.defaultSearchValue = 1
+          if (n.alertNum === 0) {
+            this.defaultPick = 8
+          } else {
+            this.defaultPick = 12
+          }
+          if (this.from === this.$CONSTANTS.fromRoute.rule) {
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label !== 'alertName' && item.label !== 'severity'
+            })
+            this.searchLabel.ruleId = n.id
+          } else if (this.from === this.$CONSTANTS.fromRoute.asset) {
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label !== 'alertType' && item.label !== 'asset'
+            })
+            this.searchLabel.assetId = n.id
+          } else if (this.from === this.$CONSTANTS.fromRoute.endpoint) {
+            this.searchMsg.searchLabelList = this.searchMsg.searchLabelList.filter((item, index) => {
+              return item.label !== 'alertType' && item.label !== 'endpoint'
+            })
+            this.searchLabel.endpointId = n.id
+          }
+          if (n.alertNum) {
+            this.defaultSearchValue = 1
+          }
         }
         this.getAlertList()
       }

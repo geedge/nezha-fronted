@@ -1,11 +1,16 @@
 <template>
   <div style="height: 100%">
     <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">{{obj.host}}</div><div
-        class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div><div
-        @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("asset.tableTitle.alerts")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
+      <div class="sub-list-tabs" v-if="from===fromRoute.asset">
+        <div class="sub-list-tab-title">{{obj.host}}</div>
+        <div class="sub-list-tab" @click="changeTab('panel')" id="endpoint-tab-change-panel">{{$t("overall.detail")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="endpoint-tab-change-alertmsg">{{$t("asset.tableTitle.alerts")}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
+      </div>
+      <div class="sub-list-tabs" v-if="from===fromRoute.module">
+        <div class="sub-list-tab-title">{{obj.name}}</div>
+        <div class="sub-list-tab sub-list-tab-active">{{$t("asset.tableTitle.modules")}}</div>
+        <div @click="changeTab('alertMessage')" class="sub-list-tab" id="endpoint-tab-change-alertmsg">{{$t("asset.tableTitle.alerts")}}</div>
       </div>
       <div class="top-tool-right">
         <div class="top-tool-search">
@@ -152,6 +157,7 @@
 import exportXLSX from '../../exportXLSX'
 import bus from '@/libs/bus'
 import deleteButton from '../../deleteButton'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'endpointTab',
   components: {
@@ -159,10 +165,12 @@ export default {
     'delete-button': deleteButton
   },
   props: {
-    obj: Object // 关联的实体对象
+    obj: Object, // 关联的实体对象
+    from: { type: String }
   },
   data () {
     return {
+      fromRoute: fromRoute,
       rightBox: {
         add: { show: false },
         edit: { show: false },
@@ -306,9 +314,13 @@ export default {
     },
     getTableData () {
       this.tools.loading = true
-      this.$set(this.endpointSearchLabel, 'assetId', this.asset.id)
+      if (this.from === fromRoute.asset) {
+        this.$set(this.endpointSearchLabel, 'assetId', this.asset.id)
+      } else if (this.from === fromRoute.module) {
+        this.$set(this.endpointSearchLabel, 'moduleIds', this.module.id)
+      }
       this.$set(this.endpointSearchLabel, 'pageSize', '-1')
-      this.$get('/endpoint', this.endpointSearchLabel).then(response => {
+      this.$get('monitor/endpoint', this.endpointSearchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
@@ -499,10 +511,17 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
-          this.asset = JSON.parse(JSON.stringify(n))
-          this.$nextTick(() => {
-            this.getTableData()
-          })
+          if (this.from === fromRoute.asset) {
+            this.asset = JSON.parse(JSON.stringify(n))
+            this.$nextTick(() => {
+              this.getTableData()
+            })
+          } else if (this.from === fromRoute.module) {
+            this.module = JSON.parse(JSON.stringify(n))
+            this.$nextTick(() => {
+              this.getTableData()
+            })
+          }
         }
       }
     }

@@ -589,7 +589,8 @@ const cn = {
       brand: '品牌ID',
       dc: '数据中心',
       type: '主机地址',
-      state: '主机状态'
+      state: '主机状态',
+      endpoint: 'Endpoint',
     },
     tagTableTitle: {
       projectName: '系统名称',

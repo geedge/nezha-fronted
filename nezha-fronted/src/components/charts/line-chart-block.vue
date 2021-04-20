@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.rule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
+        <div :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
           <el-popover
             v-if="isError"
             placement="top-start"

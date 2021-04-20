@@ -57,7 +57,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="showBottomBox( scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <button class="table-operation-item" @click="showBottomBox('endpoint', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -89,7 +89,6 @@ export default {
           label: this.$t('project.module.moduleName'),
           prop: 'name',
           show: true,
-          width: 150
         }, {
           label: this.$t('project.module.type'),
           prop: 'type',
@@ -122,9 +121,7 @@ export default {
     }
   },
   methods: {
-    showBottomBox (project) {
-      this.$store.commit('currentProjectChange', project)
-    }
+
   },
   computed: {
     isCurrentUser () {

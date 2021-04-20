@@ -4,7 +4,7 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.user"
+      :from="fromRoute.endpoint"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
@@ -140,7 +140,7 @@ export default {
         } else {
           this.object.paramObj.push({ key: '', value: [] })
         }
-        this.object.assetName = this.object.asset.name
+        this.object.assetName = this.object.asset ? this.object.asset.name : ''
         this.object.projectId = this.object.project.id
         this.object.moduleId = this.object.module.id
         this.object.type = this.object.module.type

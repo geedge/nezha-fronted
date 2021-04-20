@@ -640,7 +640,8 @@ const en = {
       brand: 'BrandID',
       dc: 'DataCenter',
       type: 'typeIds',
-      state: 'state'
+      state: 'state',
+      endpoint: 'Endpoint',
     },
     tagTableTitle: {
       projectName: 'Project name', // '系统名称'

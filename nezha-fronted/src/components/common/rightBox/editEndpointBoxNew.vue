@@ -135,8 +135,9 @@
                 </el-form-item>
                 <!--scrape_timeout-->
                 <el-form-item :label='$t("project.endpoint.scrape_timeout")' prop="scrape_timeout" class="half-form-item">
-                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editEndpoint.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout"></el-input>
-                   <template slot="append">s</template>
+                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editEndpoint.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout">
+                    <template slot="append">s</template>
+                  </el-input>
                 </el-form-item>
               </div>
             </transition>

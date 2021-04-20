@@ -22,7 +22,7 @@
         </el-form-item>
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.projectId" placeholder="" size="small" id="module-box-input-project">
+          <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.projectId" placeholder="" size="small" id="module-box-input-project" :disabled="!!editModule.id">
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -137,8 +137,9 @@
                 </el-form-item>
                 <!--scrape_timeout-->
                 <el-form-item :label='$t("project.endpoint.scrape_timeout")' prop="scrape_timeout" class="half-form-item">
-                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editModule.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout"></el-input>
-                   <template slot="append">s</template>
+                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editModule.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout">
+                    <template slot="append">s</template>
+                  </el-input>
                 </el-form-item>
               </div>
             </transition>

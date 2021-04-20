@@ -664,16 +664,16 @@ export default {
           configs: { ...JSON.parse(this.currentModuleCopy.configs), host: item.manageIp },
           moduleId: this.currentModuleCopy.id
         }
+        obj.labelModule = []
         if (obj.configs.labels !== '{}' && obj.configs.labels) {
-          obj.labelModule = []
           Object.keys(obj.configs.labels).forEach(key => {
             obj.labelModule.push({ key, value: obj.configs.labels[key] })
           })
         } else {
           obj.labelModule.push({ key: '', value: '' })
         }
+        obj.paramObj = []
         if (obj.configs.params !== '{}' && obj.configs.params) {
-          obj.paramObj = []
           Object.keys(obj.configs.params).forEach(key => {
             obj.paramObj.push({ key, value: obj.configs.params[key] })
           })

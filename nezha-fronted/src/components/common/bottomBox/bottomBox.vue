@@ -21,7 +21,7 @@
         <!--机柜-->
         <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
         <!--告警信息-->
-        <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+        <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
         <!--asset页的endpoint列表-->
         <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
         <!--endpoint-query-->
@@ -40,6 +40,9 @@
         <!--user列表的两个日志-->
         <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
         <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
+
+        <!--module列表的两个日志-->
+        <endpointTabNew v-if="from === fromRoute.module && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.user.moduleTabTitle" @changeTab="changeTab"></endpointTabNew>
       </div>
     </div>
   </div>
@@ -50,6 +53,7 @@ import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import endpointQueryTab from './tabs/endpointQueryTab'
 import endpointTab from './tabs/endpointTab'
+import endpointTabNew from './tabs/endpointTabNew'
 import panelTab from './tabs/panelTab'
 import terminalLogRecordTab from './tabs/terminalLogRecordTab'
 import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
@@ -70,7 +74,8 @@ export default {
     terminalLogMonitorTab,
     operationLogTab,
     terminalLogTab,
-    'terminal-log-cmd-tab': terminalLogCMDTab
+    'terminal-log-cmd-tab': terminalLogCMDTab,
+    endpointTabNew
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -96,6 +101,10 @@ export default {
           terminalLog: [
             { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
             { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
+          ],
+          moduleTabTitle: [
+            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint'), active: true },
+            { prop: 'alertMessage', name: 'alertMessage', active: false }
           ]
         }
       }

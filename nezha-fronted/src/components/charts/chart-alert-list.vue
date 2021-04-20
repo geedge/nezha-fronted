@@ -25,7 +25,7 @@
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span>
+                <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>

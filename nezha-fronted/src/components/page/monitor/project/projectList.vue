@@ -4,7 +4,7 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.user"
+      :from="fromRoute.project"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
