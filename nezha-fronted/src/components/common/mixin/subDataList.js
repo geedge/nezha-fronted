@@ -3,7 +3,8 @@ export default {
     obj: Object, // 关联的实体对象
     tabs: {
       type: Array
-    }
+    },
+    targetTab: String
   },
   data () {
     return {

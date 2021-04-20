@@ -41,8 +41,13 @@
         <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
         <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
 
-        <!--module列表的两个日志-->
-        <endpointTabNew v-if="from === fromRoute.module && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.user.moduleTabTitle" @changeTab="changeTab"></endpointTabNew>
+        <!--module列表的tab-->
+        <endpointTabNew v-if="from === fromRoute.module && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointTabNew>
+        <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+
+        <!--endpoint列表的tab-->
+        <endpointTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointTabNew>
+        <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
       </div>
     </div>
   </div>
@@ -51,6 +56,7 @@
 <script>
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
+import alertMessageTabNew from './tabs/alertMessageTabNew'
 import endpointQueryTab from './tabs/endpointQueryTab'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
@@ -75,7 +81,8 @@ export default {
     operationLogTab,
     terminalLogTab,
     'terminal-log-cmd-tab': terminalLogCMDTab,
-    endpointTabNew
+    endpointTabNew,
+    alertMessageTabNew
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -101,10 +108,19 @@ export default {
           terminalLog: [
             { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
             { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
-          ],
+          ]
+          // module tab
+        },
+        module: {
           moduleTabTitle: [
-            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint'), active: true },
-            { prop: 'alertMessage', name: 'alertMessage', active: false }
+            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
+            { prop: 'moduleAlertMessage', name: 'alertMessage' }
+          ]
+        },
+        endpoint: {
+          endpointTabTitle: [
+            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
+            { prop: 'moduleAlertMessage', name: 'alertMessage' }
           ]
         }
       }

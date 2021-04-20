@@ -4,7 +4,7 @@
       <div class="top-tool-left">
         <div class="sub-list-title">Name：<slot name="title"></slot></div>
         <div class="sub-list-tabs">
-          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active}" class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
+          <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop=== targetTab}" class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
         </div>
       </div>
       <div class="top-tool-right">
@@ -68,7 +68,8 @@ export default {
     },
     tabs: {
       type: Array
-    }
+    },
+    targetTab: String
   },
   data () {
     return {

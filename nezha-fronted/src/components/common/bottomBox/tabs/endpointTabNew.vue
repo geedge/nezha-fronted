@@ -6,6 +6,7 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
       :tabs="tabs"
+      :targetTab="targetTab"
       @changeTab="changeTab"
       class="full-width-height"
     >
