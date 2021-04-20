@@ -132,9 +132,6 @@ export default {
     }
   },
   methods: {
-    showBottomBox (project) {
-      this.$store.commit('currentProjectChange', project)
-    }
   },
   computed: {}
 }

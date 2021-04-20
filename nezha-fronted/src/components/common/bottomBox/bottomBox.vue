@@ -25,7 +25,7 @@
         <!--asset页的endpoint列表-->
         <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
         <!--endpoint-query-->
-        <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>
+<!--        <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>-->
 
         <!-- model-panel/asset-detail/project-overview的panel-->
         <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :detail="detail" :from="from"
@@ -46,8 +46,8 @@
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
 
         <!--endpoint列表的tab-->
-        <endpointTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointTabNew>
-        <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+        <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
+        <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
       </div>
     </div>
   </div>
@@ -57,7 +57,7 @@
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import alertMessageTabNew from './tabs/alertMessageTabNew'
-import endpointQueryTab from './tabs/endpointQueryTab'
+import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
 import panelTab from './tabs/panelTab'
@@ -73,7 +73,6 @@ export default {
   components: {
     cabinetTab,
     alertMessageTab,
-    endpointQueryTab,
     endpointTab,
     panelTab,
     terminalLogRecordTab,
@@ -82,7 +81,8 @@ export default {
     terminalLogTab,
     'terminal-log-cmd-tab': terminalLogCMDTab,
     endpointTabNew,
-    alertMessageTabNew
+    alertMessageTabNew,
+    endpointQuery
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -114,13 +114,13 @@ export default {
         module: {
           moduleTabTitle: [
             { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'alertMessage' }
+            { prop: 'moduleAlertMessage', name: 'AlertMessage' }
           ]
         },
         endpoint: {
           endpointTabTitle: [
-            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'alertMessage' }
+            { prop: 'endpointQuery', name: 'EndpointQuery' },
+            { prop: 'endpointAlertMessage', name: 'AlertMessage' }
           ]
         }
       }

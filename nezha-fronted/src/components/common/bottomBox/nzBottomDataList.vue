@@ -7,7 +7,7 @@
           <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop=== targetTab}" class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
         </div>
       </div>
-      <div class="top-tool-right">
+      <div class="top-tool-right" v-if="!customTool">
         <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
           <search-input :searchMsg="searchMsg" position="endpoint-bottom" @search="search"></search-input>
         </div>
@@ -17,9 +17,12 @@
           <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
+      <div  class="top-tool-right" v-else>
+        <slot name="top-tool-right"></slot>
+      </div>
     </div>
     <!-- 自定义table列 -->
-    <transition name="el-zoom-in-top">
+    <transition name="el-zoom-in-top" v-if="targetTab!=='endpointQuery'">
       <element-set
         v-if="tools.showCustomTableTitle"
         ref="customTableTitle"
@@ -69,7 +72,11 @@ export default {
     tabs: {
       type: Array
     },
-    targetTab: String
+    targetTab: String,
+    customTool: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

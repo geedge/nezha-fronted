@@ -10,15 +10,15 @@
   }
   .list-width{
     width: 100%;
-    height: 100%;
+    /*height: 100%;*/
     padding: 0 10px 5px 20px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
 
-    &>div {
-      height: 100%;
-      overflow-y: auto;
-    }
+    /*&>div {*/
+    /*  height: 100%;*/
+    /*  overflow-y: auto;*/
+    /*}*/
   }
 </style>
 <style lang="scss">
@@ -737,6 +737,7 @@ export default {
       })
     },
     loadChartData (scrollTop) {
+      console.log(scrollTop);
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
           if (!item.isLoaded) {
@@ -1722,6 +1723,7 @@ export default {
     },
     // 懒加载，判断网页区域，加载可见区的prom数据
     handleElementInViewport (ele, scrollTop, item, index, isSearch) {
+      console.log(ele, scrollTop, item, index)
       /*
         网页被卷去的高：document.body.scrollTop
         网页正文全文高：document.body.scrollHeight

@@ -40,7 +40,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
-          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></endpoint-table>
+          @showBottomBox="(targetTab, item) => { $refs.dataList.showBottomBox(targetTab, item) }"></endpoint-table>
       </template>
       <template v-slot:pagination>
         <div class="endpoint-page">

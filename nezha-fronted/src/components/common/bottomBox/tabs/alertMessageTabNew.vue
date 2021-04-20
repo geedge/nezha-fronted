@@ -25,7 +25,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
-          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
+          @showBottomBox="(target, item) => { $refs.dataList.showBottomBox(target, item) }"
           @toDelete="toDeleteMessage"
         ></alertMessageTable>
       </template>
@@ -33,9 +33,6 @@
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-bottom-data-list>
-    <transition name="right-box">
-      <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :type="'edit'"></edit-endpoint-box-new>
-    </transition>
   </div>
 </template>
 
@@ -43,7 +40,6 @@
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
-import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
@@ -55,7 +51,6 @@ export default {
   mixins: [dataListMixin, subDataListMixin],
   components: {
     nzBottomDataList,
-    EditEndpointBoxNew,
     alertMessageTable
   },
   props: {
@@ -298,7 +293,11 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      this.searchLabel.moduleIds = this.obj.id
+      if (this.targetTab === 'moduleAlertMessage') {
+        this.searchLabel.moduleIds = this.obj.id
+      } else {
+        this.searchLabel.endpointIds = this.obj.id
+      }
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
