@@ -12,7 +12,7 @@
       <template v-for="(menu, index) in menuList">
         <el-submenu v-if="menu.children && menu.children.length > 0" :key="index" :index="`${index}`">
           <template slot="title">
-            <i :class="getIcon(menu)"></i>
+            <i :class="menu.icon"></i>
             <span slot="title">{{$t(menu.i18n)}}</span>
           </template>
           <template v-for="(secondMenu, secondIndex) in menu.children">
@@ -24,7 +24,7 @@
           </template>
         </el-submenu>
         <el-menu-item v-else :key="index" :index="menu.route">
-          <i :class="getIcon(menu)"></i>
+          <i :class="menu.icon"></i>
           <span slot="title">{{$t(menu.i18n)}}</span>
         </el-menu-item>
       </template>
@@ -50,16 +50,16 @@ export default {
       allMenu = allMenu.filter(menu => {
         return menu.code !== 'header'
       })
-      excludeButton(allMenu)
+      excludeButtonAndMenu(allMenu)
       return allMenu
-      function excludeButton (menu) {
+      function excludeButtonAndMenu (menu) {
         for (let i = 0; i < menu.length; i++) {
-          if (menu[i].type === 2) {
+          if (menu[i].type === 2 || menu[i].type === 3) {
             menu.splice(i, 1)
             i--
           } else {
             if (menu[i].children && menu[i].children.length > 0) {
-              excludeButton(menu[i].children)
+              excludeButtonAndMenu(menu[i].children)
             }
           }
         }

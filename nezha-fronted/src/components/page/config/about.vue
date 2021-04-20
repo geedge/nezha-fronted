@@ -48,6 +48,7 @@ export default {
     align-items: center;
     justify-content: center;
     height: 100%;
+    background-color: white;
 
     .about-label {
       color: #999;
