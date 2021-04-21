@@ -196,6 +196,7 @@ export default {
   .endpointConfigsTips{
     height: 200px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   .copy-value-content{
     position: absolute;

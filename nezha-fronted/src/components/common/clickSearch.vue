@@ -126,6 +126,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: 20px;
+  padding-bottom: 0;
 }
   .search-title{
     ont-family: Roboto-Medium;

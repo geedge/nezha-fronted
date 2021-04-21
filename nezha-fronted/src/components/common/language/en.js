@@ -1194,6 +1194,10 @@ const en = {
       privPassword: 'Priv password',
       alerts: 'Alerts',
       asset: 'Asset',
+      editEndpoint: 'edit endpoint',
+      createEndpoint: 'Created endpoint',
+      batchEndpoint: 'Batch Endpoint',
+      endpointName: 'Endpoint name',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"
@@ -1237,7 +1241,8 @@ const en = {
       authTypeToken: 'bearer token',
       name: 'Name',
       configs: 'Configs',
-      state: 'State'
+      state: 'State',
+      allselect: 'The current page has all been selected'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

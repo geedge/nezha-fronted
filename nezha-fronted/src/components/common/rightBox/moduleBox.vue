@@ -680,10 +680,10 @@ export default {
           if (params.basic_auth && !params.basic_auth.password) {
             delete params.basic_auth
           }
-          if (!Object.keys(params.params).length) {
-            delete params.params
+          if (params.param && !Object.keys(params.param).length) {
+            delete params.param
           }
-          if (!Object.keys(params.labels).length) {
+          if (params.labels && !Object.keys(params.labels).length) {
             delete params.labels
           }
           this.configsCopyValue = JSON.stringify(params, null, 2)

@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-clickoutside="{obj:endpoint,func:clickOutside}">
+  <div class="right-box right-box-add-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns"></div>
     <!-- end--顶部按钮-->
@@ -15,13 +15,16 @@
         <div class="asset-and-endpoint">
           <!--endpoint-->
           <div class="right-box-endpoint-table">
-            <div class="search-box" style="display: flex;justify-content: flex-end">
-              <el-button @click="showRightBox" class="top-tool-btn" type="button">
+            <div class="search-box" style="display: flex;justify-content: space-between">
+              <span>Config</span>
+              <span>
+                <el-button @click="showRightBox" class="top-tool-btn" type="button">
                 <i class="nz-icon-gear nz-icon"></i>
               </el-button>
               <el-button @click="editAllEndpoint" class="top-tool-btn" type="button">
                 <i class="nz-icon-batch-edit nz-icon"></i>
               </el-button>
+              </span>
             </div>
             <el-table
               :data="endpointTableData"
@@ -37,61 +40,47 @@
                 style="padding: 0 1px;">
               </el-table-column>
               <el-table-column
-                label-class-name="endpoints-box-endpoints-title"
-                v-for="(title, index) in endpointTableTitle"
-                v-if="title.show"
-                :width="title.width"
+                v-for="(item, index) in endpointTableTitle"
+                v-if="item.show"
                 :key="`col-${index}`"
-                :label="title.label"
+                :fixed="item.fixed"
+                :label="item.label"
+                :min-width="`${item.minWidth}`"
+                :prop="item.prop"
+                :resizable="true"
+                :sort-orders="['ascending', 'descending']"
+                :width="`${item.width}`"
+                class="data-column"
               >
-                <template slot-scope="scope" :column="title">
-                  <span v-if="title.prop == 'asset'">{{scope.row.assetName}}</span>
-                  <span v-else-if="title.prop == 'params'">
-                      <el-popover
-                        placement="bottom"
-                        width="200"
-                        trigger="hover"
-                      >
-                        <div class="endpoint-param-pop">
-                          <div v-for="p in scope.row.paramObj" :key="p">{{p.key}}={{p.value}}</div>
-                        </div>
-                        <span slot="reference">
-                          <span @mousedown.stop>{{scope.row.configs.params.length > 8 ? scope.row.configs.params.substring(0, 8) + '...' : scope.row.configs.params}}</span>
-                        </span>
-                      </el-popover>
+                <template slot="header">
+                  <span>{{item.label}}</span>
+                  <div class="col-resize-area"></div>
+                </template>
+                <template slot-scope="scope" :column="item">
+                  <template v-if="item.prop === 'name'">
+                    {{scope.row[item.prop]}}
+                  </template>
+                  <template v-else-if="item.prop === 'asset'">
+                    <span >
+                      <i class="nz-icon nz-icon-asset" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
+                      {{scope.row.assetName}}
                     </span>
-                  <span v-else-if="title.prop == 'labels'">
-                      <el-popover
-                        placement="bottom"
-                        width="200"
-                        trigger="hover"
-                      >
-                        <div class="endpoint-param-pop">
-                          <div v-for="p in scope.row.labelModule" :key="p">{{p.key}}={{p.value}}</div>
-                        </div>
-                        <span slot="reference">
-                          <span @mousedown.stop>{{scope.row.configs.labels.length > 8 ? scope.row.configs.labels.substring(0, 8) + '...' : scope.row.configs.labels}}</span>
-                        </span>
-                      </el-popover>
-                    </span>
-                  <span v-else-if="title.prop == 'path'">
-                      <el-popover
-                        placement="bottom"
-                        width="100"
-                        trigger="hover"
-                        :content="scope.row.configs[title.prop]"
-                      >
-                        <span slot="reference" >
-                          <span>{{scope.row.configs.metrics_path.length > 5 ? scope.row.configs.metrics_path.substring(0, 5) + '...' : scope.row.configs.metrics_path}}</span>
-                        </span>
-                      </el-popover>
-                    </span>
-                  <span v-else-if="title.prop == 'port'">
-                      <span >{{scope.row.configs.port}}</span>
-                  </span>
-                  <span v-else-if="title.prop == 'host'">
-                      <span>{{scope.row.configs.host}}</span>
-                  </span>
+                  </template>
+                  <template v-else-if="item.prop === 'host'">
+                    {{scope.row.configs?scope.row.configs.host : '' }}
+                  </template>
+                  <template v-else-if="item.prop === 'port'">
+                    {{scope.row.configs?scope.row.configs.port : '' }}
+                  </template>
+                  <template v-else-if="item.prop == 'configs'">
+                    <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+                      <span class="configs-endpoint">{ ... }</span>
+                      <div class="endpointConfigsTips" slot="content">
+                        <pre >{{JSON.stringify(scope.row[item.prop],null,2)}}</pre>
+                      </div>
+                    </el-tooltip>
+                  </template>
+                  <template v-else>1</template>
                 </template>
               </el-table-column>
               <el-table-column label="" width="56"  fixed="right">
@@ -118,7 +107,7 @@
     </div>
     <!--    edit endpoint-->
     <transition name="right-box">
-      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightBox" :disabled="true" :type="'add'"></edit-endpoint-box-new>
+      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightBox" :disabled="true" :type="'add'" :optionType="optionType"></edit-endpoint-box-new>
     </transition>
   </div>
 </template>
@@ -171,7 +160,6 @@ export default {
       blankEndpoint: {
         id: '',
         projectId: '',
-        name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
         port: 9100,
@@ -179,7 +167,7 @@ export default {
           walk: [],
           snmpCredentialsId: '',
           metrics_path: '',
-          port: '',
+          port: 9100,
           host: '{{asset.manageIp}}',
           scrape_interval: '',
           scrape_timeout: '',
@@ -212,37 +200,31 @@ export default {
       moduleList: [],
       assetList: [],
       endpointList: [],
-      endpointTableTitle: [
+      endpointTableTitle: [ // 原始table列
+        {
+          label: this.$t('project.endpoint.name'),
+          prop: 'name',
+          show: true
+        },
         {
           label: this.$t('project.endpoint.asset'),
           prop: 'asset',
-          width: 150,
           show: true
-        }, {
+        },
+        {
           label: this.$t('project.endpoint.host'),
           prop: 'host',
-          width: 80,
           show: true
-        }, {
+        },
+        {
           label: this.$t('project.endpoint.port'),
           prop: 'port',
-          width: 54,
           show: true
-        }, {
-          label: this.$t('project.endpoint.labels'),
-          prop: 'labels',
-          width: 90,
-          show: true
-        }, {
-          label: this.$t('project.endpoint.param'),
-          prop: 'params',
-          width: 100,
-          show: true
-        }, {
-          label: this.$t('project.endpoint.path'),
-          prop: 'path',
-          width: 66,
-          show: true
+        },
+        {
+          label: this.$t('project.endpoint.configs'),
+          prop: 'configs',
+          show: true,
         }
       ],
       typeList: [],
@@ -252,6 +234,7 @@ export default {
       assetSelection: [],
       endpointSelection: [],
       endpointTableData: [],
+      optionType: 'batch'
     }
   },
   methods: {
@@ -467,20 +450,41 @@ export default {
       return ''
     },
     editEndpointRow (u) {
+      this.optionType = 'edit'
       this.object = JSON.parse(JSON.stringify(u))
+      // this.object.configs = JSON.parse(this.object.configs)
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.object.paramObj = []
+      this.object.labelModule = []
+      if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
+        Object.keys(this.object.configs.labels).forEach(key => {
+          this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+        })
+      } else {
+        this.object.labelModule.push({ key: '', value: '' })
+      }
+      if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
+        Object.keys(this.object.configs.params).forEach(key => {
+          this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+        })
+      } else {
+        this.object.paramObj.push({ key: '', value: [] })
+      }
       this.rightBox.show = true
     },
     showRightBox () {
-      this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModuleCopy.projectId, moduleId: this.currentModuleCopy.id, assetName: '', type: this.currentModuleCopy.type }
+      this.optionType = 'batch'
+      this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: '', moduleId: '', assetName: '', type: '' }
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.rightBox.show = true
     },
     editAllEndpoint () {
       this.endpointTableData.forEach((item, index) => {
-        this.endpointTableData[index] = { ...this.endpointTableData[index], ...this.blankEndpoint }
+        if (this.endpointSelection.find(item1 => item1.assetId === item.assetId)) {
+          this.endpointTableData[index] = { ...this.endpointTableData[index], configs: this.blankEndpoint.configs }
+        }
       })
       this.endpointTableData = [...this.endpointTableData]
     },
@@ -493,7 +497,7 @@ export default {
         })
       } else {
         this.endpointTableData.forEach((item, index) => {
-          if (item.assetId === endpoint.assetId) {
+          if (item.id === endpoint.id) {
             this.endpointTableData[index] = { ...endpoint }
           }
         })
@@ -533,24 +537,20 @@ export default {
         }
       }
     },
-    currentModuleCopy: {
-      immediate: true,
-      handler (n, o) {
-        if (n.type && n.type.toLowerCase() == 'snmp') {
-          this.endpointTableTitle[4].show = false
-          this.endpointTableTitle[5].show = false
-        } else {
-          this.endpointTableTitle[4].show = true
-          this.endpointTableTitle[5].show = true
-        }
-      }
-    },
     selectEndpointList: {
       immediate: true,
       handler (n) {
-        console.log(n)
-        n.configs = JSON.parse(n.configs)
-        this.endpointTableData = [...n]
+        console.log(n);
+        this.endpointTableData = JSON.parse(JSON.stringify(n))
+        this.endpointTableData.forEach(item => {
+          item.configs = JSON.parse(item.configs)
+          item.projectId = item.project.id
+          item.moduleId = item.module.id
+          item.assetId = item.asset.id
+          item.assetName = item.asset.name
+          item.type = item.module.type
+        })
+        console.log(this.endpointTableData);
       }
     }
   }
@@ -1031,5 +1031,15 @@ export default {
         padding: 2px 4px;
       }
     }
+  }
+  .endpointConfigsTips{
+     height: 200px;
+     overflow-y: auto;
+     overflow-x: hidden;
+   }
+  .copy-value-content{
+    position: absolute;
+    right: 1px;
+    top: 4px;
   }
 </style>

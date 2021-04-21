@@ -1177,7 +1177,11 @@ const cn = {
       contextName: '内容名称',
       alerts: 'Alerts',
       privPassword: '隐私密码',
-      asset: 'Asset'
+      asset: 'Asset',
+      editEndpoint: '编辑 endpoint',
+      createEndpoint: '新增Endpoint',
+      batchEndpoint: '批量 Endpoint',
+      endpointName: 'Endpoint name'
     },
     endpoint: {
       createEndpoint: '新增Endpoint',
@@ -1217,7 +1221,8 @@ const cn = {
       authTypeToken: 'bearer token',
       name: '名称',
       configs: 'Configs',
-      state: '状态'
+      state: '状态',
+      allselect: '当前页已全部选择'
     },
     metrics: {
       metrics: '指标',
