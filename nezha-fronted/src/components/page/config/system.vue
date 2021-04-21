@@ -790,7 +790,7 @@ export default {
 
       let hour = offsetHour>0?(offsetHour<9?'+0'+offsetHour:'+'+offsetHour):(offsetHour == 0?(offsetMinute==0?'':'+00'):(offsetHour>-10?'-0'+Math.abs(offsetHour):offsetHour))
 
-      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(offsetMinute>9?':'+offsetMinute:':0'+offsetMinute))
+      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(Math.abs(offsetMinute)>9?':'+Math.abs(offsetMinute):':0'+Math.abs(offsetMinute)))
 
       return 'UTC'+hour+minute
     }
