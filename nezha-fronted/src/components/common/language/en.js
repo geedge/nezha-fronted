@@ -951,7 +951,8 @@ const en = {
         filterTip: 'The possible options are: (cn or uid or sAMAccountName=%(user)s)',
         map: 'Attribute mapping',
         mapTip: 'Attribute mapping represents how to map LDAP user attributes to NEZHA users; username,email are the attributes of NEZHA',
-        active: 'LDAP authentication'
+        active: 'LDAP authentication',
+        timeout:"Timeout"
       },
       link: {
         link: 'Link',
@@ -971,7 +972,7 @@ const en = {
         filePath: 'File path',
         operation: 'Operation',
         account: 'Account',
-        state: 'State',
+        state: 'Enable',
         buildIn: 'Build in',
         add: 'Add',
         update: 'Update',
@@ -1000,7 +1001,8 @@ const en = {
         role: 'Role',
         create: 'Creator',
         creatAt: 'Create at',
-        expireAt: 'Expire at'
+        expireAt: 'Expire at',
+        noExpire: 'No expiration date',
       }
     },
     assetType: {

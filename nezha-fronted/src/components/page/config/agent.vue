@@ -173,10 +173,11 @@ export default {
         label: 'Centos',
         name: 'centos'
       },
-      {
-        label: 'Ubuntu',
-        name: 'ubuntu'
-      }],
+      //   {
+        //   label: 'Ubuntu',
+        //   name: 'ubuntu'
+        // }
+      ],
       agentParam: {
         osType: 'centos',
         dc: '',
@@ -188,6 +189,7 @@ export default {
   },
   methods: {
     toDownloadAgent: function () {
+      this.getAllDc();
       this.showAgentDownload = true
       this.token = sessionStorage.getItem('nz-token')
       axios.get('/healthy').then(response => {
@@ -275,7 +277,6 @@ export default {
     }
   },
   mounted () {
-    this.getAllDc()
   }
 }
 </script>

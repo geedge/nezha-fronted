@@ -102,10 +102,6 @@ export default {
           label: 'URL',
           prop: 'url',
           show: true
-        }, {
-          label: this.$t('config.system.link.create'),
-          prop: 'creator',
-          show: true
         }
       ],
       rules: {

@@ -52,11 +52,11 @@
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
-              <el-select v-model="basic.timezone" id="system-baisc-timezone" >
+              <el-select v-model="basic.timezone" id="system-baisc-timezone" filterable>
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
                   <div style="display: flex;justify-content: space-between;padding: 5px;">
                     <div >{{item.name}}</div>
-                    <div >UTC{{item.offset>=0?'+'+(item.offset/1000/60/60):'-'+(item.offset/1000/60/60)}}</div>
+                    <div >{{timezoneOptionHandler(item.offset)}}</div>
                   </div>
                 </el-option>
               </el-select>
@@ -79,7 +79,7 @@
               <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
-        </div v->
+        </div >
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="activeTab === 'email'">
@@ -132,7 +132,9 @@
         <div class="system-config-form terminal" v-if="activeTab === 'terminal'">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
             <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">
-              <el-input-number v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num"></el-input-number>
+              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.terminal.userTip')" prop="terminal_telnet_user_tip">
               <el-input id="system-terminal-user-tip" v-model="terminal.terminal_telnet_user_tip"></el-input>
@@ -141,7 +143,9 @@
               <el-input id="system-terminal_telnet_pin_tip" v-model="terminal.terminal_telnet_pin_tip"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.terminal.localRetention')" prop="terminal_record_local_retention">
-              <el-input-number v-model="terminal.terminal_record_local_retention" controls-position="right" :min="1"  id="system-terminal_record_local_retention"></el-input-number>
+              <el-input v-model="terminal.terminal_record_local_retention" controls-position="right" :min="1"  id="system-terminal_record_local_retention">
+                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
+              </el-input>
             </el-form-item>
             <el-form-item>
               <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
@@ -177,6 +181,11 @@
               <!--借用错误提示的样式-->
               <div class="el-form-item__tip el-form-item__tip--two-row">{{$t("config.system.ldap.mapTip")}}</div>
             </el-form-item>
+            <el-form-item :label="$t('config.system.ldap.timeout')" prop="ldap_timeout">
+              <el-input v-model.number="ldap.ldap_timeout" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
+            </el-form-item>
             <el-form-item>
               <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
               <button id='system-ldap-test' @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
@@ -196,7 +205,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form" v-if="activeTab === 'reset'">
-          <el-form :model="reset"  label-width="82px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
+          <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('config.system.reset.type')">
 <!--              <div class="el-checkbox-group">-->
 <!--                <div v-for="(item,index) in resetOptions" :key="item.value+index" >-->
@@ -287,7 +296,7 @@ export default {
       emailCopy: null,
       emailRules: {
         email_host: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          // { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: hostPlus, trigger: 'blur' }
         ],
         email_port: [
@@ -321,7 +330,8 @@ export default {
         ldap_ou: '',
         ldap_user_filter: '',
         ldap_mapping: '',
-        ldap_enable: 'off'
+        ldap_enable: 'off',
+        ldap_timeout:'',
       },
       ldapCopy: null,
       ldapRules: {
@@ -464,9 +474,7 @@ export default {
         if (valid) {
           const param = Object.assign({}, this[type])
 
-          if (type == 'email') {
-            param.email_test=true;
-          }
+          param[type+'_test']=true
           const postParam = Object.assign({}, param)
           this.$put('/sys/config/'+type, postParam).then(response => {
             this.prevent_opt.save = false
@@ -758,12 +766,12 @@ export default {
 
       if(isImage && isLt2M){
         const self = this;
-        this.urlToBase64(file.raw).then(res=>{
+        this.fileToBase64(file.raw).then(res=>{
           self.basic.system_logo = res;
         });
       }
     },
-    urlToBase64:function(file) {
+    fileToBase64:function(file) {
       return new Promise((resolve, reject) => {
         let  reader = new FileReader();
         reader.readAsDataURL(file);//转化二进制流，异步方法
@@ -774,6 +782,17 @@ export default {
        }
 
       })
+    },
+    timezoneOptionHandler:function(offset){
+      let offsetHour = (offset/1000/60/60).toFixed(0)
+
+      let offsetMinute = offset%(1000*60*60)/(1000*60)
+
+      let hour = offsetHour>0?(offsetHour<9?'+0'+offsetHour:'+'+offsetHour):(offsetHour == 0?(offsetMinute==0?'':'+00'):(offsetHour>-10?'-0'+Math.abs(offsetHour):offsetHour))
+
+      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(offsetMinute>9?':'+offsetMinute:':0'+offsetMinute))
+
+      return 'UTC'+hour+minute
     }
 },
   mounted () {

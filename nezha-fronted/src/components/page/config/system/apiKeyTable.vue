@@ -49,7 +49,7 @@
               </el-popover>
             </template>
             <template v-if="item.prop == 'expireAt'">
-              <el-popover :content="rules.expireAt.message" placement="top" trigger="manual" v-model="rules.expireAt.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.expireAt)">
+<!--              <el-popover :content="rules.expireAt.message" placement="top" trigger="manual" v-model="rules.expireAt.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.expireAt)">-->
                 <el-date-picker
                   slot="reference"
                   style="width: 100%;"
@@ -61,7 +61,7 @@
                   :picker-options="pickerOptions"
                   :placeholder="$t('el.datepicker.selectTime')">
                 </el-date-picker>
-              </el-popover>
+<!--              </el-popover>-->
             </template>
           </template>
           <template v-else>
@@ -70,6 +70,9 @@
             </template>
             <template v-else-if="item.prop == 'role'">
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
+            </template>
+            <template v-else-if="item.prop == 'expireAt'">
+              {{scope.row[item.prop]?scope.row[item.prop]:$t('config.system.apiKey.noExpire')}}
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -138,7 +141,7 @@ export default {
       rules: {
         name: { required: true, message: this.$t('validate.required'), switch: false },
         roleId: { required: true, message: this.$t('validate.required'), switch: false },
-        expireAt: { required: true, message: this.$t('validate.required'), switch: false }
+        // expireAt: { required: true, message: this.$t('validate.required'), switch: false }
       },
       pickerOptions: {
         // 限制预约时间
@@ -154,7 +157,7 @@ export default {
         this.tableData.unshift({
           id: '',
           name: '',
-          roles: {
+          role: {
             id: '',
             name: ''
           },
@@ -174,15 +177,15 @@ export default {
     },
     save: function (obj) {
       const copy = JSON.parse(JSON.stringify(obj))
-      if (copy.roles) {
-        copy.roleId = copy.roles.id
+      if (copy.role) {
+        copy.roleId = copy.role.id
       }
-      delete copy.roles
+      delete copy.role
       this.saveOrUpdate(copy)
     }
   },
   mounted () {
-    this.getRoles()
+
   }
 }
 </script>
