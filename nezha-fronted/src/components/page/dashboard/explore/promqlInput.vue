@@ -140,7 +140,7 @@
         <button id="temp-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="tempBoxShowChange(false)">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-      <button :disabled="prevent_opt.save" @click="tempBoxShowChange(true)" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`expression_template_render`" >
+      <button :disabled="prevent_opt.save" @click="tempBoxShowChange(true)" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`expressionTemplate_add`" >
         <span>{{$t('overall.save')}}</span>
       </button>
       </span>
@@ -284,6 +284,7 @@ export default {
       // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
       this.$emit('change', value)
+      this.$forceUpdate();
     },
     metricKeyDown (val) {
       if (this.required) {
@@ -330,12 +331,12 @@ export default {
           })
         } else {
           this.dropDownVisible = false
-          if (!data.value) {
-            this.metricChange(data.expression)
-            return
-          }
           this.$get('/expression/tmpl/' + data.id).then(res => {
             if (res.code === 200) {
+              if (!res.data.vars || !res.data.vars.length) {
+                this.metricChange(data.expression)
+                return
+              }
               res.data.vars.forEach(item => {
                 res.data[item] = ''
                 const arr = item.split('.')
