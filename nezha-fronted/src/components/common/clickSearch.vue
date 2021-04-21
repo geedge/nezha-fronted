@@ -66,7 +66,7 @@ export default {
       deep: true,
       handler (n) {
         console.log(n)
-        this.$emit('reload', this.selectValue)
+        this.$emit('reload', this.selectValueOut)
       }
     }
   },
