@@ -128,21 +128,30 @@ export default {
           key: 'projectIds',
           type: 'checkBox',
           children: [],
-          show: true
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
         },
         module: {
           label: 'Module',
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
-          show: true
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
         },
         state: {
           label: 'state',
           key: 'state',
           type: 'checkBox',
           children: [],
-          show: true
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
         }
       },
       selectValue: {
@@ -248,7 +257,7 @@ export default {
           })
         }
       })
-      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
+      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
     }
   },
   computed: {
