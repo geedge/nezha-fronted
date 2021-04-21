@@ -39,7 +39,7 @@
                 <el-input slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
               </el-popover>
             </template>
-            <template v-if="item.prop == 'roles'">
+            <template v-if="item.prop == 'role'">
               <el-popover :content="rules.roleId.message" placement="top" trigger="manual" v-model="rules.roleId.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.roleId)">
                 <el-select v-model="scope.row[item.prop]" size="small" value-key="id" slot="reference">
                   <template v-for="role in roles" >
@@ -65,10 +65,10 @@
             </template>
           </template>
           <template v-else>
-            <template v-if="item.prop == 'creator'">
+            <template v-if="item.prop == 'createUser'">
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
             </template>
-            <template v-if="item.prop == 'roles'">
+            <template v-else-if="item.prop == 'role'">
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
@@ -118,7 +118,7 @@ export default {
           show: true
         }, {
           label: this.$t('config.system.apiKey.role'),
-          prop: 'roles',
+          prop: 'role',
           show: true
         }, {
           label: this.$t('config.system.apiKey.expireAt'),

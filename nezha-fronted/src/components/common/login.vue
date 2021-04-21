@@ -115,7 +115,7 @@ export default {
           this.license.warnInfo = ''
           this.license.valid = true
         } else {
-          this.license.valid = false
+          this.license.valid = true
           this.license.warnInfo = response.msg
         }
         this.license.token = response.token

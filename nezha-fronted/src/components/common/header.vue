@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div @click="jumpTo('overview')" class="logo link" id="header-to-overview">
-      <img height="34" src="../../assets/img/logo1-2.png"/>
+      <img height="34" :src="logo?logo:'../../assets/img/logo1-2.png'"/>
       <span class="header-system-name">{{systemName&&systemName != 'undefined'&&systemName != null?systemName: $t('dashboard.overview.contentTitle')}}</span>
     </div>
     <el-menu
@@ -173,7 +173,7 @@ export default {
     return {
       username: sessionStorage.getItem('nz-username'),
       language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
-
+      systemLogo:'',
       // 顶部菜单相关
       /* activeIndex: '', */
       activeItemIndex: '',

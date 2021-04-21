@@ -198,6 +198,15 @@ window.vm = new Vue({
 
 export default window.vm
 
+const orignalSetItem = localStorage.setItem;
+localStorage.setItem = function(key,value){
+  const setItemEvent = new Event("setItemEvent");
+  setItemEvent.key=key;
+  setItemEvent.value = value;
+  window.dispatchEvent(setItemEvent);
+  orignalSetItem.apply(this,arguments);
+}
+
 /* 重写组件内容 */
 /* const elUi = require("element-ui");
 const pl = require("pl-table");

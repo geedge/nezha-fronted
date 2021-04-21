@@ -40,6 +40,9 @@ const user = {
     loginSuccess (store, res) {
       sessionStorage.setItem('nz-token', res.data.token)
       localStorage.setItem('nz-sys-name', res.data.systemName)
+      if(res.systemLogo){
+        localStorage.setItem('nz-sys-logo', res.data.systemLogo)
+      }
       localStorage.setItem('nz-sys-timezone', res.data.timezone)
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)

@@ -2,29 +2,40 @@
   <div class="system">
     <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
-        <div class="system-config-form basicForm">
-          <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basic.asset_ping_switch == 'on'?basicRules:basicRules2" :validate-on-rule-change="false">
+        <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
+          <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
+            <el-form-item :label="$t('config.system.basic.sysLogo')" prop="system_logo">
+              <el-upload
+                class="avatar-uploader"
+                action=""
+                type=".jpg,.jpeg,.png"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="handleLogoChange"
+                >
+                <img v-if="basic.system_logo" :src="basic.system_logo" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <div slot="tip" v-if="imageFormatErr" class="logo-upload-tip">{{$t('config.system.basic.logoTip')}}</div>
+              </el-upload>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
               <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
               <el-input id="system-baisc-alert_api" v-model="basic.alert_api"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.assetPingSwith')" prop="asset_ping_switch">
-              <el-switch id="system-baisc-asset_ping_switch" v-model.number="basic.asset_ping_switch"  active-color="rgb(238, 157, 63)" active-value='on' inactive-value='off'>
-              </el-switch>
+            <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
+              <el-input v-model.number="basic.asset_ping_interval" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
             </el-form-item>
-            <!--<el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
-              <el-input v-model.number="basic.asset_ping_interval" :disabled="basic.asset_ping_switch == 'off'"></el-input><span class="nz-input-append">s</span>
-            </el-form-item>-->
-            <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
-              <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
+            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
+              <el-input v-model.number="basic.default_scrape_interval" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
             </el-form-item>
-            <!--<el-form-item :label="$t('config.system.basic.exporterTarget')" prop="node_exporter_target_path">
-              <el-input v-model="basic.node_exporter_target_path"></el-input>
-            </el-form-item>-->
-            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="scrape_interval" class="append">
-              <el-input v-model.number="basic.scrape_interval" id="system-baisc-scrape_interval">
+            <el-form-item :label="$t('config.system.basic.scrapeTimeout')" prop="default_scrape_timeout">
+              <el-input v-model.number="basic.default_scrape_timeout" >
                 <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
               </el-input>
             </el-form-item>
@@ -36,14 +47,25 @@
             <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
               <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-baisc-query_max_series"></el-input-number>
             </el-form-item>
+            <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
+              <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
               <!--                <el-input v-model.number="basic.timezone" ></el-input>-->
               <el-select v-model="basic.timezone" id="system-baisc-timezone" >
-                <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.label" :value="item.value" ></el-option>
+                <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
+                  <div style="display: flex;justify-content: space-between;padding: 5px;">
+                    <div >{{item.name}}</div>
+                    <div >UTC{{item.offset>=0?'+'+(item.offset/1000/60/60):'-'+(item.offset/1000/60/60)}}</div>
+                  </div>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.mapConfig')" >
               <latlng-picker :init-data="basic.map_center_config" ref="latlngPicker" :show-zoom="true"></latlng-picker>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.snmpTrapPort')" prop="snmp_trap_listen_port">
+              <el-input v-model="basic.snmp_trap_listen_port"   id="system-baisc-snmp_trap_listen_port"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
               <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
@@ -57,25 +79,30 @@
               <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
-        </div>
+        </div v->
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
-        <div class="system-config-form">
+        <div class="system-config-form" v-if="activeTab === 'email'">
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
               <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpHost')" prop="email_smtp_host">
-              <el-input v-model="email.email_smtp_host" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_host"></el-input>
+            <el-form-item :label="$t('config.system.email.smtpHost')" prop="email_host">
+              <el-input v-model="email.email_host" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_host"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPort')" prop="email_smtp_port">
-              <el-input v-model.number="email.email_smtp_port" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_port"></el-input>
+            <el-form-item :label="$t('config.system.email.smtpPort')" prop="email_port">
+              <el-input v-model.number="email.email_port" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_port"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_smtp_account">
-              <el-input  v-model="email.email_smtp_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
+            <el-form-item :label="$t('config.system.email.timeout')" prop="email_timeout">
+              <el-input v-model.number="email.email_timeout" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPwd')" class="has-tip" prop="email_smtp_password">
-              <el-input v-model="email.email_smtp_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
+            <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_auth_account">
+              <el-input  v-model="email.email_auth_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.email.smtpPwd')" class="has-tip" prop="email_auth_password">
+              <el-input v-model="email.email_auth_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
               <div class="el-form-item__tip">{{$t("config.system.email.pwdTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">
@@ -83,22 +110,15 @@
               <div class="el-form-item__tip">{{$t("config.system.email.sendAccountTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.testAccount')" class="has-tip" prop="email_test_reciver">
-              <el-input v-model="email.email_test_reciver" :disabled="email.email_enable == 'off'" id="system-email-email_test_reciver"></el-input>
+              <el-input v-model="email.email_test_account" :disabled="email.email_enable == 'off'" id="system-email-email_test_reciver"></el-input>
               <div class="el-form-item__tip">{{$t("config.system.email.testAccountTip")}}</div>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.useSSL')" prop="email_ssl_flag">
-              <el-row :gutter="10">
-                <el-col :span="5"><el-checkbox v-model="email.email_ssl_flag" true-label="on" false-label="off" :disabled="email.email_enable == 'off'" id="system-email-email_ssl_flag"></el-checkbox></el-col>
-                <el-col :span="15"></el-col>
-              </el-row>
-              <div class="el-form-item__tip" style="margin-top: 0;">{{$t("config.system.email.sslTip")}}</div>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.email.useTLS')" prop="email_tls_flag">
-              <el-row :gutter="10">
-                <el-col :span="5"><el-checkbox v-model="email.email_tls_flag" true-label='on' false-label='off' :disabled="email.email_enable == 'off'" id="system-email-email_tls_flag"></el-checkbox></el-col>
-                <el-col :span="16"></el-col>
-              </el-row>
-              <div class="el-form-item__tip" style="margin-top: 0;">{{$t("config.system.email.tlsTip")}}</div>
+            <el-form-item :label="$t('config.system.email.securityType')" prop="email_security_type">
+              <el-select v-model="email.email_security_type" :disabled="email.email_enable == 'off'">
+                <el-option label="None" value="NONE"></el-option>
+                <el-option label="SSL" value="SSL"></el-option>
+                <el-option label="TLS" value="TLS"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item style="padding-top: 20px;">
               <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
@@ -109,10 +129,19 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
-        <div class="system-config-form terminal">
+        <div class="system-config-form terminal" v-if="activeTab === 'terminal'">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
-            <el-form-item :label="$t('config.system.terminal.terminalNum')" prop="max_terminal_num">
-              <el-input-number v-model="terminal.max_terminal_num" controls-position="right" :min="1" :max="50" id="system-terminal-max_terminal_num"></el-input-number>
+            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">
+              <el-input-number v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num"></el-input-number>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.terminal.userTip')" prop="terminal_telnet_user_tip">
+              <el-input id="system-terminal-user-tip" v-model="terminal.terminal_telnet_user_tip"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.terminal.pinTip')" prop="terminal_telnet_pin_tip">
+              <el-input id="system-terminal_telnet_pin_tip" v-model="terminal.terminal_telnet_pin_tip"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.terminal.localRetention')" prop="terminal_record_local_retention">
+              <el-input-number v-model="terminal.terminal_record_local_retention" controls-position="right" :min="1"  id="system-terminal_record_local_retention"></el-input-number>
             </el-form-item>
             <el-form-item>
               <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
@@ -121,7 +150,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.ldap.ldap')" name="ldap">
-        <div class="system-config-form">
+        <div class="system-config-form" v-if="activeTab === 'ldap'">
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
               <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
@@ -166,25 +195,28 @@
         <api-key-tab v-if="activeTab === 'apiKey'"></api-key-tab>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
-        <div class="system-config-form">
+        <div class="system-config-form" v-if="activeTab === 'reset'">
           <el-form :model="reset"  label-width="82px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
-            <el-form-item  prop="type">
-<!--                <el-checkbox-group v-model="reset.type">-->
-<!--                  <div v-for="(item,index) in resetOptions" :key="item.value+index">-->
-<!--                    <el-checkbox :value="item.value"   :label="item.label" :disabled="true" :checked="true"></el-checkbox>-->
-<!--                  </div>-->
-<!--                </el-checkbox-group>-->
-              <div class="el-checkbox-group">
-                <div v-for="(item,index) in resetOptions" :key="item.value+index" >
-                  <label class="el-checkbox sys-reset-label" :for="item.value" >
-                    <span class="el-checkbox__label" style="width: 100px;text-align: right;margin-right: 10px">{{item.label}}</span>
-                    <span class="el-checkbox__input">
-                      <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>
-                      <span class="el-checkbox__inner"></span>
-                    </span>
-                  </label>
-                </div>
-              </div>
+            <el-form-item  prop="type" :label="$t('config.system.reset.type')">
+<!--              <div class="el-checkbox-group">-->
+<!--                <div v-for="(item,index) in resetOptions" :key="item.value+index" >-->
+<!--                  <label class="el-checkbox sys-reset-label" :for="item.value" >-->
+<!--                    <span class="el-checkbox__label" style="width: 100px;text-align: right;margin-right: 10px">{{item.label}}</span>-->
+<!--                    <span class="el-checkbox__input">-->
+<!--                      <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>-->
+<!--                      <span class="el-checkbox__inner"></span>-->
+<!--                    </span>-->
+<!--                  </label>-->
+<!--                </div>-->
+<!--              </div>-->
+              <el-select v-model="reset.type" multiple>
+                <template v-for="item in resetOptions" >
+                  <el-option :label="item.label" :value="item.value"></el-option>
+                </template>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.reset.pwd')" prop="password">
+              <el-input id="system-reset-password" v-model="reset.password" type="password"></el-input>
             </el-form-item>
             <el-form-item>
               <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</button>
@@ -209,100 +241,71 @@ export default {
   components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab },
   data () {
     return {
+      imageFormatErr:false,
       basic: {
         alert_api: '',
-        asset_ping_switch: 'on', // 主机连通性检查开关，'on'：开启，off：关闭
-        asset_ping_interval: null, // 检查周期，单位：s
-        node_exporter_target_path: '',
-        scrape_interval: 15,
+        asset_ping_interval: '300', // 检查周期，单位：s
         storage_local_retention: 15 * 24,
         system_name: '',
+        system_logo:'',
         current_site_url: '',
         timezone: '',
         default_cabinet_usize: '',
         query_max_series: '',
         unsaved_change: 'on',
+        default_scrape_interval:'60',
+        default_scrape_timeout:'30',
+        default_scrape_interval:'60',
+        snmp_trap_listen_port:162,
         map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 }
       },
       basicCopy: null,
       basicRules: {
         system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        // node_exporter_target_path:[{required:true,message:this.$t('validate.required'),trigger:'blur'},],
         alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
         asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
-        scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        default_scrape_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         storage_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        snmp_trap_listen_port: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: port, trigger: 'blur' }],
         timezone: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         default_cabinet_usize: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }, { validator: uSize, trigger: 'blur' }],
         query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
-      basicRules2: {
-        system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        node_exporter_target_path: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
-        scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
-        storage_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
-        timezone: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        default_cabinet_usize: [{ validator: positiveInteger, trigger: 'blur' }, { validator: uSize, trigger: 'blur' }],
-        query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
-      },
-      timezoneOption: [
-        { label: 'UTC-12:00', value: '-12' },
-        { label: 'UTC-11:00', value: '-11' },
-        { label: 'UTC-10:00', value: '-10' },
-        { label: 'UTC-09:00', value: '-9' },
-        { label: 'UTC-08:00', value: '-8' },
-        { label: 'UTC-07:00', value: '-7' },
-        { label: 'UTC-06:00', value: '-6' },
-        { label: 'UTC-05:00', value: '-5' },
-        { label: 'UTC-04:00', value: '-4' },
-        { label: 'UTC-03:00', value: '-3' },
-        { label: 'UTC-02:00', value: '-2' },
-        { label: 'UTC-01:00', value: '-1' },
-        { label: 'UTC 00:00', value: '0' },
-        { label: 'UTC+01:00', value: '1' },
-        { label: 'UTC+02:00', value: '2' },
-        { label: 'UTC+03:00', value: '3' },
-        { label: 'UTC+04:00', value: '4' },
-        { label: 'UTC+05:00', value: '5' },
-        { label: 'UTC+06:00', value: '6' },
-        { label: 'UTC+07:00', value: '7' },
-        { label: 'UTC+08:00', value: '8' },
-        { label: 'UTC+09:00', value: '9' },
-        { label: 'UTC+10:00', value: '10' },
-        { label: 'UTC+11:00', value: '11' },
-        { label: 'UTC+12:00', value: '12' }
-      ],
+      timezoneOption: [],
       email: {
         email_enable: 'on',
-        email_smtp_host: '',
-        email_smtp_port: 25,
-        email_smtp_account: '',
-        email_smtp_password: '',
+        email_host: '',
+        email_port: 25,
+        email_timeout:10,
+        email_auth_account: '',
+        email_auth_password: '',
         email_send_account: '',
-        email_test_reciver: '',
-        email_ssl_flag: 'off',
-        email_tls_flag: 'off'
+        email_test_account: '',
+        email_security_type: 'NONE'
       },
       emailCopy: null,
       emailRules: {
-        email_smtp_host: [
+        email_host: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: hostPlus, trigger: 'blur' }
         ],
-        email_smtp_port: [
+        email_port: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: port, trigger: 'blur' }
         ],
-        email_smtp_account: [
+        email_auth_account: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { type: 'email', message: this.$t('validate.email'), trigger: 'blur' }
         ],
         email_send_account: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }],
-        email_test_reciver: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }]
+        email_test_account: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }]
       },
       terminal: {
-        max_terminal_num: 10
+        terminal_timeout: 30,
+        terminal_telnet_user_tip:'ogin:',
+        terminal_telnet_pin_tip:'assword:',
+        terminal_record_local_retention:365,
       },
       terminalCopy: null,
       terminalRules: {
@@ -374,12 +377,19 @@ export default {
           value: 'sysconfig'
         }
       ],
-      activeTab: 'notification'
+      activeTab: 'basic'
     }
   },
   methods: {
     selectTab: function (tab) {
       this.querySetInfo(tab.name)
+    },
+    queryTimezone:function(){
+      this.$get("/sys/timezone").then(response=>{
+        if(response.code == 200){
+          this.timezoneOption = response.data.list;
+        }
+      })
     },
     querySetInfo: function (type) { // 切换tab
       if (!type) {
@@ -389,21 +399,23 @@ export default {
       if (type == 'reset' || type == 'link' || type == 'notification' || type == 'apiKey') {
         return
       }
-      this.$get('sysConfig?type=' + type).then(response => {
+      this.$get('/sys/config/' + type).then(response => {
         if (response.code == 200) {
-          const sets = response.data[type]
-          for (const key in sets) {
-            this[type][key] = sets[key]
+          for (let key in response.data){
+            this[type][key] = response.data[key]
           }
           if (type == 'basic') {
             localStorage.setItem('nz-sys-name', this.basic.system_name)
             localStorage.setItem('nz-sys-timezone', this.basic.timezone)
-            localStorage.setItem('nz-sys-asset-ping-switch', this.basic.asset_ping_switch)
+            localStorage.setItem('nz-sys-logo', this.basic.system_logo)
             localStorage.setItem('nz-sys-default-cabinet-usize', this.basic.default_cabinet_usize)
-            localStorage.setItem('nz-unnsaved-change', this.basic.unsaved_change)
+            localStorage.setItem('nz-unsaved-change', this.basic.unsaved_change)
             this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
           } else if (type == 'terminal') {
-            localStorage.setItem('nz-sys-max-terminal-num', this.terminal.max_terminal_num)
+            localStorage.setItem('nz-sys-terminal-timeout', this.terminal.terminal_timeout)
+            localStorage.setItem('nz-sys-terminal-telnet-user-tip', this.terminal.terminal_telnet_user_tip)
+            localStorage.setItem('nz-sys-terminal-telnet-pin-tip', this.terminal.terminal_telnet_pin_tip)
+            localStorage.setItem('nz-sys-terminal-record-local-retention', this.terminal.terminal_record_local_retention)
           }
           if (type == 'email') {
             this.$refs.emailForm.clearValidate()
@@ -417,18 +429,17 @@ export default {
       this.prevent_opt.save = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const param = {}
+          const param = Object.assign({}, this[type])
+
           if (type == 'basic') {
-            this.basic.map_center_config = this.$refs.latlngPicker.getAttribute()
-            this.basic.map_center_config = JSON.stringify(this.basic.map_center_config)
+            let mapConfig = this.$refs.latlngPicker.getAttribute()
+            param.map_center_config = JSON.stringify(mapConfig)
           }
-          param[type] = Object.assign({}, this[type])
-          this.$set(param[type], 'test', 'false')
           const postParam = Object.assign({}, param)
           for (const key in postParam[type]) {
             postParam[type][key] = postParam[type][key] + ''
           }
-          this.$put('/sysConfig', postParam).then(response => {
+          this.$put('/sys/config/'+type, postParam).then(response => {
             this.prevent_opt.save = false
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -441,7 +452,7 @@ export default {
             }
           })
         } else {
-          this.prevent_opt.save = true
+          this.prevent_opt.save = false
           return false
         }
       })
@@ -451,14 +462,13 @@ export default {
       this.prevent_opt.save = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const param = {}
-          param[type] = Object.assign({}, this[type])
-          this.$set(param[type], 'test', 'true')
-          const postParam = Object.assign({}, param)
-          for (const key in postParam[type]) {
-            postParam[type][key] = postParam[type][key] + ''
+          const param = Object.assign({}, this[type])
+
+          if (type == 'email') {
+            param.email_test=true;
           }
-          this.$put('/sysConfig', postParam).then(response => {
+          const postParam = Object.assign({}, param)
+          this.$put('/sys/config/'+type, postParam).then(response => {
             this.prevent_opt.save = false
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.testSuccess') })
@@ -737,10 +747,38 @@ export default {
     // openUrl 跳转页面
     openUrl (item) {
       // window.open(item.url)
+    },
+    handleLogoChange(file, fileList) {
+      const imageTypes = ['image/jpeg','image/jpg','image/png'];
+      console.log(file.raw.type)
+      const isImage = imageTypes.some(t=> file.raw.type === t);
+      const isLt2M = file.raw.size / 1024 / 1024 < 2;
+
+      this.imageFormatErr = (!isImage || !isLt2M)
+
+      if(isImage && isLt2M){
+        const self = this;
+        this.urlToBase64(file.raw).then(res=>{
+          self.basic.system_logo = res;
+        });
+      }
+    },
+    urlToBase64:function(file) {
+      return new Promise((resolve, reject) => {
+        let  reader = new FileReader();
+        reader.readAsDataURL(file);//转化二进制流，异步方法
+        let base64Str='';
+        reader.onload = function(){//完成后this.result为二进制流console.log(this.result);
+           base64Str = this.result;
+          resolve(base64Str);
+       }
+
+      })
     }
-  },
+},
   mounted () {
     this.querySetInfo(this.activeTab)
+    this.queryTimezone();
   }
 }
 </script>
@@ -1010,5 +1048,34 @@ export default {
   }
   .warn-pop .popper__arrow:after{
     border-top-color: #FEF0F0 !important;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+  }
+  .system .logo-upload-tip{
+    color:#F66C6C;
+    font-size: 12px;
+    line-height: 20px;
   }
 </style>

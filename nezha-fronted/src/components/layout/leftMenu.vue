@@ -3,7 +3,7 @@
     <el-menu :collapse="isShrink" active-text-color="#ffffff" class="header-logo" text-color="#ffffff">
       <el-menu-item index="logo">
         <div id="home-to-overview" class="logo link">
-          <img alt="loading..." height="26" src="../../assets/img/logo1-2.png"/>
+          <img alt="loading..." height="26" :src="logo?logo:require('../../assets/img/logo1-2.png')"/>
           <span class="system-name">{{systemName && systemName !== 'undefined' ? systemName : $t('dashboard.overview.contentTitle')}}</span>
         </div>
       </el-menu-item>
@@ -41,8 +41,17 @@ export default {
   data () {
     return {
       isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
-      systemName: localStorage.getItem('nz-sys-name')
+      systemName: localStorage.getItem('nz-sys-name'),
+      logo:'',
     }
+  },
+  created() {
+    const self = this;
+    window.addEventListener('setItemEvent',function(e){
+      if(e.key == 'nz-sys-logo'&&e.value){
+        self.logo = e.value;
+      }
+    })
   },
   computed: {
     menuList () {
@@ -67,7 +76,7 @@ export default {
     },
     route () {
       return this.$route.path
-    }
+    },
   },
   methods: {
     shrink () {

@@ -889,7 +889,7 @@ const en = {
         basic: 'Basic',
         alertApi: 'Alert API',
         assetPingSwith: 'Asset ping',
-        assetPingInterval: 'Interval',
+        assetPingInterval: 'Asset ping Interval',
         exporterTarget: 'Exporter path',
         scrapeInterval: 'Scrape interval',
         storageRetention: 'Local retention',
@@ -906,7 +906,11 @@ const en = {
         lat: 'latitude',
         lng: 'longitude',
         zoom: 'zoom',
-        lnglat: 'coordinate'
+        lnglat: 'coordinate',
+        sysLogo:'System logo',
+        scrapeTimeout:"Scrape timeout",
+        snmpTrapPort:"SNMP trap port",
+        logoTip:'Logo format only can be jpg、jpeg、png,and less than 2M'
       },
       email: {
         email: 'Email',
@@ -916,6 +920,7 @@ const en = {
         smtpAccount: 'SMTP account',
         smtpPwd: 'SMTP password',
         sendAccount: 'Send account',
+        timeout:"Timeout",
         testAccount: 'Test account',
         useSSL: 'SSL',
         useTLS: 'TLS',
@@ -924,11 +929,16 @@ const en = {
         sendAccountTip: 'Tip:The SMTP account is used as the sending account by default',
         testAccountTip: 'Tip:Used only as test mail recipient',
         sslTip: 'If the SMTP port is 465, you usually need to enable SSL',
-        tlsTip: 'If the SMTP port is 587, you usually need to enable TLS'
+        tlsTip: 'If the SMTP port is 587, you usually need to enable TLS',
+        securityType: 'Security type'
       },
       terminal: {
         terminal: 'Terminal',
-        terminalNum: 'Max terminal number'
+        terminalNum: 'Max terminal number',
+        timeout:"Timeout",
+        userTip:"Telnet user prompt",
+        pinTip:"Ternet password prompt",
+        localRetention:"Local retention",
       },
       ldap: {
         ldap: 'LDAP',
