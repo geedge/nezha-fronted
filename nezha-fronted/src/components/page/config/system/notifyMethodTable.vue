@@ -57,7 +57,7 @@
           </template>
           <template v-else>
             <template v-if="item.prop == 'state'">
-              <div :class="{'active-icon green':scope.row[item.prop] == '1','active-icon red':scope.row[item.prop] == '0'}"></div><span>{{scope.row[item.prop] == '1'?$t(''):$t('')}}</span>
+              <el-switch :disabled="true" v-model="scope.row.state" active-color="#ee9d3f" :active-value="1" :inactive-value="0" />
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>

@@ -902,7 +902,11 @@ const cn = {
         lat: '纬度',
         lng: '经度',
         zoom: '缩放',
-        lnglat: '坐标'
+        lnglat: '坐标',
+        sysLogo:'系统Logo',
+        scrapeTimeout:"Scrape timeout",
+        snmpTrapPort:"SNMP trap端口",
+        logoTip:'Logo支持格式为jpg、jpeg、png且大小小于2M的图片'
       },
       email: {
         email: '邮件',
@@ -912,6 +916,7 @@ const cn = {
         smtpAccount: 'SMTP账号',
         smtpPwd: 'SMTP密码',
         sendAccount: '发送账号',
+        timeout:"超时时间",
         testAccount: '测试账号',
         useSSL: 'SSL',
         useTLS: 'TLS',
@@ -920,11 +925,16 @@ const cn = {
         sendAccountTip: '提示：发送邮件账号，默认使用SMTP账号作为发送账号',
         testAccountTip: '提示：仅用来作为测试邮件收件人',
         sslTip: '如果SMTP端口是465，通常需要启用SSL',
-        tlsTip: '如果SMTP端口是587，通常需要启用TLS'
+        tlsTip: '如果SMTP端口是587，通常需要启用TLS',
+        securityType: '安全协议'
       },
       terminal: {
         terminal: '终端',
-        terminalNum: '最大终端数量'
+        terminalNum: '最大终端数量',
+        timeout:"超时时间",
+        userTip:"Telnet user prompt",
+        pinTip:"Ternet password prompt",
+        localRetention:"本地存储",
       },
       ldap: {
         ldap: 'LDAP',
@@ -937,7 +947,8 @@ const cn = {
         filterTip: '可能的选项是(cn或uid或sAMAccountName=%(user)s)',
         map: '属性映射',
         mapTip: '属性映射代表怎样将NEZHA用户属性映射到jumpserver用户上;username,email是jumpserver的属性',
-        active: '启用LDAP认证'
+        active: '启用LDAP认证',
+        timeout:"超时时间"
       },
       link: {
         link: 'Link',
