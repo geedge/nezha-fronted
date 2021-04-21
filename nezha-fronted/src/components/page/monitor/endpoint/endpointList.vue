@@ -203,7 +203,7 @@ export default {
         ...this.titleSearch
       }
       this.tools.loading = true
-      this.$get(this.url, params).then(response => {
+      this.$get(this.url, { ...params, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
@@ -220,7 +220,11 @@ export default {
         }
       })
     },
-    reloadTable () {
+    reloadTable (obj) {
+      Object.keys(obj).forEach(key => {
+        this.searchCheckBox[key] = obj[key].join(',')
+      })
+      console.log(obj, this.searchCheckBox)
       this.getTableData()
     },
     getTitleSearch () {
