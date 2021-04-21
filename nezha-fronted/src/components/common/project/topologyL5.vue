@@ -3,7 +3,7 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box" v-loading="topologyLoading">
+  <div class="project-box list-page" v-loading="topologyLoading">
     <!--project主要信息-->
     <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
@@ -110,22 +110,22 @@
            </button>
          </span>
       </div>
-      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right">
+      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
 <button @click="changeScreen" class="top-tool-btn float-right"
-        style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
+        style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button"
 >
                   <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
         </button>
         <button @click="editTopology" class="top-tool-btn float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;margin-top: -2px" type="button"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>
           <pick-time
             v-show="!editTopologyFlag"
-            class="float-right pickTime"
+            class="float-right pickTime top-tool-btn-group"
             :refresh-data-func="dateChange"
             v-model="searchTime"
             :use-chart-unit="false"
@@ -2471,11 +2471,10 @@ export default {
     overflow: hidden;
     background: #fff;
     .pickTime{
-      margin-top: -13px;
+      margin-right: 10px;
     }
     .project-title {
-      height: 34px;
-      padding-top: 20px;
+      height: 55px;
       padding-bottom: 0px;
     }
 

@@ -3,6 +3,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      :tableId="tableId"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet']"
@@ -33,6 +34,7 @@
           ref="dataTable"
           v-loading="slotProps.loading"
           :api="url"
+          :tableId="tableId"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
@@ -40,6 +42,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></module-table>
       </template>
       <template v-slot:pagination>
@@ -196,19 +199,21 @@ export default {
 
       this.searchLabel.projectIds = localStorage.getItem('moduleProjectId')
     }
+    if (localStorage.getItem('moduleProjectId')) {
+      setTimeout(()=>{
+        this.$refs.dataList.$refs.searchInput.select_list.push({
+          id: 11,
+          name: 'project id',
+          type: 'input',
+          label: 'projectIds',
+          disabled: false,
+          val: localStorage.getItem('moduleProjectId')
+        })
+        this.$refs.dataList.$refs.searchInput.sreach_num = 1
+      })
+    }
   },
   mounted () {
-    if (localStorage.getItem('moduleProjectId')) {
-      this.$refs.dataList.$refs.searchInput.select_list.push({
-        id: 11,
-        name: 'project id',
-        type: 'input',
-        label: 'projectIds',
-        disabled: false,
-        val: localStorage.getItem('moduleProjectId')
-      })
-      this.$refs.dataList.$refs.searchInput.sreach_num = 1
-    }
   }
 }
 </script>

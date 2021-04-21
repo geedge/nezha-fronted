@@ -7,7 +7,7 @@
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
-    @selection-change="(selection) => { batchDeleteObjs = selection }"
+    @selection-change="selectionChange"
   >
     <el-table-column
       :resizable="false"
@@ -34,23 +34,26 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <span class="module-num">
+          <span class="">
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
           <span class="module-num" @click="jumpModule(scope.row)">
+            <i class="nz-icon nz-icon-overview-module"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
-          <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'"  @click="jumpEndpoint(scope.row)">
+          <span class="endpoint-num" @click="jumpEndpoint(scope.row)" >
+              <i class="nz-icon nz-icon-endpoint" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-         <span class="endpoint-num" :class="scope.row[item.prop]>0?'bagEF7458':'bag23BF9A'">
-            {{scope.row[item.prop]}} active
+         <span class="alert-num">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row[item.prop]}}
           </span>
         </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
@@ -94,7 +97,7 @@ export default {
           label: this.$t('project.project.project'),
           prop: 'name',
           show: true,
-          width: 150
+          minWidth: 150
         }, {
           label: this.$t('project.module.module'),
           prop: 'moduleNum',
@@ -106,7 +109,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('project.endpoint.endpoint'),
+          label: this.$t('project.endpoint.alerts'),
           prop: 'alertNum',
           show: true,
           width: 150
@@ -114,7 +117,7 @@ export default {
         {
           label: this.$t('overall.remark'),
           prop: 'remark',
-          show: true,
+          show: false,
           minWidth: 150
         }
       ]
@@ -142,26 +145,26 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .module-num{
     font-size: 14px;
-    color: #3C92F1;
     font-weight: 400;
     cursor: pointer;
     padding: 0 3px;
     cursor: pointer;
+    .nz-icon-overview-module{
+    color: rgb(122, 208, 188)
+    }
   }
-  .endpoint-num{
+  .alert-num{
     padding: 0 3px;
     cursor: pointer;
     border-radius: 2px;
   }
-  .bagEF7458{
-    background: #EF7458;
-    color: #fff;
+  .colorEF7458{
+    color: #EF7458;
   }
-  .bag23BF9A{
-    background: #23BF9A;
-    color: #fff;
+  .color23BF9A{
+    color: #23BF9A;
   }
 </style>

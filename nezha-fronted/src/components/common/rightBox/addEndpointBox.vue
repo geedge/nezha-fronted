@@ -253,7 +253,7 @@ export default {
       },
       pageObj: {
         pageNo: 1,
-        pageSize: 2
+        pageSize: 10
       },
       pages: {
         total: 0,
@@ -606,7 +606,6 @@ export default {
           assetId: item.assetId,
           name: item.name,
           configs: JSON.stringify(item.configs),
-          port: 9100
         }
         endpointList.push(endpoint)
       })

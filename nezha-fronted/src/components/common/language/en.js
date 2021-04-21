@@ -54,6 +54,7 @@ const en = {
     createChart: 'Create chart',
     createProject: 'Create project',
     createEndpoint: 'Create endpoint',
+    batchEndpoint: 'Batch modify endpoint',
     createAsset: 'Create asset',
     createAlertRule: 'Create alert rule',
     createUser: 'Create user',

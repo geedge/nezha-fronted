@@ -47,6 +47,7 @@ const cn = {
     createChart: '新增图表',
     createProject: '新增系统',
     createEndpoint: '新增Endpoint',
+    batchEndpoint: '批量修改Endpoint',
     createAsset: '新增资产',
     createAlertRule: '新增告警规则',
     createUser: '新增用户',

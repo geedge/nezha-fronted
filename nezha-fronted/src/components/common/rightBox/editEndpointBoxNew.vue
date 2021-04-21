@@ -592,7 +592,7 @@ export default {
       document.execCommand('Copy') // 执行浏览器复制命令
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
-      this.$message(this.$t('overall.copySuccess'))
+      this.$message.success(this.$t('overall.copySuccess'))
     },
     syntaxHighlight (json) {
       if (typeof json != 'string') {
