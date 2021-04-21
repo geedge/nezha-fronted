@@ -3,9 +3,11 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      class="dataList"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
       :layout="['searchInput', 'elementSet']"
+      :hasSearch="true"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
         <export-excel
@@ -27,6 +29,9 @@
           </template>
         </export-excel>
         <delete-button id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:search>
+        <clickSearch :titleSearchList="titleSearchList" :selectValue.sync="selectValue" @reload="reloadTable"/>
       </template>
       <template v-slot="slotProps">
         <endpoint-table
@@ -64,6 +69,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
+import clickSearch from '@/components/common/clickSearch'
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发
@@ -77,7 +83,8 @@ export default {
     addEndpointBox,
     deleteButton,
     endpointTable,
-    'export-excel': exportXLSX
+    'export-excel': exportXLSX,
+    clickSearch
   },
   mixins: [dataListMixin],
   data () {
@@ -113,6 +120,35 @@ export default {
       rightBox: {
         editShow: false,
         show: false
+      },
+      titleSearch: {},
+      titleSearchList: {
+        project: {
+          label: 'Project',
+          key: 'projectIds',
+          type: 'checkBox',
+          children: [],
+          show: true
+        },
+        module: {
+          label: 'Module',
+          key: 'moduleIds',
+          type: 'checkBox',
+          children: [],
+          show: true
+        },
+        state: {
+          label: 'state',
+          key: 'state',
+          type: 'checkBox',
+          children: [],
+          show: true
+        }
+      },
+      selectValue: {
+        projectIds: [],
+        moduleIds: [],
+        state: []
       }
     }
   },
@@ -162,8 +198,12 @@ export default {
       } else {
         localStorage.removeItem('endpointProjectId')
       }
+      const params = {
+        ...this.searchLabel,
+        ...this.titleSearch
+      }
       this.tools.loading = true
-      this.$get(this.url, this.searchLabel).then(response => {
+      this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
@@ -179,6 +219,32 @@ export default {
           }
         }
       })
+    },
+    reloadTable () {
+      this.getTableData()
+    },
+    getTitleSearch () {
+      this.$get('monitor/project', { pageSize: -1 }).then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          res.data.list.forEach((item) => {
+            this.titleSearchList.project.children.push(
+              { key: item.name, value: item.id, name: item.name }
+            )
+          })
+        }
+      })
+      this.$get('monitor/module', { pageSize: -1 }).then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          res.data.list.forEach((item) => {
+            this.titleSearchList.module.children.push(
+              { key: item.name, value: item.id, name: item.name }
+            )
+          })
+        }
+      })
+      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
     }
   },
   computed: {
@@ -187,6 +253,7 @@ export default {
     if (localStorage.getItem('endpointProjectId')) {
       this.searchLabel.projectIds = localStorage.getItem('endpointProjectId')
     }
+    this.getTitleSearch()
   },
   mounted () {
     if (localStorage.getItem('endpointProjectId')) {
@@ -203,3 +270,15 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .endpoint-list{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .dataList{
+    flex: 1;
+    width: 100%;
+  }
+</style>

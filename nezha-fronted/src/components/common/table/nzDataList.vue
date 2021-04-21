@@ -22,6 +22,9 @@
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <!-- <div v-if="layout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
+        <div v-if="hasSearch" class="search-box">
+          <slot name="search"></slot>
+        </div>
         <div v-show="bottomBox.mainResizeShow" class="nz-table2">
           <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
         </div>
@@ -88,6 +91,10 @@ export default {
     tableId: {
       type: String,
       default: ''
+    },
+    hasSearch: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
