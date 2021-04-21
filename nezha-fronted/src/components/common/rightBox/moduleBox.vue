@@ -144,7 +144,12 @@
               </div>
             </transition>
 
-            <div style="text-align: center"><i class="nz-icon nz-icon-drop-down need-rotate" :class="showAllBasicOption?'is-active':''" @click="showAllBasicOption=!showAllBasicOption"></i></div>
+            <div style="text-align: center">
+              <span @click="showAllBasicOption=!showAllBasicOption" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none">
+                {{$t('overall.moreOption')}}
+                <i class="nz-icon nz-icon-arrow-down need-rotate" :class="showAllBasicOption?'is-active':''" ></i>
+              </span>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="Parameter" name="Parameter">
             <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-params">
@@ -163,6 +168,7 @@
                     placeholder="value" size="mini"
                     default-first-option
                     popper-class="config-dropdown hide-element"
+                    @change="(val)=>{paramObjchange(val,index)}"
                   >
                     <span slot="empty" class=""></span>
                   </el-select>
@@ -441,6 +447,7 @@ export default {
       } else {
         this.authType = 0
       }
+      console.log(params)
       this.$refs.moduleForm.validate((valid) => {
         if (valid) {
           this.prevent_opt.save = true
@@ -584,7 +591,7 @@ export default {
       document.execCommand('Copy') // 执行浏览器复制命令
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
-      this.$message(this.$t('overall.copySuccess'))
+      this.$message.success(this.$t('overall.copySuccess'))
     },
     syntaxHighlight (json) {
       if (typeof json != 'string') {
@@ -608,6 +615,9 @@ export default {
           return '<span class="' + cls + '">' + match + '</span>'
         }
       )
+    },
+    paramObjchange (val, index) {
+      this.editModule.paramObj[index].value = val.filter(item => item.trim())
     }
   },
   mounted () {
@@ -680,10 +690,10 @@ export default {
           if (params.basic_auth && !params.basic_auth.password) {
             delete params.basic_auth
           }
-          if (!Object.keys(params.params).length) {
-            delete params.params
+          if (params.param && !Object.keys(params.param).length) {
+            delete params.param
           }
-          if (!Object.keys(params.labels).length) {
+          if (params.labels && !Object.keys(params.labels).length) {
             delete params.labels
           }
           this.configsCopyValue = JSON.stringify(params, null, 2)
@@ -770,11 +780,11 @@ export default {
   /deep/ .el-tabs__content{
     padding-left: 18px;
   }
-  .need-rotate.nz-icon-drop-down{
+  .need-rotate.nz-icon-arrow-down{
     display: inline-block;
     transition: transform .3s;
   }
-  .need-rotate.nz-icon-drop-down.is-active{
+  .need-rotate.nz-icon-arrow-down.is-active{
     transform: rotate(
       -180deg
     );

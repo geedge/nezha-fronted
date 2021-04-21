@@ -3,6 +3,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      :tableId="tableId"
       class="dataList"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
@@ -22,13 +23,17 @@
           class="top-tool-export margin-r-10"
         >
           <template slot="optionZone">
-            <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+            <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn margin-l-20"
                     type="button" @click="add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
           </template>
         </export-excel>
         <delete-button id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <button id="account-batch-modify" v-has="'monitor_endpoint_add'" :class="{'nz-btn-disabled' : batchDeleteObjs.length<1}" class="top-tool-btn margin-l-20 margin-r-20"
+                type="button" @click="batchModify">
+          <i class="nz-icon-batch-edit nz-icon"></i>
+        </button>
       </template>
       <template v-slot:search>
         <clickSearch :titleSearchList="titleSearchList" :selectValue.sync="selectValue" @reload="reloadTable"/>
@@ -41,10 +46,12 @@
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
+          :tableId="tableId"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @selectionChange="selectionChange"
           @showBottomBox="(targetTab, item) => { $refs.dataList.showBottomBox(targetTab, item) }"></endpoint-table>
       </template>
       <template v-slot:pagination>
@@ -59,6 +66,9 @@
     <transition name="right-box">
       <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :type="'edit'"></edit-endpoint-box-new>
     </transition>
+    <transition name="right-box">
+      <batchModifyEndpoint v-if="rightBox.batchModify" :module="object" @close="closeRightBatchModify" :selectEndpointList="batchDeleteObjs" :disabled="true" :type="'edit'"></batchModifyEndpoint>
+    </transition>
   </div>
 </template>
 <script>
@@ -69,6 +79,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
+import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
 import clickSearch from '@/components/common/clickSearch'
 
 export default {
@@ -84,7 +95,8 @@ export default {
     deleteButton,
     endpointTable,
     'export-excel': exportXLSX,
-    clickSearch
+    clickSearch,
+    batchModifyEndpoint
   },
   mixins: [dataListMixin],
   data () {
@@ -119,7 +131,8 @@ export default {
       roles: [],
       rightBox: {
         editShow: false,
-        show: false
+        show: false,
+        batchModify: false
       },
       titleSearch: {},
       titleSearchList: {
@@ -199,6 +212,13 @@ export default {
         this.getTableData()
       }
     },
+    closeRightBatchModify (refresh) {
+      this.rightBox.batchModify = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -257,7 +277,13 @@ export default {
           })
         }
       })
-      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' },{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
+      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
+    },
+    batchModify () {
+      if (!this.batchDeleteObjs.length) {
+        return
+      }
+      this.rightBox.batchModify = true
     }
   },
   computed: {
@@ -293,5 +319,8 @@ export default {
   .dataList{
     flex: 1;
     width: 100%;
+  }
+  /deep/ .nz-btn-disabled {
+    opacity: 0.5;
   }
 </style>

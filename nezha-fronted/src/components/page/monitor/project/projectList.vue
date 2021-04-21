@@ -3,6 +3,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      :tableId="tableId"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.project"
       :layout="['searchInput', 'elementSet']"
@@ -22,10 +23,12 @@
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
+          :tableId="tableId"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></project-table>
       </template>
       <template v-slot:pagination>

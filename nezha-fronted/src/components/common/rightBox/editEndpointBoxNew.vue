@@ -2,22 +2,32 @@
   <div class="right-box right-box-module" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="editEndpoint.id" id="module-del" v-has="'module_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
+<!--      <button v-if="editEndpoint.id" id="module-del" v-has="'module_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">-->
+<!--        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
+<!--        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+<!--      </button>-->
     </div>
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editEndpoint.id ? $t("project.module.editEndpoint") + "  ID：" + editEndpoint.id : $t("project.module.createModule")}}</div>
+    <div class="right-box-title">
+      <span v-if="optionType === 'edit'">
+       {{ $t("project.module.editEndpoint")}}
+      </span>
+      <span v-if="optionType === 'batch'">
+       {{ $t("project.module.batchEndpoint")}}
+      </span>
+      <span v-if="optionType === 'add'">
+       {{ $t("project.module.creatEndpoint")}}
+      </span>
+    </div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
     <div class="right-box-form-box" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
         <!--name-->
-        <el-form-item :label='$t("project.module.moduleName")' prop="name" label-width="125px">
+        <el-form-item :label='$t("project.module.endpointName")' prop="name" label-width="125px" v-if="optionType!=='batch'">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editEndpoint.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
         <!--project-->
@@ -142,7 +152,12 @@
               </div>
             </transition>
 
-            <div style="text-align: center"><i class="nz-icon nz-icon-drop-down need-rotate" :class="showAllBasicOption?'is-active':''" @click="showAllBasicOption=!showAllBasicOption"></i></div>
+            <div style="text-align: center">
+              <span @click="showAllBasicOption=!showAllBasicOption" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none">
+                {{$t('overall.moreOption')}}
+                <i class="nz-icon nz-icon-arrow-down need-rotate" :class="showAllBasicOption?'is-active':''" ></i>
+              </span>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="Parameter" name="Parameter">
             <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-params">
@@ -161,6 +176,7 @@
                     placeholder="value" size="mini"
                     default-first-option
                     popper-class="config-dropdown hide-element"
+                    @change="(val)=>{paramObjchange(val,index)}"
                   >
                     <span slot="empty" class=""></span>
                   </el-select>
@@ -252,6 +268,10 @@ export default {
     type: {
       type: String,
       default: 'add'
+    },
+    optionType: {
+      type: String,
+      default: 'batch'
     }
   },
   components: {
@@ -271,16 +291,16 @@ export default {
       showAllBasicOption: false,
       rules: {
         name: [
-          { validator: noSpecialChar, trigger: 'change' }
+          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
         ],
         projectId: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
         ],
         moduleId: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
         ],
         walk: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'blur' }
         ],
         port: [
           { validator: port, trigger: 'blur' }
@@ -592,7 +612,7 @@ export default {
       document.execCommand('Copy') // 执行浏览器复制命令
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
-      this.$message(this.$t('overall.copySuccess'))
+      this.$message.success(this.$t('overall.copySuccess'))
     },
     syntaxHighlight (json) {
       if (typeof json != 'string') {
@@ -616,6 +636,9 @@ export default {
           return '<span class="' + cls + '">' + match + '</span>'
         }
       )
+    },
+    paramObjchange (val, index) {
+      this.editModule.paramObj[index].value = val.filter(item => item.trim())
     }
   },
   mounted () {
@@ -668,6 +691,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        console.log(n)
         if (n && n.configs) {
           const params = Object.assign({}, n.configs)
           params.params = this.paramToJson(this.editEndpoint.paramObj)
@@ -688,10 +712,10 @@ export default {
           if (params.basic_auth && !params.basic_auth.password) {
             delete params.basic_auth
           }
-          if (!Object.keys(params.param).length) {
+          if (params.param && !Object.keys(params.param).length) {
             delete params.param
           }
-          if (!Object.keys(params.labels).length) {
+          if (params.labels && !Object.keys(params.labels).length) {
             delete params.labels
           }
           this.configsCopyValue = JSON.stringify(params, null, 2)
@@ -778,11 +802,11 @@ export default {
   /deep/ .el-tabs__content{
     padding-left: 18px;
   }
-  .need-rotate.nz-icon-drop-down{
+  .need-rotate.nz-icon-arrow-down{
     display: inline-block;
     transition: transform .3s;
   }
-  .need-rotate.nz-icon-drop-down.is-active{
+  .need-rotate.nz-icon-arrow-down.is-active{
     transform: rotate(
       -180deg
     );

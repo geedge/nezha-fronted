@@ -47,6 +47,7 @@ const cn = {
     createChart: '新增图表',
     createProject: '新增系统',
     createEndpoint: '新增Endpoint',
+    batchEndpoint: '批量修改Endpoint',
     createAsset: '新增资产',
     createAlertRule: '新增告警规则',
     createUser: '新增用户',
@@ -98,7 +99,8 @@ const cn = {
       stackBack: '返回原始图'
     },
     SyncSave: '保存同时更新 Assets',
-    copySuccess: '复制成功'
+    copySuccess: '复制成功',
+    moreOption: '更多选项'
   },
   setup: {
     step0: '欢迎',
@@ -590,7 +592,7 @@ const cn = {
       dc: '数据中心',
       type: '主机地址',
       state: '主机状态',
-      endpoint: 'Endpoint',
+      endpoint: 'Endpoint'
     },
     tagTableTitle: {
       projectName: '系统名称',
@@ -902,10 +904,10 @@ const cn = {
         lng: '经度',
         zoom: '缩放',
         lnglat: '坐标',
-        sysLogo:'系统Logo',
-        scrapeTimeout:"Scrape timeout",
-        snmpTrapPort:"SNMP trap端口",
-        logoTip:'Logo支持格式为jpg、jpeg、png且大小小于2M的图片'
+        sysLogo: '系统Logo',
+        scrapeTimeout: 'Scrape timeout',
+        snmpTrapPort: 'SNMP trap端口',
+        logoTip: 'Logo支持格式为jpg、jpeg、png且大小小于2M的图片'
       },
       email: {
         email: '邮件',
@@ -915,7 +917,7 @@ const cn = {
         smtpAccount: 'SMTP账号',
         smtpPwd: 'SMTP密码',
         sendAccount: '发送账号',
-        timeout:"超时时间",
+        timeout: '超时时间',
         testAccount: '测试账号',
         useSSL: 'SSL',
         useTLS: 'TLS',
@@ -930,10 +932,10 @@ const cn = {
       terminal: {
         terminal: '终端',
         terminalNum: '最大终端数量',
-        timeout:"超时时间",
-        userTip:"Telnet user prompt",
-        pinTip:"Ternet password prompt",
-        localRetention:"本地存储",
+        timeout: '超时时间',
+        userTip: 'Telnet user prompt',
+        pinTip: 'Ternet password prompt',
+        localRetention: '本地存储'
       },
       ldap: {
         ldap: 'LDAP',
@@ -947,7 +949,7 @@ const cn = {
         map: '属性映射',
         mapTip: '属性映射代表怎样将NEZHA用户属性映射到jumpserver用户上;username,email是jumpserver的属性',
         active: '启用LDAP认证',
-        timeout:"超时时间"
+        timeout: '超时时间'
       },
       link: {
         link: 'Link',
@@ -1187,7 +1189,11 @@ const cn = {
       contextName: '内容名称',
       alerts: 'Alerts',
       privPassword: '隐私密码',
-      asset: 'Asset'
+      asset: 'Asset',
+      editEndpoint: '编辑 endpoint',
+      createEndpoint: '新增Endpoint',
+      batchEndpoint: '批量 Endpoint',
+      endpointName: 'Endpoint name'
     },
     endpoint: {
       createEndpoint: '新增Endpoint',
@@ -1227,7 +1233,8 @@ const cn = {
       authTypeToken: 'bearer token',
       name: '名称',
       configs: 'Configs',
-      state: '状态'
+      state: '状态',
+      allselect: '当前页已全部选择'
     },
     metrics: {
       metrics: '指标',

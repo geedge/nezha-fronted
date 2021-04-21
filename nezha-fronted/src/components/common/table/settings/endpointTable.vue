@@ -7,7 +7,7 @@
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
-    @selection-change="(selection) => { batchDeleteObjs = selection }"
+    @selection-change="selectionChange"
   >
     <el-table-column
       :resizable="false"
@@ -46,14 +46,24 @@
           {{scope.row[item.prop].name}}
         </template>
         <template v-else-if="item.prop === 'alerts'">
-          <span class="endpoint-num" :class="scope.row.alertNum>0?'bagEF7458':'bag23BF9A'">
-            {{scope.row.alertNum}} active
+          <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row.alertNum}}
+          </span>
+        </template>
+        <template v-else-if="item.prop === 'asset'">
+          <span >
+            <i class="nz-icon nz-icon-asset" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
+            {{scope.row.asset.name}}
           </span>
         </template>
         <template v-else-if="item.prop === 'configs'">
-          <el-tooltip placement="right" effect="light">
-            <span class="configs-endpoint">{}</span>
-            <div slot="content">{{scope.row[item.prop]}}</div>
+          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
+            <span class="configs-endpoint">{ ... }</span>
+            <div class="endpointConfigsTips" slot="content">
+              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row[item.prop])"></i></span>
+              <pre >{{JSON.stringify(JSON.parse(scope.row[item.prop]),null,2)}}</pre>
+            </div>
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
@@ -110,17 +120,23 @@ export default {
           show: true
         },
         {
+          label: this.$t('project.endpoint.asset'),
+          prop: 'asset',
+          show: true
+        },
+        {
           label: this.$t('project.module.module'),
           prop: 'module',
-          show: true
-        }, {
-          label: this.$t('project.endpoint.alerts'),
-          prop: 'alerts',
           show: true
         },
         {
           label: this.$t('project.endpoint.configs'),
           prop: 'configs',
+          show: false
+        },
+        {
+          label: this.$t('project.endpoint.alerts'),
+          prop: 'alerts',
           show: true
         },
         {
@@ -132,6 +148,17 @@ export default {
     }
   },
   methods: {
+    copyValue (str) {
+      const domUrl = document.createElement('input')
+      domUrl.value = str
+      domUrl.id = 'creatDom'
+      document.body.appendChild(domUrl)
+      domUrl.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      const creatDom = document.getElementById('creatDom')
+      creatDom.parentNode.removeChild(creatDom)
+      this.$message.success(this.$t('overall.copySuccess'))
+    }
   },
   computed: {}
 }
@@ -151,9 +178,29 @@ export default {
     color: #fff;
   }
   .configs-endpoint{
-    background: #FA901C;
     border-radius: 4px;
     padding: 2px 7px;
-    color: #fff;
+    color: #3C92F1;
+  }
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+  .endpoint-num, .alert-num{
+    cursor: pointer;
+  }
+</style>
+<style>
+  .endpointConfigsTips{
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .copy-value-content{
+    position: absolute;
+    right: 1px;
+    top: 4px;
   }
 </style>

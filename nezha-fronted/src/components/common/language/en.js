@@ -54,6 +54,7 @@ const en = {
     createChart: 'Create chart',
     createProject: 'Create project',
     createEndpoint: 'Create endpoint',
+    batchEndpoint: 'Batch modify endpoint',
     createAsset: 'Create asset',
     createAlertRule: 'Create alert rule',
     createUser: 'Create user',
@@ -103,7 +104,8 @@ const en = {
       stackBack: 'Back to original chart'
     },
     SyncSave: 'Save&Sync',
-    copySuccess: 'Copy success'
+    copySuccess: 'Copy success',
+    moreOption: 'More options'
   },
   pageSize: '/page',
   setup: {
@@ -641,7 +643,7 @@ const en = {
       dc: 'DataCenter',
       type: 'typeIds',
       state: 'state',
-      endpoint: 'Endpoint',
+      endpoint: 'Endpoint'
     },
     tagTableTitle: {
       projectName: 'Project name', // '系统名称'
@@ -907,10 +909,10 @@ const en = {
         lng: 'longitude',
         zoom: 'zoom',
         lnglat: 'coordinate',
-        sysLogo:'System logo',
-        scrapeTimeout:"Scrape timeout",
-        snmpTrapPort:"SNMP trap port",
-        logoTip:'Logo format only can be jpg、jpeg、png,and less than 2M'
+        sysLogo: 'System logo',
+        scrapeTimeout: 'Scrape timeout',
+        snmpTrapPort: 'SNMP trap port',
+        logoTip: 'Logo format only can be jpg、jpeg、png,and less than 2M'
       },
       email: {
         email: 'Email',
@@ -920,7 +922,7 @@ const en = {
         smtpAccount: 'SMTP account',
         smtpPwd: 'SMTP password',
         sendAccount: 'Send account',
-        timeout:"Timeout",
+        timeout: 'Timeout',
         testAccount: 'Test account',
         useSSL: 'SSL',
         useTLS: 'TLS',
@@ -935,10 +937,10 @@ const en = {
       terminal: {
         terminal: 'Terminal',
         terminalNum: 'Max terminal number',
-        timeout:"Timeout",
-        userTip:"Telnet user prompt",
-        pinTip:"Ternet password prompt",
-        localRetention:"Local retention",
+        timeout: 'Timeout',
+        userTip: 'Telnet user prompt',
+        pinTip: 'Ternet password prompt',
+        localRetention: 'Local retention'
       },
       ldap: {
         ldap: 'LDAP',
@@ -952,7 +954,7 @@ const en = {
         map: 'Attribute mapping',
         mapTip: 'Attribute mapping represents how to map LDAP user attributes to NEZHA users; username,email are the attributes of NEZHA',
         active: 'LDAP authentication',
-        timeout:"Timeout"
+        timeout: 'Timeout'
       },
       link: {
         link: 'Link',
@@ -1002,7 +1004,7 @@ const en = {
         create: 'Creator',
         creatAt: 'Create at',
         expireAt: 'Expire at',
-        noExpire: 'No expiration date',
+        noExpire: 'No expiration date'
       }
     },
     assetType: {
@@ -1195,6 +1197,10 @@ const en = {
       privPassword: 'Priv password',
       alerts: 'Alerts',
       asset: 'Asset',
+      editEndpoint: 'edit endpoint',
+      createEndpoint: 'Created endpoint',
+      batchEndpoint: 'Batch Endpoint',
+      endpointName: 'Endpoint name',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"
@@ -1238,7 +1244,8 @@ const en = {
       authTypeToken: 'bearer token',
       name: 'Name',
       configs: 'Configs',
-      state: 'State'
+      state: 'State',
+      allselect: 'The current page has all been selected'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

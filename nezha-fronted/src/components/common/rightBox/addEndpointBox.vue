@@ -112,7 +112,7 @@
               </span>
             </div>
             <div v-if="selectAssetAll" class="asset-allselect">
-              '当前页已全部选择'
+              {{$t('project.endpoint.allselect')}}
             </div>
           </div>
           <!--endpoint-->
@@ -143,7 +143,7 @@
                 v-for="(title, index) in endpointTableTitle"
                 v-if="title.show"
                 :width="title.width"
-                :key="`col-${index}`"
+                :key="index"
                 :label="title.label"
               >
                 <template slot-scope="scope" :column="title">
@@ -225,7 +225,7 @@
     </div>
 <!--    edit endpoint-->
     <transition name="right-box">
-      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightBox" :disabled="true" :type="'add'"></edit-endpoint-box-new>
+      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightBox" :disabled="true" :type="'add'" :optionType="optionType"></edit-endpoint-box-new>
     </transition>
   </div>
 </template>
@@ -253,7 +253,7 @@ export default {
       },
       pageObj: {
         pageNo: 1,
-        pageSize: 2
+        pageSize: 10
       },
       pages: {
         total: 0,
@@ -274,10 +274,10 @@ export default {
       tempEndpoint2: {},
       assetLoading: true,
       rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
+      optionType: 'batch',
       blankEndpoint: {
         id: '',
         projectId: '',
-        name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
         port: 9100,
@@ -285,7 +285,7 @@ export default {
           walk: [],
           snmpCredentialsId: '',
           metrics_path: '',
-          port: '',
+          port: 9100,
           host: '{{asset.manageIp}}',
           scrape_interval: '',
           scrape_timeout: '',
@@ -606,7 +606,6 @@ export default {
           assetId: item.assetId,
           name: item.name,
           configs: JSON.stringify(item.configs),
-          port: 9100
         }
         endpointList.push(endpoint)
       })
@@ -699,12 +698,14 @@ export default {
       return ''
     },
     editEndpointRow (u) {
+      this.optionType = 'add'
       this.object = JSON.parse(JSON.stringify(u))
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
       this.rightBox.show = true
     },
     showRightBox () {
+      this.optionType = 'batch'
       this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModuleCopy.projectId, moduleId: this.currentModuleCopy.id, assetName: '', type: this.currentModuleCopy.type }
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
@@ -712,7 +713,9 @@ export default {
     },
     editAllEndpoint () {
       this.endpointTableData.forEach((item, index) => {
-        this.endpointTableData[index] = { ...this.endpointTableData[index], ...this.blankEndpoint }
+        if (this.endpointSelection.find(item1 => item1.assetId === item.assetId)) {
+          this.endpointTableData[index] = { ...this.endpointTableData[index], ...this.blankEndpoint }
+        }
       })
       this.endpointTableData = [...this.endpointTableData]
     },

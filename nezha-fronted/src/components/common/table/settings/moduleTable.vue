@@ -7,7 +7,7 @@
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
-    @selection-change="(selection) => { batchDeleteObjs = selection }"
+    @selection-change="selectionChange"
   >
     <el-table-column
       :resizable="false"
@@ -43,10 +43,16 @@
           {{scope.row[item.prop].name}}
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
+          <span class="endpoint-num"  @click="showBottomBox('endpoint', scope.row)">
+             <i class="nz-icon nz-icon-endpoint" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
           {{scope.row[item.prop]}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          {{scope.row[item.prop]}}
+          <span class="alert-num" @click="showBottomBox('moduleAlertMessage', scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row[item.prop]}}
+          </span>
         </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
       </template>
@@ -89,10 +95,11 @@ export default {
           label: this.$t('project.module.moduleName'),
           prop: 'name',
           show: true,
+          minWidth: 200
         }, {
           label: this.$t('project.module.type'),
           prop: 'type',
-          show: true,
+          show: false,
           width: 150
         }, {
           label: this.$t('project.project.project'),
@@ -114,7 +121,7 @@ export default {
         {
           label: this.$t('overall.remark'),
           prop: 'remark',
-          show: true,
+          show: false,
           minWidth: 150
         }
       ]
@@ -132,3 +139,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+  .endpoint-num, .alert-num{
+    cursor: pointer;
+  }
+</style>
