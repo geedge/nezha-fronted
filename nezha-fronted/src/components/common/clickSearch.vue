@@ -109,9 +109,9 @@ export default {
       this.titleSearchListCopy[key].showMore = !this.titleSearchListCopy[key].showMore
     }
   },
-  destroyed() {
+  destroyed () {
     window.removeEventListener('resize', this.needMore)
-  },
+  }
 }
 </script>
 

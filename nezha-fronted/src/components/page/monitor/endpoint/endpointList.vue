@@ -158,9 +158,13 @@ export default {
         },
         state: {
           label: 'state',
-          key: 'state',
+          key: 'states',
           type: 'checkBox',
-          children: [],
+          children: [
+            { key: 'Down', value: 0, name: 'Down' },
+            { key: 'Up', value: 1, name: 'Up' },
+            { key: 'Suspended', value: 0, name: 'Suspended' }
+          ],
           show: true,
           showMore: false,
           width: 0,
@@ -277,7 +281,6 @@ export default {
           })
         }
       })
-      this.titleSearchList.state.children = [{ key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }, { key: 'up', value: 'up', name: 'up' }, { key: 'down', value: 'down', name: 'up' }]
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {

@@ -167,19 +167,25 @@
                 </el-form-item>
                 <span class="param-box-row-eq">=</span>
                 <el-form-item class="param-box-row-value" :prop="'paramObj.' + index + '.value'">
-                  <el-select
-                    v-model="item.value"
-                    multiple
-                    filterable
-                    allow-create
-                    :ref="'select'+ index"
-                    placeholder="value" size="mini"
-                    default-first-option
-                    popper-class="config-dropdown hide-element"
-                    @change="(val)=>{paramObjchange(val,index)}"
-                  >
-                    <span slot="empty" class=""></span>
-                  </el-select>
+<!--                  <el-select-->
+<!--                    v-model="item.value"-->
+<!--                    multiple-->
+<!--                    filterable-->
+<!--                    allow-create-->
+<!--                    :ref="'select'+ index"-->
+<!--                    placeholder="value" size="mini"-->
+<!--                    default-first-option-->
+<!--                    popper-class="config-dropdown hide-element"-->
+<!--                    @change="(val)=>{paramObjchange(val,index)}"-->
+<!--                  >-->
+<!--                    <span slot="empty" class=""></span>-->
+<!--                  </el-select>-->
+                  <vue-tags-input
+                    v-model="item.tags"
+                    :tags="item.value"
+                    :maxlength="32"
+                    @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
+                  />
                 </el-form-item>
                 <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
@@ -255,6 +261,7 @@
 <script>
 import { noSpecialChar, port, nzNumber } from '../js/validate'
 import selectWalk from '../popBox/selectWalk'
+import VueTagsInput from '@johmun/vue-tags-input'
 
 export default {
   name: 'editEndpointBoxNew',
@@ -275,7 +282,8 @@ export default {
     }
   },
   components: {
-    'select-walk': selectWalk
+    'select-walk': selectWalk,
+    VueTagsInput
   },
   data () {
     return {
@@ -562,6 +570,9 @@ export default {
       }
       this.editEndpoint.labelModule.splice(index, 1)
     },
+    tagsChange (newTags, index) {
+      this.editEndpoint.paramObj[index].value = newTags.map(item => item.text)
+    },
     // 将param转为json字符串格式
     paramToJson (param) {
       const tempParam = {}
@@ -839,6 +850,15 @@ export default {
     right: 20px;
     top: 14px;
     cursor: pointer;
+  }
+  /deep/ .ti-input{
+    min-height: 30px;
+    overflow-x: hidden;
+    border-radius: 2px;
+    padding: 0;
+  }
+  /deep/ .ti-tag{
+    background-color: #FA901C;
   }
 </style>
 <style>
