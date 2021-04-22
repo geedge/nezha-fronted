@@ -47,6 +47,7 @@ const en = {
     about: 'About', // 关于
     detail: 'Detail', // 详情
     query: 'Query', // 查询
+    account: 'Account',
     back: 'Back', // 返回
     unavailable: 'Unavailable',
     available: 'Available',
@@ -105,7 +106,9 @@ const en = {
     },
     SyncSave: 'Save&Sync',
     copySuccess: 'Copy success',
-    moreOption: 'More options'
+    parent: 'Parent',
+    dc: 'Data center',
+    labels: 'Labels'
   },
   pageSize: '/page',
   setup: {
@@ -506,7 +509,7 @@ const en = {
     assets: 'Assets', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
     createAsset: 'New asset', // '编辑资产'
-    batchEditAsset: 'Bulk edit',
+    batchEditAsset: 'Edit asset in bulk',
     selectAsset: 'Selected assets',
     host: 'Host',
     state: 'State', // '状态'
@@ -518,6 +521,7 @@ const en = {
     loginType: 'Login type', // '登录类型'
     password: 'Password', // '密码'
     ssh: 'SSH key', // 'SSH-Key'
+    sshAccount: 'SSH account',
     protocol: 'Protocol',
     sshProtocol: 'SSH',
     telnetProtocol: 'Telnet',
@@ -526,7 +530,7 @@ const en = {
     reloginPasswordTip: 'Relogin tip', // 密码提示
     userPwdIntroduce: 'Please specify a user name and password so that the telenet login process can automatically log in',
     reLoginPwdIntroduce: 'Please specify the password prompt so that the login process can run automatically',
-    account: 'User name', // '用户名'
+    username: 'Username', // '用户名'
     port: 'Port', // '端口'
     upload: 'Upload', // '上传'
     clickToUpload: 'Upload', // '上传'
@@ -653,7 +657,20 @@ const en = {
     },
     active: 'Alive', // "存活",
     total: 'Total', // "总数",
-    down: 'Down'
+    down: 'Down',
+    brand: 'Brand',
+    model: 'Model',
+    cabinet: 'Cabinet',
+    alertNum: 'Alert num',
+    endpointNum2: 'Endpoint num',
+    manageIp: 'Manage IP',
+    number: 'Number',
+    brandAndModel: 'Brand & Model',
+    authType: 'Auth type',
+    privateKey: 'Private key',
+    usernamePrompt: 'Username prompt',
+    passwordPrompt: 'Password prompt',
+    snmpCredential: 'SNMP credential'
   },
   config: {
     config: 'Settings', // "设置"
@@ -891,7 +908,7 @@ const en = {
         basic: 'Basic',
         alertApi: 'Alert API',
         assetPingSwith: 'Asset ping',
-        assetPingInterval: 'Asset ping Interval',
+        assetPingInterval: 'Interval',
         exporterTarget: 'Exporter path',
         scrapeInterval: 'Scrape interval',
         storageRetention: 'Local retention',
