@@ -28,8 +28,8 @@
 <!--        <endpoint-query-tab v-if="(from === fromRoute.endpoint && targetTab === 'endpointQuery')" v-show="subResizeShow" ref="endpointQuery" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-query-tab>-->
 
         <!-- model-panel/asset-detail/project-overview的panel-->
-        <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :detail="detail" :from="from"
-                   :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab>
+<!--        <panel-tab v-if="(from === fromRoute.model || from === fromRoute.asset || from === fromRoute.project || from === fromRoute.rule || from === fromRoute.endpoint) && targetTab === 'panel'" v-show="subResizeShow" ref="panelTab" :detail="detail" :from="from"-->
+<!--                   :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab>-->
 
         <!--terminal-log的记录和回放-->
         <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
