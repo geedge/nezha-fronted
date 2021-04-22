@@ -85,7 +85,7 @@
             class="top-tool-export margin-l-10"
           >
             <template slot="optionZone">
-              <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_toAdd'"
+              <button :title="$t('overall.createChart')" @click="addChart" v-has="'panel_chart_add'"
                       id="panel-add-chart" class="top-tool-btn">
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>

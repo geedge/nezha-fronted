@@ -1,6 +1,3 @@
-<style scoped lang="scss">
-  @import '@/assets/css/common/rightBoxCommon.scss';
-</style>
 <template>
   <div class="right-box right-box-menu" v-clickoutside="{obj:editMenu,func:clickOutside}">
     <!-- begin--顶部按钮-->

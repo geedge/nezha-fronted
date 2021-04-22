@@ -123,8 +123,8 @@ export default new Router({
           component: resolve => require(['../components/page/alert/alertSilence.vue'], resolve)
         },
         {
-          path: '/exprtemp',
-          component: resolve => require(['../components/page/config/exprTemp.vue'], resolve)
+          path: '/template',
+          component: resolve => require(['../components/page/config/template/index.vue'], resolve)
         }
       ]
     }

@@ -7,6 +7,14 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.expressionTemplate"
       :search-msg="searchMsg">
+      <template v-slot:top-tool-left>
+        <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')"><!--v-has="'snmp_browser_view'"-->
+          <div class="nz-tab-item">{{$t("config.exprTemp.exprTemp")}}</div>
+        </div>
+        <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')"><!--v-has="'snmp_browser_view'"-->
+          <div class="nz-tab-item nz-tab-item-active">{{$t("config.chartTemp.chartTemp")}}</div>
+        </div>
+      </template>
       <template v-slot:top-tool-right>
         <export-excel
           id="expression-template-list"
@@ -79,7 +87,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import exprTmplTable from '@/components/common/table/settings/exprTmplTable'
 
 export default {
-  name: 'exprTemp',
+  name: 'chartTemp',
   components: {
     deleteButton,
     exprTmplBox,
