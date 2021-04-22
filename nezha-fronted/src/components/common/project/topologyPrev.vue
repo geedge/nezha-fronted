@@ -6,7 +6,7 @@
   <div class="project-box list-page" v-loading="topologyLoading">
     <!--project主要信息-->
     <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
-      <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px">
+      <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
         <!--工具栏-->
         <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start">
@@ -110,7 +110,7 @@
            </button>
          </span>
       </div>
-      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools">
+      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px;padding-top: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
 <button @click="changeScreen" class="top-tool-btn float-right"

@@ -185,6 +185,7 @@
                     :tags="item.value"
                     :maxlength="32"
                     @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
+                    :placeholder="'add parameter'"
                   />
                 </el-form-item>
                 <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>

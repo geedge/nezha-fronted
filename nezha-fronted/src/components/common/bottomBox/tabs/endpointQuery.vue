@@ -54,7 +54,7 @@
           :formatTime="formatTime"
           :hideSameLabels="hideSameLabels"
           :queryExpression="queryExpression"
-          @changSelection="changSelection"
+          @changSelection="changSelectionF"
         />
       </template>
 <!--      <template v-slot:pagination>-->
@@ -157,9 +157,21 @@ export default {
         }, 700)
       }
     },
-    changSelection (arr) {
+    changSelectionF (arr) {
       this.changSelection = arr
-    }
+    },
+    toTop (wrap) {
+      let currentTop = wrap.scrollTop
+      const interval = currentTop / 10
+      const intervalFunc = setInterval(function () { // 花200ms分10次回到顶部，模拟动画效果
+        if (currentTop === 0) {
+          clearInterval(intervalFunc)
+        } else {
+          currentTop = (currentTop - interval) < interval * 0.5 ? 0 : currentTop - interval
+          wrap.scrollTop = currentTop
+        }
+      }, 20)
+    },
   }
 }
 </script>

@@ -44,10 +44,11 @@
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
-
+        <panel-tab-new v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
         <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+        <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.endpoint.endpointTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
       </div>
     </div>
   </div>
@@ -61,6 +62,7 @@ import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
 import panelTab from './tabs/panelTab'
+import panelTabNew from './tabs/panelTabNew'
 import terminalLogRecordTab from './tabs/terminalLogRecordTab'
 import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from './tabs/terminalLogCMDTab'
@@ -82,7 +84,8 @@ export default {
     'terminal-log-cmd-tab': terminalLogCMDTab,
     endpointTabNew,
     alertMessageTabNew,
-    endpointQuery
+    endpointQuery,
+    panelTabNew
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -114,13 +117,15 @@ export default {
         module: {
           moduleTabTitle: [
             { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'AlertMessage' }
+            { prop: 'moduleAlertMessage', name: 'Alerts' },
+            { prop: 'panel', name: 'Detail' }
           ]
         },
         endpoint: {
           endpointTabTitle: [
-            { prop: 'endpointQuery', name: 'EndpointQuery' },
-            { prop: 'endpointAlertMessage', name: 'AlertMessage' }
+            { prop: 'endpointQuery', name: 'Query' },
+            { prop: 'endpointAlertMessage', name: 'Alerts' },
+            { prop: 'panel', name: 'Detail' }
           ]
         }
       }

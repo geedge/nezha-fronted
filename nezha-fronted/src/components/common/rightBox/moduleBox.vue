@@ -177,6 +177,7 @@
                     :tags="item.value"
                     :maxlength="32"
                     @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
+                    :placeholder="'add parameter'"
                   />
 
                 </el-form-item>
