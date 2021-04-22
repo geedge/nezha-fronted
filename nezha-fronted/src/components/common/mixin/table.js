@@ -23,7 +23,7 @@ export default {
     }
   },
   methods: {
-    tableOperation ([command, row]) {
+    tableOperation ([command, row, param]) {
       switch (command) {
         case 'edit': {
           this.$emit('edit', row)
@@ -35,6 +35,14 @@ export default {
         }
         case 'record': {
           this.$emit('showBottomBox', 'record', row)
+          break
+        }
+        case 'cli': {
+          this.$emit('cli', row)
+          break
+        }
+        case 'copy': {
+          this.$emit('copy', row)
           break
         }
         default:

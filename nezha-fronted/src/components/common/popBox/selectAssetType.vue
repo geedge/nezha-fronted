@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel" ref="selectAssetTypePopBox" transition="slide" v-model="popBox.show" width="820">
+  <el-popover ref="selectAssetTypePopBox" v-model="popBox.show" :placement="placement" :width="width" popper-class="nz-pop nz-pop-select-panel" transition="slide">
     <div>
       <div class="pop-item-wider">
 
@@ -37,13 +37,14 @@ export default {
   props: {
     placement: { type: String },
     assetTypeData: { type: Array },
-    showParent: { type: Object }
+    showType: { type: Object },
+    width: { type: String, default: '625' }
   },
   mounted () {
     this.$refs.assetTypeTree.setCurrentKey(this.assetType)
   },
   watch: {
-    showParent: {
+    showType: {
       immediate: true,
       handler (n) {
         if (n) {

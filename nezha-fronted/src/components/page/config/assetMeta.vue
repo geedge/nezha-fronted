@@ -1,20 +1,19 @@
 <template>
-  <div style="height: 100%">
+  <div>
     <nz-data-list
       ref="dataList"
-      :components="['searchInput', 'elementSet']"
+      :api="url"
+      :from="fromRoute.assetLabel"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.role"
-      :search-msg="searchMsg"
-      :table-id="tableId"
-      :table-title="tableTitle">
+      :layout="['searchInput', 'elementSet']"
+      :search-msg="searchMsg">
       <template v-slot:top-tool-left>
         <select-group ref="selectGroup" :filter-object="filterGroup" :object-data="groupData" :placement="'bottom-start'"
                       :show-object="showGroup" style="width: 300px;" @del="delGroup" @edit="editGroup" @selectObject="groupChange">
           <template v-slot:header>
             <div class="panel-select-header">
               <el-input id="panel-list-search" v-model="filterGroup" :placeholder="$t('overall.search')" clearable size="mini" style="width: 240px; margin-right: 5px;"></el-input>
-              <span id="panel-list-toadd" v-has="'panel_toAdd'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-plus"></i></span>
+              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-plus"></i></span>
             </div>
           </template>
           <template v-slot:trigger>
@@ -23,94 +22,28 @@
         </select-group>
       </template>
       <template v-slot:top-tool-right>
-        <button id="meta-add-meta" v-has="'expr_temp_save'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-l-20"
+        <button id="meta-add-meta" v-has="'asset_label_add'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       :api="'asset/field/meta'" v-has="'expr_temp_delete'" id="meta-msg-batch-delete"></delete-button>
+                       id="meta-msg-batch-delete" v-has="'asset_label_delete'" :api="url"></delete-button>
       </template>
       <template v-slot:default="slotProps">
-        <el-table
-          id="role-list-table"
+        <asset-meta-table
           ref="dataTable"
-          v-loading="tools.loading"
-          :data="tableData"
+          v-loading="slotProps.loading"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
-          border
-          @header-dragend="dragend"
-          @sort-change="tableDataSort"
-          @selection-change="(selection)=>{batchDeleteObjs=selection}"
-        >
-          <el-table-column
-            :resizable="false"
-            align="center"
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in tools.customTableTitle"
-            v-if="item.show"
-            :key="`col-${index}`"
-            :fixed="item.fixed"
-            :label="item.label"
-            :prop="item.prop"
-            :resizable="true"
-            :sort-orders="['ascending', 'descending']"
-            :width="`${item.width}`"
-            class="data-column"
-          >
-            <template slot="header">
-              <span>
-                <span>{{item.label}}</span>
-                <div class="col-resize-area"></div>
-              </span>
-            </template>
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop === 'group'">
-                {{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}
-              </div>
-              <div v-else-if=" item.prop === 'display' ">
-                <el-switch
-                  v-model="scope.row[item.prop]"
-                  active-color="#ee9d3f"
-                  :active-value="1"
-                  @change="putMeta(scope.row)"
-                  :inactive-value="0">
-                </el-switch>
-              </div>
-              <div v-else-if=" item.prop === 'search' ">
-                <el-switch
-                  v-model="scope.row[item.prop]"
-                  active-color="#ee9d3f"
-                  :active-value="1"
-                  @change="putMeta(scope.row)"
-                  :inactive-value="0">
-                </el-switch>
-              </div>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-          <el-table-column
-            :resizable="false"
-            :width="operationWidth"
-            fixed="right">
-            <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-            <div slot-scope="scope" class="table-operation-items">
-              <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-              <el-dropdown size="medium" trigger="hover" @command="tableOperation">
-                <div class="table-operation-item table-operation-item--more">
-                  <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
-                </div>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="['edit', scope.row]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-                  <el-dropdown-item :command="['delete', scope.row, `asset/field/meta?ids=${scope.row.id}`]" :disabled="isBuildIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </div>
-          </el-table-column>
-        </el-table>
+          :table-data="tableData"
+          @del="del"
+          @edit="edit"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange"
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
+        ></asset-meta-table>
         <!-- 回到table顶部的按钮 -->
         <button v-show="tools.showTopBtn && slotProps.mainResizeShow" id="role-list-totop" :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" class="to-top" @click="toTop(scrollbarWrap)"><i class="nz-icon nz-icon-top"></i></button>
       </template>
@@ -137,62 +70,29 @@ import assetMetaGroup from '@/components/common/rightBox/assetMetaGroup'
 import assetMetaBox from '@/components/common/rightBox/assetMetaBox'
 import selectGroup from '@/components/common/popBox/selectAssetMetaGroup'
 import nzDataList from '@/components/common/table/nzDataList'
-import tableMixin from '@/components/common/mixin/table'
+import dataListMixin from '@/components/common/mixin/dataList'
+import assetMetaTable from '@/components/common/table/asset/assetMetaTable'
 
 export default {
   name: 'assetMeta',
   components: {
     deleteButton,
     assetMetaGroup,
-    assetMetaBox,
     selectGroup,
-    nzDataList
+    nzDataList,
+    assetMetaBox,
+    assetMetaTable
   },
-  mixins: [tableMixin],
+  mixins: [dataListMixin],
   data () {
     return {
+      url: 'asset/field/meta',
       tableId: 'assetMeta',
       // 侧滑
       rightBox: {
         metaShow: false,
         groupShow: false
       },
-      tableTitle: [
-        {
-          label: 'ID',
-          prop: 'id',
-          show: true,
-          width: 80
-        }, {
-          label: this.$t('config.assetMeta.name'),
-          prop: 'name',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.key'),
-          prop: 'metaKey',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.group'),
-          prop: 'group',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.search'),
-          prop: 'search',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.display'),
-          prop: 'display',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.type'),
-          prop: 'type',
-          show: true
-        }, {
-          label: this.$t('config.assetMeta.params'),
-          prop: 'param',
-          show: false
-        }
-      ],
       groupData: [{
         name: this.$t('config.assetMeta.all'),
         id: -1,
@@ -233,7 +133,6 @@ export default {
         param: {},
         remark: ''
       },
-      object: {},
       blankMetaGroup: {
         id: '',
         name: '',
@@ -266,24 +165,20 @@ export default {
       if (!this.searchLabel.groupId) {
         delete this.searchLabel.groupId
       }
-      this.$get('asset/field/meta', this.searchLabel).then(response => {
+      this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
-          // console.info(this.$refs.dataTable)
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
         }
       })
-    },
-    afterTableListChange () {
-      this.getTableData()
     },
     addGroup () {
       this.metaGroup = JSON.parse(JSON.stringify(this.blankMetaGroup))
@@ -330,26 +225,16 @@ export default {
       this.getTableData()
     },
     add () {
-      this.assetMeta = JSON.parse(JSON.stringify(this.blankObject))
+      this.object = JSON.parse(JSON.stringify(this.blankObject))
       this.rightBox.metaShow = true
     },
     edit (row) {
-      this.$get('asset/field/meta/' + row.id).then(res => {
-        this.assetMeta = { ...res.data, param: JSON.parse(res.data.param) }
+      /* this.$get('asset/field/meta/' + row.id).then(res => {
+        this.object = { ...res.data, param: JSON.parse(res.data.param) }
         this.rightBox.metaShow = true
-      })
-    },
-    putMeta (row) {
-      this.tools.loading = true
-      this.$put('asset/field/meta', row).then(response => {
-        this.prevent_opt.save = false
-        if (response.code === 200) {
-          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-        } else {
-          this.$message.error(response.msg)
-        }
-        this.getTableData()
-      })
+      }) */
+      this.object = JSON.parse(JSON.stringify(row))
+      this.rightBox.metaShow = true
     },
     closeRightBox (refresh) {
       this.rightBox.metaShow = false

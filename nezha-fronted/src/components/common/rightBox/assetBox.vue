@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-asset" v-clickoutside="{obj:editAsset,func:clickOutside}">
+  <div v-clickoutside="{obj:editAsset, func:clickOutside}" class="right-box right-box-asset">
     <!--顶部按钮-->
     <div class="right-box-top-btns right-box-form-delete">
       <button @click="del" id="asset-edit-del" type="button" v-has="'asset_delete'" v-if="editAsset.id"
@@ -686,7 +686,8 @@ export default {
   }
 }
 </script>
-<style >
+<style lang="scss">
+@import '@/assets/css/common/rightBoxCommon.scss';
   .location-selector{
     width: 512px;
   }

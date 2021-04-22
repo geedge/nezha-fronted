@@ -10,12 +10,11 @@
       <template v-slot:top-tool-right>
         <export-excel
           id="expression-template-list"
-          v-has="'expressionTemplate_add'"
           export-url="expression/tmpl/export"
           import-url="expression/tmpl/import"
           export-file-name="expression-template"
           :params="searchLabel"
-          :permissions="{import: 'asset_import', export: 'asset_export'}"
+          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
           @afterImport="getTableData"
           class="top-tool-export margin-r-10"
         >
@@ -39,6 +38,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="(row) => {copyRow(row, 'exprTmpl')}"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"

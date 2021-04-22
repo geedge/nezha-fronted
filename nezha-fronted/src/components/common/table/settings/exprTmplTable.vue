@@ -43,7 +43,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" title="Copy" @click="copyRow(scope.row,'exprTemp')"><i class="nz-icon nz-icon-override"></i></button>
+        <button class="table-operation-item" title="Copy" @click="tableOperation('copy', scope.row)"><i class="nz-icon nz-icon-override"></i></button>
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>

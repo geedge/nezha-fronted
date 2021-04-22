@@ -24,7 +24,7 @@
         </el-form-item>
         <!--parent-->
         <el-form-item :label="$t('config.assetType.parent')" prop="pid">
-          <select-asset-type :asset-type-data="assetTypeData2" :show-parent="showParentAssetType" @selectAssetType="selectParent" id="asset-type-parent"
+          <select-asset-type id="asset-type-parent" :asset-type-data="assetTypeData2" :show-type="showParentAssetType" @selectAssetType="selectParent"
                               size="small">
             <template v-slot:trigger>
               <el-input :clearable="true" :readonly="true" placeholder="" size="small" v-model="showParentAssetType.name">
@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-import selectAssetType from '../popBox/selectAssetType'
+import selectAssetType from '@/components/common/popBox/selectAssetType'
 export default {
   name: 'asset-type-right-box',
   props: {

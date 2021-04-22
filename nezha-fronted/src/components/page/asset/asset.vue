@@ -1,281 +1,133 @@
 <template>
-  <div class="asset" ref="asset">
-    <div class="main-list" :class="{'main-list-with-sub': bottomBox.showSubList}">
-      <div class="main-modal"></div>
-      <div class="top-tools" v-show="bottomBox.mainResizeShow">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': bottomBox.showSubList}">
-          <div class="top-tool-search margin-r-20"><search-input :searchMsg="searchMsg" @search="search" :inTransform="bottomBox.inTransform"></search-input></div>
-          <export-excel
-            id="asset-list"
-            export-file-name="asset"
-            export-url="/asset/export"
-            import-url="/asset/import"
-            :params="searchLabel"
-            :permissions="{import: 'asset_import', export: 'asset_export'}"
-            @afterImport="afterTableListChange"
-          >
-            <template slot="optionZone">
-              <button :title="$t('overall.createAsset')" @click.stop="add" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-create-asset" v-has="'asset_toAdd'">
-                <i class="nz-icon nz-icon-create-square"></i></button>
-            </template>
-          </export-excel>
-          <button :title="$t('overall.batchEdit')" @click.stop="batchEdit" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="asset-batch-asset" style="margin-left: 15px" v-has="'asset_toBatchEdit'">
-            <i class="nz-icon nz-icon-batch-edit"></i>
-          </button>
-          <delete-button :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true" api="asset" v-has="'asset_delete'" id="asset-list-batch-delete"></delete-button>
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- 自定义table列 -->
-      <transition name="el-zoom-in-top">
-        <element-set
+  <div>
+    <nz-data-list
+      ref="dataList"
+      :api="url"
+      :custom-table-title.sync="tools.customTableTitle"
+      :from="fromRoute.asset"
+      :layout="['searchInput', 'elementSet']"
+      :search-msg="searchMsg">
+      <template v-slot:top-tool-right>
+        <export-excel
           id="asset-list"
-          v-if="tools.showCustomTableTitle"
-          @close="tools.showCustomTableTitle = false"
-          :custom-table-title.sync="tools.customTableTitle"
-          :original-table-title="tableTitle"
-          ref="customTableTitle"
-        ></element-set>
-      </transition>
-      <el-table
-        id="asset-list-table"
-        class="nz-table"
-        :height="mainTableHeight"
-        style="width: 100%;position: relative;z-index: 99"
-        :data="tableData"
-        v-show="bottomBox.mainResizeShow"
-        border
-        v-loading="tools.loading"
-        ref="assetTable"
-        @sort-change="tableDataSort"
-        @row-dblclick="detail"
-        @selection-change="(selection)=>{this.batchDeleteObjs=selection}"
-      >
-        <el-table-column
-          :resizable="false"
-          type="selection"
-          width="40"
-          align="center">
-        </el-table-column>
-        <el-table-column
-          :resizable="true"
-          v-for="(item, index) in tools.customTableTitle"
-          v-if="item.show"
-          :key="`col_${index}`"
-          :label="item.label"
-          :fixed="item.fixed"
-          :width="item.width"
-          :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-          :sortable="$tableSet.sortableShow(item.prop,'asset')"
-          :prop="$tableSet.propTitle(item.prop,'asset')"
-          :sort-orders="['ascending', 'descending']"
+          :params="searchLabel"
+          :permissions="{import: 'asset_add', export: 'asset_view'}"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset"
+          export-url="/asset/export"
+          import-url="/asset/import"
+          @afterImport="getTableData"
         >
-          <template slot="header">
-            <span v-if="item.type == 'tag'" class="tag-header" :title="item.label"><span class="tag-value">{{item.label}}</span><span class="tag-mark">&nbsp;[Tag]</span></span>
-            <span v-else>
-              <span>{{item.label}}</span>
-              <div class="col-resize-area"></div>
-            </span>
+          <template slot="optionZone">
+            <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+              <i class="nz-icon nz-icon-create-square"></i></button>
           </template>
-          <template slot-scope="scope" :column="item">
-            <div v-if="item.prop=='ID'">
-              <span>{{scope.row.id}}</span>
-            </div>
-            <div v-if="item.prop=='assetType'">
-              <span>{{scope.row.model.type.value}}</span>
-            </div>
-            <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-            <div v-if="item.prop=='HOST'">
-              <span>{{scope.row.host}}</span>
-            </div>
-            <div v-if="item.prop=='state'">
-              <span v-if="scope.row.state==1">{{ $t('asset.inStock')}}</span>
-              <span v-if="scope.row.state==2">{{ $t('asset.notInStock')}}</span>
-              <span v-if="scope.row.state==3">{{ $t('asset.suspended')}}</span>
-            </div>
-          <div @mouseenter="showTableTooltip(formatPingTime(scope.row.pingLastUpdate), true, $event)" @mouseleave="hideTableTooltip" v-if="item.prop == 'pingStatus'">
-            <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
-            <!--<el-popover
-              placement="right"
-              width="200"
-              trigger="hover"
-              :content="formatPingTime(scope.row.pingLastUpdate)">
-              <div slot="reference" style="width: 100%">
-                <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
-              </div>
-            </el-popover>-->
-          </div>
-          <template v-if="item.prop=='Module'">
-            <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(`${$t('asset.down')} / ${$t('asset.suspended')} / ${$t('asset.total')}`, true, $event)" @mouseleave="hideTableTooltip">
-              <span @click="showEndpoint(scope.row)" class="link" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
-            </div>
-            <!--<el-tooltip placement="right" effect="light">
-              <div slot="content">
-                {{$t('asset.down')}} / {{$t('asset.suspended')}} / {{$t('asset.total')}}
-              </div>
-              <span :class="messageStyle(item, scope.row)">
-                <span class="link" @click="showEndpoint(scope.row)" style="padding: 2px 8px">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
-              </span>
-            </el-tooltip>-->
-          </template>
-          <template v-if="item.prop=='Alert'">
-            <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(scope.row.alertNum+' '+$t('overall.active'), scope.row.alertNum >= 99, $event)" @mouseleave="hideTableTooltip">
-              <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
-                {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                {{' ' + $t('overall.active')}}
-              </span>
-            </div>
-            <!--<el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
-              <span :class="messageStyle(item, scope.row)">
-                <span :id="'asset-alerts-'+scope.row.id" @click="jumpToAlertMsg(scope.row)" class="link">
-                  {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                    <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                  {{' ' + $t('overall.active')}}
-                </span>
-              </span>
-            </el-tooltip>-->
-          </template>
-          <div v-if="item.prop=='dataCenter'">
-            <span  >{{scope.row.idc.name}}</span>
-          </div>
-          <template v-if="item.prop=='cabinet'">
-            <span v-if="scope.row.cabinet && scope.row.cabinet != '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
-            <span v-else >--</span>
-          </template>
-          <div v-if="item.prop=='model'">
-            <span>{{scope.row.model.name}}</span>
-          </div>
-          <div v-if="item.prop=='vendor'">
-            <span>{{scope.row.model.vendor.value}}</span>
-          </div>
-          <div v-if="item.prop=='purchaseDate'">
-            <span v-if="scope.row.purchaseDate">{{scope.row.purchaseDate}}</span>
-            <span v-else>==</span>
-          </div>
-          <div v-if="item.prop=='principal'">
-            <span>{{getPrincipalName(scope.row.idc.principal)}}</span>
-          </div>
-          <div v-if="item.prop=='tel'">
-            <span>{{scope.row.idc.tel}}</span>
-          </div>
-          <template v-if="item.prop == 'tags'">
-            <span>{{filterTags(scope)}}</span>
-          </template>
-          <template v-if="item.prop == 'option'">
-            <span :title="$t('overall.view')" @click.stop="detail(scope.row)" class="content-right-option" :id="'asset-detail-'+scope.row.id"><i
-              class="nz-icon nz-icon-view"></i>
-            </span>
-              &nbsp;
-              <span :id="'asset-edit-'+scope.row.id" :title="$t('overall.edit')" @click.stop="edit(scope.row)" class="content-right-option" v-has="'asset_toEdit'"><i
-                class="nz-icon nz-icon-edit"></i>
-            </span>
-              &nbsp;
-              <span :id="'asset-del-'+scope.row.id" :title="$t('overall.delete')" @click.stop="del(scope.row)" class="content-right-option" v-has="'asset_delete'"><i
-                class="nz-icon nz-icon-delete"></i>
-            </span>
-              &nbsp;
-            <el-dropdown @command="cli" trigger="hover" v-has="'asset_connect'">
-              <span title="CLI" class="content-right-option" :id="'asset-ssh-'+scope.row.id"><i
-                class="nz-icon nz-icon-cli" :class="{'gray-filter': !scope.row.accounts || scope.row.accounts.length == 0 || (scope.row.accounts.length==1&&scope.row.accounts.find(t=>t.protocol == 'SNMP'))}"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="[scope.row.id ,scope.row.host, account]" :key="index" v-for="(account, index) in scope.row.accounts" v-if="account && account.protocol != 'SNMP'">{{account.protocol}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column width="28" fixed="right" :resizable="false">
-          <template slot="header">
-          <span @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)" class="nz-table-gear">
-            <i class="nz-icon nz-icon-gear"></i>
-          </span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <button :class="{'to-top-is-hover': tools.tableHover}" :style="{top: tools.toTopBtnTop}" @click="toTop(scrollbarWrap)" class="to-top" v-show="tools.showTopBtn && bottomBox.mainResizeShow"><i class="nz-icon nz-icon-top"></i></button>
-      <div class="pagination-bottom" v-show="!bottomBox.showSubList">
-        <Pagination :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
-    </div>
-    <transition name="el-zoom-in-bottom">
-      <bottom-box :detail="bottomBox.assetDetail" :from="$CONSTANTS.fromRoute.asset" :isFullScreen="bottomBox.isFullScreen" :obj="bottomBox.asset" :sub-resize-show="bottomBox.subResizeShow" :targetTab.sync="bottomBox.targetTab" v-if="bottomBox.showSubList"
-                  @reload="getTableData"
-                  @closeSubList="bottomBox.showSubList = false"
-                  @fullScreen="fullScreen"
-                  @exitFullScreen="exitFullScreen"
-                  @listResize="listResize" ></bottom-box>
+        </export-excel>
+        <button id="asset-batch-asset" v-has="'asset_edit'" :title="$t('overall.batchEdit')" class="top-tool-btn margin-r-10" @click.stop="batchEdit">
+          <i class="nz-icon nz-icon-batch-edit"></i>
+        </button>
+        <delete-button id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:default="slotProps">
+        <asset-table
+          ref="dataTable"
+          v-loading="slotProps.loading"
+          :api="url"
+          :custom-table-title="tools.customTableTitle"
+          :height="mainTableHeight"
+          :table-data="tableData"
+          @cli="cli"
+          @del="del"
+          @edit="edit"
+          @orderBy="tableDataSort"
+          @reload="getTableData"
+          @selectionChange="selectionChange"
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></asset-table>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+      </template>
+    </nz-data-list>
+    <transition name="right-box">
+      <asset-box v-if="rightBox.show"
+                 ref="assetBox"
+                 :brand-data="brandData"
+                 :dc-data="dcData"
+                 :field-group-data="fieldGroupData"
+                 :from="fromRoute.asset"
+                 :obj="object"
+                 :snmp-credential-data="snmpCredentialData"
+                 :state-data="stateData"
+                 :type-data="typeData"
+                 @close="closeRightBox"
+                 @refresh="getTableData"></asset-box>
     </transition>
     <transition name="right-box">
-      <asset-box v-if="rightBox.show" :asset="asset" @refresh="getTableData" ref="assetBox" @close="closeRightBox"></asset-box>
-    </transition>
-    <transition name="right-box">
-      <batch-edit-asset v-if="rightBox.batchShow"  @refresh="getTableData" ref="assetBox" @close="closeRightBox"></batch-edit-asset>
+      <asset-batch-edit-box v-if="rightBox.batchShow"
+                            :field-group-data="fieldGroupData"
+                            :snmp-credential-data="snmpCredentialData"
+                            :state-data="stateData"
+                            @close="closeRightBox"
+                            @refresh="getTableData"></asset-batch-edit-box>
     </transition>
   </div>
 </template>
 
 <script>
-import bus from '../../../libs/bus'
-import exportXLSX from '../../common/exportXLSX'
-import deleteButton from '../../common/deleteButton'
-import { showTableTooltip, hideTableTooltip } from '../../common/js/tools'
+import bus from '@/libs/bus'
+import exportXLSX from '@/components/common/exportXLSX'
+import deleteButton from '@/components/common/deleteButton'
+import assetBox from '@/components/common/rightBox/asset/assetBox'
+import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEditBox'
+import nzDataList from '@/components/common/table/nzDataList'
+import dataListMixin from '@/components/common/mixin/dataList'
+import assetTable from '@/components/common/table/asset/assetTable'
+import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 
 export default {
   name: 'asset',
   components: {
-    'export-excel': exportXLSX,
-    'delete-button': deleteButton
+    deleteButton,
+    assetBox,
+    nzDataList,
+    assetBatchEditBox,
+    assetTable,
+    'export-excel': exportXLSX
   },
+  mixins: [dataListMixin],
   data () {
     return {
+      url: 'asset/asset',
       // 侧滑
       rightBox: {
-        show: false,
         batchShow: false
       },
-      /* 二级页面相关 */
-      bottomBox: {
-        assetDetail: {}, // asset详情
-        asset: {}, // 告警信息对应的asset对象
-        mainResizeShow: true, // dom高度改变时是否展示|隐藏
-        subResizeShow: true,
-        isFullScreen: false, // 全屏状态
-        showSubList: false, // 是否显示二级列表
-        targetTab: '', // 显示二级列表中的哪个页签
-        inTransform: false // 搜索框相关，搜索条件下拉框是否在transform里
-      },
-
-      mainTableHeight: this.$tableHeight.normal, // 主列表table高度
-
-      /* 工具参数 */
-      tools: {
-        loading: false, // 是否显示table加载动画
-        toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
-        tableHover: false, // 控制滚动条和top按钮同时出现
-        showTopBtn: false, // 显示To top按钮
-        showCustomTableTitle: false, // 自定义列弹框是否显示
-        customTableTitle: [] // 自定义列工具的数据
-      },
-      batchDeleteObjs: [],
-      asset: {},
-      blankAsset: {
+      blankObject: {
         id: '',
+        name: '',
+        pid: '',
         sn: '',
-        host: '',
-        state: 1,
-        purchaseDate: '',
-        idcId: '',
+        manageIp: '',
+        stateId: '',
+        purchaseDate: null,
+        dcId: '',
         cabinetId: '',
+        brandId: '',
+        brand: { id: '', name: '' },
         modelId: '',
-        model: { type: { code: '' } },
-        assetType: '',
-        impi: {
-          host: '',
-          port: ''
-        },
-        tags: [],
+        model: { id: '', name: '' },
+        type: { name: '', id: '' },
+        brandAndModel: [],
+        typeId: '',
+        authProtocolPort: '',
+        authType: '',
+        authUsername: '',
+        authPin: '',
+        authPriKey: '',
+        authUserTip: '',
+        authPinTip: '',
+        fields: [],
         accounts: []
       },
       tableId: 'assetTable', // 需要分页的table的id，用于记录每页数量
@@ -320,170 +172,23 @@ export default {
         }]
       },
 
-      searchLabel: {}, // 搜索参数
-      activeType: 'dataCenter',
-
-      tableTitle: [
-        {
-          label: this.$t('asset.tableTitle.host'),
-          prop: 'HOST',
-          show: true,
-          width: 130,
-          fixed: 'left'
-        },
-        {
-          label: this.$t('asset.tableTitle.id'),
-          prop: 'ID',
-          show: false,
-          allowed: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.assetType'),
-          prop: 'assetType',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.device'),
-          prop: 'SN',
-          show: true
-        }, {
-          label: this.$t('asset.tableTitle.assetState'),
-          prop: 'state',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.assetPing'),
-          prop: 'pingStatus',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.modules'),
-          prop: 'Module',
-          show: true,
-          width: 120
-        }, {
-          label: this.$t('asset.tableTitle.alerts'),
-          prop: 'Alert',
-          show: true,
-          width: 120
-        }, {
-          label: this.$t('asset.tableTitle.dataCenter'),
-          prop: 'dataCenter',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.cabinet'),
-          prop: 'cabinet',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.model'),
-          prop: 'model',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.vendor'),
-          prop: 'vendor',
-          show: true,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.procurementDate'),
-          prop: 'purchaseDate',
-          show: false,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.principal'),
-          prop: 'principal',
-          show: false,
-          width: 110
-        }, {
-          label: this.$t('asset.tableTitle.principalTel'),
-          prop: 'tel',
-          show: false,
-          width: 115
-        }, {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          fixed: 'right'
-        }],
-      tableData: [],
-
-      pageObj: {
-        pageNo: 1,
-        pageSize: this.$CONSTANTS.defaultPageSize,
-        total: 0,
-        idcId: '',
-        idcIds: ''
-      },
-      assetPingSwitch: localStorage.getItem('nz-sys-asset-ping-switch'),
-      tagKeys: [],
-
-      scrollbarWrap: null,
-      delFlag: false
+      brandData: [],
+      modelData: [],
+      stateData: [],
+      typeData: [],
+      dcData: [],
+      snmpCredentialData: [],
+      fieldGroupData: []
     }
   },
-  computed: {
-    headerCurrentDc: function () {
+  /* computed: {
+    headerCurrentDc () {
       return this.$store.state.currentDc
     }
-  },
-  watch: {
-    'bottomBox.showSubList': function (n) {
-      const vm = this
-      this.$bottomBoxWindow.showSubListWatch(vm, n)
-    },
-    'bottomBox.asset': {
-      deep: true,
-      handler (n) {
-        if (n.id) {
-          this.bottomBox.assetDetail = this.convertToDetail(n)
-          if (n.model.id) {
-            n.modelId = n.model.id
-          }
-        }
-      }
-    },
-    'tools.customTableTitle': {
-      deep: true,
-      immediate: true,
-      handler (n, o) {
-        const pingTitle = n.find(item => { return item.prop == 'pingStatus' })
-        if (pingTitle) {
-          this.dispatchEvent('asset-ping-switch-change', pingTitle.show)
-        }
-      }
-    },
-    tableData: {
-      deep: true,
-      handler (n) {
-        if (n.length === 0 && this.pageObj.pageNo > 1) {
-          this.pageNo(this.pageObj.pageNo - 1)
-        }
-
-        if (!this.delFlag) { // 不是删除时回到顶部
-          this.$refs.assetTable.bodyWrapper.scrollTop = 0
-        } else {
-          this.delFlag = false
-        }
-      }
-    }
-  },
+  }, */
   methods: {
     showTableTooltip,
     hideTableTooltip,
-    fullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.fullScreen(vm)
-    },
-    exitFullScreen () {
-      const vm = this
-      this.$bottomBoxWindow.exitFullScreen(vm)
-    },
-    listResize (e) {
-      const vm = this
-      this.$bottomBoxWindow.listResize(vm, e)
-    },
     cli ([id, host, account]) {
       const consoleParam = {
         id: id,
@@ -493,137 +198,84 @@ export default {
       }
       this.$store.commit('addConsole', consoleParam)
     },
-    jumpToAlertMsg (asset) {
-      if (!this.hasButton('asset_alerts_view')) {
-        return
-      }
-      this.bottomBox.targetTab = 'alertMessage'
-      this.bottomBox.asset = JSON.parse(JSON.stringify(asset))
-      this.bottomBox.showSubList = true
-    },
-    checkSearchLabel (n, o) {
-      const nKeys = Object.keys(n)
-      const oKeys = Object.keys(o)
-      if (nKeys.length != oKeys.length) {
-        return true
-      } else {
-        let flag = false
-        nKeys.forEach(key => {
-          n[key] != o[key] && (flag = true)
-        })
-        return flag
-      }
-    },
-    getTableData () {
-      this.searchLabel = Object.assign(this.searchLabel, this.pageObj)
-      delete this.searchLabel.total
-      this.tools.loading = true
-      if (this.searchLabel.tags && this.searchLabel.tags != '') {
-        this.searchLabel.tags = encodeURIComponent(this.searchLabel.tags)
-      }
-      Object.keys(this.searchLabel).forEach(key => {
-        if (!this.searchLabel[key] && this.searchLabel[key] !== 0) {
-          delete this.searchLabel[key]
-        }
-      })
-      this.$get('asset', this.searchLabel).then(response => {
-        this.tools.loading = false
-        if (response.code === 200) {
-          this.tableData = response.data.list
-          this.pageObj.total = response.data.total
-          bus.$emit('asset-property-change')
-
-          if (!this.scrollbarWrap) {
-            this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.assetTable.bodyWrapper
-              this.toTopBtnHandler(this.scrollbarWrap)
-            })
-          }
-        }
-      })
-    },
     getUserData () {
       return new Promise(resolve => {
-        this.$get('sys/user/list').then(response => {
+        this.$get('sys/user').then(response => {
           if (response.code === 200) {
             this.userData = response.data.list
           }
-          resolve(this.userData)
+          resolve()
         })
       })
     },
-    messageStyle (title, row) {
-      if (title.label == 'Alerts' || title.label == this.$t('asset.tableTitle.alerts')) {
-        if (row.alertNum > 0) {
-          return 'danger'
-        } else {
-          return 'success'
-        }
-      }
-      if (title.label == 'Module' || title.label == this.$t('asset.tableTitle.modules')) {
-        if (row.state == 3) {
-          return 'suspended'
-        } else {
-          if (row.endpointDownNum > 0) {
-            return 'danger'
-          } else {
-            return 'success'
-          }
-        }
-      }
-      /* if (e.column.label == 'Alerts' || e.column.label == this.$t("asset.tableTitle.alerts")) {
-          if (e.row.alertNum > 0) {
-            return 'danger';
-          } else {
-            return 'success';
-          }
-        }
-        if(e.column.label == 'Module' || e.column.label == this.$t("asset.tableTitle.modules")){
-          if (e.row.state == 3) {
-            return 'suspended';
-          } else {
-            if (e.row.endpointDownNum > 0) {
-              return 'danger';
-            } else {
-              return 'success';
-            }
-          }
-        } */
-      return ''
-    },
-    edit (asset) {
-      this.asset = JSON.parse(JSON.stringify(asset))
-      this.rightBox.show = true
-    },
-    detail (asset) {
-      this.bottomBox.asset = JSON.parse(JSON.stringify(asset))
-      this.bottomBox.targetTab = 'panel'
-      this.bottomBox.showSubList = true
-    },
-    del (asset) {
-      this.$confirm(this.$t('tip.confirmDelete'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('asset?ids=' + asset.id).then(response => {
+    getStateData () {
+      return new Promise(resolve => {
+        this.$get('asset/stateConf').then(response => {
           if (response.code === 200) {
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.delFlag = true
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
+            this.stateData = response.data.list
           }
+          resolve()
         })
       })
     },
-    markOptionData (data) {
-      data.forEach(item => {
-        this.$set(item, 'isEdit', false)
-        this.$set(item, 'oldName', item.value)
-        this.$set(item, item.name, false)
-        this.$set(item, item.id, false)
-        this.$set(item, item.id + item.name, false)
+    getTypeData () {
+      return new Promise(resolve => {
+        this.$get('asset/typeConf/tree').then(response => {
+          if (response.code === 200) {
+            this.typeData = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getDcData () {
+      return new Promise(resolve => {
+        this.$get('dc', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.dcData = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getSnmpCredentialData () {
+      return new Promise(resolve => {
+        this.$get('snmp/credential', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.snmpCredentialData = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getFieldGroupData () {
+      return new Promise(resolve => {
+        this.$get('asset/field/group', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.fieldGroupData = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getBrandData () {
+      return new Promise(resolve => {
+        this.$get('asset/brand').then(response => {
+          if (response.code === 200) {
+            this.brandData = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getModelData (brandId) {
+      return new Promise(resolve => {
+        this.$get('asset/model').then(response => {
+          if (response.code === 200) {
+            this.modelData = response.data.list
+          }
+          resolve()
+        })
       })
     },
     showEndpoint (asset) {
@@ -634,22 +286,9 @@ export default {
       this.bottomBox.targetTab = 'endpoint'
       this.bottomBox.showSubList = true
     },
-    add () {
-      this.asset = this.newAsset()
-      this.$get('sys/dict/all?type=assetType&pageSize=-1').then(response => {
-        if (response.code === 200) {
-          if (this.asset.model && !this.asset.model.type.code) {
-            this.asset.model.type.code = response.data[0].code
-          }
-        }
-      })
-      this.rightBox.show = true
-    },
+
     batchEdit () {
       this.rightBox.batchShow = true
-    },
-    newAsset () {
-      return JSON.parse(JSON.stringify(this.blankAsset))
     },
     closeRightBox (refresh) {
       this.rightBox.show = false
@@ -657,20 +296,8 @@ export default {
       if (refresh) {
         this.delFlag = true
         this.getTableData()
-        this.loadKeys()
+        // this.loadKeys()
       }
-    },
-    afterTableListChange: function () {
-      bus.$emit('asset-list-change')
-    },
-    pageNo (val) {
-      this.pageObj.pageNo = val
-      this.getTableData()
-    },
-    pageSize (val) {
-      this.pageObj.pageSize = val
-      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
     },
     getPrincipalName (data) {
       for (const item in this.userData) {
@@ -679,78 +306,7 @@ export default {
         }
       }
     },
-    returnData (data) {
-      if (data && data !== '--') {
-        return data
-      } else if (data === '--') {
-        return '--'
-      } else {
-        return '--'
-      }
-    },
-    returnCabinet (start, end) { // 返回机柜u位信息
-      if (!start || !end) {
-        return ''
-      }
-      return `[${start}-${end}]`
-    },
-    closeAllPop () {
-      this.$refs.idcConfigBox.forEach((item) => {
-        item.show(false)
-      })
-      this.$refs.cabinetConfigBox.forEach((item) => {
-        item.show(false)
-      })
-    },
-    search (searchObj) {
-      let orderBy = ''
-      if (this.searchLabel.orderBy) {
-        orderBy = this.searchLabel.orderBy
-      }
-      this.searchLabel = {}
-      this.pageObj.pageNo = 1
-      for (const item in searchObj) {
-        if (searchObj[item]) {
-          this.$set(this.searchLabel, item, searchObj[item])
-        }
-      }
-      if (orderBy) {
-        this.$set(this.searchLabel, 'orderBy', orderBy)
-      }
-      if (this.$refs.assetTable && this.$refs.assetTable.bodyWrapper) {
-        this.$refs.assetTable.bodyWrapper.scrollTop = 0
-      }
-      this.getTableData()
-    },
-    convertToDetail (obj) {
-      const detail = JSON.parse(JSON.stringify(obj))
-      detail.state = obj.state == 1 ? this.$t('asset.inStock') : this.$t('asset.notInStock')
-      detail.assetType = obj.model.type.value
-      detail.vendorModel = obj.model.vendor.value + ' ' + obj.model.name
-      detail.dataCenter = obj.idc ? obj.idc.name : ''
-      detail.location = obj.idc ? obj.idc.location : ''
-      detail.principal = obj.idc ? this.getPrincipalName(obj.idc.principal) : ''
-      detail.tel = obj.idc ? obj.idc.tel : ''
-      detail.cabinet = obj.cabinet ? obj.cabinet.name : ''
-      detail.uSize = obj.cabinet ? obj.cabinet.uSize : ''
-      detail.remark = obj.idc ? obj.idc.remark : ''
-      if (obj.accounts && obj.accounts.length > 0) {
-        const account = obj.accounts[0]
-        detail.protocol = account.protocol
-        detail.account = account.user
-        let loginType = ''
-        if (account.authType == 1) {
-          loginType = this.$t('asset.password')
-        } else if (account.authType == 2) {
-          loginType = this.$t('asset.ssh')
-        }
-        detail.loginType = loginType
-        detail.port = account.port
-      }
-
-      return detail
-    },
-    formatPingTime: function (str) {
+    /* formatPingTime (str) {
       if (!str) {
         return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
       }
@@ -764,19 +320,8 @@ export default {
       const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
       const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
       return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
-    },
+    }, */
     // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
-    },
     initEvent () {
       bus.$on('asset-filter-change', (column, content) => {
         this.pageObj.pageNo = 1
@@ -803,7 +348,7 @@ export default {
         bus.$emit(event, param)
       })
     },
-    loadKeys: function () {
+    loadKeys () {
       this.$get('/asset/tagKey').then(res => {
         if (res.code == 200) {
           this.tagKeys = res.data.list.map(item => {
@@ -812,128 +357,23 @@ export default {
           this.resetTableTitle()
         }
       })
-    },
-    resetTableTitle: function () {
-      const title = this.tools.customTableTitle
-
-      const tableTitle = title.slice(0, this.tableTitle.length)
-
-      const tagTitle = title.slice(this.tableTitle.length, title.length)
-
-      const $self = this
-      const newTags = this.tagKeys.filter(item => { return !tagTitle.find(t => { return item.label == t.label }) })
-      const keepTags = tagTitle.filter(item => { return $self.tagKeys.find(t => { return item.label == t.label }) })
-
-      let result = tableTitle.concat([{ label: 'Tag', show: false, NotSet: true, type: 'title', prop: 'table-tag' }])
-
-      result = result.concat(keepTags).concat(newTags)
-
-      this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
-    },
-    filterTags: function (scope) {
-      const tag = scope.column.label.split(' [Tag]')[0]
-      const tagVals = scope.row.tags
-      if (tagVals) {
-        const showTag = tagVals.find(item => { return item.tag == tag })
-        if (showTag) {
-          return showTag.value
-        }
-      }
-    }
-  },
-  created () {
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
     }
   },
   mounted () {
-    // 初始化表头
-    const tableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.$route.path))
-      : this.tableTitle
-
-    this.tableTitleReset(this.tableTitle, tableTitle)
-
-    if (this.assetPingSwitch == 'off') {
-      this.dispatchEvent('asset-ping-switch-change', false)
-      for (const i in tableTitle) {
-        const label = tableTitle[i]
-        if (label.prop == 'pingStatus') {
-          label.show = false
-          label.NotSet = true
-          break
-        }
-      }
-    } else {
-      for (const i in tableTitle) {
-        const label = tableTitle[i]
-        if (label.prop == 'pingStatus') {
-          label.show = true
-          label.NotSet = false
-          break
-        }
-      }
-    }
-    this.tools.customTableTitle = tableTitle
-
-    this.loadKeys()
-
+    // this.loadKeys()
     // 初始化数据
-    this.getUserData()
-
-    this.pageObj.idcId = this.headerCurrentDc
-
-    this.getTableData()
-    // 是否存在分页缓存
-    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-    if (pageSize != 'undefined' && pageSize != null) {
-      this.pageObj.pageSize = pageSize
-    }
+    // this.getUserData()
     this.initEvent()
+    this.getBrandData()
+    this.getStateData()
+    this.getTypeData()
+    this.getDcData()
+    this.getSnmpCredentialData()
+    this.getFieldGroupData()
   },
   beforeDestroy () {
     bus.$off('asset-filter-change')
     bus.$off('alert-message-change')
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    }
   }
 }
 </script>
-
-<style scoped lang="scss">
-  .asset {
-    height: 100%;
-  }
-  /deep/ .el-table .cell.el-tooltip{
-    min-width: 88px;
-  }
-  .linkSup{
-    position: absolute;
-    top: -15px;
-    left: 17px;
-  }
-  .link{
-    position: relative;
-  }
-
-  .mark{
-    vertical-align: middle;
-    display: inline-flex;
-  }
-  .tag-header{
-    display: flex; width: 100%; align-items: center; flex-wrap: nowrap;
-    .tag-value{
-      max-width: calc(100% - 40px); min-width: 20px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-    }
-    .tag-mark{
-      color:orange; width: 42px;
-    }
-  }
-  /*/deep/ .sidebar-info-item .el-checkbox__label{*/
-    /*padding-right: 15px;*/
-    /*width: calc(100% - 32px);*/
-  /*}*/
-</style>

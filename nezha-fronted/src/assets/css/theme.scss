@@ -1,10 +1,23 @@
 :root {
-  --theme-color: #FA901C; // 默认主题色
+  --theme-color: #FA901C; // 默认主题色，下方深化、浅化的色值默认值是写死的；用户自定义修改主题色后，由js计算新值
+  --theme-color-dark-10: #E18219; // 默认主题色 深10%
+  --theme-color-light-10: #FA9B33; // 默认主题色 浅10%
+  --theme-color-light-20: #FBA649; // 默认主题色 浅20%
+  --theme-color-light-30: #FBB160; // 默认主题色 浅30%
+  --theme-color-light-40: #FBBC77; // 默认主题色 浅40%
+  --theme-color-light-50: #FCC88D; // 默认主题色 浅50%
+  --theme-color-light-60: #FCD4A4; // 默认主题色 浅60%
+  --theme-color-light-71: #FFDFBD; // 默认主题色 浅71%
+  --theme-color-light-80: #FFEAD2; // 默认主题色 浅80%
+  --theme-color-light-90: #FFF5E8; // 默认主题色 浅90%
+  --theme-color-light-98: #FFFCF8; // 默认主题色 浅98%
 }
 $--theme-color: var(--theme-color); // 主题色
 
 $--primary-border-color: #DEDEDE;
 $--primary-border-radius: 2px;
+
+$--right-box-border-color: #E7EAED;
 
 /* 按钮 */
 $--button-border-radius: $--primary-border-radius; // 按钮圆角

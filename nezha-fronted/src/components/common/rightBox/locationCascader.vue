@@ -6,13 +6,13 @@
       </el-input>
     </div>
     <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}" >
-      <div class="container">
+      <div class="location-container">
         <div class="container-item">
           <div style="height: 100%; overflow: auto;">
-            <ul v-if="idcInfos&& idcInfos.length>0">
-              <li v-for="(item,index) in idcInfos" :key="item.id+'-'+index" @click="loadCabinetInfos(item)">
+            <ul v-if="dcInfos&& dcInfos.length>0">
+              <li v-for="(item,index) in dcInfos" :key="item.id+'-'+index" @click="loadCabinetInfos(item)">
                 <div class="container-item-content">
-                  <div :title="item.name" class="container-item-content_label" :class="{'selected':selectedData.idc&&selectedData.idc.id == item.id}">{{item.name}}</div>
+                  <div :class="{'selected':selectedData.dc&&selectedData.dc.id == item.id}" :title="item.name" class="container-item-content_label">{{item.name}}</div>
                   <div><i class="el-icon-arrow-right"></i></div>
                 </div>
               </li>
@@ -36,7 +36,7 @@
         <div class="container-item" v-show="isShowCabinetU || uChecked.length>0" style="border-right: unset">
           <div style="height: 100%; overflow: auto;">
             <el-checkbox-group v-model="uChecked" v-if="refresh" @change="uChange">
-              <el-checkbox v-for="(item,index) in showUInfos" :key="index" :label="item.label" :value="item.value" :disabled="item.occupy==true" :checked="item.occupy==true||item.checked==true" :ref="'u-'+selectedData.idc.id+'-'+selectedData.cabinet.id+'-'+item.value" style="width: 50%"></el-checkbox>
+              <el-checkbox v-for="(item,index) in showUInfos" :key="index" :ref="'u-'+selectedData.dc.id+'-'+selectedData.cabinet.id+'-'+item.value" :checked="item.occupy==true||item.checked==true" :disabled="item.occupy==true" :label="item.label" :value="item.value" style="width: 50%"></el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -60,19 +60,19 @@ export default {
     defaultModelUSize: { default: 1 },
     value: { default: null },
     disabled: { type: Boolean },
-    idcOption: { type: Array }
+    dcOption: { type: Array }
   },
   data () {
     return {
       initData: null,
       dropDownVisible: false,
-      idcInfos: [],
+      dcInfos: [],
       cabinetInfos: new Map(),
       showCabinetInfos: [],
       uInfos: new Map(),
       showUInfos: [],
       selectedData: {
-        idc: null,
+        dc: null,
         cabinet: null,
         u: null
       },
@@ -88,7 +88,7 @@ export default {
   mounted () {
   },
   methods: {
-    toggleDropdown: function () {
+    toggleDropdown () {
       if (this.disabled == false) {
         this.dropDownVisible = !this.dropDownVisible
         if (this.dropDownVisible) {
@@ -103,30 +103,22 @@ export default {
         }
       }
     },
-    queryIdcInfos: function () {
-      this.idcInfos = this.idcOption
-      /* this.$get('idc?pageSize=-1').then(response=>{
-          console.info(2)
-          if(response.code == 200){
-              this.idcInfos=response.data.list;
-          }else{
-            console.error(response.msg);
-          }
-        }) */
+    queryDcInfos () {
+      this.dcInfos = this.dcOption
     },
-    loadCabinetInfos: function (idc) {
-      if (!idc) {
+    loadCabinetInfos (dc) {
+      if (!dc) {
         return
       }
-      this.selectedData.idc = idc
+      this.selectedData.dc = dc
       this.selectedData.cabinet = null
       this.selectedData.u = null
-      const cabinetKey = 'idc-' + idc.name + '-' + idc.id
+      const cabinetKey = 'dc-' + dc.name + '-' + dc.id
       this.showCabinetInfos = []
       if (this.cabinetInfos.has(cabinetKey) && this.cabinetInfos.get(cabinetKey) && this.cabinetInfos.get(cabinetKey).length > 0) {
         this.showCabinetInfos = this.cabinetInfos.get(cabinetKey)
       } else {
-        this.$get('cabinet?pageSize=-1&idcId=' + idc.id).then(response => {
+        this.$get('cabinet?pageSize=-1&dcId=' + dc.id).then(response => {
           if (response.code == 200) {
             this.cabinetInfos.set(cabinetKey, response.data.list)
             this.showCabinetInfos = response.data.list
@@ -139,14 +131,14 @@ export default {
       this.isShowCabinetU = false
       this.showUInfos = []
     },
-    loadCabinetUInfos: function (cabinet, isInit = false) {
+    loadCabinetUInfos (cabinet, isInit = false) {
       if (!cabinet) {
         return
       }
       // console.log('load u',cabinet,isInit)
       this.selectedData.cabinet = cabinet
       this.selectedData.u = null
-      const cabinetUKey = 'cabinet-' + this.selectedData.idc.id + '-' + cabinet.id
+      const cabinetUKey = 'cabinet-' + this.selectedData.dc.id + '-' + cabinet.id
       this.showUInfos = []
       this.uChecked = []
       this.oldUChecked = []
@@ -196,7 +188,7 @@ export default {
       this.isShowCabinetU = true
       this.refreshCheckBox()
     },
-    uChange: function (data) {
+    uChange (data) {
       if (data.length < this.oldUChecked.length) { // 取消选择操作
         // 1.判断是否仅剩下defualtModelusize 的u位选中
         const checkedValues = this.findUnoccupyU(this.oldUChecked)
@@ -300,11 +292,11 @@ export default {
       this.oldUChecked = this.uChecked
       this.selectedData.u = this.findOldCheckedMinMax(this.uChecked)
     },
-    clearUChecked: function () { // 取消所有选中，恢复到刚打开时的状态
+    clearUChecked () { // 取消所有选中，恢复到刚打开时的状态
       this.uChecked = []
       this.uChecked = this.uChecked.concat(this.occupyU)
     },
-    findOldCheckedMinMax: function () {
+    findOldCheckedMinMax () {
       let oldUCheckCopy = Object.assign([], this.oldUChecked)
       oldUCheckCopy = this.findUnoccupyU(oldUCheckCopy)
       if (oldUCheckCopy && oldUCheckCopy.length > 0) {
@@ -316,14 +308,14 @@ export default {
         return []
       }
     },
-    findUnoccupyU: function (arr) {
+    findUnoccupyU (arr) {
       // console.log('findUnoccupyU')
       // console.log(this.occupyU)
       return arr.filter((item, index) => {
         return !this.occupyU.includes(item)
       })
     },
-    findSuitableU: function (checkValue) {
+    findSuitableU (checkValue) {
       // 将u位数组分为左右两部分，先查找右边的是否符合
       let left = this.showUInfos.filter((item, index) => { return item.value < checkValue })
       left = left.reverse()// 自下而上查找
@@ -353,39 +345,39 @@ export default {
       }
       return result
     },
-    refreshCheckBox: function () {
+    refreshCheckBox () {
       this.refresh = false
       this.$nextTick(() => {
         this.refresh = true
       })
     },
-    initComponet: function (initData) {
+    initComponet (initData) {
       this.initData = Object.assign({}, initData)
       if (initData) {
-        this.selectedData.idc = initData.idc
+        this.selectedData.dc = initData.dc
         this.selectedData.cabinet = initData.cabinet
         this.selectedData.u = initData.u
-        this.loadCabinetInfos(initData.idc)
+        this.loadCabinetInfos(initData.dc)
         this.loadCabinetUInfos(initData.cabinet, true)
       }
     }
   },
   computed: {
     inputShowInfo () {
-      const idcName = this.selectedData.idc ? this.selectedData.idc.name + '/' : ''
+      const dcName = this.selectedData.dc ? this.selectedData.dc.name + ' / ' : ''
 
-      const cabinetName = this.selectedData.cabinet ? this.selectedData.cabinet.name + '/' : ''
+      const cabinetName = this.selectedData.cabinet ? this.selectedData.cabinet.name + ' / ' : ''
 
       const uValues = this.selectedData.u && this.selectedData.u.length > 0 && this.selectedData.u[0] && this.selectedData.u[1] ? this.selectedData.u[0] + '-' + this.selectedData.u[1] : ''
 
-      if (!this.selectedData.idc) {
+      if (!this.selectedData.dc) {
         return ''
-      } else if (this.selectedData.idc && !this.selectedData.cabinet) {
-        return idcName
-      } else if (this.selectedData.idc && this.selectedData.cabinet && !this.selectedData.u) {
-        return idcName + cabinetName
-      } else if (this.selectedData.idc && this.selectedData.cabinet && this.selectedData.u) {
-        return idcName + cabinetName + uValues
+      } else if (this.selectedData.dc && !this.selectedData.cabinet) {
+        return dcName
+      } else if (this.selectedData.dc && this.selectedData.cabinet && !this.selectedData.u) {
+        return dcName + cabinetName
+      } else if (this.selectedData.dc && this.selectedData.cabinet && this.selectedData.u) {
+        return dcName + cabinetName + uValues
       }
       return ''
     }
@@ -398,11 +390,11 @@ export default {
         this.$emit('change', n)
       }
     },
-    idcOption: {
+    dcOption: {
       deep: true,
       immediate: true,
       handler (n, o) {
-        this.queryIdcInfos()
+        this.queryDcInfos()
       }
     }
   }
@@ -448,12 +440,12 @@ export default {
     height: 200px;
     width: 100%;
   }
-  .container{
+  .location-container{
     height: 100%;
     width: 100%;
     display: flex;
   }
-  .container .container-item{
+  .location-container .container-item{
     height: 100%;
     flex: 1;
     width: 0;
@@ -469,6 +461,7 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #606266;
   }
   .container-item-content .selected{
     font-weight: 700;

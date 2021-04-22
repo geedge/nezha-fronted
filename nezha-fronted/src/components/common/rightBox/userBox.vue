@@ -311,6 +311,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import '@/assets/css/common/rightBoxCommon.scss';
   .right-box-account {
     .right-box-sub-title {
       #add-notification {

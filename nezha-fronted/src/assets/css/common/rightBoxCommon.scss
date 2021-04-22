@@ -1,0 +1,186 @@
+.right-box, .right-sub-box {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 0;
+  top: 50px;
+  padding: 0;
+  height: calc(100% - 50px);
+  width: 700px;
+  box-shadow: 0 0 5px #ccc;
+  background-color: white;
+  z-index: 410;
+
+  .el-date-editor {
+    .el-input__inner {
+      padding-left: 32px;
+    }
+  }
+}
+
+.right-box__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid $--right-box-border-color;
+  box-sizing: border-box;
+
+  .header__title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  .header__operation {
+    i {
+      color: #999;
+      font-size: 14px;
+    }
+  }
+}
+
+.right-box__container {
+  height: calc(100% - 130px);
+  padding: 0 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .el-input__inner {
+    padding: 0 10px;
+    border-radius: $--primary-border-radius;
+    border: 1px solid $--right-box-border-color;
+  }
+  .el-form {
+    padding-top: 20px;
+
+    .el-form-item {
+      margin-bottom: 16px;
+
+      .el-form-item__label {
+        padding-bottom: 6px;
+        font-size: 14px;
+        line-height: 16px;
+        color: #666;
+      }
+
+      .el-input__inner:hover {
+        border-color: darken($--right-box-border-color, 10%);
+      }
+      .el-input__inner:focus {
+        border-color: darken($--right-box-border-color, 20%);
+      }
+    }
+    .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus {
+      border-color: #F56C6C
+    }
+
+    .form__sub-title {
+      padding: 0 10px;
+      margin-bottom: 20px;
+      line-height: 32px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+      background-color: #F6F6F6;
+    }
+    /* 虚线框类型的form-item */
+    .form__dotted-item {
+      padding: 10px 10px 6px 10px;
+      margin-bottom: 10px;
+      border: 1px dashed $--primary-border-color;
+      border-radius: $--primary-border-radius;
+
+      .el-form-item {
+        margin-bottom: 0;
+
+        .el-form-item__label {
+          width: 100%;
+        }
+        .form__labels-label {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+    .form__create-btn {
+      margin-bottom: 20px;
+      width: 300px;
+      height: 28px;
+      border: 1px solid var(--theme-color-light-71);
+      border-radius: $--primary-border-radius;
+      background-color: var(--theme-color-light-98);
+
+      i {
+        color: var(--theme-color);
+      }
+    }
+    .form__flex-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.right-box__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  box-shadow: -3px 0 8px -3px rgba(205,205,205,0.77);
+
+  .footer__btn {
+    margin: 0 15px;
+    height: 30px;
+    min-width: 74px;
+    padding: 0 15px;
+    color: white;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color linear .2s, color linear .1s;
+  }
+  .footer__btn:hover:not(.footer__btn--disabled) {
+    background-color: var(--theme-color-light-20);
+  }
+  .footer__btn--light {
+    background-color: white;
+    border: 1px solid $--primary-border-color;
+    color: #333;
+  }
+  .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
+    background-color: white;
+    border-color: var(--theme-color-light-50);
+    color: var(--theme-color);
+  }
+  .footer__btn--disabled {
+    opacity: .6;
+    cursor: default;
+  }
+}
+/* 隐藏label新增按钮处级联选择器的input */
+.hide-casc-input {
+  position: relative;
+
+  .hide-input {
+    position: absolute;
+    top: 0;
+    width: 300px;
+    opacity: 0;
+  }
+}
+.label__multi-text {
+  display: flex;
+  justify-content: space-between;
+}
+.right-box__select {
+  width: 100%;
+}
+.right-box-select-dropdown {
+  width: 625px;
+}

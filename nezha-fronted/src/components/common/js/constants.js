@@ -78,7 +78,54 @@ export const asset = {
     { value: 1, label: i18n.t('asset.inStock') },
     { value: 2, label: i18n.t('asset.notInStock') },
     { value: 3, label: i18n.t('asset.suspended') }
-  ]
+  ],
+  authProtocolOptions: [
+    { value: 0, label: 'Non' },
+    { value: 1, label: 'SSH' },
+    { value: 2, label: 'TELNET' }
+  ],
+  authProtocolData: {
+    non: 0,
+    ssh: 1,
+    telnet: 2
+  },
+  authTypeOptions: [
+    { value: 1, label: 'Username' },
+    { value: 2, label: 'Key' }
+  ],
+  authTypeData: {
+    username: 1,
+    key: 2
+  },
+  editTypeOptions: [
+    { value: 1, label: i18n.t('overall.account') },
+    { value: 2, label: 'Label' },
+    { value: 3, label: i18n.t('asset.state') },
+    { value: 4, label: i18n.t('asset.snmpCredential') }
+  ],
+  editTypeData: {
+    account: 1,
+    label: 2,
+    state: 3,
+    snmpCredential: 4
+  },
+  labelTypeData: {
+    TEXT: 'TEXT',
+    MULTITEXT: 'MULTITEXT',
+    TEXTAREA: 'TEXTAREA',
+    RADIO: 'RADIO',
+    CHECKBOX: 'CHECKBOX',
+    SELECT: 'SELECT',
+    INTEGER: 'INTEGER',
+    DOUBLE: 'DOUBLE',
+    DATETIME: 'DATETIME',
+    EMAIL: 'EMAIL'
+  },
+  labelSubTypeData: {
+    date: 'date',
+    time: 'time',
+    dateTime: 'dateTime'
+  }
 }
 
 export const alertMessage = {
@@ -170,6 +217,7 @@ export const fromRoute = {
   asset: 'asset',
   assetType: 'assetType',
   assetState: 'assetState',
+  assetLabel: 'assetLabel',
   expressionTemplate: 'expressionTemplate',
   user: 'user',
   agent: 'agent',
