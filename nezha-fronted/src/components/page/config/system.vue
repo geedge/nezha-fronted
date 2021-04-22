@@ -318,10 +318,8 @@ export default {
       },
       terminalCopy: null,
       terminalRules: {
-        max_terminal_num: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: positiveInteger, trigger: 'blur' }
-        ]
+        terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
+        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
       },
       ldap: {
         ldap_address: '',
@@ -337,7 +335,8 @@ export default {
       ldapRules: {
         ldap_address: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         ldap_user_filter: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        ldap_mapping: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+        ldap_mapping: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        ldap_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
       },
       reset: {
         type: [],
@@ -790,7 +789,7 @@ export default {
 
       let hour = offsetHour>0?(offsetHour<9?'+0'+offsetHour:'+'+offsetHour):(offsetHour == 0?(offsetMinute==0?'':'+00'):(offsetHour>-10?'-0'+Math.abs(offsetHour):offsetHour))
 
-      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(offsetMinute>9?':'+offsetMinute:':0'+offsetMinute))
+      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(Math.abs(offsetMinute)>9?':'+Math.abs(offsetMinute):':0'+Math.abs(offsetMinute)))
 
       return 'UTC'+hour+minute
     }
