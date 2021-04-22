@@ -38,7 +38,7 @@
                 {{scope.row[item.prop]}} ms
               </span>
         <span v-else-if="item.prop === 'username'">{{formatUsername(scope.row)}}</span>
-        <span v-else-if="item.prop === 'createDate'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+        <span v-else-if="item.prop === 'createDate'">{{scope.row[item.prop]}}</span>
         <span v-else>{{scope.row[item.prop]}}</span>
       </template>
     </el-table-column>

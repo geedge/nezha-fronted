@@ -470,7 +470,8 @@ const en = {
     key: 'Invalid key',
     repeat: 'Repeat',
     tooLong: 'Too long content',
-    onlyWord: 'only input a-z、A-Z、0-9、"_" '
+    onlyWord: 'only input a-z、A-Z、0-9、"_" ',
+    mobile:'Invalid mobile',
   },
   search: {
     searchTip: 'Enter to search', // '点击或回车执行搜索'
@@ -704,7 +705,8 @@ const en = {
       invalidPwd: 'invalide password,the length at least 6',
       confirmPwdErr: 'The two passwords are inconsistent',
       reinputPwd: 'Enter password again',
-      notification: 'Notification'
+      notification: 'Notification',
+      mobile: 'Mobile',
     },
     roles: {
       roles: 'Roles',
@@ -869,7 +871,9 @@ const en = {
         export: 'export',
         delete: 'delete',
         reset: 'reset',
-        unknown: 'unknown'
+        unknown: 'unknown',
+        login: 'login',
+        logout: 'logout'
       }
     },
     mib: {
@@ -1007,8 +1011,8 @@ const en = {
         reset: 'Reset',
         type: 'Type',
         pwd: 'Password',
-        metric: 'metric',
-        alert: 'alert',
+        metric: 'Metric',
+        alert: 'Alert',
         sysConfig: 'System config',
         pwdTip: 'Please input your password',
         promptTitle: 'Confirm',

@@ -101,7 +101,16 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     {
       value: 'unknown',
       label: i18n.t('config.operationlog.operations.unknown')
-    }
+    },
+    {
+      value: 'login',
+      label: i18n.t('config.operationlog.operations.login')
+    },
+    {
+      value: 'logout',
+      label: i18n.t('config.operationlog.operations.logout')
+    },
+
   ],
   alertMessageState: [
     {
@@ -121,6 +130,16 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     {
       value: 'TELNET',
       label: i18n.t('config.terminallog.TELNET')
+    }
+  ],
+  state:[
+    {
+      value: 'success',
+      label: i18n.t('overall.result.success')
+    },
+    {
+      value: 'fail',
+      label: i18n.t('overall.result.failed')
     }
   ]
 }

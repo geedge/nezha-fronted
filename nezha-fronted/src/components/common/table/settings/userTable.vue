@@ -34,9 +34,7 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'roles'">
           <template v-if="scope.row[item.prop]">
-            <template v-for="(role, index) in scope.row[item.prop]">
-              <span v-if="role" :key="index"></span>
-            </template>
+            {{scope.row[item.prop].map(t=>t.name).join(',')}}
           </template>
           <template v-else>
             <span>-</span>

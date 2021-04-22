@@ -6,6 +6,7 @@
     :search-msg="searchMsg"
     :tabs="tabs"
     @changeTab="changeTab"
+    @search="search"
   >
     <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
     <template v-slot>
@@ -42,7 +43,7 @@ export default {
   },
   data () {
     return {
-      url: 'sys/log/list',
+      url: 'sys/log',
       tableId: 'operationLogTable',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -65,9 +66,28 @@ export default {
             type: 'selectString',
             label: 'operation',
             disabled: false
-          }
+          },{
+            id: 14,
+            name: this.$t('config.operationlog.operaId'),
+            type: 'input',
+            label: 'operaId',
+            disabled: false
+          },{
+            id: 16,
+            name: this.$t('config.operationlog.state'),
+            type: 'selectString',
+            label: 'state',
+            disabled: false
+          }, {
+            id: 17,
+            name: this.$t('config.operationlog.params'),
+            type: 'input',
+            label: 'params',
+            disabled: false
+          },
         ]
-      }
+      },
+      searchLabel:{userId:this.obj.id}
     }
   },
   methods: {
@@ -81,24 +101,7 @@ export default {
       }
       return ''
     },
-    getTableData () {
-      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
-      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.tools.loading = true
-      this.$get('sys/log/list', this.searchLabel).then(response => {
-        this.tools.loading = false
-        if (response.code === 200) {
-          this.tableData = response.data.list
-          this.pageObj.total = response.data.total
-          if (!this.scrollbarWrap) {
-            this.$nextTick(() => {
-              this.scrollbarWrap = this.$refs.dataTable.bodyWrapper
-              this.toTopBtnHandler(this.scrollbarWrap)
-            })
-          }
-        }
-      })
-    }
+
   }
 }
 </script>

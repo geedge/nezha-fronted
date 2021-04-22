@@ -36,13 +36,13 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <user-box v-if="rightBox.show" :user="object" @close="closeRightBox"></user-box>
+      <user-box v-if="rightBox.show" :obj="object" @close="closeRightBox"></user-box>
     </transition>
   </div>
 </template>
 <script>
 import deleteButton from '@/components/common/deleteButton'
-import userBox from '@/components/common/rightBox/userBox'
+import userBox from '@/components/common/rightBox/administration/userBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import userTable from '@/components/common/table/settings/userTable'
@@ -79,7 +79,7 @@ export default {
           id: 10,
           name: this.$t('config.user.user'),
           type: 'input',
-          label: 'username',
+          label: 'name',
           disabled: false
         }]
       }

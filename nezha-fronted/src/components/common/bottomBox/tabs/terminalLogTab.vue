@@ -64,7 +64,8 @@ export default {
           }
         ]
       },
-      nowTime: ''
+      nowTime: '',
+      searchLabel:{userId:this.obj.id}
     }
   },
   methods: {

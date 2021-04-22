@@ -35,12 +35,12 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <role-box v-if="rightBox.show" :role="object" @close="closeRightBox"></role-box>
+      <role-box v-if="rightBox.show" :obj="object" @close="closeRightBox"></role-box>
     </transition>
   </div>
 </template>
 <script>
-import roleBox from '@/components/common/rightBox/roleBox'
+import roleBox from '@/components/common/rightBox/administration/roleBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'

@@ -6,6 +6,7 @@
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.operationLog"
+      @search="search"
       :search-msg="searchMsg">
       <template v-slot:default="slotProps">
         <operation-log-table
@@ -43,7 +44,7 @@ export default {
   mixins: [dataListMixin],
   data () {
     return {
-      url: 'sys/log/list',
+      url: 'sys/log',
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -66,9 +67,27 @@ export default {
             type: 'selectString',
             label: 'operation',
             disabled: false
-          }
+          },{
+            id: 14,
+            name: this.$t('config.operationlog.operaId'),
+            type: 'input',
+            label: 'operaId',
+            disabled: false
+          },{
+            id: 16,
+            name: this.$t('config.operationlog.state'),
+            type: 'selectString',
+            label: 'state',
+            disabled: false
+          }, {
+            id: 17,
+            name: this.$t('config.operationlog.params'),
+            type: 'input',
+            label: 'params',
+            disabled: false
+          },
         ]
-      }
+      },
     }
   }
 }

@@ -56,7 +56,7 @@
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
                   <div style="display: flex;justify-content: space-between;padding: 5px;">
                     <div >{{item.name}}</div>
-                    <div >{{timezoneOptionHandler(item.offset)}}</div>
+                    <div class="utc-item">{{timezoneOptionHandler(item.offset)}}</div>
                   </div>
                 </el-option>
               </el-select>
@@ -296,7 +296,7 @@ export default {
       emailCopy: null,
       emailRules: {
         email_host: [
-          // { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { validator: hostPlus, trigger: 'blur' }
         ],
         email_port: [
@@ -304,7 +304,7 @@ export default {
           { validator: port, trigger: 'blur' }
         ],
         email_auth_account: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          // { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { type: 'email', message: this.$t('validate.email'), trigger: 'blur' }
         ],
         email_send_account: [{ type: 'email', message: this.$t('validate.email'), trigger: 'blur' }],
@@ -318,7 +318,7 @@ export default {
       },
       terminalCopy: null,
       terminalRules: {
-        terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
+        // terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
         terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
       },
       ldap: {
@@ -918,6 +918,10 @@ export default {
   .system-config-form  /deep/ .el-input input{
     text-align: left;
   }
+  .utc-item{
+    color: #999999;
+    font-size: 12px;
+  }
 </style>
 <style lang="scss">
   .system {
@@ -1082,7 +1086,7 @@ export default {
     color: #8c939d;
     width: 100px;
     height: 100px;
-    line-height: 100px;
+    line-height: 100px !important;
     vertical-align: middle;
     text-align: center;
   }

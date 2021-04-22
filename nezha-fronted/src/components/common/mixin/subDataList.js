@@ -4,7 +4,8 @@ export default {
     tabs: {
       type: Array
     },
-    targetTab: String
+    targetTab: String,
+    from: String
   },
   data () {
     return {
