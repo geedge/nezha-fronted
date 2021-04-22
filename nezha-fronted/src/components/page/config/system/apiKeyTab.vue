@@ -72,7 +72,7 @@ export default {
     addApiKey: function () {
       this.$refs.dataTable.addApiKey()
       this.$refs.dataTable.getRoles()
-    },
+    }
   }
 }
 </script>

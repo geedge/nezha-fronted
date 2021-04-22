@@ -284,7 +284,7 @@ export default {
       // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
       this.$emit('change', value)
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
     metricKeyDown (val) {
       if (this.required) {

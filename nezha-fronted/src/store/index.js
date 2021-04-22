@@ -33,7 +33,7 @@ const store = new Vuex.Store({
     overViewProject: {},
     dcDataRefresh: false,
     showTopoScreen: false,
-    logo:'',
+    logo: ''
   },
   getters: {
     getLinkData (state) {
@@ -60,9 +60,9 @@ const store = new Vuex.Store({
     getShowTopoScreen (state) {
       return state.showTopoScreen
     },
-    getLogo (state){
-      console.log('get logo',state)
-      return state.logo;
+    getLogo (state) {
+      console.log('get logo', state)
+      return state.logo
     }
   },
   mutations: {
@@ -141,9 +141,9 @@ const store = new Vuex.Store({
     setShowTopoScreen (state, boolean) {
       state.showTopoScreen = boolean
     },
-    setLogo(state,logo){
-      console.log('set log',logo)
-      state.logo = logo;
+    setLogo (state, logo) {
+      console.log('set log', logo)
+      state.logo = logo
     }
   },
   actions: {

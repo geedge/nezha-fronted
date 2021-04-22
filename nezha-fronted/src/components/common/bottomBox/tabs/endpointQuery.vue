@@ -119,7 +119,7 @@ export default {
       dropdownShow: '',
       timeout: null,
       formatTime: '',
-      hideSameLabels: true,
+      hideSameLabels: true
     }
   },
   methods: {
@@ -171,7 +171,7 @@ export default {
           wrap.scrollTop = currentTop
         }
       }, 20)
-    },
+    }
   }
 }
 </script>

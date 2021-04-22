@@ -138,7 +138,7 @@ export default {
           label: 'ids',
           disabled: false
         }]
-      },
+      }
     }
   },
   methods: {
@@ -196,11 +196,10 @@ export default {
   },
   created () {
     if (localStorage.getItem('moduleProjectId')) {
-
       this.searchLabel.projectIds = localStorage.getItem('moduleProjectId')
     }
     if (localStorage.getItem('moduleProjectId')) {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.$refs.dataList.$refs.searchInput.select_list.push({
           id: 11,
           name: 'project id',

@@ -109,7 +109,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     {
       value: 'logout',
       label: i18n.t('config.operationlog.operations.logout')
-    },
+    }
 
   ],
   alertMessageState: [
@@ -132,7 +132,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.terminallog.TELNET')
     }
   ],
-  state:[
+  state: [
     {
       value: 'success',
       label: i18n.t('overall.result.success')

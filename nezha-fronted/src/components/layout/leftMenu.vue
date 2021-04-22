@@ -42,14 +42,14 @@ export default {
     return {
       isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
       systemName: localStorage.getItem('nz-sys-name'),
-      logo:'',
+      logo: ''
     }
   },
-  created() {
-    const self = this;
-    window.addEventListener('setItemEvent',function(e){
-      if(e.key == 'nz-sys-logo'&&e.value){
-        self.logo = e.value;
+  created () {
+    const self = this
+    window.addEventListener('setItemEvent', function (e) {
+      if (e.key == 'nz-sys-logo' && e.value) {
+        self.logo = e.value
       }
     })
   },
@@ -76,7 +76,7 @@ export default {
     },
     route () {
       return this.$route.path
-    },
+    }
   },
   methods: {
     shrink () {

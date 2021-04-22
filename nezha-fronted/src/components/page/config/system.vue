@@ -250,22 +250,21 @@ export default {
   components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab },
   data () {
     return {
-      imageFormatErr:false,
+      imageFormatErr: false,
       basic: {
         alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
         storage_local_retention: 15 * 24,
         system_name: '',
-        system_logo:'',
+        system_logo: '',
         current_site_url: '',
         timezone: '',
         default_cabinet_usize: '',
         query_max_series: '',
         unsaved_change: 'on',
-        default_scrape_interval:'60',
-        default_scrape_timeout:'30',
-        default_scrape_interval:'60',
-        snmp_trap_listen_port:162,
+        default_scrape_interval: '60',
+        default_scrape_timeout: '30',
+        snmp_trap_listen_port: 162,
         map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 }
       },
       basicCopy: null,
@@ -286,7 +285,7 @@ export default {
         email_enable: 'on',
         email_host: '',
         email_port: 25,
-        email_timeout:10,
+        email_timeout: 10,
         email_auth_account: '',
         email_auth_password: '',
         email_send_account: '',
@@ -312,14 +311,14 @@ export default {
       },
       terminal: {
         terminal_timeout: 30,
-        terminal_telnet_user_tip:'ogin:',
-        terminal_telnet_pin_tip:'assword:',
-        terminal_record_local_retention:365,
+        terminal_telnet_user_tip: 'ogin:',
+        terminal_telnet_pin_tip: 'assword:',
+        terminal_record_local_retention: 365
       },
       terminalCopy: null,
       terminalRules: {
         // terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
-        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
       },
       ldap: {
         ldap_address: '',
@@ -329,14 +328,14 @@ export default {
         ldap_user_filter: '',
         ldap_mapping: '',
         ldap_enable: 'off',
-        ldap_timeout:'',
+        ldap_timeout: ''
       },
       ldapCopy: null,
       ldapRules: {
         ldap_address: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         ldap_user_filter: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         ldap_mapping: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        ldap_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        ldap_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
       },
       reset: {
         type: [],
@@ -393,10 +392,10 @@ export default {
     selectTab: function (tab) {
       this.querySetInfo(tab.name)
     },
-    queryTimezone:function(){
-      this.$get("/sys/timezone").then(response=>{
-        if(response.code == 200){
-          this.timezoneOption = response.data.list;
+    queryTimezone: function () {
+      this.$get('/sys/timezone').then(response => {
+        if (response.code == 200) {
+          this.timezoneOption = response.data.list
         }
       })
     },
@@ -410,7 +409,7 @@ export default {
       }
       this.$get('/sys/config/' + type).then(response => {
         if (response.code == 200) {
-          for (let key in response.data){
+          for (const key in response.data) {
             this[type][key] = response.data[key]
           }
           if (type == 'basic') {
@@ -441,14 +440,14 @@ export default {
           const param = Object.assign({}, this[type])
 
           if (type == 'basic') {
-            let mapConfig = this.$refs.latlngPicker.getAttribute()
+            const mapConfig = this.$refs.latlngPicker.getAttribute()
             param.map_center_config = JSON.stringify(mapConfig)
           }
           const postParam = Object.assign({}, param)
           for (const key in postParam[type]) {
             postParam[type][key] = postParam[type][key] + ''
           }
-          this.$put('/sys/config/'+type, postParam).then(response => {
+          this.$put('/sys/config/' + type, postParam).then(response => {
             this.prevent_opt.save = false
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -473,9 +472,9 @@ export default {
         if (valid) {
           const param = Object.assign({}, this[type])
 
-          param[type+'_test']=true
+          param[type + '_test'] = true
           const postParam = Object.assign({}, param)
-          this.$put('/sys/config/'+type, postParam).then(response => {
+          this.$put('/sys/config/' + type, postParam).then(response => {
             this.prevent_opt.save = false
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.testSuccess') })
@@ -755,48 +754,47 @@ export default {
     openUrl (item) {
       // window.open(item.url)
     },
-    handleLogoChange(file, fileList) {
-      const imageTypes = ['image/jpeg','image/jpg','image/png'];
+    handleLogoChange (file, fileList) {
+      const imageTypes = ['image/jpeg', 'image/jpg', 'image/png']
       console.log(file.raw.type)
-      const isImage = imageTypes.some(t=> file.raw.type === t);
-      const isLt2M = file.raw.size / 1024 / 1024 < 2;
+      const isImage = imageTypes.some(t => file.raw.type === t)
+      const isLt2M = file.raw.size / 1024 / 1024 < 2
 
       this.imageFormatErr = (!isImage || !isLt2M)
 
-      if(isImage && isLt2M){
-        const self = this;
-        this.fileToBase64(file.raw).then(res=>{
-          self.basic.system_logo = res;
-        });
+      if (isImage && isLt2M) {
+        const self = this
+        this.fileToBase64(file.raw).then(res => {
+          self.basic.system_logo = res
+        })
       }
     },
-    fileToBase64:function(file) {
+    fileToBase64: function (file) {
       return new Promise((resolve, reject) => {
-        let  reader = new FileReader();
-        reader.readAsDataURL(file);//转化二进制流，异步方法
-        let base64Str='';
-        reader.onload = function(){//完成后this.result为二进制流console.log(this.result);
-           base64Str = this.result;
-          resolve(base64Str);
-       }
-
+        const reader = new FileReader()
+        reader.readAsDataURL(file)// 转化二进制流，异步方法
+        let base64Str = ''
+        reader.onload = function () { // 完成后this.result为二进制流console.log(this.result);
+          base64Str = this.result
+          resolve(base64Str)
+        }
       })
     },
-    timezoneOptionHandler:function(offset){
-      let offsetHour = (offset/1000/60/60).toFixed(0)
+    timezoneOptionHandler: function (offset) {
+      const offsetHour = (offset / 1000 / 60 / 60).toFixed(0)
 
-      let offsetMinute = offset%(1000*60*60)/(1000*60)
+      const offsetMinute = offset % (1000 * 60 * 60) / (1000 * 60)
 
-      let hour = offsetHour>0?(offsetHour<9?'+0'+offsetHour:'+'+offsetHour):(offsetHour == 0?(offsetMinute==0?'':'+00'):(offsetHour>-10?'-0'+Math.abs(offsetHour):offsetHour))
+      const hour = offsetHour > 0 ? (offsetHour < 9 ? '+0' + offsetHour : '+' + offsetHour) : (offsetHour == 0 ? (offsetMinute == 0 ? '' : '+00') : (offsetHour > -10 ? '-0' + Math.abs(offsetHour) : offsetHour))
 
-      let minute = offsetHour==0&&offsetMinute == 0?'':(offsetMinute==0?':00':(Math.abs(offsetMinute)>9?':'+Math.abs(offsetMinute):':0'+Math.abs(offsetMinute)))
+      const minute = offsetHour == 0 && offsetMinute == 0 ? '' : (offsetMinute == 0 ? ':00' : (Math.abs(offsetMinute) > 9 ? ':' + Math.abs(offsetMinute) : ':0' + Math.abs(offsetMinute)))
 
-      return 'UTC'+hour+minute
+      return 'UTC' + hour + minute
     }
-},
+  },
   mounted () {
     this.querySetInfo(this.activeTab)
-    this.queryTimezone();
+    this.queryTimezone()
   }
 }
 </script>

@@ -20,7 +20,7 @@ export default {
       localStorage.clear()
       localStorage.setItem('nz-version', version)
     }
-  },
+  }
 }
 </script>
 
