@@ -152,7 +152,7 @@ export default {
       if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/cancelImport'
       } else if (this.importUrl.indexOf('endpoint') > -1) {
-        url = '/endpoint/cancelImport'
+        url = '/monitor/endpoint/cancelImport'
       } else if (this.importUrl.indexOf('rule') > -1) {
         url = '/alert/rule/cancelImport'
       } else if (this.importUrl.indexOf('panel') > -1) {
@@ -225,7 +225,7 @@ export default {
       } else if (this.importUrl.indexOf('panel') > -1) {
         url = '/panel/template'
       } else if (this.importUrl.indexOf('endpoint') > -1) {
-        url = '/endpoint/template'
+        url = '/monitor/endpoint/template'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
         url = '/expression/tmpl/template'
       }

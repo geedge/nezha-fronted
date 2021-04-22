@@ -1,3 +1,6 @@
+<style scoped lang="scss">
+  @import '@/assets/css/common/rightBoxCommon.scss';
+</style>
 <template>
   <div class="right-box right-box-add-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->

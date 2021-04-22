@@ -1,5 +1,5 @@
 <template>
-  <div class="endpoint-list">
+  <div class="endpoint-list" v-has="'endpoint_list'">
     <nz-data-list
       ref="dataList"
       :api="url"
@@ -18,7 +18,7 @@
           import-url="monitor/endpoint/import"
           export-file-name="expression-template"
           :params="searchLabel"
-          :permissions="{import: 'asset_add', export: 'asset_add'}"
+          :permissions="{import: 'endpoint.import', export: 'endpoint.export'}"
           @afterImport="getTableData"
           class="top-tool-export margin-r-10"
         >
@@ -157,14 +157,10 @@ export default {
           index: 0
         },
         state: {
-          label: 'state',
+          label: 'State',
           key: 'states',
           type: 'checkBox',
-          children: [
-            { key: 'Down', value: 0, name: 'Down' },
-            { key: 'Up', value: 1, name: 'Up' },
-            { key: 'Suspended', value: 0, name: 'Suspended' }
-          ],
+          children: [],
           show: true,
           showMore: false,
           width: 0,
@@ -174,7 +170,7 @@ export default {
       selectValue: {
         projectIds: [],
         moduleIds: [],
-        state: []
+        states: []
       }
     }
   },
@@ -281,6 +277,11 @@ export default {
           })
         }
       })
+      this.titleSearchList.state.children = [
+        { key: 'Down', value: 0, name: 'Down' },
+        { key: 'Up', value: 1, name: 'Up' },
+        { key: 'Suspended', value: 2, name: 'Suspended' }
+      ]
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {

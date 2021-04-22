@@ -3,13 +3,13 @@
   @import "./L5/css/props.css";
 </style>
 <template>
-  <div class="project-box list-page" v-loading="topologyLoading">
+  <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
     <!--project主要信息-->
     <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
       <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
         <!--工具栏-->
         <span class="project-topology-tool">
-          <el-dropdown trigger="click" size="small" placement="bottom-start">
+          <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick">
@@ -37,7 +37,7 @@
                   </el-collapse-item>
                 </el-collapse>
               </el-card>
-                <div class="upload-pic-box" @click="uploadPicChange">
+                <div class="upload-pic-box" @click="uploadPicChange" v-has="'topo_icon_save'">
                   <i class="el-icon-plus"></i>
                   <span>
                      Upload custom picture
@@ -119,7 +119,7 @@
                   <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
         </button>
         <button @click="editTopology" class="top-tool-btn float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button" v-has="'project_topo_update'"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
         </button>

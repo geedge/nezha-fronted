@@ -1,11 +1,14 @@
+<style scoped lang="scss">
+  @import '@/assets/css/common/rightBoxCommon.scss';
+</style>
 <template>
   <div class="right-box right-box-module" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
     <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-<!--      <button v-if="editEndpoint.id" id="module-del" v-has="'module_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">-->
-<!--        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
-<!--        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-<!--      </button>-->
+    <div class="right-box-top-btns right-box-form-delete" v-if="optionType === 'edit'">
+      <button v-if="editEndpoint.id" id="module-del" v-has="'monitor_endpoint_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
+        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+      </button>
     </div>
     <!-- end--顶部按钮-->
 
@@ -252,7 +255,7 @@
       <button v-cancel="{obj:editEndpoint,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" v-has="'monitor_endpoint_edit'" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -859,7 +862,9 @@ export default {
     padding: 0;
   }
   /deep/ .ti-tag{
-    background-color: #FA901C;
+    background-color: #f4f4f5;
+    border-color: #e9e9eb;
+    color: #909399;
   }
 </style>
 <style>

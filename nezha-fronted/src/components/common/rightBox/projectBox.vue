@@ -1,3 +1,6 @@
+<style scoped lang="scss">
+  @import '@/assets/css/common/rightBoxCommon.scss';
+</style>
 <template>
   <div class="right-box right-box-project" v-clickoutside="{obj:editProject,func:clickOutside}">
     <!-- begin--顶部按钮-->
@@ -28,7 +31,7 @@
       <button v-cancel="{obj:editProject,func:esc}" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" v-has="'project_add'" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

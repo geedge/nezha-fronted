@@ -35,12 +35,13 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  background: #fff;
+  background: #f6f6f6;
   .projectList{
     flex: 1;
   }
   .projectTopo{
     flex: 1;
+    margin-right: 10px;
   }
   .hide{
     display: none;
