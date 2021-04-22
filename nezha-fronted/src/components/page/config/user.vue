@@ -6,7 +6,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.user"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="account-add" v-has="'user_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">

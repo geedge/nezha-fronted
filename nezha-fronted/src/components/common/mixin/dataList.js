@@ -146,7 +146,7 @@ export default {
         }
       }
       if (this.$refs.dataTable) {
-        this.$refs.dataTable.bodyWrapper.scrollTop = 0
+        this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
       }
       this.getTableData()
     },
