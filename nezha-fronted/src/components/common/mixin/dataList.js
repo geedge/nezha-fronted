@@ -174,6 +174,9 @@ export default {
         }
       }, 20)
     },
+    clickTab (showTabInfo, showTab) {
+      this.$emit('changeShowTab', showTab)
+    },
     toTopBtnHandler (wrap) {
       const vm = this
       wrap.addEventListener('scroll', bus.debounce(function () {

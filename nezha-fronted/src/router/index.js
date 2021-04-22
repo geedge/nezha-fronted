@@ -103,7 +103,7 @@ export default new Router({
           component: resolve => require(['../components/page/config/snmp.vue'], resolve)
         },
         {
-          path: '/snmp/:tab',
+          path: '/snmp',
           component: resolve => require(['../components/page/config/snmp.vue'], resolve)
         },
         {
