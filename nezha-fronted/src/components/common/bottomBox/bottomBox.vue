@@ -123,9 +123,9 @@ export default {
         },
         endpoint: {
           endpointTabTitle: [
+            { prop: 'panel', name: 'Detail' },
             { prop: 'endpointQuery', name: 'Query' },
-            { prop: 'endpointAlertMessage', name: 'Alerts' },
-            { prop: 'panel', name: 'Detail' }
+            { prop: 'endpointAlertMessage', name: 'Alerts' }
           ]
         }
       }
