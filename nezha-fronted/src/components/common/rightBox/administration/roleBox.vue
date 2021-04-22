@@ -165,7 +165,7 @@
         if (this.prevent_opt.save) { return } ;
         this.prevent_opt.save = true
 
-        this.$refs.userForm.validate((valid) => {
+        this.$refs.roleForm.validate((valid) => {
           if (valid) {
             if (this.editRole.id) {
               this.$put(this.url, this.editRole).then(res => {
