@@ -330,1468 +330,1016 @@
 </template>
 
 <script>
-  import { Topology, registerNode } from '@topology/core'
-  import {
-    Tools,
-    canvasRegister,
-    imageTemp,
-    myShape,
-    myAnchors,
-    myIconRect,
-    myTextRect,
-    onChangeAnimate,
-    onChangeAnimateLine,
-    myCubec,
-    myCubeAnchors
-  } from './L5/services/canvas.js'
-  import { getTopology, setTopology } from '../js/common'
-  import CanvasProps from './L5/CanvasProps'
-  import topologyTopTool from './L5//topologyTopTool'
-  import popDataMain from './popData/Main'
-  import popDataInfo from './popData/Info'
-  import alertTable from './popData/alertTable'
-  import assetTable from './popData/assetTable'
-  import endpointTable from './popData/endpointTable'
-  import topoTooltip from './L5/topoTooltip'
-  import { getMetricTypeValue } from '../js/tools'
-  import bus from '../../../libs/bus'
-  import topologyPrev from './topologyPrev'
-  // 注册到画布
-  registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
-  registerNode('myCube', myCubec, myCubeAnchors, null, null)
+import { Topology, registerNode } from '@topology/core'
+import {
+  Tools,
+  canvasRegister,
+  imageTemp,
+  myShape,
+  myAnchors,
+  myIconRect,
+  myTextRect,
+  onChangeAnimate,
+  onChangeAnimateLine,
+  myCubec,
+  myCubeAnchors
+} from './L5/services/canvas.js'
+import { getTopology, setTopology } from '../js/common'
+import CanvasProps from './L5/CanvasProps'
+import topologyTopTool from './L5//topologyTopTool'
+import popDataMain from './popData/Main'
+import popDataInfo from './popData/Info'
+import alertTable from './popData/alertTable'
+import assetTable from './popData/assetTable'
+import endpointTable from './popData/endpointTable'
+import topoTooltip from './L5/topoTooltip'
+import { getMetricTypeValue } from '../js/tools'
+import bus from '../../../libs/bus'
+import topologyPrev from './topologyPrev'
+// 注册到画布
+registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
+registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
-  const canvasOptions = {
-    rotateCursor: '/img/rotate.cur',
-    translateKey: 'None',
-    disableEmptyLine: true,
-    autoExpandDistance: 0,
-    minScale: 0.01
-  }
-  export default {
-    name: 'topologyL5',
-    data () {
-      return {
-        objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
-        chartDataInfo: {},
-        topoPrevData: {}, // 预览数据
-        imgInit: false, // 判断图片是否加载完成
-        toolGroup: '基本形状',
-        editFlag: true,
-        tools: Tools,
-        props: {},
-        topologyLoading: false,
-        contextmenu: {
+const canvasOptions = {
+  rotateCursor: '/img/rotate.cur',
+  translateKey: 'None',
+  disableEmptyLine: true,
+  autoExpandDistance: 0,
+  minScale: 0.01
+}
+export default {
+  name: 'topologyL5',
+  data () {
+    return {
+      objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
+      chartDataInfo: {},
+      topoPrevData: {}, // 预览数据
+      imgInit: false, // 判断图片是否加载完成
+      toolGroup: '基本形状',
+      editFlag: true,
+      tools: Tools,
+      props: {},
+      topologyLoading: false,
+      contextmenu: {
+        left: null,
+        top: null,
+        bottom: null
+      },
+      filterTime: [
+        bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
+        bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      ],
+      topologyInfo: {
+        fontSize: 14,
+        align: 'left',
+        fontColor: '#000000',
+        opacity: 1,
+        name: ''
+      },
+      saveData: {},
+      oldTopologyData: '',
+      redoIndex: 0,
+      dataLength: 0,
+      editTopologyFlag: false,
+      searchTime: bus.getTimezontDateRange(),
+      activeNames: [],
+      topologyIndex: 0,
+      iconArray: [],
+      imgageLoading: false,
+      toolShow: {
+        node: true,
+        attr: true,
+        topTool: true,
+        nodeCord: [0, 0],
+        attrCord: [0, 0],
+        height: 500
+      },
+      dragFlag: true,
+      modules: [],
+      allModules: [],
+      projectInfo: {
+        title: '',
+        id: '',
+        remark: '',
+        alertStat: [1, 2, 3],
+        moduleMum: 6,
+        loading: true
+      },
+      timer: null, // 处理project短时间呢频繁变更的定时器
+      timer2: null, // 处理平移画布显示iconState的定时器
+      timer3: null, // 处理tooltip的显示定时器
+      nodesArr: [],
+      notModuleIDArr: [],
+      popData: [
+        {
+          top: '-40px',
+          left: '-21px',
+          className: 'nz-icon-endpoint',
+          id: 'endpoint',
+          title: this.$t('project.topology.endpoint')
+        },
+        { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
+        { top: '-4px', left: '40px', className: '', id: 'other', title: '' },
+        { top: '30px', left: '19px', className: '', id: 'other', title: '' },
+        { top: '30px', left: '-21px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
+        { top: '-4px', left: '-40px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
+      ],
+      popDataShow: {
+        endpoint: false,
+        asset: false,
+        total: false,
+        other: false,
+        info: false,
+        alert: false,
+        main: false
+      },
+      moduleId: '',
+      tooltipPosition: {
+        top: 0,
+        left: 0,
+        show: false,
+        height: 400
+      },
+      chartData: {},
+      chartGetData: [],
+      penLineType: [
+        { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' },
+        { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' },
+        { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' }
+        // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
+      ],
+      lineName: 'curve',
+      cachesIndex: 0,
+      projectInfoShow: false,
+      projectAlertShow: false,
+      previewShow: false,
+      penId: undefined,
+      penToolTipScale: 1,
+      oldScale: 1,
+      uploadPicShow: false,
+      uploadPic: {
+        name: '',
+        unit: ''
+      },
+      unitArr: [],
+      topoScreenState: '' // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
+    }
+  },
+  components: {
+    CanvasProps,
+    topologyTopTool,
+    popDataMain,
+    popDataInfo,
+    alertTable,
+    assetTable,
+    endpointTable,
+    topoTooltip,
+    topologyPrev
+  },
+  props: {
+    topologyIndexF: {
+      type: Number,
+      default: 0
+    },
+    obj: {},
+    showTopTools: {
+      type: Boolean,
+      default: true
+    },
+    fromOverView: {
+      type: Boolean,
+      default: false
+    },
+    fromPrev: {
+      type: Boolean,
+      default: false
+    },
+    topoPrevDataS: {
+
+    }
+  },
+  watch: {
+    topologyIndexF: {
+      immediate: true,
+      handler (n) {
+        this.topologyIndex = n
+      }
+    },
+    obj: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        if (n.id) {
+          if (getTopology(this.topologyIndex)) {
+            getTopology(this.topologyIndex).destroy()
+            setTopology(this.topologyIndex, null)
+          }
+          if (!this.objChange) {
+            this.editTopologyFlag = false
+            this.topologyLoading = true
+            this.projectInfoShow = false
+            this.projectAlertShow = false
+            if (n.id) {
+              this.getProjectData(n)
+            }
+            this.topologyLoading = true
+            this.init()
+            this.timer = null
+            this.objChange = true
+          } else {
+            if (!this.timer) {
+              this.timer = setInterval(() => {
+                if (this.objChange) { return }
+                this.editTopologyFlag = false
+                this.topologyLoading = true
+                this.projectInfoShow = false
+                this.projectAlertShow = false
+                if (n.id) {
+                  this.getProjectData(n)
+                }
+                clearTimeout(this.timer)
+                this.timer = null
+                this.objChange = true
+                this.topologyLoading = true
+                this.init()
+              }, 100)
+            } else {
+              clearTimeout(this.timer)
+              this.timer = setInterval(() => {
+                if (this.objChange) { return }
+                this.editTopologyFlag = false
+                this.topologyLoading = true
+                this.projectInfoShow = false
+                this.projectAlertShow = false
+                if (n.id) {
+                  this.getProjectData(n)
+                }
+                clearTimeout(this.timer)
+                this.timer = null
+                this.objChange = true
+                this.topologyLoading = true
+                this.init()
+              }, 100)
+            }
+          }
+        }
+      }
+    },
+    topoScreen (n) {
+      getTopology(this.topologyIndex).resize()
+      getTopology(this.topologyIndex).centerView(20)
+    }
+  },
+  computed: {
+    topoScreen () {
+      return this.$store.getters.getShowTopoScreen
+    }
+  },
+  created () {
+    canvasRegister()
+    if (process.client) {
+      document.onclick = event => {
+        this.contextmenu = {
           left: null,
           top: null,
           bottom: null
-        },
-        filterTime: [
-          bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
-          bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-        ],
-        topologyInfo: {
-          fontSize: 14,
-          align: 'left',
-          fontColor: '#000000',
-          opacity: 1,
-          name: ''
-        },
-        saveData: {},
-        oldTopologyData: '',
-        redoIndex: 0,
-        dataLength: 0,
-        editTopologyFlag: false,
-        searchTime: bus.getTimezontDateRange(),
-        activeNames: [],
-        topologyIndex: 0,
-        iconArray: [],
-        imgageLoading: false,
-        toolShow: {
-          node: true,
-          attr: true,
-          topTool: true,
-          nodeCord: [0, 0],
-          attrCord: [0, 0],
-          height: 500
-        },
-        dragFlag: true,
-        modules: [],
-        allModules: [],
-        projectInfo: {
-          title: '',
-          id: '',
-          remark: '',
-          alertStat: [1, 2, 3],
-          moduleMum: 6,
-          loading: true
-        },
-        timer: null, // 处理project短时间呢频繁变更的定时器
-        timer2: null, // 处理平移画布显示iconState的定时器
-        timer3: null, // 处理tooltip的显示定时器
-        nodesArr: [],
-        notModuleIDArr: [],
-        popData: [
-          {
-            top: '-40px',
-            left: '-21px',
-            className: 'nz-icon-endpoint',
-            id: 'endpoint',
-            title: this.$t('project.topology.endpoint')
-          },
-          { top: '-40px', left: '19px', className: 'nz-icon-asset', id: 'asset', title: this.$t('project.topology.asset') },
-          { top: '-4px', left: '40px', className: '', id: 'other', title: '' },
-          { top: '30px', left: '19px', className: '', id: 'other', title: '' },
-          { top: '30px', left: '-21px', className: 'nz-icon-info-normal', id: 'info', title: this.$t('project.topology.info') },
-          { top: '-4px', left: '-40px', className: 'nz-icon-gaojing', id: 'alert', title: this.$t('project.topology.alert') }
-        ],
-        popDataShow: {
-          endpoint: false,
-          asset: false,
-          total: false,
-          other: false,
-          info: false,
-          alert: false,
-          main: false
-        },
-        moduleId: '',
-        tooltipPosition: {
-          top: 0,
-          left: 0,
-          show: false,
-          height: 400
-        },
-        chartData: {},
-        chartGetData: [],
-        penLineType: [
-          { d: 'M5 19 a50,100 0 0,1 40,0', 'stroke-dasharray': '', name: this.$t('project.topology.curve'), id: 'curve' },
-          { d: 'M5 8 l20 0 l0 12 l20 0', 'stroke-dasharray': '', name: this.$t('project.topology.polyline'), id: 'polyline' },
-          { d: 'M5 14 l40 0', 'stroke-dasharray': '', name: this.$t('project.topology.line'), id: 'line' }
-          // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
-        ],
-        lineName: 'curve',
-        cachesIndex: 0,
-        projectInfoShow: false,
-        projectAlertShow: false,
-        previewShow: false,
-        penId: undefined,
-        penToolTipScale: 1,
-        oldScale: 1,
-        uploadPicShow: false,
-        uploadPic: {
-          name: '',
-          unit: ''
-        },
-        unitArr: [],
-        topoScreenState: '' // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
+        }
       }
+    }
+  },
+  mounted () {
+    if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
+      this.addNodeInit()
+    }
+    document.getElementById('topology-canvas' + this.topologyIndexF).addEventListener('mousemove', this.canvasMove)
+    window.addEventListener('resize', this.winResize)
+  },
+  methods: {
+    init () {
+      canvasOptions.on = this.onMessage
+      this.reload()
     },
-    components: {
-      CanvasProps,
-      topologyTopTool,
-      popDataMain,
-      popDataInfo,
-      alertTable,
-      assetTable,
-      endpointTable,
-      topoTooltip,
-      topologyPrev
-    },
-    props: {
-      topologyIndexF: {
-        type: Number,
-        default: 0
-      },
-      obj: {},
-      showTopTools: {
-        type: Boolean,
-        default: true
-      },
-      fromOverView: {
-        type: Boolean,
-        default: false
-      },
-      fromPrev: {
-        type: Boolean,
-        default: false
-      },
-      topoPrevDataS: {
 
-      }
-    },
-    watch: {
-      topologyIndexF: {
-        immediate: true,
-        handler (n) {
-          this.topologyIndex = n
-        }
-      },
-      obj: {
-        deep: true,
-        immediate: true,
-        handler (n) {
-          if (n.id) {
-            if (getTopology(this.topologyIndex)) {
-              getTopology(this.topologyIndex).destroy()
-              setTopology(this.topologyIndex, null)
-            }
-            if (!this.objChange) {
-              this.editTopologyFlag = false
-              this.topologyLoading = true
-              this.projectInfoShow = false
-              this.projectAlertShow = false
-              if (n.id) {
-                this.getProjectData(n)
-              }
-              this.topologyLoading = true
-              this.init()
-              this.timer = null
-              this.objChange = true
-            } else {
-              if (!this.timer) {
-                this.timer = setInterval(() => {
-                  if (this.objChange) { return }
-                  this.editTopologyFlag = false
-                  this.topologyLoading = true
-                  this.projectInfoShow = false
-                  this.projectAlertShow = false
-                  if (n.id) {
-                    this.getProjectData(n)
-                  }
-                  clearTimeout(this.timer)
-                  this.timer = null
-                  this.objChange = true
-                  this.topologyLoading = true
-                  this.init()
-                }, 100)
-              } else {
-                clearTimeout(this.timer)
-                this.timer = setInterval(() => {
-                  if (this.objChange) { return }
-                  this.editTopologyFlag = false
-                  this.topologyLoading = true
-                  this.projectInfoShow = false
-                  this.projectAlertShow = false
-                  if (n.id) {
-                    this.getProjectData(n)
-                  }
-                  clearTimeout(this.timer)
-                  this.timer = null
-                  this.objChange = true
-                  this.topologyLoading = true
-                  this.init()
-                }, 100)
-              }
-            }
+    reload () {
+      this.topologyLoading = true
+      this.getTopologyData().then((data) => {
+        this.openTopologyData(data).then(() => {
+          // 获取对应的值 给节点 连线添加对应动画
+          this.lineName = data.lineName ? data.lineName : this.lineName
+          this.chartGetData = []
+          const axiosArr = []
+          const promiseArr = []
+          const self = this
+          const pensPromise = (pen, arr, index) => {
+            return new Promise(function (resolve, reject) {
+              Promise.all(arr).then((res) => {
+                self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
+                self.setAnimation(pen, self.chartGetData[index].res)
+                resolve()
+              })
+            })
           }
-        }
-      },
-      topoScreen (n) {
-        getTopology(this.topologyIndex).resize()
-        getTopology(this.topologyIndex).centerView(20)
-      }
-    },
-    computed: {
-      topoScreen () {
-        return this.$store.getters.getShowTopoScreen
-      }
-    },
-    created () {
-      canvasRegister()
-      if (process.client) {
-        document.onclick = event => {
-          this.contextmenu = {
-            left: null,
-            top: null,
-            bottom: null
-          }
-        }
-      }
-    },
-    mounted () {
-      if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
-        this.addNodeInit()
-      }
-      document.getElementById('topology-canvas' + this.topologyIndexF).addEventListener('mousemove', this.canvasMove)
-      window.addEventListener('resize', this.winResize)
-    },
-    methods: {
-      init () {
-        canvasOptions.on = this.onMessage
-        this.reload()
-      },
-
-      reload () {
-        this.topologyLoading = true
-        this.getTopologyData().then((data) => {
-          this.openTopologyData(data).then(() => {
-            // 获取对应的值 给节点 连线添加对应动画
-            this.lineName = data.lineName ? data.lineName : this.lineName
-            this.chartGetData = []
-            const axiosArr = []
-            const promiseArr = []
-            const self = this
-            const pensPromise = (pen, arr, index) => {
-              return new Promise(function (resolve, reject) {
-                Promise.all(arr).then((res) => {
-                  self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
-                  self.setAnimation(pen, self.chartGetData[index].res)
-                  resolve()
+          const endTime = this.filterTime[1]
+          const startTime = this.filterTime[0]
+          const step = bus.getStep(startTime, endTime)
+          data.pens && data.pens.forEach((item, index) => {
+            this.chartGetData.push({ id: item.id, res: [] })
+            const arr = item.data.expressArr.map((ele) => {
+              let query = encodeURIComponent(ele)
+              if (!query) {
+                return new Promise(resolve => {
+                  resolve({ data: '', status: 'no query' })
                 })
-              })
-            }
-            const endTime = this.filterTime[1]
-            const startTime = this.filterTime[0]
-            const step = bus.getStep(startTime, endTime)
-            data.pens && data.pens.forEach((item, index) => {
-              this.chartGetData.push({ id: item.id, res: [] })
-              const arr = item.data.expressArr.map((ele) => {
-                let query = encodeURIComponent(ele)
-                if (!query) {
-                  return new Promise(resolve => {
-                    resolve({ data: '', status: 'no query' })
-                  })
-                }
-                query += '&nullType=' + 'connected'
-                return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
-              })
-              axiosArr.push({ item, arr })
-              promiseArr.push(pensPromise(item, arr, index))
-            })
-            Promise.all(promiseArr).then((res) => {
-              getTopology(this.topologyIndex).open(data)
-              getTopology(this.topologyIndex).lock(1)
-              this.objChange = false
-              let flag = false
-              const position = {
-                x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
-                y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
               }
-              this.oldScale = getTopology(this.topologyIndex).data.scale
-              getTopology(this.topologyIndex).data.pens.forEach(item => {
-                if (flag) {
-                  return
-                }
-                if (item.rect.ex > position.x || item.rect.ey > position.y) {
-                  getTopology(this.topologyIndex).fitView(20)
-                  flag = true
-                }
-              })
-              getTopology(this.topologyIndex).centerView(20)
-              this.penToolTipScale = getTopology(this.topologyIndex).data.scale
-              setTimeout(() => {
-                getTopology(this.topologyIndex).data.pens.forEach(item => {
-                  if (item.animatePlay) {
-                    item.stopAnimate()
-                    setTimeout(() => {
-                      item.startAnimate()
-                    })
-                  }
-                }, 100)
-              })
-              // if(this.fromPrev){
-              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-              // }
-              // getTopology(this.topologyIndex).fitView();
-              this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-              this.getNodesArr()
+              query += '&nullType=' + 'connected'
+              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
+            axiosArr.push({ item, arr })
+            promiseArr.push(pensPromise(item, arr, index))
           })
-        })
-      },
-
-      dateChange () {
-        // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
-        // this.setSearchTime(nowTimeType.type, nowTimeType.value)
-        this.searchTime = bus.getTimezontDateRange()
-        this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
-        this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
-        this.reload()
-      },
-      setSearchTime (type, val) { // 设置searchTime
-        if (type === 'minute') {
-          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
-          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
-          this.$set(this.searchTime, 0, startTime)
-          this.$set(this.searchTime, 1, endTime)
-          this.$set(this.searchTime, 2, val + 'm')
-        } else if (type === 'hour') {
-          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
-          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
-          this.$set(this.searchTime, 0, startTime)
-          this.$set(this.searchTime, 1, endTime)
-          this.$set(this.searchTime, 2, val + 'h')
-        } else if (type === 'date') {
-          const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
-          const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
-          this.$set(this.searchTime, 0, startTime)
-          this.$set(this.searchTime, 1, endTime)
-          this.$set(this.searchTime, 2, val + 'd')
-        }
-        this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
-      },
-      // 打开topology数据
-      openTopologyData (data) {
-        return new Promise(resolve => {
-          if (!getTopology(this.topologyIndex)) {
-            const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
-            canvas.open(data)
-            setTopology(this.topologyIndex, canvas)
-          } else {
+          Promise.all(promiseArr).then((res) => {
             getTopology(this.topologyIndex).open(data)
-          }
-          this.topologyLoading = false
-          if (!getTopology(this.topologyIndex).data.name) {
-            getTopology(this.topologyIndex).data.name = this.obj.name
-          }
-          getTopology(this.topologyIndex).data.projectId = this.obj.id
-          getTopology(this.topologyIndex).lock(1)
-
-          this.getModule()// 获取module
-          resolve()
-        })
-      },
-      // 获取topology数据
-      getTopologyData () {
-        return new Promise(resolve => {
-          if (this.fromPrev) {
-            resolve(this.topoPrevDataS)
-          }
-          this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
-            let data = res.data.topo
-            if (!res.data.topo || !data.pens) {
-              data = {
-                bkColor: '#FFFFFF',
-                gridSize: 10,
-                gridColor: '#ededed',
-                lineWidth: 1,
-                ruleColor: '#4e4e4e'
+            getTopology(this.topologyIndex).lock(1)
+            this.objChange = false
+            let flag = false
+            const position = {
+              x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
+              y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
+            }
+            this.oldScale = getTopology(this.topologyIndex).data.scale
+            getTopology(this.topologyIndex).data.pens.forEach(item => {
+              if (flag) {
+                return
               }
-              this.projectInfoShow = true
-              this.projectAlertShow = true
-              this.saveData = { ...data }
-              this.topologyInfo.name = this.obj.name
-              resolve(data)
-            } else {
-              this.topologyInfo = {
-                fontSize: data.data.fontSize,
-                align: data.data.align,
-                fontColor: data.data.fontColor,
-                opacity: data.data.opacity,
-                name: data.name
+              if (item.rect.ex > position.x || item.rect.ey > position.y) {
+                getTopology(this.topologyIndex).fitView(20)
+                flag = true
               }
-              if (this.fromOverView) { // 优化从首页来的加载速度
-                const arr = data.pens.filter(item => !item.type)
-                this.addNodeInit(arr)
-              }
-              const timer = setInterval(() => {
-                if (!this.imgInit) {
-                  return
-                }
-                clearInterval(timer)
-                const promiseArr = []
-                const self = this
-                for (let i = 0; i < data.pens.length; i++) {
-                  const line = data.pens[i]
-                  if (line.type === 1) {
-                    if (!data.pens.find(item => item.id === line.from.id) || !data.pens.find(item => item.id === line.to.id)) {
-                      data.pens.splice(i, 1)
-                      i--
-                    }
-                  }
-                }
-                data.pens.forEach(item => {
-                  if (item.type === 0 && item.data.imageId) {
-                    item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
-                  }
-                  if (item.type === 0) {
-                    // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
-                    item.data.state = {}
-                    item.data.state.asset = false
-                    item.data.state.endpoint = false
-                    item.data.state.alert = false
-                  } else {
-                    // promiseArr.push({ type: 1 })
-                    item.data.state = {}
-                    item.data.state.asset = false
-                    item.data.state.endpoint = false
-                    item.data.state.alert = false
-                  }
-                })
-
-                if (!data.data) {
-                  this.projectInfoShow = true
-                  this.projectAlertShow = true
-                } else if (!JSON.stringify(data.data.projectInfo)) {
-                  this.projectInfoShow = true
-                  this.projectAlertShow = true
-                } else {
-                  this.projectInfoShow = data.data.projectInfo
-                  this.projectAlertShow = data.data.alertInfo
-                }
-                if (!data.bkImage) {
-                  data.bkImage = undefined
-                }
-                Promise.all(promiseArr).then(res => {
-                  res.forEach((response, index) => {
-                    const item = data.pens[index]
-                    if (item.type === 0) {
-                      item.data.state = response.data
-                      item.data.state.asset = false
-                      item.data.state.endpoint = false
-                      item.data.state.alert = false
-                      if (item.data.state.assetStat.down > 0) {
-                        item.data.state.asset = true
-                      }
-                      if (item.data.state.endpointStat.down > 0) {
-                        item.data.state.endpoint = true
-                      }
-                      if (item.data.state.alertStat.P1 > 0 || item.data.state.alertStat.P3 > 0 || item.data.state.alertStat.P2 > 0) {
-                        item.data.state.alert = true
-                      }
-                      item.data.state.error = item.data.state.asset || item.data.state.endpoint || item.data.state.alert
-                    }
-                  })
-                  self.saveData = { ...data }
-                  resolve(data)
-                })
-              }, 100)
-            }
-          })
-        })
-      },
-      // 赋值动画
-      setAnimation (pen, res) { // 根据所有res的状态 赋值动画
-        let maxLevel = 0
-        if (res.length > 0) {
-          res.forEach((response, innerPos) => {
-            if (response.status !== 'success') {
-              return
-            }
-            if (response.data.result) {
-              response.data.result.forEach((queryItem, resIndex) => {
-                pen.data.valueMapping.forEach((item, index) => {
-                  if (item.value === 'base') { return }
-                  if (queryItem.showValue > item.value) {
-                    queryItem.level = item.level
-                    if (maxLevel < item.level) {
-                      maxLevel = item.level
-                    }
-                  }
-                })
-              })
-            }
-          })
-        }
-        if (maxLevel !== 0) {
-          if (pen.type === 0) { // 判断valueMapping 给相应的状态
-            const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
-            if (selLevel) {
-              pen.fontColor = selLevel.color.text
-              pen.fillStyle = selLevel.color.fill
-              pen.strokeStyle = selLevel.color.line
-              pen.bkType = 0
-            }
-            onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
-          } else if (pen.type === 1) { // 判断valueMapping 给相应的状态
-            const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
-            if (selLevel) {
-              pen.animateColor = selLevel.color.fill
-              pen.strokeStyle = selLevel.color.line
-              pen.animateType = selLevel.animateType
-              pen.fontColor = selLevel.color.text
-            }
-            onChangeAnimateLine(pen, pen.animateType)
-          }
-        } else {
-          if (pen.type === 0 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-            onChangeAnimate(pen, pen.animateType)
-          } else if (pen.type === 1 && pen.animatePlay) { // 判断valueMapping 给相应的状态
-            onChangeAnimateLine(pen, pen.animateType)
-          }
-        }
-      },
-      computeData (res, type, pen) { // 处理别名 以及 根据type显示对应的值
-        if (res.length > 0) {
-          res.forEach((response, innerPos) => {
-            if (response.status !== 'success') {
-              return
-            }
-
-            if (response.data.result) {
-              response.data.result.forEach((queryItem, resIndex) => {
-                // 图表中每条线的名字,后半部分
-                let host = ''// up,
-                if (queryItem.metric.__name__) {
-                  host = `${queryItem.metric.__name__}{`// up,
-                }
-                const tagsArr = Object.keys(queryItem.metric)// ["__name__","asset","idc","instance","job","module","project"]
-                // 设置时间-数据格式对
-                let dpsArr = []
-                dpsArr = Object.entries(queryItem.values)// [ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
-                dpsArr = dpsArr.map(item => {
-                  return [item[0], [item[1][0], Number(item[1][1])]]
-                })
-                // 判断是否有数据, && tagsArr.length > 0
-                if (dpsArr.length) {
-                  tagsArr.forEach((tag, i) => {
-                    if (tag !== '__name__') {
-                      host += `${tag}="${queryItem.metric[tag]}",`
-                    }
-                  })
-                  if (host.endsWith(',')) {
-                    host = host.substr(0, host.length - 1)
-                  }
-                  if (queryItem.metric.__name__) {
-                    host += '}'
-                  }
-                  if (!host || host === '') {
-                    host = pen.data.expressArr[innerPos]
-                  }
-                  // 处理legend别名
-                  let alias = this.dealLegendAlias(host, pen.data.legends[innerPos])
-                  if (!alias || alias === '') {
-                    alias = host
-                  }
-                  queryItem.legend = { name: host + '-' + pen.data.legends[innerPos] + '-' + resIndex, alias: alias }
-                  queryItem.showValue = getMetricTypeValue(queryItem.values, type)
-                  // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
-                }
-              })
-            }
-          })
-        }
-        return res
-      },
-      dealLegendAlias: function (legend, expression) {
-        if (/\{\{.+\}\}/.test(expression)) {
-          const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-            const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-            const reg = new RegExp(label + '=".+?"')
-            let value = null
-            if (reg.test(legend)) {
-              const find = legend.match(reg)[0]
-              value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-            }
-            return value || label
-          })
-          return labelValue
-        } else {
-          return expression
-        }
-      },
-      // 获取project Info
-      getProjectData (n) {
-        // 获取projectInfo
-        this.projectInfo.loading = true
-        this.$get('monitor/project/' + n.id).then(response => {
-          if (response.code === 200) {
-            this.projectInfo.loading = false
-            this.projectInfo = { ...this.projectInfo, ...response.data }
-            this.projectInfo.total = this.projectInfo.alertStat[0] + this.projectInfo.alertStat[1] + this.projectInfo.alertStat[2]
-            if (!this.projectInfo.total) {
-              this.projectInfo.total = 0
-            }
-          }
-        })
-      },
-      // Severity Label
-      returnSeverityLabel (key) {
-        return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
-      },
-      // 获取module
-      getModule () {
-        this.projectInfo.loading = true
-        this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
-          if (response.code === 200) {
-            this.projectInfo.loading = false
-            this.allModules = response.data.list
-            this.modulesDiff()
-          }
-        })
-      },
-
-      getNodesArr () {
-        if (!getTopology(this.topologyIndex)) return
-        this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
-          if (!item.data) {
-            item.data = {
-              moduleId: '',
-              moduleName: '',
-              show: false,
-              error: false,
-              expressArr: []
-            }
-          }
-          return item.type === 0
-        })
-        // this.nodesArr=this.nodesArr.map(item=>{
-        //   if(!item.data){
-        //     item.data={
-        //       moduleId:'',
-        //       moduleName:'',
-        //       show:false,
-        //       error:false,
-        //       expressArr:[],
-        //     }
-        //   }
-        //   return {
-        //     rect:item.rect,
-        //     data:item.data
-        //   }
-        // });
-        // 打开动画 是否更新顶部图标
-        this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
-      },
-
-      modelTopClick (item, index) {
-
-      },
-      // 摘除已选择的module
-      modulesDiff (data) {
-        this.modules = this.allModules
-        if (getTopology(this.topologyIndex).data.pens) {
-          getTopology(this.topologyIndex).data.pens.forEach(item => {
-            if (item.type == 0) {
-              this.modules = this.modules.filter(item1 => item.data.moduleId !== item1.id)
-            }
-          })
-        }
-        if (data && data.data && data.data.moduleId) {
-          this.modules.unshift({ id: data.data.moduleId, name: data.data.moduleName })
-        }
-      },
-
-      // 显示module的工具
-      showNodeTools (index, pen) {
-        this.nodesArr.forEach((item, i) => {
-          item.data.show = i === index
-        })
-      },
-
-      // 具体内容点击
-      nodeTools (node, tool) {
-        this.moduleId = node.data.moduleId
-        if (tool.id === 'total') {
-          this.popDataShowUpdate('', false, node)
-          return
-        }
-        setTimeout(() => {
-          this.popDataShowUpdate(tool.id, false, node)
-        }, 100)
-      },
-
-      popDataShowUpdate (key, flag, node) { // key 显示对应的弹窗 flag是否不显示工具栏
-        this.popDataShow = {
-          endpoint: false,
-          asset: false,
-          total: false,
-          other: false,
-          info: false,
-          alert: false,
-          main: false
-        }
-        if (key === 'total') {
-          this.chartDataInfo = { ...node.data, ...this.chartGetData.find(item => item.id === node.id) }
-        }
-        this.$nextTick(() => {
-          this.popDataShow[key] = true
-        })
-        if (flag) { // 处理关闭后 缩放后显示工具按钮的问题
-          this.moduleId = ''
-          this.showNodeTools('')
-        }
-        if (key === 'asset' || key === 'alert' || key === 'endpoint') {
-          this.showNodeTools('')
-        }
-      },
-
-      /* topology 方法 */
-      onDrag (event, node) {
-        this.dragFlag = false
-        setTimeout(() => {
-          this.dragFlag = true
-        }, 100)
-        event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
-      },
-      dragFlagChange (node) {
-        getTopology(this.topologyIndex).addNode(
-          {
-            ...node.data,
-            rect: {
-              ...node.data.rect,
-              x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
-              y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50
-            },
-            data: { imageId: node.data.imageId }
-          })
-        setTimeout(() => {
-          this.dragFlag = true
-        }, 100)
-      },
-
-      onMessage (event, data, e) {
-        // console.log('onMessage', event, data)
-        // console.log(getTopology(this.topologyIndex))
-        // this.notModuleIDArr=[];
-        this.toolShow.attr = false
-        this.toolShow.topTool = false
-        this.$nextTick(() => {
-          this.toolShow.attr = true
-          this.toolShow.topTool = true
-        })
-        if (data) {
-          this.notModuleIDArr.forEach(item => {
-            if (item.id === data.id) {
-              item.rect = data.rect
-            }
-          })
-        }
-        if (!Array.isArray(data) && data) { // 判断不是数组 提前个data配置好节点属性
-          if (data.type === 0 && !data.data.moduleId) {
-            data.data = {
-              ...data.data,
-              moduleId: '',
-              moduleName: '',
-              show: false,
-              error: false,
-              animatePlay: false,
-              fillStyle: data.fillStyle,
-              strokeStyle: data.strokeStyle,
-              gradientColor: '#bae7ff',
-              gradientType: 0,
-              lineWidth: this.nodeDefaultWidth(data.name),
-              iconToolState: true,
-              // chart 配置项
-              valueMapping: [{
-                color: {
-                  line: '#000000',
-                  fill: '#ffffff',
-                  text: '#000000'
-                },
-                value: 'base',
-                animateType: 'base',
-                level: 0,
-                base: true
-              }],
-              valueMappingSort: 'asc',
-              expressArr: [''],
-              legends: [''],
-              tooltipShow: true,
-              panelName: 'topologyName',
-              unit: 2,
-              type: 'line',
-              displayChart: true,
-              aggregation: 'last',
-              title: '',
-              url: ''
-            }
-          } else if (data.type == 1 && !data.data) {
-            // 连线是否自动计算锚点
-            // data.manualCps=true;
-            data.animateColor = '#FA901C'
-            data.data = {
-              animatePlay: false,
-              strokeStyle: data.strokeStyle,
-              animateColor: data.animateColor,
-              arrowColor: '#000000',
-              fromArrowColor: '#000000',
-              toArrowColor: '#000000',
-              lineWidth: 1,
-              // chart 配置项
-              valueMapping: [{
-                color: {
-                  line: '#000000',
-                  fill: '#ffffff',
-                  text: '#000000'
-                },
-                value: 'base',
-                animateType: 'base',
-                level: 0,
-                base: true
-              }],
-              valueMappingSort: 'asc', /* desc */
-              expressArr: [''],
-              legends: [''],
-              tooltipShow: true,
-              panelName: 'topologyName',
-              unit: 2,
-              type: 'line',
-              displayChart: true,
-              aggregation: 'last',
-              title: '',
-              moduleName: '',
-              url: ''
-            }
-          }
-          if (data.type === 0 || data.type === 1) {
-            data.lineWidth = data.data.lineWidth
-          }
-        }
-
-        switch (event) {
-          case 'moveInNode':
-          case 'moveInLine':
-            if (this.timer3) {
-              clearTimeout(this.timer3)
-              this.timer3 = null
-            }
-            this.chartData = { ...data.data, ...this.chartGetData.find(item => item.id === data.id) }
-            this.tooltipPosition.show = false
+            })
+            getTopology(this.topologyIndex).centerView(20)
+            this.penToolTipScale = getTopology(this.topologyIndex).data.scale
             setTimeout(() => {
-              this.tooltipPosition.show = true
-              const ePosition = window.ePosition
-              const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
-              const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
-              this.tooltipPosition.left = ePosition.layerX + 20
-              this.tooltipPosition.top = ePosition.layerY
-              this.$nextTick(() => {
-                if (this.$refs.topoTooltip) {
-                  if ((boxWidth / 2) > ePosition.layerX) {
-                    this.tooltipPosition.left = ePosition.layerX + 20
-                  } else {
-                    this.tooltipPosition.left = ePosition.layerX - 20 - this.$refs.topoTooltip.offsetWidth
-                  }
-                  if (boxHeight > (ePosition.layerY + this.$refs.topoTooltip.offsetHeight)) {
-                    this.tooltipPosition.top = ePosition.layerY
-                  } else {
-                    this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
+              getTopology(this.topologyIndex).data.pens.forEach(item => {
+                if (item.animatePlay) {
+                  item.stopAnimate()
+                  setTimeout(() => {
+                    item.startAnimate()
+                  })
+                }
+              }, 100)
+            })
+            // if(this.fromPrev){
+            //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+            // }
+            // getTopology(this.topologyIndex).fitView();
+            this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
+            this.getNodesArr()
+          })
+        })
+      })
+    },
+
+    dateChange () {
+      // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      // this.setSearchTime(nowTimeType.type, nowTimeType.value)
+      this.searchTime = bus.getTimezontDateRange()
+      this.filterTime[0] = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
+      this.filterTime[1] = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.reload()
+    },
+    setSearchTime (type, val) { // 设置searchTime
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'd')
+      }
+      this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
+    },
+    // 打开topology数据
+    openTopologyData (data) {
+      return new Promise(resolve => {
+        if (!getTopology(this.topologyIndex)) {
+          const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          canvas.open(data)
+          setTopology(this.topologyIndex, canvas)
+        } else {
+          getTopology(this.topologyIndex).open(data)
+        }
+        this.topologyLoading = false
+        if (!getTopology(this.topologyIndex).data.name) {
+          getTopology(this.topologyIndex).data.name = this.obj.name
+        }
+        getTopology(this.topologyIndex).data.projectId = this.obj.id
+        getTopology(this.topologyIndex).lock(1)
+
+        this.getModule()// 获取module
+        resolve()
+      })
+    },
+    // 获取topology数据
+    getTopologyData () {
+      return new Promise(resolve => {
+        if (this.fromPrev) {
+          resolve(this.topoPrevDataS)
+        }
+        this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
+          let data = res.data.topo
+          if (!res.data.topo || !data.pens) {
+            data = {
+              bkColor: '#FFFFFF',
+              gridSize: 10,
+              gridColor: '#ededed',
+              lineWidth: 1,
+              ruleColor: '#4e4e4e'
+            }
+            this.projectInfoShow = true
+            this.projectAlertShow = true
+            this.saveData = { ...data }
+            this.topologyInfo.name = this.obj.name
+            resolve(data)
+          } else {
+            this.topologyInfo = {
+              fontSize: data.data.fontSize,
+              align: data.data.align,
+              fontColor: data.data.fontColor,
+              opacity: data.data.opacity,
+              name: data.name
+            }
+            if (this.fromOverView) { // 优化从首页来的加载速度
+              const arr = data.pens.filter(item => !item.type)
+              this.addNodeInit(arr)
+            }
+            const timer = setInterval(() => {
+              if (!this.imgInit) {
+                return
+              }
+              clearInterval(timer)
+              const promiseArr = []
+              const self = this
+              for (let i = 0; i < data.pens.length; i++) {
+                const line = data.pens[i]
+                if (line.type === 1) {
+                  if (!data.pens.find(item => item.id === line.from.id) || !data.pens.find(item => item.id === line.to.id)) {
+                    data.pens.splice(i, 1)
+                    i--
                   }
                 }
+              }
+              data.pens.forEach(item => {
+                if (item.type === 0 && item.data.imageId) {
+                  item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
+                }
+                if (item.type === 0) {
+                  // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
+                  item.data.state = {}
+                  item.data.state.asset = false
+                  item.data.state.endpoint = false
+                  item.data.state.alert = false
+                } else {
+                  // promiseArr.push({ type: 1 })
+                  item.data.state = {}
+                  item.data.state.asset = false
+                  item.data.state.endpoint = false
+                  item.data.state.alert = false
+                }
+              })
+
+              if (!data.data) {
+                this.projectInfoShow = true
+                this.projectAlertShow = true
+              } else if (!JSON.stringify(data.data.projectInfo)) {
+                this.projectInfoShow = true
+                this.projectAlertShow = true
+              } else {
+                this.projectInfoShow = data.data.projectInfo
+                this.projectAlertShow = data.data.alertInfo
+              }
+              if (!data.bkImage) {
+                data.bkImage = undefined
+              }
+              Promise.all(promiseArr).then(res => {
+                res.forEach((response, index) => {
+                  const item = data.pens[index]
+                  if (item.type === 0) {
+                    item.data.state = response.data
+                    item.data.state.asset = false
+                    item.data.state.endpoint = false
+                    item.data.state.alert = false
+                    if (item.data.state.assetStat.down > 0) {
+                      item.data.state.asset = true
+                    }
+                    if (item.data.state.endpointStat.down > 0) {
+                      item.data.state.endpoint = true
+                    }
+                    if (item.data.state.alertStat.P1 > 0 || item.data.state.alertStat.P3 > 0 || item.data.state.alertStat.P2 > 0) {
+                      item.data.state.alert = true
+                    }
+                    item.data.state.error = item.data.state.asset || item.data.state.endpoint || item.data.state.alert
+                  }
+                })
+                self.saveData = { ...data }
+                resolve(data)
               })
             }, 100)
-            break
-          case 'moveOutNode':
-          case 'moveOutLine':
-            // this.tooltipPosition.show=false;
-            // return
-            if (!this.timer3) {
-              this.timer3 = setTimeout(() => {
-                this.tooltipPosition.show = false
-                this.timer3 = null
-              }, 50)
-            } else {
-              clearTimeout(this.timer3)
-              this.timer3 = setTimeout(() => {
-                this.tooltipPosition.show = false
-                this.timer3 = null
-              }, 50)
-            }
-            break
-        }
-        // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
-        setTimeout(() => {
-          switch (event) {
-            case 'node':
-            case 'addNode':
-              this.modulesDiff(data)
-              if (data.data.expressArr.length === 0 && event !== 'node') {
-                data.data.expressArr.push('')
-                data.data.legends.push('')
-              }
-              this.props = {
-                node: data,
-                line: null,
-                multi: false,
-                expand: this.props.expand,
-                nodes: null,
-                locked: data.locked,
-                pen: data,
-                pens: null
-              }
-              this.$nextTick(() => {
-                if (this.$refs.CanvasProps) {
-                  if (this.penId !== data.id) {
-                    this.$refs.CanvasProps.tab = '1'
+          }
+        })
+      })
+    },
+    // 赋值动画
+    setAnimation (pen, res) { // 根据所有res的状态 赋值动画
+      let maxLevel = 0
+      if (res.length > 0) {
+        res.forEach((response, innerPos) => {
+          if (response.status !== 'success') {
+            return
+          }
+          if (response.data.result) {
+            response.data.result.forEach((queryItem, resIndex) => {
+              pen.data.valueMapping.forEach((item, index) => {
+                if (item.value === 'base') { return }
+                if (queryItem.showValue > item.value) {
+                  queryItem.level = item.level
+                  if (maxLevel < item.level) {
+                    maxLevel = item.level
                   }
-                  this.penId = data.id
                 }
               })
-              break
-            case 'line':
-            case 'addLine':
-              this.props = {
-                node: null,
-                line: data,
-                multi: false,
-                nodes: null,
-                locked: data.locked,
-                pen: data,
-                pens: null
+            })
+          }
+        })
+      }
+      if (maxLevel !== 0) {
+        if (pen.type === 0) { // 判断valueMapping 给相应的状态
+          const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
+          if (selLevel) {
+            pen.fontColor = selLevel.color.text
+            pen.fillStyle = selLevel.color.fill
+            pen.strokeStyle = selLevel.color.line
+            pen.bkType = 0
+          }
+          onChangeAnimate(pen, selLevel.animateType, selLevel.color.fill, selLevel.color.line)
+        } else if (pen.type === 1) { // 判断valueMapping 给相应的状态
+          const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
+          if (selLevel) {
+            pen.animateColor = selLevel.color.fill
+            pen.strokeStyle = selLevel.color.line
+            pen.animateType = selLevel.animateType
+            pen.fontColor = selLevel.color.text
+          }
+          onChangeAnimateLine(pen, pen.animateType)
+        }
+      } else {
+        if (pen.type === 0 && pen.animatePlay) { // 判断valueMapping 给相应的状态
+          onChangeAnimate(pen, pen.animateType)
+        } else if (pen.type === 1 && pen.animatePlay) { // 判断valueMapping 给相应的状态
+          onChangeAnimateLine(pen, pen.animateType)
+        }
+      }
+    },
+    computeData (res, type, pen) { // 处理别名 以及 根据type显示对应的值
+      if (res.length > 0) {
+        res.forEach((response, innerPos) => {
+          if (response.status !== 'success') {
+            return
+          }
+
+          if (response.data.result) {
+            response.data.result.forEach((queryItem, resIndex) => {
+              // 图表中每条线的名字,后半部分
+              let host = ''// up,
+              if (queryItem.metric.__name__) {
+                host = `${queryItem.metric.__name__}{`// up,
               }
-              this.$nextTick(() => {
-                if (this.$refs.CanvasProps) {
-                  if (this.penId !== data.id) {
-                    this.$refs.CanvasProps.tab = '1'
-                  }
-                  this.penId = data.id
-                }
+              const tagsArr = Object.keys(queryItem.metric)// ["__name__","asset","idc","instance","job","module","project"]
+              // 设置时间-数据格式对
+              let dpsArr = []
+              dpsArr = Object.entries(queryItem.values)// [ ["0",[1577959830.781,"0"]], ["1",[1577959845.781,"0"]] ]
+              dpsArr = dpsArr.map(item => {
+                return [item[0], [item[1][0], Number(item[1][1])]]
               })
-              break
-            case 'multi':
-              this.props = {
-                node: null,
-                line: null,
-                multi: true,
-                nodes: data.length > 1 ? data : null,
-                locked: this.getLocked({ nodes: data }),
-                pen: null,
-                pens: data.length > 1 ? data : null
-              }
-              break
-            case 'space':
-              this.penId = undefined
-              this.props = {
-                node: null,
-                line: null,
-                multi: false,
-                nodes: null,
-                locked: false,
-                pen: null,
-                pens: null
-              }
-              break
-            case 'moveOut':
-              break
-            case 'moveNodes':
-            case 'resizeNodes':
-              if (data.length > 1) {
-                this.props = {
-                  node: null,
-                  line: null,
-                  multi: true,
-                  nodes: data,
-                  locked: this.getLocked({ nodes: data }),
-                  pen: null,
-                  pens: null
-                }
-              } else {
-                this.props = {
-                  node: data[0],
-                  line: null,
-                  multi: false,
-                  nodes: null,
-                  locked: false,
-                  pen: data[0],
-                  pens: null
-                }
-              }
-              break
-            case 'resize': {
-              const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-              if (getTopology(this.topologyIndex)) {
-                getTopology(this.topologyIndex).canvasPos = domRect
-              }
-              break
-            }
-            case 'scale': {
-              if (this.$refs.topTool) {
-                this.$refs.topTool.scaleNum = parseInt(data * 100)
-              }
-              break
-            }
-            case 'locked': {
-              this.props = {
-                node: null,
-                line: null,
-                multi: false,
-                nodes: null,
-                locked: false,
-                pen: null,
-                pens: null
-              }
-              break
-            }
-            case 'delete': {
-              this.props = {
-                node: null,
-                line: null,
-                multi: false,
-                nodes: null,
-                locked: false,
-                pen: null,
-                pens: null
-              }
-              break
-            }
-          }
-          switch (event) {
-            case 'node':
-            case 'line':
-            case 'space':
-            case 'scale':
-            case 'translate':
-              this.moduleId = ''
-              this.showNodeTools('')
-              this.popDataShowUpdate('', false)
-              if (!this.editTopologyFlag) {
-                getTopology(this.topologyIndex)
-              }
-              break
-          }
-          switch (event) {
-            case 'space':
-            case 'scale':
-            case 'translate':
-              this.getNodesArr()
-              // if(!this.timer2){
-              //   this.timer2=setTimeout(()=>{
-              //     this.getNodesArr();
-              //     this.timer2=null
-              //   },300)
-              // }else{
-              //   clearTimeout(this.timer2);
-              //   this.timer2=setTimeout(()=>{
-              //     this.getNodesArr();
-              //     this.timer2=null
-              //   },300)
-              // }
-              break
-          }
-        }, 0)
-      },
-
-      getLocked (data) {
-        let locked = true
-        if (data.nodes && data.nodes.length) {
-          for (const item of data.nodes) {
-            if (!item.locked) {
-              locked = false
-              break
-            }
-          }
-        }
-        if (locked && data.lines) {
-          for (const item of data.lines) {
-            if (!item.locked) {
-              locked = false
-              break
-            }
-          }
-        }
-
-        return locked
-      },
-
-      onUpdateProps (node) {
-        // 如果是node属性改变，需要传入node，重新计算node相关属性值
-        // 如果是line属性改变，无需传参
-        getTopology(this.topologyIndex).updateProps(node)
-      },
-
-      handleAvatarSuccess () {
-
-      },
-      beforeAvatarUpload (file, fileList) {
-        const this_ = this
-        const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
-
-        if (!isJPG) {
-          this.$message.error(this_.$t('project.topology.imgFormat'))
-          return false
-        }
-        // if (!isLt2M) {
-        //   this.$message.error( this_.$t('project.topology.imgSize'));
-        //   return false;
-        // }
-        const isSize = new Promise(function (resolve, reject) {
-          const width = 100
-          const height = 100
-          const _URL = window.URL || window.webkitURL
-          const img = new Image()
-          img.onload = function () {
-            const valid = img.width > width && img.height > height
-            valid ? resolve() : reject()
-          }
-          img.src = _URL.createObjectURL(file.raw)
-        }).then(() => {
-          if (isJPG) {
-            this.file = file.raw
-          }
-          return file.raw
-        }, () => {
-          this.$message.error(this_.$t('project.topology.imgMeasure'))
-          return Promise.reject()
-        })
-        return false
-      },
-
-      toolShowChange (attr) {
-        this.toolShow[attr] = !this.toolShow[attr]
-      },
-      /* topology 方法 */
-      end (v) {
-
-      },
-      /* tools 方法 */
-
-      imgUpload () {
-        const this_ = this
-        if (!this.uploadPic.unit) {
-          this.$message({
-            message: this_.$t('project.topology.unitError'),
-            type: 'error'
-          })
-          return
-        }
-        if (!this.file) {
-          this.$message({
-            message: this_.$t('project.topology.imgError'),
-            type: 'error'
-          })
-          return
-        }
-        this.upload()
-      },
-      upload () {
-        const form = new FormData()
-        form.append('file', this.file)
-        if (this.uploadPic.name) {
-          form.append('name', this.uploadPic.name)
-        } else {
-          form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
-        }
-        form.append('unit', this.uploadPic.unit)
-        this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
-          if (res.code == 200) {
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-            this.uploadPicShow = false
-            this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
-              const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
-              if (group) {
-                group.children.push({
-                  ...imageTemp,
-                  data: {
-                    ...imageTemp.data,
-                    text: res.data.imageName,
-                    image: data,
-                    imageId: res.data.id,
-                    unit: this.uploadPic.unit
+              // 判断是否有数据, && tagsArr.length > 0
+              if (dpsArr.length) {
+                tagsArr.forEach((tag, i) => {
+                  if (tag !== '__name__') {
+                    host += `${tag}="${queryItem.metric[tag]}",`
                   }
                 })
-              } else {
-                this.tools.push({
-                  group: this.uploadPic.unit,
-                  children: [{
-                    ...imageTemp,
-                    data: {
-                      ...imageTemp.data,
-                      text: res.data.imageName,
-                      image: data,
-                      imageId: res.data.id,
-                      unit: this.uploadPic.unit
-                    }
-                  }]
-                })
+                if (host.endsWith(',')) {
+                  host = host.substr(0, host.length - 1)
+                }
+                if (queryItem.metric.__name__) {
+                  host += '}'
+                }
+                if (!host || host === '') {
+                  host = pen.data.expressArr[innerPos]
+                }
+                // 处理legend别名
+                let alias = this.dealLegendAlias(host, pen.data.legends[innerPos])
+                if (!alias || alias === '') {
+                  alias = host
+                }
+                queryItem.legend = { name: host + '-' + pen.data.legends[innerPos] + '-' + resIndex, alias: alias }
+                queryItem.showValue = getMetricTypeValue(queryItem.values, type)
+                // 图表中每条线的名字,去掉最后的逗号与空格:metric名称,  标签1=a,标签2=c
               }
             })
-          } else {
-            this.$message.error(res.msg)
           }
         })
-      },
+      }
+      return res
+    },
+    dealLegendAlias: function (legend, expression) {
+      if (/\{\{.+\}\}/.test(expression)) {
+        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          const reg = new RegExp(label + '=".+?"')
+          let value = null
+          if (reg.test(legend)) {
+            const find = legend.match(reg)[0]
+            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+          }
+          return value || label
+        })
+        return labelValue
+      } else {
+        return expression
+      }
+    },
+    // 获取project Info
+    getProjectData (n) {
+      // 获取projectInfo
+      this.projectInfo.loading = true
+      this.$get('monitor/project/' + n.id).then(response => {
+        if (response.code === 200) {
+          this.projectInfo.loading = false
+          this.projectInfo = { ...this.projectInfo, ...response.data }
+          this.projectInfo.total = this.projectInfo.alertStat[0] + this.projectInfo.alertStat[1] + this.projectInfo.alertStat[2]
+          if (!this.projectInfo.total) {
+            this.projectInfo.total = 0
+          }
+        }
+      })
+    },
+    // Severity Label
+    returnSeverityLabel (key) {
+      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+    },
+    // 获取module
+    getModule () {
+      this.projectInfo.loading = true
+      this.$get('/monitor/module?pageSize=-1&projectIds=' + this.obj.id).then(response => {
+        if (response.code === 200) {
+          this.projectInfo.loading = false
+          this.allModules = response.data.list
+          this.modulesDiff()
+        }
+      })
+    },
 
-      delImg (item) {
-        this.$delete('monitor/project/topo/icon?ids=' + item.data.imageId).then(res => {
-          if (res.code == 200) {
-            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.addNodeInit()
-          } else {
-            this.$message.error(res.msg)
+    getNodesArr () {
+      if (!getTopology(this.topologyIndex)) return
+      this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
+        if (!item.data) {
+          item.data = {
+            moduleId: '',
+            moduleName: '',
+            show: false,
+            error: false,
+            expressArr: []
+          }
+        }
+        return item.type === 0
+      })
+      // this.nodesArr=this.nodesArr.map(item=>{
+      //   if(!item.data){
+      //     item.data={
+      //       moduleId:'',
+      //       moduleName:'',
+      //       show:false,
+      //       error:false,
+      //       expressArr:[],
+      //     }
+      //   }
+      //   return {
+      //     rect:item.rect,
+      //     data:item.data
+      //   }
+      // });
+      // 打开动画 是否更新顶部图标
+      this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
+    },
+
+    modelTopClick (item, index) {
+
+    },
+    // 摘除已选择的module
+    modulesDiff (data) {
+      this.modules = this.allModules
+      if (getTopology(this.topologyIndex).data.pens) {
+        getTopology(this.topologyIndex).data.pens.forEach(item => {
+          if (item.type == 0) {
+            this.modules = this.modules.filter(item1 => item.data.moduleId !== item1.id)
           }
         })
-      },
+      }
+      if (data && data.data && data.data.moduleId) {
+        this.modules.unshift({ id: data.data.moduleId, name: data.data.moduleName })
+      }
+    },
 
-      addNodeInit (imgidList) {
-        if (!this.fromOverView) {
-          this.$get('monitor/project/topo/icon').then(res => {
-            this.imgageLoading = true
-            // this.tools[1].children=[];
-            const imgArr = []
-            const promiseArr = []
-            res.data.list.forEach((item, index) => {
-              item.imageName = item.name
-              delete item.name
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
-              imgArr.push({ ...item })
-            })
-            Promise.all(promiseArr).then((res2) => {
-              this.iconArray = [...res.data.list]
-              this.iconArray.forEach((item, index) => {
-                item.image = res2[index]
-                const group = this.tools.find(tool => tool.group === item.unit)
-                if (group) {
-                  group.children.push({
-                    ...imageTemp,
-                    data: {
-                      ...imageTemp.data,
-                      text: item.imageName,
-                      image: res2[index],
-                      imageId: item.id,
-                      unit: item.unit
-                    }
-                  })
+    // 显示module的工具
+    showNodeTools (index, pen) {
+      this.nodesArr.forEach((item, i) => {
+        item.data.show = i === index
+      })
+    },
+
+    // 具体内容点击
+    nodeTools (node, tool) {
+      this.moduleId = node.data.moduleId
+      if (tool.id === 'total') {
+        this.popDataShowUpdate('', false, node)
+        return
+      }
+      setTimeout(() => {
+        this.popDataShowUpdate(tool.id, false, node)
+      }, 100)
+    },
+
+    popDataShowUpdate (key, flag, node) { // key 显示对应的弹窗 flag是否不显示工具栏
+      this.popDataShow = {
+        endpoint: false,
+        asset: false,
+        total: false,
+        other: false,
+        info: false,
+        alert: false,
+        main: false
+      }
+      if (key === 'total') {
+        this.chartDataInfo = { ...node.data, ...this.chartGetData.find(item => item.id === node.id) }
+      }
+      this.$nextTick(() => {
+        this.popDataShow[key] = true
+      })
+      if (flag) { // 处理关闭后 缩放后显示工具按钮的问题
+        this.moduleId = ''
+        this.showNodeTools('')
+      }
+      if (key === 'asset' || key === 'alert' || key === 'endpoint') {
+        this.showNodeTools('')
+      }
+    },
+
+    /* topology 方法 */
+    onDrag (event, node) {
+      this.dragFlag = false
+      setTimeout(() => {
+        this.dragFlag = true
+      }, 100)
+      event.dataTransfer.setData('Text', JSON.stringify({ ...node.data, data: { imageId: node.data.imageId } }))
+    },
+    dragFlagChange (node) {
+      getTopology(this.topologyIndex).addNode(
+        {
+          ...node.data,
+          rect: {
+            ...node.data.rect,
+            x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth / 2 - 50,
+            y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight / 2 - 50
+          },
+          data: { imageId: node.data.imageId }
+        })
+      setTimeout(() => {
+        this.dragFlag = true
+      }, 100)
+    },
+
+    onMessage (event, data, e) {
+      // console.log('onMessage', event, data)
+      // console.log(getTopology(this.topologyIndex))
+      // this.notModuleIDArr=[];
+      this.toolShow.attr = false
+      this.toolShow.topTool = false
+      this.$nextTick(() => {
+        this.toolShow.attr = true
+        this.toolShow.topTool = true
+      })
+      if (data) {
+        this.notModuleIDArr.forEach(item => {
+          if (item.id === data.id) {
+            item.rect = data.rect
+          }
+        })
+      }
+      if (!Array.isArray(data) && data) { // 判断不是数组 提前个data配置好节点属性
+        if (data.type === 0 && !data.data.moduleId) {
+          data.data = {
+            ...data.data,
+            moduleId: '',
+            moduleName: '',
+            show: false,
+            error: false,
+            animatePlay: false,
+            fillStyle: data.fillStyle,
+            strokeStyle: data.strokeStyle,
+            gradientColor: '#bae7ff',
+            gradientType: 0,
+            lineWidth: this.nodeDefaultWidth(data.name),
+            iconToolState: true,
+            // chart 配置项
+            valueMapping: [{
+              color: {
+                line: '#000000',
+                fill: '#ffffff',
+                text: '#000000'
+              },
+              value: 'base',
+              animateType: 'base',
+              level: 0,
+              base: true
+            }],
+            valueMappingSort: 'asc',
+            expressArr: [''],
+            legends: [''],
+            tooltipShow: true,
+            panelName: 'topologyName',
+            unit: 2,
+            type: 'line',
+            displayChart: true,
+            aggregation: 'last',
+            title: '',
+            url: ''
+          }
+        } else if (data.type == 1 && !data.data) {
+          // 连线是否自动计算锚点
+          // data.manualCps=true;
+          data.animateColor = '#FA901C'
+          data.data = {
+            animatePlay: false,
+            strokeStyle: data.strokeStyle,
+            animateColor: data.animateColor,
+            arrowColor: '#000000',
+            fromArrowColor: '#000000',
+            toArrowColor: '#000000',
+            lineWidth: 1,
+            // chart 配置项
+            valueMapping: [{
+              color: {
+                line: '#000000',
+                fill: '#ffffff',
+                text: '#000000'
+              },
+              value: 'base',
+              animateType: 'base',
+              level: 0,
+              base: true
+            }],
+            valueMappingSort: 'asc', /* desc */
+            expressArr: [''],
+            legends: [''],
+            tooltipShow: true,
+            panelName: 'topologyName',
+            unit: 2,
+            type: 'line',
+            displayChart: true,
+            aggregation: 'last',
+            title: '',
+            moduleName: '',
+            url: ''
+          }
+        }
+        if (data.type === 0 || data.type === 1) {
+          data.lineWidth = data.data.lineWidth
+        }
+      }
+
+      switch (event) {
+        case 'moveInNode':
+        case 'moveInLine':
+          if (this.timer3) {
+            clearTimeout(this.timer3)
+            this.timer3 = null
+          }
+          this.chartData = { ...data.data, ...this.chartGetData.find(item => item.id === data.id) }
+          this.tooltipPosition.show = false
+          setTimeout(() => {
+            this.tooltipPosition.show = true
+            const ePosition = window.ePosition
+            const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
+            const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
+            this.tooltipPosition.left = ePosition.layerX + 20
+            this.tooltipPosition.top = ePosition.layerY
+            this.$nextTick(() => {
+              if (this.$refs.topoTooltip) {
+                if ((boxWidth / 2) > ePosition.layerX) {
+                  this.tooltipPosition.left = ePosition.layerX + 20
                 } else {
-                  this.tools.push({
-                    group: item.unit,
-                    children: [{
-                      ...imageTemp,
-                      data: {
-                        ...imageTemp.data,
-                        text: item.imageName,
-                        image: res2[index],
-                        imageId: item.id,
-                        unit: item.unit
-                      }
-                    }]
-                  })
+                  this.tooltipPosition.left = ePosition.layerX - 20 - this.$refs.topoTooltip.offsetWidth
                 }
-              })
-
-              this.imgInit = true
-            })
-          })
-        } else {
-          this.imgageLoading = true
-          const promiseArr = []
-          imgidList.forEach((item, index) => {
-            if (item.data.imageId) {
-              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
-            } else {
-              promiseArr.push('')
-            }
-          })
-          Promise.all(promiseArr).then(res2 => {
-            this.iconArray = imgidList.map(item => {
-              return {
-                id: item.data.imageId
+                if (boxHeight > (ePosition.layerY + this.$refs.topoTooltip.offsetHeight)) {
+                  this.tooltipPosition.top = ePosition.layerY
+                } else {
+                  this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
+                }
               }
             })
-            this.iconArray.forEach((item, index) => {
-              if (item.id) {
-                item.image = res2[index]
-              }
-            })
-            this.imgInit = true
-          })
-        }
-      },
-
-      dealImg (url) {
-        // 处理后端传过来的图片流乱码问题
-        if (url) {
-          return new Promise((resolve, reject) => {
-            this.$axios
-              .get(url, {
-                responseType: 'arraybuffer'
-              })
-              .then(res => {
-                return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
-              })
-              .then(data => {
-                resolve(data)
-                // changeImage(data,(img)=>{
-                //   resolve(img)
-                // })
-              })
-              .catch(err => {
-              })
-          })
-        }
-      },
-
-      delPen (obj) { // 删除元素
-        getTopology(this.topologyIndex).delete(obj)
-        this.props = {
-          node: null,
-          line: null,
-          multi: false,
-          nodes: null,
-          locked: false,
-          pen: null,
-          pens: null
-        }
-      },
-
-      editTopology (val) {
-        this.editTopologyFlag = true
-        this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
-        this.$store.commit('setShowTopoScreen', true)
-        setTimeout(() => {
-          getTopology(this.topologyIndex).lock(0)
-          getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
-            if (item.animatePlay) {
-              item.stopAnimate()
-            }
-            if (!item.data.expressArr.length) {
-              item.data.expressArr = ['']
-              item.data.legends = ['']
-            }
-            item.animateType = item.data.animateType
-            if (item.type === 0) {
-              item.fillStyle = item.data.fillStyle
-              item.strokeStyle = item.data.strokeStyle
-              item.animatePlay = false
-              item.fontColor = '#000000'
-              item.gradientType = item.data.gradientType ? item.data.gradientType : 0
-              if (!item.data.gradientColor) {
-                item.data.gradientType = 0
-                item.data.gradientColor = '#bae7ff'
-              }
-              if (item.data.gradientType === 0) {
-                item.bkType = 0
-              } else {
-                item.bkType = 1
-              }
-            } else if (item.type === 1) {
-              item.animateColor = item.data.animateColor
-              item.strokeStyle = item.data.strokeStyle
-              item.arrowColor = item.data.arrowColor
-              item.fromArrowColor = item.data.arrowColor
-              item.toArrowColor = item.data.arrowColor
-              item.animatePlay = false
-              item.fontColor = '#000000'
-            }
-          })
-          getTopology(this.topologyIndex).caches = {
-            index: 0,
-            list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
+          }, 100)
+          break
+        case 'moveOutNode':
+        case 'moveOutLine':
+          // this.tooltipPosition.show=false;
+          // return
+          if (!this.timer3) {
+            this.timer3 = setTimeout(() => {
+              this.tooltipPosition.show = false
+              this.timer3 = null
+            }, 50)
+          } else {
+            clearTimeout(this.timer3)
+            this.timer3 = setTimeout(() => {
+              this.tooltipPosition.show = false
+              this.timer3 = null
+            }, 50)
           }
-        })
-      },
-
-      animateCanvas () {
-        getTopology(this.topologyIndex).render()
-        getTopology(this.topologyIndex).animate()
-      },
-
-      refreshTopology () {
-        // canvas.open()
-      },
-
-      dropdownClick () {
-
-      },
-
-      changeTopologyOpt (val, key) {
-        // this.topologyData.data[key]=this.colorRGBtoHex(val);
-        // getTopology(this.index).data[key]=val;
-        // getTopology(this.index).render();
-        const dataOption = getTopology(this.topologyIndex).data
-        dataOption[key] = this.lineName
-        getTopology(this.topologyIndex).render()
-      },
-      notModuleIDArrChange (id) {
-        this.notModuleIDArr = this.notModuleIDArr.filter(item => item.id !== id)
-      },
-      // 保存
-      saveTopology () {
-        const topologyData = getTopology(this.topologyIndex).pureData()
-        let flag = true
-        const arr = []
-        this.notModuleIDArr = []
-        topologyData.pens.forEach(item => {
-          if (item.type === 0 && ((!item.data) || (item.data && !item.data.moduleId))) {
-            arr.push(item)
+          break
+      }
+      // 右侧输入框编辑状态时点击编辑区域其他元素，onMessage执行后才执行onUpdateProps方法，通过setTimeout让onUpdateProps先执行
+      setTimeout(() => {
+        switch (event) {
+          case 'node':
+          case 'addNode':
+            this.modulesDiff(data)
+            if (data.data.expressArr.length === 0 && event !== 'node') {
+              data.data.expressArr.push('')
+              data.data.legends.push('')
+            }
+            this.props = {
+              node: data,
+              line: null,
+              multi: false,
+              expand: this.props.expand,
+              nodes: null,
+              locked: data.locked,
+              pen: data,
+              pens: null
+            }
+            this.$nextTick(() => {
+              if (this.$refs.CanvasProps) {
+                if (this.penId !== data.id) {
+                  this.$refs.CanvasProps.tab = '1'
+                }
+                this.penId = data.id
+              }
+            })
+            break
+          case 'line':
+          case 'addLine':
+            this.props = {
+              node: null,
+              line: data,
+              multi: false,
+              nodes: null,
+              locked: data.locked,
+              pen: data,
+              pens: null
+            }
+            this.$nextTick(() => {
+              if (this.$refs.CanvasProps) {
+                if (this.penId !== data.id) {
+                  this.$refs.CanvasProps.tab = '1'
+                }
+                this.penId = data.id
+              }
+            })
+            break
+          case 'multi':
+            this.props = {
+              node: null,
+              line: null,
+              multi: true,
+              nodes: data.length > 1 ? data : null,
+              locked: this.getLocked({ nodes: data }),
+              pen: null,
+              pens: data.length > 1 ? data : null
+            }
+            break
+          case 'space':
+            this.penId = undefined
             this.props = {
               node: null,
               line: null,
@@ -1801,231 +1349,683 @@
               pen: null,
               pens: null
             }
-            flag = false
-          }
-        })
-        if (!flag) {
-          this.notModuleIDArr = arr
-        }
-        if (flag) {
-          this.editTopologyFlag = false
-          topologyData.rule = false
-          topologyData.grid = false
-          topologyData.gridSize = 10
-          topologyData.pens.forEach(item => {
-            item.animatePlay = item.data.animatePlay
-            item.data.animateType = item.animateType
-            if (item.type === 0 && JSON.stringify(item.data.imageId)) {
-              item.image = ''
-              item.animateFrames = []
-              item.animateReady = null
-              delete item.img
-              delete item.lastImage
-            }
-            item.data.expressArr = item.data.expressArr.filter((expression, i) => {
-              if (!expression) {
-                item.data.legends.splice(i, 1)
-                return false
-              } else {
-                return true
+            break
+          case 'moveOut':
+            break
+          case 'moveNodes':
+          case 'resizeNodes':
+            if (data.length > 1) {
+              this.props = {
+                node: null,
+                line: null,
+                multi: true,
+                nodes: data,
+                locked: this.getLocked({ nodes: data }),
+                pen: null,
+                pens: null
               }
-            })
-          })
-          if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
-            getTopology(this.topologyIndex).data.scale = this.oldScale
+            } else {
+              this.props = {
+                node: data[0],
+                line: null,
+                multi: false,
+                nodes: null,
+                locked: false,
+                pen: data[0],
+                pens: null
+              }
+            }
+            break
+          case 'resize': {
+            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            if (getTopology(this.topologyIndex)) {
+              getTopology(this.topologyIndex).canvasPos = domRect
+            }
+            break
           }
-          this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
-            this.prevent_opt.save = false
-            if (res.code === 200) {
-              this.$message({
-                message: this.$t('tip.saveSuccess'),
-                type: 'success'
+          case 'scale': {
+            if (this.$refs.topTool) {
+              this.$refs.topTool.scaleNum = parseInt(data * 100)
+            }
+            break
+          }
+          case 'locked': {
+            this.props = {
+              node: null,
+              line: null,
+              multi: false,
+              nodes: null,
+              locked: false,
+              pen: null,
+              pens: null
+            }
+            break
+          }
+          case 'delete': {
+            this.props = {
+              node: null,
+              line: null,
+              multi: false,
+              nodes: null,
+              locked: false,
+              pen: null,
+              pens: null
+            }
+            break
+          }
+        }
+        switch (event) {
+          case 'node':
+          case 'line':
+          case 'space':
+          case 'scale':
+          case 'translate':
+            this.moduleId = ''
+            this.showNodeTools('')
+            this.popDataShowUpdate('', false)
+            if (!this.editTopologyFlag) {
+              getTopology(this.topologyIndex)
+            }
+            break
+        }
+        switch (event) {
+          case 'space':
+          case 'scale':
+          case 'translate':
+            this.getNodesArr()
+            // if(!this.timer2){
+            //   this.timer2=setTimeout(()=>{
+            //     this.getNodesArr();
+            //     this.timer2=null
+            //   },300)
+            // }else{
+            //   clearTimeout(this.timer2);
+            //   this.timer2=setTimeout(()=>{
+            //     this.getNodesArr();
+            //     this.timer2=null
+            //   },300)
+            // }
+            break
+        }
+      }, 0)
+    },
+
+    getLocked (data) {
+      let locked = true
+      if (data.nodes && data.nodes.length) {
+        for (const item of data.nodes) {
+          if (!item.locked) {
+            locked = false
+            break
+          }
+        }
+      }
+      if (locked && data.lines) {
+        for (const item of data.lines) {
+          if (!item.locked) {
+            locked = false
+            break
+          }
+        }
+      }
+
+      return locked
+    },
+
+    onUpdateProps (node) {
+      // 如果是node属性改变，需要传入node，重新计算node相关属性值
+      // 如果是line属性改变，无需传参
+      getTopology(this.topologyIndex).updateProps(node)
+    },
+
+    handleAvatarSuccess () {
+
+    },
+    beforeAvatarUpload (file, fileList) {
+      const this_ = this
+      const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
+
+      if (!isJPG) {
+        this.$message.error(this_.$t('project.topology.imgFormat'))
+        return false
+      }
+      // if (!isLt2M) {
+      //   this.$message.error( this_.$t('project.topology.imgSize'));
+      //   return false;
+      // }
+      const isSize = new Promise(function (resolve, reject) {
+        const width = 100
+        const height = 100
+        const _URL = window.URL || window.webkitURL
+        const img = new Image()
+        img.onload = function () {
+          const valid = img.width > width && img.height > height
+          valid ? resolve() : reject()
+        }
+        img.src = _URL.createObjectURL(file.raw)
+      }).then(() => {
+        if (isJPG) {
+          this.file = file.raw
+        }
+        return file.raw
+      }, () => {
+        this.$message.error(this_.$t('project.topology.imgMeasure'))
+        return Promise.reject()
+      })
+      return false
+    },
+
+    toolShowChange (attr) {
+      this.toolShow[attr] = !this.toolShow[attr]
+    },
+    /* topology 方法 */
+    end (v) {
+
+    },
+    /* tools 方法 */
+
+    imgUpload () {
+      const this_ = this
+      if (!this.uploadPic.unit) {
+        this.$message({
+          message: this_.$t('project.topology.unitError'),
+          type: 'error'
+        })
+        return
+      }
+      if (!this.file) {
+        this.$message({
+          message: this_.$t('project.topology.imgError'),
+          type: 'error'
+        })
+        return
+      }
+      this.upload()
+    },
+    upload () {
+      const form = new FormData()
+      form.append('file', this.file)
+      if (this.uploadPic.name) {
+        form.append('name', this.uploadPic.name)
+      } else {
+        form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
+      }
+      form.append('unit', this.uploadPic.unit)
+      this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+        if (res.code == 200) {
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+          this.uploadPicShow = false
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
+            const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
+            if (group) {
+              group.children.push({
+                ...imageTemp,
+                data: {
+                  ...imageTemp.data,
+                  text: res.data.imageName,
+                  image: data,
+                  imageId: res.data.id,
+                  unit: this.uploadPic.unit
+                }
               })
-              this.$store.commit('setShowTopoScreen', this.topoScreenState)
-              this.$nextTick(() => {
-                getTopology(this.topologyIndex).lock(1)
-                const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-                getTopology(this.topologyIndex).canvasPos = domRect
-                this.reload()
+            } else {
+              this.tools.push({
+                group: this.uploadPic.unit,
+                children: [{
+                  ...imageTemp,
+                  data: {
+                    ...imageTemp.data,
+                    text: res.data.imageName,
+                    image: data,
+                    imageId: res.data.id,
+                    unit: this.uploadPic.unit
+                  }
+                }]
               })
             }
-          }).catch(res => {
-            this.prevent_opt.save = false
-            this.$message({
-              message: res.msg,
-              type: 'error'
-            })
           })
         } else {
-          this.$message({
-            showClose: true,
-            message: this.$t('project.topology.selMod'),
-            type: 'warning'
+          this.$message.error(res.msg)
+        }
+      })
+    },
+
+    delImg (item) {
+      this.$delete('monitor/project/topo/icon?ids=' + item.data.imageId).then(res => {
+        if (res.code == 200) {
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+          this.addNodeInit()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+
+    addNodeInit (imgidList) {
+      if (!this.fromOverView) {
+        this.$get('monitor/project/topo/icon').then(res => {
+          this.imgageLoading = true
+          // this.tools[1].children=[];
+          const imgArr = []
+          const promiseArr = []
+          res.data.list.forEach((item, index) => {
+            item.imageName = item.name
+            delete item.name
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
+            imgArr.push({ ...item })
           })
-        }
-      },
-      // 取消
-      cancelTopology () {
-        this.editTopologyFlag = false
-        this.$nextTick(() => {
-          getTopology(this.topologyIndex).lock(1)
-          const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
-          getTopology(this.topologyIndex).canvasPos = domRect
-          this.$store.commit('setShowTopoScreen', this.topoScreenState)
-        })
-        this.reload()
-      },
-      // 预览
-      previewTopology () {
-        const data = JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))
-        data.pens.forEach((item) => {
-          item.animatePlay = item.data.animatePlay
-        })
-        this.topoPrevData = JSON.parse(JSON.stringify(data))
-        this.topoPrevData.rule = false
-        this.topoPrevData.grid = false
-        this.previewShow = true
-      },
-
-      // 联动 project
-      changeProjectTitle () {
-        const data = getTopology(this.topologyIndex).data
-        this.topologyInfo = {
-          fontSize: data.data.fontSize,
-          align: data.data.align,
-          fontColor: data.data.fontColor,
-          opacity: data.data.opacity,
-          name: data.name
-        }
-      },
-      /* tools 方法 */
-
-      winResize () {
-        setTimeout(() => {
-          const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
-          getTopology(this.topologyIndex).canvasPos = domRect
-          if (this.fromOverView) {
-            getTopology(this.topologyIndex).open(this.oldTopologyData)
-          }
-          let flag = false
-
-          const position = {
-            x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
-            y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
-          }
-          getTopology(this.topologyIndex).data.pens.forEach(item => {
-            if (flag) {
-              return
-            }
-            if (item.rect.ex > position.x || item.rect.ey > position.y) {
-              getTopology(this.topologyIndex).fitView(20)
-              flag = true
-            }
-          })
-          getTopology(this.topologyIndex).centerView(20)
-          this.getNodesArr()
-        }, 100)
-      },
-      canvasMove (e) { // 画布上的移动 确定tooltip的位置
-        if (this.tooltipPosition.show) {
-          return
-        }
-        window.ePosition = e
-      },
-      tooltipOver () {
-        clearTimeout(this.timer3)
-        this.timer3 = null
-      },
-      tooltipOut () {
-        this.timer3 = setTimeout(() => {
-          this.tooltipPosition.show = false
-          this.timer3 = null
-        }, 50)
-      },
-      nodeDefaultWidth (nodeName) {
-        switch (nodeName) {
-          case 'myCube':
-          case 'rectangleImg':
-            return 0
-          default:
-            return 1
-        }
-      },
-      previewBeforeClose (done) {
-        this.$emit('changeTopologyIndexF')
-        done()
-      },
-      selpopIs (pen, state) { // 判断是否有图表
-        let flag = true
-        if (state.id === 'other') {
-          flag = false
-        }
-        if (state.id === 'total' && pen.data.expressArr.length === 0) {
-          flag = false
-        }
-        return flag
-      },
-      modelPopError (pen, state) {
-        if (item.id === 'asset' && this.activeModelItem.assetError) {
-          return true
-        }
-        if (item.id === 'alert' && this.activeModelItem.alertError) {
-          return true
-        }
-        if (item.id === 'endpoint' && this.activeModelItem.endpointError) {
-          return true
-        }
-        return false
-      },
-      redoIndexChange (index) {
-        this.redoIndex = index
-      },
-      querySearch (queryString, cb) {
-        const restaurants = this.unitArr
-        const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilter (queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
-        }
-      },
-      uploadPicChange () {
-        this.unitArr = []
-        this.tools.forEach((item, index) => {
-          if (index > 0) {
-            this.unitArr.push({
-              value: item.group
+          Promise.all(promiseArr).then((res2) => {
+            this.iconArray = [...res.data.list]
+            this.iconArray.forEach((item, index) => {
+              item.image = res2[index]
+              const group = this.tools.find(tool => tool.group === item.unit)
+              if (group) {
+                group.children.push({
+                  ...imageTemp,
+                  data: {
+                    ...imageTemp.data,
+                    text: item.imageName,
+                    image: res2[index],
+                    imageId: item.id,
+                    unit: item.unit
+                  }
+                })
+              } else {
+                this.tools.push({
+                  group: item.unit,
+                  children: [{
+                    ...imageTemp,
+                    data: {
+                      ...imageTemp.data,
+                      text: item.imageName,
+                      image: res2[index],
+                      imageId: item.id,
+                      unit: item.unit
+                    }
+                  }]
+                })
+              }
             })
+
+            this.imgInit = true
+          })
+        })
+      } else {
+        this.imgageLoading = true
+        const promiseArr = []
+        imgidList.forEach((item, index) => {
+          if (item.data.imageId) {
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
+          } else {
+            promiseArr.push('')
           }
         })
-        this.uploadPic.name = ''
-        this.uploadPic.unit = ''
-        this.file = null
-        this.uploadPicShow = true
-      },
-      zoomMap (num) {
-        getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale + num)
-      },
-      penToBottom () {
-        getTopology(this.topologyIndex).bottom()
-      },
-      changeScreen () {
-        this.$store.commit('setShowTopoScreen', !this.topoScreen)
+        Promise.all(promiseArr).then(res2 => {
+          this.iconArray = imgidList.map(item => {
+            return {
+              id: item.data.imageId
+            }
+          })
+          this.iconArray.forEach((item, index) => {
+            if (item.id) {
+              item.image = res2[index]
+            }
+          })
+          this.imgInit = true
+        })
       }
     },
-    destroyed () {
-      if (getTopology(this.topologyIndex)) {
-        getTopology(this.topologyIndex).destroy()
-        setTopology(this.topologyIndex, null)
+
+    dealImg (url) {
+      // 处理后端传过来的图片流乱码问题
+      if (url) {
+        return new Promise((resolve, reject) => {
+          this.$axios
+            .get(url, {
+              responseType: 'arraybuffer'
+            })
+            .then(res => {
+              return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
+            })
+            .then(data => {
+              resolve(data)
+              // changeImage(data,(img)=>{
+              //   resolve(img)
+              // })
+            })
+            .catch(err => {
+            })
+        })
       }
-      if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
-        document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
+    },
+
+    delPen (obj) { // 删除元素
+      getTopology(this.topologyIndex).delete(obj)
+      this.props = {
+        node: null,
+        line: null,
+        multi: false,
+        nodes: null,
+        locked: false,
+        pen: null,
+        pens: null
       }
-      window.removeEventListener('resize', this.winResize)
+    },
+
+    editTopology (val) {
+      this.editTopologyFlag = true
+      this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
+      this.$store.commit('setShowTopoScreen', true)
+      setTimeout(() => {
+        getTopology(this.topologyIndex).lock(0)
+        getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
+          if (item.animatePlay) {
+            item.stopAnimate()
+          }
+          if (!item.data.expressArr.length) {
+            item.data.expressArr = ['']
+            item.data.legends = ['']
+          }
+          item.animateType = item.data.animateType
+          if (item.type === 0) {
+            item.fillStyle = item.data.fillStyle
+            item.strokeStyle = item.data.strokeStyle
+            item.animatePlay = false
+            item.fontColor = '#000000'
+            item.gradientType = item.data.gradientType ? item.data.gradientType : 0
+            if (!item.data.gradientColor) {
+              item.data.gradientType = 0
+              item.data.gradientColor = '#bae7ff'
+            }
+            if (item.data.gradientType === 0) {
+              item.bkType = 0
+            } else {
+              item.bkType = 1
+            }
+          } else if (item.type === 1) {
+            item.animateColor = item.data.animateColor
+            item.strokeStyle = item.data.strokeStyle
+            item.arrowColor = item.data.arrowColor
+            item.fromArrowColor = item.data.arrowColor
+            item.toArrowColor = item.data.arrowColor
+            item.animatePlay = false
+            item.fontColor = '#000000'
+          }
+        })
+        getTopology(this.topologyIndex).caches = {
+          index: 0,
+          list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
+        }
+      })
+    },
+
+    animateCanvas () {
+      getTopology(this.topologyIndex).render()
+      getTopology(this.topologyIndex).animate()
+    },
+
+    refreshTopology () {
+      // canvas.open()
+    },
+
+    dropdownClick () {
+
+    },
+
+    changeTopologyOpt (val, key) {
+      // this.topologyData.data[key]=this.colorRGBtoHex(val);
+      // getTopology(this.index).data[key]=val;
+      // getTopology(this.index).render();
+      const dataOption = getTopology(this.topologyIndex).data
+      dataOption[key] = this.lineName
+      getTopology(this.topologyIndex).render()
+    },
+    notModuleIDArrChange (id) {
+      this.notModuleIDArr = this.notModuleIDArr.filter(item => item.id !== id)
+    },
+    // 保存
+    saveTopology () {
+      const topologyData = getTopology(this.topologyIndex).pureData()
+      let flag = true
+      const arr = []
+      this.notModuleIDArr = []
+      topologyData.pens.forEach(item => {
+        if (item.type === 0 && ((!item.data) || (item.data && !item.data.moduleId))) {
+          arr.push(item)
+          this.props = {
+            node: null,
+            line: null,
+            multi: false,
+            nodes: null,
+            locked: false,
+            pen: null,
+            pens: null
+          }
+          flag = false
+        }
+      })
+      if (!flag) {
+        this.notModuleIDArr = arr
+      }
+      if (flag) {
+        this.editTopologyFlag = false
+        topologyData.rule = false
+        topologyData.grid = false
+        topologyData.gridSize = 10
+        topologyData.pens.forEach(item => {
+          item.animatePlay = item.data.animatePlay
+          item.data.animateType = item.animateType
+          if (item.type === 0 && JSON.stringify(item.data.imageId)) {
+            item.image = ''
+            item.animateFrames = []
+            item.animateReady = null
+            delete item.img
+            delete item.lastImage
+          }
+          item.data.expressArr = item.data.expressArr.filter((expression, i) => {
+            if (!expression) {
+              item.data.legends.splice(i, 1)
+              return false
+            } else {
+              return true
+            }
+          })
+        })
+        if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
+          getTopology(this.topologyIndex).data.scale = this.oldScale
+        }
+        this.$put('monitor/project/topo', { topo: JSON.stringify(topologyData), projectId: this.projectInfo.id }).then(res => {
+          this.prevent_opt.save = false
+          if (res.code === 200) {
+            this.$message({
+              message: this.$t('tip.saveSuccess'),
+              type: 'success'
+            })
+            this.$store.commit('setShowTopoScreen', this.topoScreenState)
+            this.$nextTick(() => {
+              getTopology(this.topologyIndex).lock(1)
+              const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+              getTopology(this.topologyIndex).canvasPos = domRect
+              this.reload()
+            })
+          }
+        }).catch(res => {
+          this.prevent_opt.save = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        })
+      } else {
+        this.$message({
+          showClose: true,
+          message: this.$t('project.topology.selMod'),
+          type: 'warning'
+        })
+      }
+    },
+    // 取消
+    cancelTopology () {
+      this.editTopologyFlag = false
+      this.$nextTick(() => {
+        getTopology(this.topologyIndex).lock(1)
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
+        this.$store.commit('setShowTopoScreen', this.topoScreenState)
+      })
+      this.reload()
+    },
+    // 预览
+    previewTopology () {
+      const data = JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))
+      data.pens.forEach((item) => {
+        item.animatePlay = item.data.animatePlay
+      })
+      this.topoPrevData = JSON.parse(JSON.stringify(data))
+      this.topoPrevData.rule = false
+      this.topoPrevData.grid = false
+      this.previewShow = true
+    },
+
+    // 联动 project
+    changeProjectTitle () {
+      const data = getTopology(this.topologyIndex).data
+      this.topologyInfo = {
+        fontSize: data.data.fontSize,
+        align: data.data.align,
+        fontColor: data.data.fontColor,
+        opacity: data.data.opacity,
+        name: data.name
+      }
+    },
+    /* tools 方法 */
+
+    winResize () {
+      setTimeout(() => {
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
+        if (this.fromOverView) {
+          getTopology(this.topologyIndex).open(this.oldTopologyData)
+        }
+        let flag = false
+
+        const position = {
+          x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
+          y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
+        }
+        getTopology(this.topologyIndex).data.pens.forEach(item => {
+          if (flag) {
+            return
+          }
+          if (item.rect.ex > position.x || item.rect.ey > position.y) {
+            getTopology(this.topologyIndex).fitView(20)
+            flag = true
+          }
+        })
+        getTopology(this.topologyIndex).centerView(20)
+        this.getNodesArr()
+      }, 100)
+    },
+    canvasMove (e) { // 画布上的移动 确定tooltip的位置
+      if (this.tooltipPosition.show) {
+        return
+      }
+      window.ePosition = e
+    },
+    tooltipOver () {
+      clearTimeout(this.timer3)
+      this.timer3 = null
+    },
+    tooltipOut () {
+      this.timer3 = setTimeout(() => {
+        this.tooltipPosition.show = false
+        this.timer3 = null
+      }, 50)
+    },
+    nodeDefaultWidth (nodeName) {
+      switch (nodeName) {
+        case 'myCube':
+        case 'rectangleImg':
+          return 0
+        default:
+          return 1
+      }
+    },
+    previewBeforeClose (done) {
+      this.$emit('changeTopologyIndexF')
+      done()
+    },
+    selpopIs (pen, state) { // 判断是否有图表
+      let flag = true
+      if (state.id === 'other') {
+        flag = false
+      }
+      if (state.id === 'total' && pen.data.expressArr.length === 0) {
+        flag = false
+      }
+      return flag
+    },
+    modelPopError (pen, state) {
+      if (item.id === 'asset' && this.activeModelItem.assetError) {
+        return true
+      }
+      if (item.id === 'alert' && this.activeModelItem.alertError) {
+        return true
+      }
+      if (item.id === 'endpoint' && this.activeModelItem.endpointError) {
+        return true
+      }
+      return false
+    },
+    redoIndexChange (index) {
+      this.redoIndex = index
+    },
+    querySearch (queryString, cb) {
+      const restaurants = this.unitArr
+      const results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    uploadPicChange () {
+      this.unitArr = []
+      this.tools.forEach((item, index) => {
+        if (index > 0) {
+          this.unitArr.push({
+            value: item.group
+          })
+        }
+      })
+      this.uploadPic.name = ''
+      this.uploadPic.unit = ''
+      this.file = null
+      this.uploadPicShow = true
+    },
+    zoomMap (num) {
+      getTopology(this.topologyIndex).scaleTo(getTopology(this.topologyIndex).data.scale + num)
+    },
+    penToBottom () {
+      getTopology(this.topologyIndex).bottom()
+    },
+    changeScreen () {
+      this.$store.commit('setShowTopoScreen', !this.topoScreen)
     }
+  },
+  destroyed () {
+    if (getTopology(this.topologyIndex)) {
+      getTopology(this.topologyIndex).destroy()
+      setTopology(this.topologyIndex, null)
+    }
+    if (document.getElementById('topology-canvas' + this.topologyIndexF)) {
+      document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
+    }
+    window.removeEventListener('resize', this.winResize)
   }
+}
 </script>
 <style lang="scss">
   .el-dropdown-menu {

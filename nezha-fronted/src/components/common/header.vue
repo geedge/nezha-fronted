@@ -173,7 +173,7 @@ export default {
     return {
       username: sessionStorage.getItem('nz-username'),
       language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
-      systemLogo:'',
+      systemLogo: '',
       // 顶部菜单相关
       /* activeIndex: '', */
       activeItemIndex: '',

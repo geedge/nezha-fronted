@@ -66,13 +66,13 @@ export default {
             type: 'selectString',
             label: 'operation',
             disabled: false
-          },{
+          }, {
             id: 14,
             name: this.$t('config.operationlog.operaId'),
             type: 'input',
             label: 'operaId',
             disabled: false
-          },{
+          }, {
             id: 16,
             name: this.$t('config.operationlog.state'),
             type: 'selectString',
@@ -84,10 +84,10 @@ export default {
             type: 'input',
             label: 'params',
             disabled: false
-          },
+          }
         ]
       },
-      searchLabel:{userId:this.obj.id}
+      searchLabel: { userId: this.obj.id }
     }
   },
   methods: {
@@ -100,7 +100,7 @@ export default {
         }
       }
       return ''
-    },
+    }
 
   }
 }

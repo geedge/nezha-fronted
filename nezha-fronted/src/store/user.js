@@ -40,7 +40,7 @@ const user = {
     loginSuccess (store, res) {
       sessionStorage.setItem('nz-token', res.data.token)
       localStorage.setItem('nz-sys-name', res.data.systemName)
-      if(res.systemLogo){
+      if (res.systemLogo) {
         localStorage.setItem('nz-sys-logo', res.data.systemLogo)
       }
       localStorage.setItem('nz-sys-timezone', res.data.timezone)

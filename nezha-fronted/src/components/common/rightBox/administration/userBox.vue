@@ -70,151 +70,151 @@
 </template>
 
 <script>
-  import { host, port } from '@/components/common/js/validate'
-  export default {
-    name: 'userBox',
-    components: {
-    },
-    props: {
-      obj: {
-        type: Object
-      },
-    },
-    computed:{
-      isCurrentUser () {
-        return function (username) {
-          return localStorage.getItem('nz-username') == username
-        }
-      },
-    },
-    data () {
-      const vm = this
-      const validatePassword = (rule, value, callback) => { // 确认密码的二次校验
-        if (value === '' && this.editUser.pin) {
-          callback(new Error(this.$t('config.user.inputConfirmPwd')))
-        } else if (value !== this.editUser.pin) {
-          callback(new Error(this.$t('config.user.confirmPwdErr')))
-        } else {
-          callback()
-        }
-      }
-      return {
-        editUser: {},
-        url: 'sys/user',
-        rightBox: {model: {show: false}},
-        rules: { // 表单校验规则
-          name: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          username: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          pin: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          pinChange: [
-            { validator: validatePassword, trigger: 'blur' },
-            { required: true, message: '', trigger: 'blur' }
-          ],
-          roleIds: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          email: [
-            { type: 'email', message: this.$t('validate.email') }
-          ],
-        },
-        rules2: { // 表单校验规则
-          username: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          pinChange: [
-            { validator: validatePassword, trigger: 'blur' }
-          ],
-          roleIds: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          email: [
-            { type: 'email', message: this.$t('validate.email') }
-          ]
-        },
-        roles: []
-      }
-    },
-    watch: {
-      obj: {
-        deep: true,
-        immediate: true,
-        handler (n) {
-          this.editUser = JSON.parse(JSON.stringify(n))
-          if(this.editUser.roles && this.editUser.roles.length>0){
-            this.editUser.roleIds=this.editUser.roles.map(t=>t.id)
-          }
-        }
-      },
-    },
-    mounted () {
-      this.getRoles()
-    },
-    methods: {
-      clickOutside () {
-        this.esc(false)
-      },
-      /* 关闭弹框 */
-      esc (refresh) {
-        this.prevent_opt.save = false
-        this.$emit('close', refresh)
-      },
-      /* 密码失去焦点 检验确认密码 */
-      passwordBlur () {
-        if (this.editUser.pin && this.editUser.pinChange) {
-          this.$refs.accountForm.validateField('passwordChange')
-        }
-      },
-      getRoles () {
-        this.roles = []
-        this.$get('sys/role?pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.roles = response.data.list
-          } else {
-            this.$message.error('load roles faild')
-          }
-        })
-      },
-      save () {
-        if (this.prevent_opt.save) { return } ;
-        this.prevent_opt.save = true
-
-        this.$refs.userForm.validate((valid) => {
-          if (valid) {
-            if (this.editUser.id) {
-              this.$put(this.url, this.editUser).then(res => {
-                this.prevent_opt.save = false
-                if (res.code === 200) {
-                  this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-                  this.esc(true)
-                } else {
-                  this.$message.error(res.msg)
-                }
-              })
-            } else {
-              this.$post(this.url, this.editUser).then(res => {
-                this.prevent_opt.save = false
-                if (res.code === 200) {
-                  this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-                  this.esc(true)
-                } else {
-                  this.$message.error(res.msg)
-                }
-              })
-            }
-          } else {
-            this.prevent_opt.save = false
-            return false
-          }
-        })
+import { host, port } from '@/components/common/js/validate'
+export default {
+  name: 'userBox',
+  components: {
+  },
+  props: {
+    obj: {
+      type: Object
+    }
+  },
+  computed: {
+    isCurrentUser () {
+      return function (username) {
+        return localStorage.getItem('nz-username') == username
       }
     }
+  },
+  data () {
+    const vm = this
+    const validatePassword = (rule, value, callback) => { // 确认密码的二次校验
+      if (value === '' && this.editUser.pin) {
+        callback(new Error(this.$t('config.user.inputConfirmPwd')))
+      } else if (value !== this.editUser.pin) {
+        callback(new Error(this.$t('config.user.confirmPwdErr')))
+      } else {
+        callback()
+      }
+    }
+    return {
+      editUser: {},
+      url: 'sys/user',
+      rightBox: { model: { show: false } },
+      rules: { // 表单校验规则
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        pin: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        pinChange: [
+          { validator: validatePassword, trigger: 'blur' },
+          { required: true, message: '', trigger: 'blur' }
+        ],
+        roleIds: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', message: this.$t('validate.email') }
+        ]
+      },
+      rules2: { // 表单校验规则
+        username: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        pinChange: [
+          { validator: validatePassword, trigger: 'blur' }
+        ],
+        roleIds: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', message: this.$t('validate.email') }
+        ]
+      },
+      roles: []
+    }
+  },
+  watch: {
+    obj: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.editUser = JSON.parse(JSON.stringify(n))
+        if (this.editUser.roles && this.editUser.roles.length > 0) {
+          this.editUser.roleIds = this.editUser.roles.map(t => t.id)
+        }
+      }
+    }
+  },
+  mounted () {
+    this.getRoles()
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
+    },
+    /* 关闭弹框 */
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    /* 密码失去焦点 检验确认密码 */
+    passwordBlur () {
+      if (this.editUser.pin && this.editUser.pinChange) {
+        this.$refs.accountForm.validateField('passwordChange')
+      }
+    },
+    getRoles () {
+      this.roles = []
+      this.$get('sys/role?pageSize=-1').then(response => {
+        if (response.code === 200) {
+          this.roles = response.data.list
+        } else {
+          this.$message.error('load roles faild')
+        }
+      })
+    },
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+
+      this.$refs.userForm.validate((valid) => {
+        if (valid) {
+          if (this.editUser.id) {
+            this.$put(this.url, this.editUser).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          } else {
+            this.$post(this.url, this.editUser).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
+          }
+        } else {
+          this.prevent_opt.save = false
+          return false
+        }
+      })
+    }
   }
+}
 </script>
 <style lang="scss">
   @import '@/assets/css/common/rightBoxCommon.scss';

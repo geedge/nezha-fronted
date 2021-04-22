@@ -65,7 +65,7 @@ export default {
         ]
       },
       nowTime: '',
-      searchLabel:{userId:this.obj.id}
+      searchLabel: { userId: this.obj.id }
     }
   },
   methods: {

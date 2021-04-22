@@ -471,7 +471,7 @@ const en = {
     repeat: 'Repeat',
     tooLong: 'Too long content',
     onlyWord: 'only input a-z、A-Z、0-9、"_" ',
-    mobile:'Invalid mobile',
+    mobile: 'Invalid mobile'
   },
   search: {
     searchTip: 'Enter to search', // '点击或回车执行搜索'
@@ -706,7 +706,7 @@ const en = {
       confirmPwdErr: 'The two passwords are inconsistent',
       reinputPwd: 'Enter password again',
       notification: 'Notification',
-      mobile: 'Mobile',
+      mobile: 'Mobile'
     },
     roles: {
       roles: 'Roles',

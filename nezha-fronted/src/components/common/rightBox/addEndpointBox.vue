@@ -608,7 +608,7 @@ export default {
           moduleId: item.moduleId,
           assetId: item.assetId,
           name: item.name,
-          configs: JSON.stringify(item.configs),
+          configs: JSON.stringify(item.configs)
         }
         endpointList.push(endpoint)
       })

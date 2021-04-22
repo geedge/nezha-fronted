@@ -114,7 +114,7 @@ export default {
   components: {
     'chart-box': ChartBox,
     'chart-list': ChartList,
-    nzBottomDataList,
+    nzBottomDataList
   },
   methods: {
     // 刷新

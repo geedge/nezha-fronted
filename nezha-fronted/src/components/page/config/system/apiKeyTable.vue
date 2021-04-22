@@ -140,7 +140,7 @@ export default {
       roles: [],
       rules: {
         name: { required: true, message: this.$t('validate.required'), switch: false },
-        roleId: { required: true, message: this.$t('validate.required'), switch: false },
+        roleId: { required: true, message: this.$t('validate.required'), switch: false }
         // expireAt: { required: true, message: this.$t('validate.required'), switch: false }
       },
       pickerOptions: {

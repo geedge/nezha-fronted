@@ -737,7 +737,7 @@ export default {
       })
     },
     loadChartData (scrollTop) {
-      console.log(scrollTop);
+      console.log(scrollTop)
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
           if (!item.isLoaded) {

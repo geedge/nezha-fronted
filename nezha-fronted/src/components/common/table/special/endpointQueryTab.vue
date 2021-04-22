@@ -447,7 +447,7 @@ export default {
           }
           setTimeout(() => {
             this.$refs.endpointChart.resize()
-          },100)
+          }, 100)
         })
       })
     },
