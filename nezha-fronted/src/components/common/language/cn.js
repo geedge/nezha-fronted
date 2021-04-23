@@ -730,6 +730,10 @@ const cn = {
       latitude: '纬度',
       lnglat: '坐标'
     },
+    cabinet:{
+      editCabinet:'编辑机柜',
+      createCabinet:'创建机柜',
+    },
     model: {
       model: '资产型号',
       vendor: '厂商',
@@ -806,6 +810,8 @@ const cn = {
         curUrl: '网站URL',
         timezone: '时区',
         defaultCabinetUsize: '机柜默认U位',
+        sessionTimeout:'Session超时',
+        minute:'分',
         second: '秒',
         day: '天',
         maxSeries: 'Query max series',
@@ -859,7 +865,7 @@ const cn = {
         filter: '用户过滤器',
         filterTip: '可能的选项是(cn或uid或sAMAccountName=%(user)s)',
         map: '属性映射',
-        mapTip: '属性映射代表怎样将NEZHA用户属性映射到jumpserver用户上;username,email是jumpserver的属性',
+        mapTip: '属性映射代表怎样将LDAP用户属性映射到NEZHA用户上;username,email是NEZHA的属性',
         active: '启用LDAP认证',
         timeout: '超时时间'
       },

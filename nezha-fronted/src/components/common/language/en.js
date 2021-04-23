@@ -681,6 +681,10 @@ const en = {
       latitude: 'Latitude',
       lnglat: 'Coordinate'
     },
+    cabinet:{
+      editCabinet:'Edit Cabinet',
+      createCabinet:'Create Cabinet',
+    },
     model: {
       model: 'Asset model',
       vendor: 'Vendor',
@@ -746,7 +750,12 @@ const en = {
         play: 'Play',
         replay: 'Replay',
         skipTip: 'Skip no operation time'
-      }
+      },
+      loginHost:'Login host',
+      loginUser:'Login user',
+      sourceIp:'Source IP',
+      sourceUser:'Source user',
+      SessionId:'Session ID',
     },
     operationlog: {
       operationlog: 'Operation log',
@@ -811,7 +820,7 @@ const en = {
         basic: 'Basic',
         alertApi: 'Alert API',
         assetPingSwith: 'Asset ping',
-        assetPingInterval: 'Interval',
+        assetPingInterval: 'Ping interval',
         exporterTarget: 'Exporter path',
         scrapeInterval: 'Scrape interval',
         storageRetention: 'Local retention',
@@ -821,6 +830,8 @@ const en = {
         defaultCabinetUsize: 'Cabinet U size',
         second: 'second',
         day: 'day',
+        sessionTimeout:'Session timeout',
+        minute:'minute',
         maxSeries: 'Query max series',
         unsaved: 'Unsaved prompt',
         mapConfig: 'Map center',

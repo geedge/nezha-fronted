@@ -19,7 +19,7 @@
       <!------TAB区------>
       <div class="sub-list__tabs">
         <!--机柜-->
-        <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+        <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
         <!--告警信息-->
         <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
         <!--asset页的endpoint列表-->
@@ -36,6 +36,8 @@
         <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
 
         <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+
+        <asset-tab v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
 
         <!--user列表的两个日志-->
         <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
@@ -68,6 +70,7 @@ import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from './tabs/terminalLogCMDTab'
 import operationLogTab from './tabs/operationLogTab'
 import terminalLogTab from './tabs/terminalLogTab'
+import assetTab from "@/components/common/bottomBox/tabs/assetTab";
 import { fromRoute } from '@/components/common/js/constants'
 
 export default {
@@ -85,7 +88,8 @@ export default {
     endpointTabNew,
     alertMessageTabNew,
     endpointQuery,
-    panelTabNew
+    panelTabNew,
+    assetTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -127,7 +131,18 @@ export default {
             { prop: 'endpointQuery', name: 'Query' },
             { prop: 'endpointAlertMessage', name: 'Alerts' }
           ]
+        },
+        dc: {
+          cabinet: [
+            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true }
+          ],
+          asset:[
+            { prop: 'asset', name: this.$t('asset.assets'), active: true },
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false }
+          ]
         }
+
       }
     }
   },

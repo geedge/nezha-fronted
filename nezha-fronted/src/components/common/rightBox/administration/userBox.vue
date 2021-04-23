@@ -37,20 +37,21 @@
           <el-form-item :label="$t('config.user.mobile')" prop="mobile">
             <el-input id="account-input-mobile" v-model.number="editUser.mobile" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
+          <!--roles-->
+          <el-form-item :label="$t('config.user.roles')" prop="roleIds">
+            <el-select id="account-input-roleIds" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.id==1"  clearable collapse-tags placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="()=>{this.$forceUpdate()}">
+              <template v-for="role in roles">
+                <el-option :key="role.id" :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
           <!--enable-->
           <el-form-item :label="$t('config.user.enable')">
             <el-switch id="account-input-status" v-model="editUser.status" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.id==1) " active-color="#ee9d3f" active-value="1"
                        inactive-value="0">
             </el-switch>
           </el-form-item>
-          <!--roles-->
-          <el-form-item :label="$t('config.user.roles')" prop="roleIds">
-            <el-select id="account-input-roleIds" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.id==1" multiple clearable collapse-tags placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="()=>{this.$forceUpdate()}">
-              <template v-for="role in roles">
-                <el-option :key="role.id" :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
-              </template>
-            </el-select>
-          </el-form-item>
+
           <el-form-item v-if="editUser.id" :label="$t('config.user.createTime')">
             <div class="right-box-form-content-txt">{{editUser.createAt}}</div>
           </el-form-item>

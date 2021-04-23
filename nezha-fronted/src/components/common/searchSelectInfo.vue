@@ -141,6 +141,24 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       value: 'fail',
       label: i18n.t('overall.result.failed')
     }
+  ],
+  terminalStatus:[
+    {
+      value: 0,
+      label: i18n.t('config.terminallog.statusItem.connecting')
+    },{
+      value: 1,
+      label: i18n.t('config.terminallog.statusItem.connectionFailed')
+    },{
+      value: 2,
+      label: i18n.t('config.terminallog.statusItem.over')
+    },{
+      value: 3,
+      label: i18n.t('config.terminallog.statusItem.kickedOut')
+    },{
+      value: 4,
+      label: i18n.t('config.terminallog.statusItem.unknownError')
+    },
   ]
 }
 export default searchSelectInfo

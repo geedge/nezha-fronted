@@ -4,25 +4,30 @@
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
-            <el-form-item :label="$t('config.system.basic.sysLogo')" prop="system_logo">
-              <el-upload
-                class="avatar-uploader"
-                action=""
-                type=".jpg,.jpeg,.png"
-                :auto-upload="false"
-                :show-file-list="false"
-                :on-change="handleLogoChange"
-                >
-                <img v-if="basic.system_logo" :src="basic.system_logo" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                <div slot="tip" v-if="imageFormatErr" class="logo-upload-tip">{{$t('config.system.basic.logoTip')}}</div>
-              </el-upload>
-            </el-form-item>
+<!--            <el-form-item :label="$t('config.system.basic.sysLogo')" prop="system_logo">-->
+<!--              <el-upload-->
+<!--                class="avatar-uploader"-->
+<!--                action=""-->
+<!--                type=".jpg,.jpeg,.png"-->
+<!--                :auto-upload="false"-->
+<!--                :show-file-list="false"-->
+<!--                :on-change="handleLogoChange"-->
+<!--                >-->
+<!--                <img v-if="basic.system_logo" :src="basic.system_logo" class="avatar">-->
+<!--                <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--                <div slot="tip" v-if="imageFormatErr" class="logo-upload-tip">{{$t('config.system.basic.logoTip')}}</div>-->
+<!--              </el-upload>-->
+<!--            </el-form-item>-->
             <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
               <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
               <el-input id="system-baisc-alert_api" v-model="basic.alert_api"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.sessionTimeout')" prop="session_timeout">
+              <el-input v-model.number="basic.session_timeout" >
+                <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
+              </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
               <el-input v-model.number="basic.asset_ping_interval" >
@@ -72,10 +77,10 @@
               </el-switch>
             </el-form-item>
             <el-form-item>
-              <button
-                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"
-                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"
-              >{{$t('overall.reset')}}</button>
+<!--              <button-->
+<!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"-->
+<!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
+<!--              >{{$t('overall.reset')}}</button>-->
               <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
@@ -121,7 +126,7 @@
               </el-select>
             </el-form-item>
             <el-form-item style="padding-top: 20px;">
-              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
+<!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
               <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
               <button id="system-email-save" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
@@ -131,11 +136,11 @@
       <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
         <div class="system-config-form terminal" v-if="activeTab === 'terminal'">
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
-            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">
-              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
-              </el-input>
-            </el-form-item>
+<!--            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">-->
+<!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
+<!--                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>-->
+<!--              </el-input>-->
+<!--            </el-form-item>-->
             <el-form-item :label="$t('config.system.terminal.userTip')" prop="terminal_telnet_user_tip">
               <el-input id="system-terminal-user-tip" v-model="terminal.terminal_telnet_user_tip"></el-input>
             </el-form-item>
@@ -187,7 +192,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>
+<!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
               <button id='system-ldap-test' @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
               <button id='system-ldap-save' @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
@@ -254,6 +259,7 @@ export default {
       basic: {
         alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
+        session_timeout:'30',
         storage_local_retention: 15 * 24,
         system_name: '',
         system_logo: '',
@@ -273,6 +279,7 @@ export default {
         alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
         asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
+        session_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         default_scrape_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         storage_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         snmp_trap_listen_port: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: port, trigger: 'blur' }],

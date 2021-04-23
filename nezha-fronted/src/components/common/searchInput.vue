@@ -33,7 +33,7 @@
                         <div class="select_condition">
                             {{val.name}}
                         </div>
-                        <div class="select_content" v-if="val.val && ind!=sreach_num">
+                        <div class="select_content" v-if="typeof val.val !='undefined' && val.val != null && ind!=sreach_num">
                             <span>{{val.valString ? val.valString : val.val}}</span>
                             <i class="nz-icon nz-icon-close" @click="close_selcet_list(ind,$event)"></i>
                         </div>
@@ -57,6 +57,16 @@
                               </el-scrollbar>
                               <ul v-else>
                                 <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                              </ul>
+                            </div>
+                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'terminalStatus'">
+                              <el-scrollbar v-if="selectInfoList['terminalStatus'].length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                               </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'dc'">
@@ -633,7 +643,6 @@ export default {
     },
     // 点击搜索
     select () {
-      console.log(this.select_list)
       const objectInfo = {}
       this.change_sreach_show = true
       this.name = '', this.id = ''
@@ -726,7 +735,7 @@ export default {
       }
       let labelBool = true
       this.select_list.forEach(val => {
-        if (typeof (val.val) !== 'undefined' && val.val) {
+        if (typeof (val.val) !== 'undefined' && val.val != null) {
           if (val.type == 'select') {
             if (val.label == 'alertType' || val.label == 'promType') {
               objectInfo.type = val.valnum
@@ -763,6 +772,7 @@ export default {
             objectInfo[val.label] = val.val
           }
         }
+        console.log('search obj',objectInfo)
       })
       this.getHeight()
       // 搜索完成后存储在本地历史记录中
@@ -1337,9 +1347,9 @@ export default {
       }
     }, 1000)
     JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
-      if (val.name == 'Protocol') {
-        this.schemaTypeSelect = val.doc.data
-      }
+      // if (val.name == 'Protocol') {
+      //   this.schemaTypeSelect = val.doc.data
+      // }
       if (val.prop == 'common_action') {
         this.actionSelect = val.doc.data
       }

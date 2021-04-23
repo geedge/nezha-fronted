@@ -141,7 +141,7 @@ export default {
       this.searchLabel = {}
       this.pageObj.pageNo = 1
       for (const item in searchObj) {
-        if (searchObj[item]) {
+        if (typeof searchObj[item] !== 'undefined' && searchObj[item] !== null && searchObj[item] !== '') {
           this.$set(this.searchLabel, item, searchObj[item])
         }
       }

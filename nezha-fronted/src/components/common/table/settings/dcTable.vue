@@ -1,6 +1,6 @@
 <template>
   <el-table
-    id="roleTable"
+    id="dcTable"
     ref="dataTable"
     :data="tableData"
     :height="height"
@@ -59,22 +59,24 @@
           <template v-if="regNumTest(scope.row.latitude)">{{scope.row.latitude}}</template>
           <template v-else>-</template>
         </template>
-        <template v-else-if="item.prop === 'assetStat' && scope.row.assetStat">
-          <el-popover
-            :content="$t('overall.result.total') + '：' + scope.row.assetStat.total + '，' + $t('asset.inStock') + '：' + scope.row.assetStat.inStock + '，' + $t('asset.notInStock') + '：' + scope.row.assetStat.outStock + '，' + $t('asset.suspended') + '：' + scope.row.assetStat.suspended"
-            placement="top"
-            trigger="hover">
-            <div slot="reference" class="dc-asset-states">
-              <span class="dc-asset-state dc-asset-state-total">{{scope.row.assetStat.total}}</span>
-              <span class="dc-asset-state dc-asset-state-in">{{scope.row.assetStat.inStock}}</span>
-              <span class="dc-asset-state dc-asset-state-out">{{scope.row.assetStat.outStock}}</span>
-              <span class="dc-asset-state dc-asset-state-suspended">{{scope.row.assetStat.suspended}}</span>
-            </div>
-          </el-popover>
+        <template v-else-if="item.prop === 'assetNum'">
+          <span class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
+             <i class="nz-icon nz-icon-asset" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
+          {{scope.row[item.prop]}}
+          </span>
+        </template>
+        <template v-else-if="item.prop === 'alertNum'">
+          <span class="alert-num" @click="showBottomBox('moduleAlertMessage', scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row[item.prop]}}
+          </span>
+        </template>
 
-        </template >
         <template v-else-if="item.prop === 'cabinetNum'">
-          <span class="link" @click="showBottomBox('cabinet', scope.row)">{{scope.row[item.prop]}}</span>
+          <span class="alert-num" @click="showBottomBox('cabinet', scope.row)">
+            <i class="nz-icon nz-icon-Cabinet" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
+            {{scope.row[item.prop]}}
+          </span>
         </template>
         <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
         <template v-else>-</template>
@@ -102,6 +104,7 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 export default {
   name: 'dcTable',
   mixins: [table],
@@ -128,16 +131,20 @@ export default {
           show: true
         }, {
           label: this.$t('config.dc.assets'),
-          prop: 'assetStat',
+          prop: 'assetNum',
+          show: true
+        },{
+          label: this.$t('config.dc.alert'),
+          prop: 'alertNum',
           show: true
         }, {
           label: this.$t('asset.tel'),
           prop: 'tel',
-          show: true
+          show: false
         }, {
           label: this.$t('asset.principal'),
           prop: 'principal',
-          show: true
+          show: false
         }, {
           label: this.$t('config.dc.longitude'),
           prop: 'longitude',
@@ -155,9 +162,39 @@ export default {
     }
   },
   methods: {
+    showTableTooltip, hideTableTooltip,
     regNumTest (val) { // 校验是否是数字
       return this.regNum.test(val)
-    }
+    },
+    messageStyle (title, row) {
+      if (title.prop === 'alertNum') {
+        if (row.alertNum > 0) {
+          return 'danger'
+        } else {
+          return 'success'
+        }
+      }
+      if (title.label === 'assettNum') {
+        if (row.state === 3) {
+          return 'suspended'
+        } else {
+          if (row.endpointDownNum > 0) {
+            return 'danger'
+          } else {
+            return 'success'
+          }
+        }
+      }
+      return ''
+    },
   }
 }
 </script>
+<style scoped>
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+</style>
