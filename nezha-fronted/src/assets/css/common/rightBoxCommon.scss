@@ -41,6 +41,9 @@
 }
 
 .right-box__container {
+  .right-box-form{
+    width: calc(100% - 60px);
+  }
   height: calc(100% - 130px);
   padding: 0 30px;
   overflow-x: hidden;

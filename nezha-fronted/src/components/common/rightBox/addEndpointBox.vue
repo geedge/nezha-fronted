@@ -1,15 +1,16 @@
 <template>
   <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-clickoutside="{obj:endpoint,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns"></div>
-    <!-- end--顶部按钮-->
-
-    <!-- begin--标题-->
-    <div class="right-box-title">{{$t("overall.createEndpoint")}}</div>
-    <!-- end--标题-->
+    <div class="right-box__header">
+      <!-- begin--标题-->
+      <div class="right-box-title">{{$t("overall.createEndpoint")}}</div>
+      <!-- end--标题-->
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns"></div>
+      <!-- end--顶部按钮-->
+    </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box" style="overflow: hidden">
+    <div class="right-box-form-box right-box__container" style="overflow: hidden">
       <el-form class="right-box-form right-box-form-left" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
         <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
@@ -215,7 +216,7 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
@@ -650,6 +651,7 @@ export default {
       })
     },
     addEndpoint () {
+      const arr = []
       this.assetSelection.forEach(item => {
         if (this.endpointTableData.find(endpoint => endpoint.assetId === item.id)) {
           return
@@ -657,12 +659,14 @@ export default {
         const obj = {
           assetId: item.id,
           assetName: item.name,
-          asset: item,
+          // asset: item,
           type: this.currentModuleCopy.type,
           projectId: this.currentModuleCopy.projectId,
           configs: { ...JSON.parse(this.currentModuleCopy.configs), host: item.manageIp },
           moduleId: this.currentModuleCopy.id
         }
+        obj.name = this.currentModuleCopy.endpointNameTmpl
+        obj.configs = JSON.stringify(obj.configs)
         obj.labelModule = []
         if (obj.configs.labels !== '{}' && obj.configs.labels) {
           Object.keys(obj.configs.labels).forEach(key => {
@@ -679,10 +683,15 @@ export default {
         } else {
           obj.paramObj.push({ key: '', value: [] })
         }
-        this.endpointTableData.push(obj)
+        // this.endpointTableData.push({ ...obj })
+        obj.configs = JSON.stringify(obj.configs)
+        arr.push(obj)
       })
-      this.assetTableData = [...this.assetTableData]
-      this.$refs.multipleTable.clearSelection()
+      this.$put('monitor/endpoint/render', arr).then(res => {
+        console.log(res)
+      })
+      // this.assetTableData = [...this.assetTableData]
+      // this.$refs.multipleTable.clearSelection()
     },
     removeEndpoint () {
       if (this.endpointSelection.length === 0) {

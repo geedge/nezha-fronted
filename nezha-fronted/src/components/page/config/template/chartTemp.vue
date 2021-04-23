@@ -37,7 +37,7 @@
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
                        id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>
       <template v-slot:default="slotProps">
-        <expr-tmpl-table
+        <chart-tmpl-table
           ref="dataTable"
           v-loading="slotProps.loading"
           :api="url"
@@ -50,7 +50,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
-          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></expr-tmpl-table>
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></chart-tmpl-table>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
@@ -58,47 +58,33 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <expr-tmpl-box v-if="rightBox.show" :exprTemp="object" @close="closeRightBox"></expr-tmpl-box>
+<!--      <chart-box :chart="chart" :from="'temp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>-->
     </transition>
-    <!--导出-->
-    <div class="export-xlsx">
-      <el-dialog :visible.sync="importBox.show" :title="importBox.title" :modal-append-to-body='false'
-                 :show-close="true" width="300px" @close="closeDialog" class="nz-dialog">
-        <div class="upload-body">
-          <button @click="exportCur" class="el-button el-button--default el-button--small" id="alert-msg-exportcur">
-            <span>{{$t('overall.exportCur')}}</span>
-          </button>
-          <button @click="exportAll" class="el-button el-button--default el-button--small" id="alert-msg-exportall">
-            <span>{{$t('overall.exportAll')}}</span>
-          </button>
-        </div>
-      </el-dialog>
-    </div>
   </div>
 </template>
 
 <script>
 import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
-import exprTmplBox from '@/components/common/rightBox/exprTmplBox'
+import chartBox from "@/components/page/dashboard/chartBox";
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
-import exprTmplTable from '@/components/common/table/settings/exprTmplTable'
+import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
 
 export default {
   name: 'chartTemp',
   components: {
+    chartBox,
     deleteButton,
-    exprTmplBox,
     nzDataList,
-    exprTmplTable,
+    chartTmplTable,
     'export-excel': exportXLSX
   },
   mixins: [dataListMixin],
   data () {
     return {
-      url: 'expression/tmpl',
+      url: 'visual/panel/chart',
       tableId: 'exprTemp',
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
@@ -115,12 +101,6 @@ export default {
             name: this.$t('config.exprTemp.name'),
             type: 'input',
             label: 'name',
-            disabled: false
-          }, {
-            id: 13,
-            name: this.$t('config.exprTemp.gname'),
-            type: 'selectTemp',
-            label: 'gname',
             disabled: false
           }
         ]
@@ -140,61 +120,33 @@ export default {
     }
   },
   mounted () {
-    this.initEvent()
+
   },
   methods: {
-    initEvent () {
-      bus.$on('alert-rule-list-change', () => {
-        this.getTableData()
-      })
-      bus.$on('dc-list-change', () => {
-        this.getTableData()
-      })
-      bus.$on('alert-message-change', () => {
-        this.getTableData()
-      })
-    },
-    showExportDialog () {
-      this.importBox.show = true
-    },
-    closeDialog () {
-      this.importBox.show = false
-      this.deleteBox.show = false
-    },
-    exportCur () {
-      const searchLabel = Object.assign({}, this.searchLabel)
-      this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(searchLabel)
-      this.closeDialog()
-    },
-    exportAll () {
-      const temp = JSON.parse(JSON.stringify(this.searchLabel))
-      temp.pageSize = -1
-      this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(temp)
-      this.closeDialog()
-    },
-    overtime (row) {
-      if (this.prevent_opt.save) {
-        return
+    getTableData (params) {
+      if (params && Object.keys(params).length > 0) {
+        for (const key in params) {
+          this.$set(this.searchLabel, key, params[key])
+        }
       }
-      this.prevent_opt.save = true
-      this.$confirm(this.$t('tip.confirmOvertime'), {
-        confirmButtonText: this.$t('tip.yes'),
-        cancelButtonText: this.$t('tip.no'),
-        type: 'warning'
-      }).then(() => {
-        this.$delete('expression/tmpl?ids=' + row.id).then(response => {
-          this.prevent_opt.save = false
-          if (response.code === 200) {
-            this.$message({ type: 'success', message: this.$t('tip.deleteSuccess') })
-            this.getTableData()
-          } else {
-            this.$message.error(response.msg)
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox, panelId: 0, returnChildren: 0 }).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
           }
-        })
-      }).catch(() => {
-        this.prevent_opt.save = false
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
       })
     }
   }

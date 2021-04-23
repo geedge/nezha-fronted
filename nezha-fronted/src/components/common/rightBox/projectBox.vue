@@ -1,18 +1,21 @@
 <template>
   <div class="right-box right-box-project" v-clickoutside="{obj:editProject,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="project-del" type="button" v-has="'project_delete'" v-if="project.id">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
+    <div class="right-box__header">
+      <!-- begin--标题-->
+      <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") + "  ID：" + editProject.id : $t("overall.createProject")}}</div>
+      <!-- end--标题-->
 
-    <!-- begin--标题-->
-    <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") + "  ID：" + editProject.id : $t("overall.createProject")}}</div>
-    <!-- end--标题-->
-    <div class="right-box-form-box">
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns right-box-form-delete">
+        <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="project-del" type="button" v-has="'project_delete'" v-if="project.id">
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+      </div>
+      <!-- end--顶部按钮-->
+
+    </div>
+    <div class="right-box-form-box right-box__container">
       <el-form class="right-box-form right-box-form-left" :model="editProject" label-position = "top" label-width="120px" :rules="rules" ref="projectForm">
         <el-form-item :label='$t("project.project.projectName")' prop="name">
           <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name" id="project-box-input-name"></el-input>
@@ -24,7 +27,7 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:editProject,func:esc}" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>

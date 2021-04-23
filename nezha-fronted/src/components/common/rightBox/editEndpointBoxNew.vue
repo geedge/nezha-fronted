@@ -1,30 +1,31 @@
 <template>
   <div class="right-box right-box-module" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete" v-if="optionType === 'edit'">
-      <button v-if="editEndpoint.id" id="module-del" v-has="'monitor_endpoint_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
-
-    <!-- begin--标题-->
-    <div class="right-box-title">
+    <div class="right-box__header">
+      <!-- begin--标题-->
+      <div class="right-box-title">
       <span v-if="optionType === 'edit'">
        {{ $t("project.module.editEndpoint")}}
       </span>
-      <span v-if="optionType === 'batch'">
+        <span v-if="optionType === 'batch'">
        {{ $t("project.module.batchEndpoint")}}
       </span>
-      <span v-if="optionType === 'add'">
+        <span v-if="optionType === 'add'">
        {{ $t("project.module.creatEndpoint")}}
       </span>
+      </div>
+      <!-- end--标题-->
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns right-box-form-delete" v-if="optionType === 'edit'">
+        <button v-if="editEndpoint.id" id="module-del" v-has="'monitor_endpoint_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
+          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+        </button>
+      </div>
+      <!-- end--顶部按钮-->
     </div>
-    <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box" ref="scrollbar">
+    <div class="right-box-form-box  right-box__container" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
         <!--name-->
         <el-form-item :label='$t("project.module.endpointName")' prop="name" label-width="125px" v-if="optionType!=='batch'">
@@ -248,7 +249,7 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:editEndpoint,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>

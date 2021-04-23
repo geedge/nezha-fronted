@@ -1,15 +1,16 @@
 <template>
   <div class="right-box right-box-add-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns"></div>
-    <!-- end--顶部按钮-->
-
-    <!-- begin--标题-->
-    <div class="right-box-title">{{$t("overall.batchEndpoint")}}</div>
-    <!-- end--标题-->
+    <div class="right-box__header">
+      <!-- begin--标题-->
+      <div class="right-box-title">{{$t("overall.batchEndpoint")}}</div>
+      <!-- end--标题-->
+      <!-- begin--顶部按钮-->
+      <div class="right-box-top-btns"></div>
+      <!-- end--顶部按钮-->
+    </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box" style="overflow: hidden">
+    <div class="right-box-form-box right-box__container" style="overflow: hidden">
       <el-form class="right-box-form right-box-form-left" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--asset和endpoint-->
         <div class="asset-and-endpoint">
@@ -97,7 +98,7 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>

@@ -1370,7 +1370,8 @@ const en = {
       imgError: 'Please upload pictures',
       folder: 'Folder',
       selMod: 'Please bind module for all nodes'
-    }
+    },
+    update: '更新'
   },
   date: {
     week: {

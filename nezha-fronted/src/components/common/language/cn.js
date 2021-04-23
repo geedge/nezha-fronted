@@ -1353,7 +1353,8 @@ const cn = {
       imgError: '请上传图片',
       folder: '目录',
       selMod: '请个所有节点绑定module'
-    }
+    },
+    update: '更新'
   },
   date: {
     week: {
