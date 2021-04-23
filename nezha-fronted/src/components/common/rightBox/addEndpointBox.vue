@@ -143,58 +143,26 @@
                 label-class-name="endpoints-box-endpoints-title"
                 v-for="(title, index) in endpointTableTitle"
                 v-if="title.show"
-                :width="title.width"
+                :min-width="title.width"
                 :key="index"
                 :label="title.label"
+                :resizable="true"
               >
                 <template slot-scope="scope" :column="title">
                   <span v-if="title.prop == 'asset'">{{scope.row.assetName}}</span>
-                  <span v-else-if="title.prop == 'params'">
-                      <el-popover
-                        placement="bottom"
-                        width="200"
-                        trigger="hover"
-                      >
-                        <div class="endpoint-param-pop">
-                          <div v-for="p in scope.row.paramObj" :key="p">{{p.key}}={{p.value}}</div>
-                        </div>
-                        <span slot="reference">
-                          <span @mousedown.stop>{{scope.row.configs.params.length > 8 ? scope.row.configs.params.substring(0, 8) + '...' : scope.row.configs.params}}</span>
-                        </span>
-                      </el-popover>
+                  <span v-else-if="title.prop == 'name'">
+                      {{scope.row.name}}
                     </span>
-                  <span v-else-if="title.prop == 'labels'">
-                      <el-popover
-                        placement="bottom"
-                        width="200"
-                        trigger="hover"
-                      >
-                        <div class="endpoint-param-pop">
-                          <div v-for="p in scope.row.labelModule" :key="p">{{p.key}}={{p.value}}</div>
-                        </div>
-                        <span slot="reference">
-                          <span @mousedown.stop>{{scope.row.configs.labels.length > 8 ? scope.row.configs.labels.substring(0, 8) + '...' : scope.row.configs.labels}}</span>
-                        </span>
-                      </el-popover>
-                    </span>
-                  <span v-else-if="title.prop == 'path'">
-                      <el-popover
-                        placement="bottom"
-                        width="100"
-                        trigger="hover"
-                        :content="scope.row.configs[title.prop]"
-                      >
-                        <span slot="reference" >
-                          <span>{{scope.row.configs.metrics_path.length > 5 ? scope.row.configs.metrics_path.substring(0, 5) + '...' : scope.row.configs.metrics_path}}</span>
-                        </span>
-                      </el-popover>
-                    </span>
-                  <span v-else-if="title.prop == 'port'">
-                      <span >{{scope.row.configs.port}}</span>
-                  </span>
-                  <span v-else-if="title.prop == 'host'">
-                      <span>{{scope.row.configs.host}}</span>
-                  </span>
+                  <template v-else-if="title.prop === 'configs'">
+                    <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
+                      <span class="configs-endpoint">{ ... }</span>
+                      <div class="endpointConfigsTips" slot="content">
+<!--                        <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row[title.prop])"></i></span>-->
+                        <pre >{{JSON.stringify(scope.row[title.prop],null,2)}}</pre>
+<!--                        <pre>{{}}</pre>-->
+                      </div>
+                    </el-tooltip>
+                  </template>
                 </template>
               </el-table-column>
               <el-table-column label="" width="56"  fixed="right">
@@ -321,40 +289,33 @@ export default {
       endpointList: [],
       endpointTableTitle: [
         {
-          label: this.$t('project.endpoint.asset'),
-          prop: 'asset',
+          label: this.$t('project.endpoint.name'),
+          prop: 'name',
           width: 150,
           show: true
         }, {
-          label: this.$t('project.endpoint.host'),
-          prop: 'host',
+          label: this.$t('project.endpoint.asset'),
+          prop: 'asset',
           width: 80,
           show: true
         }, {
-          label: this.$t('project.endpoint.port'),
-          prop: 'port',
-          width: 54,
-          show: true
-        }, {
-          label: this.$t('project.endpoint.labels'),
-          prop: 'labels',
-          width: 90,
-          show: true
-        }, {
-          label: this.$t('project.endpoint.param'),
-          prop: 'params',
-          width: 100,
-          show: true
-        }, {
-          label: this.$t('project.endpoint.path'),
-          prop: 'path',
-          width: 66,
+          label: this.$t('project.endpoint.configs'),
+          prop: 'configs',
+          width: 80,
           show: true
         }
+
       ],
       assetListAll: false,
       assetListHalf: false,
       assetTableTitle: [
+        {
+          label: this.$t('asset.tableTitle.name'),
+          prop: 'name',
+          show: false,
+          allowed: true,
+          minWidth: '200'
+        },
         {
           label: this.$t('asset.tableTitle.sn'),
           prop: 'sn',
@@ -362,12 +323,6 @@ export default {
           minWidth: '200'
         },
         {
-          label: this.$t('asset.tableTitle.name'),
-          prop: 'name',
-          show: false,
-          allowed: true,
-          minWidth: '200'
-        }, {
           label: this.$t('asset.tableTitle.manageIp'),
           prop: 'manageIp',
           show: true,
@@ -667,31 +622,40 @@ export default {
         }
         obj.name = this.currentModuleCopy.endpointNameTmpl
         obj.configs = JSON.stringify(obj.configs)
-        obj.labelModule = []
-        if (obj.configs.labels !== '{}' && obj.configs.labels) {
-          Object.keys(obj.configs.labels).forEach(key => {
-            obj.labelModule.push({ key, value: obj.configs.labels[key] })
-          })
-        } else {
-          obj.labelModule.push({ key: '', value: '' })
-        }
-        obj.paramObj = []
-        if (obj.configs.params !== '{}' && obj.configs.params) {
-          Object.keys(obj.configs.params).forEach(key => {
-            obj.paramObj.push({ key, value: obj.configs.params[key] })
-          })
-        } else {
-          obj.paramObj.push({ key: '', value: [] })
-        }
-        // this.endpointTableData.push({ ...obj })
-        obj.configs = JSON.stringify(obj.configs)
         arr.push(obj)
       })
       this.$put('monitor/endpoint/render', arr).then(res => {
         console.log(res)
+        if (res.code === 200) {
+          res.data.list.forEach((item, index) => {
+            const obj = item
+            obj.configs = JSON.parse(obj.configs)
+            obj.labelModule = []
+            if (obj.configs.labels !== '{}' && obj.configs.labels) {
+              Object.keys(obj.configs.labels).forEach(key => {
+                obj.labelModule.push({ key, value: obj.configs.labels[key] })
+              })
+            } else {
+              obj.labelModule.push({ key: '', value: '' })
+            }
+            obj.paramObj = []
+            if (obj.configs.params !== '{}' && obj.configs.params) {
+              Object.keys(obj.configs.params).forEach(key => {
+                obj.paramObj.push({ key, value: obj.configs.params[key] })
+              })
+            } else {
+              obj.paramObj.push({ key: '', value: [] })
+            }
+            this.endpointTableData.push({
+              ...arr[index],
+              ...obj
+            })
+          })
+          console.log(this.endpointTableData)
+        }
       })
-      // this.assetTableData = [...this.assetTableData]
-      // this.$refs.multipleTable.clearSelection()
+      this.assetTableData = [...this.assetTableData]
+      this.$refs.multipleTable.clearSelection()
     },
     removeEndpoint () {
       if (this.endpointSelection.length === 0) {

@@ -136,30 +136,32 @@
 <template>
   <div  class="mc">
     <div :class="boxClass" class="right-box right-box-add-chart z-top right-box-chart" v-clickoutside="{obj:editChart,func:clickOutside}">
-      <transition name="right-box">
+      <transition name="right-box" v-if="from!=='temp'">
         <panel-box :panel="panel" @reload="panelReload" ref="panelBox2" v-if="!showPanel.type"></panel-box>
       </transition>
 
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns right-box-form-delete">
-        <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" id="chart-box-delete" type="button" v-if="editChart.id">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
+      <div class="right-box__header">
+        <!-- begin--标题-->
+        <div class="right-box-title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+        <!-- end--标题-->
 
-      <!-- begin--标题-->
-      <div class="right-box-title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
-      <!-- end--标题-->
+        <!-- begin--顶部按钮-->
+        <div class="right-box-top-btns right-box-form-delete">
+          <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" id="chart-box-delete" type="button" v-if="editChart.id">
+            <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
+            <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
+          </button>
+        </div>
+        <!-- end--顶部按钮-->
+      </div>
 
       <!-- begin--表单-->
-      <div class="right-box-form-box" ref="scrollbar">
+      <div class="right-box-form-box right-box__container" ref="scrollbar">
         <el-form :model="editChart" :rules="rules" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" ref="chartForm">
           <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
             <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model'">
+          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model' && from!=='temp'">
             <!--<el-autocomplete
               :fetch-suggestions="panelSuggestion"
               @input="inputPanel"
@@ -196,6 +198,14 @@
           <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="half-form-item" prop="group">
             <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.groupId" value-key="chartType" id="chart-box-group" :disabled="editChart.type==='group'">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in groupArr">
+                <span class="panel-dropdown-label-txt" >{{item.name}}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--   varType   -->
+          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'temp'">
+            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChart.varType" value-key="chartType" id="chart-box-group" :disabled="!!editChart.id">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
@@ -429,14 +439,14 @@
         </el-form>
       </div>
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:editChart,func:esc}" id="chart-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'panel_chart_edit'" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="SyncSave">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
-      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else>
+      <button @click="preview" id="chart-box-preview" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-else-if="from!=='temp'" >
         <span>{{$t('overall.preview')}}</span>
       </button>
       <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="confirmAdd" >
@@ -599,7 +609,11 @@ export default {
       sortedOptionKeys: [{ key: 'min', label: 'Min' }, { key: 'max', label: 'Max' }, { key: 'avg', label: 'Avg' }, { key: 'last', label: 'Last' }, { key: 'total', label: 'Total' }],
       textShow: false,
       metricOptions: [],
-      showPicker: []
+      showPicker: [],
+      varTypeArr: [
+        { name: 'Asset', id: 1 },
+        { name: 'Endpoint', id: 2 }
+      ]
       // metricStore: []
     }
   },
@@ -874,7 +888,10 @@ export default {
         }); */
 
       // panelPromise.then(()=>{
-      if (this.panelId) {
+      if (this.panelId || this.from === 'temp') {
+        if (this.from === 'temp') {
+          this.panelId = 0
+        }
         const chartParams = params || this.editChart
         chartParams.panelId = this.panelId
         if (!chartParams.groupId) {
@@ -907,7 +924,10 @@ export default {
     },
     // 更新图表
     updateCharts (params) {
-      const panelId = this.panelId ? this.panelId : this.chart.panelId
+      let panelId = this.panelId ? this.panelId : this.chart.panelId
+      if (this.from === 'temp') {
+        panelId = 0
+      }
       const chartParams = params || this.editChart
       chartParams.panelId = panelId
       if (!chartParams.groupId) {
@@ -948,7 +968,8 @@ export default {
 
             },
             sync: this.editChart.sync,
-            groupId: this.editChart.groupId
+            groupId: this.editChart.groupId,
+            varType: this.editChart.varType
           }
           if (this.editChart.type === 'singleStat' || this.editChart.type === 'pie' || this.editChart.type === 'bar') {
             // params.param.statistics=this.statistics;
@@ -1013,7 +1034,8 @@ export default {
           param: param,
           sync: this.editChart.sync,
           remark: this.editChart.remark,
-          groupId: this.editChart.groupId
+          groupId: this.editChart.groupId,
+          varType: this.editChart.varType
         }
         if (valid) {
           if (opType === 'preview') {
@@ -1082,7 +1104,8 @@ export default {
               },
               sync: this.editChart.sync,
               remark: this.editChart.remark,
-              groupId: this.editChart.groupId
+              groupId: this.editChart.groupId,
+              varType: this.editChart.varType
             }
 
             if (valid) {
@@ -1111,7 +1134,8 @@ export default {
               },
               sync: this.editChart.sync,
               remark: this.editChart.remark,
-              groupId: this.editChart.groupId
+              groupId: this.editChart.groupId,
+              varType: this.editChart.varType
             }
 
             if (valid) {
@@ -1477,7 +1501,8 @@ export default {
               param: this.editChart.param,
               sync: this.editChart.sync,
               remark: this.editChart.remark,
-              groupId: this.editChart.groupId
+              groupId: this.editChart.groupId,
+              varType: this.editChart.varType
             }
             params = JSON.parse(JSON.stringify(params))
             if (this.editChart.type === 'singleStat' || this.editChart.type === 'table') {
@@ -1529,7 +1554,8 @@ export default {
               url: this.editChart.param.url
             },
             remark: this.editChart.remark,
-            groupId: this.editChart.groupId
+            groupId: this.editChart.groupId,
+            varType: this.editChart.varType
           }
 
           if (valid) {
@@ -1555,7 +1581,8 @@ export default {
               text: text
             },
             remark: this.editChart.remark,
-            groupId: this.editChart.groupId
+            groupId: this.editChart.groupId,
+            varType: this.editChart.varType
           }
 
           if (valid) {
@@ -1710,12 +1737,15 @@ export default {
             }
           })
         }
-
         if (n.name) {
           this.isEdit = true
         }
 
         this.editChart = JSON.parse(JSON.stringify(n))
+        if (this.editChart.panelId === 0 && !this.editChart.varType) {
+          this.editChart.varType = 1
+        }
+
         this.panelName = this.editChart.panelName
         this.panelId = this.editChart.panelId
         this.editChart.name = this.editChart.name || ''
@@ -1751,7 +1781,7 @@ export default {
           n.param && !n.param.legendValue && this.$set(this.editChart.param, 'legendValue', { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' })
         }
         this.$set(this.editChart, 'panelName', this.showPanel.name)
-        if (this.showPanel.id) {
+        if (this.showPanel.id || this.from === 'temp') {
           this.panelId = this.showPanel.id
         }
         this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {

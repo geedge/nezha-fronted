@@ -33,7 +33,8 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
+        <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
+        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
       </template>
     </el-table-column>
@@ -43,7 +44,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" title="Copy" @click="tableOperation('copy', scope.row)"><i class="nz-icon nz-icon-override"></i></button>
+        <button class="table-operation-item" title="Copy" @click="showBottomBox('panel', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -74,6 +75,10 @@ export default {
         }, {
           label: this.$t('config.exprTemp.name'),
           prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.exprTemp.varType'),
+          prop: 'varType',
           show: true
         }, {
           label: this.$t('config.exprTemp.remark'),

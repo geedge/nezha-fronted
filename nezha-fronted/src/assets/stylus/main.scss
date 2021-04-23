@@ -1281,11 +1281,11 @@ li{
 }
 .right-box-form>.el-form-item.half-form-item{
   display: inline-block;
-  width: 395px;
+  width: calc(50% - 15px);
 }
 .right-box-form>.el-form-item.half-form-item:nth-child(odd){
   display: inline-block;
-  width: 395px;
+  width: calc(50% - 15px);
   margin-left: 10px;
 }
 .right-box-form .one-third-form-item-left{
@@ -2171,11 +2171,11 @@ li{
 }
 .right-box-form>.el-form-item.half-form-item-other{
   display: inline-block;
-  width: 345px;
+  width: calc(50% - 15px);
 }
 .right-box-form>.el-form-item.half-form-item-other-two{
   display: inline-block;
-  width: 455px;
+  width: calc(50% - 15px);
   margin-left: 0;
 }
 .right-box .right-box-form-add,.right-box  .right-box-form-minus-box{

@@ -11,7 +11,7 @@
             <template v-slot:header>
               <div class="panel-select-header">
                 <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px;"></el-input>
-                <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_toAdd'" id="panel-list-toadd"><i class="nz-icon nz-icon-plus"></i></span>
+                <span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" class="panel-select-add" v-has="'panel_add'" id="panel-list-toadd"><i class="nz-icon nz-icon-plus"></i></span>
               </div>
             </template>
             <template v-slot:trigger>

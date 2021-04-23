@@ -36,8 +36,8 @@
 
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
                        id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>
-      <template v-slot:default="slotProps">
-        <chart-tmpl-table
+      <template  v-slot="slotProps">
+        <chartTmplTable
           ref="dataTable"
           v-loading="slotProps.loading"
           :api="url"
@@ -50,7 +50,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
-          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></chart-tmpl-table>
+          @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></chartTmplTable>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
@@ -58,7 +58,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-<!--      <chart-box :chart="chart" :from="'temp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>-->
+      <chart-box :chart="object" :show-panel="showPanel" :from="'temp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </div>
 </template>
@@ -66,7 +66,7 @@
 <script>
 import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
-import chartBox from "@/components/page/dashboard/chartBox";
+import chartBox from '@/components/page/dashboard/chartBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
@@ -85,7 +85,7 @@ export default {
   data () {
     return {
       url: 'visual/panel/chart',
-      tableId: 'exprTemp',
+      tableId: 'chartTemp',
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -112,9 +112,22 @@ export default {
       blankObject: {
         id: '',
         name: '',
-        gname: '',
-        expression: '',
-        remark: ''
+        type: 'line',
+        span: 12,
+        height: '400',
+        unit: 2,
+        param: { url: '', threshold: '' },
+        elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
+        panel: '',
+        sync: '',
+        remark: '',
+        groupId: -1,
+        panelId: 0,
+        varType: 1
+      },
+      showPanel: {
+        name: 'template',
+        id: 0
       },
       nowTime: ''
     }
@@ -123,6 +136,12 @@ export default {
 
   },
   methods: {
+    add () {
+      this.object = this.newObject()
+      this.object.panelId = 0
+      this.object.panelName = 'template'
+      this.rightBox.show = true
+    },
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
@@ -148,7 +167,25 @@ export default {
           }
         }
       })
-    }
+    },
+    closeChartBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.getTableData()
+      }
+    },
+    delChart () {
+
+    },
+    createSuccess () {
+      this.rightBox.show = false
+      this.getTableData()
+    },
+    delChartOk () {
+      this.rightBox.show = false
+    },
+    panelReload () {},
+    panelReloadOnlyPanel () {}
   }
 }
 </script>

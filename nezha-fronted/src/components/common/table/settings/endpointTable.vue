@@ -53,7 +53,6 @@
         </template>
         <template v-else-if="item.prop === 'asset'">
           <span >
-            <i class="nz-icon nz-icon-asset" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
             {{scope.row.asset.name}}
           </span>
         </template>

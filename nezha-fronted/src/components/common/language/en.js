@@ -644,10 +644,10 @@ const en = {
       sn: 'SN',
       name: 'Name',
       manageIp: 'manageIp',
-      brand: 'BrandID',
+      brand: 'Brand',
       dc: 'DataCenter',
-      type: 'typeIds',
-      state: 'state',
+      type: 'Types',
+      state: 'State',
       endpoint: 'Endpoint'
     },
     tagTableTitle: {
@@ -1103,6 +1103,9 @@ const en = {
       edit: 'Edit expression template',
       create: 'New expression template',
       expressionError: 'Please fill in the "expression" value'
+    },
+    chartTemp: {
+      chartTemp: 'Chart template',
     }
   },
   alert: {

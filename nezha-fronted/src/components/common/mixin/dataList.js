@@ -212,6 +212,7 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
+    console.log(this.$refs.dataTable)
     this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
       ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
       : this.$refs.dataTable.tableTitle

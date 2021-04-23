@@ -589,7 +589,7 @@ const cn = {
       sn: 'SN',
       name: 'Name',
       manageIp: 'manageIp',
-      brand: '品牌ID',
+      brand: '品牌',
       dc: '数据中心',
       type: '主机地址',
       state: '主机状态',
@@ -1088,6 +1088,9 @@ const cn = {
       edit: '修改表达式模板',
       create: '创建表达式模板',
       expressionError: '请填写表达式'
+    },
+    chartTemp: {
+      chartTemp: 'Chart 模板',
     }
   },
   alert: {
