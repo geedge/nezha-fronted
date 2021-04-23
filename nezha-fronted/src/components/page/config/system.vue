@@ -317,7 +317,7 @@ export default {
       },
       terminalCopy: null,
       terminalRules: {
-        // terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
+        terminal_timeout: [{ validator: positiveInteger, trigger: 'blur' }],
         terminal_record_local_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }]
       },
       ldap: {

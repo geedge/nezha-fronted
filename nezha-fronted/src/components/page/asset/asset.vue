@@ -5,7 +5,8 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.asset"
-      :layout="['searchInput', 'elementSet']"
+      :has-search="true"
+      :layout="['searchInput', 'elementSet', 'clickSearch']"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
         <export-excel
@@ -28,6 +29,9 @@
         </button>
         <delete-button id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
+      <template v-slot:search>
+        <click-search :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
+      </template>
       <template v-slot:default="slotProps">
         <asset-table
           ref="dataTable"
@@ -39,6 +43,7 @@
           @cli="cli"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -75,7 +80,6 @@
 </template>
 
 <script>
-import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
 import deleteButton from '@/components/common/deleteButton'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
@@ -83,7 +87,7 @@ import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEdit
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
-import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
+import clickSearch from '@/components/common/clickSearch'
 
 export default {
   name: 'asset',
@@ -93,6 +97,7 @@ export default {
     nzDataList,
     assetBatchEditBox,
     assetTable,
+    clickSearch,
     'export-excel': exportXLSX
   },
   mixins: [dataListMixin],
@@ -178,17 +183,70 @@ export default {
       typeData: [],
       dcData: [],
       snmpCredentialData: [],
-      fieldGroupData: []
+      fieldGroupData: [],
+      titleSearchList: {
+        dc: {
+          label: this.$t('overall.dc'),
+          key: 'dcIds',
+          type: 'checkBox',
+          children: [],
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
+        },
+        type: {
+          label: this.$t('overall.type'),
+          key: 'typeIds',
+          type: 'checkBox',
+          children: [],
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
+        },
+        ping: {
+          label: 'ping',
+          key: 'ping',
+          type: 'checkBox',
+          children: [
+            { key: 'Down', value: 0, name: 'Down' },
+            { key: 'Up', value: 1, name: 'Up' }
+          ],
+          show: true,
+          showMore: false,
+          width: 0,
+          index: 0
+        },
+        model: {
+          label: this.$t('asset.model'),
+          key: 'modelIds',
+          type: 'dropdownCheckBox',
+          children: [],
+          show: true,
+          width: 0,
+          index: 0
+        },
+        assetLabel: {
+          label: 'More',
+          key: 'fields',
+          type: 'dropdownCheckBox',
+          children: [],
+          show: true,
+          width: 0,
+          index: 0
+        }
+      },
+      selectValue: {
+        dcIds: [],
+        typeIds: [],
+        ping: [],
+        modelIds: [],
+        fields: ''
+      }
     }
   },
-  /* computed: {
-    headerCurrentDc () {
-      return this.$store.state.currentDc
-    }
-  }, */
   methods: {
-    showTableTooltip,
-    hideTableTooltip,
     cli ([id, host, account]) {
       const consoleParam = {
         id: id,
@@ -197,6 +255,10 @@ export default {
         port: account.port
       }
       this.$store.commit('addConsole', consoleParam)
+    },
+    copy (row) {
+      this.object = { ...row, id: '' }
+      this.rightBox.show = true
     },
     getUserData () {
       return new Promise(resolve => {
@@ -220,6 +282,16 @@ export default {
     },
     getTypeData () {
       return new Promise(resolve => {
+        this.$get('asset/typeConf').then(response => {
+          if (response.code === 200) {
+            this.titleSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
+          }
+          resolve()
+        })
+      })
+    },
+    getTypeTreeData () {
+      return new Promise(resolve => {
         this.$get('asset/typeConf/tree').then(response => {
           if (response.code === 200) {
             this.typeData = response.data.list
@@ -228,11 +300,22 @@ export default {
         })
       })
     },
+    reloadTable (obj) {
+      Object.keys(obj).forEach(key => {
+        if (typeof obj[key] === 'string') {
+          this.searchCheckBox[key] = obj[key]
+        } else {
+          obj[key].length > 0 ? this.searchCheckBox[key] = obj[key].join(',') : this.searchCheckBox[key] = null
+        }
+      })
+      this.getTableData()
+    },
     getDcData () {
       return new Promise(resolve => {
         this.$get('dc', { pageSize: -1 }).then(response => {
           if (response.code === 200) {
             this.dcData = response.data.list
+            this.titleSearchList.dc.children = response.data.list.map(d => { return { ...d, value: d.id } })
           }
           resolve()
         })
@@ -258,6 +341,25 @@ export default {
         })
       })
     },
+    getSearchableMetaData () {
+      return new Promise(resolve => {
+        this.$get('asset/field/meta', { pageSize: -1, search: 1 }).then(response => {
+          if (response.code === 200) {
+            const data = []
+            response.data.list.forEach(m => {
+              if (m.param) {
+                const param = JSON.parse(m.param)
+                if (param.items) {
+                  data.push({ ...m, children: param.items.map(p => { return { ...p, id: p.name, metaId: m.id } }) })
+                }
+              }
+            })
+            this.titleSearchList.assetLabel.children = data
+          }
+          resolve()
+        })
+      })
+    },
     getBrandData () {
       return new Promise(resolve => {
         this.$get('asset/brand').then(response => {
@@ -268,11 +370,20 @@ export default {
         })
       })
     },
-    getModelData (brandId) {
+    getModelData () {
       return new Promise(resolve => {
         this.$get('asset/model').then(response => {
           if (response.code === 200) {
             this.modelData = response.data.list
+            const titleSearchData = {}
+            this.modelData.forEach(m => {
+              if (titleSearchData[m.brand.name]) {
+                titleSearchData[m.brand.name].children.push(m)
+              } else {
+                titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+              }
+            })
+            this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
           }
           resolve()
         })
@@ -296,7 +407,6 @@ export default {
       if (refresh) {
         this.delFlag = true
         this.getTableData()
-        // this.loadKeys()
       }
     },
     getPrincipalName (data) {
@@ -305,7 +415,7 @@ export default {
           return this.userData[item].username
         }
       }
-    },
+    }
     /* formatPingTime (str) {
       if (!str) {
         return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
@@ -321,59 +431,18 @@ export default {
       const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
       return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
     }, */
-    // 数据排序
-    initEvent () {
-      bus.$on('asset-filter-change', (column, content) => {
-        this.pageObj.pageNo = 1
-        if (column == 'multiParam') {
-          const $self = this
-          if (content instanceof Array && content.length > 0) {
-            content.forEach(item => {
-              $self.pageObj[item.key] = item.value
-            })
-          }
-        } else {
-          this.pageObj[column] = content
-        }
-        // let isSame = this.checkSearchLabel(JSON.parse(JSON.stringify(this.pageObj)), oldPageObj);
-        // isSame && this.getTableData();
-        this.getTableData()
-      })
-      bus.$on('alert-message-change', () => {
-        this.getTableData()
-      })
-    },
-    dispatchEvent (event, param) {
-      this.$nextTick(() => {
-        bus.$emit(event, param)
-      })
-    },
-    loadKeys () {
-      this.$get('/asset/tagKey').then(res => {
-        if (res.code == 200) {
-          this.tagKeys = res.data.list.map(item => {
-            return { label: item, prop: 'tags', show: false, allowed: true, type: 'tag' }
-          })
-          this.resetTableTitle()
-        }
-      })
-    }
   },
   mounted () {
-    // this.loadKeys()
     // 初始化数据
-    // this.getUserData()
-    this.initEvent()
     this.getBrandData()
+    this.getModelData()
     this.getStateData()
+    this.getTypeTreeData()
     this.getTypeData()
     this.getDcData()
+    this.getSearchableMetaData()
     this.getSnmpCredentialData()
     this.getFieldGroupData()
-  },
-  beforeDestroy () {
-    bus.$off('asset-filter-change')
-    bus.$off('alert-message-change')
   }
 }
 </script>

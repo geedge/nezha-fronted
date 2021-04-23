@@ -1,11 +1,24 @@
 <template>
-  <div class="search-box" :style="{'height':height+ 'px'}">
-    <div v-for="(searchKey,index) in titleSearchListCopy" :key="index" v-if="searchKey.show" class="search-content-box">
-      <label class="search-title">{{searchKey.label}}:</label>
-      <el-checkbox-group v-model="selectValueOut[searchKey.key]" v-if="searchKey.type === 'checkBox'" ref="searchContent" class="search-content">
-        <el-checkbox v-for="(item, j) in searchKey.children" :label="item.value" :key="j" v-show="!searchKey.showMore || j < searchKey.index">{{item.key || item.name || item.label}}</el-checkbox>
+  <div class="search-box__container">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-if="data.show" :key="index" class="search-content-box">
+      <label class="search-title">{{data.label}}:</label>
+      <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]">
+        <template v-for="(item, j) in data.children">
+          <el-checkbox v-if="j < 20" v-show="!data.showMore || j < data.index" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
+        </template>
       </el-checkbox-group>
-      <span class="search-more" @click="changShowMore(index)" v-show="contentWidth <= searchKey.width">更多 <i class="nz-icon" :class="searchKey.showMore?'nz-icon-arrow-down':'nz-icon-arrow-up'"/></span>
+      <div v-for="(item, j) in data.children" v-else-if="data.type === 'dropdownCheckBox'" :key="j" class="nz-label-search">
+        <el-cascader
+          :ref="`${type}_cascader`"
+          :options="item.children"
+          :placeholder="item.name"
+          :props="{ multiple: true, label: 'name', value: 'id' }"
+          popper-class="click-search-dropdown"
+          size="mini"
+          @change="casChange(type, data.key)"
+        ></el-cascader>
+      </div>
+      <span v-show="contentWidth <= data.width" class="search-more" @click="changShowMore(index)">更多 <i :class="data.showMore?'el-icon-arrow-down':'el-icon-arrow-up'"/></span>
     </div>
   </div>
 </template>
@@ -42,10 +55,6 @@ export default {
     },
     selectValue: {
       type: Object
-    },
-    height: {
-      type: Number,
-      default: 116
     }
   },
   computed: { },
@@ -65,7 +74,6 @@ export default {
       deep: true,
       handler (n) {
         this.selectValueOut = { ...n }
-        // this.$emit('reload', this.selectValue)
       }
     },
     selectValueOut: {
@@ -87,15 +95,40 @@ export default {
     window.addEventListener('resize', this.needMore)
   },
   methods: {
+    casChange (type, key) {
+      const cascs = this.$refs[`${type}_cascader`]
+      if (type === 'assetLabel') { // label特殊处理，组织成{“id”:[“张三”,"lw"],"id":["李四"]}
+        const values = {}
+        cascs.forEach(c => {
+          const nodes = c.getCheckedNodes()
+          nodes.forEach(n => {
+            const metaId = n.data.metaId
+            if (values[`${metaId}`]) {
+              values[`${metaId}`].push(n.data.name)
+            } else {
+              values[`${metaId}`] = [n.data.name]
+            }
+          })
+        })
+        this.selectValueOut[key] = JSON.stringify(values)
+      } else {
+        const values = new Set()
+        cascs.forEach(c => {
+          const nodes = c.getCheckedNodes()
+          nodes.forEach(n => values.add(n.data.id))
+        })
+        this.selectValueOut[key] = [...values]
+      }
+    },
     needMore (key) {
-      setTimeout(() => {
+      /* setTimeout(() => {
         this.contentWidth = this.$refs.searchContent[0].$el.offsetWidth
 
         Object.keys(this.titleSearchListCopy).forEach(key => {
           this.titleSearchListCopy[key].width = 0
           this.titleSearchListCopy[key].showMore = false
           this.titleSearchListCopy[key].children.forEach((item, i) => {
-            /* (基础宽度 + 文字宽度) 总和 》 文本长时 显示更多 */
+            /!* (基础宽度 + 文字宽度) 总和 》 文本长时 显示更多 *!/
             this.titleSearchListCopy[key].width += 60 + item.name.length * 12
             if (this.titleSearchListCopy[key].width > this.contentWidth && !this.titleSearchListCopy[key].showMore) {
               this.titleSearchListCopy[key].showMore = true
@@ -103,7 +136,7 @@ export default {
             }
           })
         }, 100)
-      })
+      }) */
     },
     changShowMore (key) {
       this.titleSearchListCopy[key].showMore = !this.titleSearchListCopy[key].showMore
@@ -115,56 +148,55 @@ export default {
 }
 </script>
 
-<style scoped>
-.search-box{
-  background: #FFFFFF;
-  border: 1px solid #E7EAED;
-  margin: 0 20px;
+<style lang="scss" scoped>
+.search-box__container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border: 1px solid #E7EAED;
+  background-color: #FFFFFF;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-top: 20px;
-  padding-bottom: 0;
+  padding: 15px 0 15px 17px;
 }
-  .search-title{
-    ont-family: Roboto-Medium;
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    line-height: 14px;
-    font-weight: 500;
-    width: 130px;
-    overflow: hidden;
-  }
-  .search-content-box{
-    display: flex;
-    width: 100%;
-    flex: 1;
-    padding-left: 20px;
-    position: relative;
-  }
-  /deep/ .el-checkbox-group{
-    flex: 1;
-  }
-  /deep/ .el-checkbox{
-    margin-bottom: 10px;
-  }
-  .search-content{
-    padding-right: 30px;
-  }
-  .search-more{
-    position: absolute;
-    right: 30px;
-    top: 0;
+.search-title {
+  position: absolute;
+  width: 130px;
+  left: 0;
+  line-height: 18px;
+  font-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  font-weight: 500;
+  overflow: hidden;
+}
+.search-content-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  padding-left: 130px;
+  padding-right: 80px;
+  width: calc(100vw - 333px);
+  box-sizing: border-box;
+}
+.search-more {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 8px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #333333;
+  box-sizing: border-box;
+  border: 1px solid $--primary-border-color;
+  border-radius: 2px;
+
+  i {
+    color: #999;
     font-size: 12px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 16px;
-    font-weight: 400;
-    border: 1px solid #DEDEDE;
-    border-radius: 2px;
-    padding: 3px 5px;
   }
+}
 </style>

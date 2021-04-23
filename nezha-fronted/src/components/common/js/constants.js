@@ -80,12 +80,10 @@ export const asset = {
     { value: 3, label: i18n.t('asset.suspended') }
   ],
   authProtocolOptions: [
-    { value: 0, label: 'Non' },
     { value: 1, label: 'SSH' },
     { value: 2, label: 'TELNET' }
   ],
   authProtocolData: {
-    non: 0,
     ssh: 1,
     telnet: 2
   },

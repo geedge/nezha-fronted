@@ -324,6 +324,35 @@
 .operation-dropdown-text {
   font-size: 13px;
 }
-.search-box{
-  padding-bottom: 20px;
+
+.search-box {
+  padding: 0 20px 20px;
+
+  .nz-label-search {
+    margin-right: 20px;
+
+    .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner {
+      border-color: #c7c7c7 !important;
+    }
+    .el-input__inner {
+      height: 24px !important;
+      width: 140px;
+    }
+  }
+}
+.click-search-dropdown {
+  width: calc(100% - 300px) !important;
+  left: 270px !important;
+  margin-top: -3px !important;
+  box-shadow: none;
+  box-sizing: border-box;
+  border-radius: 0;
+  border-color: #c7c7c7;
+
+  .popper__arrow {
+    display: none;
+  }
+  .el-cascader-menu__list {
+    display: flex;
+  }
 }
