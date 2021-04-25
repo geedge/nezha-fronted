@@ -20,6 +20,7 @@ export default {
         customTableTitle: [] // 自定义列工具的数据
       },
       mainTableHeight: this.$tableHeight.normal, // 主列表table高度
+      searchTableHeight: this.$tableHeight.search, // 主列表table高度
       batchDeleteObjs: [],
       object: {},
 

@@ -345,7 +345,8 @@ const en = {
       moreTitle: 'Showing only 20 time series. ',
       moreTitleOther: 'Showing only 10 the data. ',
       showAll: 'Show all ',
-      showAllOther: 'All Data'
+      showAllOther: 'All Data',
+      addChartTemp: 'addChartTemp'
     },
     metric: {
       name: 'Metric name', // "指标名称"
@@ -571,7 +572,22 @@ const en = {
     usernamePrompt: 'Username prompt',
     passwordPrompt: 'Password prompt',
     snmpCredential: 'SNMP credential',
-    authProtocol: 'Auth protocol'
+    authProtocol: 'Auth protocol',
+    id: 'ID', // ID
+    device: 'SN', // SN
+    assetState: 'State', // '状态'
+    assetPing: 'Ping',
+    lastReply: 'Ping last reply',
+    modules: 'Endpoint', // '组件'
+    alerts: 'Alerts', // '告警信息'
+    dataCenter: 'Data center', // DC
+    vendor: 'Vendor', // '厂商'
+    procurementDate: 'Purchase date', // '购买日期'
+    principalTel: 'Telephone', // '电话'
+    option: 'Operation', // "操作"
+    name: 'Name',
+    dc: 'DataCenter',
+    type: 'Types',
   },
   config: {
     config: 'Settings', // "设置"
@@ -682,9 +698,9 @@ const en = {
       latitude: 'Latitude',
       lnglat: 'Coordinate'
     },
-    cabinet:{
-      editCabinet:'Edit Cabinet',
-      createCabinet:'Create Cabinet',
+    cabinet: {
+      editCabinet: 'Edit Cabinet',
+      createCabinet: 'Create Cabinet'
     },
     model: {
       model: 'Asset model',
@@ -752,11 +768,11 @@ const en = {
         replay: 'Replay',
         skipTip: 'Skip no operation time'
       },
-      loginHost:'Login host',
-      loginUser:'Login user',
-      sourceIp:'Source IP',
-      sourceUser:'Source user',
-      SessionId:'Session ID',
+      loginHost: 'Login host',
+      loginUser: 'Login user',
+      sourceIp: 'Source IP',
+      sourceUser: 'Source user',
+      SessionId: 'Session ID'
     },
     operationlog: {
       operationlog: 'Operation log',
@@ -831,8 +847,8 @@ const en = {
         defaultCabinetUsize: 'Cabinet U size',
         second: 'second',
         day: 'day',
-        sessionTimeout:'Session timeout',
-        minute:'minute',
+        sessionTimeout: 'Session timeout',
+        minute: 'minute',
         maxSeries: 'Query max series',
         unsaved: 'Unsaved prompt',
         mapConfig: 'Map center',
@@ -1016,7 +1032,7 @@ const en = {
       expressionError: 'Please fill in the "expression" value'
     },
     chartTemp: {
-      chartTemp: 'Chart template',
+      chartTemp: 'Chart template'
     }
   },
   alert: {

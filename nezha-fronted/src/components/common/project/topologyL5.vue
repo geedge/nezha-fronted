@@ -529,7 +529,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
+        if (n && n.id) {
           if (getTopology(this.topologyIndex)) {
             getTopology(this.topologyIndex).destroy()
             setTopology(this.topologyIndex, null)

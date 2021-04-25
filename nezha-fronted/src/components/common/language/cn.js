@@ -336,7 +336,8 @@ const cn = {
       moreTitle: '仅显示 20 个时间序列。',
       moreTitleOther: '仅显示 10 条数据。',
       showAll: '全部显示 ',
-      showAllOther: '全部数据 '
+      showAllOther: '全部数据 ',
+      addChartTemp: 'addChartTemp'
     },
     metric: {
       name: '指标名称',
@@ -563,7 +564,23 @@ const cn = {
     usernamePrompt: '用户名提示',
     passwordPrompt: '密码提示',
     snmpCredential: 'SNMP凭证',
-    authProtocol: '认证协议'
+    authProtocol: '认证协议',
+    id: 'ID',
+    device: 'SN',
+    assetState: '状态',
+    modules: 'Endpoint',
+    alerts: '告警信息',
+    dataCenter: '数据中心',
+    manufacturer: '厂商',
+    procurementDate: '购买日期',
+    principalTel: '电话',
+    option: '操作',
+    assetPing: 'Ping',
+    lastReply: 'Ping最后应答',
+    vendor: '厂商',
+    name: 'Name',
+    dc: '数据中心',
+    type: '主机地址'
   },
   config: {
     config: '设置',

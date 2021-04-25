@@ -44,7 +44,7 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="searchTableHeight"
           :table-data="tableData"
           :tableId="tableId"
           @del="del"
