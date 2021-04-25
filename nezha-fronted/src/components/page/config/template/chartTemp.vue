@@ -5,7 +5,7 @@
       :api="url"
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.expressionTemplate"
+      :from="fromRoute.chartTemp"
       :search-msg="searchMsg">
       <template v-slot:top-tool-left>
         <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')"><!--v-has="'snmp_browser_view'"-->
@@ -156,6 +156,9 @@ export default {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + ''
+            if (response.data.list[i].type === 'group') {
+              response.data.list[i].children = []
+            }
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total

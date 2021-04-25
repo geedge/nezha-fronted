@@ -2169,13 +2169,13 @@ li{
   height: 70px;
   justify-content: space-around;
 }
-.right-box-form>.el-form-item.half-form-item-other{
+.right-box-form .half-form-item-other{
   display: inline-block;
-  width: calc(50% - 15px);
+  width: calc(50% - 30px);
 }
-.right-box-form>.el-form-item.half-form-item-other-two{
+.right-box-form .half-form-item-other-two{
   display: inline-block;
-  width: calc(50% - 15px);
+  width: calc(50% - 30px);
   margin-left: 0;
 }
 .right-box .right-box-form-add,.right-box  .right-box-form-minus-box{

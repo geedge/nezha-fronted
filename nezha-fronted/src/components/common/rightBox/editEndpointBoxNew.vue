@@ -14,14 +14,9 @@
       </span>
       </div>
       <!-- end--标题-->
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns right-box-form-delete" v-if="optionType === 'edit'">
-        <button v-if="editEndpoint.id" id="module-del" v-has="'monitor_endpoint_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
+      <div class="header__operation">
+        <span v-cancel="{obj: editEndpoint, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
-      <!-- end--顶部按钮-->
     </div>
 
     <!-- begin--表单-->

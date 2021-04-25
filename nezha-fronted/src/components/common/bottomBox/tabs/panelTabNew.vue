@@ -15,7 +15,7 @@
             <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
                 <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
-                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"></chart-list>
+                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelData"></chart-list>
               </div>
             </div>
           </div>
@@ -161,47 +161,7 @@ export default {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
-      }).then(() => {
-        this.$delete('panel/' + this.showPanel.id + '/charts?ids=' + data.id).then(response => {
-          if (response.code === 200) {
-            this.$message({
-              duration: 2000,
-              type: 'success',
-              message: this.$t('tip.deleteSuccess')
-            })
-            this.rightBox.show = false
-            const chartList = this.$refs.chartList.dataList
-            let nextChart = null; let prevChart = null
-            for (let i = 0; i < chartList.length; i++) {
-              if (chartList[i].id === data.id) {
-                chartList.splice(i, 1)
-              }
-              if (data.next != -1) {
-                if (chartList[i].id === data.next) {
-                  nextChart = chartList[i]
-                }
-              }
-              if (data.prev != 0) {
-                if (chartList[i].id === data.prev) {
-                  prevChart = chartList[i]
-                }
-              }
-            }
-            this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
-            if (nextChart && prevChart) { // 删除图表为中间位置
-              prevChart.next = nextChart.id
-              nextChart.prev = prevChart.id
-            } else {
-              if (!nextChart) prevChart.next = -1
-              if (!prevChart) nextChart.prev = 0
-            }
-            // this.getTableData(this.obj.id); //删除相关图表后，刷新面板数据
-          } else {
-            console.error(response.msg)
-            this.$message.error(response.msg)
-          }
-        })
-      })
+      }).then(() => {})
     },
     delChartOk () {
       this.getData(this.filter)
@@ -265,31 +225,41 @@ export default {
       if (this.from == this.$CONSTANTS.fromRoute.rule || this.from == this.$CONSTANTS.fromRoute.endpoint) {
         this.getData(this.filter)
       } else {
-        this.$get('panel', { type: this.from, link: linkId }).then(response => {
-          if (response.code === 200) {
-            this.panelData = response.data.list
-            if (this.panelData.length > 0) {
-              this.showPanel.id = this.filter.panelId = this.panelData[0].id
-              this.getData(this.filter)
-            }
-          } else {
-            if (response.msg) {
-              console.error(response.msg)
-              this.$message.error(response.msg)
-            } else if (response.error) {
-              console.error(response.error)
-              this.$message.error(response.error)
+        if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
+          console.log(this.obj)
+          this.panelData = [this.obj]
+          console.log(this.panelData)
+          if (this.panelData.length > 0) {
+            this.showPanel.id = this.filter.panelId = this.panelData[0].id
+            this.getData(this.filter)
+          }
+        } else {
+          this.$get('panel', { type: this.from, link: linkId }).then(response => {
+            if (response.code === 200) {
+              this.panelData = response.data.list
+              if (this.panelData.length > 0) {
+                this.showPanel.id = this.filter.panelId = this.panelData[0].id
+                this.getData(this.filter)
+              }
             } else {
-              console.error(response)
-              this.$message.error(response)
+              if (response.msg) {
+                console.error(response.msg)
+                this.$message.error(response.msg)
+              } else if (response.error) {
+                console.error(response.error)
+                this.$message.error(response.error)
+              } else {
+                console.error(response)
+                this.$message.error(response)
+              }
             }
-          }
-        }).catch((error) => {
-          if (error) {
-            console.error(error)
-            this.$message.error(error.toString())
-          }
-        })
+          }).catch((error) => {
+            if (error) {
+              console.error(error)
+              this.$message.error(error.toString())
+            }
+          })
+        }
       }
     },
     // 定期刷新

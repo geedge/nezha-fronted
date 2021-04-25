@@ -642,7 +642,7 @@ export default {
       this.panelName = panel.name
       this.panelId = panel.id
       this.editChart.groupId = ''
-      this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {
+      this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           this.groupArr = []
           response.data.list.forEach((item, index) => {
@@ -1784,7 +1784,7 @@ export default {
         if (this.showPanel.id || this.from === 'temp') {
           this.panelId = this.showPanel.id
         }
-        this.$get('visual/panel/chart?panelId=' + this.panelId).then(response => {
+        this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {
           if (response.code === 200) {
             this.groupArr = []
             response.data.list.forEach((item, index) => {

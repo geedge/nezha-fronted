@@ -34,6 +34,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
+        <span v-else-if="item.prop==='type'" :class="'asd'">{{scope.row[item.prop]}}</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
       </template>
@@ -75,6 +76,10 @@ export default {
         }, {
           label: this.$t('config.exprTemp.name'),
           prop: 'name',
+          show: true
+        }, {
+          label: this.$t('config.exprTemp.type'),
+          prop: 'type',
           show: true
         }, {
           label: this.$t('config.exprTemp.varType'),

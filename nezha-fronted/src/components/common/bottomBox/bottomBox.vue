@@ -49,6 +49,8 @@
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
         <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.endpoint.endpointTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <!--chartTemp的Tab-->
+        <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.chartTemp.chartTempTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
       </div>
     </div>
   </div>
@@ -126,6 +128,11 @@ export default {
             { prop: 'panel', name: 'Detail' },
             { prop: 'endpointQuery', name: 'Query' },
             { prop: 'endpointAlertMessage', name: 'Alerts' }
+          ]
+        },
+        chartTemp: {
+          chartTempTabTitle: [
+            { prop: 'panel', name: 'Template preview' }
           ]
         }
       }

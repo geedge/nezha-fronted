@@ -232,5 +232,6 @@ export const fromRoute = {
   menus: 'menus',
   notify: 'notify',
   link: 'link',
-  apiKey: 'apiKey'
+  apiKey: 'apiKey',
+  chartTemp: 'chartTemp'
 }

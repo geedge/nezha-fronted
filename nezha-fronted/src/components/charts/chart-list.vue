@@ -230,6 +230,8 @@ import textChart from './text-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
 import chartGroup from './chart-group'
+import { fromRoute } from '@/components/common/js/constants'
+import chartTempData from "@/components/charts/chartTempData";
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -240,7 +242,8 @@ export default {
     detail: Object,
     from: { type: String },
     panelLock: { type: Boolean, default: false },
-    hasGroup: { type: Boolean, default: true }
+    hasGroup: { type: Boolean, default: true },
+    panelDataList: Array
   },
 
   components: {
@@ -281,6 +284,12 @@ export default {
 
       tempDom: { height: '', width: '' }
       // showShadow:false,
+    }
+  },
+  watch: {
+    panelDataList (n) {
+      console.log(n)
+      this.getData(this.filter)
     }
   },
   methods: {
@@ -662,9 +671,25 @@ export default {
         })
         return
       }
+      if (param.from == this.$CONSTANTS.fromRoute.chartTemp) {
+        console.log(this.panelDataList)
+        this.dataList = this.panelDataList
+        this.$nextTick(() => {
+          this.dataList.forEach((item, index) => {
+            this.$set(item, 'from', params.from)
+            this.setChartSize(item, index)// 设置该图表宽度
+            const chartBox = document.getElementById('chart-' + item.id)
+            this.handleElementInViewport(chartBox, 0, item, index)
+            if (item.type === 'group') {
+              this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
+            }
+          })
+        })
+        return
+      }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      this.$get('visual/panel/chart?panelId=' + params.panelId).then(response => {
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
@@ -918,6 +943,9 @@ export default {
               // if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
               //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               // }
+              if (this.from === fromRoute.chartTemp) {
+                return chartTempData
+              }
               return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
             // 一个图表的所有element单独获取数据
