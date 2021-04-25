@@ -66,7 +66,7 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]>1">
+          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]<2">
             <div>
               <div v-html="suspendedStr(scope.row[item.prop])"></div>
             </div>
