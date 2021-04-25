@@ -250,7 +250,7 @@ const en = {
             label: 'Text'
           },
           group: {
-            label: 'group'
+            label: 'Group'
           }
         },
         statisticsVal: {
