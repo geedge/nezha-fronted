@@ -1290,11 +1290,11 @@ li{
 }
 .right-box-form .one-third-form-item-left{
   display: inline-block;
-  width: 170px;
+  width: calc(50% - 5px);
 }
 .right-box-form .one-third-form-item-right{
   display: inline-block;
-  width: 170px;
+  width: calc(50% - 5px);
   .el-form-item__label{
     width: 20px !important;
   }

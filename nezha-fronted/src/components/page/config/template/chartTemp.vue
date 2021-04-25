@@ -142,6 +142,15 @@ export default {
       this.object.panelName = 'template'
       this.rightBox.show = true
     },
+    edit (u) {
+      if (!u.param) {
+        u.param = { url: '', threshold: '' }
+      }
+      this.object = JSON.parse(JSON.stringify(u))
+      this.object.panelId = this.showPanel.id
+      this.object.panelName = this.showPanel.name
+      this.rightBox.show = true
+    },
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {
         for (const key in params) {
