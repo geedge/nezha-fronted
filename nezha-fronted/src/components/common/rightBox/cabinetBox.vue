@@ -47,7 +47,7 @@
 export default {
   name: 'cabinetBox',
   props: {
-    cabinet: { type: Object },
+    obj: { type: Object },
     currentDc: { type: Object }
   },
   data () {
@@ -128,7 +128,7 @@ export default {
     }
   },
   watch: {
-    cabinet: {
+    obj: {
       deep: true,
       immediate: true,
       handler: function (n, o) {

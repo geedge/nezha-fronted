@@ -106,7 +106,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         remark: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          // { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         type: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

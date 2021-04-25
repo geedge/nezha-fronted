@@ -83,19 +83,19 @@
                 </template>
                 <template v-if="label.action !== 1">
                   <template v-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXT">
-                    <el-input v-model="label.value" size="small"/>
+                    <el-input v-model="label.value[0]" size="small"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                     <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
-                      <el-input v-model="label.value[i]" size="small"/>
-                      <span><i class="nz-icon nz-icon-minus"></i></span>
+                      <el-input v-model="label.value[i]" size="small" style="margin-right: 15px;"/>
+                      <span :style="{'opacity': label.value.length > 1 ? 1 : 0.5}" @click="label.value.length > 1 ? label.value.splice(i, 1) : ''"><i class="nz-icon nz-icon-minus"></i></span>
                     </div>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
-                    <el-input v-model="label.value" :maxlength="4096" size="small" type="textarea"/>
+                    <el-input v-model="label.value[0]" :maxlength="4096" size="small" type="textarea"/>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
-                    <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value" :label="item.name">{{item.name}}</el-radio>
+                    <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value[0]" :label="item.name">{{item.name}}</el-radio>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX">
                     <el-checkbox-group v-model="label.value">
@@ -103,15 +103,15 @@
                     </el-checkbox-group>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                    <el-select v-model="label.value" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                    <el-select v-model="label.value[0]" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
                       <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                     </el-select>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.INTEGER">
-                    <el-input v-model="label.value" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
+                    <el-input v-model="label.value[0]" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DOUBLE">
-                    <el-input v-model="label.value" oninput="value=value.replace(/[^0-9.]/g,'')" size="small"></el-input>
+                    <el-input v-model="label.value[0]" oninput="value=value.replace(/[^0-9.]/g,'')" size="small"></el-input>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DATETIME">
                     <template v-if="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.time">
@@ -120,14 +120,14 @@
                         <el-time-select v-model="label.value[1]" size="small"></el-time-select>
                       </div>
                       <template v-else>
-                        <el-time-select v-model="label.value" size="small" style="width: 100%"></el-time-select>
+                        <el-time-select v-model="label.value[0]" size="small" style="width: 100%"></el-time-select>
                       </template>
                     </template>
                     <template v-else>
                       <template v-if="label.interval">
                         <el-date-picker
                           id="asset-box-input-purchase-date"
-                          v-model="label.value"
+                          v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                           placeholder=""
                           size="small"
@@ -137,7 +137,7 @@
                       <template v-else>
                         <el-date-picker
                           id="asset-box-input-parchase-date"
-                          v-model="label.value"
+                          v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType"
                           placeholder=""
                           size="small"
@@ -148,7 +148,7 @@
                     </template>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.EMAIL">
-                    <input v-model="label.value" size="small"></input>
+                    <input v-model="label.value[0]" size="small"></input>
                   </template>
                 </template>
               </el-form-item>
@@ -237,9 +237,10 @@ export default {
       url: 'asset/asset',
       editData: {
         editType: 1,
-        authProtocol: 0,
+        authProtocol: 1,
         authType: 1,
         fields: [],
+        port: 22,
         snmpCredentialId: null
       },
       labelCascProp: {

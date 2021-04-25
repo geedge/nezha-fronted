@@ -551,111 +551,9 @@ const en = {
     assetType: 'Asset type', // '资产类型'
     principal: 'Administrator', // '负责人'
     tel: 'Telephone', // '电话'
-    left: {
-      dataCenter: 'Data center',
-      vendor: 'Vendor',
-      ping: 'Ping'
-    },
     featureTitle: 'Attribute',
     endpointUpNum: 'It\'s a normal number',
     endpointNum: 'Represents the total quantity',
-    editAssetTab: {
-      title: 'New asset', // '新增资产'
-      sn: 'SN', // SN
-      host: 'Host', // 'Host'
-      state: 'State', // '状态'
-      modelId: 'Module', // '组件'
-      alert: 'Alert information', // '告警信息'
-      assetInfo: 'Asset information', // '资产信息'
-      assetType: 'Asset type', // '资产类型'
-      vendor: 'Vendor', // '厂商/型号'
-      vendorTab: {
-        vendor: 'Vendor/Model', // '厂商/型号'
-        vendorName: 'New vendor', // '新厂商'
-        existVendor: 'Existed vendor', // '已有厂商'
-        modelName: 'New model', // '新型号'
-        existModel: 'Existed model'// '已有型号'
-      },
-      purchaseDate: 'Purchase date', // '购买日期'
-      dataSelectTip: 'Please select date', // '请选择日期'
-      dc: 'Data center',
-      dcName: 'Data center name', // 'DC名称'
-      AddIdcTab: {
-        title: 'New Data center', // '新增DC'
-        dcName: 'Data center name', // 'DC名称'
-        location: 'Location', // '地区'
-        principal: 'Administrator', // '负责人'
-        tel: 'Telephone'// '电话'
-      },
-      editIdcTab: {
-        title: 'Edit Data center', // '编辑DC'
-        dcName: 'Data center name', // 'DC名称'
-        location: 'Location', // '地区'
-        principal: 'Administrator', // '负责人'
-        tel: 'Telephone'// '电话'
-      },
-      location: 'Location', // '地区'
-      principal: 'Administrator', // '负责人'
-      tel: 'Telephone', // '电话'
-      cabinet: 'Cabinet', // '机柜'
-      AddCabinetTab: {
-        title: 'New cabinet', // '新增机柜'
-        name: 'Name', // '名称'
-        uSize: 'U size', // 'U位'
-        remark: 'Description', // '描述'
-        DC: 'Data center'// DC
-      },
-      editCabinetTab: {
-        title: 'Edit cabinet', // '编辑机柜'
-        name: 'Name', // '名称'
-        uSize: 'U size', // 'U位'
-        remark: 'Description', // '描述'
-        DC: 'Data center'// DC
-      },
-      uSize: 'U size', // 'U位'
-      remark: 'Description', // '描述'
-      cli: 'CLI account', // 'CLI账号'
-      loginType: 'Login type', // '登录类型'
-      password: 'Password', // '密码'
-      ssh: 'SSH-Key', // 'SSH-Key'
-      account: 'Username', // '用户名'
-      port: 'Port', // '端口'
-      upload: 'Upload', // '上传'
-      clickToUpload: 'Upload'// '上传'
-    },
-    tableTitle: {
-      id: 'ID', // ID
-      assetType: 'Asset type', // '资产类型'
-      device: 'SN', // SN
-      host: 'Host', // 'Host'
-      assetState: 'State', // '状态'
-      assetPing: 'Ping',
-      lastReply: 'Ping last reply',
-      modules: 'Endpoint', // '组件'
-      alerts: 'Alerts', // '告警信息'
-      dataCenter: 'Data center', // DC
-      cabinet: 'Cabinet', // '机柜'
-      model: 'Model', // '型号'
-      vendor: 'Vendor', // '厂商'
-      procurementDate: 'Purchase date', // '购买日期'
-      principal: 'Administrator', // '负责人'
-      principalTel: 'Telephone', // '电话'
-      option: 'Operation', // "操作"
-      sn: 'SN',
-      name: 'Name',
-      manageIp: 'manageIp',
-      brand: 'Brand',
-      dc: 'DataCenter',
-      type: 'Types',
-      state: 'State',
-      endpoint: 'Endpoint'
-    },
-    tagTableTitle: {
-      projectName: 'Project name', // '系统名称'
-      moduleName: 'Module name', // '组件名称'
-      endPoint: 'End point', // 'EndPoint'
-      alert: 'Alert'// '告警'
-    },
     active: 'Alive', // "存活",
     total: 'Total', // "总数",
     down: 'Down',
@@ -671,7 +569,8 @@ const en = {
     privateKey: 'Private key',
     usernamePrompt: 'Username prompt',
     passwordPrompt: 'Password prompt',
-    snmpCredential: 'SNMP credential'
+    snmpCredential: 'SNMP credential',
+    authProtocol: 'Auth protocol'
   },
   config: {
     config: 'Settings', // "设置"
@@ -782,6 +681,10 @@ const en = {
       latitude: 'Latitude',
       lnglat: 'Coordinate'
     },
+    cabinet:{
+      editCabinet:'Edit Cabinet',
+      createCabinet:'Create Cabinet',
+    },
     model: {
       model: 'Asset model',
       vendor: 'Vendor',
@@ -847,7 +750,12 @@ const en = {
         play: 'Play',
         replay: 'Replay',
         skipTip: 'Skip no operation time'
-      }
+      },
+      loginHost:'Login host',
+      loginUser:'Login user',
+      sourceIp:'Source IP',
+      sourceUser:'Source user',
+      SessionId:'Session ID',
     },
     operationlog: {
       operationlog: 'Operation log',
@@ -912,7 +820,7 @@ const en = {
         basic: 'Basic',
         alertApi: 'Alert API',
         assetPingSwith: 'Asset ping',
-        assetPingInterval: 'Interval',
+        assetPingInterval: 'Ping interval',
         exporterTarget: 'Exporter path',
         scrapeInterval: 'Scrape interval',
         storageRetention: 'Local retention',
@@ -922,6 +830,8 @@ const en = {
         defaultCabinetUsize: 'Cabinet U size',
         second: 'second',
         day: 'day',
+        sessionTimeout:'Session timeout',
+        minute:'minute',
         maxSeries: 'Query max series',
         unsaved: 'Unsaved prompt',
         mapConfig: 'Map center',
@@ -1094,7 +1004,7 @@ const en = {
       exprTempImport: 'expression template import',
       exprTempExport: 'expression template export',
       exprTempImportCancel: 'expression template import rollback',
-      copy: 'Copy',
+      copy: 'Duplicate',
       name: 'Name',
       gname: 'Group',
       expression: 'Expression',

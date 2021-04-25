@@ -504,7 +504,7 @@ export default {
     },
     endLoading: function () {
       this.$refs.loading.endLoading()
-      this.chart.resize();
+      this.chart.resize()
       this.$emit('is-loading', false)
     },
     guid () {

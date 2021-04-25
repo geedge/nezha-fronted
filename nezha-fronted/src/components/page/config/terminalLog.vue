@@ -6,6 +6,7 @@
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.terminalLog"
+      @search="search"
       :search-msg="searchMsg">
       <template v-slot:default="slotProps">
         <terminal-log-table
@@ -51,15 +52,45 @@ export default {
         searchLabelList: [
           {
             id: 11,
-            name: this.$t('config.terminallog.host'),
+            name: this.$t('config.terminallog.loginHost'),
             type: 'input',
             label: 'host',
             disabled: false
           }, {
             id: 12,
-            name: this.$t('config.terminallog.user'),
+            name: this.$t('config.terminallog.loginUser'),
+            type: 'input',
+            label: 'loginUser',
+            disabled: false
+          }, {
+            id: 13,
+            name: this.$t('config.terminallog.sourceIp'),
+            type: 'input',
+            label: 'remoteAddr',
+            disabled: false
+          }, {
+            id: 14,
+            name: this.$t('config.terminallog.sourceUser'),
             type: 'input',
             label: 'username',
+            disabled: false
+          }, {
+            id: 15,
+            name: this.$t('config.terminallog.uuid'),
+            type: 'input',
+            label: 'uuid',
+            disabled: false
+          }, {
+            id: 16,
+            name: this.$t('config.terminallog.protocol'),
+            type: 'selectString',
+            label: 'protocol',
+            disabled: false
+          }, {
+            id: 17,
+            name: this.$t('config.terminallog.status'),
+            type: 'terminalStatus',
+            label: 'state',
             disabled: false
           }
         ]

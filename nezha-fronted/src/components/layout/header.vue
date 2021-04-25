@@ -233,9 +233,9 @@ export default {
       })
     },
     getLinkData () {
-      this.$get('link').then(response => {
+      /* this.$get('link').then(response => {
         this.$store.commit('setLinkData', response.data)
-      })
+      }) */
     },
     createBox (item) {
       if (item.type == 1) {
