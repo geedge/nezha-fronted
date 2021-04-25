@@ -122,7 +122,7 @@ export default {
         },
         module: {
           moduleTabTitle: [
-            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
+            { prop: 'endpoint', name: this.$t('asset.endpoint') },
             { prop: 'moduleAlertMessage', name: 'Alerts' },
             { prop: 'panel', name: 'Detail' }
           ]

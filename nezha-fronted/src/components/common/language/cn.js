@@ -545,6 +545,7 @@ const cn = {
     principal: '负责人',
     tel: '电话',
     featureTitle: '属性',
+    endpoint: 'Endpoint',
     endpointUpNum: '代表正常的数量',
     endpointNum: '代表总的数量',
     active: '存活', // "存活",

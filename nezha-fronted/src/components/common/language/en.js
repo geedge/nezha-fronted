@@ -552,6 +552,7 @@ const en = {
     principal: 'Administrator', // '负责人'
     tel: 'Telephone', // '电话'
     featureTitle: 'Attribute',
+    endpoint: 'Endpoint',
     endpointUpNum: 'It\'s a normal number',
     endpointNum: 'Represents the total quantity',
     active: 'Alive', // "存活",

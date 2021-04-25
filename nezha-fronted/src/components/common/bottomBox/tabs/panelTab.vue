@@ -10,14 +10,14 @@
           <template v-else-if="from == $CONSTANTS.fromRoute.endpoint">{{$t("project.endpoint.endpointId")}}: {{obj.id}}</template>
         </div><div class="sub-list-tab sub-list-tab-active" v-if="from == $CONSTANTS.fromRoute.model">{{$t("dashboard.panel.title")}}</div><template v-if="from == $CONSTANTS.fromRoute.asset"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="panel-tab-change-asset-alertmsg">{{$t("asset.tableTitle.alerts")}}</div><div
-          @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'" id="panel-tab-change-endpoint">{{$t("asset.tableTitle.modules")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'asset_alerts_view'" id="panel-tab-change-asset-alertmsg">{{$t("asset.alerts")}}</div><div
+          @click="changeTab('endpoint')" class="sub-list-tab" v-has="'asset_endpoint_view'" id="panel-tab-change-endpoint">{{$t("asset.modules")}}</div>
         </template><template v-if="from == $CONSTANTS.fromRoute.rule"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'rule_alerts_view'" id="panel-tab-change-rule-alertmsg">{{$t("asset.tableTitle.alerts")}}</div>
+          @click="changeTab('alertMessage')" class="sub-list-tab" v-has="'rule_alerts_view'" id="panel-tab-change-rule-alertmsg">{{$t("asset.alerts")}}</div>
         </template><template v-if="from == $CONSTANTS.fromRoute.endpoint"><div
           class="sub-list-tab sub-list-tab-active">{{$t("overall.detail")}}</div><div
-          @click="changeTab('alertMessage')" class="sub-list-tab " v-has="'project_endpoint_alerts_view'">{{$t("asset.tableTitle.alerts")}}</div><div
+          @click="changeTab('alertMessage')" class="sub-list-tab " v-has="'project_endpoint_alerts_view'">{{$t("asset.alerts")}}</div><div
           @click="changeTab('endpointQuery')" class="sub-list-tab" v-has="'project_endpoint_query_chart_view'">{{$t("overall.query")}}</div>
         </template>
       </div>

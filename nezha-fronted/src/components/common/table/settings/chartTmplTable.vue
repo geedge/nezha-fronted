@@ -34,7 +34,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
-        <span v-else-if="item.prop==='type'" :class="'asd'">{{scope.row[item.prop]}}</span>
+        <span v-else-if="item.prop==='type'" :class="typeIcon(scope.row)">{{scope.row[item.prop]}}</span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
       </template>
@@ -91,6 +91,20 @@ export default {
           show: true
         }
       ]
+    }
+  },
+  methods: {
+    typeIcon (row) {
+      let str = 'nz-icon'
+      switch (row.type) {
+        case 'line':
+          str += 'nz-icon-multitext'
+          break
+        default :
+          str += 'nz-icon-multitext'
+          break
+      }
+      return str
     }
   }
 }

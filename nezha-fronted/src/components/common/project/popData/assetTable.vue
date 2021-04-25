@@ -151,32 +151,32 @@ export default {
       mainTableHeight: '100%',
       tableTitle: [
         {
-          label: this.$t('asset.tableTitle.host'),
+          label: this.$t('asset.host'),
           prop: 'HOST',
           show: true,
           width: 130,
           fixed: 'left'
         },
         {
-          label: this.$t('asset.tableTitle.device'),
+          label: this.$t('asset.device'),
           prop: 'SN',
           show: true,
           width: 130
         },
         {
-          label: this.$t('asset.tableTitle.assetType'),
+          label: this.$t('asset.assetType'),
           prop: 'assetType',
           show: true
         }, {
-          label: this.$t('asset.tableTitle.assetState'),
+          label: this.$t('asset.assetState'),
           prop: 'state',
           show: true
         }, {
-          label: this.$t('asset.tableTitle.assetPing'),
+          label: this.$t('asset.assetPing'),
           prop: 'pingStatus',
           show: true
         }, {
-          label: this.$t('asset.tableTitle.alerts'),
+          label: this.$t('asset.alerts'),
           prop: 'Alert',
           show: true,
           width: 100
@@ -287,7 +287,7 @@ export default {
       this.esc(false)
     },
     messageStyle (e) {
-      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.tableTitle.alerts')) {
+      if (e.column.label == 'Alerts' || e.column.label == this.$t('asset.alerts')) {
         if (e.row.alertNum > 0) {
           return 'danger'
         } else {
