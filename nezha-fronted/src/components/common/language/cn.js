@@ -736,8 +736,10 @@ const cn = {
     },
     model: {
       model: '资产型号',
-      vendor: '厂商',
-      assets: '资产',
+      name: '资产型号',
+      barnd: '品牌',
+      ChartTemplate: '图表模板',
+      assetNum: '资产编号',
       editModel: '编辑型号',
       createModel: '创建型号',
       remark: '备注',

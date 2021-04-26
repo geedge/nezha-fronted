@@ -32,6 +32,9 @@ import pickTime from '@/components/common/pickTime'
 import bus from '@/libs/bus'
 import theme from '@/assets/css/theme.scss'
 
+import vSelectPage from 'v-selectpage';
+Vue.use(vSelectPage);
+
 Vue.component('Pagination', Pagination)
 Vue.component('searchInput', searchInput)
 Vue.component('element-set', elementSet)

@@ -687,8 +687,10 @@ const en = {
     },
     model: {
       model: 'Asset model',
-      vendor: 'Vendor',
-      assets: 'Assets',
+      brand: 'Brand', 
+      name: 'Asset model',
+      ChartTemplate: 'ChartTemplate',
+      assetNum: 'AssetNum',
       editModel: 'Edit model',
       createModel: 'Create model',
       remark: 'Remark',
