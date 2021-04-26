@@ -278,7 +278,11 @@ const cn = {
         content: '内容',
         tooltip: 'Tooltip',
         displayChart: '图表',
-        aggregation: 'Aggregation'
+        aggregation: 'Aggregation',
+        varType: 'Vartype',
+        pid: 'Chart 模板',
+        selectAsset: '请选择Asset',
+        selectEndpoint: '请选择Endpoint'
       },
       chartTableColumn: {
         metric: '指标',

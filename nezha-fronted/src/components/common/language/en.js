@@ -288,7 +288,11 @@ const en = {
         content: 'Content',
         tooltip: 'Tooltip',
         displayChart: 'Display chart',
-        aggregation: 'Aggregation'
+        aggregation: 'Aggregation',
+        varType: 'Vartype',
+        pid: 'Chart template',
+        selectAsset: 'Please select the Asset',
+        selectEndpoint: 'Please select the Endpoint'
       },
       chartTableColumn: {
         metric: 'Metric', // '指标'

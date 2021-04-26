@@ -194,7 +194,6 @@ export default {
           str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
         }
       })
-      console.log(arr, str)
       return str
     }
   },

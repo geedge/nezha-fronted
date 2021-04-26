@@ -313,7 +313,7 @@
            </button>
 
               <button @click="imgUpload" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
-                      v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                      v-has="'topo_icon_save'" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
              {{$t('project.topology.save')}}
@@ -477,6 +477,8 @@ export default {
       penToolTipScale: 1,
       oldScale: 1,
       uploadPicShow: false,
+      imgWidth: 0,
+      imgHeight: 0,
       uploadPic: {
         name: '',
         unit: ''
@@ -1484,22 +1486,24 @@ export default {
     beforeAvatarUpload (file, fileList) {
       const this_ = this
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
-
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG) {
         this.$message.error(this_.$t('project.topology.imgFormat'))
         return false
       }
-      // if (!isLt2M) {
-      //   this.$message.error( this_.$t('project.topology.imgSize'));
-      //   return false;
-      // }
+      if (!isLt2M) {
+        this.$message.error(this_.$t('project.topology.imgSize'))
+        return false
+      }
       const isSize = new Promise(function (resolve, reject) {
-        const width = 100
-        const height = 100
+        const width = 0
+        const height = 0
         const _URL = window.URL || window.webkitURL
         const img = new Image()
         img.onload = function () {
           const valid = img.width > width && img.height > height
+          this_.imgWidth = img.width
+          this_.imgHeight = img.height
           valid ? resolve() : reject()
         }
         img.src = _URL.createObjectURL(file.raw)
@@ -1545,12 +1549,15 @@ export default {
     upload () {
       const form = new FormData()
       form.append('file', this.file)
+      console.log(this.file)
       if (this.uploadPic.name) {
         form.append('name', this.uploadPic.name)
       } else {
         form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
       }
       form.append('unit', this.uploadPic.unit)
+      form.append('width', this.imgWidth)
+      form.append('height', this.imgHeight)
       this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -1685,6 +1692,7 @@ export default {
               responseType: 'arraybuffer'
             })
             .then(res => {
+              console.log(res.data)
               return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
             })
             .then(data => {

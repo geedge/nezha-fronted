@@ -8,18 +8,18 @@
     </div>
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="userForm" :model="editChartTemp" :rules="editChartTemp.id ? rules2 : rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px">
+        <el-form ref="userForm" :model="editChartTemp" :rules="rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px">
           <!--type-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.varType')">
-            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.varType" value-key="chartType" id="chart-box-group">
+          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" prop="varType">
+            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.varType" value-key="chartType" id="chart-box-group" @change="varTypeChange">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
           </el-form-item>
           <!--chartTemp list-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.varType')">
-            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.pid" value-key="chartType" id="chart-box-group">
+          <el-form-item :label="$t('dashboard.panel.chartForm.pid')" prop="pid">
+            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.pid" value-key="chartType" id="chart-box-group" >
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTempArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -27,12 +27,13 @@
           </el-form-item>
 
           <!-- 选择资产，穿梭框 -->
-          <div class="form__sub-title">{{$t('overall.select')}}</div>
+          <div class="form__sub-title">{{editChartTemp.varType === 1 ? 'Asset' : 'Endpoint'}}</div>
           <nz-transfer ref="transfer"
                        :page-obj="transfer.pageObj"
                        :search-msg="transfer.searchMsg"
                        :table-data="transfer.tableData"
                        style="margin-bottom: 20px;"
+                       :tableTitle="transferTableTitle"
                        @leftToRight="addAsset"
                        @search="search"
                        @rightToLeft="removeAsset">
@@ -77,7 +78,10 @@ export default {
       url: 'visual/panel/chart/fromTmpl',
       rightBox: { model: { show: false } },
       rules: { // 表单校验规则
-        name: [
+        varType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        pid: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
@@ -139,7 +143,19 @@ export default {
           pages: 1,
           total: 0
         }
-      }
+      },
+      transferTableTitle: [
+        {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        },
+        {
+          label: this.$t('asset.host'),
+          prop: 'manageIp',
+          show: true
+        }
+      ]
     }
   },
   watch: {
@@ -153,7 +169,7 @@ export default {
   },
   mounted () {
     this.getChartTempData()
-    this.getAssetData()
+    this.getTableData()
   },
   methods: {
     clickOutside () {
@@ -170,9 +186,9 @@ export default {
       if (!this.transfer.selectedData.length) {
         this.prevent_opt.save = false
         if (this.editChartTemp.varType === 1) {
-          this.$message.error('请选择Asset')
+          this.$message.error(this.$t('dashboard.panel.chartForm.selectAsset'))
         } else {
-          this.$message.error('请选择Endpoint')
+          this.$message.error(this.$t('dashboard.panel.chartForm.selectEndpoint'))
         }
         return
       }
@@ -184,6 +200,7 @@ export default {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.$emit('on-create-success')
                 this.esc(true)
               } else {
                 this.$message.error(res.msg)
@@ -209,7 +226,7 @@ export default {
     search (searchLabel, page) {
       this.transfer.searchLabel = JSON.parse(JSON.stringify(searchLabel))
       this.transfer.pageObj = JSON.parse(JSON.stringify(page))
-      this.getAssetData()
+      this.getTableData()
     },
     addAsset (toAdd) {
       this.transfer.selectedData = toAdd
@@ -230,6 +247,13 @@ export default {
           this.chartTempArr = response.data.list
         }
       })
+    },
+    getTableData () {
+      if (this.editChartTemp.varType === 1) {
+        this.getAssetData()
+      } else {
+        this.getEndpointData()
+      }
     },
     getAssetData () {
       this.$refs.transfer.startLoading()
@@ -252,7 +276,38 @@ export default {
       })
     },
     varTypeChange () {
-
+      this.getChartTempData()
+      this.editChartTemp.pid = ''
+      this.transfer.selectedData = []
+      this.$refs.transfer.selectedData = []
+      if (this.editChartTemp.varType === 1) {
+        this.transferTableTitle = [
+          {
+            label: this.$t('overall.name'),
+            prop: 'name',
+            show: true
+          },
+          {
+            label: this.$t('asset.host'),
+            prop: 'manageIp',
+            show: true
+          }
+        ]
+      } else {
+        this.transferTableTitle = [
+          {
+            label: 'ID',
+            prop: 'id',
+            show: true
+          },
+          {
+            label: this.$t('project.endpoint.name'),
+            prop: 'name',
+            show: true
+          }
+        ]
+      }
+      this.getTableData()
     }
   }
 }
