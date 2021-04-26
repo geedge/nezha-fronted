@@ -28,14 +28,12 @@
             width="36">
           </el-table-column>
           <el-table-column
-            :label="$t('overall.name')"
+            :label="item.label"
+            v-for="(item,index) in tableTitle"
+            :key="index"
           >
-           <template slot-scope="scope">{{scope.row.name}}</template>
-          </el-table-column>
-          <el-table-column
-            :label="$t('asset.host')"
-          >
-            <template slot-scope="scope">{{scope.row.manageIp}}</template>
+            <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop]}}</template>
+            <slot :name="item.prop" v-else></slot>
           </el-table-column>
         </el-table>
       </div>
@@ -79,14 +77,12 @@
             width="36">
           </el-table-column>
           <el-table-column
-            :label="$t('overall.name')"
+            :label="item.label"
+            v-for="(item,index) in tableTitle"
+            :key="index"
           >
-            <template slot-scope="scope">{{scope.row.name}}</template>
-          </el-table-column>
-          <el-table-column
-            :label="$t('asset.host')"
-          >
-            <template slot-scope="scope">{{scope.row.host}}</template>
+            <template slot-scope="scope" v-if="!item.slot">{{scope.row[item.prop]}}</template>
+            <slot :name="item.prop" v-else></slot>
           </el-table-column>
         </el-table>
       </div>
@@ -131,6 +127,9 @@ export default {
     },
     pageObj: {
       type: Object
+    },
+    tableTitle: {
+      type: Array,
     }
   },
   data () {
