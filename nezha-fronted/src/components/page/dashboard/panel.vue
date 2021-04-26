@@ -91,7 +91,7 @@
               </button>
             </template>
           </export-excel>
-          <button id="chart-temp-add" class="top-tool-btn margin-l-10" type="button" @click="addChartByTemp"><i class='nz-icon nz-icon-lock'></i></button>
+          <button id="chart-temp-add" class="top-tool-btn margin-l-10" type="button" @click="addChartByTemp"><i class='nz-icon nz-icon-table-edit'></i></button>
           <button id="panel-lock" class="top-tool-btn margin-l-10" type="button" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
         </div>
       </template>

@@ -4,36 +4,30 @@
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="header-menu">
-      <template v-for="(menu, index) in getMenuList">
-        <template v-if="menu.code === 'header' && menu.children && menu.children.length > 0">
-          <template v-for="(subMenu, subIndex) in menu.children">
-            <el-dropdown v-if="subMenu.code === 'header_link'" :key="subIndex">
-              <div class="header-menu--item"><i class="nz-icon nz-icon-more-app"></i></div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
-                  <span class="link-title"><a :href='item.url' :title="item.name" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <el-dropdown v-if="subMenu.code === 'header_terminal'" :key="subIndex">
-              <div id="header-open-cli" @click="cli">
-                <div class="header-menu--item"><i class="nz-icon nz-icon-terminal"></i></div>
-                <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
-              </div>
-            </el-dropdown>
-            <el-dropdown v-if="subMenu.code === 'header_add'" :key="subIndex">
-              <div class="header-menu--item"><i class="nz-icon nz-icon-create-square"></i></div>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="(item, createIndex) in createMenu" :key="createIndex" v-has="item.permission" :index="`${index}-${subIndex}-${createIndex}`">
-                  <div :id="'create-box-'+createIndex" @click="createBox(item)">
-                    <span>{{item.label}}</span>
-                  </div>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
-        </template>
-      </template>
+      <el-dropdown>
+        <div class="header-menu&#45;&#45;item"><i class="nz-icon nz-icon-more-app"></i></div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
+            <span class="link-title"><a :href='item.url' :title="item.name" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dropdown >
+        <div id="header-open-cli" @click="cli">
+          <div class="header-menu&#45;&#45;item"><i class="nz-icon nz-icon-terminal"></i></div>
+          <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
+        </div>
+      </el-dropdown>
+      <el-dropdown>
+        <div class="header-menu&#45;&#45;item"><i class="nz-icon nz-icon-create-square"></i></div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(item, createIndex) in createMenu" :key="createIndex" v-has="item.permission" :index="`${createIndex}`">
+            <div :id="'create-box-'+createIndex" @click="createBox(item)">
+              <span>{{item.label}}</span>
+            </div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <!--个人操作-->
     <div class="personal">
@@ -565,7 +559,7 @@ export default {
   .right-tip {
     position: absolute;
     left: 30px;
-    bottom: 27px;
+    top: 10px;
     padding: 0 6px;
     line-height: 15px;
     height: 15px;

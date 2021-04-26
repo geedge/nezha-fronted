@@ -33,6 +33,11 @@
                 <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
 
               </span>
+              <span class="chart-title-icon"  v-else :class="{'visible':caretShow,'hidden':!caretShow}">
+                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.refresh')" class="" @click="addGroupItemChart">
+                  <i class="nz-icon nz-icon-plus"></i>
+                </span>
+              </span>
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">

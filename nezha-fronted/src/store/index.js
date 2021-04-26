@@ -81,12 +81,6 @@ const store = new Vuex.Store({
 
     openConsole (state) { // 打开console，如果当前窗口数为0，则默认新建一个console
       state.consoleShow = true
-      if (state.consoleCount === 0) {
-        state.consoleCount++
-        state.isAddConsole = true
-      } else {
-        state.isAddConsole = false
-      }
     },
     addConsole (state, data) { // 打开console，并新建一个console
       state.consoleShow = true

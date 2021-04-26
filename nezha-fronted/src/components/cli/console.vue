@@ -201,7 +201,17 @@ export default {
       } else {
         baseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'ws://')
       }
-      const url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+      let url = ''
+      if (this.terminal.type === 'asset') {
+        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&assetId=' + this.terminal.assetId + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+      } else if (this.terminal.type === 'custom') {
+        url = baseUrl + '/terminal.ws?width=' + this.terminal.width + '&height=' + this.terminal.height + '&cols=' + this.terminal.cols + '&rows=' + this.terminal.rows + '&token=' + token + '&accountId=' + this.terminal.accountId + '&uuid=' + this.terminal.uuid
+        Object.keys(this.terminal.custom).forEach(key => {
+          if (this.terminal.custom[key]) {
+            url += '&' + key + '=' + this.terminal.custom[key]
+          }
+        })
+      }
       console.info(baseUrl, url)
       this.terminalSocket = new WebSocket(url)
       // 连接成功

@@ -173,7 +173,16 @@ const en = {
     downloadButtonTitle: 'Download',
     filePath: 'File path',
     closeTip: 'All connections will be closed, are you sure you want to close the window?',
-    remember: 'Remember my decision'
+    remember: 'Remember my decision',
+    protocol: 'Protocol',
+    authType: 'Auth type',
+    host: 'Host',
+    port: 'Port',
+    authUsername: 'Username',
+    authPin: 'Password',
+    authUserTip: 'Username prompt',
+    authPinTip: 'Password prompt',
+    authPriKey: 'Key',
   },
   login: {
     username: 'Username',

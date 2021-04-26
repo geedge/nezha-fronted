@@ -64,8 +64,19 @@
             <my-console :fontSize="fontSize"    :idIndex="index" :isFullScreen="isFullScreen"    :ref="'console'+index" :terminal="item.terminal" @closeConsole="removeTab" @refreshConsoleTitle="refreshTabTitle"></my-console>
 
           </el-tab-pane>
-          <el-tab-pane key="add" name="add">
-            <span slot="label" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
+          <el-tab-pane key="add" name="addConsole" style="width: 20px">
+            <el-popover
+              slot="label"
+              placement="bottom"
+              width="200"
+              trigger="hover"
+             >
+              <div>
+                <div  @click="assetShowChange">Asset</div>
+                <div @click="customShow=true">Custom</div>
+              </div>
+              <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
+            </el-popover>
           </el-tab-pane>
         </el-tabs>
         <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right:70px;'></i>
@@ -170,6 +181,72 @@
             </div>
           </div>
         </el-dialog>
+        <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="assetShow=false" class="nz-dialog" width="620px" >
+          <div >
+            <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
+              <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
+                <v-selectpage
+                  style="flex: 1"
+                  :data="assetData"
+                  :tb-columns="columns"
+                  key-field="id"
+                  show-field="manageIp"
+                  search-field="manageIp"
+                  v-model="assetContent.assetId"
+                  size="small"
+                  :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
+                  id="box-input-asset-id"
+                  :result-format="resultFormat"></v-selectpage>
+                <button @click="connect" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">Connect</button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-dialog>
+        <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="customShow=false" class="nz-dialog" width="620px" >
+          <div >
+            <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
+              <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
+                <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
+                  <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authType")' prop="authType">
+                <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" placeholder="" size="small" id="webshell-box-input-protocol">
+                  <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.host")' prop="host">
+                <el-input v-model="customConnect.host" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.port")' prop="host">
+                <el-input v-model="customConnect.port" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
+                <el-input v-model="customConnect.authUsername" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authPin")' prop="authPin">
+                <el-input v-model="customConnect.authPin" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authUserTip")' prop="authUserTip">
+                <el-input v-model="customConnect.authUserTip" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authPinTip")' prop="authPinTip">
+                <el-input v-model="customConnect.authPinTip" size="small"/>
+              </el-form-item>
+              <el-form-item :label='$t("webshell.authPriKey")' prop="authPriKey">
+                <el-input v-model="customConnect.authPriKey" size="small"/>
+              </el-form-item>
+              <div class="right-box__footer">
+                <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light">
+                  <span>{{$t('overall.cancel')}}</span>
+                </button>
+                <button id="asset-edit-save" :disabled="prevent_opt.save" class="footer__btn" @click="connect">
+                  <span>Connect</span>
+                </button>
+              </div>
+            </el-form>
+          </div>
+        </el-dialog>
       </div>
     </div>
 </template>
@@ -178,16 +255,38 @@
 import Console from './console'
 import uuidv1 from 'uuid/v1'
 import axios from 'axios'
-
+import { SelectPage } from 'v-selectpage'
+import { host, port } from '@/components/common/js/validate'
 export default {
   name: 'webSSH',
   components: {
-    'my-console': Console
+    'my-console': Console,
+    'v-selectpage': SelectPage
   },
 
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
+      authProtocol: [
+        {
+          value: 1,
+          name: 'SSH'
+        },
+        {
+          value: 2,
+          name: 'TELNET'
+        }
+      ],
+      authType: [
+        {
+          value: 1,
+          name: 'Password'
+        },
+        {
+          value: 2,
+          name: 'Key'
+        }
+      ],
       consoleShow: false,
       isFullScreen: false,
       closeConfirmShow: false,
@@ -213,7 +312,85 @@ export default {
       downloadResult: null,
       // 字体大小
       fontSize: termFontSize || 15,
-      webSSHHeight: ''// 最小化之前的高度
+      webSSHHeight: '', // 最小化之前的高度
+      assetShow: false,
+      customShow: false,
+      assetContent: {
+        assetId: ''
+      },
+      customConnect: {
+        host: '',
+        port: '',
+        authType: 1,
+        authUsername: '',
+        authPin: '',
+        authPriKey: '',
+        authUserTip: '',
+        authPinTip: '',
+        authProtocolPort: '',
+        authProtocol: 1
+      },
+      columns: [
+        { title: 'id', data: 'id' },
+        { title: 'name', data: 'name' },
+        { title: 'Manage Ip', data: 'manageIp' },
+        {
+          title: 'Type',
+          data: (row) => {
+            return row.type.name
+          }
+        },
+        {
+          title: 'Model',
+          data: (row) => {
+            return row.model.name
+          }
+        },
+        {
+          title: 'Datacenter',
+          data: (row) => {
+            return row.dc.name
+          }
+        }
+      ],
+      rules: {
+        assetId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
+      },
+      rulesCustom: {
+        authProtocol: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: host, trigger: 'change' }
+        ],
+        port: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: port, trigger: 'change' }
+        ],
+        authUsername: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPin: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        // authUserTip: [
+        //   { validator: this.authUserTipValid, trigger: 'change' }
+        // ],
+        // authPinTip: [
+        //   { validator: this.authPinTipValid, trigger: 'change' }
+        // ],
+        // authPriKey: [
+        //   { validator: this.authPriKeyValid, trigger: 'change' }
+        // ]
+      },
+      assetData: [],
+      assetLoading: false
     }
   },
   methods: {
@@ -224,7 +401,7 @@ export default {
       this.currentUuid = uuid
       return uuid
     },
-    addConsole (id, host, accountId, port) {
+    addConsole (id, host, accountId, port, type) {
       if (!id) { id = '' }
       if (!host) { host = '' }
       if (!accountId) { accountId = '' }
@@ -251,8 +428,12 @@ export default {
           height: this.consoleHeight,
           assetId: id,
           accountId: accountId,
-          uuid: uuid
+          uuid: uuid,
+          type: type
         }
+      }
+      if (type === 'custom') {
+        console.terminal.custom = { ...this.customConnect }
       }
       this.editableTabsValue = newTabName
       this.editableTabs.push(console)
@@ -510,56 +691,11 @@ export default {
         })
       }
     },
-    /* dragEagle:function(e){
-        var targetDiv= document.getElementById('shell-service'); //e.target.parentNode.parentNode;.children[0]
-
-        //得到点击时该容器的宽高：
-        var targetDivHeight=targetDiv.offsetHeight;
-        var startY=e.clientY;
-        var _this=this;
-
-        document.onmousemove=function(e){
-          e.preventDefault();
-          //得到鼠标拖动的宽高距离：取绝对值
-          var distY=Math.abs(e.clientY-startY);
-
-          //往上方拖动：
-          if( e.clientY < startY){
-            targetDiv.style.height=targetDivHeight+distY+'px';
-          }
-          //往下方拖动：
-          if (e.clientY > startY) {
-            targetDiv.style.height=(targetDivHeight-distY)+'px';
-          }
-          let height = document.body.clientHeight;//可视高度
-          if(parseInt(targetDiv.style.height)>=height){
-            targetDiv.style.height=height+'px';
-          }
-          if(parseInt(targetDiv.style.height)<=10){
-            targetDiv.style.height=20+'px';
-          }
-
-          _this.editableTabs.forEach((tab, index) => {
-            _this.$refs['console'+index][0].resizeConsole(parseInt(targetDiv.style.height));
-          });
-        }
-
-        document.onmouseup=function(){
-          document.onmousemove=null;
-          _this.editableTabs.forEach((tab, index) => {
-           // _this.$refs['console'+index][0].resizeServiceConsole(parseInt(targetDiv.style.height));
-            _this.$refs['console'+index][0].resizeServiceConsole();
-          });
-
-          _this.consoleHeight = parseInt(targetDiv.style.height);
-          if(_this.consoleHeight===null || !_this.consoleHeight){_this.consoleHeight = _this.initConsoleHeight;}
-        }
-      }, */
     dragEagle (e) {
       // let mainListDom = document.querySelector(".main-list"); //主列表
       const subBoxDom = document.querySelector('#shell-service.sub-box') // 副列表
       const subListDom = document.querySelector('#shell-service .sub-list') // 副列表
-      const contentRightDom = document.querySelector('.content-right') // 右侧内容区
+      const contentRightDom = document.querySelector('.list-page') // 右侧内容区
       const resizeBarHeight = 9 // resize横条高度
       const minHeight = 15 // terminal最小高度限制为15
       // let contentHideHeight = 100; //主、副列表高度低于100时隐藏内容
@@ -656,6 +792,54 @@ export default {
       this.editableTabs.forEach((tab, index) => {
         this.$refs['console' + index][0].setFontSize(fontSize)
       })
+    },
+    resultFormat (resp) {
+      console.log(resp)
+      if (resp && resp.data) return resp.data.values.gridResult
+    },
+    assetShowChange () {
+      this.assetShow = true
+      this.getAssetData()
+    },
+    getAssetData () {
+      this.assetLoading = true
+      this.$get('asset/asset', { pageSize: -1 }).then(res => {
+        this.assetLoading = false
+        this.assetData = res.data.list
+      })
+    },
+    connect () {
+      this.prevent_opt.save = true
+      if (this.assetShow) {
+        console.log(this.assetContent)
+        this.$refs.assetConnect.validate((valid) => {
+          if (valid) {
+            // this.show(id, host, accountId, port)
+            const asset = this.assetData.find(item => item.id == this.assetContent.assetId)
+            console.log(asset)
+            this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
+            this.assetShow = false
+            this.prevent_opt.save = false
+          }
+        })
+      } else {
+        this.$refs.customConnect.validate((valid) => {
+          if (valid) {
+            this.addConsole('', this.customConnect.host, '', this.customConnect.port, 'custom')
+            this.customShow = false
+            this.prevent_opt.save = false
+          }
+        })
+      }
+    },
+    authUserTipValid () {
+
+    },
+    authPinTipValid () {
+
+    },
+    authPriKeyValid () {
+
     }
   },
   watch: {
@@ -706,6 +890,22 @@ export default {
   }
   .sub-list{
     background: #E4E7ED;
-
+  }
+  .flex /deep/ .el-form-item__content{
+    display: flex;
+  }
+  .nz-btn-style-normal-new{
+    margin-left: 10px;
+    margin-top: 2px;
+  }
+  /deep/ .custom .el-form-item {
+    width: calc(50% - 30px);
+    display: inline-block;
+  }
+  /deep/ .custom .el-form-item:nth-child(even) {
+    margin-left: 10px;
+  }
+  /deep/ .el-select--small{
+    width: 100%;
   }
 </style>

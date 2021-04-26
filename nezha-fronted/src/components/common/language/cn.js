@@ -165,7 +165,16 @@ const cn = {
     downloadButtonTitle: '下载',
     filePath: '文件路径',
     closeTip: '是否断开所有连接，关闭窗口？',
-    remember: '记住我的决定'
+    remember: '记住我的决定',
+    protocol: 'Protocol',
+    authType: 'Auth type',
+    host: 'Host',
+    port: 'Port',
+    authUsername: 'Username',
+    authPin: 'Password',
+    authUserTip: 'Username prompt',
+    authPinTip: 'Password prompt',
+    authPriKey: 'Key',
   },
   pageSize: '条/页',
   login: {

@@ -293,6 +293,45 @@ export default {
             show: true
           }
         ]
+        this.transfer.searchMsg.searchLabelList = [
+          {
+            id: 1,
+            name: 'ID',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          }, {
+            id: 20,
+            name: 'SN',
+            type: 'input',
+            label: 'sn',
+            disabled: false
+          }, {
+            id: 21,
+            name: 'Host',
+            type: 'input',
+            label: 'host',
+            disabled: false
+          }, {
+            id: 22,
+            name: this.$t('asset.state'),
+            type: 'select',
+            label: 'assetState',
+            disabled: false
+          }, {
+            id: 23,
+            name: 'pingStatus',
+            type: 'select',
+            label: 'pingStatus',
+            disabled: false
+          }, {
+            id: 23,
+            name: this.$t('asset.cabinet'),
+            type: 'input',
+            label: 'cabinetName',
+            disabled: false
+          }
+        ]
       } else {
         this.transferTableTitle = [
           {
@@ -306,6 +345,47 @@ export default {
             show: true
           }
         ]
+        this.transfer.searchMsg.searchLabelList = [
+          {
+            id: 11,
+            name: 'project id',
+            type: 'input',
+            label: 'projectIds',
+            disabled: false
+          }, {
+            id: 12,
+            name: 'endpoint name',
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            id: 13,
+            name: 'endpoint id',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          }, {
+            id: 14,
+            name: this.$t('asset.asset'),
+            type: 'query',
+            label: 'query',
+            disabled: false
+          }, {
+            id: 34,
+            name: this.$t('project.project.project'),
+            // name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'projectName',
+            disabled: false
+          }, {
+            id: 35,
+            name: this.$t('project.module.module'),
+            // name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'moduleName',
+            disabled: false
+          }]
       }
       this.getTableData()
     }

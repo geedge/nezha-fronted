@@ -15,7 +15,7 @@
             <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
                 <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
-                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelData"></chart-list>
+                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"></chart-list>
               </div>
             </div>
           </div>
@@ -108,7 +108,8 @@ export default {
       // removeModal: false, // 删除弹出
       // deleteObj: {}, // 删除对象
       // ---图表相关参数--end
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      panelDataList: []
     }
   },
   components: {
@@ -227,10 +228,15 @@ export default {
       } else {
         if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
           console.log(this.obj)
-          this.panelData = [this.obj]
+          this.panelDataList = [this.obj]
           console.log(this.panelData)
-          if (this.panelData.length > 0) {
-            this.showPanel.id = this.filter.panelId = this.panelData[0].id
+          if (this.obj.type === 'group') {
+            this.$get('/visual/panel/chart', { ids: this.obj.id,pageSize: -1 }).then(res => {
+              console.log(res)
+            })
+          }
+          if (this.panelDataList.length > 0) {
+            this.showPanel.id = this.filter.panelId = 0
             this.getData(this.filter)
           }
         } else {

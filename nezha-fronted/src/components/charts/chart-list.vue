@@ -231,7 +231,7 @@ import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
 import chartGroup from './chart-group'
 import { fromRoute } from '@/components/common/js/constants'
-import chartTempData from "@/components/charts/chartTempData";
+import chartTempData from '@/components/charts/chartTempData'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',

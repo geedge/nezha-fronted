@@ -204,6 +204,8 @@ import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
+import chartTempData from '@/components/charts/chartTempData'
+import {fromRoute} from "@/components/common/js/constants";
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -677,6 +679,9 @@ export default {
               // if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
               //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               // }
+              if (this.from === fromRoute.chartTemp) {
+                return chartTempData
+              }
               return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
             // 一个图表的所有element单独获取数据
