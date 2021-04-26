@@ -2,253 +2,274 @@
   @import './webSSH.scss';
 </style>
 <template>
-<!--  <div id="shell-service" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
-    <div class="resize-modal">
-      <div class="sub-list-resize-copy">一</div>
-    </div>
-    <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
-    <div :class="{'shell-service-max': isFullScreen,'shell-service':true}" class="sub-box ani-webSHH-height" data-yunlog-scope="popup" id="shell-service" ref="webSShBox" style="height: 0;background: #000">
+  <!--  <div id="shell-service" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
       <div class="resize-modal">
-        <div class="sub-list-resize-copy" style="width: 100%">一</div>
+        <div class="sub-list-resize-copy">一</div>
       </div>
-      <div @mousedown="dragEagle" class="sub-list-resize" id="shell-split" v-show="!isFullScreen">一</div>
-      <div class="sub-list-resize" v-show="isFullScreen"></div>
-      <div class="sub-list" style='position: relative;'>
-        <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
-        <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
-        <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
-          <el-submenu index="1"  popper-class="fontSizeBox" style="width:40px;">
-            <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
-            <!--<el-submenu index="1-1">-->
-            <!--<template slot="title">文字大小</template>-->
-            <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
-            <el-menu-item @click="changeFontSize(15)" :class="{fontSet:true,menuActive:fontSize==15, middleFont:true}" index="1-2">A</el-menu-item>
-            <el-menu-item @click="changeFontSize(20)" :class="{fontSet:true,menuActive:fontSize==20, bigFont:true}" index="1-3">A</el-menu-item>
-            <!--<el-menu-item class="fontSet" index="1-4">大</el-menu-item>-->
-            <!--</el-submenu>-->
-            <!--<el-submenu index="1-2" >-->
-            <!--<template slot="title">字体</template>-->
-            <!--<el-menu-item index="1-2-1">Monosapace</el-menu-item>-->
-            <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
-            <!--</el-submenu>-->
-          </el-submenu>
-          <el-submenu index="2" style="width:50px;">
-            <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
-            <el-menu-item @click="showUploadBox" index="2-1">
-              <div>{{$t('webshell.upload')}}</div>
-            </el-menu-item>
-            <el-menu-item @click="showDownloadBox" index="2-2">
-              <div>{{$t('webshell.download')}}</div>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
+      <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
+  <div :class="{'shell-service-max': isFullScreen,'shell-service':true}" class="sub-box ani-webSHH-height" data-yunlog-scope="popup" id="shell-service" ref="webSShBox" style="height: 0;background: #000">
+    <div class="resize-modal">
+      <div class="sub-list-resize-copy" style="width: 100%">一</div>
+    </div>
+    <div @mousedown="dragEagle" class="sub-list-resize" id="shell-split" v-show="!isFullScreen">一</div>
+    <div class="sub-list-resize" v-show="isFullScreen"></div>
+    <div class="sub-list" style='position: relative;'>
+      <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
+      <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
+      <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
+        <el-submenu index="1"  popper-class="fontSizeBox" style="width:40px;">
+          <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
+          <!--<el-submenu index="1-1">-->
+          <!--<template slot="title">文字大小</template>-->
+          <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
+          <el-menu-item @click="changeFontSize(15)" :class="{fontSet:true,menuActive:fontSize==15, middleFont:true}" index="1-2">A</el-menu-item>
+          <el-menu-item @click="changeFontSize(20)" :class="{fontSet:true,menuActive:fontSize==20, bigFont:true}" index="1-3">A</el-menu-item>
+          <!--<el-menu-item class="fontSet" index="1-4">大</el-menu-item>-->
+          <!--</el-submenu>-->
+          <!--<el-submenu index="1-2" >-->
+          <!--<template slot="title">字体</template>-->
+          <!--<el-menu-item index="1-2-1">Monosapace</el-menu-item>-->
+          <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
+          <!--</el-submenu>-->
+        </el-submenu>
+        <el-submenu index="2" style="width:50px;">
+          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
+          <el-menu-item @click="showUploadBox" index="2-1">
+            <div>{{$t('webshell.upload')}}</div>
+          </el-menu-item>
+          <el-menu-item @click="showDownloadBox" index="2-2">
+            <div>{{$t('webshell.download')}}</div>
+          </el-menu-item>
+        </el-submenu>
+      </el-menu>
 
-        <el-tabs :before-leave="beforeLeave"
-                 @tab-click="handleClick"
-                 @tab-remove="removeTab"
-                 style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;margin-top: -4px'
-                 type="border-card"
-                 v-model="editableTabsValue" >
-          <el-tab-pane :key="item.name"
-                       :label="item.title"
-                       :name="item.name"
-                       closable
-                       v-for="(item, index) in editableTabs"
-          >
-            <!-- tab显示的内容 1 grey,2 green, 3 red-->
-            <span slot="label" style="">
+      <el-tabs :before-leave="beforeLeave"
+               @tab-click="handleClick"
+               @tab-remove="removeTab"
+               style='width:100%; margin-left:0px;border-left:solid 1px black;border-bottom: 1px solid black;margin-top: -4px'
+               type="border-card"
+               v-model="editableTabsValue" >
+        <el-tab-pane :key="item.name"
+                     :label="item.title"
+                     :name="item.name"
+                     closable
+                     v-for="(item, index) in editableTabs"
+        >
+          <!-- tab显示的内容 1 grey,2 green, 3 red-->
+          <span slot="label" style="">
             <div :class="{'active-icon grey':item.circleColor == 1,'active-icon green':item.circleColor == 2,'active-icon red':item.circleColor == 3}"
                  style="margin-top: 0px;"></div>{{item.title}}
           </span>
 
-            <my-console :fontSize="fontSize"    :idIndex="index" :isFullScreen="isFullScreen"    :ref="'console'+index" :terminal="item.terminal" @closeConsole="removeTab" @refreshConsoleTitle="refreshTabTitle"></my-console>
+          <my-console :fontSize="fontSize"    :idIndex="index" :isFullScreen="isFullScreen"    :ref="'console'+index" :terminal="item.terminal" @closeConsole="removeTab" @refreshConsoleTitle="refreshTabTitle"></my-console>
 
-          </el-tab-pane>
-          <el-tab-pane key="add" name="addConsole" style="width: 20px">
-            <el-popover
-              slot="label"
-              placement="bottom"
-              width="200"
-              trigger="hover"
-             >
-              <div>
-                <div  @click="assetShowChange">Asset</div>
-                <div @click="customShow=true">Custom</div>
-              </div>
-              <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
-            </el-popover>
-          </el-tab-pane>
-        </el-tabs>
-        <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right:70px;'></i>
-        <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right:38px;' v-if="!isFullScreen"></i>
-        <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right:38px;' v-else></i>
-        <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right:8px;'></i>
-        <!--
-        <i style='right:103px;' @click="minScreen" class="nz-icon nz-icon-minus console-title-icon"></i>
-        <i style='right:70px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
-        <i style='right:38px;' class="el-icon-copy-document console-title-icon" ></i>
-        <i style='right:8px;' @click="closeConsole" class="nz-icon nz-icon-close console-title-icon"></i>
-        -->
-        <!--nz-icon-setting  nz-icon nz-icon-minus  el-icon-full-screen  el-icon-copy-document-->
-      </div>
-
-      <div >
-        <el-dialog :modal-append-to-body='false' :show-close="true" :title="uploadBox.title" :visible.sync="uploadBox.showUpload" @close="closeDialog" class="nz-dialog" width="500px" >
-          <div >
-            <div class="upload-body">
-
-              <el-row >
-                <el-col :span="24">
-                  <el-upload :auto-upload="false" :file-list="uploadFileList"
-                             :on-change="handleChange" action=""
-                             class="upload-demo"
-                             drag
-                             ref="uploadFile" >
-                    <i class="nz-icon nz-icon-upload"></i>
-                    <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-                    <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-                      <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>
-                    </button>-->
-                  </el-upload>
-                </el-col>
-              </el-row>
-              <el-row style="margin-top: 20px;">
-                <el-col :span="3" style="text-align:center;line-height: 24px;">
-                  <label>{{$t('webshell.filePath')}}</label>
-                </el-col>
-                <el-col :span="21">
-                  <el-input size="mini" v-model="uploadFile.path"></el-input>
-                </el-col>
-              </el-row>
+        </el-tab-pane>
+        <el-tab-pane key="add" name="addConsole" style="width: 20px">
+          <el-popover
+            slot="label"
+            placement="bottom-start"
+            width="150"
+            trigger="hover"
+            :popper-class="'popover-webshell'"
+          >
+            <div>
+              <div class="popover-webshell-item"  @click="assetShowChange"><i class="nz-icon nz-icon-menu-assets" />Select asset</div>
+              <div  class="popover-webshell-item"  @click="customShow=true"><i class="nz-icon nz-icon-edit" />Custom connect</div>
             </div>
-            <div class="footer" slot="footer">
-              <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
-                <button  @click="upload"  class="el-button el-button--default el-button--small">
-                  <span>{{$t('webshell.uploadButtonTitle')}}</span>
-                </button>
-                <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
-                  <span>{{$t('overall.cancel')}}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </el-dialog>
-        <el-dialog :modal-append-to-body='false' :show-close="true" :title="downloadBox.title" :visible.sync="downloadBox.showDownload" @close="closeDownloadDialog" class="nz-dialog" width="500px" >
-          <div>
-            <div class="upload-body">
-              <el-row style="margin-top: 20px;">
-                <el-col :span="3" style="text-align:center;line-height: 24px;">
-                  <label>{{$t('webshell.filePath')}}</label>
-                </el-col>
-                <el-col :span="21">
-                  <el-input size="mini" v-model="downloadFile.path"></el-input>
-                </el-col>
-              </el-row>
-            </div>
-            <div class="footer" slot="footer">
-              <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
-                <button @click="download"  class="el-button el-button--default el-button--small">
-                  <span>{{$t('webshell.downloadButtonTitle')}}</span>
-                </button>
-                <button  @click="closeDownloadDialog"  class="el-button el-button--default el-button--small">
-                  <span>{{$t('overall.cancel')}}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </el-dialog>
-        <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="closeConfirmShow" @close="cancleConfirm" class="nz-dialog" width="500px" >
-          <div >
-            <div class="el-message-box__content">
-              <div class="el-message-box__container">
-                <div class="el-message-box__status el-icon-warning">
-                </div>
-                <div class="el-message-box__message">
-                  <p>{{$t('webshell.closeTip')}}</p>
-                </div>
-              </div>
-            </div>
-            <div class="footer" slot="footer">
-              <div class="el-message-box__btns" style="text-align: unset; padding-left: 50px;">
-                <el-checkbox v-model="closeRemember">{{$t('webshell.remember')}}</el-checkbox>
-                <button @click="closeShellWindow" class="el-button el-button--default el-button--small el-button--primary float-right" type="button">
-                  <span>{{$t('tip.yes')}}</span>
-                </button>
-                <button @click="cancleConfirm" class="el-button el-button--default el-button--small float-right" type="button">
-                  <span>{{$t('tip.no')}}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </el-dialog>
-        <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="assetShow=false" class="nz-dialog" width="620px" >
-          <div >
-            <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
-              <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
-                <v-selectpage
-                  style="flex: 1"
-                  :data="assetData"
-                  :tb-columns="columns"
-                  key-field="id"
-                  show-field="manageIp"
-                  search-field="manageIp"
-                  v-model="assetContent.assetId"
-                  size="small"
-                  :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
-                  id="box-input-asset-id"
-                  :result-format="resultFormat"></v-selectpage>
-                <button @click="connect" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">Connect</button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-dialog>
-        <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="customShow=false" class="nz-dialog" width="620px" >
-          <div >
-            <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
-              <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
-                <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
-                  <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authType")' prop="authType">
-                <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" placeholder="" size="small" id="webshell-box-input-protocol">
-                  <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.host")' prop="host">
-                <el-input v-model="customConnect.host" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.port")' prop="host">
-                <el-input v-model="customConnect.port" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
-                <el-input v-model="customConnect.authUsername" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authPin")' prop="authPin">
-                <el-input v-model="customConnect.authPin" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authUserTip")' prop="authUserTip">
-                <el-input v-model="customConnect.authUserTip" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authPinTip")' prop="authPinTip">
-                <el-input v-model="customConnect.authPinTip" size="small"/>
-              </el-form-item>
-              <el-form-item :label='$t("webshell.authPriKey")' prop="authPriKey">
-                <el-input v-model="customConnect.authPriKey" size="small"/>
-              </el-form-item>
-              <div class="right-box__footer">
-                <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light">
-                  <span>{{$t('overall.cancel')}}</span>
-                </button>
-                <button id="asset-edit-save" :disabled="prevent_opt.save" class="footer__btn" @click="connect">
-                  <span>Connect</span>
-                </button>
-              </div>
-            </el-form>
-          </div>
-        </el-dialog>
-      </div>
+            <span slot="reference" style="padding:8px;font-size:20px;font-weight:bold;">+</span>
+          </el-popover>
+        </el-tab-pane>
+      </el-tabs>
+      <i @click="minScreen" class="nz-icon nz-icon-minus console-title-icon" style='right:70px;'></i>
+      <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right:38px;' v-if="!isFullScreen"></i>
+      <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right:38px;' v-else></i>
+      <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right:8px;'></i>
+      <!--
+      <i style='right:103px;' @click="minScreen" class="nz-icon nz-icon-minus console-title-icon"></i>
+      <i style='right:70px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
+      <i style='right:38px;' class="el-icon-copy-document console-title-icon" ></i>
+      <i style='right:8px;' @click="closeConsole" class="nz-icon nz-icon-close console-title-icon"></i>
+      -->
+      <!--nz-icon-setting  nz-icon nz-icon-minus  el-icon-full-screen  el-icon-copy-document-->
     </div>
+
+    <div >
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="uploadBox.title" :visible.sync="uploadBox.showUpload" @close="closeDialog" class="nz-dialog" width="500px" >
+        <div >
+          <div class="upload-body">
+
+            <el-row >
+              <el-col :span="24">
+                <el-upload :auto-upload="false" :file-list="uploadFileList"
+                           :on-change="handleChange" action=""
+                           class="upload-demo"
+                           drag
+                           ref="uploadFile" >
+                  <i class="nz-icon nz-icon-upload"></i>
+                  <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+                  <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
+                    <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>
+                  </button>-->
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 20px;">
+              <el-col :span="3" style="text-align:center;line-height: 24px;">
+                <label>{{$t('webshell.filePath')}}</label>
+              </el-col>
+              <el-col :span="21">
+                <el-input size="mini" v-model="uploadFile.path"></el-input>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="footer" slot="footer">
+            <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
+              <button  @click="upload"  class="el-button el-button--default el-button--small">
+                <span>{{$t('webshell.uploadButtonTitle')}}</span>
+              </button>
+              <button @click="closeDialog"  class="el-button el-button--default el-button--small" >
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="downloadBox.title" :visible.sync="downloadBox.showDownload" @close="closeDownloadDialog" class="nz-dialog" width="500px" >
+        <div>
+          <div class="upload-body">
+            <el-row style="margin-top: 20px;">
+              <el-col :span="3" style="text-align:center;line-height: 24px;">
+                <label>{{$t('webshell.filePath')}}</label>
+              </el-col>
+              <el-col :span="21">
+                <el-input size="mini" v-model="downloadFile.path"></el-input>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="footer" slot="footer">
+            <div class="el-message-box__btns" style="text-align: right;margin-top: 20px;">
+              <button @click="download"  class="el-button el-button--default el-button--small">
+                <span>{{$t('webshell.downloadButtonTitle')}}</span>
+              </button>
+              <button  @click="closeDownloadDialog"  class="el-button el-button--default el-button--small">
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="closeConfirmShow" @close="cancleConfirm" class="nz-dialog" width="500px" >
+        <div >
+          <div class="el-message-box__content">
+            <div class="el-message-box__container">
+              <div class="el-message-box__status el-icon-warning">
+              </div>
+              <div class="el-message-box__message">
+                <p>{{$t('webshell.closeTip')}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="footer" slot="footer">
+            <div class="el-message-box__btns" style="text-align: unset; padding-left: 50px;">
+              <el-checkbox v-model="closeRemember">{{$t('webshell.remember')}}</el-checkbox>
+              <button @click="closeShellWindow" class="el-button el-button--default el-button--small el-button--primary float-right" type="button">
+                <span>{{$t('tip.yes')}}</span>
+              </button>
+              <button @click="cancleConfirm" class="el-button el-button--default el-button--small float-right" type="button">
+                <span>{{$t('tip.no')}}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </el-dialog>
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="assetShow=false" class="nz-dialog" width="620px" >
+        <div >
+          <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
+            <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
+              <v-selectpage
+                style="flex: 1"
+                :data="assetData"
+                :tb-columns="columns"
+                key-field="id"
+                show-field="manageIp"
+                search-field="manageIp"
+                v-model="assetContent.assetId"
+                size="small"
+                :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
+                id="box-input-asset-id"
+                :result-format="resultFormat"></v-selectpage>
+              <button @click.prevent="connect" type="button" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">Connect</button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-dialog>
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="customShow=false" class="nz-dialog" width="620px" >
+        <div >
+          <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
+            <el-form-item :label='$t("webshell.protocol")' prop="authProtocol" @change="protocolChange">
+              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
+                <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange">
+              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" placeholder="" size="small" id="webshell-box-input-protocol">
+                <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label='$t("webshell.host")' prop="host">
+              <el-input v-model="customConnect.host" size="small"/>
+            </el-form-item>
+            <el-form-item :label='$t("webshell.port")' prop="host">
+              <el-input v-model="customConnect.port" size="small"/>
+            </el-form-item>
+            <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
+              <el-input v-model="customConnect.authUsername" size="small"/>
+            </el-form-item>
+            <el-form-item :label='$t("webshell.authPin")' prop="authPin">
+              <el-input v-model="customConnect.authPin" size="small"/>
+            </el-form-item>
+            <el-form-item
+              v-if="customConnect.authProtocol === 2"
+              :label='$t("webshell.authUserTip")'
+              prop="authUserTip"
+              :rules="[
+                  { required: customConnect.authProtocol ===2, message:$t('validate.required'), trigger: 'change'},
+                ]">
+              <el-input v-model="customConnect.authUserTip" size="small"/>
+            </el-form-item>
+            <el-form-item
+              v-if="customConnect.authProtocol === 2"
+              :label='$t("webshell.authPinTip")'
+              prop="authPinTip"
+              :rules="[
+                  { required: customConnect.authProtocol ===2, message:$t('validate.required'), trigger: 'change'},
+                ]"
+            >
+              <el-input v-model="customConnect.authPinTip" size="small"/>
+            </el-form-item>
+            <el-form-item
+              v-if="customConnect.authType === 2"
+              :label='$t("webshell.authPriKey")'
+              prop="authPriKey"
+              :rules="[
+                  { required: customConnect.authType ===2, message:$t('validate.required'), trigger: 'change'},
+                ]"
+            >
+              <el-input v-model="customConnect.authPriKey" size="small"/>
+            </el-form-item>
+            <div class="right-box__footer">
+              <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light" type="button">
+                <span>{{$t('overall.cancel')}}</span>
+              </button>
+              <button id="asset-edit-save" :disabled="prevent_opt.save" class="footer__btn" @click.prevent="connect" type="button">
+                <span>Connect</span>
+              </button>
+            </div>
+          </el-form>
+        </div>
+      </el-dialog>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -378,7 +399,7 @@ export default {
         ],
         authPin: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
-        ],
+        ]
         // authUserTip: [
         //   { validator: this.authUserTipValid, trigger: 'change' }
         // ],
@@ -794,7 +815,6 @@ export default {
       })
     },
     resultFormat (resp) {
-      console.log(resp)
       if (resp && resp.data) return resp.data.values.gridResult
     },
     assetShowChange () {
@@ -811,12 +831,10 @@ export default {
     connect () {
       this.prevent_opt.save = true
       if (this.assetShow) {
-        console.log(this.assetContent)
         this.$refs.assetConnect.validate((valid) => {
           if (valid) {
             // this.show(id, host, accountId, port)
             const asset = this.assetData.find(item => item.id == this.assetContent.assetId)
-            console.log(asset)
             this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
             this.assetShow = false
             this.prevent_opt.save = false
@@ -832,14 +850,16 @@ export default {
         })
       }
     },
-    authUserTipValid () {
-
+    protocolChange () {
+      if (this.customConnect.authProtocol === 1) {
+        this.customConnect.authUserTip = ''
+        this.customConnect.authPinTip = ''
+      }
     },
-    authPinTipValid () {
-
-    },
-    authPriKeyValid () {
-
+    authTypeChange () {
+      if (this.customConnect.authType === 1) {
+        this.customConnect.authPriKey = ''
+      }
     }
   },
   watch: {
@@ -907,5 +927,31 @@ export default {
   }
   /deep/ .el-select--small{
     width: 100%;
+  }
+</style>
+<style lang="scss">
+  .popover-webshell{
+    margin-top: 0 !important;
+   .popover-webshell-item{
+     padding: 5px;
+     font-family: Roboto-Regular;
+     font-size: 14px;
+     color: #666666;
+     font-weight: 400;
+     .nz-icon{
+       margin-right: 5px;
+       font-size: 16px;
+     }
+   }
+    .popover-webshell-item:hover{
+      background: #F6F6F6;
+      font-family: Roboto-Regular;
+      font-size: 14px;
+      color: #FA901C;
+      font-weight: 400;
+    }
+    .popper__arrow{
+      display: none;
+    }
   }
 </style>

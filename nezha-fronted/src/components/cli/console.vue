@@ -195,7 +195,7 @@ export default {
       this.term.open(terminalContainer)
       this.term.focus()
       const token = sessionStorage.getItem('nz-token')
-      let baseUrl = this.$axios.defaults.baseURL
+      let baseUrl = JSON.parse(JSON.stringify(this.$axios.defaults.baseURL))
       if (baseUrl.startsWith('/')) {
         baseUrl = 'ws://' + window.location.host + baseUrl
       } else {
