@@ -6,7 +6,7 @@
       <div class="main-modal"></div>
       <div class="main-container">
         <div v-show="bottomBox.mainResizeShow" class="top-tools">
-          <div class="top-tool-left" style="width: 300px">
+          <div class="top-tool-left" style="min-width: 300px">
             <slot name="top-tool-left"></slot>
           </div>
           <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">

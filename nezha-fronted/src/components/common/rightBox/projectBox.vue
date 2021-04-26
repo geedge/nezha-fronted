@@ -5,14 +5,9 @@
       <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") + "  ID：" + editProject.id : $t("overall.createProject")}}</div>
       <!-- end--标题-->
 
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns right-box-form-delete">
-        <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="project-del" type="button" v-has="'project_delete'" v-if="project.id">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
+      <div class="header__operation">
+        <span v-cancel="{obj: editProject, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
-      <!-- end--顶部按钮-->
 
     </div>
     <div class="right-box-form-box right-box__container">

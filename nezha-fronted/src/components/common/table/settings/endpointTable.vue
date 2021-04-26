@@ -66,7 +66,22 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-          {{scope.row[item.prop]}}
+          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]<2">
+            <div>
+              <div v-html="suspendedStr(scope.row[item.prop])"></div>
+            </div>
+            <div slot="reference" style="width: 100px">
+              <div v-if="scope.row[item.prop]===0">
+                <div class="active-icon red inline-block"></div> down
+              </div>
+              <div v-else-if="scope.row[item.prop]===1">
+                <div class="active-icon green inline-block"></div> up
+              </div>
+              <div v-else>
+                <div class="active-icon gray inline-block"></div> suspended
+              </div>
+            </div>
+          </el-popover>
         </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
       </template>
@@ -157,6 +172,29 @@ export default {
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
       this.$message.success(this.$t('overall.copySuccess'))
+    },
+    suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
+      const arr = status.toString(2).split('')
+      while (arr.length < 5) {
+        arr.unshift('0')
+      }
+      arr.pop()
+      let str = ''
+      arr.forEach((item, index) => {
+        if (index === 0) {
+          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+        }
+        if (index === 1) {
+          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+        }
+        if (index === 2) {
+          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+        }
+        if (index === 3) {
+          str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+        }
+      })
+      return str
     }
   },
   computed: {}
@@ -189,6 +227,9 @@ export default {
   }
   .endpoint-num, .alert-num{
     cursor: pointer;
+  }
+  .inline-block{
+    display: inline-block;
   }
 </style>
 <style>

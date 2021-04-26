@@ -55,6 +55,7 @@ Vue.prototype.$chartResizeTool = chartResizeTool
 Vue.prototype.$tableSet = tableSet
 Vue.prototype.$tableHeight = { // 列表页表格的高度
   normal: 'calc(100% - 48px)', // 常规高度，特例在下方定义
+  search: 'calc(100% - 240px)', // 常规高度，特例在下方定义
   openSubList: { // 打开二级列表后的高度
     mainList: 'calc(100% - 60px)',
     subList: 'calc(100% - 38px)',

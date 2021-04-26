@@ -169,10 +169,13 @@ export default {
       }
     },
     getPanelData () { // 获取panel数据
-      this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
-        if (response.code === 200) {
-          this.panelData = response.data.list
-        }
+      return new Promise((resolve, reject) => {
+        this.$get('visual/panel?pageNo=1&pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.panelData = response.data.list
+            resolve()
+          }
+        })
       })
     },
     handlerTableData (results) {
@@ -462,27 +465,29 @@ export default {
       this.graphShow = false
     },
     saveChart () { // 新增chart
-      const chart = {
-        title: '',
-        type: 'line',
-        span: 12,
-        height: '400',
-        unit: this.chartUnit,
-        param: {
-          url: '',
-          threshold: ''
-        },
-        elements: [],
-        panel: '',
-        sync: 0
-      }
-      for (let i = 0; i < this.batchDeleteObjs.length; i++) {
-        if (this.batchDeleteObjs[i] && this.batchDeleteObjs[i].element !== '') {
-          chart.elements.push({ chartId: '', expression: this.batchDeleteObjs[i].element, type: 'expert' })
+      this.getPanelData().then(()=>{
+        const chart = {
+          title: '',
+          type: 'line',
+          span: 12,
+          height: '400',
+          unit: this.chartUnit,
+          param: {
+            url: '',
+            threshold: ''
+          },
+          elements: [],
+          panel: '',
+          sync: 0
         }
-      }
-      this.chart = chart
-      this.rightBox.show = true
+        for (let i = 0; i < this.batchDeleteObjs.length; i++) {
+          if (this.batchDeleteObjs[i] && this.batchDeleteObjs[i].element !== '') {
+            chart.elements.push({ chartId: '', expression: this.batchDeleteObjs[i].element, type: 'expert' })
+          }
+        }
+        this.chart = chart
+        this.rightBox.show = true
+      })
     },
     createSuccess (type, response, param, panel) {
       this.$confirm(this.$t('dashboard.metric.goPanelTip'), this.$t('tip.saveSuccess'), {
@@ -505,7 +510,7 @@ export default {
   computed: {
   },
   created () {
-    this.getPanelData()
+    // this.getPanelData()
   }
 }
 </script>

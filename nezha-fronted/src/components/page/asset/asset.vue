@@ -170,7 +170,7 @@ export default {
           disabled: false
         }, {
           id: 23,
-          name: this.$t('asset.tableTitle.cabinet'),
+          name: this.$t('asset.cabinet'),
           type: 'input',
           label: 'cabinetName',
           disabled: false

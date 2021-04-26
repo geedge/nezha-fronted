@@ -58,17 +58,13 @@
 </template>
 
 <script>
-import exportXLSX from '@/components/common/exportXLSX'
 import bus from '@/libs/bus'
 import topologyL5 from '@/components/common/project/topologyL5'
-import deleteButton from '@/components/common/deleteButton'
 
 export default {
   name: 'project2',
   components: {
     topologyL5,
-    'export-excel': exportXLSX,
-    'delete-button': deleteButton
   },
   data () {
     return {
@@ -624,7 +620,6 @@ export default {
       this.endpointPageObj.pageSize = pageSize
     }
     this.getUserData()
-    this.getProjectList()
   },
   mounted () {
     // 初始化表头

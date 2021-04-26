@@ -91,6 +91,7 @@
               </button>
             </template>
           </export-excel>
+          <button id="chart-temp-add" class="top-tool-btn margin-l-10" type="button" @click="addChartByTemp"><i class='nz-icon nz-icon-lock'></i></button>
           <button id="panel-lock" class="top-tool-btn margin-l-10" type="button" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
         </div>
       </template>
@@ -108,6 +109,9 @@
       <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>
     </transition>
     <transition name="right-box">
+      <chart-temp-box :obj="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess" v-if="rightBox.chartTemp.show"></chart-temp-box>
+    </transition>
+    <transition name="right-box">
       <panel-box v-if="closePanelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
     </transition>
   </div>
@@ -121,6 +125,7 @@ import pickTime from '../../common/pickTime'
 import exportXLSX from '../../common/exportXLSX'
 import selectPanel from '../../common/popBox/selectPanel'
 import panelBox from '@/components/common/rightBox/panelBox'
+import chartTempBox from '@/components/common/rightBox/chartTempBox'
 
 export default {
   name: 'panel',
@@ -131,6 +136,7 @@ export default {
       visible: false,
       rightBox: { // 面板弹出框相关
         chart: { show: false },
+        chartTemp: { show: false },
         panel: { show: false }
       },
       tableHover: false,
@@ -165,6 +171,12 @@ export default {
         pageNo: 1,
         pageSize: -1, // 此处获取所有数据，所以设置一个较大的值
         total: 0
+      },
+      blankChartTemp: {
+        varType: 1,
+        pid: '',
+        panelId: '',
+        varIds: []
       },
       chartsData: [], // 中间部分图表相关数据
       panelData: [],
@@ -204,7 +216,8 @@ export default {
     'pick-time': pickTime,
     'export-excel': exportXLSX,
     selectPanel,
-    'panel-box': panelBox
+    'panel-box': panelBox,
+    chartTempBox
   },
   methods: {
     // 刷新
@@ -290,6 +303,11 @@ export default {
       this.chart.panelName = this.showPanel.name
       this.rightBox.chart.show = true
     },
+    addChartByTemp () {
+      this.chart = Object.assign({},this.blankChartTemp)
+      this.chart.panelId = this.showPanel.id
+      this.rightBox.chartTemp.show = true
+    },
     addGroupItem (groupId) {
       this.chart = this.newChart()
       this.chart.groupId = groupId
@@ -313,6 +331,12 @@ export default {
     },
     closeChartBox (refresh) {
       this.rightBox.chart.show = false
+      /* if (refresh) {
+
+      } */
+    },
+    closeChartTempBox () {
+      this.rightBox.chartTemp.show = false
       /* if (refresh) {
 
       } */

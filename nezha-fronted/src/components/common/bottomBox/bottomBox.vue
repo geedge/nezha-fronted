@@ -51,6 +51,8 @@
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
         <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.endpoint.endpointTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <!--chartTemp的Tab-->
+        <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.chartTemp.chartTempTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
       </div>
     </div>
   </div>
@@ -70,7 +72,7 @@ import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
 import terminalLogCMDTab from './tabs/terminalLogCMDTab'
 import operationLogTab from './tabs/operationLogTab'
 import terminalLogTab from './tabs/terminalLogTab'
-import assetTab from "@/components/common/bottomBox/tabs/assetTab";
+import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 
 export default {
@@ -120,7 +122,7 @@ export default {
         },
         module: {
           moduleTabTitle: [
-            { prop: 'endpoint', name: this.$t('asset.tableTitle.endpoint') },
+            { prop: 'endpoint', name: this.$t('asset.endpoint') },
             { prop: 'moduleAlertMessage', name: 'Alerts' },
             { prop: 'panel', name: 'Detail' }
           ]
@@ -132,12 +134,17 @@ export default {
             { prop: 'endpointAlertMessage', name: 'Alerts' }
           ]
         },
+        chartTemp: {
+          chartTempTabTitle: [
+            { prop: 'panel', name: 'Template preview' }
+          ]
+        },
         dc: {
           cabinet: [
             { prop: 'asset', name: this.$t('asset.assets'), active: false },
             { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true }
           ],
-          asset:[
+          asset: [
             { prop: 'asset', name: this.$t('asset.assets'), active: true },
             { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false }
           ]

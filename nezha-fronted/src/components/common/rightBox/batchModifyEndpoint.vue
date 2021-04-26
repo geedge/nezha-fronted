@@ -4,9 +4,9 @@
       <!-- begin--标题-->
       <div class="right-box-title">{{$t("overall.batchEndpoint")}}</div>
       <!-- end--标题-->
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns"></div>
-      <!-- end--顶部按钮-->
+      <div class="header__operation">
+        <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
     </div>
 
     <!-- begin--表单-->

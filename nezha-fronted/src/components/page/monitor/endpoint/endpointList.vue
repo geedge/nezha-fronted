@@ -9,6 +9,7 @@
       :from="fromRoute.endpoint"
       :layout="['searchInput', 'elementSet']"
       :hasSearch="true"
+      @search="search"
       :search-msg="searchMsg">
       <template v-slot:top-tool-right>
         <export-excel
@@ -44,7 +45,7 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="searchTableHeight"
           :table-data="tableData"
           :tableId="tableId"
           @del="del"
@@ -125,6 +126,26 @@ export default {
           name: 'endpoint id',
           type: 'input',
           label: 'id',
+          disabled: false
+        }, {
+          id: 14,
+          name: this.$t('asset.asset'),
+          type: 'query',
+          label: 'query',
+          disabled: false
+        },{
+          id: 34,
+          name: this.$t('project.project.project'),
+          // name: this.$t('asset.asset'),
+          type: 'input',
+          label: 'projectName',
+          disabled: false
+        }, {
+          id: 35,
+          name: this.$t('project.module.module'),
+          // name: this.$t('asset.asset'),
+          type: 'input',
+          label: 'moduleName',
           disabled: false
         }]
       },
@@ -222,17 +243,23 @@ export default {
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      const params = {
+        ...this.searchLabel,
+        ...this.searchCheckBox
+      }
       if (this.searchLabel.projectIds) {
         localStorage.setItem('endpointProjectId', this.searchLabel.projectIds)
+        if (params.projectIds) {
+          params.projectIds += ',' + this.searchLabel.projectIds
+        } else {
+          params.projectIds = this.searchLabel.projectIds
+        }
       } else {
         localStorage.removeItem('endpointProjectId')
       }
-      const params = {
-        ...this.searchLabel,
-        ...this.titleSearch
-      }
+      console.log()
       this.tools.loading = true
-      this.$get(this.url, { ...params, ...this.searchCheckBox }).then(response => {
+      this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {

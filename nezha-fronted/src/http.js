@@ -28,7 +28,7 @@ export function get (url, params) {
     axios.get(url, {
       params: params
     }).then(response => {
-      resolve(response.data)
+      resolve(response.data, response)
     }).catch(err => {
       if (err.response) {
         resolve(err.response.data)
@@ -42,7 +42,7 @@ export function get (url, params) {
 export function post (url, params, headers) {
   return new Promise(resolve => {
     axios.post(url, params, { headers: headers }).then(response => {
-      resolve(response.data)
+      resolve(response.data, response)
     }).catch(err => {
       if (err.response) {
         resolve(err.response.data)
@@ -56,7 +56,7 @@ export function post (url, params, headers) {
 export function put (url, params, headers) {
   return new Promise((resolve) => {
     axios.put(url, params, { headers: headers }).then(response => {
-      resolve(response.data)
+      resolve(response.data, response)
     }).catch(err => {
       if (err.response) {
         resolve(err.response.data)
@@ -70,7 +70,7 @@ export function put (url, params, headers) {
 export function del (url, params) {
   return new Promise((resolve) => {
     axios.delete(url, params).then(response => {
-      resolve(response.data)
+      resolve(response.data, response)
     }).catch(err => {
       if (err.response) {
         resolve(err.response.data)

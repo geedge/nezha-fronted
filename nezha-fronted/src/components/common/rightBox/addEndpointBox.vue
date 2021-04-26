@@ -4,9 +4,9 @@
       <!-- begin--标题-->
       <div class="right-box-title">{{$t("overall.createEndpoint")}}</div>
       <!-- end--标题-->
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns"></div>
-      <!-- end--顶部按钮-->
+      <div class="header__operation">
+        <span v-cancel="{obj: object, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
     </div>
 
     <!-- begin--表单-->
@@ -310,50 +310,50 @@ export default {
       assetListHalf: false,
       assetTableTitle: [
         {
-          label: this.$t('asset.tableTitle.name'),
+          label: this.$t('asset.name'),
           prop: 'name',
           show: false,
           allowed: true,
           minWidth: '200'
         },
         {
-          label: this.$t('asset.tableTitle.sn'),
+          label: this.$t('asset.sn'),
           prop: 'sn',
           show: true,
           minWidth: '200'
         },
         {
-          label: this.$t('asset.tableTitle.manageIp'),
+          label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
           minWidth: '200'
         }, {
-          label: this.$t('asset.tableTitle.brand'),
+          label: this.$t('asset.brand'),
           prop: 'brand',
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.tableTitle.model'),
+          label: this.$t('asset.model'),
           prop: 'model',
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.tableTitle.dc'),
+          label: this.$t('asset.dc'),
           prop: 'dc',
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.tableTitle.cabinet'),
+          label: this.$t('asset.cabinet'),
           prop: 'cabinet',
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.tableTitle.type'),
+          label: this.$t('asset.type'),
           prop: 'type',
           show: true,
           minWidth: '100'
         }, {
-          label: this.$t('asset.tableTitle.state'),
+          label: this.$t('asset.state'),
           prop: 'state',
           show: true,
           minWidth: '100'
@@ -371,63 +371,63 @@ export default {
         zheze_none: true,
         searchLabelList: [{
           id: 10,
-          name: this.$t('asset.tableTitle.sn'),
+          name: this.$t('asset.sn'),
           type: 'input',
           label: 'sn',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.name'),
+          name: this.$t('asset.name'),
           type: 'input',
           label: 'name',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.manageIp'),
+          name: this.$t('asset.manageIp'),
           type: 'input',
           label: 'manageIp',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.brand'),
+          name: this.$t('asset.brand'),
           type: 'input',
           label: 'brand',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.model'),
+          name: this.$t('asset.model'),
           type: 'input',
           label: 'model',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.dc'),
+          name: this.$t('asset.dc'),
           type: 'input',
           label: 'dc',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.cabinet'),
+          name: this.$t('asset.cabinet'),
           type: 'input',
           label: 'cabinet',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.type'),
+          name: this.$t('asset.type'),
           type: 'input',
           label: 'type',
           disabled: false
         },
         {
           id: 11,
-          name: this.$t('asset.tableTitle.state'),
+          name: this.$t('asset.state'),
           type: 'input',
           label: 'state',
           disabled: false

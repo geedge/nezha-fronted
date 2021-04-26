@@ -193,6 +193,7 @@
                        :search-msg="transfer.searchMsg"
                        :table-data="transfer.tableData"
                        style="margin-bottom: 20px;"
+                       :tableTitle="transfer.tableTitle"
                        @leftToRight="addAsset"
                        @rightToLeft="removeAsset">
             <template v-slot:title>Selected</template>
@@ -302,13 +303,25 @@ export default {
               disabled: false
             }, {
               id: 23,
-              name: this.$t('asset.tableTitle.cabinet'),
+              name: this.$t('asset.cabinet'),
               type: 'input',
               label: 'cabinetName',
               disabled: false
             }
           ]
         },
+        tableTitle: [
+          {
+            label: this.$t('overall.name'),
+            prop: 'name',
+            show: true
+          },
+          {
+            label: this.$t('asset.host'),
+            prop: 'host',
+            show: true
+          }
+        ],
         pageObj: {
           pageNo: 1,
           pageSize: 10,

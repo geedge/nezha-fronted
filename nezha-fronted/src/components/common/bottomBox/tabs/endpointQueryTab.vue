@@ -22,7 +22,7 @@
       <div class="sub-list-tabs">
         <div class="sub-list-tab-title">{{$t("project.endpoint.endpointId")}}: {{currentEndpoint ? currentEndpoint.id : ''}}</div><div
         class="sub-list-tab" @click="changeTab('panel')" id="endpoint-query-changepanel">{{$t("overall.detail")}}</div>
-        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("asset.tableTitle.alerts")}}</div>
+        <div class="sub-list-tab" @click="changeTab('alertMessage')" id="endpoint-query-alertMessage">{{$t("asset.alerts")}}</div>
         <div class="sub-list-tab sub-list-tab-active">{{$t("overall.query")}}</div>
       </div>
       <div class="top-tool-right">

@@ -44,7 +44,7 @@
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
           <span class="endpoint-num"  @click="showBottomBox('endpoint', scope.row)">
-             <i class="nz-icon nz-icon-endpoint" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
+             <i class="nz-icon nz-icon-overview-endpoint color969dea"/>
           {{scope.row[item.prop]}}
           </span>
         </template>
@@ -145,6 +145,9 @@ export default {
   }
   .color23BF9A{
     color: #23BF9A;
+  }
+  .color969dea{
+    color: #969dea;
   }
   .endpoint-num, .alert-num{
     cursor: pointer;
