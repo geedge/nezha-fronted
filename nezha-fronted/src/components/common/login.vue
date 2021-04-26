@@ -77,7 +77,8 @@ export default {
       if (this.loading) {
         return
       }
-      if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
+      // if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
+      if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {

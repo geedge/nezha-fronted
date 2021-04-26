@@ -1377,7 +1377,7 @@ export default {
   width: 32px;
   border: none;
   outline: none;
-  border-left: 1px solid #DEDEDE;
+  border-left: 1px solid $--primary-border-color;
   background-color: #F9F9F9;
 
   i {

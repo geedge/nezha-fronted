@@ -34,7 +34,7 @@
       ></element-set>
     </transition>
     <div class="sub-container">
-      <div class="nz-table2">
+      <div :class="targetTab === 'panel' ? 'bottom-panel' : 'nz-table2'">
         <slot></slot>
       </div>
       <div class="pagination-bottom">
@@ -175,6 +175,11 @@ export default {
 }
 .main-and-sub-transition {
   transition: .4s height;
+}
+
+.bottom-panel {
+  padding-top: 15px;
+  background-color: white;
 }
 
 .resize-modal {

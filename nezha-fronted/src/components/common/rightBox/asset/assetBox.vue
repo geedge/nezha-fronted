@@ -8,12 +8,12 @@
     </div>
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="assetEditForm" :model="editAsset" :rules="rules" label-position="top" label-width="120px">
+        <el-form ref="form" :model="editAsset" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
             <el-input v-model="editAsset.name" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('overall.type')" prop="typeId">
-            <select-asset-type id="asset-type" :asset-type-data="typeData" :show-type="editAsset.type" size="small"
+            <select-asset-type id="asset-type" :asset-type-data="options.typeOptions" :show-type="editAsset.type" size="small"
                                @selectAssetType="selectType">
               <template v-slot:trigger>
                 <el-input v-model="editAsset.type.name" :clearable="true" :readonly="true" placeholder="" size="small"></el-input>
@@ -27,12 +27,12 @@
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
               value-key="id">
-              <el-option v-for="p in parentAssetData" :key="p.id" :label="p.name" :value="p.id"></el-option>
+              <el-option v-for="p in options.parentAssetOptions" :key="p.id" :label="p.name" :value="p.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.state')" prop="stateId">
             <el-select v-model="editAsset.stateId" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="state in stateData" :key="state.id" :label="state.name" :value="state.id"></el-option>
+              <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.manageIp')" prop="manageIp">
@@ -47,18 +47,18 @@
           <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
             <el-cascader
               v-if="!vmLock"
-              v-model="brandAndModelData"
-              :options="brandData"
+              v-model="editAsset.brandAndModel"
               :placeholder="lockModelInputValue"
-              :props="modelCascProp"
-              popper-class="prevent-clickoutside"
+              :options="options.brandAndModelOptions"
+              :props="{ label: 'name', value: 'id' }"
+              popper-class="prevent-clickoutside limit-height"
               size="small"
               style="width: 100%;"
             ></el-cascader>
             <el-input v-else v-model="lockModelInputValue" disabled size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.location')" prop="location">
-            <location-cascader v-if="!vmLock" ref="locationCascader" :dc-option="dcData" :default-model-u-size="1" @change="setLocationData"></location-cascader>
+            <location-cascader v-if="!vmLock" ref="locationCascader" :dc-option="options.dcOptions" :default-model-u-size="1" @change="setLocationData"></location-cascader>
             <el-input v-else v-model="lockLocationInputValue" disabled size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.purchaseDate')" prop="purchaseDate">
@@ -80,7 +80,6 @@
                 <div class="form__labels-label">
                   <span>{{label.name}}</span>
                   <div>
-                    <el-checkbox v-model="label.action" :false-label="0" :label="$t('overall.delete')" :true-label="1" size="small" style="padding-right: 20px;"></el-checkbox>
                     <span @click="removeLabel(label)"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </div>
@@ -162,7 +161,7 @@
             <button class="form__create-btn" type="button" @click.stop><i class="nz-icon nz-icon-create-square"></i></button>
             <el-cascader
               v-if="labelCascShow"
-              :options="fieldGroupData"
+              :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
               popper-class="prevent-clickoutside"
@@ -218,7 +217,7 @@
             <div class="form__sub-title">SNMP</div>
             <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId">
               <el-select v-model="editAsset.snmpCredentialId" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-                <el-option v-for="snmp in snmpCredentialData" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
+                <el-option v-for="snmp in options.snmpCredentialOptions" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
             </el-form-item>
           </template>
@@ -250,24 +249,6 @@ export default {
   props: {
     obj: {
       type: Object
-    },
-    dcData: {
-      type: Array
-    },
-    brandData: {
-      type: Array
-    },
-    stateData: {
-      type: Array
-    },
-    typeData: {
-      type: Array
-    },
-    snmpCredentialData: {
-      type: Array
-    },
-    fieldGroupData: {
-      type: Array
     }
   },
   data () {
@@ -282,9 +263,18 @@ export default {
       lockModelInputValue: '', // model锁定时的显示内容
       lockLocationInputValue: '', // location锁定时显示的内容
 
-      cabinetData: [],
-      parentAssetData: [],
-      metaData: [], // 下拉选项列表
+      options: { // 下拉选项的option数据
+        cabinetOptions: [],
+        metaOptions: [],
+        dcOptions: [],
+        stateOptions: [],
+        snmpCredentialOptions: [],
+        brandAndModelOptions: [],
+        modelOptions: [],
+        fieldGroupOptions: [],
+        parentAssetOptions: [],
+        typeOptions: []
+      },
       labelCascShow: true, // 用来控制label的cascader的重新渲染
       rules: {
         name: [
@@ -306,6 +296,9 @@ export default {
         stateId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
+        brandAndModel: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
         dcId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
@@ -325,8 +318,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
-      brandAndModelData: [],
-      modelCascProp: {
+      /* modelCascProp: {
         lazy: true,
         value: 'id',
         label: 'name',
@@ -342,7 +334,7 @@ export default {
             }
           })
         }
-      },
+      }, */
       labelCascProp: {
         lazy: true,
         value: 'id',
@@ -356,7 +348,7 @@ export default {
                 leaf: level >= 1,
                 disabled: vm.editAsset.fields.some(a => a.id === item.id)
               }))
-              vm.metaData = meta
+              vm.options.metaOptions = meta
               resolve(meta)
             }
           })
@@ -370,6 +362,7 @@ export default {
       immediate: true,
       handler (n) {
         this.editAsset = JSON.parse(JSON.stringify(n))
+        this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
         this.editAsset.stateId = n.state ? n.state.id : ''
         this.editAsset.typeId = n.type ? n.type.id : ''
         this.$nextTick(() => {
@@ -400,11 +393,11 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n) {
+        if (n && n !== -1) {
           if (this.vmLock) {
-            if (this.parentAssetData.length === 0) {
+            if (this.options.parentAssetOptions.length === 0) {
               this.getParentAsset().then(res => {
-                const asset = this.parentAssetData.find(a => a.id === n)
+                const asset = this.options.parentAssetOptions.find(a => a.id === n)
                 if (asset) {
                   this.editAsset.brandId = asset.brand.id
                   this.editAsset.modelId = asset.model.id
@@ -418,7 +411,7 @@ export default {
                 }
               })
             } else {
-              const asset = this.parentAssetData.find(a => a.id === n)
+              const asset = this.options.parentAssetOptions.find(a => a.id === n)
               if (asset) {
                 this.editAsset.brandId = asset.brand.id
                 this.editAsset.modelId = asset.model.id
@@ -438,6 +431,12 @@ export default {
   },
   mounted () {
     this.getParentAsset()
+    this.getModelData()
+    this.getStateData()
+    this.getDcData()
+    this.getTypeTreeData()
+    this.getSnmpCredentialData()
+    this.getFieldGroupData()
   },
   methods: {
     clickOutside () {
@@ -482,7 +481,7 @@ export default {
       return new Promise(resolve => {
         this.$get(this.url, { pageSize: -1, vmh: 1 }).then(response => {
           if (response.code === 200) {
-            this.parentAssetData = response.data.list
+            this.options.parentAssetOptions = response.data.list
           }
           resolve()
         })
@@ -493,7 +492,7 @@ export default {
       this.editAsset.typeId = type.id ? type.id : ''
     },
     addLabel ([groupId, metaId]) {
-      const label = this.metaData.find(m => m.id === metaId)
+      const label = this.options.metaOptions.find(m => m.id === metaId)
       this.editAsset.fields.push({ ...label, value: this.blankLabelValue(label), action: 0 })
       this.labelCascShow = false
       this.$nextTick(() => {
@@ -509,20 +508,25 @@ export default {
       return new Promise(resolve => {
         this.$get('cabinet?dcId=' + id).then(response => {
           if (response.code === 200) {
-            this.cabinetData = response.data.list
-            for (let i = 0; i < this.cabinetData.length; i++) {
-              this.$set(this.cabinetData[i], 'children', this.dcData)
+            this.options.cabinetOptions = response.data.list
+            for (let i = 0; i < this.options.cabinetOptions.length; i++) {
+              this.$set(this.options.cabinetOptions[i], 'children', this.options.dcOptions)
             }
           }
-          resolve(this.cabinetData)
+          resolve(this.options.cabinetOptions)
         })
       })
     },
     save () {
-      if (this.prevent_opt.save) { return } ;
+      if (this.prevent_opt.save) { return }
       this.prevent_opt.save = true
 
-      this.$refs.assetEditForm.validate((valid) => {
+      if (this.editAsset.brandAndModel.length === 2) {
+        this.editAsset.brandId = parseInt(this.editAsset.brandAndModel[0])
+        this.editAsset.modelId = parseInt(this.editAsset.brandAndModel[1])
+      }
+
+      this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.editAsset.id) {
             this.$put(this.url, this.editAsset).then(res => {
@@ -549,6 +553,77 @@ export default {
           this.prevent_opt.save = false
           return false
         }
+      })
+    },
+
+    getStateData () {
+      return new Promise(resolve => {
+        this.$get('asset/stateConf?pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.options.stateOptions = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getDcData () {
+      return new Promise(resolve => {
+        this.$get('dc', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.dcData = response.data.list
+            this.options.dcOptions = response.data.list.map(d => { return { ...d, value: d.id } })
+          }
+          resolve()
+        })
+      })
+    },
+    getTypeTreeData () {
+      return new Promise(resolve => {
+        this.$get('asset/typeConf/tree').then(response => {
+          if (response.code === 200) {
+            this.options.typeOptions = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getSnmpCredentialData () {
+      return new Promise(resolve => {
+        this.$get('snmp/credential', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.options.snmpCredentialOptions = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getFieldGroupData () {
+      return new Promise(resolve => {
+        this.$get('asset/field/group', { pageSize: -1 }).then(response => {
+          if (response.code === 200) {
+            this.options.fieldGroupOptions = response.data.list
+          }
+          resolve()
+        })
+      })
+    },
+    getModelData () {
+      return new Promise(resolve => {
+        this.$get('asset/model?pageSize=-1').then(response => {
+          if (response.code === 200) {
+            this.options.modelOptions = response.data.list
+            const titleSearchData = {}
+            this.options.modelOptions.forEach(m => {
+              if (titleSearchData[m.brand.name]) {
+                titleSearchData[m.brand.name].children.push(m)
+              } else {
+                titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+              }
+            })
+            this.options.brandAndModelOptions = Object.keys(titleSearchData).map(b => titleSearchData[b])
+          }
+          resolve()
+        })
       })
     }
   }

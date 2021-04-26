@@ -49,10 +49,13 @@
   overflow-x: hidden;
   overflow-y: auto;
 
-  .el-input__inner {
+  .el-input__inner, .el-textarea__inner {
     padding: 0 10px;
     border-radius: $--primary-border-radius;
     border: 1px solid $--right-box-border-color;
+  }
+  .el-textarea__inner {
+    padding: 5px 20px 4px 15px;
   }
   .el-form {
     padding-top: 20px;
@@ -79,6 +82,8 @@
     }
 
     .form__sub-title {
+      display: flex;
+      justify-content: space-between;
       padding: 0 10px;
       margin-bottom: 20px;
       line-height: 32px;
@@ -186,4 +191,39 @@
 }
 .right-box-select-dropdown {
   width: 625px;
+}
+.limit-height {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.form-items--half-width-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .form-item--half-width {
+    width: calc(50% - 10px);
+
+    .el-select {
+      width: 100%;
+    }
+  }
+}
+.nz-icon-minus-position {
+  display: inline-flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  height: 100%;
+  transform: translateY(-50%);
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.form-item--end-with-btn { // 末尾留出btn宽度空间的form item
+
+}
+.el-form-item__content .el-autocomplete .el-input-group {
+  vertical-align: unset;
 }

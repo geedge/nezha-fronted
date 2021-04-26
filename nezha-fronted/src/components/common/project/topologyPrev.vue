@@ -2450,7 +2450,7 @@
 
   .el-dropdown-title {
     background: #FFFFFF;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     border-radius: 2px;
     width: 66px;
     height: 28px;
@@ -2607,7 +2607,7 @@
   .top-tool-btn{
     height: 32px;
     width: 32px;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     outline: none;
     border-radius: 2px;
     background-color: #F9F9F9;

@@ -48,8 +48,6 @@
 <template>
   <div class="list-width chart-group"  :id="'listContainer' + groupId" ref="listContainer"><!--v-drag-->
 
-    <span class="temp-dom"></span>
-
     <draggable v-model="dataList" :disabled="panelLock" :move="move" @end="end" @start="start"
                :scroll-sensitivity="150"
                :options="{

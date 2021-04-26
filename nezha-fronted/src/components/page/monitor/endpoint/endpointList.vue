@@ -81,7 +81,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
-import clickSearch from '@/components/common/clickSearch'
+import clickSearch from '@/components/common/labelFilter/clickSearch'
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发

@@ -37,6 +37,11 @@ $--button-gray-border-color: $--primary-border-color; // 灰色按钮边框色
 $--button-gray-hover-border-color: $--button-gray-border-color; // 灰色按钮hover边框色
 $--button-gray-active-border-color-tint-percent: 30%; // 灰色按钮在focus时边框色相对于主题色变浅的幅度
 
+$--danger-color: #DE5D3F; //全局警告色红色
+$--success-color: #23BF9A; //全局正常色绿色
+$--warning-color: var(--theme-color); //全局警告橙色
+$--suspended-color: #9e9c98; //全局停用色灰色
+
 :export {
   themeColor: $--theme-color
 }

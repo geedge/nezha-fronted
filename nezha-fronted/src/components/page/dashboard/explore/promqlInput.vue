@@ -60,7 +60,7 @@
             </el-col>
             <el-col
               :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
-              :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 120px)':'100%',height: '100%',}">
+              :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 160px)':'100%',height: '100%',}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                 <el-input v-model="expressionList[index]" @change="metricChange" @input="metricKeyDown"   type="textarea"
@@ -630,19 +630,20 @@ export default {
     width:100px;
     margin-left: 10px;
     margin-right: 10px;
-    height: 33px;
+    height: 32px;
     text-align: left;
     padding: 0 0 0 10px;
     font-weight: 400;
     line-height: 33px;
     background: #E7EAED;
+    border-radius: $--primary-border-radius;
     font-family: ArialMT;
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
   }
   .metric-selector-input-box{
-    width: calc(100% - 120px);
+    width: calc(100% - 160px);
   }
   .metric-null-input-box{
     width: 100%;

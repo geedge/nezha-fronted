@@ -21,7 +21,7 @@
         <!--机柜-->
         <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
         <!--告警信息-->
-        <alert-message-tab v-if="((from === fromRoute.rule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+        <alert-message-tab v-if="((from === fromRoute.alertRule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
         <!--asset页的endpoint列表-->
         <endpoint-tab v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
         <!--endpoint-query-->
@@ -42,9 +42,12 @@
         <!--user列表的两个日志-->
         <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
         <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
-
+        <!-- asset列表的3个 -->
+        <panel-tab-new v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <alertMessageTabNew v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+        <endpointTabNew v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <!--module列表的tab-->
-        <endpointTabNew v-if="from === fromRoute.module && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointTabNew>
+        <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <panel-tab-new v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
@@ -65,7 +68,6 @@ import alertMessageTabNew from './tabs/alertMessageTabNew'
 import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
-import panelTab from './tabs/panelTab'
 import panelTabNew from './tabs/panelTabNew'
 import terminalLogRecordTab from './tabs/terminalLogRecordTab'
 import terminalLogMonitorTab from './tabs/terminalLogMonitorTab'
@@ -81,7 +83,6 @@ export default {
     cabinetTab,
     alertMessageTab,
     endpointTab,
-    panelTab,
     terminalLogRecordTab,
     terminalLogMonitorTab,
     operationLogTab,
@@ -119,6 +120,23 @@ export default {
             { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
           ]
           // module tab
+        },
+        asset: {
+          panel: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoints', active: false }
+          ],
+          alertMessage: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
+            { prop: 'endpointTab', name: 'Endpoints', active: false }
+          ],
+          endpoint: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoints', active: true }
+          ]
         },
         module: {
           moduleTabTitle: [

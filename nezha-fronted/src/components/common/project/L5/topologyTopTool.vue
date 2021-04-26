@@ -204,7 +204,7 @@ export default {
   .top-tool-item{
     cursor: pointer;
     background: #FFFFFF;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     border-radius: 2px;
     padding: 8px 11px;
     line-height: 14px;

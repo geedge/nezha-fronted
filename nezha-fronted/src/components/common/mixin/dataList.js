@@ -127,8 +127,12 @@ export default {
       }
     },
     edit (u) {
-      this.object = JSON.parse(JSON.stringify(u))
-      this.rightBox.show = true
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = response.data
+          this.rightBox.show = true
+        }
+      })
     },
     esc () {
       this.rightBox.show = false

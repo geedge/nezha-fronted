@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   .chartBox {
     float:left;
-    padding: 0px 10px 10px 0;
+    padding: 0 0 10px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -44,17 +44,9 @@
     height: 5px;
     box-sizing: inherit;
   }
-
-  .temp-dom {
-    visibility: hidden;
-    font-size: 14px;
-    position: fixed;
-  }
 </style>
 <template>
   <div class="list-width"  id="listContainer" ref="listContainer"><!--v-drag-->
-
-    <span class="temp-dom"></span>
 
     <draggable v-model="dataList" :disabled="panelLock" :move="move" @end="end" @start="start"
                :scroll-sensitivity="150"
@@ -560,7 +552,7 @@ export default {
         from: params.from
       }
       // alert-rule单独处理
-      if (param.from == this.$CONSTANTS.fromRoute.alertRule) {
+      if (param.from == fromRoute.alertRule) {
         this.dataList = []
         this.dataList.push({
           id: -10,
@@ -609,7 +601,7 @@ export default {
         return
       }
       // endpoint单独处理
-      if (param.from == this.$CONSTANTS.fromRoute.endpoint) {
+      if (param.from == fromRoute.endpoint) {
         this.dataList = []
         // this.dataList.push({
         //   id: -8,
@@ -670,7 +662,7 @@ export default {
         })
         return
       }
-      if (param.from == this.$CONSTANTS.fromRoute.chartTemp) {
+      if (param.from == fromRoute.chartTemp) {
         this.dataList = this.panelDataList
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
@@ -730,12 +722,12 @@ export default {
               this.dataList.forEach((item, index) => {
                 this.setChartSize(item, index)// 设置该图表宽度
                 this.$set(item, 'from', params.from)
-                if (param.from == this.$CONSTANTS.fromRoute.asset) {
+                if (param.from == fromRoute.asset) {
                   if (item.type == 'assetInfo') {
                     this.$set(item, 'draggable', true)
                     this.$set(item, 'resizable', true)
                   }
-                } else if (param.from == this.$CONSTANTS.fromRoute.project) {
+                } else if (param.from == fromRoute.project) {
                   if (item.type == 'projectInfo') {
                     this.$set(item, 'draggable', true)
                     this.$set(item, 'resizable', true)
@@ -856,7 +848,7 @@ export default {
         return
       }
       if (chartItem.type === 'assetInfo') {
-        if (chartItem.from != this.$CONSTANTS.fromRoute.endpoint) {
+        if (chartItem.from != fromRoute.endpoint) {
           this.$set(chartItem, 'draggable', true)
           this.$set(chartItem, 'resizable', true)
         }

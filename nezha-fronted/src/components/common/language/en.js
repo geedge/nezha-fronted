@@ -274,7 +274,7 @@ const en = {
           null: 'None'
         },
         width: 'Width', // "宽"
-        high: 'High', // "高"
+        high: 'Height', // "高"
         metric: 'Metric', // "指标"
         option: 'Option',
         addMetric: 'Add metric', // "添加指标"

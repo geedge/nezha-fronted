@@ -1130,7 +1130,7 @@ export default {
   .add-endpoint{
     display: inline-block;
     background: #F9F9F9;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     border-radius: 2px;
     width: 28px;
     height: 28px;
@@ -1141,7 +1141,7 @@ export default {
   .top-tool-btn{
     height: 32px;
     width: 32px;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     outline: none;
     border-radius: 2px;
     background-color: #F9F9F9;

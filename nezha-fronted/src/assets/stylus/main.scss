@@ -274,7 +274,7 @@ li{
   //background-color: $btn-normal-background-color-hover;
 }
 .nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
-  background-color: #dedede;
+  background-color: $--primary-border-color;
 }
 
 .nz-btn.nz-btn-size-normal-new{
@@ -448,12 +448,12 @@ li{
 .el-textarea .el-input__count { /*防止字数限制提示信息遮挡内容和滚动条*/
   right: 20px;
 }
-.no-resize .el-textarea__inner {
+/*.no-resize .el-textarea__inner {
   padding: 5px 20px 5px 15px;
 }
 .el-textarea__inner {
   padding: 5px 60px 5px 15px;
-}
+}*/
 .el-radio__input .el-radio__inner:hover {
   border-color: $btn-normal-background-color-active-new;
 }
@@ -1697,23 +1697,6 @@ li{
   display: inline-block;
   margin-right: 5px;
 }
-.red {
-  //background-color: #d64f40 !important;
-  background-color: $danger-color !important;
-}
-.green {
-  //background-color:#50d050 !important;
-  background-color:$success-color !important;
-}
-.gray {
-  background-color: $suspended-color !important;
-}
-.dark-red {
-  background-color: #aa0000 !important;
-}
-.orange {
-  background-color: #ffa500 !important;
-}
 
 .clickable:hover{
   cursor:pointer;
@@ -1742,12 +1725,12 @@ li{
   line-height: 30px !important;
 }*/
 
-.el-textarea:not(.not-fixed-height) textarea {
+/*.el-textarea:not(.not-fixed-height) textarea {
   height: 140px !important;
 }
 .nz-message .el-textarea textarea {
   height: 70px !important;
-}
+}*/
 /*el-data-picker选中背景色*/
 .el-date-table td.current:not(.disabled) span {
   background-color: $global-text-color-active;
@@ -2124,9 +2107,6 @@ li{
 //  border-radius: 4px;
 //  padding: 7px 10px;
 //}
-/deep/ .el-input--mini .el-input__icon{
-  line-height: 24px;
-}
 .right-box-small-title{
   font-family: Roboto-Regular;
   font-size: 14px;
@@ -2151,23 +2131,6 @@ li{
   background-color: rgba(236,127,102,.1);
   border-radius: 2px;
   cursor: pointer;
-}
-.nz-icon-copy {
-  padding: 2px 6px;
-  color: $global-text-color-active;
-  background-color: #FDF5E9;
-  border-radius: 2px;
-  cursor: pointer;
-}
-.nz-icon-minus-position{
-  display: inline-flex;
-  flex-direction: column;
-  position: absolute;
-  right: -40px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 70px;
-  justify-content: space-around;
 }
 .right-box-form .half-form-item-other{
   display: inline-block;
@@ -2195,19 +2158,6 @@ li{
 .right-box  .right-box-form-minus-box .nz-icon-minus{
   color: #FA901C;
   cursor: pointer;
-}
-.right-box .right-box-form-delete .nz-btn-size-alien{
-  border: none;
-  border-radius: 0px 0 6px 6px;
-  padding-bottom: 8px;
-  padding-top: 3px;
-  height: 45px;
-}
-.right-box .right-box-form-delete .nz-btn-size-alien:hover{
-  background: #D8D7D7;
-}
-.right-box .right-box-form-delete .nz-icon-delete{
-
 }
 .nz-icon-caret-right{
   font-size: 12px;

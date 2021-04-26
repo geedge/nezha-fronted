@@ -41,8 +41,8 @@ export default {
           this.$emit('cli', row)
           break
         }
-        case 'copy': {
-          this.$emit('copy', row)
+        case 'duplicate': {
+          this.$emit('duplicate', row)
           break
         }
         default:
@@ -57,7 +57,6 @@ export default {
     },
     dragend () {
       this.$nextTick(() => {
-        console.info(1)
         this.$refs.dataTable.doLayout()
       })
     },

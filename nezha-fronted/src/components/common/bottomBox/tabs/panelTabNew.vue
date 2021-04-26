@@ -8,6 +8,24 @@
       class="full-width-height"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+      <template v-if="from === fromRoute.asset" v-slot:top-tool-right>
+        <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+        <export-excel
+          id="asset-list"
+          :params="searchLabel"
+          :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset-charts"
+          export-url="visual/panel/export"
+          import-url="visual/panel/import"
+          @afterImport="getTableData"
+        >
+          <template slot="optionZone">
+            <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="addChart">
+              <i class="nz-icon nz-icon-create-square"></i></button>
+          </template>
+        </export-excel>
+      </template>
       <template v-slot>
         <div class="panel">
           <!--图表-->
@@ -30,11 +48,13 @@
 </template>
 
 <script>
-import ChartBox from '../../../page/dashboard/chartBox'
-import ChartList from '../../../charts/chart-list'
+import chartBox from '../../../page/dashboard/chartBox'
+import chartList from '../../../charts/chart-list'
 import bus from '../../../../libs/bus'
+import exportXLSX from '@/components/common/exportXLSX'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
+import { fromRoute } from '@/components/common/js/constants'
 
 export default {
   name: 'panelTabNew',
@@ -47,6 +67,7 @@ export default {
   },
   data () {
     return {
+      fromRoute,
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
@@ -75,7 +96,9 @@ export default {
         },
         elements: [{ expression: '', legend: '', type: 'expert', id: '' }],
         panel: '',
-        sync: 0
+        sync: 0,
+        name: '',
+        remark: ''
       },
       pageObj: {
         pageNo: 1,
@@ -113,9 +136,10 @@ export default {
     }
   },
   components: {
-    'chart-box': ChartBox,
-    'chart-list': ChartList,
-    nzBottomDataList
+    chartBox,
+    chartList,
+    nzBottomDataList,
+    'export-excel': exportXLSX
   },
   methods: {
     // 刷新
@@ -221,9 +245,14 @@ export default {
       }
       this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
     },
+    getVarType (from) {
+      if (from === this.fromRoute.asset) {
+        return 1
+      }
+    },
     // 公用操作
     getTableData (linkId) {
-      if (this.from == this.$CONSTANTS.fromRoute.rule || this.from == this.$CONSTANTS.fromRoute.endpoint) {
+      if (this.from === this.fromRoute.alertRule || this.from === this.fromRoute.endpoint) {
         this.getData(this.filter)
       } else {
         if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
@@ -240,7 +269,7 @@ export default {
             this.getData(this.filter)
           }
         } else {
-          this.$get('panel', { type: this.from, link: linkId }).then(response => {
+          this.$get('visual/panel', { type: this.from, link: linkId }).then(response => {
             if (response.code === 200) {
               this.panelData = response.data.list
               if (this.panelData.length > 0) {
@@ -336,20 +365,20 @@ export default {
       this.$refs.queryPanel.focus()
     },
     syncChart: function () {
-      if (this.from == this.$CONSTANTS.fromRoute.asset || this.from == this.$CONSTANTS.fromRoute.model) {
+      if (this.from == this.fromRoute.asset || this.from == this.fromRoute.model) {
         this.$confirm(this.$t('tip.syncTip'), {
           confirmButtonText: this.$t('tip.yes'),
           cancelButtonText: this.$t('tip.no'),
           type: 'warning'
         }).then(() => {
           const param = {
-            modelId: this.from == this.$CONSTANTS.fromRoute.model ? this.obj.id : null,
-            assetId: this.from == this.$CONSTANTS.fromRoute.asset ? this.obj.id : null
+            modelId: this.from == this.fromRoute.model ? this.obj.id : null,
+            assetId: this.from == this.fromRoute.asset ? this.obj.id : null
           }
           this.$put('/model/syncChart', param).then(response => {
             if (response.code == 200) {
               this.$message({ duration: 1000, type: 'success', message: this.$t('tip.syncSuccess') })
-              if (this.from == this.$CONSTANTS.fromRoute.asset) {
+              if (this.from == this.fromRoute.asset) {
                 this.refresh()
               }
             } else {
@@ -478,7 +507,6 @@ export default {
 
   /* begin-chart list*/
   .table-list {
-    margin-top: 6px;
     overflow-y: auto;
     height: calc(100% - 56px);
   }

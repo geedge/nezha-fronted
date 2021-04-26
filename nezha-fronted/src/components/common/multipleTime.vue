@@ -69,7 +69,7 @@
   }
   .nz-icon-compare{
     background: #FFFFFF;
-    border: 1px solid #DEDEDE;
+    border: 1px solid $--primary-border-color;
     border-radius: 2px;
     padding: 6px 8px;
   }

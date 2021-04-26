@@ -46,3 +46,42 @@
 .el-checkbox__inner, .el-input__inner {
   border-color: rgba(0,0,0,0.15)
 }
+
+.nz-icon-copy {
+  padding: 0 4px;
+  color: $--theme-color;
+  background-color: #FDF5E9;
+  border-radius: $--primary-border-radius;
+  cursor: pointer;
+}
+
+.red {
+  color: $--danger-color !important;
+}
+.green {
+  color:$--success-color !important;
+}
+.gray {
+  color: $--suspended-color !important;
+}
+.dark-red {
+  color: #aa0000 !important;
+}
+.orange {
+  color: var(--theme-color) !important;
+}
+.red-bg {
+  background-color: $--danger-color !important;
+}
+.green-bg {
+  background-color:$--success-color !important;
+}
+.gray-bg {
+  background-color: $--suspended-color !important;
+}
+.dark-red-bg {
+  background-color: #aa0000 !important;
+}
+.orange-bg {
+  background-color: var(--theme-color) !important;
+}

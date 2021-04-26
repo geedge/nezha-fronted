@@ -30,7 +30,7 @@
         <delete-button id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot:search>
-        <click-search :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
+        <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
       </template>
       <template v-slot:default="slotProps">
         <asset-table
@@ -38,12 +38,12 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="assetTableHeight"
           :table-data="tableData"
           @cli="cli"
           @del="del"
           @edit="edit"
-          @copy="copy"
+          @duplicate="duplicate"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -57,7 +57,6 @@
     <transition name="right-box">
       <asset-box v-if="rightBox.show"
                  ref="assetBox"
-                 :brand-data="brandData"
                  :dc-data="dcData"
                  :field-group-data="fieldGroupData"
                  :from="fromRoute.asset"
@@ -87,7 +86,7 @@ import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEdit
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
-import clickSearch from '@/components/common/clickSearch'
+import clickSearch from '@/components/common/labelFilter/clickSearch'
 
 export default {
   name: 'asset',
@@ -108,6 +107,7 @@ export default {
       rightBox: {
         batchShow: false
       },
+      assetTableHeight: `calc(100% - ${48 + 201 + 20}px)`,
       blankObject: {
         id: '',
         name: '',
@@ -177,7 +177,6 @@ export default {
         }]
       },
 
-      brandData: [],
       modelData: [],
       stateData: [],
       typeData: [],
@@ -224,6 +223,7 @@ export default {
           type: 'dropdownCheckBox',
           children: [],
           show: true,
+          showMore: false,
           width: 0,
           index: 0
         },
@@ -233,6 +233,7 @@ export default {
           type: 'dropdownCheckBox',
           children: [],
           show: true,
+          showMore: false,
           width: 0,
           index: 0
         }
@@ -256,23 +257,13 @@ export default {
       }
       this.$store.commit('addConsole', consoleParam)
     },
-    copy (row) {
-      this.object = { ...row, id: '' }
+    duplicate (row) {
+      this.object = { ...row, id: '', name: `${row.name}-copy` }
       this.rightBox.show = true
-    },
-    getUserData () {
-      return new Promise(resolve => {
-        this.$get('sys/user').then(response => {
-          if (response.code === 200) {
-            this.userData = response.data.list
-          }
-          resolve()
-        })
-      })
     },
     getStateData () {
       return new Promise(resolve => {
-        this.$get('asset/stateConf').then(response => {
+        this.$get('asset/stateConf?pageSize=-1').then(response => {
           if (response.code === 200) {
             this.stateData = response.data.list
           }
@@ -282,7 +273,7 @@ export default {
     },
     getTypeData () {
       return new Promise(resolve => {
-        this.$get('asset/typeConf').then(response => {
+        this.$get('asset/typeConf?pageSize=-1').then(response => {
           if (response.code === 200) {
             this.titleSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
           }
@@ -303,9 +294,9 @@ export default {
     reloadTable (obj) {
       Object.keys(obj).forEach(key => {
         if (typeof obj[key] === 'string') {
-          this.searchCheckBox[key] = obj[key]
+          this.searchCheckBox[key] = obj[key] ? obj[key] : null
         } else {
-          obj[key].length > 0 ? this.searchCheckBox[key] = obj[key].join(',') : this.searchCheckBox[key] = null
+          obj[key] && obj[key].length > 0 ? this.searchCheckBox[key] = obj[key].join(',') : this.searchCheckBox[key] = null
         }
       })
       this.getTableData()
@@ -360,19 +351,9 @@ export default {
         })
       })
     },
-    getBrandData () {
-      return new Promise(resolve => {
-        this.$get('asset/brand').then(response => {
-          if (response.code === 200) {
-            this.brandData = response.data.list
-          }
-          resolve()
-        })
-      })
-    },
     getModelData () {
       return new Promise(resolve => {
-        this.$get('asset/model').then(response => {
+        this.$get('asset/model?pageSize=-1').then(response => {
           if (response.code === 200) {
             this.modelData = response.data.list
             const titleSearchData = {}
@@ -434,7 +415,6 @@ export default {
   },
   mounted () {
     // 初始化数据
-    this.getBrandData()
     this.getModelData()
     this.getStateData()
     this.getTypeTreeData()

@@ -9,6 +9,8 @@
     <web-ssh ref="webSsh"></web-ssh>
     <!--table悬浮提示容器-->
     <span class="el-popover table-tooltip"></span>
+    <!-- 临时文本dom，用来计算文本长度 -->
+    <span class="temp-dom"></span>
   </div>
 </template>
 
@@ -53,5 +55,10 @@ export default {
     flex: auto;
     transition: all .2s;
   }
+}
+.temp-dom {
+  visibility: hidden;
+  font-size: 14px;
+  position: fixed;
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div class="tooltip-box" style="display: flex;" v-if="(isChart||chartData.tooltipShow)&&chartData.expressArr.length">
-    <span class="temp-dom"></span>
     <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressArr.length)">
       <line-chart-block v-show="isChart || chartData.type !== 'table'"
                         :key="'inner' + chartData.id"
@@ -324,11 +323,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .temp-dom {
-    visibility: hidden;
-    font-size: 14px;
-    position: fixed;
-  }
   .tooltip-box{
     background: #FFFFFF;
     box-shadow: 1px 2px 8px 0 rgba(0,0,0,0.11);
