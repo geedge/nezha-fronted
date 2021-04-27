@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="scss" scoped>
   @import './webSSH.scss';
 </style>
 <template>
@@ -57,6 +57,18 @@
         >
           <!-- tab显示的内容 1 grey,2 green, 3 red-->
           <span slot="label" style="">
+            <el-popover
+              slot="label"
+              placement="top"
+              width="150"
+              trigger="hover"
+              :popper-class="'popover-webshell'"
+            >
+            <div>
+             {{item.uuid.slice(0,7)}}
+            </div>
+            <span slot="reference"> <i class="nz-icon nz-icon-about" /></span>
+          </el-popover>
             <div :class="{'active-icon grey':item.circleColor == 1,'active-icon green':item.circleColor == 2,'active-icon red':item.circleColor == 3}"
                  style="margin-top: 0px;"></div>{{item.title}}
           </span>
@@ -441,6 +453,7 @@ export default {
         title: title,
         name: newTabName,
         circleColor: 1, // 1 grey,2 green, 3 red
+        uuid: uuid,
         terminal: {
           name: newTabName,
           cols: 225,
