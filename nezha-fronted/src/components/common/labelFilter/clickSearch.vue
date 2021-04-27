@@ -101,6 +101,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        console.log(n)
         this.$emit('reload', n)
       }
     }

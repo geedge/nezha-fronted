@@ -755,13 +755,13 @@ export default {
     currentModuleCopy: {
       immediate: true,
       handler (n, o) {
-        if (n.type && n.type.toLowerCase() == 'snmp') {
-          this.endpointTableTitle[4].show = false
-          this.endpointTableTitle[5].show = false
-        } else {
-          this.endpointTableTitle[4].show = true
-          this.endpointTableTitle[5].show = true
-        }
+        // if (n.type && n.type.toLowerCase() == 'snmp') {
+        //   this.endpointTableTitle[4].show = false
+        //   this.endpointTableTitle[5].show = false
+        // } else {
+        //   this.endpointTableTitle[4].show = true
+        //   this.endpointTableTitle[5].show = true
+        // }
       }
     }
   }

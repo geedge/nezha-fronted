@@ -6,6 +6,7 @@
       :targetTab="targetTab"
       @changeTab="changeTab"
       class="full-width-height"
+      :showPagination="false"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-if="from === fromRoute.asset" v-slot:top-tool-right>
@@ -274,14 +275,17 @@ export default {
         this.getData(this.filter)
       } else {
         if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
-          console.log(this.obj)
-          this.panelDataList = [this.obj]
-          console.log(this.panelData)
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id,groupId:0}).then(res => {
-              console.log(res)
+              this.panelDataList = res.data.list
+              if (this.panelDataList.length > 0) {
+                this.showPanel.id = this.filter.panelId = 0
+                this.getData(this.filter)
+              }
             })
+            return
           }
+          this.panelDataList = [this.obj]
           if (this.panelDataList.length > 0) {
             this.showPanel.id = this.filter.panelId = 0
             this.getData(this.filter)

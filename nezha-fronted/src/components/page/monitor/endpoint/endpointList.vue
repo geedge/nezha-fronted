@@ -266,7 +266,6 @@ export default {
             response.data.list[i].status = response.data.list[i].status + ''
           }
           this.tableData = response.data.list
-          console.log(this.tableData);
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
@@ -279,6 +278,9 @@ export default {
     },
     reloadTable (obj) {
       Object.keys(obj).forEach(key => {
+        if (key === 'change') {
+          return
+        }
         this.searchCheckBox[key] = obj[key].join(',')
       })
       console.log(obj, this.searchCheckBox)
