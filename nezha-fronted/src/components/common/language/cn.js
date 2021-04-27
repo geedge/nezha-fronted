@@ -174,7 +174,7 @@ const cn = {
     authPin: 'Password',
     authUserTip: 'Username prompt',
     authPinTip: 'Password prompt',
-    authPriKey: 'Key',
+    authPriKey: 'Key'
   },
   pageSize: '条/页',
   login: {
@@ -761,9 +761,9 @@ const cn = {
       latitude: '纬度',
       lnglat: '坐标'
     },
-    cabinet:{
-      editCabinet:'编辑机柜',
-      createCabinet:'创建机柜',
+    cabinet: {
+      editCabinet: '编辑机柜',
+      createCabinet: '创建机柜'
     },
     model: {
       model: '资产型号',
@@ -843,8 +843,8 @@ const cn = {
         curUrl: '网站URL',
         timezone: '时区',
         defaultCabinetUsize: '机柜默认U位',
-        sessionTimeout:'Session超时',
-        minute:'分',
+        sessionTimeout: 'Session超时',
+        minute: '分',
         second: '秒',
         day: '天',
         maxSeries: 'Query max series',
@@ -1023,10 +1023,14 @@ const cn = {
       errorStr: '请填写 {errorStr} 的值',
       edit: '修改表达式模板',
       create: '创建表达式模板',
-      expressionError: '请填写表达式'
+      expressionError: '请填写表达式',
+      type: 'Type',
+      varType: 'varType'
     },
     chartTemp: {
       chartTemp: 'Chart 模板',
+      type: 'Type',
+      varType: 'varType'
     }
   },
   alert: {

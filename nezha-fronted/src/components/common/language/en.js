@@ -1044,10 +1044,14 @@ const en = {
       errorStr: 'Please fill in the {errorStr} value',
       edit: 'Edit expression template',
       create: 'New expression template',
-      expressionError: 'Please fill in the "expression" value'
+      expressionError: 'Please fill in the "expression" value',
+      type: 'Type',
+      varType: 'varType'
     },
     chartTemp: {
-      chartTemp: 'Chart template'
+      chartTemp: 'Chart template',
+      type: 'Type',
+      varType: 'varType'
     }
   },
   alert: {

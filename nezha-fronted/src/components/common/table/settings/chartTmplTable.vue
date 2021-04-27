@@ -34,7 +34,8 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
-        <span v-else-if="item.prop==='type'" :class="typeIcon(scope.row)">
+        <span v-else-if="item.prop==='type'">
+          <i :class="typeIcon(scope.row)"/>
         {{chartTypeList.find(title=>title.id == scope.row[item.prop]).name}}
         </span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
@@ -140,13 +141,40 @@ export default {
   },
   methods: {
     typeIcon (row) {
-      let str = 'nz-icon'
+      let str = 'nz-icon '
       switch (row.type) {
         case 'line':
-          str += 'nz-icon-multitext'
+          str += 'nz-icon-LinkChart'
+          break
+        case 'bar':
+          str += 'nz-icon-barchart'
+          break
+        case 'stackArea':
+          str += 'nz-icon-StackArea'
+          break
+        case 'singleStat':
+          str += 'nz-icon-SingleValue'
+          break
+        case 'pie':
+          str += 'nz-icon-Piechart'
+          break
+        case 'table':
+          str += 'nz-icon-Table1'
+          break
+        case 'alertList':
+          str += 'nz-icon-alertlist'
+          break
+        case 'text':
+          str += 'nz-icon-Text1'
+          break
+        case 'url':
+          str += 'nz-icon-URL'
+          break
+        case 'group':
+          str += 'nz-icon-Group'
           break
         default :
-          str += 'nz-icon-multitext'
+          str += 'nz-icon-Table1'
           break
       }
       return str
