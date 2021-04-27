@@ -1,28 +1,28 @@
 <template>
   <div>
-    <el-dialog class="nz-dialog" :title="$t('overall.changePwd')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
-      <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePwdForm" size="mini">
+    <el-dialog class="nz-dialog" :title="$t('overall.changePin')" :visible.sync="visible"  @open="dialogOpened"  :modal-append-to-body='false' @closed="dialogClosed" width="600px" :show-close="false" >
+      <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm" size="mini">
         <el-form-item :label="$t('config.user.account')" prop="username" v-show="curUser != sysUser">
-          <el-input type="text" autocomplete="false" v-model="user.username" disabled id="change-pwd-username"></el-input>
+          <el-input type="text" autocomplete="false" v-model="user.username" disabled id="change-pin-username"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.user.oldPwd')" prop="pwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pwd" maxlength="20" :placeholder="$t('config.user.inputOldPwd')" id="change-pwd-pwd"></el-input>
+        <el-form-item :label="$t('config.user.oldPin')" prop="pin">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pin" maxlength="20" :placeholder="$t('config.user.inputOldPin')" id="change-pin-pin"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.user.newPwd')" prop="newPwd">
-          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPwd" maxlength="20" :placeholder="$t('config.user.inputNewPwd')" id="change-pwd-newPwd"></el-input>
+        <el-form-item :label="$t('config.user.newPin')" prop="newPin">
+          <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPin" maxlength="20" :placeholder="$t('config.user.inputNewPin')" id="change-pin-newPin"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.user.confirmPwd')" prop="confirmPwd">
-          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPwd" maxlength="20" :placeholder="$t('config.user.inputConfirmPwd')" id="change-pwd-confirmPwd"></el-input>
+        <el-form-item :label="$t('config.user.confirmPin')" prop="confirmPin">
+          <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPin" maxlength="20" :placeholder="$t('config.user.inputConfirmPin')" id="change-pin-confirmPin"></el-input>
         </el-form-item>
       </el-form>
       <!--底部按钮-->
       <template slot="footer">
         <div class="right-box-bottom-btns" >
-          <button @click="close" id="change-pwd-esc"
+          <button @click="close" id="change-pin-esc"
                   class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
             <span>{{$t('overall.cancel')}}</span>
           </button>
-          <button  @click="changePwd" id="change-pwd-save"
+          <button  @click="changePin" id="change-pin-save"
                    class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">
             <span>{{$t('overall.save')}}</span>
           </button>
@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  name: 'changePwd',
+  name: 'changePin',
   props: {
     curUser: { type: String },
     showDialog: { type: Boolean, default: false }
@@ -46,28 +46,28 @@ export default {
       if (value && value != '') {
         callback()
       } else {
-        callback(new Error(temp.$t('config.user.invalidPwd')))
+        callback(new Error(temp.$t('config.user.invalidPin')))
       }
     }
     const validateConfirmPass = (rule, value, callback) => {
-      if (value && value != '' && value == temp.user.newPwd) {
+      if (value && value != '' && value == temp.user.newPin) {
         callback()
       } else {
-        callback(new Error(temp.$t('config.user.confirmPwdErr')))
+        callback(new Error(temp.$t('config.user.confirmPinErr')))
       }
     }
     return {
       user: {
         username: '',
-        pwd: '',
-        newPwd: '',
-        confirmPwd: ''
+        pin: '',
+        newPin: '',
+        confirmPin: ''
       },
       sysUser: sessionStorage.getItem('nz-username'),
       rules: {
-        pwd: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        newPwd: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: validatePass, trigger: 'blur' }],
-        confirmPwd: [{ required: true, message: this.$t('config.user.reinputPwd'), trigger: 'blur' }, { validator: validateConfirmPass, trigger: 'blur' }]
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        newPin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: validatePass, trigger: 'blur' }],
+        confirmPin: [{ required: true, message: this.$t('config.user.reinputPin'), trigger: 'blur' }, { validator: validateConfirmPass, trigger: 'blur' }]
       },
       visible: false
     }
@@ -77,8 +77,8 @@ export default {
   },
   methods: {
     dialogOpened: function () {
-      if (this.$refs.changePwdForm) {
-        this.$refs.changePwdForm.resetFields()
+      if (this.$refs.changePinForm) {
+        this.$refs.changePinForm.resetFields()
       }
     },
     dialogClosed: function () {
@@ -87,12 +87,12 @@ export default {
     close: function () {
       this.visible = false
     },
-    changePwd: function () {
-      this.$refs.changePwdForm.validate((valid) => {
+    changePin: function () {
+      this.$refs.changePinForm.validate((valid) => {
         if (valid) {
           const paramObj = {
-            pin: this.user.pwd,
-            newPin: this.user.newPwd
+            pin: this.user.pin,
+            newPin: this.user.newPin
           }
           this.$get('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
             if (response && response.code == 200) {

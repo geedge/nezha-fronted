@@ -395,10 +395,10 @@ export default {
           port: 22,
           params: {
             user: '',
-            method: 'password',
-            password: '',
+            method: 'pin',
+            pin: '',
             key: '',
-            keyPassword: ''
+            keyPin: ''
           }
         })
       } else if (type == 'TELNET') {
@@ -407,9 +407,9 @@ export default {
           port: 23,
           params: {
             user: '',
-            password: '',
+            pin: '',
             userTip: '',
-            passwordTip: '',
+            pinTip: '',
             reloginTip: ''
           }
         })
@@ -422,8 +422,8 @@ export default {
             community: 'public',
             securityName: '',
             securityLevel: '',
-            password: '',
-            privPassword: '',
+            pin: '',
+            privPin: '',
             authProtocol: '',
             privProtocol: '',
             contextName: ''

@@ -127,7 +127,7 @@
             <div style="height: 1px; width: 100%; background-color: #cccccc;"></div>
           </el-menu-item>
           <el-menu-item index="101-3">
-            <div @click="showPwdDialog" id="header-to-changepwd">{{$t('overall.changePwd')}}</div>
+            <div @click="showPinDialog" id="header-to-changepin">{{$t('overall.changePin')}}</div>
           </el-menu-item>
           <el-menu-item index="101-4">
             <div @click="logout" id="header-to-logout">{{$t('overall.signOut')}}</div>
@@ -154,7 +154,7 @@
     <transition name="right-box">
       <dc-box @close="closeDcBox" :dc="dc" :user-data="userData" @reload="getAssetData" v-if="rightBox.dc.show"></dc-box>
     </transition>
-    <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
+    <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
 </template>
 
@@ -162,11 +162,11 @@
 import bus from '../../libs/bus'
 import dcBox from './rightBox/dcBox' // dc弹框
 import { mapActions } from 'vuex'
-import changePwd from '../page/config/changePwd'
+import changePin from '../page/config/changePin'
 export default {
   name: 'Header',
   components: {
-    'change-password': changePwd,
+    'change-password': changePin,
     'dc-box': dcBox
   },
   data () {
@@ -283,7 +283,7 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showChangePwd: false
+      showChangePin: false
     }
   },
   methods: {
@@ -338,10 +338,10 @@ export default {
           community: 'public',
           username: '',
           security_level: 'noAuthNoPriv', // noAuthNoPriv/authNoPriv/authPriv
-          password: '',
+          pinrd: '',
           auth_protocol: 'MD5', // MD5/SHA
           priv_protocol: 'DES', // DES/AES
-          priv_password: '',
+          priv_pin: '',
           context_name: ''
         }
       } else if (item.type == 3) {
@@ -483,11 +483,11 @@ export default {
         window.location.reload()
       })
     },
-    showPwdDialog () {
-      this.showChangePwd = true
+    showPinDialog () {
+      this.showChangePin = true
     },
     dialogClosed () {
-      this.showChangePwd = false
+      this.showChangePin = false
     },
     cancel () {
       this.jumpTo(this.$route.path.slice(1, this.$route.path.length))

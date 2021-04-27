@@ -99,7 +99,7 @@ export default {
           labels: '',
           basic_auth: {
             username: '',
-            password: ''
+            pin: ''
           },
           bearer_token: ''
         },

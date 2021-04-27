@@ -22,11 +22,11 @@
           <!--password-->
           <el-form-item :label="$t('config.user.pin')" prop="pin">
             <el-input id="account-input-password" v-model="editUser.pin"  maxlength="16" placeholder=""
-                      show-word-limit size="small" type="password" @blur="passwordBlur"></el-input>
+                      show-word-limit size="small" type="password" @blur="pinBlur"></el-input>
           </el-form-item>
-          <!--passwordChange-->
-          <el-form-item :label="$t('config.user.confirmPwd')" label-width="200px" prop="pinChange">
-            <el-input id="account-input-passwordChange" v-model="editUser.pinChange"  maxlength="16" placeholder=""
+          <!--pinChange-->
+          <el-form-item :label="$t('config.user.confirmPin')" label-width="200px" prop="pinChange">
+            <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="16" placeholder=""
                       show-word-limit size="small" type="password"></el-input>
           </el-form-item>
           <!--email-->
@@ -90,11 +90,11 @@ export default {
   },
   data () {
     const vm = this
-    const validatePassword = (rule, value, callback) => { // 确认密码的二次校验
+    const validatePin = (rule, value, callback) => { // 确认密码的二次校验
       if (value === '' && this.editUser.pin) {
-        callback(new Error(this.$t('config.user.inputConfirmPwd')))
+        callback(new Error(this.$t('config.user.inputConfirmPin')))
       } else if (value !== this.editUser.pin) {
-        callback(new Error(this.$t('config.user.confirmPwdErr')))
+        callback(new Error(this.$t('config.user.confirmPinErr')))
       } else {
         callback()
       }
@@ -114,7 +114,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         pinChange: [
-          { validator: validatePassword, trigger: 'blur' },
+          { validator: validatePin, trigger: 'blur' },
           { required: true, message: '', trigger: 'blur' }
         ],
         roleIds: [
@@ -129,7 +129,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         pinChange: [
-          { validator: validatePassword, trigger: 'blur' }
+          { validator: validatePin, trigger: 'blur' }
         ],
         roleIds: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -166,9 +166,9 @@ export default {
       this.$emit('close', refresh)
     },
     /* 密码失去焦点 检验确认密码 */
-    passwordBlur () {
+    pinBlur () {
       if (this.editUser.pin && this.editUser.pinChange) {
-        this.$refs.accountForm.validateField('passwordChange')
+        this.$refs.accountForm.validateField('pinChange')
       }
     },
     getRoles () {

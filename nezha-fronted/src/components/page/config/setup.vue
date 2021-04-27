@@ -312,9 +312,9 @@ export default {
                     this.activeStep = 2
                     this.step = 2
                     if (response.code == 574004) { // 密码无效
-                      this.$alert(this.$t('setup.invalidpin'), { type: 'warning' })
+                      this.$alert(this.$t('setup.invalidPin'), { type: 'warning' })
                     } else if (response.code == 574005) {
-                      this.$alert(this.$t('setup.requirepin'), { type: 'warning' })
+                      this.$alert(this.$t('setup.requirePin'), { type: 'warning' })
                     } else if (response.code == 574002) {
                       this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
                     } else {

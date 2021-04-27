@@ -86,6 +86,7 @@ export default {
   data () {
     return {
       agent2: agent2,
+      agentPrometheusEnabled: localStorage.getItem('nz-prometheus-federation-enabled'),
       rules: {
         'dc.name': [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

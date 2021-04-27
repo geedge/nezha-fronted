@@ -109,7 +109,7 @@
             </el-form-item>
             <!--host-->
             <el-form-item :label='$t("project.endpoint.host")' prop="host">
-              <el-input placeholder="" v-model.number="editModule.configs.host" size="small" id="module-box-input-host"></el-input>
+              <el-input placeholder="" v-model="editModule.configs.host" size="small" id="module-box-input-host"></el-input>
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="showAllBasicOption" >
@@ -292,10 +292,10 @@ export default {
         username: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        password: [
+        pin: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        priv_password: [
+        priv_pin: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         max_repetitions: [
@@ -448,7 +448,7 @@ export default {
       params.configs = JSON.stringify(params.configs)
       if (this.authType === 2 && !this.editModule.configs.bearer_token) {
         this.$message.error("'token' is required")
-      } else if (this.authType === 1 && !(this.editModule.configs.basic_auth.username && this.editModule.configs.basic_auth.password)) {
+      } else if (this.authType === 1 && !(this.editModule.configs.basic_auth.username && this.editModule.configs.basic_auth.pin)) {
         this.$message.error("'username' and 'password' is required")
       } else {
         this.authType = 0
@@ -588,7 +588,7 @@ export default {
       this.editModule.configs.bearer_token = ''
       this.editModule.configs.basic_auth = {
         username: '',
-        password: ''
+        pin: ''
       }
     },
     copyValue () {
@@ -696,7 +696,7 @@ export default {
           if (params.basic_auth && !params.basic_auth.username) {
             delete params.basic_auth
           }
-          if (params.basic_auth && !params.basic_auth.password) {
+          if (params.basic_auth && !params.basic_auth.pin) {
             delete params.basic_auth
           }
           if (params.param && !Object.keys(params.param).length) {

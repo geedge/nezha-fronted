@@ -85,6 +85,7 @@ export default {
             // 登录成功，记录用户名、token和lang
             sessionStorage.setItem('nz-username', this.loginData.username)
             localStorage.setItem('nz-username', this.loginData.username)
+            localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
             localStorage.setItem('nz-language', this.lang)
             this.$i18n.locale = this.lang
             this.loginSuccess(res)

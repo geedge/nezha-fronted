@@ -117,7 +117,7 @@
             </el-form-item>
             <!--host-->
             <el-form-item :label='$t("project.endpoint.host")' prop="host">
-              <el-input placeholder="" v-model.number="editEndpoint.configs.host" size="small" id="module-box-input-host"></el-input>
+              <el-input placeholder="" v-model="editEndpoint.configs.host" size="small" id="module-box-input-host"></el-input>
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="showAllBasicOption" >
@@ -226,7 +226,7 @@
             </el-form-item>
 
             <el-form-item :label='$t("project.endpoint.pin")' prop="authtype" v-if="authType === 1" class="half-form-item">
-              <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.password" size="small" id="module-box-input-password"></el-input>
+              <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.pin" size="small" id="module-box-input-password"></el-input>
             </el-form-item>
 
             <!--authtype 2-->
@@ -454,7 +454,7 @@ export default {
       params.configs = JSON.stringify(params.configs)
       if (this.authType === 2 && !this.editEndpoint.configs.bearer_token) {
         this.$message.error("'token' is required")
-      } else if (this.authType === 1 && !(this.editEndpoint.configs.basic_auth.username && this.editEndpoint.configs.basic_auth.password)) {
+      } else if (this.authType === 1 && !(this.editEndpoint.configs.basic_auth.username && this.editEndpoint.configs.basic_auth.pin)) {
         this.$message.error("'username' and 'password' is required")
       } else {
         this.authType = 0
@@ -608,7 +608,7 @@ export default {
       this.editEndpoint.configs.bearer_token = ''
       this.editEndpoint.configs.basic_auth = {
         username: '',
-        password: ''
+        pin: ''
       }
     },
     copyValue () {
@@ -717,7 +717,7 @@ export default {
           if (params.basic_auth && !params.basic_auth.username) {
             delete params.basic_auth
           }
-          if (params.basic_auth && !params.basic_auth.password) {
+          if (params.basic_auth && !params.basic_auth.pin) {
             delete params.basic_auth
           }
           if (params.param && !Object.keys(params.param).length) {
