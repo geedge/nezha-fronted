@@ -208,7 +208,7 @@
                 search-field="manageIp"
                 v-model="assetContent.assetId"
                 size="small"
-                :language="localStorage.getItem('nz-language')"
+                :language="language"
                 :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
                 id="box-input-asset-id"
                 :result-format="resultFormat"></v-selectpage>
@@ -303,6 +303,7 @@ export default {
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
+      language: localStorage.getItem('nz-language'),
       authProtocol: [
         {
           value: 1,
