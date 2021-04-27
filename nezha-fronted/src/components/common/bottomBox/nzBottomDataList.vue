@@ -37,7 +37,7 @@
       <div :class="targetTab === 'panel' ? 'bottom-panel' : 'nz-table2'">
         <slot></slot>
       </div>
-      <div class="pagination-bottom">
+      <div class="pagination-bottom" v-if="showPagination">
         <slot name="pagination"></slot>
       </div>
     </div>
@@ -76,6 +76,10 @@ export default {
     customTool: {
       type: Boolean,
       default: false
+    },
+    showPagination: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -131,6 +135,7 @@ export default {
   padding: 10px;
   height: 100%;
   background-color: #f6f6f6;
+  overflow-y: auto;
   &>div {
     background-color: white;
   }
@@ -180,6 +185,7 @@ export default {
 .bottom-panel {
   padding-top: 15px;
   background-color: white;
+  padding-bottom: 50px;
 }
 
 .resize-modal {

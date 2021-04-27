@@ -21,7 +21,6 @@
             </span>
           </el-popover>
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
-            <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
               <span class="chart-title-icon"  v-if="from !== 'chartTemp'"  :class="{'visible':caretShow,'hidden':!caretShow}">

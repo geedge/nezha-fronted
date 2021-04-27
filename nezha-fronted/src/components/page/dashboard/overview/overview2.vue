@@ -460,7 +460,7 @@ export default {
           this.$get('/module/stat', { id: item.id }).then(res => {
             item.state = res.data
           })
-          promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.iconId}`))
+          promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.iconId}/1`))
         })
         Promise.all(promiseArr).then(res => {
           arr.forEach((item, index) => {

@@ -41,7 +41,7 @@ import deleteButton from '../../deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
-import cabinetTable from "@/components/common/table/settings/cabinetTable";
+import cabinetTable from '@/components/common/table/settings/cabinetTable'
 export default {
   name: 'cabinetTab',
   mixins: [dataListMixin, subDataListMixin],
@@ -56,8 +56,8 @@ export default {
   },
   data () {
     return {
-      url:'/cabinet',
-      tableId:'cabinetTable',
+      url: '/cabinet',
+      tableId: 'cabinetTable',
       blankObject: {
         id: '',
         idcId: '',
@@ -89,14 +89,14 @@ export default {
             disabled: false
           }
         ]
-      },
+      }
     }
   },
   methods: {
     // 切换tab
     changeTab (tab) {
       this.$emit('changeTab', tab)
-    },
+    }
   },
   watch: {
     obj: {

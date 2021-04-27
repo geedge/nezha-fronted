@@ -53,7 +53,7 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'authType'">
-          <span v-if="scope.row.authType == 1">{{$t('config.terminallog.password')}}</span>
+          <span v-if="scope.row.authType == 1">{{$t('config.terminallog.pin')}}</span>
           <span v-else-if="scope.row.authType == 2">{{$t('config.terminallog.key')}}</span>
         </template>
         <span v-else>{{scope.row[item.prop]}}</span>

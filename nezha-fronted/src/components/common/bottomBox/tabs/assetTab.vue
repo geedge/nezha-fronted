@@ -50,8 +50,8 @@
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
-import assetTable from "@/components/common/table/asset/assetTable";
-import assetBox from "@/components/common/rightBox/asset/assetBox";
+import assetTable from '@/components/common/table/asset/assetTable'
+import assetBox from '@/components/common/rightBox/asset/assetBox'
 export default {
   name: 'assetTab',
   mixins: [dataListMixin, subDataListMixin],
@@ -184,16 +184,16 @@ export default {
           resolve()
         })
       })
-    },
+    }
 
   },
-  watch:{
-    obj:{
-      immediate:true,
-      deep:true,
-      handler(n,o){
-        this.searchLabel.dcIds=n.id;
-        this.getTableData();
+  watch: {
+    obj: {
+      immediate: true,
+      deep: true,
+      handler (n, o) {
+        this.searchLabel.dcIds = n.id
+        this.getTableData()
       }
     }
   },
@@ -204,6 +204,6 @@ export default {
     this.getDcData()
     this.getSnmpCredentialData()
     this.getFieldGroupData()
-  },
+  }
 }
 </script>

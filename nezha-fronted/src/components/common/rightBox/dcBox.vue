@@ -84,7 +84,7 @@ export default {
       editDc: {},
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         state: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

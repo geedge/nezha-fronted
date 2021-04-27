@@ -64,7 +64,7 @@ import topologyL5 from '@/components/common/project/topologyL5'
 export default {
   name: 'project2',
   components: {
-    topologyL5,
+    topologyL5
   },
   data () {
     return {

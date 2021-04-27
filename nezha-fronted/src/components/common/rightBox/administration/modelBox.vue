@@ -25,16 +25,16 @@
           </el-form-item>
           <!-- ChartTemplate -->
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
-            <v-selectpage 
-            :data="chartlList" 
-            :tb-columns="ChartSearchShowFields" 
-            :max-select-limit="3" 
+            <v-selectpage
+            :data="chartlList"
+            :tb-columns="ChartSearchShowFields"
+            :max-select-limit="3"
             :multiple="true"
             title="ChartSearch"
             placeholder="Please select item"
             key-field="id"
-            v-model="editModel.chartIds" 
-            show-field="name" 
+            v-model="editModel.chartIds"
+            show-field="name"
             class="form-control"
             @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
           ></v-selectpage>
@@ -59,7 +59,7 @@ import selectWalk from '../../popBox/selectWalk'
 export default {
   name: 'modelBox',
   components: {
-    'select-walk': selectWalk,
+    'select-walk': selectWalk
   },
   props: {
     obj: {
@@ -75,27 +75,27 @@ export default {
   },
   data () {
     return {
-      editModel: {}, 
+      editModel: {},
       brandList: [], // brand 列表数据
-      editModule: {}, 
+      editModule: {},
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
-        {title: 'id',data: 'id'},
-        {title: 'name',data: 'name'},
-        {title: 'desc',data: 'type'},
-        {title: 'Description',data: 'Description'}
+        { title: 'id', data: 'id' },
+        { title: 'name', data: 'name' },
+        { title: 'desc', data: 'type' },
+        { title: 'Description', data: 'Description' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',
       rightBox: { model: { show: false } },
       roles: [],
       rules: {
-          model: [
-            { required: true, message: '必填', trigger: 'blur' }
-          ],
-          brandId: [
-            { required: true, message: this.$t('validate.required'), trigger: 'change' }
-          ]
+        model: [
+          { required: true, message: '必填', trigger: 'blur' }
+        ],
+        brandId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
       }
     }
   },
@@ -125,7 +125,7 @@ export default {
       this.$refs.modelForm.validate((valid) => {
         if (valid) {
           if (this.editModel.id) {
-            console.log(this.editModel);
+            console.log(this.editModel)
             this.$put(this.url, this.editModel).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
@@ -154,7 +154,7 @@ export default {
     },
     save () {
       if (typeof this.editModel.brandId === 'string') { // 判断是否是新增的
-        this.$post(this.brandUrl, {name: this.editModel.brandId}).then(res => {
+        this.$post(this.brandUrl, { name: this.editModel.brandId }).then(res => {
           if (res.code === 200) { // 新增成功
             this.getBrandList().then(res2 => { // 新增成功后，重新调用getBrandList，刷新brandList
               const newBrand = this.brandList.find(b => b.name === this.editModel.brandId) // 取出刚新增的brand对象
@@ -168,10 +168,9 @@ export default {
       } else {
         this.saveModel()
       }
-      
     },
     selectWalk (walk) {
-      console.log(walk);
+      console.log(walk)
       if (this.editModule.walk.indexOf(walk) != -1) {
         this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
       } else {
@@ -191,8 +190,8 @@ export default {
     },
     /* 获取chart列表数据 */
     ChartTemplateList () {
-      this.$get('visual/panel/chart',{pageSize : -1 , varType : 1, panelId: 0}).then(res => {
-        console.log(res);
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0 }).then(res => {
+        console.log(res)
         this.chartlList = res.data.list
       })
     }

@@ -77,7 +77,7 @@
               <div v-else-if="scope.row[item.prop]===1">
                 <div class="active-icon green inline-block"></div> up
               </div>
-              <div v-else>
+              <div v-else-if="scope.row[item.prop]">
                 <div class="active-icon gray inline-block"></div> suspended
               </div>
             </div>
@@ -174,6 +174,7 @@ export default {
       this.$message.success(this.$t('overall.copySuccess'))
     },
     suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
+      if (!status || status === 1 || status == 0) { return '' }
       const arr = status.toString(2).split('')
       while (arr.length < 5) {
         arr.unshift('0')

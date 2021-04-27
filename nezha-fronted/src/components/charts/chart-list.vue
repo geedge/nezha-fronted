@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   .chartBox {
     float:left;
-    padding: 0 0 10px 0;
+    padding: 0 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -361,18 +361,13 @@ export default {
       chartTitle.style.background = '#d8dce1'
     },
     clone (event) {
-      // console.log('clone',event );
       const canvas = event.item.querySelector('canvas')
-      // console.log('clone-canvas',canvas);
       const canvasclone = event.clone.querySelector('canvas')
       canvasclone.style.border = 'solid 1px yellow'
-      // console.log('clone-canvasclone',canvasclone);
       if (canvas && canvasclone) {
         const image = new Image()
         image.src = canvas.toDataURL()
-        // console.log('clone-image',image);
         const ctxClone = canvasclone.getContext('2d')
-        // ctxClone.drawImage(image,0,0);
         image.onload = function () {
           ctxClone.drawImage(image, 0, 0)
         }
@@ -662,7 +657,7 @@ export default {
         })
         return
       }
-      if (param.from == fromRoute.chartTemp) {
+      if (param.from == fromRoute.chartTemp) { // 模板列表
         this.dataList = this.panelDataList
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
@@ -679,13 +674,12 @@ export default {
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      this.$get('visual/panel/chart?panelId=' + params.panelId + '&pageSize=-1').then(response => {
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0').then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
           // response.data.list = response.data.list.filter((item) => item.groupId === -1 || !item.groupId) // 处理外层存在的groupItem
-          // console.log(response.data.list)
           if (response.data.list) {
             this.dataTotalListBak = response.data.list
           } else {

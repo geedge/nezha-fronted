@@ -71,7 +71,7 @@
                   <div class="mib-browser-ad-search-label">{{$t('login.pin')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.password" id="traffic-setting-password"></el-input>
+                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.pin" id="traffic-setting-password"></el-input>
                 </el-col>
               </el-row>
 
@@ -101,10 +101,10 @@
 
               <el-row class="mib-browser-ad-search-item" v-if="assetSetting.auth.securityLevel == 'authPriv'">
                 <el-col :span="6">
-                  <div class="mib-browser-ad-search-label">{{$t('project.module.privPassword')}}</div>
+                  <div class="mib-browser-ad-search-label">{{$t('project.module.privPin')}}</div>
                 </el-col>
                 <el-col :span="17">
-                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.privPassword" id="traffic-setting-privPassword"></el-input>
+                  <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.privPin" id="traffic-setting-privPassword"></el-input>
                 </el-col>
               </el-row>
             </template>

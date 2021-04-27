@@ -12,7 +12,8 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown >
+      <el-dropdown>
+        <el-dropdown-menu slot="dropdown"></el-dropdown-menu>
         <div id="header-open-cli" @click="cli">
           <div class="header-menu&#45;&#45;item"><i class="nz-icon nz-icon-terminal"></i></div>
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
@@ -48,7 +49,7 @@
         <div class='login-user header-menu--item'>{{username}}&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <div id="header-to-changepwd" @click="showPwdDialog">{{$t('overall.changePwd')}}</div>
+            <div id="header-to-changepin" @click="showPinDialog">{{$t('overall.changePin')}}</div>
           </el-dropdown-item>
           <el-dropdown-item>
             <div id="header-to-logout" @click="logout">{{$t('overall.signOut')}}</div>
@@ -74,7 +75,7 @@
     <transition name="right-box">
       <dc-box v-if="rightBox.dc.show" :dc="dc" :user-data="userData" @close="closeDcBox" @reload="getAssetData"></dc-box>
     </transition>
-    <change-password :cur-user="username" :show-dialog="showChangePwd" @click="showPwdDialog" @dialogClosed="dialogClosed"></change-password>
+    <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>
   </div>
 </template>
 
@@ -82,11 +83,11 @@
 import bus from '../../libs/bus'
 import dcBox from '../common/rightBox/dcBox' // dc弹框
 import { mapActions } from 'vuex'
-import changePwd from '../page/config/changePwd'
+import changePin from '../page/config/changePin'
 export default {
   name: 'Header',
   components: {
-    'change-password': changePwd,
+    'change-password': changePin,
     'dc-box': dcBox
   },
   data () {
@@ -202,7 +203,7 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showChangePwd: false
+      showChangePin: false
     }
   },
   methods: {
@@ -257,10 +258,10 @@ export default {
           community: 'public',
           username: '',
           security_level: 'noAuthNoPriv', // noAuthNoPriv/authNoPriv/authPriv
-          password: '',
+          pin: '',
           auth_protocol: 'MD5', // MD5/SHA
           priv_protocol: 'DES', // DES/AES
-          priv_password: '',
+          priv_pin: '',
           context_name: ''
         }
       } else if (item.type == 3) {
@@ -402,11 +403,11 @@ export default {
         window.location.reload()
       })
     },
-    showPwdDialog () {
-      this.showChangePwd = true
+    showPinDialog () {
+      this.showChangePin = true
     },
     dialogClosed () {
-      this.showChangePwd = false
+      this.showChangePin = false
     },
     cancel () {
       this.jumpTo(this.$route.path.slice(1, this.$route.path.length))

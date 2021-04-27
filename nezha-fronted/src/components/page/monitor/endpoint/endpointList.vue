@@ -133,7 +133,7 @@ export default {
           type: 'query',
           label: 'query',
           disabled: false
-        },{
+        }, {
           id: 34,
           name: this.$t('project.project.project'),
           // name: this.$t('asset.asset'),
@@ -278,6 +278,9 @@ export default {
     },
     reloadTable (obj) {
       Object.keys(obj).forEach(key => {
+        if (key === 'change') {
+          return
+        }
         this.searchCheckBox[key] = obj[key].join(',')
       })
       console.log(obj, this.searchCheckBox)

@@ -95,11 +95,11 @@ export default {
           label: this.$t('config.model.remark'),
           prop: 'remark',
           show: true
-        },{
+        }, {
           label: this.$t('config.model.assetNum'),
           prop: 'assetNum',
           show: true,
-          width:200
+          width: 200
         }
       ]
     }

@@ -51,7 +51,7 @@ const en = {
     back: 'Back', // 返回
     unavailable: 'Unavailable',
     available: 'Available',
-    changePwd: 'Change password', // 修改密码
+    changePin: 'Change password', // 修改密码
     createChart: 'Create chart',
     createProject: 'Create project',
     createEndpoint: 'Create endpoint',
@@ -153,8 +153,8 @@ const en = {
     finish: 'Finish',
     invalidDb: 'There may be some errors in the configuration of the database',
     invalidRedis: 'There may be some errors in the configuration of the Redis',
-    invalidpin: "Redis's password may be wrong",
-    requirepin: 'The password may be required by the Redis',
+    invalidPin: "Redis's password may be wrong",
+    requirePin: 'The password may be required by the Redis',
     wait: 'The configuration has been saved, please wait patiently for it to take effect',
     reloadTimeout: 'It took too much time to restart the server, there may be some problems when you install',
     hadConfig: 'Someone has started to configure the system',
@@ -182,7 +182,7 @@ const en = {
     authPin: 'Password',
     authUserTip: 'Username prompt',
     authPinTip: 'Password prompt',
-    authPriKey: 'Key',
+    authPriKey: 'Key'
   },
   login: {
     username: 'Username',
@@ -542,9 +542,9 @@ const en = {
     telnetProtocol: 'Telnet',
     userTip: 'User tip', // 用户名提示
     pinTip: 'Password tip', // 密码提示
-    reloginpinTip: 'Relogin tip', // 密码提示
-    userPwdIntroduce: 'Please specify a user name and password so that the telenet login process can automatically log in',
-    reLoginPwdIntroduce: 'Please specify the password prompt so that the login process can run automatically',
+    reloginPinTip: 'Relogin tip', // 密码提示
+    userPinIntroduce: 'Please specify a user name and password so that the telenet login process can automatically log in',
+    reLoginPinIntroduce: 'Please specify the password prompt so that the login process can run automatically',
     username: 'Username', // '用户名'
     port: 'Port', // '端口'
     upload: 'Upload', // '上传'
@@ -600,7 +600,7 @@ const en = {
     option: 'Operation', // "操作"
     name: 'Name',
     dc: 'DataCenter',
-    type: 'Types',
+    type: 'Types'
   },
   config: {
     config: 'Settings', // "设置"
@@ -625,15 +625,15 @@ const en = {
       editUser: 'Edit user', // "编辑用户"
       notCurrentlySupport: 'Not available', // '暂不支持'
       pin: 'Password', // '密码'
-      oldPwd: 'Old password',
-      inputOldPwd: 'Please input old password',
-      newPwd: 'New password',
-      inputNewPwd: 'Please input new password',
-      confirmPwd: 'Confirm password',
-      inputConfirmPwd: 'Please input confirm password',
-      invalidPwd: 'invalide password,the length at least 6',
-      confirmPwdErr: 'The two passwords are inconsistent',
-      reinputPwd: 'Enter password again',
+      oldPin: 'Old password',
+      inputOldPin: 'Please input old password',
+      newPin: 'New password',
+      inputNewPin: 'Please input new password',
+      confirmPin: 'Confirm password',
+      inputConfirmPin: 'Please input confirm password',
+      invalidPin: 'invalide password,the length at least 6',
+      confirmPinErr: 'The two passwords are inconsistent',
+      reinputPin: 'Enter password again',
       notification: 'Notification',
       mobile: 'Mobile'
     },
@@ -883,14 +883,14 @@ const en = {
         smtpHost: 'SMTP host',
         smtpPort: 'SMTP port',
         smtpAccount: 'SMTP account',
-        smtpPwd: 'SMTP password',
+        smtpPin: 'SMTP password',
         sendAccount: 'Send account',
         timeout: 'Timeout',
         testAccount: 'Test account',
         useSSL: 'SSL',
         useTLS: 'TLS',
         testConnection: 'Test connection',
-        pwdTip: 'Tip:Some email providers need to enter token',
+        pinTip: 'Tip:Some email providers need to enter token',
         sendAccountTip: 'Tip:The SMTP account is used as the sending account by default',
         testAccountTip: 'Tip:Used only as test mail recipient',
         sslTip: 'If the SMTP port is 465, you usually need to enable SSL',
@@ -909,7 +909,7 @@ const en = {
         ldap: 'LDAP',
         address: 'LDAP address',
         dn: 'Bind DN',
-        pwd: 'Password',
+        pin: 'Password',
         ou: 'User OU',
         ouTip: 'Use the "|" symbol to separate OU',
         filter: 'User filter',
@@ -952,11 +952,11 @@ const en = {
       reset: {
         reset: 'Reset',
         type: 'Type',
-        pwd: 'Password',
+        pin: 'Password',
         metric: 'Metric',
         alert: 'Alert',
         sysConfig: 'System config',
-        pwdTip: 'Please input your password',
+        pinTip: 'Please input your password',
         promptTitle: 'Confirm',
         yes: 'Yes',
         no: 'No'

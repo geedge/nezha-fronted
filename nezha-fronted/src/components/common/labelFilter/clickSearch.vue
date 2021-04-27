@@ -1,23 +1,24 @@
 <template>
   <div :style="{'height': height + 'px'}" class="search-box__container">
-    <div v-for="(data, type, index) in titleSearchListCopy" v-if="data.show" :key="index" ref="searchContentBox" class="search-content-box">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak v-if="data.show" :key="index" ref="searchContentBox" class="search-content-box">
       <label class="search-title">{{data.label}}:</label>
       <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]">
         <template v-for="(item, j) in data.children">
-          <el-checkbox v-show="!data.showMore || j < data.index" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
+          <el-checkbox v-if="!data.showMore || j < data.index" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
         </template>
       </el-checkbox-group>
-      <dropdown
-        v-for="(item, j) in data.children"
-        v-else-if="data.type === 'dropdownCheckBox'"
-        :key="j"
-        :ref="`${type}_cascader`"
-        :collapse-tags="true"
-        :item="item"
-        @blur="casFocus"
-        @change="casChange(type, data.key)"
-        @focus="casFocus"
-      ></dropdown>
+      <template v-for="(item, j) in data.children" v-else-if="data.type === 'dropdownCheckBox'">
+        <dropdown
+          v-if="!data.showMore || j < data.index"
+          :key="j"
+          :ref="`${type}_cascader`"
+          :collapse-tags="true"
+          :item="item"
+          @blur="casFocus"
+          @change="casChange(type, data.key)"
+          @focus="casFocus"
+        ></dropdown>
+      </template>
       <span v-show="contentWidth <= data.width" class="search-more" @click="changShowMore(type)">更多 <i :class="data.showMore?'el-icon-arrow-down':'el-icon-arrow-up'"/></span>
     </div>
   </div>
@@ -100,6 +101,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        console.log(n)
         this.$emit('reload', n)
       }
     }

@@ -77,54 +77,54 @@
 </template>
 
 <script>
-  import table from '@/components/common/mixin/table'
-  export default {
-    name: "cabinet Table",
-    mixins: [table],
-    data(){
-      return{
-        tableTitle: [
-          {
-            label: 'ID',
-            prop: 'id',
-            show: true,
-            width: 80
-          },
-          {
-            label: this.$t('overall.name'),
-            prop: 'name',
-            show: true
-          },
-          {
-            label: this.$t('asset.uSize'),
-            prop: 'uSize',
-            show: true
-          },
-          {
-            label: this.$t('config.dc.assets'),
-            prop: 'assetStat',
-            show: true
-          },
-          {
-            label: this.$t('alert.alert'),
-            prop: 'alertStat',
-            show: true
-          },
-          {
-            label: this.$t('config.dc.remark'),
-            prop: 'remark',
-            show: true
-          },
-          {
-            label: this.$t('config.account.option'),
-            prop: 'option',
-            show: true,
-            width: 120
-          }
-        ],
-      }
+import table from '@/components/common/mixin/table'
+export default {
+  name: 'cabinet Table',
+  mixins: [table],
+  data () {
+    return {
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 80
+        },
+        {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true
+        },
+        {
+          label: this.$t('asset.uSize'),
+          prop: 'uSize',
+          show: true
+        },
+        {
+          label: this.$t('config.dc.assets'),
+          prop: 'assetStat',
+          show: true
+        },
+        {
+          label: this.$t('alert.alert'),
+          prop: 'alertStat',
+          show: true
+        },
+        {
+          label: this.$t('config.dc.remark'),
+          prop: 'remark',
+          show: true
+        },
+        {
+          label: this.$t('config.account.option'),
+          prop: 'option',
+          show: true,
+          width: 120
+        }
+      ]
     }
   }
+}
 </script>
 
 <style scoped>

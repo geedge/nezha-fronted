@@ -16,8 +16,8 @@
     <div class="sub-list" style='position: relative;'>
       <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
       <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
-      <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;'>
-        <el-submenu index="1"  popper-class="fontSizeBox" style="width:40px;">
+      <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' class="horizontal">
+        <el-submenu index="1"  popper-class="horizontal" style="width:40px;">
           <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
           <!--<el-submenu index="1-1">-->
           <!--<template slot="title">文字大小</template>-->
@@ -32,7 +32,7 @@
           <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
           <!--</el-submenu>-->
         </el-submenu>
-<!--        <el-submenu index="2" style="width:50px;">-->
+<!--        <el-submenu index="2" style="width:50px;" popper-class="horizontal">-->
 <!--          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>-->
 <!--          <el-menu-item @click="showUploadBox" index="2-1">-->
 <!--            <div>{{$t('webshell.upload')}}</div>-->
@@ -65,7 +65,7 @@
               :popper-class="'popover-webshell'"
             >
             <div>
-             {{item.uuid.slice(0,7)}}
+             Session ID : {{item.uuid.slice(0,7).toLocaleUpperCase()}}
             </div>
             <span slot="reference"> <i class="nz-icon nz-icon-about" /></span>
           </el-popover>
@@ -977,5 +977,11 @@ export default {
   }
   div.sp-header{
     display: none;
+  }
+  /deep/ .horizontal .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+    border: none;
+  }
+  /deep/ .horizontal .el-menu--popup .el-menu-item.is-active{
+    background: #fff;
   }
 </style>

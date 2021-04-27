@@ -61,7 +61,7 @@ export default {
               securityLevel: '',
               authProtocol: '',
               privProtocol: '',
-              privPassword: ''
+              privPin: ''
             },
             configs: [
               {
@@ -92,7 +92,7 @@ export default {
             securityLevel: '',
             authProtocol: '',
             privProtocol: '',
-            privPassword: ''
+            privPin: ''
           },
           configs: [
             {
@@ -117,7 +117,7 @@ export default {
           securityLevel: '',
           authProtocol: '',
           privProtocol: '',
-          privPassword: ''
+          privPin: ''
         },
         configs: [
           {
@@ -240,7 +240,7 @@ export default {
                   securityLevel: '',
                   authProtocol: '',
                   privProtocol: '',
-                  privPassword: ''
+                  privPin: ''
                 }
               }
               configs.forEach(item => {
@@ -269,7 +269,7 @@ export default {
                     securityLevel: '',
                     authProtocol: '',
                     privProtocol: '',
-                    privPassword: ''
+                    privPin: ''
                   },
                   configs: [
                     {

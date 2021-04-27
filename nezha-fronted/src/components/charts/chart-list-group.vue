@@ -203,7 +203,7 @@ import textChart from './text-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
 import chartTempData from '@/components/charts/chartTempData'
-import {fromRoute} from "@/components/common/js/constants";
+import { fromRoute } from '@/components/common/js/constants'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',

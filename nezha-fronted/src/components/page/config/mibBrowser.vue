@@ -88,7 +88,7 @@
                     <div class="mib-browser-ad-search-label">{{$t('login.pin')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.password" id="mib-browser-password"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.pin" id="mib-browser-pin"></el-input>
                   </el-col>
                 </el-row>
 
@@ -118,10 +118,10 @@
 
                 <el-row class="mib-browser-ad-search-item" v-if="searchParamPop.auth.securityLevel == 'authPriv'">
                   <el-col :span="6">
-                    <div class="mib-browser-ad-search-label">{{$t('project.module.privpin')}}</div>
+                    <div class="mib-browser-ad-search-label">{{$t('project.module.privPin')}}</div>
                   </el-col>
                   <el-col :span="17">
-                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPassword" id="mib-browser-privPassword"></el-input>
+                    <el-input type="password" class="input-x-mini-24" v-model.trim="searchParamPop.auth.privPin" id="mib-browser-privPassword"></el-input>
                   </el-col>
                 </el-row>
               </template>
@@ -285,11 +285,11 @@ export default {
         community: 'public',
         auth: {
           username: '',
-          password: '',
+          pin: '',
           securityLevel: '',
           authProtocol: '',
           privProtocol: '',
-          privPassword: ''
+          privPin: ''
         },
         type: '',
         value: ''
@@ -303,11 +303,11 @@ export default {
         community: 'public',
         auth: {
           username: '',
-          password: '',
+          pin: '',
           securityLevel: '',
           authProtocol: '',
           privProtocol: '',
-          privPassword: ''
+          privPin: ''
         }
       },
       operationData: ['get', 'walk', 'getnext', 'set'],
@@ -453,11 +453,11 @@ export default {
         community: 'public',
         auth: {
           username: '',
-          password: '',
+          pin: '',
           securityLevel: '',
           authProtocol: '',
           privProtocol: '',
-          privPassword: ''
+          privPin: ''
         }
       }
     },
@@ -481,10 +481,10 @@ export default {
             if (this.searchParamPop.version == 3) {
               this.searchParamPop.auth.username = snmpAccount.params.username
               this.searchParamPop.auth.securityLevel = snmpAccount.params.securityLevel
-              this.searchParamPop.auth.password = snmpAccount.params.password
+              this.searchParamPop.auth.pin = snmpAccount.params.pin
               this.searchParamPop.auth.authProtocol = snmpAccount.params.authProtocol
               if (this.searchParamPop.auth.securityLevel == 'authPriv') { this.searchParamPop.auth.privProtocol = snmpAccount.params.privProtocol }
-              this.searchParamPop.auth.privPassword = snmpAccount.params.privPassword
+              this.searchParamPop.auth.privPin = snmpAccount.params.privPin
             }
           }
         }

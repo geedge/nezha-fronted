@@ -106,9 +106,9 @@
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_auth_account">
               <el-input  v-model="email.email_auth_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPwd')" class="has-tip" prop="email_auth_password">
-              <el-input v-model="email.email_auth_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
-              <div class="el-form-item__tip">{{$t("config.system.email.pwdTip")}}</div>
+            <el-form-item :label="$t('config.system.email.smtpPin')" class="has-tip" prop="email_auth_pin">
+              <el-input v-model="email.email_auth_pin" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
+              <div class="el-form-item__tip">{{$t("config.system.email.pinTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">
               <el-input v-model="email.email_send_account" :disabled="email.email_enable == 'off'" id="system-email-email_send_account"></el-input>
@@ -170,8 +170,8 @@
             <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
               <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.pwd')" prop="ldap_password">
-              <el-input v-model="ldap.ldap_password" type="password" id="system-ldap-ldap_password"></el-input>
+            <el-form-item :label="$t('config.system.ldap.pin')" prop="ldap_pin">
+              <el-input v-model="ldap.ldap_pin" type="password" id="system-ldap-ldap_pin"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
               <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>
@@ -229,8 +229,8 @@
                 </template>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.reset.pwd')" prop="password">
-              <el-input id="system-reset-password" v-model="reset.password" type="password"></el-input>
+            <el-form-item :label="$t('config.system.reset.pin')" prop="pin">
+              <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
             </el-form-item>
             <el-form-item>
               <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</button>
@@ -259,7 +259,7 @@ export default {
       basic: {
         alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
-        session_timeout:'30',
+        session_timeout: '30',
         storage_local_retention: 15 * 24,
         system_name: '',
         system_logo: '',
@@ -294,7 +294,7 @@ export default {
         email_port: 25,
         email_timeout: 10,
         email_auth_account: '',
-        email_auth_password: '',
+        email_auth_pin: '',
         email_send_account: '',
         email_test_account: '',
         email_security_type: 'NONE'
@@ -330,7 +330,7 @@ export default {
       ldap: {
         ldap_address: '',
         ldap_dn: '',
-        ldap_password: '',
+        ldap_pin: '',
         ldap_ou: '',
         ldap_user_filter: '',
         ldap_mapping: '',
@@ -346,7 +346,7 @@ export default {
       },
       reset: {
         type: [],
-        password: ''
+        pin: ''
       },
       linkTemp: {
         name: '', url: ''
@@ -376,7 +376,7 @@ export default {
       },
       resetRules: {
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        password: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       resetOptions: [
         {

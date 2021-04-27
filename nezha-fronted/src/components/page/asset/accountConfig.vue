@@ -11,13 +11,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('asset.pin')" v-if="account.params.method == 'password'">
-        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="ssh-account-password"/>
+        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.pin" id="ssh-account-password"/>
       </el-form-item>
       <el-form-item :label="$t('asset.ssh')" v-if="account.params.method == 'key'" prop="file">
         <el-input rows="4" type="textarea" placeholder="" v-model="account.params.key" size="small" id="ssh-account-key"></el-input>
       </el-form-item>
       <el-form-item :label="$t('asset.pin')" v-if="account.params.method == 'key'">
-        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.keyPassword" id="ssh-account-keyPassword"/>
+        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.keyPin" id="ssh-account-keyPin"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
         <el-input size="small" v-model.number="account.port" id="ssh-account-port"/>
@@ -31,12 +31,12 @@
         <el-input autocomplete="new-password" size="small" v-model="account.params.userTip" id="telnet-account-userTip"/>
       </el-form-item>
       <el-form-item :label="$t('asset.pin')">
-        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="telnet-account-password"/>
+        <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.pin" id="telnet-account-pin"/>
       </el-form-item>
       <el-form-item :label="this.$t('asset.pinTip')">
-        <el-input size="small" v-model="account.params.passwordTip" id="telnet-account-passwordTip"/>
+        <el-input size="small" v-model="account.params.pinTip" id="telnet-account-pinTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.reloginpinTip')" prop="reloginTip">
+      <el-form-item :label="$t('asset.reloginPinTip')" prop="reloginTip">
         <el-input size="small" v-model="account.params.reloginTip" id="telnet-account-reloginTip"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
@@ -71,8 +71,8 @@
             <el-radio-button label="authPriv"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('login.pin')" prop="params.password" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
-          <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="snmp-account-password"/>
+        <el-form-item :label="$t('login.pin')" prop="params.pin" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
+          <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.pin" id="snmp-account-password"/>
         </el-form-item>
         <el-form-item :label="$t('project.module.authProtocol')" prop="params.authProtocol" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
           <el-radio-group v-model="account.params.authProtocol" size="small" id="snmp-account-authProtocol">
@@ -86,8 +86,8 @@
             <el-radio-button label="AES"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('project.module.privpin')" prop="params.privPassword" v-if="account.params.securityLevel == 'authPriv'">
-          <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.privPassword" id="snmp-account-privPassword"/>
+        <el-form-item :label="$t('project.module.privPin')" prop="params.privPin" v-if="account.params.securityLevel == 'authPriv'">
+          <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.privPin" id="snmp-account-privPin"/>
         </el-form-item>
       </template>
     </template>
@@ -123,24 +123,24 @@ export default {
         user: '',
         authType: 1,
         protocol: 'SSH',
-        pwd: '',
+        pin: '',
         port: null,
         privateKey: null,
         userTip: '',
-        passwordTip: '',
-        reloginPasswordTip: ''
+        pinTip: '',
+        reloginPinTip: ''
       }
     },
     isShowTelnetOption () {
       this.showTelnetOption = !this.showTelnetOption
       if (!this.showTelnetOption) {
         this.account.userTip = ''
-        this.account.passwordTip = ''
-        this.account.reloginPasswordTip = ''
+        this.account.pinTip = ''
+        this.account.reloginPinTip = ''
       }
     },
     telnetOptionState () {
-      if (this.account.userTip != '' || this.account.passwordTip != '' || this.account.reloginPasswordTip != '') {
+      if (this.account.userTip != '' || this.account.pinTip != '' || this.account.reloginPinTip != '') {
         this.showTelnetOption = true
       }
     },
@@ -155,8 +155,8 @@ export default {
     },
     clearTelnetOptions () {
       this.account.userTip = ''
-      this.account.passwordTip = ''
-      this.account.reloginPasswordTip = ''
+      this.account.pinTip = ''
+      this.account.reloginPinTip = ''
     },
     handleChange (file, fileList) {
       if (fileList.length > 0) {
@@ -182,7 +182,7 @@ export default {
           this.clearPrivateKey()
         }
         if (n.authType == 2) { // 公钥登录
-          this.account.pwd = ''
+          this.account.pin = ''
         }
         if (n.protocol == 'SSH') {
           this.showTelnetOption = false

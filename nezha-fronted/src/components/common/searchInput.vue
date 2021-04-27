@@ -772,7 +772,7 @@ export default {
             objectInfo[val.label] = val.val
           }
         }
-        console.log('search obj',objectInfo)
+        console.log('search obj', objectInfo)
       })
       this.getHeight()
       // 搜索完成后存储在本地历史记录中
