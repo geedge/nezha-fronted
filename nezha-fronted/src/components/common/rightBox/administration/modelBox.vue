@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="modelForm" :model="editModel" :rules="rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px">
           <!--name-->
-          <el-form-item :label="$t('config.model.model')" prop="model">
+          <el-form-item :label="$t('config.model.name')" prop="name">
             <el-input v-model="editModel.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--brand-->
