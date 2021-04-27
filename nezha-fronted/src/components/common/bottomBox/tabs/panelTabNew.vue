@@ -9,8 +9,13 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-if="from === fromRoute.asset" v-slot:top-tool-right>
+        <div class="top-tool-search margin-r-20">
+          <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
+            <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
+          </el-input>
+        </div>
         <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-        <export-excel
+<!--        <export-excel
           id="asset-list"
           :params="searchLabel"
           :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
@@ -24,7 +29,21 @@
             <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="addChart">
               <i class="nz-icon nz-icon-create-square"></i></button>
           </template>
-        </export-excel>
+        </export-excel>-->
+        <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          id="asset-list"
+          :params="searchLabel"
+          :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset-charts"
+          export-url="visual/panel/export"
+          import-url="visual/panel/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
       </template>
       <template v-slot>
         <div class="panel">
@@ -51,11 +70,10 @@
 import chartBox from '../../../page/dashboard/chartBox'
 import chartList from '../../../charts/chart-list'
 import bus from '../../../../libs/bus'
-import exportXLSX from '@/components/common/exportXLSX'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import { fromRoute } from '@/components/common/js/constants'
-
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 export default {
   name: 'panelTabNew',
   mixins: [subDataListMixin],
@@ -139,7 +157,7 @@ export default {
     chartBox,
     chartList,
     nzBottomDataList,
-    'export-excel': exportXLSX
+    topToolMoreOptions
   },
   methods: {
     // 刷新
@@ -333,7 +351,7 @@ export default {
       this.pageObj.pageSize = val
       this.getTableData(this.obj.id)
     },
-    search: function () {
+    search () {
       if (this.$refs.chartList) {
         this.$refs.chartList.searchCharts(this.filter.searchName)
       }
@@ -346,13 +364,13 @@ export default {
         _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
-    focusInput: function () {
+    focusInput () {
       let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
       classVal = classVal.replace('query-input-inactive', 'query-input-active')
       document.getElementById('queryPanel').parentElement.setAttribute('class', classVal)
       this.$refs.queryPanel.focus()
     },
-    blurInput: function () {
+    blurInput () {
       if (!this.filter.searchName || this.filter.searchName == '') {
         setTimeout(function () {
           let classVal = document.getElementById('queryPanel').parentElement.getAttribute('class')
@@ -361,10 +379,10 @@ export default {
         }, 100)
       }
     },
-    clearInput: function () {
+    clearInput () {
       this.$refs.queryPanel.focus()
     },
-    syncChart: function () {
+    syncChart () {
       if (this.from == this.fromRoute.asset || this.from == this.fromRoute.model) {
         this.$confirm(this.$t('tip.syncTip'), {
           confirmButtonText: this.$t('tip.yes'),
@@ -408,14 +426,14 @@ export default {
       this.tableHover = false
     }
   },
-  mounted: function () {
+  mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
   },
   watch: {
-    'filter.searchName': function (n, o) {
+    'filter.searchName' (n, o) {
       const temp = this
       setTimeout(function () {
         temp.search()
@@ -650,12 +668,6 @@ export default {
 <style lang="scss">
   .nz-dashboard-dropdown {
     z-index: 3001 !important;
-  }
-  .panel .top-tools input {
-    background-color: $content-right-background-color;
-  }
-  .panel .top-tools  .el-input__inner {
-    background-color: $content-right-background-color;
   }
   .panel-calendar .el-range-editor--mini.el-input__inner {
     height: 25px !important;

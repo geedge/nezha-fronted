@@ -12,7 +12,8 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown >
+      <el-dropdown>
+        <el-dropdown-menu slot="dropdown"></el-dropdown-menu>
         <div id="header-open-cli" @click="cli">
           <div class="header-menu&#45;&#45;item"><i class="nz-icon nz-icon-terminal"></i></div>
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>

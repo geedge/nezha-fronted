@@ -22,48 +22,6 @@
                   </el-input>
                 </template>
               </select-panel>
-              <!--<el-dropdown @command="panelChange" class="panel-dropdown-title" trigger="click" placement="bottom-start" >
-                <el-row  :gutter="10" class="el-dropdown-link" style="padding-right: 5px">
-                  <el-col :span="21" class="panel-list-title" :title="showPanel.name">{{showPanel.name}}</el-col>
-                  <el-col :span="3" style="padding-left:0px !important;"><i class="nz-icon nz-icon-arrow-down"></i></el-col>
-                </el-row>
-                <el-dropdown-menu class="nz-dashboard-dropdown panel-dropdown-title-space" slot="dropdown"  >
-                  &lt;!&ndash;<el-dropdown-item>{{$t('dashboard.panel.createPanelTitleSec')}}</el-dropdown-item>&ndash;&gt;
-                  <div ref="dashboardScrollbar" style="height: 100%; overflow: auto">
-                    <el-dropdown-item >
-                      <el-row class="panel-list-width" :gutter="10" >
-                        <el-col :span="21"><el-input :placeholder="$t('overall.search')" @click.native.stop="filterPanelFocus($event)" @input="filterPanelFunc" clearable size="mini" v-model="filterPanel"></el-input></el-col>
-                        <el-col :span="3"><span :title='$t("dashboard.panel.createPanelTitleSec")' @click="toAdd" v-has="'panel_toAdd'"><i class="nz-icon nz-icon-plus"></i></span></el-col>
-                      </el-row>
-                    </el-dropdown-item>
-                    <draggable v-model="panelData" @start="start" @end="end" :move="move" :key
-                               :scroll-sensitivity="150"
-                               :options="{
-                                   group:{name:'chartGroup',pull:'false'},
-                                   dragClass:'drag-chart-class',
-                                   fallbackClass:'fallback-class',
-                                   forceFallback:true,
-                                   ghostClass:'chart-ghost',
-                                   chosenClass:'choose-class',
-                                   scroll:true,
-                                   scrollFn:function(offsetX,offsetY,originalEvent,touchEvt,hoverTargetEI){},
-                                   animation:150,
-                                   handle:'.panelContent',
-                                 }"  >
-                      <el-dropdown-item v-for="item in showPanelList" :key="item.id+1" class="panel-title-li"
-                                        :class="showPanel.id==item.id?'nz-dashboard-dropdown-bg':''" :command="item">
-                        <el-row  :gutter="10" class="panel-list-width" >
-                          <el-col :span="2" class="panelContent move-area"><i class="nz-icon nz-icon-sort4"></i></el-col>
-                          <el-col :span="17" class="panel-list-item" :title="item.name">{{item.name}}</el-col>
-                          <el-col :span="1"><span @click.stop="del(item)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span></el-col>
-                          <el-col :span="1">&nbsp;</el-col>
-                          <el-col :span="1"><span @click.stop="edit(item)" class="panel-dropdown-btn" v-has="'panel_toEdit'"><i class="nz-icon nz-icon-edit"></i></span></el-col>
-                        </el-row>
-                      </el-dropdown-item>
-                    </draggable>
-                  </div>
-                </el-dropdown-menu>
-              </el-dropdown>-->
             </div>
             <div class="top-tool-right">
               <div class="top-tool-search margin-r-20">
@@ -73,7 +31,13 @@
               </div>
 
               <pick-time id="panel" ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-              <export-excel
+
+              <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10"
+                      type="button" @click="addChart">
+                <i class="nz-icon-create-square nz-icon"></i>
+              </button>
+
+              <top-tool-more-options
                 id="panel"
                 :params="filter"
                 :permissions="{
@@ -86,15 +50,17 @@
                 import-url="/visual/panel/import"
                 @afterImport="dateChange"
               >
-                <template slot="optionZone">
-                  <button id="panel-add-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')"
-                          class="top-tool-btn" @click="addChart">
-                    <i class="nz-icon-create-square nz-icon"></i>
-                  </button>
+                <template v-slot:before>
+                  <el-dropdown-item>
+                    <div id="panel-lock" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? 'Locked' : 'Unlocked'}}</div>
+                  </el-dropdown-item>
                 </template>
-              </export-excel>
-              <button id="chart-temp-add" class="top-tool-btn margin-l-10" type="button" @click="addChartByTemp"><i class='nz-icon nz-icon-lock'></i></button>
-              <button id="panel-lock" class="top-tool-btn margin-l-10" type="button" @click="panelLock=!panelLock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i></button>
+                <template v-slot:after>
+                  <el-dropdown-item v-has="'panel_chart_add'">
+                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add template</div>
+                  </el-dropdown-item>
+                </template>
+              </top-tool-more-options>
             </div>
           </template>
         </div>
@@ -127,11 +93,11 @@ import ChartBox from './chartBox'
 import ChartList from '../../charts/chart-list'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
-import exportXLSX from '../../common/exportXLSX'
 import selectPanel from '../../common/popBox/selectPanel'
 import panelBox from '@/components/common/rightBox/panelBox'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
-
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import Template from '@/components/page/config/template'
 export default {
   name: 'panel',
   data () {
@@ -216,12 +182,13 @@ export default {
     }
   },
   components: {
+    Template,
     'chart-box': ChartBox,
     'chart-list': ChartList,
     'pick-time': pickTime,
-    'export-excel': exportXLSX,
-    selectPanel,
     'panel-box': panelBox,
+    topToolMoreOptions,
+    selectPanel,
     chartTempBox
   },
   methods: {

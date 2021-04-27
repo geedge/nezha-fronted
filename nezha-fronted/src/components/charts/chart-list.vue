@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   .chartBox {
     float:left;
-    padding: 0 0 10px 0;
+    padding: 0 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }
