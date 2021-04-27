@@ -8,16 +8,16 @@
     </div>
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="modelForm" :model="editModel" :rules="rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px">
+        <el-form ref="modelForm" :model="editModel" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.model.name')" prop="name">
             <el-input v-model="editModel.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--brand-->
           <el-form-item :label='$t("config.model.brand")' prop="brandId">
-            <el-select value-key="id" allow-create popper-class="config-dropdown" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
-            <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+            <el-select value-key="id" allow-create  class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :filterable="true" v-model="editModel.brandId" placeholder="" size="small" id="module-box-input-project">
+              <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('config.model.remark')" prop="remark">

@@ -79,6 +79,18 @@ export const asset = {
     { value: 2, label: i18n.t('asset.notInStock') },
     { value: 3, label: i18n.t('asset.suspended') }
   ],
+  assetType: {
+    authProtocolOptions: [
+      { value: 0, label: '无' },
+      { value: 1, label: 'SSH' },
+      { value: 2, label: 'TELNET' }
+    ],
+    authProtocolData: {
+      non: 0,
+      ssh: 1,
+      telnet: 2
+    },
+  },
   authProtocolOptions: [
     { value: 1, label: 'SSH' },
     { value: 2, label: 'TELNET' }

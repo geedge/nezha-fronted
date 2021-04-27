@@ -1,6 +1,6 @@
 <template>
   <el-table
-    id="assetMetaTable"
+    id="assetLabelTable"
     ref="dataTable"
     :data="tableData"
     :height="height"
@@ -37,22 +37,22 @@
           {{scope.row[item.prop] ? scope.row[item.prop].name : '-'}}
         </div>
         <div v-else-if=" item.prop === 'display' ">
-          <el-switch
-            v-model="scope.row[item.prop]"
-            :active-value="1"
-            :inactive-value="0"
-            active-color="#ee9d3f"
-            @change="putMeta(scope.row)">
-          </el-switch>
+          <div v-if="scope.row[item.prop] === 1">Enabled</div>
+          <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
         </div>
         <div v-else-if=" item.prop === 'search' ">
-          <el-switch
-            v-model="scope.row[item.prop]"
-            :active-value="1"
-            :inactive-value="0"
-            active-color="#ee9d3f"
-            @change="putMeta(scope.row)">
-          </el-switch>
+          <div v-if="scope.row[item.prop] === 1">Enabled</div>
+          <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
+        </div>
+        <div v-else-if=" item.prop === 'type' ">
+          <div v-if="scope.row[item.prop] == 'TEXT'&&'text'"><i class="nz-icon nz-icon-text"></i>TEXT</div>
+          <div v-else-if="scope.row[item.prop] == 'multitext'"><i class="nz-icon nz-icon-multitext"></i>MULTITEXT</div>
+          <div v-else-if="scope.row[item.prop] == 'textarea'"><i class="nz-icon nz-icon-textarea"></i>TEXTAREA</div>
+          <div v-else-if="scope.row[item.prop] == 'radio'"><i class="nz-icon nz-icon-radio"></i>RADI0</div>
+          <div v-else-if="scope.row[item.prop] == 'checkbox'"><i class="nz-icon nz-icon-checkbox"></i>CHECKBOX</div>
+          <div v-else-if="scope.row[item.prop] == 'xialaxuanze'"><i class="nz-icon nz-icon-xialaxuanze"></i>SELECT</div>
+          <div v-else-if="scope.row[item.prop] == 'integer'"><i class="nz-icon nz-icon-integer"></i>INTEGER</div>
+          <div v-else-if="scope.row[item.prop] == 'double'"><i class="nz-icon nz-icon-double"></i>DOUBLE</div>
         </div>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
@@ -93,31 +93,32 @@ export default {
           show: true,
           width: 80
         }, {
-          label: this.$t('config.assetMeta.name'),
+          label: this.$t('config.assetLabel.name'),
           prop: 'name',
-          show: true
+          show: true,
+          width: 100
         }, {
-          label: this.$t('config.assetMeta.key'),
+          label: this.$t('config.assetLabel.key'),
           prop: 'metaKey',
           show: true
         }, {
-          label: this.$t('config.assetMeta.group'),
+          label: this.$t('config.assetLabel.group'),
           prop: 'group',
           show: true
         }, {
-          label: this.$t('config.assetMeta.search'),
+          label: this.$t('config.assetLabel.search'),
           prop: 'search',
           show: true
         }, {
-          label: this.$t('config.assetMeta.display'),
+          label: this.$t('config.assetLabel.display'),
           prop: 'display',
           show: true
         }, {
-          label: this.$t('config.assetMeta.type'),
+          label: this.$t('config.assetLabel.type'),
           prop: 'type',
           show: true
         }, {
-          label: this.$t('config.assetMeta.params'),
+          label: this.$t('config.assetLabel.params'),
           prop: 'param',
           show: false
         }
@@ -125,18 +126,7 @@ export default {
     }
   },
   methods: {
-    putMeta (row) {
-      this.tools.loading = true
-      this.$put('asset/field/meta', row).then(response => {
-        this.prevent_opt.save = false
-        if (response.code === 200) {
-          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-        } else {
-          this.$message.error(response.msg)
-        }
-        this.getTableData()
-      })
-    }
+    
   }
 }
 </script>

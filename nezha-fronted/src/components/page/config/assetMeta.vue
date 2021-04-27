@@ -94,7 +94,7 @@ export default {
         groupShow: false
       },
       groupData: [{
-        name: this.$t('config.assetMeta.all'),
+        name: this.$t('config.assetLabel.all'),
         id: -1,
         children: []
       }],
@@ -114,7 +114,7 @@ export default {
             disabled: false
           }, {
             id: 12,
-            name: this.$t('config.assetMeta.name'),
+            name: this.$t('config.assetLabel.name'),
             type: 'input',
             label: 'name',
             disabled: false
@@ -226,6 +226,7 @@ export default {
     },
     add () {
       this.object = JSON.parse(JSON.stringify(this.blankObject))
+      console.log(this.object);
       this.rightBox.metaShow = true
     },
     edit (row) {

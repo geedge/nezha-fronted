@@ -972,6 +972,12 @@ const en = {
     },
     assetType: {
       assetType: 'Asset Type',
+      name:'Name',
+      vm:'VM',
+      vmh:'VMH',
+      authProtocol:'AuthProtocol',
+      snmpEnable: 'SnmpEnable',
+      createModel:'CreateModel',
       parent: 'Parent',
       pname: 'Parent name',
       editAssetType: 'Edit asset type',
@@ -986,6 +992,7 @@ const en = {
       editAssetState: 'Edit asset state'
     },
     assetLabel: {
+      addMeta:'addMeta',
       example: 'Example',
       assetLabel: 'Asset labels',
       all: 'All',

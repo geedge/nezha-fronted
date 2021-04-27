@@ -950,6 +950,7 @@ const cn = {
       }
     },
     assetType: {
+      name:'名称',
       assetType: '资产类型',
       parent: '父级',
       pname: '父级',

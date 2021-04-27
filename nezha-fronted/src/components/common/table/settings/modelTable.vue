@@ -43,16 +43,6 @@
          <template v-else-if="item.prop === 'brand'">
              {{scope.row.brand.name}}
          </template>
-        <template v-else-if="item.prop === 'status'">
-          <el-switch
-            v-model="scope.row.status"
-            :active-color="theme.themeColor"
-            :disabled="isCurrentUser(scope.row.username) || !hasButton('user_edit') || (scope.row.username === 'admin' && scope.row.id === 1)"
-            active-value="1"
-            inactive-value="0"
-            @change="val => {statusChange(scope.row)}">
-          </el-switch>
-        </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else>{{scope.row[item.prop]}}</span>
       </template>
@@ -115,27 +105,11 @@ export default {
     }
   },
   methods: {
-    statusChange (user) {
-      if (user.roles) {
-        user.roleIds = user.roles.map(t => t.id)
-      }
-      this.$put(this.url, user).then(response => {
-        if (response.code === 200) {
-          this.rightBox.show = false
-          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-        } else {
-          this.$message.error(response.msg)
-        }
-        this.$emit('reload')
-      })
-    }
+   
+    
   },
   computed: {
-    isCurrentUser () {
-      return function (username) {
-        return localStorage.getItem('nz-username') === username
-      }
-    }
+    
   }
 }
 </script>
