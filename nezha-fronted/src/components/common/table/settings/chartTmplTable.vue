@@ -144,37 +144,37 @@ export default {
       let str = 'nz-icon '
       switch (row.type) {
         case 'line':
-          str += 'nz-icon-LinkChart'
+          str += 'nz-icon-link-chart'
           break
         case 'bar':
-          str += 'nz-icon-barchart'
+          str += 'nz-icon-bar-chart'
           break
         case 'stackArea':
-          str += 'nz-icon-StackArea'
+          str += 'nz-icon-stack-area'
           break
         case 'singleStat':
-          str += 'nz-icon-SingleValue'
+          str += 'nz-icon-single-value'
           break
         case 'pie':
-          str += 'nz-icon-Piechart'
+          str += 'nz-icon-pie-chart'
           break
         case 'table':
-          str += 'nz-icon-Table1'
+          str += 'nz-icon-table1'
           break
         case 'alertList':
-          str += 'nz-icon-alertlist'
+          str += 'nz-icon-alert-list'
           break
         case 'text':
-          str += 'nz-icon-Text1'
+          str += 'nz-icon-text1'
           break
         case 'url':
-          str += 'nz-icon-URL'
+          str += 'nz-icon-url'
           break
         case 'group':
-          str += 'nz-icon-Group'
+          str += 'nz-icon-group'
           break
         default :
-          str += 'nz-icon-Table1'
+          str += 'nz-icon-table1'
           break
       }
       return str

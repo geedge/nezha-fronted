@@ -65,7 +65,7 @@
               :popper-class="'popover-webshell'"
             >
             <div>
-             {{item.uuid.slice(0,7)}}
+             Session ID : {{item.uuid.slice(0,7).toLocaleUpperCase()}}
             </div>
             <span slot="reference"> <i class="nz-icon nz-icon-about" /></span>
           </el-popover>
