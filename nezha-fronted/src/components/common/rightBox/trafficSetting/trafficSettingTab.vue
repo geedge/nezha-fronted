@@ -68,7 +68,7 @@
 
               <el-row class="mib-browser-ad-search-item" v-if="assetSetting.auth.securityLevel == 'authNoPriv' || assetSetting.auth.securityLevel == 'authPriv'">
                 <el-col :span="6">
-                  <div class="mib-browser-ad-search-label">{{$t('login.password')}}</div>
+                  <div class="mib-browser-ad-search-label">{{$t('login.pin')}}</div>
                 </el-col>
                 <el-col :span="17">
                   <el-input class="input-x-mini-24" v-model.trim="assetSetting.auth.password" id="traffic-setting-password"></el-input>

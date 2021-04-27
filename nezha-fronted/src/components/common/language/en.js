@@ -143,7 +143,7 @@ const en = {
     },
     name: 'Database name',
     username: 'Username',
-    password: 'Password',
+    pin: 'Password',
     alertPath: 'Site URL',
     alertPrefix: 'Alert prefix',
     haMode: 'HA mode',
@@ -153,8 +153,8 @@ const en = {
     finish: 'Finish',
     invalidDb: 'There may be some errors in the configuration of the database',
     invalidRedis: 'There may be some errors in the configuration of the Redis',
-    invalidPassword: "Redis's password may be wrong",
-    requirePassword: 'The password may be required by the Redis',
+    invalidpin: "Redis's password may be wrong",
+    requirepin: 'The password may be required by the Redis',
     wait: 'The configuration has been saved, please wait patiently for it to take effect',
     reloadTimeout: 'It took too much time to restart the server, there may be some problems when you install',
     hadConfig: 'Someone has started to configure the system',
@@ -186,7 +186,7 @@ const en = {
   },
   login: {
     username: 'Username',
-    password: 'Password',
+    pin: 'Password',
     login: 'Login',
     upload: 'Upload license'
   },
@@ -534,15 +534,15 @@ const en = {
     remark: 'Description', // '描述'
     cli: 'CLI account', // 'CLI账号'
     loginType: 'Login type', // '登录类型'
-    password: 'Password', // '密码'
+    pin: 'Password', // '密码'
     ssh: 'SSH key', // 'SSH-Key'
     sshAccount: 'SSH account',
     protocol: 'Protocol',
     sshProtocol: 'SSH',
     telnetProtocol: 'Telnet',
     userTip: 'User tip', // 用户名提示
-    passwordTip: 'Password tip', // 密码提示
-    reloginPasswordTip: 'Relogin tip', // 密码提示
+    pinTip: 'Password tip', // 密码提示
+    reloginpinTip: 'Relogin tip', // 密码提示
     userPwdIntroduce: 'Please specify a user name and password so that the telenet login process can automatically log in',
     reLoginPwdIntroduce: 'Please specify the password prompt so that the login process can run automatically',
     username: 'Username', // '用户名'
@@ -583,7 +583,7 @@ const en = {
     authType: 'Auth type',
     privateKey: 'Private key',
     usernamePrompt: 'Username prompt',
-    passwordPrompt: 'Password prompt',
+    pinPrompt: 'Password prompt',
     snmpCredential: 'SNMP credential',
     authProtocol: 'Auth protocol',
     id: 'ID', // ID
@@ -624,7 +624,7 @@ const en = {
       createUser: 'New user', // "新增用户"
       editUser: 'Edit user', // "编辑用户"
       notCurrentlySupport: 'Not available', // '暂不支持'
-      password: 'Password', // '密码'
+      pin: 'Password', // '密码'
       oldPwd: 'Old password',
       inputOldPwd: 'Please input old password',
       newPwd: 'New password',
@@ -717,7 +717,7 @@ const en = {
     },
     model: {
       model: 'Asset model',
-      brand: 'Brand', 
+      brand: 'Brand',
       name: 'Asset model',
       ChartTemplate: 'ChartTemplate',
       assetNum: 'AssetNum',
@@ -749,7 +749,7 @@ const en = {
       selectFile: 'Select file',
       SSH: 'SSH',
       TELNET: 'TELNET',
-      password: 'Password',
+      pin: 'Password',
       key: 'Key',
       endTime: 'EndTime',
       id: 'ID',
@@ -1160,7 +1160,7 @@ const en = {
       authProtocol: 'Auth protocol',
       privProtocol: 'Priv protocol',
       contextName: 'Context name',
-      privPassword: 'Priv password',
+      privpin: 'Priv password',
       alerts: 'Alerts',
       asset: 'Asset',
       editEndpoint: 'edit endpoint',
@@ -1204,7 +1204,7 @@ const en = {
       type: 'Type',
       bearer_token: 'bearer token',
       username: 'Username',
-      password: 'Password',
+      pin: 'Password',
       authTypeNull: 'None',
       authTypeWord: 'basic auth',
       authTypeToken: 'bearer token',

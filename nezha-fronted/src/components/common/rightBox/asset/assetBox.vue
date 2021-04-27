@@ -186,7 +186,7 @@
                 <el-input v-model="editAsset.authPriKey" size="small"/>
               </el-form-item>
             </template>
-            <el-form-item :label="$t('asset.password')" prop="authPin">
+            <el-form-item :label="$t('asset.pin')" prop="authPin">
               <el-input v-model="editAsset.authPin" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
@@ -199,13 +199,13 @@
             <el-form-item :label="$t('asset.username')" prop="authUsername">
               <el-input v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
-            <el-form-item :label="$t('asset.password')" prop="authPin">
+            <el-form-item :label="$t('asset.pin')" prop="authPin">
               <el-input v-model="editAsset.authPin" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
               <el-input v-model="editAsset.authUserTip" size="small"/>
             </el-form-item>
-            <el-form-item :label="$t('asset.passwordPrompt')" prop="authPinTip">
+            <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
               <el-input v-model="editAsset.authPinTip" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.port')" prop="authProtocolPort">

@@ -225,7 +225,7 @@
               <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.username" size="small" id="module-box-input-uername"></el-input>
             </el-form-item>
 
-            <el-form-item :label='$t("project.endpoint.password")' prop="authtype" v-if="authType === 1" class="half-form-item">
+            <el-form-item :label='$t("project.endpoint.pin")' prop="authtype" v-if="authType === 1" class="half-form-item">
               <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.password" size="small" id="module-box-input-password"></el-input>
             </el-form-item>
 

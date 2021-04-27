@@ -20,7 +20,7 @@
                       maxlength="64" placeholder="" show-word-limit size="small" type="text"></el-input>
           </el-form-item>
           <!--password-->
-          <el-form-item :label="$t('config.user.password')" prop="pin">
+          <el-form-item :label="$t('config.user.pin')" prop="pin">
             <el-input id="account-input-password" v-model="editUser.pin"  maxlength="16" placeholder=""
                       show-word-limit size="small" type="password" @blur="passwordBlur"></el-input>
           </el-form-item>

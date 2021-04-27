@@ -6,17 +6,17 @@
       </el-form-item>
       <el-form-item :label="$t('asset.loginType')" prop="params.method">
         <el-radio-group v-model="account.params.method" size="small" id="ssh-account-method">
-          <el-radio-button label="password">{{$t('asset.password')}}</el-radio-button>
+          <el-radio-button label="password">{{$t('asset.pin')}}</el-radio-button>
           <el-radio-button label="key">{{$t('asset.ssh')}}</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'password'">
+      <el-form-item :label="$t('asset.pin')" v-if="account.params.method == 'password'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="ssh-account-password"/>
       </el-form-item>
       <el-form-item :label="$t('asset.ssh')" v-if="account.params.method == 'key'" prop="file">
         <el-input rows="4" type="textarea" placeholder="" v-model="account.params.key" size="small" id="ssh-account-key"></el-input>
       </el-form-item>
-      <el-form-item :label="$t('asset.password')" v-if="account.params.method == 'key'">
+      <el-form-item :label="$t('asset.pin')" v-if="account.params.method == 'key'">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.keyPassword" id="ssh-account-keyPassword"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
@@ -30,13 +30,13 @@
       <el-form-item :label="$t('asset.userTip')" prop="userTip">
         <el-input autocomplete="new-password" size="small" v-model="account.params.userTip" id="telnet-account-userTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.password')">
+      <el-form-item :label="$t('asset.pin')">
         <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="telnet-account-password"/>
       </el-form-item>
-      <el-form-item :label="this.$t('asset.passwordTip')">
+      <el-form-item :label="this.$t('asset.pinTip')">
         <el-input size="small" v-model="account.params.passwordTip" id="telnet-account-passwordTip"/>
       </el-form-item>
-      <el-form-item :label="$t('asset.reloginPasswordTip')" prop="reloginTip">
+      <el-form-item :label="$t('asset.reloginpinTip')" prop="reloginTip">
         <el-input size="small" v-model="account.params.reloginTip" id="telnet-account-reloginTip"/>
       </el-form-item>
       <el-form-item :label="$t('asset.port')" prop="port" style="display: inline-block">
@@ -71,7 +71,7 @@
             <el-radio-button label="authPriv"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('login.password')" prop="params.password" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
+        <el-form-item :label="$t('login.pin')" prop="params.password" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.password" id="snmp-account-password"/>
         </el-form-item>
         <el-form-item :label="$t('project.module.authProtocol')" prop="params.authProtocol" v-if="account.params.securityLevel == 'authNoPriv' || account.params.securityLevel == 'authPriv'">
@@ -86,7 +86,7 @@
             <el-radio-button label="AES"></el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('project.module.privPassword')" prop="params.privPassword" v-if="account.params.securityLevel == 'authPriv'">
+        <el-form-item :label="$t('project.module.privpin')" prop="params.privPassword" v-if="account.params.securityLevel == 'authPriv'">
           <el-input autocomplete="new-password" size="small" type="password" v-model="account.params.privPassword" id="snmp-account-privPassword"/>
         </el-form-item>
       </template>

@@ -11,7 +11,7 @@
       <div class="login-label"></div>
       <div class="login-input">
         <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.password')"></input>
+        <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')"></input>
       </div>
       <div class="login-foot">
         <button @click="login" class="login-btn" id="login" v-loading="loading" :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed':!license.valid}">{{$t("login.login")}}</button>

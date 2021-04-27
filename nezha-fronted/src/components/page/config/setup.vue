@@ -69,7 +69,7 @@
                 <el-form-item :label="$t('setup.username')" prop="username" key="dbusername">
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="pin" key="dbpassword">
+                <el-form-item :label="$t('setup.pin')"  prop="pin" key="dbpassword">
                   <el-input v-model="database.pin" type="password" show-password></el-input>
                 </el-form-item>
               </el-form>
@@ -92,7 +92,7 @@
                 <el-form-item :label="$t('setup.port')" prop="port" key="rdport">
                   <el-input v-model="redis.port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="pin" key="rdpassword">
+                <el-form-item :label="$t('setup.pin')"  prop="pin" key="rdpassword">
                   <el-input v-model="redis.pin" type="password" show-password></el-input>
                 </el-form-item>
               </el-form>
@@ -112,7 +112,7 @@
                 <el-form-item :label="$t('setup.username')" prop="host" key="syshost">
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.password')"  prop="pin" key="syspassword">
+                <el-form-item :label="$t('setup.pin')"  prop="pin" key="syspassword">
                   <el-input v-model="system.pin" type="password" show-password></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('setup.alertPath')"  prop="alertPath" key="sysalertPath">
@@ -312,9 +312,9 @@ export default {
                     this.activeStep = 2
                     this.step = 2
                     if (response.code == 574004) { // 密码无效
-                      this.$alert(this.$t('setup.invalidPassword'), { type: 'warning' })
+                      this.$alert(this.$t('setup.invalidpin'), { type: 'warning' })
                     } else if (response.code == 574005) {
-                      this.$alert(this.$t('setup.requirePassword'), { type: 'warning' })
+                      this.$alert(this.$t('setup.requirepin'), { type: 'warning' })
                     } else if (response.code == 574002) {
                       this.$alert(this.$t('setup.invalidCode', { page: this.$t('setup.welcomePage') }), { type: 'warning' })
                     } else {

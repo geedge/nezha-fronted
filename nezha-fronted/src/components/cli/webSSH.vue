@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss">
   @import './webSSH.scss';
 </style>
 <template>
@@ -32,15 +32,15 @@
           <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
           <!--</el-submenu>-->
         </el-submenu>
-        <el-submenu index="2" style="width:50px;">
-          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>
-          <el-menu-item @click="showUploadBox" index="2-1">
-            <div>{{$t('webshell.upload')}}</div>
-          </el-menu-item>
-          <el-menu-item @click="showDownloadBox" index="2-2">
-            <div>{{$t('webshell.download')}}</div>
-          </el-menu-item>
-        </el-submenu>
+<!--        <el-submenu index="2" style="width:50px;">-->
+<!--          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>-->
+<!--          <el-menu-item @click="showUploadBox" index="2-1">-->
+<!--            <div>{{$t('webshell.upload')}}</div>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item @click="showDownloadBox" index="2-2">-->
+<!--            <div>{{$t('webshell.download')}}</div>-->
+<!--          </el-menu-item>-->
+<!--        </el-submenu>-->
       </el-menu>
 
       <el-tabs :before-leave="beforeLeave"
@@ -195,6 +195,7 @@
         </div>
       </el-dialog>
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="assetShow=false" class="nz-dialog" width="620px" >
+        <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
@@ -207,6 +208,7 @@
                 search-field="manageIp"
                 v-model="assetContent.assetId"
                 size="small"
+                :language="localStorage.getItem('nz-language')"
                 :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
                 id="box-input-asset-id"
                 :result-format="resultFormat"></v-selectpage>
@@ -216,6 +218,7 @@
         </div>
       </el-dialog>
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="customShow=false" class="nz-dialog" width="620px" >
+        <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
             <el-form-item :label='$t("webshell.protocol")' prop="authProtocol" @change="protocolChange">
@@ -237,8 +240,18 @@
             <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
               <el-input v-model="customConnect.authUsername" size="small"/>
             </el-form-item>
+            <el-form-item
+              v-if="customConnect.authType === 2"
+              :label='$t("webshell.authPriKey")'
+              prop="authPriKey"
+              :rules="[
+                  { required: customConnect.authType ===2, message:$t('validate.required'), trigger: 'change'},
+                ]"
+            >
+              <el-input v-model="customConnect.authPriKey" size="small"/>
+            </el-form-item>
             <el-form-item :label='$t("webshell.authPin")' prop="authPin">
-              <el-input v-model="customConnect.authPin" size="small"/>
+              <el-input v-model="customConnect.authPin" size="small" type="password"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authProtocol === 2"
@@ -258,16 +271,6 @@
                 ]"
             >
               <el-input v-model="customConnect.authPinTip" size="small"/>
-            </el-form-item>
-            <el-form-item
-              v-if="customConnect.authType === 2"
-              :label='$t("webshell.authPriKey")'
-              prop="authPriKey"
-              :rules="[
-                  { required: customConnect.authType ===2, message:$t('validate.required'), trigger: 'change'},
-                ]"
-            >
-              <el-input v-model="customConnect.authPriKey" size="small"/>
             </el-form-item>
             <div class="right-box__footer">
               <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light" type="button">
@@ -851,6 +854,8 @@ export default {
             this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
             this.assetShow = false
             this.prevent_opt.save = false
+          } else {
+            this.prevent_opt.save = false
           }
         })
       } else {
@@ -858,6 +863,8 @@ export default {
           if (valid) {
             this.addConsole('', this.customConnect.host, '', this.customConnect.port, 'custom')
             this.customShow = false
+            this.prevent_opt.save = false
+          } else {
             this.prevent_opt.save = false
           }
         })
@@ -966,5 +973,8 @@ export default {
     .popper__arrow{
       display: none;
     }
+  }
+  div.sp-header{
+    display: none;
   }
 </style>
