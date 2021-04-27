@@ -182,7 +182,7 @@ const en = {
     authPin: 'Password',
     authUserTip: 'Username prompt',
     authPinTip: 'Password prompt',
-    authPriKey: 'Key',
+    authPriKey: 'Key'
   },
   login: {
     username: 'Username',
@@ -600,7 +600,7 @@ const en = {
     option: 'Operation', // "操作"
     name: 'Name',
     dc: 'DataCenter',
-    type: 'Types',
+    type: 'Types'
   },
   config: {
     config: 'Settings', // "设置"

@@ -36,101 +36,101 @@
 </template>
 
 <script>
-  export default {
-    name: "cabinetBox",
-    props: {
-      obj: { type: Object },
-      currentDc: { type: Object }
-    },
-    data () {
-      return {
-        editCabinet: {},
-        rules: {
-          name: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-          ],
-          uSize: [
-            { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-            { type: 'number', min: 1, max: 47, message: this.$t('validate.uSize'), trigger: 'blur' }
-          ]
-        }
+export default {
+  name: 'cabinetBox',
+  props: {
+    obj: { type: Object },
+    currentDc: { type: Object }
+  },
+  data () {
+    return {
+      editCabinet: {},
+      rules: {
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        uSize: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { type: 'number', min: 1, max: 47, message: this.$t('validate.uSize'), trigger: 'blur' }
+        ]
       }
+    }
+  },
+  methods: {
+    clickOutside () {
+      this.esc(false)
     },
-    methods: {
-      clickOutside () {
-        this.esc(false)
-      },
-      esc (refresh) {
-        this.prevent_opt.save = false
-        this.$emit('close', refresh)
-      },
-      save () {
-        if (this.prevent_opt.save) { return } ;
-        this.prevent_opt.save = true
-        this.$refs.cabinetForm.validate(valid => {
-          if (valid) {
-            this.editCabinet.idcId = this.currentDc.id
-            if (this.editCabinet.id) {
-              this.$put('cabinet', this.editCabinet).then(res => {
-                this.prevent_opt.save = false
-                if (res.code === 200) {
-                  this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-                  this.esc(true)
-                } else {
-                  this.$message.error(res.msg)
-                }
-              })
-            } else {
-              this.$post('cabinet', this.editCabinet).then(res => {
-                this.prevent_opt.save = false
-                if (res.code === 200) {
-                  this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-                  this.esc(true)
-                } else {
-                  this.$message.error(res.msg)
-                }
-              })
-            }
+    esc (refresh) {
+      this.prevent_opt.save = false
+      this.$emit('close', refresh)
+    },
+    save () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$refs.cabinetForm.validate(valid => {
+        if (valid) {
+          this.editCabinet.idcId = this.currentDc.id
+          if (this.editCabinet.id) {
+            this.$put('cabinet', this.editCabinet).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
           } else {
-            this.prevent_opt.save = false
-            return false
+            this.$post('cabinet', this.editCabinet).then(res => {
+              this.prevent_opt.save = false
+              if (res.code === 200) {
+                this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+                this.esc(true)
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
           }
-        })
-      },
-      del () {
-        if (this.prevent_opt.save) { return } ;
-        this.prevent_opt.save = true
-        this.$confirm(this.$t('tip.confirmDelete'), {
-          confirmButtonText: this.$t('tip.yes'),
-          cancelButtonText: this.$t('tip.no'),
-          type: 'warning'
-        }).then(() => {
-          this.$delete('/cabinet?ids=' + this.editCabinet.id).then(response => {
-            this.prevent_opt.save = false
-            if (response.code == 200) {
-              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.esc(true)
-            } else {
-              this.$message.error(response.msg)
-            }
-          })
-        }).catch(() => {
+        } else {
           this.prevent_opt.save = false
-        })
-      }
+          return false
+        }
+      })
     },
-    watch: {
-      obj: {
-        deep: true,
-        immediate: true,
-        handler: function (n, o) {
-          if (n) {
-            this.editCabinet = JSON.parse(JSON.stringify(n))
+    del () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/cabinet?ids=' + this.editCabinet.id).then(response => {
+          this.prevent_opt.save = false
+          if (response.code == 200) {
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+            this.esc(true)
+          } else {
+            this.$message.error(response.msg)
           }
+        })
+      }).catch(() => {
+        this.prevent_opt.save = false
+      })
+    }
+  },
+  watch: {
+    obj: {
+      deep: true,
+      immediate: true,
+      handler: function (n, o) {
+        if (n) {
+          this.editCabinet = JSON.parse(JSON.stringify(n))
         }
       }
     }
   }
+}
 </script>
 
 <style lang="scss">

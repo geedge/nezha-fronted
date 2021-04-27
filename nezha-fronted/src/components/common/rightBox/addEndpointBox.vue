@@ -65,6 +65,7 @@
                 :sort-orders="['ascending', 'descending']"
                 :width="`${item.width}`"
                 class="data-column"
+
               >
                 <template slot="header">
                   <span>{{item.label}}</span>
@@ -75,19 +76,19 @@
                     <span>{{scope.row[item.prop].name}}</span>
                   </template>
                   <template v-else-if="item.prop == 'model'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
                   </template>
                   <template v-else-if="item.prop == 'dc'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
                   </template>
                    <template v-else-if="item.prop == 'cabinet'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                     <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
                   </template>
                   <template v-else-if="item.prop == 'type'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
                   </template>
                   <template v-else-if="item.prop == 'state'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
                   </template>
                   <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
                 </template>
@@ -1130,7 +1131,7 @@ export default {
   .add-endpoint{
     display: inline-block;
     background: #F9F9F9;
-    border: 1px solid $--primary-border-color;
+    border: 1px solid #dedede;
     border-radius: 2px;
     width: 28px;
     height: 28px;
@@ -1141,7 +1142,7 @@ export default {
   .top-tool-btn{
     height: 32px;
     width: 32px;
-    border: 1px solid $--primary-border-color;
+    border: 1px solid #dedede;
     outline: none;
     border-radius: 2px;
     background-color: #F9F9F9;

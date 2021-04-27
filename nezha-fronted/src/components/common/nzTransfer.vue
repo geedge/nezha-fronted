@@ -129,7 +129,7 @@ export default {
       type: Object
     },
     tableTitle: {
-      type: Array,
+      type: Array
     }
   },
   data () {

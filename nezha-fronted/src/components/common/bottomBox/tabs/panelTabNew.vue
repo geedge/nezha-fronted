@@ -278,7 +278,7 @@ export default {
           this.panelDataList = [this.obj]
           console.log(this.panelData)
           if (this.obj.type === 'group') {
-            this.$get('/visual/panel/chart', { ids: this.obj.id,pageSize: -1 }).then(res => {
+            this.$get('/visual/panel/chart', { ids: this.obj.id,groupId:0}).then(res => {
               console.log(res)
             })
           }

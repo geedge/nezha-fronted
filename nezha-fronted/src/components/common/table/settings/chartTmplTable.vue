@@ -136,7 +136,7 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
         }
 
-      ],
+      ]
     }
   },
   methods: {

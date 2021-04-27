@@ -259,7 +259,7 @@ export default {
       basic: {
         alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
-        session_timeout:'30',
+        session_timeout: '30',
         storage_local_retention: 15 * 24,
         system_name: '',
         system_logo: '',

@@ -133,7 +133,7 @@ export default {
           label: this.$t('config.dc.assets'),
           prop: 'assetNum',
           show: true
-        },{
+        }, {
           label: this.$t('config.dc.alert'),
           prop: 'alertNum',
           show: true
@@ -162,7 +162,8 @@ export default {
     }
   },
   methods: {
-    showTableTooltip, hideTableTooltip,
+    showTableTooltip,
+    hideTableTooltip,
     regNumTest (val) { // 校验是否是数字
       return this.regNum.test(val)
     },
@@ -186,7 +187,7 @@ export default {
         }
       }
       return ''
-    },
+    }
   }
 }
 </script>

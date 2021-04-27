@@ -276,7 +276,7 @@ export default {
       this.rightBox.chart.show = true
     },
     addChartByTemp () {
-      this.chart = Object.assign({},this.blankChartTemp)
+      this.chart = Object.assign({}, this.blankChartTemp)
       this.chart.panelId = this.showPanel.id
       this.rightBox.chartTemp.show = true
     },

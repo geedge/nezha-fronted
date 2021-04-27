@@ -1562,7 +1562,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1618,7 +1618,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2) => {
@@ -1662,7 +1662,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
           } else {
             promiseArr.push('')
           }

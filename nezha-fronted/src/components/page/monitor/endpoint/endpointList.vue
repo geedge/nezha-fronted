@@ -133,7 +133,7 @@ export default {
           type: 'query',
           label: 'query',
           disabled: false
-        },{
+        }, {
           id: 34,
           name: this.$t('project.project.project'),
           // name: this.$t('asset.asset'),
@@ -266,6 +266,7 @@ export default {
             response.data.list[i].status = response.data.list[i].status + ''
           }
           this.tableData = response.data.list
+          console.log(this.tableData);
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {

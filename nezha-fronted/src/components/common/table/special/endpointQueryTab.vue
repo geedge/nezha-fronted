@@ -465,7 +465,7 @@ export default {
       this.graphShow = false
     },
     saveChart () { // 新增chart
-      this.getPanelData().then(()=>{
+      this.getPanelData().then(() => {
         const chart = {
           title: '',
           type: 'line',
