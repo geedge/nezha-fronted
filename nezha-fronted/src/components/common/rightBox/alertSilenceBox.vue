@@ -37,7 +37,6 @@
               <span class="datepicker-title">start time</span>
               <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
-                              :picker-options="optionsStartAt"
                               type="datetime"
                               :clearable="false"
                               popper-class="panel-time-picker-popper"
@@ -50,7 +49,6 @@
               <span class="datepicker-title">end time</span>
               <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
-                              :picker-options="optionsEndAt"
                               type="datetime"
                               :clearable="false"
                               popper-class="panel-time-picker-popper"

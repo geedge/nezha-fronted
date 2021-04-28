@@ -1549,7 +1549,6 @@ export default {
     upload () {
       const form = new FormData()
       form.append('file', this.file)
-      console.log(this.file)
       if (this.uploadPic.name) {
         form.append('name', this.uploadPic.name)
       } else {
@@ -1562,7 +1561,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/0`).then((data,header) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data,header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1618,7 +1617,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/0`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2,header) => {
@@ -1662,7 +1661,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/0`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
           } else {
             promiseArr.push('')
           }
@@ -1688,13 +1687,10 @@ export default {
       if (url) {
         return new Promise((resolve, reject) => {
           this.$axios
-            .get(url, {
-              responseType: 'arraybuffer'
-            })
-            .then((res, resHeader) => {
+            .get(url)
+            .then((res) => {
               return {
-                data: ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))),
-                header: resHeader
+                data: ('data:image/jpeg;base64,' + res.data),
               }
             })
             .then(data => {

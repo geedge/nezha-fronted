@@ -1549,7 +1549,6 @@ export default {
     upload () {
       const form = new FormData()
       form.append('file', this.file)
-      console.log(this.file)
       if (this.uploadPic.name) {
         form.append('name', this.uploadPic.name)
       } else {
@@ -1562,7 +1561,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1621,7 +1620,7 @@ export default {
             promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
-          Promise.all(promiseArr).then((res2) => {
+          Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index]
@@ -1688,14 +1687,14 @@ export default {
       if (url) {
         return new Promise((resolve, reject) => {
           this.$axios
-            .get(url, {
-              responseType: 'arraybuffer'
-            })
-            .then(res => {
-              return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
+            .get(url)
+            .then((res) => {
+              return {
+                data: ('data:image/jpeg;base64,' + res.data)
+              }
             })
             .then(data => {
-              resolve(data)
+              resolve(data.data, data.header)
               // changeImage(data,(img)=>{
               //   resolve(img)
               // })

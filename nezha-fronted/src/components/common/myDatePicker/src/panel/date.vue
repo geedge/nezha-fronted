@@ -173,7 +173,7 @@ import TimePicker from './time'
 import YearTable from '../basic/year-table'
 import MonthTable from '../basic/month-table'
 import DateTable from '../basic/date-table'
-
+import bus from '@/libs/bus'
 export default {
   mixins: [Locale],
 
@@ -373,7 +373,7 @@ export default {
       // NOTE: not a permanent solution
       //       consider disable "now" button in the future
       if ((!this.disabledDate || !this.disabledDate(new Date())) && this.checkDateWithinRange(new Date())) {
-        this.date = new Date()
+        this.date = new Date(bus.computeTimezoneTime(new Date()))
         this.emit(this.date)
       }
     },

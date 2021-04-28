@@ -1149,7 +1149,7 @@ const cn = {
       alerts: 'Alerts',
       privpin: '隐私密码',
       asset: 'Asset',
-      editEndpoint: '编辑 endpoint',
+      editEndpoint: '编辑 Endpoint',
       createEndpoint: '新增Endpoint',
       batchEndpoint: '批量 Endpoint',
       endpointName: 'Endpoint name'

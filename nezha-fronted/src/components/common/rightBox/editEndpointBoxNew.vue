@@ -4,7 +4,7 @@
       <!-- begin--标题-->
       <div class="right-box-title">
       <span v-if="optionType === 'edit'">
-       {{ $t("project.module.editEndpoint")}}
+       {{ $t("project.module.editEndpoint")}} {{editEndpoint.id}}
       </span>
         <span v-if="optionType === 'batch'">
        {{ $t("project.module.batchEndpoint")}}

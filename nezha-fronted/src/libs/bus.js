@@ -272,6 +272,20 @@ export default new Vue({
         return sourceTime
       }
     },
+    // 将本地时区转为系统配置的时区
+    computeTimezoneTime: function (sourceTime) {
+      let offset = localStorage.getItem('nz-sys-timezone')
+      offset = moment.tz(offset).format('Z')
+      if (offset && offset !== 'undefined') {
+        offset = Number.parseInt(offset)
+        const date = new Date(sourceTime)
+        const localOffset = date.getTimezoneOffset() * 60 * 1000 // 默认 一分钟显示时区偏移的结果
+        const utcTime = date.getTime() + localOffset
+        return utcTime + (offset * 60 * 60 * 1000)
+      } else {
+        return sourceTime
+      }
+    },
     getTimezontDateRange: function (offset = -1) {
       return [
         new Date(new Date(this.computeTimezone(new Date().getTime())).setHours(new Date(this.computeTimezone(new Date().getTime())).getHours() + offset)),

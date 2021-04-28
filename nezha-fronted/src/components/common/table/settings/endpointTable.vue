@@ -72,13 +72,13 @@
             </div>
             <div slot="reference" style="width: 100px">
               <div v-if="scope.row[item.prop]===0">
-                <div class="active-icon red inline-block"></div> down
+                <div class="active-icon red-bg inline-block"></div> down
               </div>
               <div v-else-if="scope.row[item.prop]===1">
-                <div class="active-icon green inline-block"></div> up
+                <div class="active-icon green-bg inline-block"></div> up
               </div>
               <div v-else-if="scope.row[item.prop]">
-                <div class="active-icon gray inline-block"></div> suspended
+                <div class="active-icon gray-bg inline-block"></div> suspended
               </div>
             </div>
           </el-popover>
@@ -183,16 +183,16 @@ export default {
       let str = ''
       arr.forEach((item, index) => {
         if (index === 0) {
-          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
         }
         if (index === 1) {
-          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
         }
         if (index === 2) {
-          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
         }
         if (index === 3) {
-          str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red' : 'green'}"></div></div>`
+          str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
         }
       })
       return str
