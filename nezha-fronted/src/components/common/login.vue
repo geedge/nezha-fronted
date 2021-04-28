@@ -50,6 +50,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import moment from 'moment-timezone'
 export default {
   name: 'login',
   data () {

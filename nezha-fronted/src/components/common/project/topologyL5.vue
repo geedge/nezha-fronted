@@ -1692,7 +1692,6 @@ export default {
               responseType: 'arraybuffer'
             })
             .then(res => {
-              console.log(res.data)
               return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
             })
             .then(data => {

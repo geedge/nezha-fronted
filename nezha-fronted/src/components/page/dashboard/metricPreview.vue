@@ -17,7 +17,7 @@
 
           <!--<div class="top-tools">
               <div class="float-right mr-10">
-                <el-date-picker size="mini" ref="calendar"
+                <my-date-picker size="mini" ref="calendar"
                                 format="yyyy/MM/dd HH:mm"
                                 @change="dateChange"
                                 v-model="searchTime"
@@ -27,7 +27,7 @@
                                 :start-placeholder="$t('dashboard.panel.startTime')"
                                 :end-placeholder="$t('dashboard.panel.endTime')"
                                 align="right">
-                </el-date-picker>
+                </my-date-picker>
               </div>
             </div>-->
             <div class="table-list" >
@@ -38,7 +38,7 @@
                   </el-col>
                   <el-col :span="0.5" ><div>&nbsp;</div></el-col>
                   <el-col :span="13" class="chart-preview-area" >
-                    <el-date-picker size="mini" ref="calendar"
+                    <my-date-picker size="mini" ref="calendar"
                                     format="yyyy/MM/dd HH:mm"
                                     @change="dateChange"
                                     v-model="searchTime"
@@ -49,7 +49,7 @@
                                     :end-placeholder="$t('dashboard.panel.endTime')"
                                     style="position:absolute; right: 10px"
                                     align="right">
-                    </el-date-picker>
+                    </my-date-picker>
                     <el-row class="border-area" v-show="chartCount === 'single'" style="margin-top: 40px;">
                       <div class="chartBox">
                         <line-chart-block

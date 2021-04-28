@@ -111,6 +111,7 @@
               <div>{{ leftLabel }}</div>
             </div>
             <date-table
+              :timezone="timezone"
               selection-mode="range"
               :date="leftDate"
               :default-value="defaultValue"
@@ -151,6 +152,7 @@
               <div>{{ rightLabel }}</div>
             </div>
             <date-table
+              :timezone="timezone"
               selection-mode="range"
               :date="rightDate"
               :default-value="defaultValue"
@@ -167,13 +169,15 @@
         </div>
       </div>
       <div class="el-picker-panel__footer" v-if="showTime">
-        <el-button
-          size="mini"
-          type="text"
-          class="el-picker-panel__link-btn"
-          @click="handleClear">
-          {{ t('el.datepicker.clear') }}
-        </el-button>
+        <span class="timezone-area">{{timezone}}</span>
+        <span class="timezone-offset">{{timezoneOffset}}</span>
+<!--        <el-button-->
+<!--          size="mini"-->
+<!--          type="text"-->
+<!--          class="el-picker-panel__link-btn"-->
+<!--          @click="handleClear">-->
+<!--          {{ t('el.datepicker.clear') }}-->
+<!--        </el-button>-->
         <el-button
           plain
           size="mini"

@@ -46,7 +46,7 @@
     </div>
     <div v-else-if="type==='datetime'">
       <div v-if="param.subType==='date'">
-        <el-date-picker
+        <my-date-picker
           size="small"
           :type="param.interval?'daterange':'date'"
           :range-separator="$t('dashboard.panel.to')"
@@ -54,7 +54,7 @@
           :start-placeholder="$t('dashboard.panel.startTime')"
           :end-placeholder="$t('dashboard.panel.endTime')"
         >
-        </el-date-picker>
+        </my-date-picker>
       </div>
       <div v-if="param.subType==='time'">
         <el-time-picker
@@ -68,14 +68,14 @@
         </el-time-picker>
       </div>
       <div v-if="param.subType==='datetime'">
-        <el-date-picker
+        <my-date-picker
           size="small"
           :type="param.interval?'datetimerange':'datetime'"
           :range-separator="$t('dashboard.panel.to')"
           :placeholder="$t('alert.silence.selectTime')"
           :start-placeholder="$t('dashboard.panel.startTime')"
           :end-placeholder="$t('dashboard.panel.endTime')">
-        </el-date-picker>
+        </my-date-picker>
       </div>
     </div>
     <div v-else-if="type==='email'" :class="emailError?'emailError':''">

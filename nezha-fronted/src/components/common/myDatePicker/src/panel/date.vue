@@ -89,6 +89,7 @@
 
           <div class="el-picker-panel__content">
             <date-table
+              :timezone="timezone"
               v-show="currentView === 'date'"
               @pick="handleDatePick"
               :selection-mode="selectionMode"
@@ -122,6 +123,8 @@
       <div
         class="el-picker-panel__footer"
         v-show="footerVisible && currentView === 'date'">
+        <span class="timezone-area">{{timezone}}</span>
+        <span class="timezone-offset">{{timezoneOffset}}</span>
         <el-button
           size="mini"
           type="text"

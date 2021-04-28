@@ -66,7 +66,7 @@
         </el-form-item>
         <el-form-item :label="$t('asset.purchaseDate')">
           <div class="select-style">
-            <el-date-picker
+            <my-date-picker
               id="asset-box-input-parchase-date"
               size="small"
               v-model="editAsset.purchaseDate"
@@ -74,7 +74,7 @@
               type="date"
               style="width: 100%"
               placeholder="">
-            </el-date-picker>
+            </my-date-picker>
           </div>
         </el-form-item>
         <el-form-item :label="$t('asset.location')" class="required-marker" prop="locationInfo" :rules="[{validator:locationValidator, trigger:'blur'}]">

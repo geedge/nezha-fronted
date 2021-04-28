@@ -57,7 +57,7 @@
                 </template>
                 <template v-slot:after>
                   <el-dropdown-item v-has="'panel_chart_add'">
-                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add template</div>
+                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add by template</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>

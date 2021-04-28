@@ -85,3 +85,26 @@
 .orange-bg {
   background-color: var(--theme-color) !important;
 }
+.timezone-area{
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  font-size: 14px;
+  float: left;
+  margin-left: 10px;
+  font-family: PingFangSC-Regular;
+  color: #333333;
+  line-height: 20px;
+  font-weight: 400;
+}
+.timezone-offset{
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  font-size: 14px;
+  margin-right: 10px;
+  font-family: PingFangSC-Regular;
+  color: #333333;
+  line-height: 20px;
+  font-weight: 400;
+}

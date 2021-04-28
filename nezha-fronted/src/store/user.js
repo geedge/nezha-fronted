@@ -2,6 +2,7 @@ import { post } from '../http'
 import router from '../router'
 import bus from '../libs/bus'
 import { sortByOrderNum } from '../permission'
+import moment from 'moment-timezone'
 
 const user = {
   state: {
@@ -44,6 +45,7 @@ const user = {
         localStorage.setItem('nz-sys-logo', res.data.systemLogo)
       }
       localStorage.setItem('nz-sys-timezone', res.data.timezone)
+      localStorage.setItem('timezoneOffset', moment.tz(res.data.timezone).format('Z'))
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
       localStorage.setItem('nz-sys-asset-ping-switch', res.data.assetPingSwitch)
