@@ -377,19 +377,19 @@ export default {
         {
           title: 'Type',
           data: (row) => {
-            return row.type.name
+            return row.type ? row.type.name : ''
           }
         },
         {
           title: 'Model',
           data: (row) => {
-            return row.model.name
+            return row.model ? row.model.name : ''
           }
         },
         {
           title: 'Datacenter',
           data: (row) => {
-            return row.dc.name
+            return row.dc ? row.dc.name : ''
           }
         }
       ],
