@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import bus from '@/libs/bus'
 import { getFirstDayOfMonth, getDayCountOfMonth, getWeekNumber, getStartDateOfMonth, prevDate, nextDate, isDate, clearTime as _clearTime } from 'element-ui/src/utils/date-util'
 import Locale from 'element-ui/src/mixins/locale'
 import { arrayFindIndex, arrayFind, coerceTruthyValueToArray } from 'element-ui/src/utils/util'
@@ -54,14 +55,13 @@ const removeFromArray = function (arr, pred) {
   const idx = typeof pred === 'function' ? arrayFindIndex(arr, pred) : arr.indexOf(pred)
   return idx >= 0 ? [...arr.slice(0, idx), ...arr.slice(idx + 1)] : arr
 }
-import moment from 'moment-timezone'
 export default {
   mixins: [Locale],
 
   props: {
     timezone: {
       type: String,
-      default: moment.tz.guess() // 没有传则使用本地的时区
+      default: localStorage.getItem('nz-sys-timezone') // 没有传则使用本地的时区
     },
     firstDayOfWeek: {
       default: 7,
@@ -148,7 +148,9 @@ export default {
       const disabledDate = this.disabledDate
       const cellClassName = this.cellClassName
       const selectedDate = this.selectionMode === 'dates' ? coerceTruthyValueToArray(this.value) : []
-      const now = getDateTimestamp(new Date( moment().tz(this.timezone).format('YYYY/MM/DD HH:mm:ss')))
+      const now = getDateTimestamp(
+        new Date(bus.computeTimezoneTime(new Date()))
+      )
 
       for (let i = 0; i < 6; i++) {
         const row = rows[i]

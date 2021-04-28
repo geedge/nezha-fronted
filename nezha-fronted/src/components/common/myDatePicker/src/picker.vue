@@ -825,12 +825,14 @@ export default {
     },
 
     mountPicker () {
-      let tempFun = this.panel.data
-      this.panel.data = () => {return {
-        timezone: this.timezone, // add timezone to panel component
-        timezoneOffset: moment.tz(this.timezone).format('Z'),
-        ...tempFun()
-      }}
+      const tempFun = this.panel.data
+      this.panel.data = () => {
+        return {
+          timezone: localStorage.getItem('nz-sys-timezone'), // add timezone to panel component
+          timezoneOffset: localStorage.getItem('timezoneOffset'),
+          ...tempFun()
+        }
+      }
       this.picker = new Vue(this.panel).$mount()
       this.picker.defaultValue = this.defaultValue
       this.picker.defaultTime = this.defaultTime
