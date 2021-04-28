@@ -58,7 +58,7 @@ const user = {
 
         bus.$emit('login')
         router.push({
-          path: menuList.find(menu => { return menu.route && menu.route != '/header' }).route,
+          path: 'overview',
           query: {
             t: +new Date()
           }
