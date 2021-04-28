@@ -471,7 +471,7 @@ export default {
         }
       }
       if (type === 'custom') {
-        console.terminal.custom = { ...this.customConnect }
+        console.terminal.custom = { ...this.customConnect, authPin: this.encode(this.customConnect.authPin) }
       }
       this.editableTabsValue = newTabName
       this.editableTabs.push(console)
@@ -881,6 +881,11 @@ export default {
       if (this.customConnect.authType === 1) {
         this.customConnect.authPriKey = ''
       }
+    },
+    encode (str) {
+      // 对编码的字符串转化base64
+      const base64 = btoa(str)
+      return base64
     }
   },
   watch: {
