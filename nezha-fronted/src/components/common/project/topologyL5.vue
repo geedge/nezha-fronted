@@ -1562,7 +1562,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/0`).then((data,header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1618,10 +1618,10 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/0`))
             imgArr.push({ ...item })
           })
-          Promise.all(promiseArr).then((res2) => {
+          Promise.all(promiseArr).then((res2,header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index]
@@ -1662,7 +1662,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/0`))
           } else {
             promiseArr.push('')
           }
@@ -1691,11 +1691,14 @@ export default {
             .get(url, {
               responseType: 'arraybuffer'
             })
-            .then(res => {
-              return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
+            .then((res, resHeader) => {
+              return {
+                data: ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))),
+                header: resHeader
+              }
             })
             .then(data => {
-              resolve(data)
+              resolve(data.data, data.header)
               // changeImage(data,(img)=>{
               //   resolve(img)
               // })
