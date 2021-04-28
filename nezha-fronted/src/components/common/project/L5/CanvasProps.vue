@@ -54,6 +54,7 @@
               :styleType="2"
               :metricOptionsParent="metricOptions"
               @change="expressionChange"
+              :from-father-data="true"
               @removeExpression="removeExpression"
             ></promql-input>
             <el-row>
@@ -1128,7 +1129,7 @@ export default {
     })
   },
   mounted () {
-    this.queryMetrics()
+    // this.queryMetrics()
     // this.topologyData.data.grid= !!dataOption.grid;
     // this.topologyData.data.rule= !!dataOption.rule;
     // this.topologyData.data.projectInfo= !!dataOption.projectInfo;

@@ -10,7 +10,7 @@
               <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric
                 &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></el-button>
               <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-model="cascaderValue" v-clickoutside="closeDropdown"
-                                 slot="dropdown" ref="metricSelector" :props="{emitPath:false,}"
+                                 slot="dropdown" ref="metricSelector" :props="{emitPath:false,}" :loading="loading"
                                  :options="metricOptions" @change="metricChange">
 
                 <template slot-scope="{ node, data }">
@@ -178,6 +178,10 @@ export default {
     typeContentLoading: {
       type: Boolean,
       default: false
+    },
+    fromFatherData: {
+      type: Boolean,
+      default: false
     }
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
@@ -204,11 +208,14 @@ export default {
       datacenterOption: [],
       projectOption: [],
       filterSilence: '',
-      tempBoxId: {}
+      tempBoxId: {},
+      loading: false
     }
   },
-  created () {
-    this.queryMetrics()
+  mounted () {
+    if (!this.fromFatherData) {
+      this.queryMetrics()
+    }
   },
   methods: {
     closeDropdown () {
@@ -229,8 +236,15 @@ export default {
     },
     toggleDropdown () {
       this.dropDownVisible = !this.dropDownVisible
+      this.getMetricOptions()
+    },
+    getMetricOptions () {
+      if (!this.metricOptions.length) {
+        this.queryMetrics()
+      }
     },
     queryMetrics: function () {
+      this.loading = true
       this.$get('prom/api/v1/label/__name__/values').then(response => {
         if (response.status == 'success') {
           const metrics = response.data.sort()
@@ -300,6 +314,7 @@ export default {
     },
     getExprTemp () {
       this.$get('/expression/tmpl/gname').then(res => {
+        this.loading = false
         if (res.code === 200) {
           res.data.list.forEach(item => {
             this.metricOptions.unshift({
