@@ -28,8 +28,8 @@
             <v-selectpage
             :data="chartlList"
             :tb-columns="ChartSearchShowFields"
-            :max-select-limit="3"
             :multiple="true"
+            language="en"
             title="ChartSearch"
             placeholder="Please select item"
             key-field="id"
