@@ -261,7 +261,7 @@ export default new Vue({
     // 将本地时区转为系统配置的时区
     computeTimezone: function (sourceTime) {
       let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).zoneAbbr()
+      offset = moment.tz(offset).format('Z')
       if (offset && offset !== 'undefined') {
         offset = Number.parseInt(offset)
         const date = new Date(sourceTime)
@@ -297,7 +297,7 @@ export default new Vue({
     },
     UTCTimeToConfigTimezone (utcTime) {
       let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).zoneAbbr()
+      offset = moment.tz(offset).format('Z')
       if (offset && offset !== 'undefined') {
         let time = utcTime
         if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
@@ -312,7 +312,7 @@ export default new Vue({
     },
     configTimezoneToUTCTime: function (configTime) {
       let offset = localStorage.getItem('nz-sys-timezone')
-      offset = moment.tz(offset).zoneAbbr()
+      offset = moment.tz(offset).format('Z')
       if (offset && offset !== 'undefined') {
         let time = configTime
         if (typeof time === 'string' && /(\d+?-){2}\d+?\s(\d+?:)*\d+/.test(time)) {
