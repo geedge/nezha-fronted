@@ -194,7 +194,7 @@
           </div>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="assetShow=false" class="nz-dialog" width="620px" >
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px" >
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
@@ -217,7 +217,7 @@
           </el-form>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="customShow=false" class="nz-dialog" width="620px" >
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" >
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
@@ -226,7 +226,7 @@
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange">
+            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" :disabled="customConnect.authProtocol === 2 ">
               <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
@@ -238,20 +238,23 @@
               <el-input v-model="customConnect.port" size="small"/>
             </el-form-item>
             <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
-              <el-input v-model="customConnect.authUsername" size="small"/>
+              <el-input v-model="customConnect.authUsername" size="small" autocomplete="new-password"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authType === 2"
               :label='$t("webshell.authPriKey")'
               prop="authPriKey"
               :rules="[
-                  { required: customConnect.authType ===2, message:$t('validate.required'), trigger: 'change'},
+                  { required: customConnect.authType ===2, message:$t('vali date.required'), trigger: 'change'},
                 ]"
             >
-              <el-input v-model="customConnect.authPriKey" size="small"/>
+              <el-input v-model="customConnect.authPriKey" size="small" autocomplete="new-password"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authPin")' prop="authPin">
-              <el-input v-model="customConnect.authPin" size="small" type="password"/>
+            <el-form-item :label='$t("webshell.authPin")' prop="authPin"
+                          :rules="[
+                  { required: customConnect.authType ===1, message:$t('validate.required'), trigger: 'change'},
+                ]">
+              <el-input v-model="customConnect.authPin" size="small" type="password" autocomplete="new-password"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authProtocol === 2"
@@ -272,7 +275,7 @@
             >
               <el-input v-model="customConnect.authPinTip" size="small"/>
             </el-form-item>
-            <div class="right-box__footer">
+            <div class="right-box__footer custom-footer">
               <button id="asset-edit-cancel" @click="customShow=false" class="footer__btn footer__btn--light" type="button">
                 <span>{{$t('overall.cancel')}}</span>
               </button>
@@ -875,6 +878,9 @@ export default {
       if (this.customConnect.authProtocol === 1) {
         this.customConnect.authUserTip = ''
         this.customConnect.authPinTip = ''
+      } else {
+        this.customConnect.authPriKey = ''
+        this.customConnect.authPriKey = 1
       }
     },
     authTypeChange () {
@@ -886,6 +892,23 @@ export default {
       // 对编码的字符串转化base64
       const base64 = btoa(str)
       return base64
+    },
+    closeAssetCustom () {
+      this.assetShow = false
+      this.customShow = false
+      this.assetContent.assetId = ''
+      this.customConnect = {
+        host: '',
+        port: '',
+        authType: 1,
+        authUsername: '',
+        authPin: '',
+        authPriKey: '',
+        authUserTip: '',
+        authPinTip: '',
+        authProtocolPort: '',
+        authProtocol: 1
+      }
     }
   },
   watch: {
@@ -953,6 +976,9 @@ export default {
   }
   /deep/ .el-select--small{
     width: 100%;
+  }
+  .custom-footer{
+    box-shadow: none;
   }
 </style>
 <style lang="scss">
