@@ -54,12 +54,11 @@
     </nz-data-list>
     <!--侧滑-->
     <transition name="right-box">
-      <assetMetaBox v-if="rightBox.metaShow" ref="assetMetaBox" :asset-meta="object"
-                    @close="closeRightBox"></assetMetaBox>
+      <asset-meta-box v-if="rightBox.metaShow" ref="assetMetaBox" v-bind:asset-label="object" @close="closeRightBox"></asset-meta-box>
     </transition>
     <transition name="right-box">
-      <assetMetaGroup v-if="rightBox.groupShow" :metaGroup="metaGroup" @close="closeRightBox"
-                      ref="assetMetaBox"></assetMetaGroup>
+      <asset-meta-group v-if="rightBox.groupShow" :metaGroup="metaGroup" @close="closeRightBox"
+                      ref="assetMetaBox"></asset-meta-group>
     </transition>
   </div>
 </template>

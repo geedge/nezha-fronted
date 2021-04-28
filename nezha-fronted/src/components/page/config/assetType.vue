@@ -65,7 +65,9 @@ export default {
         vm: '',
         vmh:'',
         authProtocol:'',
-        snmpEnable:''
+        snmpEnable:'',
+        snmpCollect:'',
+        sshCollect:''
       },
       tableId: 'typeConfTable',
       searchMsg: { // 给搜索框子组件传递的信息

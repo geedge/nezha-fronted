@@ -304,8 +304,7 @@ export default {
     save () {
       if (this.prevent_opt.save) {
         return
-      }
-      ;
+      };
       this.prevent_opt.save = true
       this.$refs.editAssetMetaForm.validate((valid) => {
         if (valid) {

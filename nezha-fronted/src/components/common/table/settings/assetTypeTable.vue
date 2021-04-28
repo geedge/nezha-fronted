@@ -42,14 +42,25 @@
         </div>
         <div v-else-if=" item.prop === 'authProtocol' ">
           <div v-if="scope.row[item.prop] === 1">SSH</div>
-          <div v-else-if="scope.row[item.prop] === 0">无</div>
+          <div v-else-if="scope.row[item.prop] === 0">nothing</div>
           <div v-else-if="scope.row[item.prop] === 2">telnet</div>
         </div>
         <div v-else-if=" item.prop === 'snmpEnable' ">
           <div v-if="scope.row[item.prop] === 1">Enabled</div>
           <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
         </div>
-        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
+        <div v-else-if=" item.prop === 'snmpCollect' ">
+          <div v-if="scope.row[item.prop] === 1">Enabled</div>
+          <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
+        </div>
+        <div v-else-if=" item.prop === 'sshCollect' ">
+          <div v-if="scope.row[item.prop] === 1">Enabled</div>
+          <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
+        </div>
+        <div v-else-if="item.prop === 'sshCollectScript'">
+          <div>{{ scope.row[item.prop] || '-' }}</div>
+        </div>
+        <span v-else-if="scope.row[item.prop]">{{ scope.row[item.prop] || '-' }}</span>
         <template v-else>-</template>
       </template>
     </el-table-column>
@@ -107,6 +118,20 @@ export default {
         },{
           label: this.$t('config.assetType.snmpEnable'),
           prop: 'snmpEnable',
+          show: true,
+        },{
+          label: this.$t('config.assetType.snmpCollect'),
+          prop: 'snmpCollect',
+          show: true,
+        },
+        {
+          label: this.$t('config.assetType.sshCollect'),
+          prop: 'sshCollect',
+          show: true,
+        },
+        {
+          label: this.$t('config.assetType.sshCollectScript'),
+          prop: 'sshCollectScript',
           show: true,
         }
       ]

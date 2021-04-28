@@ -81,7 +81,7 @@ export const asset = {
   ],
   assetType: {
     authProtocolOptions: [
-      { value: 0, label: '无' },
+      { value: 0, label: 'nothing' },
       { value: 1, label: 'SSH' },
       { value: 2, label: 'TELNET' }
     ],

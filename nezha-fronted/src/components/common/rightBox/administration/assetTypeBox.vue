@@ -46,6 +46,27 @@
               :inactive-value="0">
             </el-switch>
           </el-form-item>
+          <!--snmpCollect-->
+          <el-form-item :label='$t("config.assetType.snmpCollect")' prop="snmpCollect">
+            <el-switch
+              v-model="editAssetType.snmpCollect"
+              active-color="#ee9d3f"
+              :active-value="1"
+              :inactive-value="0">
+            </el-switch>
+          </el-form-item>
+          <!--sshCollect-->
+          <el-form-item :label='$t("config.assetType.sshCollect")' prop="sshCollect">
+            <el-switch
+              v-model="editAssetType.sshCollect"
+              active-color="#ee9d3f"
+              :active-value="1"
+              :inactive-value="0">
+            </el-switch>
+          </el-form-item>
+          <el-form-item :label='$t("config.assetType.sshCollectScript")' prop="sshCollectScript">
+            <el-input v-model="editAssetType.sshCollectScript" size="small" type="text"></el-input>
+          </el-form-item>
           <!-- ChartTemplate -->
           <!-- <el-form-item :label="$t('config.type.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage 
