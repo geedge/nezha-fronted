@@ -252,7 +252,7 @@ export default {
         clearTimeout(this.timer)
       }
       this.assetData.id = data
-      const boxWidth = document.getElementsByClassName('content-right')[0].offsetWidth
+      const boxWidth = document.getElementsByClassName('list-page')[0].offsetWidth
       this.boxWidth = boxWidth
       // this.assetData.rate=window.screen.height/1297;
       this.$nextTick(() => {

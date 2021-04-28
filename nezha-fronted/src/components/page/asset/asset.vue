@@ -4,7 +4,6 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.asset"
       :has-search="true"
       :layout="['searchInput', 'elementSet', 'clickSearch']"
       :search-msg="searchMsg">

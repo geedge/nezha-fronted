@@ -43,7 +43,11 @@ $--warning-color: var(--theme-color); //全局警告橙色
 $--suspended-color: #9e9c98; //全局停用色灰色
 
 :export {
-  themeColor: $--theme-color
+  themeColor: $--theme-color;
+  dangerColor: $--danger-color;
+  successColor: $--success-color;
+  warningColor: var(--theme-color);
+  suspendedColor: $--suspended-color;
 }
 /* element-ui变量覆盖 */
 /*$--color-primary: red; // 覆盖element-ui的主题色
