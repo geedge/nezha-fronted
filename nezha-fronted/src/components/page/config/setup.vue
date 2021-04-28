@@ -1,12 +1,34 @@
 <template>
   <div class="setup">
     <div class="logo-header">
-     <img height="100px" src="../../../assets/img/logo-big.png">
+      <img height="30px" style="vertical-align: bottom; margin-top: 10px" src="../../../assets/img/logo1-2.png"/>
+      <span class="logo-header-text">One-stop monitoring system</span>
+      <div class="language-select">
+      <el-dropdown :hide-on-click="false" >
+        <span class="el-dropdown-link">
+          <i class="nz-icon nz-icon-language-change" style="color: #e6eaed; font-size: 14px"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown" >
+          <el-dropdown-item>
+            <div :style="language == 'en' ? 'color:#f90' : ''" @click="changeLocal('en')" id="header-to-english">
+              <i class="nz-icon nz-icon-lang-en"></i>
+              English
+            </div>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <div :style="language == 'cn' ? 'color:#f90' : ''" @click="changeLocal('cn')" id="header-to-chinese">
+              <i class="nz-icon nz-icon-lang-zh"></i>
+              中文
+            </div>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      </div>
     </div>
-    <div style="display: flex">
+    <div style="display: flex" class="flex-box">
       <div class="step-box">
         <div class="step-inner">
-          <el-steps direction="vertical" :active="step" finish-status="success">
+          <el-steps direction="vertical" space=0 :active="step" finish-status="success">
             <el-step :title="$t('setup.step0')" ></el-step>
             <el-step :title="$t('setup.step1')" ></el-step>
             <el-step :title="$t('setup.step2')"></el-step>
@@ -15,108 +37,124 @@
         </div>
       </div>
       <div class="setup-box">
-        <div style="position: relative; height: 50px">
-          <el-menu mode="horizontal" class="language-select">
-            <el-submenu index="1">
-              <template slot="title">{{$t('setup.language')}}</template>
-              <el-menu-item index="1">
-                <div :style="language=='en'?'color:#f90':''" @click="changeLocal('en')" id="header-to-english">English</div>
-              </el-menu-item>
-              <el-menu-item index="2">
-                <div :style="language=='cn'?'color:#f90':''" @click="changeLocal('cn')" id="header-to-chinese">中文</div>
-              </el-menu-item>
-            </el-submenu>
-          </el-menu>
-        </div>
-        <div class="setup-inner">
+        <div class="setup-inner" >
           <template v-if="activeStep == 0">
             <div class="welcome">
               <div class="wel-header">
                 <!--Welcome to Nezha setup wizard!-->
-                {{$t('setup.welcome.header')}}
+                {{ $t("setup.welcome.header") }}
               </div>
-              <div class="content-divider"/>
+              <div class="content-divider" />
               <div class="wel-wizard">
-                <div class="wizard-header"><!--What will the wizard do for you?-->{{$t('setup.welcome.guid')}}</div>
+                <div class="wizard-header">
+                  <!--What will the wizard do for you?-->{{
+                    $t("setup.welcome.guid")
+                  }}
+                </div>
                 <ul>
-                  <li><!--Create a basic, single site configuration-->{{$t('setup.welcome.guid_1')}}</li>
-                  <li><!--Tries to find problems within your Database and Redis setup-->{{$t('setup.welcome.guid_2')}}</li>
+                  <li>
+                    <!--Create a basic, single site configuration-->{{
+                      $t("setup.welcome.guid_1")
+                    }}
+                  </li>
+                  <li>
+                    <!--Tries to find problems within your Database and Redis setup-->{{
+                      $t("setup.welcome.guid_2")
+                    }}
+                  </li>
                 </ul>
               </div>
-              <div class="content-divider"/>
+              <div class="content-divider" />
               <div class="wel-continue">
-                <div class="wizard-header"><!--To continue-->{{$t('setup.welcome.toContinue')}}:</div>
-                <div>
-                  <!--For security reasons you need to authenticate for the installation by creating the file-->{{$t('setup.welcome.creatFile')}} '/opt/nezha/nz-web/tmp/nezha.auth'.<br/><!--This can be done by executing the following command-->{{$t('setup.welcome.createFileTip')}}:
+                <div class="wizard-header">
+                  <!--To continue-->{{ $t("setup.welcome.toContinue") }}:
                 </div>
-                <pre>echo -n {{validateCode}} > /opt/nezha/nz-web/tmp/nezha.auth</pre>
-                <div><!--Click the 'Next' button when you've finished.-->{{$t('setup.welcome.next')}}</div>
+                <div>
+                  <!--For security reasons you need to authenticate for the installation by creating the file-->{{
+                    $t("setup.welcome.creatFile")
+                  }}
+                  '/opt/nezha/nz-web/tmp/nezha.auth'.<br /><!--This can be done by executing the following command-->{{
+                    $t("setup.welcome.createFileTip")
+                  }}:
+                </div>
+                <pre>echo -n {{ validateCode }} > /opt/nezha/nz-web/tmp/nezha.auth</pre>
+                <div>
+                  <!--Click the 'Next' button when you've finished.-->{{
+                    $t("setup.welcome.next")
+                  }}
+                </div>
               </div>
             </div>
           </template>
           <template v-if="activeStep == 1">
             <div class="setup-config">
-              <el-form ref="db-form" :model="database" label-width="80px" :rules="dbRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false">
-                <el-form-item :label="$t('setup.host')" prop="host" key="dbhost">
+              <el-form ref="db-form" :model="database" label-width="80px" :rules="dbRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false" >
+                <el-form-item :label="$t('setup.host')" prop="host" key="dbhost" >
                   <el-input v-model="database.host"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.port')" prop="port" key="dbport">
+                <el-form-item :label="$t('setup.port')" prop="port" key="dbport" >
                   <el-input v-model="database.port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.name')" prop="name" key="dbname">
+                <el-form-item :label="$t('setup.name')" prop="name" key="dbname" >
                   <el-input v-model="database.name"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.username')" prop="username" key="dbusername">
+                <el-form-item :label="$t('setup.username')" prop="username" key="dbusername" >
                   <el-input v-model="database.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')"  prop="pin" key="dbpassword">
-                  <el-input v-model="database.pin" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.pin')" prop="pin" key="dbpassword" >
+                  <el-input v-model="database.pin" type="password" show-password ></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
                 <div class="help-header">
-                  {{$t('setup.database.configTitle')}}
+                  {{ $t("setup.database.configTitle") }}
                 </div>
                 <div class="help-body">
-                  {{$t('setup.database.configTip')}}
+                  {{ $t("setup.database.configTip") }}
                 </div>
               </div>
             </div>
           </template>
           <template v-if="activeStep == 2">
             <div class="setup-config">
-              <el-form ref="redis-form" :model="redis" label-width="80px" :rules="redisRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false">
-                <el-form-item :label="$t('setup.host')" prop="host" key="rdhost">
+              <el-form ref="redis-form" :model="redis" label-width="80px" :rules="redisRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false" >
+                <el-form-item :label="$t('setup.host')" prop="host" key="rdhost" >
                   <el-input v-model="redis.host"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.port')" prop="port" key="rdport">
+                <el-form-item :label="$t('setup.port')" prop="port" key="rdport" >
                   <el-input v-model="redis.port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')"  prop="pin" key="rdpassword">
-                  <el-input v-model="redis.pin" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.pin')" prop="pin" key="rdpassword" >
+                  <el-input v-model="redis.pin" type="password" show-password ></el-input>
                 </el-form-item>
               </el-form>
               <div class="setup-help">
                 <div class="help-header">
-                  {{$t('setup.redis.configTitle')}}
+                  {{ $t("setup.redis.configTitle") }}
                 </div>
                 <div class="help-body">
-                  {{$t('setup.redis.configTip')}}
+                  {{ $t("setup.redis.configTip") }}
                 </div>
               </div>
             </div>
           </template>
           <template v-if="activeStep == 3">
             <div class="setup-config">
-              <el-form ref="sys-form" :model="system" label-width="80px" :rules="sysRules" label-position="top" size="small" style="width: 600px" :validate-on-rule-change="false">
-                <el-form-item :label="$t('setup.username')" prop="host" key="syshost">
+              <el-form ref="sys-form" :model="system" label-width="80px" :rules="sysRules" label-position="top" size="small" style="width: 640px" :validate-on-rule-change="false" >
+                <el-form-item :label="$t('setup.username')" prop="host" key="syshost" >
                   <el-input v-model="system.username"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.pin')"  prop="pin" key="syspassword">
-                  <el-input v-model="system.pin" type="password" show-password></el-input>
+                <el-form-item :label="$t('setup.pin')" prop="pin" key="syspassword" >
+                  <el-input v-model="system.pin" type="password" show-password ></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.alertPath')"  prop="alertPath" key="sysalertPath">
-                  <el-input v-model="system.alertPath" ></el-input>
+                <el-form-item :label="$t('setup.alertPath')" prop="alertPath" key="sysalertPath" >
+                  <el-input v-model="system.alertPath"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('setup.promentheusFederationEnabled')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
+                  <el-select v-model="system.prometheusFederationEnabled"  style="width: 100%" placeholder="Enable">
+                    <el-option label="Enable" value="1"></el-option>
+                    <el-option label="Close"  value="0"></el-option>
+                  </el-select>
                 </el-form-item>
                <!-- <el-form-item :label="$t('setup.alertPrefix')"  prop="alertPrefix" key="sysalertPrefix">
                   <el-input v-model="system.alertPrefix" ></el-input>
@@ -141,7 +179,7 @@
           </template>
           <div class="setup-bottom-btn">
 
-            <button @click="preStep" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-if="activeStep != 0">
+            <button @click="preStep" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-if="activeStep != 0" style="background-color:#fff;color:#333;border:1px solid rgba(0,0,0,0.15);">
               <span>{{$t('setup.back')}}</span>
             </button>
             <button @click="nextStep"  class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_next" v-if="activeStep != 3" :class="{'nz-btn-disabled':prevent_next}">
@@ -170,16 +208,20 @@ export default {
       step: 0,
       activeStep: 0,
       database: {
-        host: '',
+        host: "",
         port: 3306,
-        name: 'nz',
-        username: '',
-        pin: ''
+        name: "nz",
+        username: "",
+        pin: "",
       },
       dbRules: {
         host: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: host, trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "blur",
+          },
+          { validator: host, trigger: "blur" },
         ],
         port: [{ validator: port, trigger: 'blur' }],
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -187,14 +229,18 @@ export default {
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       redis: {
-        host: '',
+        host: "",
         port: 6379,
-        pin: ''
+        pin: "",
       },
       redisRules: {
         host: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: host, trigger: 'blur' }
+          {
+            required: true,
+            message: this.$t("validate.required"),
+            trigger: "blur",
+          },
+          { validator: host, trigger: "blur" },
         ],
         port: [{ validator: port, trigger: 'blur' }]
       },
@@ -204,13 +250,15 @@ export default {
         alertPath: '',
         alertPrefix: '',
         haMode: 1,
-        haVip: ''
+        haVip: '',
+        prometheusFederationEnabled:'',
       },
       sysRules: {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        prometheusFederationEnabled: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       reloadTime: 5000,
       reloadTimeout: null,
@@ -421,113 +469,197 @@ export default {
 </script>
 
 <style scoped>
-  .setup{
-    /*display: flex;*/
-    width: 1250px;
-    height: 100%;
-    margin: 0 auto;
-  }
-  .logo-header{
-    padding-left: 20px;
-    width: 100%;
-    height: 100px;
-  }
-  .language-select{
-    position: absolute;
-    right: 20px;
-    height: 50px;
-    z-index: 2;
-  }
-  .setup .step-box{
-    width: 200px;
-    height: 100%;
-  }
-  .setup .setup-box{
-    width: calc(100% - 200px);
-    height: 100%;
-  }
-  .step-box .step-inner{
-    height: 600px;
-    padding:20px;
-  }
-  .setup-box .setup-inner{
-    position: relative;
-    width: calc(100% - 42px);
-    height: 600px;
-    padding: 20px;
-    border: 1px solid #EEEEEE;
-  }
-  .setup-inner .setup-config{
-    position: relative;
-  }
-  .setup-inner .setup-help{
-    width: calc(100% - 640px);
-    height: 500px;
-    position: absolute;
-    top: 20px;
-    right: 0px;
-    border-left: 1px solid #ddd;
-    padding-left: 10px;
-  }
-  .setup .setup-help .help-header{
-     font-weight: 800;
-     font-size: 30px;
-   }
-  .setup .setup-help .help-body{
-    line-height: 35px;
-    font-size: 16px;
-  }
-  .welcome{
-    line-height: 35px;
-    font-size: 16px;
-  }
-  .welcome .wel-header{
-    font-weight: 800;
-    font-size: 30px;
+.setup {
+  /*display: flex;*/
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+.logo-header {
+  padding-left: 20px;
+  width: 100%;
+  height: 50px;
+  background-color: #202f3f;
+  position: relative;
+}
+.logo-header-text {
+  font-family: Verdand;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #dedede;
+}
+.language-select {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  z-index: 2;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+.flex-box{
+  height: calc(100% - 50px);
+}
+.setup .step-box {
+  width: 240px;
+  height: 100%;
+}
+.setup .setup-box {
+  width: calc(100% - 240px);
+  height: 100%;
+}
+.step-box .step-inner {
+  height: 100%;
+  padding: 20px;
+  padding-left: 0;
+  box-sizing: border-box;
+}
 
-  }
- .wizard-header{
-    font-weight: 600;
-    font-size: 20px;
-  }
-  .welcome ul li{
-    list-style: inside !important;
-  }
-  .welcome pre{
-    border: 1px solid #ddd;
-    border-left: 4px solid #e6522c;
-    border-radius: 0;
-    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
-    background-color: #f5f5f5;
-    color: #333;
-    padding: 15px;
-  }
-  .welcome .content-divider{
-    height: 1px;
-    width: 100%;
-    border-bottom: 2px solid #C0C4CC;
-    margin: 5px 0px;
-  }
-  .setup-bottom-btn{
-    width: 100%;
-    height: 49px;
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-    padding-top: 20px;
-    text-align: right;
-  }
+.setup-box .setup-inner {
+  position: relative;
+  height: 100%;
+  padding: 40px 30px 0 30px;
+  border: 10px solid #eeeeee;
+  box-sizing: border-box;
+}
+.setup-inner .setup-config {
+  position: relative;
+  height: 100%;
+}
+.setup-inner .setup-help {
+  width: calc(100% - 710px);;
+  height:calc(100% - 50px);
+  position: absolute;
+  top: 20px;
+  right: 0px;
+  border-left: 1px solid #E7EAED;
+  padding-left: 30px;
+}
+.setup .setup-help .help-header {
+  font-family: Roboto-Medium;
+  font-size: 22px;
+  color: #333333;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+.setup .setup-help .help-body {
+  font-family: Roboto-Regular;
+  font-size: 16px;
+  color: #333333;
+  line-height: 28px;
+  font-weight: 400;
+}
+.welcome {
+  line-height: 35px;
+  font-size: 16px;
+}
+.welcome .wel-header {
+  font-family: Roboto-Medium;
+  font-size: 26px;
+  color: #333333;
+  font-weight: 500;
+}
+.wizard-header {
+  font-family: Roboto-Bold;
+  font-size: 14px;
+  color: #333333;
+  font-weight: 700;
+}
+.welcome ul li {
+  list-style: inside !important;
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #333333;
+  font-weight: 400;
+}
+.welcome pre {
+  border: 1px solid #eae7ed;
+  border-left: 4px solid #fa901c;
+  border-radius: 0;
+  font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+  font-size: 14px;
+  background-color: #f9f9f9;
+  color: #333;
+  padding: 15px;
+  height: 48px;
+  line-height: 16px;
+  box-sizing: border-box;
+}
+.welcome .content-divider {
+  height: 1px;
+  width: 100%;
+  border-bottom: 1px solid #eae7ed;
+  margin: 5px 0px;
+}
+.setup-bottom-btn {
+  width: 100%;
+  height: 49px;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  padding-top: 20px;
+  text-align: right;
+}
+/* 步骤条样式 */
+/deep/ .el-step{
+  height: 46px ;
+  /* height: 46px !important; */
+}
+/deep/ .el-step .el-step__head{
+  /* display: none !important; */
+  display: none ;
+}
+ /deep/ .el-step .el-step__main{
+  padding-left: 20px ;
+  height: 46px ;
+  line-height: 46px;
+  /* padding-left: 20px !important;
+  height: 46px !important; */
+} 
+/deep/ .el-step .el-step__main .el-step__title{
+  padding: 0 0 0 20px  ;
+  font-family: Roboto-Medium;
+  font-size: 16px;
+  color: #999;
+  letter-spacing: 0;
+  font-weight: 400;
+  padding-left: 20px;
+  margin-top: 11px;
+  /* padding: 0 0 0 20px  !important; */
+}
+/deep/ .el-step .el-step__main .el-step__title.is-process{
+  border-left:2px solid #fa901c ;
+  color: #333333;
+  font-weight: 500;
+  padding-left: 18px;
+  /* border-left:2px solid #fa901c !important; */
+  /* padding-left: 18px !important; */
+}
+/deep/ .el-step .el-step__main .el-step__title.is-success{
+  color: #333333;
+  font-weight: 500;
+}
+/deep/ .el-step .el-step__main .el-step__description{
+  /* display: none !important; */
+  display: none ;
+}
+.el-select-dropdown__item.selected{
+  font-weight: 400;
+}
+/* .el-select-dropdown__item.hover{
+  font-weight: 700;
+} */
 </style>
 <style>
-  .setup .el-menu--horizontal>.el-submenu.is-active .el-submenu__title {
-    border-bottom: unset !important;
-    color: #303133;
-    background-color:transparent;
-  }
-  .language-select .el-submenu__title{
-    height: 50px !important;
-  }
-  .language-select .el-submenu{
-    height: 50px !important;
-  }
+.setup .el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+  border-bottom: unset !important;
+  color: #303133;
+  background-color: transparent;
+}
+.language-select .el-submenu__title {
+  height: 50px !important;
+}
+.language-select .el-submenu {
+  height: 50px !important;
+}
 </style>
