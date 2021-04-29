@@ -59,13 +59,19 @@
     align-items: center;
   }
   .compare-box{
-    line-height: 50px;
+    /*line-height: 50px;*/
   }
   .compare-box .nz-icon-compare{
    border-right: none;
   }
   .calendar{
     /*width: 125px;*/
+    border: none;
+    box-sizing: content-box;
+    line-height: unset;
+    height: 100%;
+    margin-left: -6px;
+    margin-right: 10px;
   }
   .nz-icon-compare{
     background: #FFFFFF;

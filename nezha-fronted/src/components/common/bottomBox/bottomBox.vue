@@ -140,14 +140,14 @@ export default {
         },
         module: {
           moduleTabTitle: [
+            // { prop: 'panel', name: 'Detail' },
             { prop: 'endpoint', name: this.$t('asset.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'Alerts' },
-            { prop: 'panel', name: 'Detail' }
+            { prop: 'moduleAlertMessage', name: 'Alerts' }
           ]
         },
         endpoint: {
           endpointTabTitle: [
-            { prop: 'panel', name: 'Detail' },
+            // { prop: 'panel', name: 'Detail' },
             { prop: 'endpointQuery', name: 'Query' },
             { prop: 'endpointAlertMessage', name: 'Alerts' }
           ]

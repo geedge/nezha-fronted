@@ -44,7 +44,7 @@
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
           <span class="endpoint-num"  @click="showBottomBox('endpoint', scope.row)">
-             <i class="nz-icon nz-icon-overview-endpoint color969dea"/>
+             <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
           {{scope.row[item.prop]}}
           </span>
         </template>

@@ -49,7 +49,7 @@
 <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
 <!--            clearable></el-cascader>-->
           <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
-            <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
               <span class="panel-dropdown-label-txt" >{{item.label}}</span>
             </el-option>
           </el-select>
@@ -104,7 +104,8 @@ export default {
         ]
       },
       editPromServer: {},
-      dcData: [] // data center数据
+      dcData: [], // data center数据
+      federationEnabled: !Number(localStorage.getItem('nz-prometheus-federation-enabled'))
     }
   },
   methods: {

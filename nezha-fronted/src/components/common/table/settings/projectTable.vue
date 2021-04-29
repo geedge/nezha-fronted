@@ -40,13 +40,13 @@
         </template>
         <template v-else-if="item.prop === 'moduleNum'" >
           <span class="module-num" @click="jumpModule(scope.row)">
-            <i class="nz-icon nz-icon-overview-module"/>
+            <i class="nz-icon nz-icon-overview-module monitorColor"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'endpointNum'">
           <span class="endpoint-num" @click="jumpEndpoint(scope.row)" >
-              <i class="nz-icon nz-icon-endpoint" :class="scope.row[item.prop]>0?'colorEF7458':'colorEF7458'"/>
+              <i class="nz-icon nz-icon-overview-endpoint monitorColor"/>
             {{scope.row[item.prop]}}
           </span>
         </template>

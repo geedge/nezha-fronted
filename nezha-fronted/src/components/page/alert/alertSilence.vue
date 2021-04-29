@@ -121,10 +121,14 @@ export default {
         startAt: '',
         endAt: '',
         ruleId: '',
-        matcher: '',
         type: 'asset',
         linkId: '',
-        reason: ''
+        reason: '',
+        time: [],
+        matcher: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
       },
       nowTime: ''
     }

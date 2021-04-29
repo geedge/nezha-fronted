@@ -43,16 +43,17 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'matchers'">
-          <div class="nz-silence-tag-box">
-              <span v-if="scope.row.linkId!==-1" class="nz-silence-tag blue">
-              <span class="nz-silence-tag-title">{{scope.row.type}}</span>
-              <span :title="scope.row.linkName" class="nz-silence-tag-content">{{scope.row.linkName}}</span>
-            </span>
-            <span v-if="scope.row.ruleId!==-1" class="nz-silence-tag rule-gray">
-              <span class="nz-silence-tag-title">Alert rule</span>
-              <span :title="scope.row.ruleName" class="nz-silence-tag-content">{{scope.row.ruleName}}</span>
-            </span>
-          </div>
+<!--          <div class="nz-silence-tag-box">-->
+<!--              <span v-if="scope.row.linkId!==-1" class="nz-silence-tag blue">-->
+<!--              <span class="nz-silence-tag-title">{{scope.row.type}}</span>-->
+<!--              <span :title="scope.row.linkName" class="nz-silence-tag-content">{{scope.row.linkName}}</span>-->
+<!--            </span>-->
+<!--            <span v-if="scope.row.ruleId!==-1" class="nz-silence-tag rule-gray">-->
+<!--              <span class="nz-silence-tag-title">Alert rule</span>-->
+<!--              <span :title="scope.row.ruleName" class="nz-silence-tag-content">{{scope.row.ruleName}}</span>-->
+<!--            </span>-->
+<!--          </div>-->
+          matchers
         </template>
         <template v-else-if="item.prop === 'state'">
           <span v-if="scope.row.state===1" class="silence-pending">pending</span>

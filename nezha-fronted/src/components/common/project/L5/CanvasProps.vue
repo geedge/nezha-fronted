@@ -586,82 +586,82 @@
         Project
       </div>
       <div class="project-content">
-        <div class="project-content-title">{{$t('project.topology.title')}}</div>
+<!--        <div class="project-content-title">{{$t('project.topology.title')}}</div>-->
 
-        <div class="project-content-box" style="width: 100%">
+<!--        <div class="project-content-box" style="width: 100%">-->
 
-          <div class="project-content-item">
-            <label>{{$t('project.topology.name')}}</label>
-            <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.name" :placeholder="$t('el.select.placeholder')"
-                        @change="changeTopologyOpt"></el-input>
-            </div>
-          </div>
+<!--          <div class="project-content-item">-->
+<!--            <label>{{$t('project.topology.name')}}</label>-->
+<!--            <div class="full pr10">-->
+<!--              <el-input class="input" size="small" v-model="topologyData.data.name" :placeholder="$t('el.select.placeholder')"-->
+<!--                        @change="changeTopologyOpt"></el-input>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.fontSize')}}</label>
-            <div class="full pr10 h32">
-              <el-input-number
-                @focus="inputFocus"
-                @blur="inputBlur"
-                :precision="2"
-                controls-position="right"
-                size="small"
-                name="fontSize"
-                class="input"
-                v-model.number="topologyData.data.fontSize"
-                :readonly="readonly"
-                required
-                :min="10"
-                @change="changeTopologyOpt(topologyData.data.fontSize,'fontSize')"></el-input-number>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>{{$t('project.topology.fontSize')}}</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <el-input-number-->
+<!--                @focus="inputFocus"-->
+<!--                @blur="inputBlur"-->
+<!--                :precision="2"-->
+<!--                controls-position="right"-->
+<!--                size="small"-->
+<!--                name="fontSize"-->
+<!--                class="input"-->
+<!--                v-model.number="topologyData.data.fontSize"-->
+<!--                :readonly="readonly"-->
+<!--                required-->
+<!--                :min="10"-->
+<!--                @change="changeTopologyOpt(topologyData.data.fontSize,'fontSize')"></el-input-number>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.fontColor')}}</label>
-            <div class="full pr10 h32">
-              <nezhaColor :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{
-                changeTopologyOpt(val,key,true)
-                }"/>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>{{$t('project.topology.fontColor')}}</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <nezhaColor :value-arr="[{name:'fontColor',value:topologyData.data.fontColor}]" @colorChange="(val,key)=>{-->
+<!--                changeTopologyOpt(val,key,true)-->
+<!--                }"/>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.align')}}</label>
-            <div class="full pr10 h32">
-              <el-radio-group v-model="topologyData.data.align" size="small" @change="changeTopologyOpt">
-                <el-radio-button label="left">left</el-radio-button>
-                <el-radio-button label="center">center</el-radio-button>
-                <el-radio-button label="right">right</el-radio-button>
-              </el-radio-group>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>{{$t('project.topology.align')}}</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <el-radio-group v-model="topologyData.data.align" size="small" @change="changeTopologyOpt">-->
+<!--                <el-radio-button label="left">left</el-radio-button>-->
+<!--                <el-radio-button label="center">center</el-radio-button>-->
+<!--                <el-radio-button label="right">right</el-radio-button>-->
+<!--              </el-radio-group>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.opacity')}}</label>
-            <div class="full pr10 h32">
-              <el-input-number
-                @focus="inputFocus"
-                @blur="inputBlur"
-                :precision="2"
-                controls-position="right"
-                size="small"
-                name="fontSize"
-                class="input"
-                v-model.number="topologyData.data.opacity"
-                :readonly="readonly"
-                required
-                :step="0.2"
-                :min="0"
-                @change="changeTopologyOpt(topologyData.data.opacity,'opacity')"></el-input-number>
-            </div>
-          </div>
-        </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>{{$t('project.topology.opacity')}}</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <el-input-number-->
+<!--                @focus="inputFocus"-->
+<!--                @blur="inputBlur"-->
+<!--                :precision="2"-->
+<!--                controls-position="right"-->
+<!--                size="small"-->
+<!--                name="fontSize"-->
+<!--                class="input"-->
+<!--                v-model.number="topologyData.data.opacity"-->
+<!--                :readonly="readonly"-->
+<!--                required-->
+<!--                :step="0.2"-->
+<!--                :min="0"-->
+<!--                @change="changeTopologyOpt(topologyData.data.opacity,'opacity')"></el-input-number>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div class="project-content-title">
-          Appearance
-          <!--{{$t('project.topology.name')}}-->
-        </div>
+<!--        <div class="project-content-title">-->
+<!--          Appearance-->
+<!--          &lt;!&ndash;{{$t('project.topology.name')}}&ndash;&gt;-->
+<!--        </div>-->
 
         <div class="project-content-box" style="width: 100%">
           <div class="project-content-item half">
@@ -673,13 +673,13 @@
             </div>
           </div>
 
-          <div class="project-content-item half">
-            <label>{{$t('project.topology.bacImage')}}</label>
-            <div class="full pr10 h32">
-              <!--暂时是input 输入网址-->
-              <el-input class="input" size="small" v-model="topologyData.data.bkImage" @change="changeTopologyOpt"></el-input>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>{{$t('project.topology.bacImage')}}</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              &lt;!&ndash;暂时是input 输入网址&ndash;&gt;-->
+<!--              <el-input class="input" size="small" v-model="topologyData.data.bkImage" @change="changeTopologyOpt"></el-input>-->
+<!--            </div>-->
+<!--          </div>-->
 
           <!-- <div class="project-content-item half">
              <label>{{$t('project.topology.rule')}}</label>
@@ -796,51 +796,51 @@
 
         </div>
 
-        <div class="project-content-title">Appearance</div>
+<!--        <div class="project-content-title">Appearance</div>-->
 
-        <div class="project-content-box" style="width: 100%">
+<!--        <div class="project-content-box" style="width: 100%">-->
 
-          <div class="project-content-item half">
-            <label>Project Info</label>
-            <div class="full pr10 h32">
-              <el-switch
-                v-model="topologyData.data.projectInfo"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-                @change="changeTopologyOpt(topologyData.data.projectInfo,'projectInfo')">
-              </el-switch>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>Project Info</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <el-switch-->
+<!--                v-model="topologyData.data.projectInfo"-->
+<!--                :active-value="true"-->
+<!--                :inactive-value="false"-->
+<!--                active-color="#ee9d3f"-->
+<!--                @change="changeTopologyOpt(topologyData.data.projectInfo,'projectInfo')">-->
+<!--              </el-switch>-->
+<!--            </div>-->
+<!--          </div>-->
 
-          <div class="project-content-item half">
-            <label>Alert Info</label>
-            <div class="full pr10 h32">
-              <el-switch
-                v-model="topologyData.data.alertInfo"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-                @change="changeTopologyOpt(topologyData.data.alertInfo,'alertInfo')">
-              </el-switch>
-            </div>
-          </div>
+<!--          <div class="project-content-item half">-->
+<!--            <label>Alert Info</label>-->
+<!--            <div class="full pr10 h32">-->
+<!--              <el-switch-->
+<!--                v-model="topologyData.data.alertInfo"-->
+<!--                :active-value="true"-->
+<!--                :inactive-value="false"-->
+<!--                active-color="#ee9d3f"-->
+<!--                @change="changeTopologyOpt(topologyData.data.alertInfo,'alertInfo')">-->
+<!--              </el-switch>-->
+<!--            </div>-->
+<!--          </div>-->
 
-        </div>
+<!--        </div>-->
 
-        <div class="project-content-title">{{$t('project.topology.link')}}</div>
+<!--        <div class="project-content-title">{{$t('project.topology.link')}}</div>-->
 
-        <div class="project-content-box" style="width: 100%">
+<!--        <div class="project-content-box" style="width: 100%">-->
 
-          <div class="project-content-item">
-            <label>Url</label>
-            <div class="full pr10">
-              <el-input class="input" size="small" v-model="topologyData.data.url" :placeholder="$t('el.select.placeholder')"
-                        @change="changeTopologyOpt"></el-input>
-            </div>
-          </div>
+<!--          <div class="project-content-item">-->
+<!--            <label>Url</label>-->
+<!--            <div class="full pr10">-->
+<!--              <el-input class="input" size="small" v-model="topologyData.data.url" :placeholder="$t('el.select.placeholder')"-->
+<!--                        @change="changeTopologyOpt"></el-input>-->
+<!--            </div>-->
+<!--          </div>-->
 
-        </div>
+<!--        </div>-->
 
       </div>
     </div>

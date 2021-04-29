@@ -1,23 +1,16 @@
 <template>
   <div class="right-box right-box-alert-config" v-clickoutside="{obj:editAlertSilence,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="alert-box-del" type="button"
-              v-has="'alert_silence_delete'" v-if="alertSilence.id">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
-
     <!-- begin--标题-->
-    <div class="right-box-title">{{editAlertSilence.id ? $t("alert.silence.edit") + " ID：" + editAlertSilence.id :
-      $t("alert.silence.create")}}
+    <div class="right-box__header">
+      <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") + " ID：" + editAlertSilence.id : $t("alert.silence.create")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editAlertSilence, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
     </div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box">
+    <div class="right-box-form-box right-box__container">
       <el-form class="right-box-form right-box-form-left" :model="editAlertSilence" label-position="top"
                label-width="120px" :rules="rules" ref="alertSilenceForm">
         <el-form-item :label='$t("alert.silence.time")' prop="time" class="range-time">
@@ -62,43 +55,21 @@
         </el-form-item>
 
         <el-form-item :label='$t("alert.silence.matcher")' prop="matcher" class="matcher">
-          <div class="matcher-type">
-            <div class="matcher-type-title">Alert rule</div>
-            <el-select v-model="editAlertSilence.ruleId" filterable @change="matcherChange" :popper-append-to-body="false" size="small" class="matcher-type-content" clearable>
-              <el-option
-                v-for="item in ruleList"
-                :key="item.id"
-                :label="item.alertName"
-                :value="item.id">
-              </el-option>
-            </el-select>
+          <div v-for="(item, index) in editAlertSilence.matcher" :key="index" class="param-box-row">
+            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matcher.' + index + '.name'">
+              <el-input placeholder="key" size="mini" v-model="item.name"></el-input>
+            </el-form-item>
+            <span class="param-box-row-eq">=</span>
+            <el-form-item class="param-box-row-value" :prop="'matcher.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
+              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matcher-value"></el-input>
+              <el-checkbox class="silence-matcher-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
+            </el-form-item>
+            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeMatcher(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
           </div>
-
-          <div class="matcher-type">
-            <el-select class="matcher-type-title matcher-type-header" v-model="editAlertSilence.type" :popper-append-to-body="false" size="small" @change="typeChange">
-              <el-option
-                v-for="item in typeList"
-                :key="item.type"
-                :label="item.name"
-                :value="item.type">
-              </el-option>
-            </el-select>
-            <div class="matcher-type-content">
-              <select-alert-silence :filter-silence="filterSilence" :silence-data="silenceData" :panel-lock="false" :placement="'bottom-start'" :typeContentLoading="typeContentLoading"
-                                   @selectSilence="silenceChange" ref="selectPanel" style="width: 300px;">
-                <template v-slot:header>
-                  <div class="panel-select-header">
-                    <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterSilence" id="panel-list-search"></el-input>
-                  </div>
-                </template>
-
-                <template v-slot:trigger>
-                  <el-input class="panel-name" placeholder="" readonly="readonly" v-model="editAlertSilence.name" size="small">
-                    <span slot="suffix" class="el-input__icon el-icon-circle-close el-input__clear" @click.stop="clearValue"></span>
-                  </el-input>
-                </template>
-              </select-alert-silence>
-            </div>
+          <div style="text-align: center">
+               <span id="module-add-label" type="button" @click="addMatcher" class="right-box-form-add module-add-label" style="margin-right: 140px">
+              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+            </span>
           </div>
         </el-form-item>
 
@@ -119,7 +90,7 @@
     <!-- end--表单-->
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box-bottom-btns right-box__footer">
       <button v-cancel="{obj:editAlertSilence,func:esc}" id="alert-box-esc"
               class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
         <span>{{$t('overall.cancel')}}</span>
@@ -134,11 +105,11 @@
 
 <script>
 import bus from '../../../libs/bus'
-import selectAlertSilence from '../alert/selectAlertSilence'
+// import selectAlertSilence from '../alert/selectAlertSilence'
 export default {
   name: 'alertSilenceBox',
   components: {
-    selectAlertSilence
+    // selectAlertSilence
   },
 
   props: {
@@ -161,10 +132,6 @@ export default {
         this.endAtTamp = new Date(this.editAlertSilence.endAt).getTime()
         this.editAlertSilence.time = this.startAtTamp
         this.rangeTimeCallback()
-        this.typeChange(this.editAlertSilence.type, obj.linkId)
-        if (obj.linkId || obj.ruleId) {
-          this.matcherChange()
-        }
       }
     }
   },
@@ -188,7 +155,9 @@ export default {
         linkId: '',
         reason: '',
         time: [],
-        matcher: '',
+        matcher: [
+          { name: '', value: '', regex: 0 }
+        ],
         name: ''
       },
       rules: {
@@ -197,9 +166,6 @@ export default {
           { required: true, trigger: 'change' },
           { validator: validate, trigger: 'change' }
         ],
-        matcher: [
-          { required: true, message: this.$t('alert.silence.selectMather'), trigger: 'change' }
-        ]
       },
       rangeTime: '',
       ruleList: [],
@@ -223,7 +189,6 @@ export default {
     }
   },
   mounted () {
-    this.getRuleList()
   },
   methods: {
     clickOutside () {
@@ -239,7 +204,6 @@ export default {
       }
       ;
       this.prevent_opt.save = true
-      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
       this.$refs.alertSilenceForm.validate((valid) => {
         if (this.endAtTamp < this.startAtTamp) {
           this.prevent_opt.save = false
@@ -249,21 +213,8 @@ export default {
           })
           return
         }
-        let params = { ...this.editAlertSilence }
-        delete params.time
-        delete params.matcher
+        const params = { ...this.editAlertSilence }
         if (valid) {
-          params = {
-            id: params.id,
-            endAt: params.endAt,
-            startAt: params.startAt,
-            linkId: params.linkId,
-            linkName: params.linkName,
-            reason: params.reason,
-            ruleId: params.ruleId,
-            name: params.name,
-            type: params.type
-          }
           if (this.editAlertSilence.id) {
             this.$put('/alert/silence', params).then(response => {
               this.prevent_opt.save = false
@@ -315,13 +266,6 @@ export default {
         this.prevent_opt.save = false
       })
     },
-    getRuleList () {
-      this.$get('alert/rule', { pageNo: 1, pageSize: -1 }).then(response => {
-        if (response.code == 200) {
-          this.ruleList = response.data.list
-        }
-      })
-    },
     dateChange (val, type) {
       if (type === 'startAt') {
         this.editAlertSilence.startAt = bus.timeFormate(new Date(val), 'yyyy-MM-dd hh:mm:ss')
@@ -349,145 +293,20 @@ export default {
       this.endAtTamp = new Date(this.editAlertSilence.endAt).getTime()
       this.$forceUpdate()
     },
-    matcherChange (val) {
-      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
-    },
-    silenceChange (val) {
-      this.editAlertSilence.linkId = val.id
-      this.editAlertSilence.matcher = this.editAlertSilence.ruleId || this.editAlertSilence.linkId
-      if (this.editAlertSilence.type === 'datacenter') {
-        this.editAlertSilence.name = val.name
-      }
-      if (this.editAlertSilence.type === 'asset') {
-        this.editAlertSilence.name = val.sn
-      }
-      if (this.editAlertSilence.type === 'project') {
-        this.editAlertSilence.name = val.name
-      }
-      if (this.editAlertSilence.type === 'module') {
-        this.editAlertSilence.name = val.name
-      }
-      if (this.editAlertSilence.type === 'endpoint') {
-        this.editAlertSilence.name = val.name
-      }
-    },
     clearValue () {
       this.editAlertSilence.name = ''
       this.editAlertSilence.linkId = ''
     },
-    typeChange (val, linkId) {
-      let firstArr = []
-      // const secondArr = []
-      // const thirddiArr = []
-      this.typeContentLoading = true
-      this.editAlertSilence.linkId = linkId || ''
-      this.editAlertSilence.name = ''
-      if (val === 'datacenter') {
-        this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
-          if (response.code == 200) {
-            firstArr = response.data.list
-            if (linkId) {
-              this.editAlertSilence.name = firstArr.find(item => item.id === linkId).name
-            }
-            this.silenceData = firstArr
-            this.datacenterData = firstArr
-            this.typeContentLoading = false
-          }
-        })
+    // 新增label
+    addMatcher () {
+      this.editAlertSilence.matcher.push({ name: '', value: '', regex: 0 })
+    },
+    // 移除单个Label
+    removeMatcher (index) {
+      if (this.editAlertSilence.matcher.length === 1) {
+        this.editAlertSilence.matcher = [{ name: '', value: '', regex: 0 }]
       }
-
-      if (val === 'asset') {
-        this.$get('asset?pageNo=1&pageSize=-1').then(res => {
-          if (res.code == 200) {
-            const arr = []
-            res.data.list.forEach(asset => {
-              asset.name = asset.sn
-              if (linkId === asset.id) {
-                this.editAlertSilence.name = asset.name
-              }
-              const idcF = arr.find(idc => idc.id === asset.idc.id)
-              if (idcF) {
-                idcF.children.push(asset)
-              } else {
-                const idc = { ...asset.idc }
-                idc.children = [asset]
-                arr.push(idc)
-              }
-            })
-            this.silenceData = arr
-            this.assetData = arr
-            this.typeContentLoading = false
-          }
-        })
-      }
-
-      if (val === 'project') {
-        this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
-          if (response.code == 200) {
-            firstArr = response.data.list
-            if (linkId) {
-              this.editAlertSilence.name = firstArr.find(item => item.id === linkId).name
-            }
-            this.silenceData = firstArr
-            this.projectData = firstArr
-            this.typeContentLoading = false
-          }
-        })
-      }
-
-      if (val === 'module') {
-        this.$get('module?pageNo=1&pageSize=-1').then(res => {
-          if (res.code == 200) {
-            const arr = []
-            res.data.list.forEach(module => {
-              if (linkId === module.id) {
-                this.editAlertSilence.name = module.name
-              }
-              const projectF = arr.find(project => project.id === module.project.id)
-              if (projectF) {
-                projectF.children.push(module)
-              } else {
-                const project = { ...module.project }
-                project.children = [module]
-                arr.push(project)
-              }
-            })
-            this.silenceData = arr
-            this.moduleData = arr
-            this.typeContentLoading = false
-          }
-        })
-      }
-
-      if (val === 'endpoint') {
-        this.$get('endpoint?pageNo=1&pageSize=-1').then(res => {
-          if (res.code == 200) {
-            const arr = []
-            res.data.list.forEach(item => {
-              item.name = item.host
-              if (linkId === item.id) {
-                this.editAlertSilence.name = item.name
-              }
-              const projectF = arr.find(project => item.project.id === project.id)
-              if (projectF) {
-                const moduleF = projectF.children.find(module => module.id === item.module.id)
-                if (moduleF) {
-                  moduleF.children.push(item)
-                } else {
-                  projectF.children.push({ ...item.module, children: [item] })
-                }
-              } else {
-                const project = { ...item.project }
-                project.children = [{ ...item.module, children: [item] }]
-                arr.push(project)
-              }
-            })
-            this.silenceData = arr
-            this.endpointData = arr
-            this.typeContentLoading = false
-          }
-        })
-      }
+      this.editAlertSilence.matcher.splice(index, 1)
     }
   }
 }
@@ -565,5 +384,17 @@ export default {
         flex: 1;
       }
     }
+  }
+  /deep/ .silence-matcher-value{
+    width: calc(100% - 100px);
+  }
+  .silence-matcher-regex{
+    margin-left: 10px;
+  }
+  /deep/ .param-box-row-key{
+    width: 36%;
+  }
+  /deep/ .param-box-row-value{
+    width: 50%;
   }
 </style>

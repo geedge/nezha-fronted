@@ -40,7 +40,7 @@
     <transition name="right-box">
       <agent-box v-if="rightBox.show" :prom-server="object" @close="closeRightBox"></agent-box>
     </transition>
-    <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="620px" @close="closeDialog">
+    <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
       <div v-if="showAgentDownload" class="agent-box">
         <el-form v-model="agentParam" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
           <div class="right-box-sub-title">{{$t('config.agent.agent.download')}}</div>
@@ -67,7 +67,7 @@
           </el-form-item>
           <el-form-item :label="$t('config.agent.agent.type')" class="half-form-item" prop="type">
             <el-select v-model="agentParam.type" class="right-box-row-with-btn" placeholder="">
-              <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value">
+              <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
             </el-select>
@@ -184,7 +184,8 @@ export default {
         type: 1
       },
       wgetVisible: false,
-      curlVisible: false
+      curlVisible: false,
+      federationEnabled: !Number(localStorage.getItem('nz-prometheus-federation-enabled'))
     }
   },
   methods: {
