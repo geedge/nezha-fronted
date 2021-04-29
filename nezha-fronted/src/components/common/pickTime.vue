@@ -9,7 +9,7 @@
         <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
       </button>
       <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)">
-        <span class="select-refresh-time" v-if="interval !== -1">{{interLabel}}</span>
+        <span class="select-refresh-time-label" v-if="interval !== -1">{{interLabel}}</span>
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
           <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown">
@@ -98,7 +98,7 @@ export default {
     selectInterval (val) {
       this.visible = false
       this.interval = val.value
-      this.interLabel = val.value
+      this.interLabel = val.label
       console.info(this.interval, val)
       if (!this.showTimePicker && val && val.value != -1) {
         this.intervalTimer = setInterval(() => {
@@ -170,4 +170,7 @@ export default {
 .interval-refresh {
   display: flex;
 }
+  .select-refresh-time-label{
+    margin-left: 5px;
+  }
 </style>

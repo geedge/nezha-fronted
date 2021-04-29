@@ -96,6 +96,8 @@
     }
     .top-tool-btn--dropdown {
       position: relative;
+      width: auto;
+      min-width: 36px;
     }
   }
   .top-tools--sub {
