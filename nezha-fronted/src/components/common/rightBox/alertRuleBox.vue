@@ -15,12 +15,12 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box">
-      <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
+      <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" style="width:100%">
         <!--name-->
         <el-form-item :label='$t("alert.config.name")' prop="name">
           <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
         </el-form-item>
-        <el-form-item :label='$t("alert.config.expr")' prop="expr" style="width: calc(100% - 15px);margin-left: 15px">
+        <el-form-item :label='$t("alert.config.expr")' prop="expr" >
           <promql-input
             id="alert-box-input-promql"
             ref="promql"
@@ -334,5 +334,31 @@ export default {
   }
   /deep/ .metric-selector-title{
     margin-left: 0 !important;
+  }
+   /* 标题样式 */
+  .right-box-title{
+    font-size: 16px;
+    font-weight: 700;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 0 0 20px;
+    border-bottom:1px solid #E7EAED ;
+    box-sizing: border-box;
+  }
+  /* 表单 */
+  .el-form-item {
+    margin-left: 0;
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
+  }
+  .el-form-item__lable{
+    font-family: Roboto-Medium;
+    font-weight: 500;
+  }
+  .rule-severity-remark{
+    width: 640px;
+    box-sizing: border-box;
+    margin: -13px 30px 18px 30px;
   }
 </style>
