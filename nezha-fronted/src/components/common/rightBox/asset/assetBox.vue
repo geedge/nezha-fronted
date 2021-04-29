@@ -62,7 +62,7 @@
             <el-input v-else v-model="lockLocationInputValue" disabled size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.purchaseDate')" prop="purchaseDate">
-            <el-date-picker
+            <my-date-picker
               id="asset-box-input-parchase-date"
               v-model="editAsset.purchaseDate"
               placeholder=""
@@ -70,7 +70,7 @@
               style="width: 100%"
               type="date"
               value-format="yyyy-MM-dd">
-            </el-date-picker>
+            </my-date-picker>
           </el-form-item>
           <!-- labels -->
           <div class="form__sub-title">{{$t('overall.labels')}}</div>
@@ -128,17 +128,17 @@
                   </template>
                   <template v-else>
                     <template v-if="label.interval">
-                      <el-date-picker
+                      <my-date-picker
                         id="asset-box-input-purchase-date"
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
                         size="small"
                         style="width: 100%">
-                      </el-date-picker>
+                      </my-date-picker>
                     </template>
                     <template v-else>
-                      <el-date-picker
+                      <my-date-picker
                         id="asset-box-input-parchase-date"
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType"
@@ -146,7 +146,7 @@
                         size="small"
                         style="width: 100%"
                         value-format="yyyy-MM-dd">
-                      </el-date-picker>
+                      </my-date-picker>
                     </template>
                   </template>
                 </template>

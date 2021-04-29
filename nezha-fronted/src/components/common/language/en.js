@@ -1178,7 +1178,7 @@ const en = {
       privpin: 'Priv password',
       alerts: 'Alerts',
       asset: 'Asset',
-      editEndpoint: 'edit endpoint',
+      editEndpoint: 'Edit endpoint',
       createEndpoint: 'Created endpoint',
       batchEndpoint: 'Batch Endpoint',
       endpointName: 'Endpoint name',

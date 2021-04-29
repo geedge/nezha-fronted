@@ -313,7 +313,7 @@
            </button>
 
               <button @click="imgUpload" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
-                      v-has="'project_topo_save'" :disabled="prevent_opt.save"
+                      v-has="'topo_icon_save'" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">
              {{$t('project.topology.save')}}
@@ -477,6 +477,8 @@ export default {
       penToolTipScale: 1,
       oldScale: 1,
       uploadPicShow: false,
+      imgWidth: 0,
+      imgHeight: 0,
       uploadPic: {
         name: '',
         unit: ''
@@ -1484,22 +1486,24 @@ export default {
     beforeAvatarUpload (file, fileList) {
       const this_ = this
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
-
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG) {
         this.$message.error(this_.$t('project.topology.imgFormat'))
         return false
       }
-      // if (!isLt2M) {
-      //   this.$message.error( this_.$t('project.topology.imgSize'));
-      //   return false;
-      // }
+      if (!isLt2M) {
+        this.$message.error(this_.$t('project.topology.imgSize'))
+        return false
+      }
       const isSize = new Promise(function (resolve, reject) {
-        const width = 100
-        const height = 100
+        const width = 0
+        const height = 0
         const _URL = window.URL || window.webkitURL
         const img = new Image()
         img.onload = function () {
           const valid = img.width > width && img.height > height
+          this_.imgWidth = img.width
+          this_.imgHeight = img.height
           valid ? resolve() : reject()
         }
         img.src = _URL.createObjectURL(file.raw)
@@ -1551,11 +1555,13 @@ export default {
         form.append('name', this.file.name.substring(0, this.file.name.lastIndexOf('.')))
       }
       form.append('unit', this.uploadPic.unit)
+      form.append('width', this.imgWidth)
+      form.append('height', this.imgHeight)
       this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}`).then((data) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1611,10 +1617,10 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
-          Promise.all(promiseArr).then((res2) => {
+          Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index]
@@ -1655,7 +1661,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
           } else {
             promiseArr.push('')
           }
@@ -1681,14 +1687,14 @@ export default {
       if (url) {
         return new Promise((resolve, reject) => {
           this.$axios
-            .get(url, {
-              responseType: 'arraybuffer'
-            })
-            .then(res => {
-              return ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), '')))
+            .get(url)
+            .then((res) => {
+              return {
+                data: ('data:image/jpeg;base64,' + res.data)
+              }
             })
             .then(data => {
-              resolve(data)
+              resolve(data.data, data.header)
               // changeImage(data,(img)=>{
               //   resolve(img)
               // })

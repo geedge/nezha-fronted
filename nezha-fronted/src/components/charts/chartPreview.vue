@@ -60,7 +60,7 @@
 <!--          <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange" v-if="chart.type !='text'"></time-picker>-->
           <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="chart-preview"></pick-time>
           <!--
-          <el-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
+          <my-date-picker ref="calendar" prefix-icon=" " size="mini" class="nz-preview-picker"
                           format="yyyy/MM/dd HH:mm"
                           @change="dateChange"
                           v-model="searchTime"
@@ -70,7 +70,7 @@
                           :start-placeholder="$t('dashboard.panel.startTime')"
                           :end-placeholder="$t('dashboard.panel.endTime')"
                           align="right">
-          </el-date-picker>-->
+          </my-date-picker>-->
         </div>
       </div>
 

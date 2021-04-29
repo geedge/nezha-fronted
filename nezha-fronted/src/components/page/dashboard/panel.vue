@@ -57,7 +57,7 @@
                 </template>
                 <template v-slot:after>
                   <el-dropdown-item v-has="'panel_chart_add'">
-                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add template</div>
+                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add by template</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>
@@ -65,7 +65,7 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
+          <div ref="dashboardScrollbar" style="height: calc(100% - 1px); overflow: auto;" :class="overScroll10?'border-t-1-de':'border-t-1-tr'">
             <div class="box-content">
               <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="$CONSTANTS.fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
@@ -102,6 +102,7 @@ export default {
   name: 'panel',
   data () {
     return {
+      overScroll10: false,
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
@@ -571,6 +572,7 @@ export default {
       const _self = this
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
+        _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
         _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
@@ -783,6 +785,12 @@ export default {
 }
 </script>
 <style lang="scss">
+  .border-t-1-de{
+    border-top: 1px solid #dedede;
+  }
+  .border-t-1-tr{
+    border-top: 1px solid transparent;
+  }
   .panel {
     height: 100%;
     display: flex;

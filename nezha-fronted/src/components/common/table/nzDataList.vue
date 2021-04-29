@@ -36,7 +36,7 @@
       <transition name="el-zoom-in-top">
         <element-set
           v-if="tools.showCustomTableTitle"
-          :tableId="tableId"
+          :tableId="$parent.tableId"
           ref="customTableTitle"
           :custom-table-title="customTableTitle"
           :original-table-title="tableTitle"
@@ -87,10 +87,6 @@ export default {
     },
     searchMsg: {
       type: Object
-    },
-    tableId: {
-      type: String,
-      default: ''
     },
     hasSearch: {
       type: Boolean,

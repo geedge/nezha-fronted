@@ -50,7 +50,7 @@
             </template>
             <template v-if="item.prop == 'expireAt'">
 <!--              <el-popover :content="rules.expireAt.message" placement="top" trigger="manual" v-model="rules.expireAt.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.expireAt)">-->
-                <el-date-picker
+                <my-date-picker
                   slot="reference"
                   style="width: 100%;"
                   v-model="scope.row[item.prop]"
@@ -60,7 +60,7 @@
                   type="datetime"
                   :picker-options="pickerOptions"
                   :placeholder="$t('el.datepicker.selectTime')">
-                </el-date-picker>
+                </my-date-picker>
 <!--              </el-popover>-->
             </template>
           </template>

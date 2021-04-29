@@ -72,6 +72,10 @@
             </month-table>
           </div>
         </div>
+        <div class="el-picker-panel__footer" v-if="showTime">
+          <span class="timezone-area">{{timezone}}</span>
+          <span class="timezone-offset">{{timezoneOffset}}</span>
+        </div>
       </div>
     </div>
   </transition>

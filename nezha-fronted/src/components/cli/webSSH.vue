@@ -360,7 +360,7 @@ export default {
       },
       customConnect: {
         host: '',
-        port: '',
+        port: 22,
         authType: 1,
         authUsername: '',
         authPin: '',
@@ -377,19 +377,19 @@ export default {
         {
           title: 'Type',
           data: (row) => {
-            return row.type.name
+            return row.type ? row.type.name : ''
           }
         },
         {
           title: 'Model',
           data: (row) => {
-            return row.model.name
+            return row.model ? row.model.name : ''
           }
         },
         {
           title: 'Datacenter',
           data: (row) => {
-            return row.dc.name
+            return row.dc ? row.dc.name : ''
           }
         }
       ],
@@ -878,9 +878,10 @@ export default {
       if (this.customConnect.authProtocol === 1) {
         this.customConnect.authUserTip = ''
         this.customConnect.authPinTip = ''
+        this.customConnect.port = 22
       } else {
         this.customConnect.authPriKey = ''
-        this.customConnect.authPriKey = 1
+        this.customConnect.port = 23
       }
     },
     authTypeChange () {

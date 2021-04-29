@@ -125,17 +125,17 @@
                     </template>
                     <template v-else>
                       <template v-if="label.interval">
-                        <el-date-picker
+                        <my-date-picker
                           id="asset-box-input-purchase-date"
                           v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                           placeholder=""
                           size="small"
                           style="width: 100%">
-                        </el-date-picker>
+                        </my-date-picker>
                       </template>
                       <template v-else>
-                        <el-date-picker
+                        <my-date-picker
                           id="asset-box-input-parchase-date"
                           v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType"
@@ -143,7 +143,7 @@
                           size="small"
                           style="width: 100%"
                           value-format="yyyy-MM-dd">
-                        </el-date-picker>
+                        </my-date-picker>
                       </template>
                     </template>
                   </template>

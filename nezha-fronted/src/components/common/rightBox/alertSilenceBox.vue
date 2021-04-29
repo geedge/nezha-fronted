@@ -35,29 +35,27 @@
           <div class="datepicker">
             <div class="datepicker-box">
               <span class="datepicker-title">start time</span>
-              <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
-                              :picker-options="optionsStartAt"
                               type="datetime"
                               :clearable="false"
                               popper-class="panel-time-picker-popper"
                               :placeholder="$t('dashboard.panel.startTime')"
                               align="right"
               >
-              </el-date-picker>
+              </my-date-picker>
             </div>
             <div class="datepicker-box">
               <span class="datepicker-title">end time</span>
-              <el-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
-                              :picker-options="optionsEndAt"
                               type="datetime"
                               :clearable="false"
                               popper-class="panel-time-picker-popper"
                               :placeholder="$t('dashboard.panel.startTime')"
                               align="right"
               >
-              </el-date-picker>
+              </my-date-picker>
             </div>
             <!--( :range-separator="")-->
           </div>

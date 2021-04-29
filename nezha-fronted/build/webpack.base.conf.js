@@ -8,8 +8,6 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-
-
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -25,8 +23,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src'),
+      vue$: 'vue/dist/vue.esm.js',
+      '@': resolve('src')
     }
   },
   module: {
@@ -37,9 +35,22 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
-        test: /\.js$/,
+        test: /\.(js)$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client'), resolve('node_modules/element-ui/packages/scrollbar')],
+        exclude: '/node_modules/',
+        options: {
+          presets: [
+            ['env', {
+              modules: false,
+              targets: {
+                browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
+              }
+            }],
+            'stage-2'
+          ],
+          plugins: ['transform-vue-jsx', 'transform-runtime']
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

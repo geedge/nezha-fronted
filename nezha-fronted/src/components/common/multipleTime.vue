@@ -116,11 +116,11 @@
 <!--    name="multiple-time-datepicker"-->
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar">
-        <el-date-picker prefix-icon=" " size="mini" ref="calendar"
+        <my-date-picker prefix-icon=" " size="mini" ref="calendar"
                         format="yyyy/MM/dd HH:mm:ss" class="panel-time-picker-hidden" @change="dateChange" v-model="startTime" type="datetime"
                         popper-class="panel-time-picker-popper"
                         align="right">
-        </el-date-picker>
+        </my-date-picker>
         <!--
         <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
                 class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
@@ -373,6 +373,7 @@ export default {
           } else {
             this.isCustom = true
             this.$refs.calendar.focus()
+            this.$refs.calendar.pickerVisible = true
           }
         } else {
           this.isCustom = false

@@ -54,13 +54,6 @@ export default {
   created () {
     const localStorageTitle = JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
     if (localStorageTitle) {
-      for (const title of this.originalTableTitle) {
-        for (const lsTitle of localStorageTitle) {
-          if (lsTitle.prop === title.prop) {
-            lsTitle.label = title.label
-          }
-        }
-      }
       localStorage.setItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId, JSON.stringify(localStorageTitle))
     }
   },

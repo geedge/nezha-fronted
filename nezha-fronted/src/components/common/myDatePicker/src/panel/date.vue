@@ -89,6 +89,7 @@
 
           <div class="el-picker-panel__content">
             <date-table
+              :timezone="timezone"
               v-show="currentView === 'date'"
               @pick="handleDatePick"
               :selection-mode="selectionMode"
@@ -122,6 +123,8 @@
       <div
         class="el-picker-panel__footer"
         v-show="footerVisible && currentView === 'date'">
+        <span class="timezone-area">{{timezone}}</span>
+        <span class="timezone-offset">{{timezoneOffset}}</span>
         <el-button
           size="mini"
           type="text"
@@ -170,7 +173,7 @@ import TimePicker from './time'
 import YearTable from '../basic/year-table'
 import MonthTable from '../basic/month-table'
 import DateTable from '../basic/date-table'
-
+import bus from '@/libs/bus'
 export default {
   mixins: [Locale],
 
@@ -370,7 +373,7 @@ export default {
       // NOTE: not a permanent solution
       //       consider disable "now" button in the future
       if ((!this.disabledDate || !this.disabledDate(new Date())) && this.checkDateWithinRange(new Date())) {
-        this.date = new Date()
+        this.date = new Date(bus.computeTimezoneTime(new Date()))
         this.emit(this.date)
       }
     },

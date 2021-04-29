@@ -85,3 +85,35 @@
 .orange-bg {
   background-color: var(--theme-color) !important;
 }
+.timezone-area{
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  font-size: 14px;
+  float: left;
+  margin-left: 10px;
+  font-family: PingFangSC-Regular;
+  color: #333333;
+  line-height: 20px;
+  font-weight: 400;
+  margin-top: 3px;
+}
+.timezone-offset{
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  font-size: 14px;
+  margin-right: 10px;
+  font-family: PingFangSC-Regular;
+  color: #333333;
+  line-height: 20px;
+  font-weight: 400;
+}
+.active-icon{
+  margin-top:0px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  display: inline-block;
+  margin-right: 5px;
+}
