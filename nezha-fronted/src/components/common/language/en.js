@@ -718,12 +718,12 @@ const en = {
     model: {
       model: 'Asset model',
       brand: 'Brand',
-      name: 'Asset model',
+      name: 'Name',
       ChartTemplate: 'ChartTemplate',
       assetNum: 'AssetNum',
       editModel: 'Edit model',
-      createModel: 'Create model',
-      remark: 'Remark',
+      createModel: 'Add model',
+      remark: 'Description',
       type: 'Type'
     },
     terminallog: {
@@ -972,13 +972,14 @@ const en = {
     },
     assetType: {
       assetType: 'Asset Type',
+      type: 'Asset Type',
       name:'Name',
       vm:'VM',
       vmh:'VMH',
       authProtocol:'AuthProtocol',
       snmpEnable: 'SnmpEnable',
       snmpCollect:'SnmpCollect',
-      createModel:'CreateModel',
+      createModel:'Add Type',
       sshCollect:'SshCollect',
       sshCollectScript:'SshCollectScript',
       parent: 'Parent',
@@ -995,7 +996,7 @@ const en = {
       editAssetState: 'Edit asset state'
     },
     assetLabel: {
-      addMeta:'addMeta',
+      addMeta:'Add lables',
       example: 'Example',
       assetLabel: 'Asset labels',
       all: 'All',

@@ -10,11 +10,11 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{editCredential.id ? ($t("config.mib.credential.edit") + "  ID：" + editCredential.id) : $t("config.mib.credential.create")}}</div>
+      <div class="right-box__header">{{editCredential.id ? ($t("config.mib.credential.edit") + "  ID：" + editCredential.id) : $t("config.mib.credential.create")}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form-box">
+      <div class="right-box__container">
         <el-form class="right-box-form right-box-form-left" label-width="120px" size="small" :model="editCredential" label-position = "top" :rules="rules" ref="credentialForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.name" size="small" id="credential-box-input-name"></el-input>

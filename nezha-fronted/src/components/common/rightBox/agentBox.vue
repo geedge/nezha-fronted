@@ -12,16 +12,16 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
+    <div class="right-box__header">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box">
+    <div class="right-box__container">
       <el-form ref="promServerForm" :model="editPromServer" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
         <!--DC-->
         <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
           <div class="right-box-form-content">
-            <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" popper-class="config-dropdown" size="small" value-key="id">
+            <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
                 <span class="config-dropdown-label-txt">{{item.name}}</span>
               </el-option>
@@ -48,7 +48,7 @@
 <!--            :options="$CONSTANTS.promServer.theData"-->
 <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
 <!--            clearable></el-cascader>-->
-          <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" popper-class="config-dropdown" size="small" value-key="value">
+          <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
             <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value">
               <span class="panel-dropdown-label-txt" >{{item.label}}</span>
             </el-option>

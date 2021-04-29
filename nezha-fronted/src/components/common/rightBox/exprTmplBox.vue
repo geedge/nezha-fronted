@@ -11,13 +11,13 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
+    <div class="right-box__header">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
       $t("config.exprTemp.create")}}
     </div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box">
+    <div class="right-box__container">
       <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules"
                class="right-box-form right-box-form-left" label-position="top" label-width="120px">
         <el-form-item :label="$t('config.exprTemp.name')" prop="name">

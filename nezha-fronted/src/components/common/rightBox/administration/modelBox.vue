@@ -19,10 +19,6 @@
               <el-option :id="'module-project-'+item.id" v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <!--remark-->
-          <el-form-item :label="$t('config.model.remark')" prop="remark">
-            <el-input v-model="editModel.remark" size="small" type="text"></el-input>
-          </el-form-item>
           <!-- ChartTemplate -->
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
@@ -38,6 +34,10 @@
             class="form-control"
             @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
           ></v-selectpage>
+          </el-form-item>
+          <!--remark-->
+          <el-form-item :label="$t('config.model.remark')" prop="remark">
+            <el-input v-model="editModel.remark" size="small" type="text"></el-input>
           </el-form-item>
         </el-form>
       </div>

@@ -10,11 +10,11 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
+      <div class="right-box__header">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form-box">
+      <div class="right-box__container">
         <el-form class="right-box-form right-box-form-left" label-width="120px" size="small" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
           <el-form-item :label='$t("overall.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
@@ -26,7 +26,7 @@
             <el-input placeholder="" v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
           </el-form-item>
           <el-form-item :label='$t("asset.principal")' prop="principal">
-            <el-select value-key="id" popper-class="config-dropdown" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
+            <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
               <el-option v-for="item in userData" :id="'dc-principal-op-'+item.userId" :key="item.userId" :label="item.username" :value="item.userId">
                 <span>{{item.username}}</span>
               </el-option>

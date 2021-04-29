@@ -10,11 +10,11 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
+    <div class="right-box__header">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box">
+    <div class="right-box__container">
       <el-form class="right-box-form  right-box-form-left" :model="editMib" label-position = "top" label-width="120px" :rules="rules" ref="mibForm">
         <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
           <el-cascader
@@ -28,7 +28,8 @@
             collapse-tags
             :placeholder="$t('config.mib.modelTip')"
             size="small"
-            class="right-box-form-row"
+            class="right-box__select" 
+            popper-class="right-box-select-dropdown prevent-clickoutside"
             clearable></el-cascader>
         </el-form-item>
         <el-form-item :label="$t('config.mib.remark')" prop="remark">
