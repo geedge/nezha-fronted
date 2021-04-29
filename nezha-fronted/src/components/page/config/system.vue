@@ -250,6 +250,7 @@ import draggable from 'vuedraggable'
 import notifyMethod from './system/notifyMethodTab'
 import linkTab from './system/linkTab'
 import apiKeyTab from './system/apiKeyTab'
+import moment from 'moment-timezone'
 export default {
   name: 'system',
   components: { draggable, latlngPicker, notifyMethod, linkTab, apiKeyTab },
@@ -459,6 +460,10 @@ export default {
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
               // this.resetForm(formName);
+              if (type == 'basic') {
+                localStorage.setItem('nz-sys-timezone', param.timezone)
+                localStorage.setItem('timezoneOffset', moment.tz(param.timezone).format('Z'))
+              }
               setTimeout(() => {
                 this.querySetInfo(type)
               }, 200)
