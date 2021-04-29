@@ -322,11 +322,13 @@ export default {
         this.dataList.forEach((item, index) => {
           item.weight = index
           newWeights.push({ id: item.id, weight: index })
-          if (item.type === 'group') {
+          if (item.type === 'group' && item.children) {
             item.children.forEach(chart => {
               i++
               newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
             })
+          } else {
+            item.children = []
           }
         })
         const panelId = this.pagePanelId
@@ -339,16 +341,18 @@ export default {
       this.dataList.forEach((item, index) => {
         item.weight = index
         newWeights.push({ id: item.id, weight: index })
-        if (item.type === 'group' && group.groupId !== item.id) {
+        if (item.type === 'group' && group.groupId !== item.id && item.children) {
           item.children.forEach(chart => {
             i++
             newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
           })
-        } else if (item.type === 'group' && group.groupId == item.id) {
+        } else if (item.type === 'group' && group.groupId == item.id && item.children) {
           group.children.forEach(chart => {
             i++
             newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
           })
+        } else {
+          item.children= []
         }
       })
       const panelId = this.pagePanelId
@@ -446,7 +450,7 @@ export default {
           } else {
             item.isLoaded = true
             item.isHide = true
-            if (item.type === 'group') {
+            if (item.type === 'group' && item.children) {
               item.children.forEach(groupItem => {
                 if (groupItem.name.indexOf(searchName) > -1) {
                   item.isLoaded = false
@@ -703,11 +707,13 @@ export default {
           this.dataList = [...this.dataTotalList]
           let addGroupIndex = 0
           this.dataList.forEach((item) => {
-            if (item.type === 'group') {
+            if (item.type === 'group' && item.children) {
               item.children.forEach(chart => {
                 addGroupIndex++
                 chart.chartIndex = this.dataList.length + addGroupIndex
               })
+            } else {
+              item.children = []
             }
           })
           // this.showShadow=false;
