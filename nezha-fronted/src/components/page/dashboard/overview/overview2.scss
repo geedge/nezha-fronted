@@ -5,8 +5,11 @@
 }
 .overview-content-header{
   display: flex;
-  padding: 0 0 2px 0;
   justify-content: space-between;
+  margin-top: 10px;
+  padding: 5px 0 0 0;
+  background-color: white;
+  box-sizing: border-box;
 }
 .overview-content-header .header-title{
   height: 35px;
@@ -21,11 +24,12 @@
   display: flex;
   padding: 5px;
 }
-.header-tool .tool-container{
+.overview .header-tool .tool-container{
   display: flex;
   text-align: center;
   justify-content: space-between;
   min-width: 310px;
+  padding-right: 7px !important;
 }
 .tool-container .pickTime{
   margin-right: -20px;
@@ -66,7 +70,10 @@
   cursor: pointer;
   color: #666666;
 }
-.overview-content{
+.overview-content {
+  padding: 0 10px 15px;
+  background-color: white;
+  box-sizing: border-box;
   height: calc(100% - 42px);
   width: 100%;
 }

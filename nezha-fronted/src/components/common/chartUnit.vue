@@ -1,18 +1,24 @@
 <template>
-    <div style="display: flex;justify-content: flex-start">
-      <button class="input-prepend nz-btn nz-btn-size-small nz-btn-style-light nz-btn-style-square nz-input-group-prepend" @click="openSeletor" :id="id+'-open-select'">{{$t('dashboard.panel.chartForm.unit')}}</button>
-      <el-cascader placeholder="" popper-class="no-style-class unit-pop-class" size="mini"
-                   :id="id+'-unit-input'"
-                   :options="chartUnits"
-                   class="chart-unit"
-                   :props="{ expandTrigger: 'click' ,emitPath:false}"
-                   :show-all-levels="false"
-                   v-model="unit"
-                   @change="unitSelected"
-                   ref="unitSelector"
-      >
-      </el-cascader>
-    </div>
+  <div class="top-tool-btn-group">
+    <button
+      :id="id+'-open-select'"
+      class="top-tool-btn top-tool-btn--text"
+      style="border-radius: 2px 0 0 2px; border-right: none;"
+      @click="openSeletor"
+    >{{$t('dashboard.panel.chartForm.unit')}}</button>
+    <el-cascader :id="id+'-unit-input'" ref="unitSelector" v-model="unit"
+                 :options="chartUnits"
+                 :props="{ expandTrigger: 'click' ,emitPath:false}"
+                 :show-all-levels="false"
+                 class="chart-unit"
+                 placeholder=""
+                 popper-class="prevent-clickoutside unit-pop-class"
+                 size="small"
+                 style="border-radius: 0 2px 2px 0;"
+                 @change="unitSelected"
+    >
+    </el-cascader>
+  </div>
 </template>
 
 <script>
@@ -49,10 +55,14 @@ export default {
 }
 </script>
 
-<style >
+<style lang="scss">
+
   .chart-unit{
     width: 100px;
     margin: 0 20px 0 0;
+  }
+  .chart-unit.el-cascader .el-input.is-focus .el-input__inner {
+    border-color: #FBCEA4;
   }
   .chart-unit .el-input__suffix-inner {
     color: #aaa;

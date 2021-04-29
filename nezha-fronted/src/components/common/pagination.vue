@@ -158,9 +158,6 @@ export default {
 </script>
 
 <style lang="scss">
-  .el-pagination__total {
-    float: left;
-  }
   .pagination {
     padding-top: 8px;
     text-align: center;

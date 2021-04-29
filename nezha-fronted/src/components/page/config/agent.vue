@@ -6,7 +6,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.agent"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="prom-add" v-has="'agent_add'" :title="$t('overall.createPrometheusServer')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">

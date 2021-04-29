@@ -4,7 +4,9 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :from="fromRoute.menus">
+      :from="fromRoute.menus"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="menus-add" class="top-tool-btn margin-l-20"
                 type="button" @click="add">

@@ -56,9 +56,6 @@ export default {
     opacity: 0.7;
     border-radius: 2px;
   }
-  .delete-button .nz-btn-disabled .nz-icon-delete{
-    opacity: 0.5;
-  }
   .delete-button-light.delete-button{
     border-radius: 2px;
   }

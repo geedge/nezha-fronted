@@ -7,7 +7,9 @@
       :from="fromRoute.assetState"
       :search-msg="searchMsg"
       :table-id="tableId"
-      :table-title="tableTitle">
+      :table-title="tableTitle"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="assetState-add" v-has="'assetState_toAdd'" :title="$t('overall.createAssetState')" class="top-tool-btn margin-l-20"
                 type="button" @click="add">

@@ -1,42 +1,45 @@
 <template>
-  <div style="height: 100%;">
-    <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">ID：{{obj.id}}</div><div
-        @click="changeTab('record')" class="sub-list-tab">{{$t("config.terminallog.record.record")}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.cmd.cmd")}}</div>
-      </div>
-    </div>
-    <div class="record-container">
-      <div class="record-container--record-tip">
-        <span class="record--title">{{$t('config.terminallog.cmd.legendTip')}}:</span>
-        <span class="detail--cmd"><span class="detail--cmd__red"><i class="nz-icon nz-icon-jinggao" style="color: #f35844; margin-right: 8px"></i>{{$t("config.terminallog.cmd.dangerTip")}}</span></span>
-      </div>
-      <div class="record-container--record">
-        <div class="record--title">{{$t('config.terminallog.cmd.history')}}</div>
-        <div class="record--list">
-          <template v-for="record in records">
-            <template v-for="(item, index) in record.list">
-              <div :key="index" class="detail--time"><span>{{calcTime(item.time)}}</span></div>
-              <div :key="index" class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
+  <nz-bottom-data-list
+    :layout="[]"
+    :tabs="tabs"
+    @changeTab="changeTab"
+  >
+    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot>
+      <div class="record-container">
+        <div class="record-container--record-tip">
+          <span class="record--title">{{$t('config.terminallog.cmd.legendTip')}}:</span>
+          <span class="detail--cmd"><span class="detail--cmd__red"><i class="nz-icon nz-icon-jinggao" style="color: #f35844; margin-right: 8px"></i>{{$t("config.terminallog.cmd.dangerTip")}}</span></span>
+        </div>
+        <div class="record-container--record">
+          <div class="record--title">{{$t('config.terminallog.cmd.history')}}</div>
+          <div class="record--list">
+            <template v-for="record in records">
+              <template v-for="(item, index) in record.list">
+                <div :key="index" class="detail--time"><span>{{calcTime(item.time)}}</span></div>
+                <div :key="index" class="detail--cmd"><span :class="matchBgColor(item.cmd)">{{item.cmd}}</span></div>
+              </template>
             </template>
-          </template>
-        </div>
-        <div :style="{visibility: hasNext ? 'visible' : 'hidden'}" class="record--more">
-          <span @click="loadMore" class="more-btn"><i class="nz-icon nz-icon-drop-down"></i></span>
+          </div>
+          <div :style="{visibility: hasNext ? 'visible' : 'hidden'}" class="record--more">
+            <span class="more-btn" @click="loadMore"><i class="nz-icon nz-icon-drop-down"></i></span>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </nz-bottom-data-list>
 </template>
 
 <script>
+import dataListMixin from '@/components/common/mixin/dataList'
+import subDataListMixin from '@/components/common/mixin/subDataList'
+import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
+
 export default {
   name: 'terminalLogRecordTab',
+  mixins: [dataListMixin, subDataListMixin],
   components: {
-  },
-  props: {
-    obj: Object // 关联的实体对象
+    nzBottomDataList
   },
   computed: {
     calcTime () {

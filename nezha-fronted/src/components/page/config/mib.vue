@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div>
     <nz-data-list
       v-if="showTab === 'file'"
       ref="dataList"
@@ -7,7 +7,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.mib"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-left>
         <div id="module-type-1" class="nz-tab-item-box">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.mibFiles")}}</div>

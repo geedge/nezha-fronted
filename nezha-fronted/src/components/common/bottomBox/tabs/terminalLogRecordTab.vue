@@ -1,42 +1,46 @@
 <template>
-  <div class="replay-tab" ref="replayTab">
-    <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">ID：{{obj.id}}</div><div
-        class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.record.record")}}</div><div
-        @click="changeTab('cmd')" class="sub-list-tab">{{$t("config.terminallog.cmd.cmd")}}</div>
-      </div>
-    </div>
-    <div class="replay-container">
-      <div class="replay-operate">
-        <div>
-          <button :title="$t('config.terminallog.record.pause')" @click="pause" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-pause" v-show="isPlaying"><i class="nz-icon nz-icon-suspend"></i></button>
-          <button :title="$t('config.terminallog.record.play')" @click="play" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-play" v-show="isFinish || !isPlaying"><i class="nz-icon nz-icon-play"></i></button>
-          <button :title="$t('config.terminallog.record.replay')" @click="restart" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-restart"><i class="nz-icon nz-icon-replay"></i></button>
-          <button @click="speedChange" class="nz-btn nz-btn-style-light nz-btn-size-large" id="terminal-replay-speed-change"><i class="nz-icon nz-icon-fast-forward"></i>&nbsp;{{speedTable[speedOffset].name}}</button>
-          <el-checkbox class="operate-skip" id="terminal-replay-skip" v-model="needSkip">{{$t("config.terminallog.record.skipTip")}}</el-checkbox>
-          <el-tag class="time-box" color="#23bf9a" effect="dark" size="medium">{{parseCurrentTime}}&nbsp;s</el-tag>
+  <nz-bottom-data-list
+    :layout="[]"
+    :tabs="tabs"
+    @changeTab="changeTab"
+  >
+    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot>
+      <div class="replay-container">
+        <div class="replay-operate">
+          <div>
+            <button v-show="isPlaying" id="terminal-replay-pause" :title="$t('config.terminallog.record.pause')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="pause"><i class="nz-icon nz-icon-suspend"></i></button>
+            <button v-show="isFinish || !isPlaying" id="terminal-replay-play" :title="$t('config.terminallog.record.play')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="play"><i class="nz-icon nz-icon-play"></i></button>
+            <button id="terminal-replay-restart" :title="$t('config.terminallog.record.replay')" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="restart"><i class="nz-icon nz-icon-replay"></i></button>
+            <button id="terminal-replay-speed-change" class="nz-btn nz-btn-style-light nz-btn-size-large" @click="speedChange"><i class="nz-icon nz-icon-fast-forward"></i>&nbsp;{{speedTable[speedOffset].name}}</button>
+            <el-checkbox id="terminal-replay-skip" v-model="needSkip" class="operate-skip">{{$t("config.terminallog.record.skipTip")}}</el-checkbox>
+            <el-tag class="time-box" color="#23bf9a" effect="dark" size="medium">{{parseCurrentTime}}&nbsp;s</el-tag>
+          </div>
+          <div class="terminal-replay-progress" @click="jumpProgress">
+            <el-progress ref="terminalProgress" :percentage="progress" :show-text="false" class="terminal-replay-progress-bar"></el-progress>
+            <div id="progressController" ref="progressController" class="progress-controller" @mousedown="startDragging"></div>
+          </div>
         </div>
-        <div @click="jumpProgress" class="terminal-replay-progress">
-          <el-progress :percentage="progress" :show-text="false" class="terminal-replay-progress-bar" ref="terminalProgress"></el-progress>
-          <div @mousedown="startDragging" class="progress-controller" id="progressController" ref="progressController"></div>
+        <div ref="recordConsole" class="record-console">
+          <div :id="obj.uuid" class="record-terminal"></div>
         </div>
       </div>
-      <div class="record-console" ref="recordConsole">
-        <div :id="obj.uuid" class="record-terminal"></div>
-      </div>
-    </div>
-  </div>
+    </template>
+  </nz-bottom-data-list>
 </template>
 
 <script>
 import Terminal from '../../js/Xterm'
 import bus from '../../../../libs/bus'
+import dataListMixin from '@/components/common/mixin/dataList'
+import subDataListMixin from '@/components/common/mixin/subDataList'
+import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 
 export default {
   name: 'terminalLogReplayTab',
-  props: {
-    obj: Object // 关联的实体对象
+  mixins: [dataListMixin, subDataListMixin],
+  components: {
+    nzBottomDataList
   },
   data () {
     return {

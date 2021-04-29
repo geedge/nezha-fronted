@@ -451,7 +451,6 @@ export default {
                 !severityData.P3 && (severityData.P3 = 0)
                 assetStateData.push({ ...alertTopAssets[i], alert: [severityData] })
               })
-              console.info(assetStateData)
               this.messageAssetData = assetStateData
             })
           }
@@ -465,7 +464,7 @@ export default {
         this.$get('stat/asset/type').then(response => {
           this.assetTypeLoading = false
           if (response.code === 200) {
-            this.assetTypeData = response.data
+            this.assetTypeData = response.data.list
             /* 饼图 */
             const legendData = []
             const typeSeriesData = []
@@ -768,10 +767,10 @@ export default {
         }
       ]
       return new Promise(resolve => {
-        const requests = [axios.get('dc?pageSize=-1')/* , axios.get('stat/overview/map') */]
+        const requests = [axios.get('dc?pageSize=-1'), axios.get('stat/overview/map')]
         axios.all(requests).then(result => {
           const dcInfos = result[0].data.data.list
-          const dcStats = testData
+          const dcStats = result[1].data.data.list
           dcStats.sort((a, b) => {
             return a.asset.total - b.asset.total
           })
@@ -1178,7 +1177,6 @@ export default {
 
 <style lang="scss">
 @import './overview2.scss';
-@import '@/assets/css/common/tableCommon.scss';
 .leaflet-control-zoom{
   border: 1px solid #E7EAED !important;
   box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77) !important;

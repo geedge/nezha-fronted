@@ -30,7 +30,7 @@ export default new Router({
           component: resolve => require(['../components/page/dashboard/explore/explore.vue'], resolve)
         },
         {
-          path: 'overview',
+          path: '/overview',
           component: resolve => require(['../components/page/dashboard/overview/overview.vue'], resolve)
         },
         {

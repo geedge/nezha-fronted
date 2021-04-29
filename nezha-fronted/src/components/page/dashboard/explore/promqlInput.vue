@@ -1,14 +1,14 @@
 <template>
-  <div class="promqlInput" :style="{height:(errorMsg || appendMsg)?'auto':'auto','margin-bottom':required?'0':'18px'}">
+  <div class="promqlInput">
     <div class="query-row">
       <div class="query-input">
         <!--explore页面的样式-->
         <template v-if="styleType == 1">
-          <div class="metric-btn" v-if="plugins.indexOf('metric-selector') > -1">
+          <div v-if="plugins.indexOf('metric-selector') > -1">
             <el-dropdown class="metric-selector">
               <el-dropdown-menu style="display: none"></el-dropdown-menu>
-              <el-button class="metric-btn nz-btn nz-btn-size-normal nz-btn-style-light" @click="toggleDropdown">Metric
-                &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></el-button>
+              <button class="top-tool-btn" type="button" @click="toggleDropdown">Metric
+                &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></button>
               <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-model="cascaderValue" v-clickoutside="closeDropdown"
                                  slot="dropdown" ref="metricSelector" :props="{emitPath:false,}" :loading="loading"
                                  :options="metricOptions" @change="metricChange">
@@ -24,8 +24,6 @@
             </el-dropdown>
           </div>
           <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-            <!--            <el-autocomplete :placeholder="$t('dashboard.metricPreview.inputTip')" :fetch-suggestions="filterInput" clearable @clear="clearExpression" :trigger-on-focus="false" v-model="expressionList[index]" @blur="expressionChange" style="width: 100%;height:36px"></el-autocomplete>-->
-            <!--<editor :styleType="styleType" :metric-list="metricStore" :history-param="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>?-->
             <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]" :id="inputId"
                       @input="metricKeyDown" type="textarea"
                       :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"></el-input>
@@ -566,7 +564,6 @@ export default {
   .input-box .error {
     color: #F56C6C;
   }
-
   .query-row .query-input {
     display: flex;
     justify-content: flex-start;
@@ -703,7 +700,6 @@ export default {
     position: relative;
     z-index: 2100;
   }
-
   .input-box .el-input__inner {
     height: 30px;
   }

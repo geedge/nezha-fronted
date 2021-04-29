@@ -156,7 +156,8 @@ export const alertMessage = {
   ],
   states: [
     { value: '1', label: i18n.t('alert.list.pending') },
-    { value: '2', label: i18n.t('alert.list.expired') }
+    { value: '2', label: i18n.t('overall.silence') },
+    { value: '3', label: i18n.t('alert.list.expired') }
   ]
 }
 

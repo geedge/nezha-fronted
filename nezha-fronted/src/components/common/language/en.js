@@ -108,7 +108,8 @@ const en = {
     copySuccess: 'Copy success',
     parent: 'Parent',
     dc: 'Data center',
-    labels: 'Labels'
+    labels: 'Labels',
+    silence: 'Silence'
   },
   pageSize: '/page',
   setup: {

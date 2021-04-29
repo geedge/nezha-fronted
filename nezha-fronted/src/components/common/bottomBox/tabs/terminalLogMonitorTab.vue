@@ -1,27 +1,39 @@
 <template>
-  <div class="replay-tab" ref="replayTab">
-    <div class="sub-top-tools">
-      <div class="sub-list-tabs">
-        <div class="sub-list-tab-title">ID：{{obj.id}}</div>
-        <div class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.monitor.monitor")}}</div>
+  <nz-bottom-data-list
+    :layout="[]"
+    :tabs="tabs"
+    @changeTab="changeTab"
+  >
+    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot>
+      <div ref="replayTab" class="replay-tab">
+        <div class="sub-top-tools">
+          <div class="sub-list-tabs">
+            <div class="sub-list-tab-title">ID：{{obj.id}}</div>
+            <div class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.monitor.monitor")}}</div>
+          </div>
+        </div>
+        <div class="replay-container">
+          <div ref="recordConsole" class="record-console">
+            <div :id="obj.uuid" class="record-terminal"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="replay-container">
-      <div class="record-console" ref="recordConsole">
-        <div :id="obj.uuid" class="record-terminal"></div>
-      </div>
-    </div>
-  </div>
+    </template>
+  </nz-bottom-data-list>
 </template>
 
 <script>
 import Terminal from '../../js/Xterm'
 import bus from '../../../../libs/bus'
-
+import dataListMixin from '@/components/common/mixin/dataList'
+import subDataListMixin from '@/components/common/mixin/subDataList'
+import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 export default {
   name: 'terminalLogReplayTab',
-  props: {
-    obj: Object // 关联的实体对象
+  mixins: [dataListMixin, subDataListMixin],
+  components: {
+    nzBottomDataList
   },
   data () {
     return {

@@ -6,7 +6,9 @@
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.chartTemp"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-left>
         <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.exprTemp.exprTemp")}}</div>

@@ -76,12 +76,17 @@
         color: $--button-gray-color;
       }
     }
+    .top-tool-btn.top-tool-btn--text {
+      padding: 0 8px;
+      width: unset;
+      color: #666;
+    }
     .top-tool-btn:hover:not(.nz-btn-disabled) {
       background-color: $--button-gray-hover-background-color;
     }
-    .top-tool-btn:focus:not(.nz-btn-disabled) {
+    .top-tool-btn:focus:not(.nz-btn-disabled), .top-tool-btn.is-focus {
       background-color: $--button-gray-hover-background-color;
-      border-color: #FBCEA4;
+      border: 1px solid #FBCEA4 !important;
       i {
         color: $--button-gray-active-color;
       }

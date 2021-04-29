@@ -4,9 +4,9 @@
     <multipleTime ref="multipleTime" v-if="showMultiple" :stepSearchTime="searchTime" @change="dateChange(searchTime)" class="multiple-time"/>
     <chart-unit v-model="unit" v-if="useChartUnit"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group margin-r-10">
-      <button :id="id+'-refresh'" class="top-tool-btn" @click="refreshDataFunc">
+      <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="refreshDataFunc">
         <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;
-        <span class="nz-btn nz-btn-text" ><slot name="added-text"></slot></span>
+        <span><slot name="added-text"></slot></span>
       </button>
       <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)">
         <span class="select-refresh-time-label" v-if="interval !== -1">{{interLabel}}</span>

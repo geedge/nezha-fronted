@@ -9,7 +9,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertMessage"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <pick-time v-model="searchTime" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
@@ -445,8 +447,8 @@ export default {
     },
     openDelMessageBox () {
       if (this.batchDeleteObjs.length < 1) return
-      if (this.$refs.alertMessageTable) {
-        this.$refs.alertMessageTable.toDeleteMessage(false)
+      if (this.$refs.dataTable) {
+        this.$refs.dataTable.toDeleteMessage(false)
       }
     },
     toDeleteMessage (obj) {
@@ -470,14 +472,6 @@ export default {
           })
         }
       })
-    },
-    selectChange (s) {
-      const ids = []
-      this.deleteBox.ids = ''
-      s.forEach(item => {
-        ids.push(item.id)
-      })
-      this.deleteBox.ids = ids.join(',')
     },
     showExportDialog () {
       this.importBox.show = true
@@ -561,24 +555,6 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    showTagDetail (data, key) {
-      let open = false
-      if (key == 'asset' || key == 'project' || key == 'module' || key == 'endpoint' || key == 'datacenter') {
-        open = true
-      }
-      if (open) {
-        const labelList = []
-        const detailList = []
-        for (const item in data) {
-          if (item == 'asset' || item == 'project' || item == 'module' || item == 'endpoint' || item == 'dc') {
-            labelList.push(item)
-            detailList.push(data[item])
-          }
-        }
-        this.bottomBox.showSubList = true
-        this.tabList = labelList
-      }
-    },
     search (searchObj) {
       let orderBy = ''
       if (this.searchLabel.orderBy) {
@@ -598,21 +574,10 @@ export default {
       if (orderBy) {
         this.$set(this.searchLabel, 'orderBy', orderBy)
       }
-      this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0
+      if (this.$refs.dataTable) {
+        this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
+      }
       this.getTableData()
-    },
-    fillProject (module) {
-      this.$get('project', { id: module.projectId }).then(response => {
-        if (response.code == 200) {
-          module.project = response.data.list[0]
-        }
-      })
-    },
-    closeViews () {
-      this.$refs.alertConfigBox.show(false, false)
-      this.$refs.projectBox.show(false, false)
-      this.$refs.moduleBox.show(false, false)
-      this.viewAssetState = false
     },
     // 数据排序
     tableDataSort (item) {

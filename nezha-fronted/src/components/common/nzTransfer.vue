@@ -220,7 +220,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/css/common/tableCommon.scss';
 .nz-transfer {
   display: flex;
   justify-content: space-between;

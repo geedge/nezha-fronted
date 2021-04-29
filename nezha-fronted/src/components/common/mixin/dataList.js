@@ -17,10 +17,10 @@ export default {
       /* 工具参数 */
       tools: {
         loading: false, // 是否显示table加载动画
-        customTableTitle: [] // 自定义列工具的数据
+        customTableTitle: [], // 自定义列工具的数据
+        extraTableTitle: [] // 特殊页面（asset）额外的列
       },
       mainTableHeight: this.$tableHeight.normal, // 主列表table高度
-      searchTableHeight: this.$tableHeight.search, // 主列表table高度
       batchDeleteObjs: [],
       object: {},
 
@@ -188,6 +188,14 @@ export default {
         vm.tools.showTopBtn = wrap.scrollTop > 50
         vm.tools.tableHover = wrap.scrollTop > 50
       }, 100))
+    },
+    showClickSearch () {
+      const index = this.dataListLayout.indexOf('clickSearch')
+      if (index > -1) {
+        this.dataListLayout.splice(index, 1)
+      } else {
+        this.dataListLayout.push('clickSearch')
+      }
     }
   },
   watch: {
@@ -217,11 +225,9 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
-    console.log(this.$refs.dataTable)
     this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
       ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
       : this.$refs.dataTable.tableTitle
-    console.log(this.fromBottom)
     if (!this.fromBottom) {
       this.getTableData()
     }

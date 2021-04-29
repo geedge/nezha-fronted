@@ -6,7 +6,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertSilence"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="roles-add" v-has="'alertSilence_add'" :title="$t('overall.create')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">

@@ -36,13 +36,13 @@
         <template v-if="item.prop === 'type'">{{scope.row.type ? scope.row.type.name : '-'}}</template>
         <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
         <template v-else-if="item.prop === 'endpointNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-endpoint" style="color: #969dea; padding-right: 8px;"></i><span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
+          <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
 <!--          <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(`${$t('asset.down')} / ${$t('asset.suspended')} / ${$t('asset.total')}`, true, $event)" @mouseleave="hideTableTooltip">
             <span class="link" style="padding: 2px 8px" @click="showEndpoint(scope.row)">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
           </div>-->
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"><i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert" style="padding-right: 8px;"></i><span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span></span>
+          <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"><i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span></span>
         </template>
         <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
         <template v-else-if="item.prop === 'cabinet'">

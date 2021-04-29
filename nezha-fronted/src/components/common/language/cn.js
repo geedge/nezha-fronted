@@ -101,7 +101,8 @@ const cn = {
     },
     SyncSave: '保存同时更新 Assets',
     copySuccess: '复制成功',
-    moreOption: '更多选项'
+    moreOption: '更多选项',
+    silence: '静默'
   },
   setup: {
     step0: '欢迎',

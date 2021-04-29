@@ -38,6 +38,9 @@
 
     &:first-of-type {
       padding-top: 0;
+      .nz-icon-minus-position {
+        padding-top: 4px;
+      }
     }
     padding: 20px 0;
     width: 100%;

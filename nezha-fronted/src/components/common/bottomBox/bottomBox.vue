@@ -32,10 +32,9 @@
 <!--                   :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab>-->
 
         <!--terminal-log的记录和回放-->
-        <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmd'" ref="reminalLogCMDTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-cmd-tab>
-        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'record'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab"></terminal-log-record-tab>
-
-        <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitor'" ref="reminalLogRecordTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+        <terminal-log-cmd-tab v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab"></terminal-log-cmd-tab>
+        <terminal-log-record-tab v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab"></terminal-log-record-tab>
+        <terminal-log-monitor-tab v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
 
         <asset-tab v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
 
@@ -110,6 +109,19 @@ export default {
     return {
       fromRoute: fromRoute,
       tabs: {
+        terminalLog: {
+          monitor: [
+            { prop: 'monitorTab', name: this.$t('config.terminallog.monitor.monitor'), active: true }
+          ],
+          cmd: [
+            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
+            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
+          ],
+          record: [
+            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
+            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
+          ]
+        },
         user: {
           operationLog: [
             { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: true },
@@ -202,3 +214,100 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+/* begin--二级顶部工具栏*/
+.sub-top-tools {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #DCDFE6;
+  border-bottom: 1px solid #E4E7ED;
+  margin: 0 -6px;
+  padding-right: 80px;
+  background-color: $content-right-background-color;
+  margin-bottom: 10px;
+}
+.sub-top-tools>div {
+  margin-top: 2px;
+}
+.sub-top-tools .top-tool-search {
+  width: 260px;
+  margin: -1px 0 0 0;
+  .select_input input {
+    background-color: white;
+  }
+}
+.sub-container {
+  padding: 10px;
+  height: 100%;
+  background-color: #f6f6f6;
+  overflow-y: auto;
+  &>div {
+    background-color: white;
+  }
+}
+.sub-top-tools .top-tool-btn-txt .nz-icon{
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 6px;
+}
+.sub-top-tool-right {
+  display: flex;
+  align-content: center;
+}
+.has-sub-popper {
+  color: $danger-color;
+}
+.sub-box {
+  height: 50%;
+  position: relative;
+}
+.sub-list {
+  height: calc(100% - 9px);
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  top: 9px;
+
+  .sub-list__tabs {
+    height: 100%;
+    background-color: white;
+
+    &>div {
+      height: 100%;
+      background-color: #f6f6f6;
+
+      .nz-table2 {
+        height: calc(100% - 92px);
+        padding: 20px 20px 0;
+      }
+    }
+  }
+}
+.main-and-sub-transition {
+  transition: .4s height;
+}
+
+.bottom-panel {
+  padding-top: 15px;
+  background-color: white;
+  padding-bottom: 50px;
+}
+
+.resize-modal {
+  width: calc(100% - 240px);
+  opacity: 0.6;
+  background-color: #f5f9ff;
+  border: 1px solid #a7d0f7;
+  box-sizing: border-box;
+  position: fixed;
+  cursor: ns-resize;
+  display: none;
+  z-index: 20;
+  vertical-align: bottom;
+  bottom: 0;
+}
+
+/* end--二级顶部工具栏*/
+</style>

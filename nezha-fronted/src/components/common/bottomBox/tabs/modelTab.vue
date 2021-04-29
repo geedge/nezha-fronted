@@ -103,7 +103,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/assets/css/common/tableCommon.scss';
 /* begin--二级顶部工具栏*/
 .sub-top-tools {
   display: flex;

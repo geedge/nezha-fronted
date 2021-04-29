@@ -6,7 +6,9 @@
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.dc"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <button id="dc-add" v-has="'dc_add'" :title="$t('overall.createDatacenter')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">

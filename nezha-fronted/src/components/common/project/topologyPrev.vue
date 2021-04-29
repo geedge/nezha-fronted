@@ -113,12 +113,12 @@
       <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px;padding-top: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools">
         <div>{{topologyInfo.name}}</div>
         <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
-<button @click="changeScreen" class="top-tool-btn float-right"
+<button class="top-tool-btn" @click="changeScreen"
         style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button"
 >
                   <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
         </button>
-        <button @click="editTopology" class="top-tool-btn float-right"
+        <button class="top-tool-btn" @click="editTopology"
                 style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button" v-has="'project_topo_update'"
         >
                   <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>

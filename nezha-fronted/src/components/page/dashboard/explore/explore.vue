@@ -1,54 +1,41 @@
 <template>
-  <div class="explore" v-has="'explore_view'">
-    <div class="main-list main-and-sub-transition">
+  <div class="explore list-page">
+    <div class="main-list">
+      <div class="main-container">
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
-          <div class="top-tool-main-right">
+          <div class="top-tool-left"></div>
+          <div class="top-tool-right">
             <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime" id="explore">
               <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
             </pick-time>
-            <button :disabled="saveDisabled" @click="saveChart" type="button" v-has="'explore_chart_toAdd'" id="explore-save-chart"
-                    class="nz-btn nz-btn-size-large nz-btn-style-normal nz-btn-min-width-120"
+            <button id="explore-save-chart" v-has="'panel_chart_add'" :disabled="saveDisabled" class="top-tool-btn top-tool-btn--text" type="button"
+                    @click="saveChart"
                     :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed' : saveDisabled}">
               {{$t('dashboard.metric.saveChart')}}
             </button>
           </div>
         </div>
-        <div style="height: calc(100% - 50px);width: 100%;" >
-          <div ref="scrollWrap" style="height: 100%; overflow: auto;">
-            <div class="expression-room right-margin" style="padding-top: 5px" id="explore-promql-box">
-              <!--坑，这个index居然是从1开始-->
-              <promql-input
-                v-for="index of promqlKeys.length"
-                :ref="'promql-'+(index-1)"
-                :id="promqlKeys[index-1]"
-                :key="promqlKeys[index-1]"
-                :expression-list="expressions"
-                :index="index-1"
-                :styleType="1"
-                :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
-                @change="expressionChange"
-                @addExpression="addExpression"
-                @copyExpression="copyExpression"
-                @removeExpression="removeExpression"
-              ></promql-input>
-<!--
+        <div class="top-tools" style="width: 100%;box-sizing: border-box; padding-left: 10px;">
+          <div id="explore-promql-box" class="expression-room">
+            <!--坑，这个index居然是从1开始-->
             <promql-input
               v-for="index of promqlKeys.length"
-              :ref="'promql-'+(index-1)"
               :id="promqlKeys[index-1]"
               :key="promqlKeys[index-1]"
+              :ref="'promql-'+(index-1)"
               :expression-list="expressions"
               :index="index-1"
+              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
               :styleType="1"
-              :history-param="historyParam"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove']"
-              @change="expressionChange"
               @addExpression="addExpression"
+              @change="expressionChange"
+              @copyExpression="copyExpression"
               @removeExpression="removeExpression"
             ></promql-input>
--->
           </div>
+        </div>
+        <div ref="scrollWrap" style="height: 100%; overflow: auto;">
           <div class="chart-view right-margin" v-show="!showIntroduce"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
             <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
@@ -196,9 +183,8 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               </div>
             </div>
           </div>
-      </div>
         </div>
-
+      </div>
     </div>
     <transition name="right-box">
       <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.explore" :panel-data="panelData" :show-panel="{id: -1, name: '', type: 'explore'}" @close="handleBox(false)" @on-create-success="createSuccess" ref="addChartModal" v-if="rightBox.show"></chart-box>
@@ -764,9 +750,6 @@ export default {
     border: 1px solid #c7d0d9;
     border-radius: 4px;
   }
-  .right-margin{
-    margin-right: 15px;
-  }
   /*外部引用 样式start*/
   .doc-content {
     font-size: 16px;
@@ -930,7 +913,7 @@ export default {
 
   /*外部引用 样式end*/
 </style>
-<style>
+<style lang="scss">
   .explore-table tr td .cell {
     overflow: hidden;
     text-overflow: ellipsis;

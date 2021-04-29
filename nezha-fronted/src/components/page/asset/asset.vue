@@ -4,10 +4,15 @@
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
-      :has-search="true"
-      :layout="['searchInput', 'elementSet', 'clickSearch']"
-      :search-msg="searchMsg">
+      :from="fromRoute.asset"
+      :layout="dataListLayout"
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
+        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
+          <i class="nz-icon nz-icon-funnel"></i>
+        </button>
         <export-excel
           id="asset-list"
           :params="searchLabel"
@@ -37,7 +42,7 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="assetTableHeight"
+          :height="dataListLayout.indexOf('clickSearch') > -1 ? assetTableHeight : mainTableHeight"
           :table-data="tableData"
           @cli="cli"
           @del="del"
@@ -106,6 +111,7 @@ export default {
       rightBox: {
         batchShow: false
       },
+      dataListLayout: ['searchInput', 'elementSet'],
       assetTableHeight: `calc(100% - ${48 + 201 + 20}px)`,
       blankObject: {
         id: '',
@@ -333,10 +339,14 @@ export default {
     },
     getSearchableMetaData () {
       return new Promise(resolve => {
-        this.$get('asset/field/meta', { pageSize: -1, search: 1 }).then(response => {
+        this.$get('asset/field/meta', { pageSize: -1 }).then(response => {
           if (response.code === 200) {
             const data = []
-            response.data.list.forEach(m => {
+            const searchableData = response.data.list.filter(d => d.search === 1)
+            const showData = response.data.list.filter(d => d.display === 1).map(item => {
+              return { label: item.name, prop: 'Label', show: false, allowed: true, type: 'label' }
+            })
+            searchableData.forEach(m => {
               if (m.param) {
                 const param = JSON.parse(m.param)
                 if (param.items) {
@@ -345,6 +355,19 @@ export default {
               }
             })
             this.titleSearchList.assetLabel.children = data
+            setTimeout(() => {
+              const title = this.tools.customTableTitle
+              const originalTitle = title.slice(0, this.$refs.dataTable.tableTitle.length) // 原title
+              const oldLabelTitle = title.slice(this.$refs.dataTable.tableTitle.length, title.length) // 旧labelTitle
+
+              const newLabel = showData.filter(item => { return !oldLabelTitle.find(t => { return item.label === t.label }) })
+              const keepLabel = oldLabelTitle.filter(item => showData.find(t => item.label === t.label))
+
+              let result = originalTitle.concat([{ label: 'Label', show: false, NotSet: true, type: 'title', prop: 'table-label' }])
+
+              result = result.concat(keepLabel).concat(newLabel)
+              this.tools.customTableTitle = JSON.parse(JSON.stringify(result))
+            }, 200)
           }
           resolve()
         })

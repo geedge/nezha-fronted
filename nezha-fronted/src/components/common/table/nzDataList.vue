@@ -10,19 +10,19 @@
             <slot name="top-tool-left"></slot>
           </div>
           <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">
-            <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
+            <div v-if="showLayout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
               <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
             </div>
             <slot name="top-tool-right"></slot>
-            <button v-if="layout.indexOf('elementSet') > -1"  class="top-tool-btn table-column-setting"
+            <button v-if="showLayout.indexOf('elementSet') > -1"  class="top-tool-btn table-column-setting"
                     type="button" @click="tools.showCustomTableTitle = true">
               <i class="nz-icon-gear nz-icon"></i>
             </button>
           </div>
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
-          <!-- <div v-if="layout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
+          <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
-        <div v-if="hasSearch" class="search-box">
+        <div v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
           <slot name="search"></slot>
         </div>
         <div v-show="bottomBox.mainResizeShow" class="nz-table2">
@@ -87,10 +87,6 @@ export default {
     },
     searchMsg: {
       type: Object
-    },
-    hasSearch: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -109,7 +105,8 @@ export default {
         toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
         tableHover: false, // 控制滚动条和top按钮同时出现
         showCustomTableTitle: false // 自定义列弹框是否显示
-      }
+      },
+      showLayout: []
     }
   },
   methods: {
@@ -145,10 +142,14 @@ export default {
     'bottomBox.showSubList': function (n) {
       const vm = this
       bottomBoxWindow.showSubListWatch(vm, n)
+    },
+    layout: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.showLayout = [...n]
+      }
     }
   }
 }
 </script>
-<style lang="scss">
-@import '@/assets/css/common/tableCommon.scss';
-</style>

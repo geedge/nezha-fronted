@@ -6,7 +6,9 @@
       :layout="['searchInput', 'elementSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.expressionTemplate"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-left>
         <div id="module-type-1" class="nz-tab-item-box">
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.exprTemp.exprTemp")}}</div>

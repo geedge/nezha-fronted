@@ -501,7 +501,7 @@ export default {
       }
     },
     getDcData () {
-      this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('dc', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.dcSelect = response.data.list
           this.dcSelect.forEach((item, index) => {
@@ -772,7 +772,7 @@ export default {
             objectInfo[val.label] = val.val
           }
         }
-        console.log('search obj', objectInfo)
+        // console.log('search obj', objectInfo)
       })
       this.getHeight()
       // 搜索完成后存储在本地历史记录中
@@ -1329,13 +1329,13 @@ export default {
       if (this.$route.path == '/Objects_Objects') {
         this.schelistget()
       }
-      if (this.$route.path == '/promServer') {
+      if (this.$route.path == '/agent') {
         this.getDcData()
       }
-      if (this.$route.path == '/project' || this.$route.path == '/alertList' || this.$route.path == '/alertConfig') {
+      if (this.$route.path == '/monitor/project' || this.$route.path == '/alertMessage' || this.$route.path == '/alertRule') {
         this.getAssetData()
       }
-      if (this.$route.path == '/alertList') {
+      if (this.$route.path == '/alertMessage') {
         this.getProjectData()
         this.getModuleData()
       }

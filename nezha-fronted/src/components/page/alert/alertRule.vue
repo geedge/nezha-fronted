@@ -6,7 +6,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertRule"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <export-excel
           id="alert-rule"

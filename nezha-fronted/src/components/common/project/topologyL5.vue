@@ -4,11 +4,11 @@
 </style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
-    <!--project主要信息-->
-    <div class="project-title" v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }">
-      <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
-        <!--工具栏-->
-        <span class="project-topology-tool">
+    <div class="main-list">
+      <div class="main-container">
+        <div v-if="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
+          <!--工具栏-->
+          <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
@@ -93,7 +93,7 @@
           </topology-top-tool>
 
         </span>
-        <span class="float-right">
+          <span class="float-right">
           <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
                   style="margin-right: 20px"
           >
@@ -109,31 +109,48 @@
              {{$t('project.topology.exit')}}
            </button>
          </span>
-      </div>
-      <div style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px;padding-top: 10px" v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools">
-        <div>{{topologyInfo.name}}</div>
-        <span class="edit-topologyLine" style="padding-top: 5px" v-show="!editTopologyFlag&&!fromPrev&&!fromOverView">
-<button @click="changeScreen" class="top-tool-btn float-right"
-        style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button"
->
-                  <i class="nz-icon" :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'"></i>
-        </button>
-        <button @click="editTopology" class="top-tool-btn float-right"
-                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button" v-has="'project_topo_update'"
-        >
-                  <i class="nz-icon nz-icon-edit" :title="$t('project.topology.edit')"></i>
-        </button>
-          <pick-time
-            v-show="!editTopologyFlag"
-            class="float-right pickTime top-tool-btn-group"
-            :refresh-data-func="dateChange"
-            v-model="searchTime"
-            :use-chart-unit="false"
-            :showTimePicker="false"
-            ref="pickTime">
-          </pick-time>
-
-      </span>
+        </div>
+        <div v-if="!editTopologyFlag&&!fromOverView" class="top-tools">
+          <div>{{topologyInfo.name}}</div>
+          <div v-if="!editTopologyFlag&&!fromPrev&&!fromOverView" class="top-tool-right">
+            <pick-time
+              v-show="!editTopologyFlag"
+              ref="pickTime"
+              v-model="searchTime"
+              :refresh-data-func="dateChange"
+              :showTimePicker="false"
+              :use-chart-unit="false"
+              class="pickTime margin-r-10">
+            </pick-time>
+            <button v-has="'project_topo_update'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
+              <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
+            </button>
+            <button class="top-tool-btn" type="button" @click="changeScreen">
+              <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
+            </button>
+          </div>
+        </div>
+        <div class="nz-table2">
+          <!--悬浮network部分-->
+          <div class="network-info">
+            <div v-if="popDataShow.main">
+              <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
+            </div>
+            <div v-if="popDataShow.info">
+              <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
+            </div>
+          </div>
+          <!--endpoint-->
+          <transition name="right-box">
+            <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :projectId="projectInfo.id"
+                           @close="popDataShowUpdate('',true)">endpoint
+            </endpointTable>
+          </transition>
+          <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev" class="right-bottom-zoom">
+            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+            <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+          </div>
+        </div>
       </div>
     </div>
     <div :class="['page',fromOverView?'overview-page':'']" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
@@ -216,21 +233,6 @@
     <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
     <!--</ul>-->
     <!--</div>-->
-    <!--悬浮network部分-->
-    <div class="network-info">
-      <div v-if="popDataShow.main">
-        <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
-      </div>
-      <div v-if="popDataShow.info">
-        <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
-      </div>
-    </div>
-    <!--endpoint-->
-    <transition name="right-box">
-      <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :projectId="projectInfo.id"
-                     @close="popDataShowUpdate('',true)">endpoint
-      </endpointTable>
-    </transition>
     <!--asset-->
     <transition name="right-box">
       <assetTable v-if="popDataShow.asset" :moduleId="moduleId" :projectId="projectInfo.id"
@@ -322,10 +324,6 @@
       </div>
 
     </el-dialog>
-    <div class="right-bottom-zoom" v-if="!fromOverView&&!editTopologyFlag&&!fromPrev">
-      <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
-      <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
-    </div>
   </div>
 </template>
 
@@ -2470,8 +2468,6 @@ export default {
 
   .project-box {
     width: 100%;
-    height: calc(100% - 20px);
-    margin-top: 10px;
     position: relative;
     border-radius: 2px;
     overflow: hidden;
