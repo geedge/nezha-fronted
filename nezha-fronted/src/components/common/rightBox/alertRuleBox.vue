@@ -347,8 +347,8 @@ export default {
   }
   /* 表单 */
   .el-form-item {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 0 im !important;
+    width: 100% im !important;
     padding: 0 30px;
     box-sizing: border-box;
   }
