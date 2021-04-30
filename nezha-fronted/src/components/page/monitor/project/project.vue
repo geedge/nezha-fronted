@@ -25,9 +25,7 @@
 </style>
 <template>
   <div class="project">
-    <template>
-      <topologyL5 :obj="currentProject" targetTab.sync="panel" ref="facade" :topologyIndexF="topologyIndexF" v-if="reloadFacade" @changeTopologyIndexF="changeTopologyIndexF" v-has="'topo_list'"/>
-    </template>
+    <topologyL5 v-if="reloadFacade" ref="facade" v-has="'topo_list'" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>
 
     <transition name="el-zoom-in-bottom">
       <bottom-box v-if="bottomBox.showSubList"

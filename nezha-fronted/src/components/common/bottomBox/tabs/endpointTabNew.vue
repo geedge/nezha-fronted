@@ -43,6 +43,7 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
+import {fromRoute} from "@/components/common/js/constants";
 
 export default {
   name: 'terminalLogTab',
@@ -56,7 +57,6 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
-        console.log(n)
         if (n) {
           this.getTableData()
         }
@@ -99,7 +99,11 @@ export default {
         pageNo: this.pageObj.pageNo,
         pageSize: this.pageObj.pageSize
       }
-      params.moduleIds = this.obj.id
+      if (this.from === fromRoute.module) {
+        params.moduleIds = this.obj.id
+      } else if (this.from === fromRoute.asset) {
+        params.assetIds = this.obj.id
+      }
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

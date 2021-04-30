@@ -96,7 +96,7 @@
               </el-tooltip>
               <div class="content-col-content-title">{{$t("overall.alert")}}</div>
             </div>
-            <div class="content-alert-num">{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData.alertRuleTotal : "") | numberFormat}}</div>
+            <div class="content-alert-num">{{$t("dashboard.overview.alert.ruleNum")}}&nbsp;:&nbsp;{{(alertRuleData ? alertRuleData : "") | numberFormat}}</div>
           </div>
         </div>
       </div>
@@ -222,7 +222,7 @@ export default {
       endpointData: { num: 0 },
       alertMessageLoading: false,
       alertMessageData: { num: 0 },
-      alertRuleData: [],
+      alertRuleData: 0,
       map: null,
       allProject: [],
 
@@ -605,7 +605,9 @@ export default {
       return new Promise(resolve => {
         this.$get('stat/alertRule/total').then(response => {
           if (response.code === 200) {
-            this.alertRuleData = response.data
+            response.data.list.forEach(d => {
+              this.alertRuleData += d.num
+            })
           }
           resolve()
         })

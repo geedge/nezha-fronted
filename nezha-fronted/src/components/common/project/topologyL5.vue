@@ -1,14 +1,14 @@
 <style>
-  @import "./L5/css/iconfont.css";
-  @import "./L5/css/props.css";
+@import "./L5/css/iconfont.css";
+@import "./L5/css/props.css";
 </style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
-    <div class="main-list">
-      <div class="main-container">
-        <div v-if="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
-          <!--工具栏-->
-          <span class="project-topology-tool">
+    <!--project主要信息-->
+    <div v-if="showTopTools&&!fromOverView" :style="{'background':editTopologyFlag?'#F6F6F6':'#ffffff','border-bottom':editTopologyFlag? '1px solid #F6F6F6':'' }" class="project-title">
+      <div v-show="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
+        <!--工具栏-->
+        <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
@@ -93,7 +93,7 @@
           </topology-top-tool>
 
         </span>
-          <span class="float-right">
+        <span class="float-right">
           <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
                   style="margin-right: 20px"
           >
@@ -109,48 +109,31 @@
              {{$t('project.topology.exit')}}
            </button>
          </span>
-        </div>
-        <div v-if="!editTopologyFlag&&!fromOverView" class="top-tools">
-          <div>{{topologyInfo.name}}</div>
-          <div v-if="!editTopologyFlag&&!fromPrev&&!fromOverView" class="top-tool-right">
-            <pick-time
-              v-show="!editTopologyFlag"
-              ref="pickTime"
-              v-model="searchTime"
-              :refresh-data-func="dateChange"
-              :showTimePicker="false"
-              :use-chart-unit="false"
-              class="pickTime margin-r-10">
-            </pick-time>
-            <button v-has="'project_topo_update'" class="top-tool-btn margin-r-10" type="button" @click="editTopology">
-              <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
-            </button>
-            <button class="top-tool-btn" type="button" @click="changeScreen">
-              <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
-            </button>
-          </div>
-        </div>
-        <div class="nz-table2">
-          <!--悬浮network部分-->
-          <div class="network-info">
-            <div v-if="popDataShow.main">
-              <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
-            </div>
-            <div v-if="popDataShow.info">
-              <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
-            </div>
-          </div>
-          <!--endpoint-->
-          <transition name="right-box">
-            <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :projectId="projectInfo.id"
-                           @close="popDataShowUpdate('',true)">endpoint
-            </endpointTable>
-          </transition>
-          <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev" class="right-bottom-zoom">
-            <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
-            <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
-          </div>
-        </div>
+      </div>
+      <div v-if="!editTopologyFlag&&!fromOverView" class="top-tool-main-right top-tools" style="width: 100%;display: flex;justify-content: space-between;padding-left: 10px;padding-top: 10px">
+        <div>{{topologyInfo.name}}</div>
+        <span v-show="!editTopologyFlag&&!fromPrev&&!fromOverView" class="edit-topologyLine" style="padding-top: 5px">
+<button class="top-tool-btn float-right" style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;"
+        type="button" @click="changeScreen"
+>
+                  <i :class="topoScreen?'nz-icon-exit-full-screen':'nz-icon-full-screen'" class="nz-icon"></i>
+        </button>
+        <button v-has="'project_topo_update'" class="top-tool-btn float-right"
+                style="border-right: 1px solid rgba(162,162,162,0.50);margin-right: 12px;" type="button" @click="editTopology"
+        >
+                  <i :title="$t('project.topology.edit')" class="nz-icon nz-icon-edit"></i>
+        </button>
+          <pick-time
+            v-show="!editTopologyFlag"
+            ref="pickTime"
+            v-model="searchTime"
+            :refresh-data-func="dateChange"
+            :showTimePicker="false"
+            :use-chart-unit="false"
+            class="float-right pickTime top-tool-btn-group">
+          </pick-time>
+
+      </span>
       </div>
     </div>
     <div :class="['page',fromOverView?'overview-page':'']" :style="{'border':fromOverView?'none':'1px solid #eeeeee'}">
@@ -233,6 +216,21 @@
     <!--<li>3.选中元素 按下Delete键或者Backspace可以删除元素</li>-->
     <!--</ul>-->
     <!--</div>-->
+    <!--悬浮network部分-->
+    <div class="network-info">
+      <div v-if="popDataShow.main">
+        <popDataMain :moduleId="moduleId" :projectId="projectInfo.id"></popDataMain>
+      </div>
+      <div v-if="popDataShow.info">
+        <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
+      </div>
+    </div>
+    <!--endpoint-->
+    <transition name="right-box">
+      <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :projectId="projectInfo.id"
+                     @close="popDataShowUpdate('',true)">endpoint
+      </endpointTable>
+    </transition>
     <!--asset-->
     <transition name="right-box">
       <assetTable v-if="popDataShow.asset" :moduleId="moduleId" :projectId="projectInfo.id"
@@ -324,6 +322,10 @@
       </div>
 
     </el-dialog>
+    <div v-if="!fromOverView&&!editTopologyFlag&&!fromPrev" class="right-bottom-zoom">
+      <div class="zoom-option" style="border-bottom: 1px solid #c5c8cb;" @click="zoomMap(0.25)"><span><i class="nz-icon nz-icon-enlarge"></i></span></div>
+      <div class="zoom-option" @click="zoomMap(-0.25)"><span><i class="nz-icon nz-icon-narrow"></i></span></div>
+    </div>
   </div>
 </template>
 
@@ -1547,6 +1549,7 @@ export default {
     upload () {
       const form = new FormData()
       form.append('file', this.file)
+      console.log(this.file)
       if (this.uploadPic.name) {
         form.append('name', this.uploadPic.name)
       } else {
@@ -1559,7 +1562,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data,header) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/0`).then((data,header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1615,7 +1618,7 @@ export default {
           res.data.list.forEach((item, index) => {
             item.imageName = item.name
             delete item.name
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/0`))
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2,header) => {
@@ -1659,7 +1662,7 @@ export default {
         const promiseArr = []
         imgidList.forEach((item, index) => {
           if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/0`))
           } else {
             promiseArr.push('')
           }
@@ -1685,10 +1688,13 @@ export default {
       if (url) {
         return new Promise((resolve, reject) => {
           this.$axios
-            .get(url)
-            .then((res) => {
+            .get(url, {
+              responseType: 'arraybuffer'
+            })
+            .then((res, resHeader) => {
               return {
-                data: ('data:image/jpeg;base64,' + res.data),
+                data: ('data:image/jpeg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))),
+                header: resHeader
               }
             })
             .then(data => {
@@ -2032,599 +2038,601 @@ export default {
 }
 </script>
 <style lang="scss">
-  .el-dropdown-menu {
-    .project-topology-add-node {
-      .el-collapse-item__header {
-        padding: 0 10px;
-        background-color: #ffffff;
-        height: 32px;
-      }
+.el-dropdown-menu {
+  .project-topology-add-node {
+    .el-collapse-item__header {
+      padding: 0 10px;
+      background-color: #ffffff;
+      height: 32px;
+    }
 
-      .el-collapse-item__header.is-active {
-        background: #F6F6F6;
-        ont-family: Roboto-Bold;
-        font-size: 14px;
-        color: #FA901C;
-        font-weight: 700;
+    .el-collapse-item__header.is-active {
+      background: #F6F6F6;
+      ont-family: Roboto-Bold;
+      font-size: 14px;
+      color: #FA901C;
+      font-weight: 700;
 
-        el-collapse-item__arrow {
-          color: #666;
-        }
-      }
-
-      .el-collapse-item__wrap {
-        padding: 0 10px;
-        background-color: #ffffff;
-      }
-
-      .el-collapse-item__content {
-        padding: 12px 0px;
-        display: flex;
-        flex-wrap: wrap;
-        /*justify-content: space-around;*/
-      }
-
-      .el-card__body {
-        padding: 0;
-        height: 100%;
-      }
-
-      .handle {
-        position: absolute;
-        z-index: 2;
-      }
-
-      .buttons {
-        padding: 12px;
-        display: inline-block;
-        position: relative;
-        vertical-align: middle;
-        width: 26px;
-
-        .delIcon {
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          border-radius: 10px;
-          font-size: 12px;
-          line-height: 16px;
-          text-align: center;
-          background: red;
-          right: -8px;
-          top: -8px;
-          color: #fff;
-          display: none;
-          cursor: pointer;
-        }
-
-        a {
-          display: inline-block;
-          color: #314659;
-          width: 26px;
-          height: 26px;
-          text-align: center;
-          text-decoration: none !important;
-          cursor: pointer;
-          line-height: 26px;
-
-          .iconfont {
-            font-size: 24px;
-          }
-
-          img {
-            max-width: 26px;
-            max-height: 26px;
-          }
-
-          &:hover {
-            color: #1890ff;
-          }
-        }
-
-        .upload-icon-box {
-          .el-icon-plus {
-            font-size: 14px;
-            margin-bottom: 10px;
-          }
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .buttons:hover {
-        .delIcon {
-          /*display: inline-block;*/
-        }
+      el-collapse-item__arrow {
+        color: #666;
       }
     }
 
-    .avatar-uploader {
-      line-height: 30px;
+    .el-collapse-item__wrap {
+      padding: 0 10px;
+      background-color: #ffffff;
+    }
 
-      .el-icon-plus {
+    .el-collapse-item__content {
+      padding: 12px 0px;
+      display: flex;
+      flex-wrap: wrap;
+      /*justify-content: space-around;*/
+    }
+
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+    }
+
+    .handle {
+      position: absolute;
+      z-index: 2;
+    }
+
+    .buttons {
+      padding: 12px;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      width: 26px;
+
+      .delIcon {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 10px;
         font-size: 12px;
-        color: #FA901C;
-        margin: 0 8px 0 15px;
+        line-height: 16px;
+        text-align: center;
+        background: red;
+        right: -8px;
+        top: -8px;
+        color: #fff;
+        display: none;
+        cursor: pointer;
       }
 
-      .el-upload--picture-card {
+      a {
+        display: inline-block;
+        color: #314659;
+        width: 26px;
+        height: 26px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        line-height: 26px;
+
+        .iconfont {
+          font-size: 24px;
+        }
+
+        img {
+          max-width: 26px;
+          max-height: 26px;
+        }
+
+        &:hover {
+          color: #1890ff;
+        }
+      }
+
+      .upload-icon-box {
+        .el-icon-plus {
+          font-size: 14px;
+          margin-bottom: 10px;
+        }
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
         width: 100%;
         height: 100%;
-        border: none;
-        color: #666;
-        font-size: 14px;
-        line-height: 30px;
-        text-align: left;
-      }
-
-      .el-upload--picture-card:hover, .el-upload:focus {
-        color: #666;
       }
     }
 
-    .avatar-uploader:active el-upload--picture-card {
-      color: #DB8B8B;
-    }
-
-    .avatar-uploader:active .el-upload--picture-card:hover, .avatar-uploader:active .el-upload:focus {
-      color: #DB8B8B;
+    .buttons:hover {
+      .delIcon {
+        /*display: inline-block;*/
+      }
     }
   }
+
+  .avatar-uploader {
+    line-height: 30px;
+
+    .el-icon-plus {
+      font-size: 12px;
+      color: #FA901C;
+      margin: 0 8px 0 15px;
+    }
+
+    .el-upload--picture-card {
+      width: 100%;
+      height: 100%;
+      border: none;
+      color: #666;
+      font-size: 14px;
+      line-height: 30px;
+      text-align: left;
+    }
+
+    .el-upload--picture-card:hover, .el-upload:focus {
+      color: #666;
+    }
+  }
+
+  .avatar-uploader:active el-upload--picture-card {
+    color: #DB8B8B;
+  }
+
+  .avatar-uploader:active .el-upload--picture-card:hover, .avatar-uploader:active .el-upload:focus {
+    color: #DB8B8B;
+  }
+}
 </style>
 <style lang="scss" scoped>
-  .project-box{
-    @keyframes model-error-animation {
-      0% {
-        transform: scale(0.7);
-      }
-      50% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(0.7);
-      }
+.project-box{
+  @keyframes model-error-animation {
+    0% {
+      transform: scale(0.7);
     }
-
-    @keyframes model-icon-animation {
-      0% {
-        transform: scale(1.2) translateX(1px);
-      }
-      50% {
-        transform: scale(0.9) translateX(0px);
-      }
-      100% {
-        transform: scale(1.2) translateX(1px);
-      }
+    50% {
+      transform: scale(1);
     }
-
-    .nz-icon-shuidi {
-      position: absolute;
-      font-size: 48px;
-      color: rgba(190, 233, 222, 0.45);
-      border-radius: 50%;
-      height: 48px;
-      width: 48px;
-      line-height: 48px;
-    }
-
-    .model-error.nz-icon-shuidi {
-      color: #FADED7;
-      animation: model-error-animation .6s infinite ease-in-out;
-      animation-direction: normal;
-    }
-
-    .model-error-active.nz-icon-shuidi {
-      color: #FADED7;
-    }
-
-    .nz-icon-model {
-      color: #23BF9A;
-      position: absolute;
-      top: -4px;
-      left: 15px;
-      font-size: 18px;
-      line-height: 48px;
-    }
-
-    .model-error .nz-icon-model {
-      color: #EC7F66;
-      animation: model-icon-animation .6s infinite ease-in-out;
-      animation-direction: normal;
-    }
-
-    .model-error-active .nz-icon-model {
-      color: #EC7F66;
-    }
-
-    .scaleTool-enter-active {
-      animation: scaleTool-in .15s;
-    }
-
-    .scaleTool-leave-active {
-      animation: scaleTool-in .15s reverse;
-    }
-
-    @keyframes scaleTool-in {
-      from {
-        top: 0px;
-        left: 0px;
-        transform: scale(0.5);
-      }
-    }
-
-    .moduleIdRect{
-      /*border: 4px dashed #FA901C;*/
-    }
-    .module-rect-top{
-      border-top: 4px dashed #ff8c0a;
-      position: absolute;
-    }
-    .module-rect-right{
-      border-right: 4px dashed #ff8c0a;
-      position: absolute;
-    }
-    .module-rect-bottom{
-      border-bottom: 4px dashed #ff8c0a;
-      position: absolute;
-    }
-    .module-rect-left{
-      border-left: 4px dashed #ff8c0a;
-      position: absolute;
-    }
-
-    .network-pop .nz-icon-hexagonBorder{
-      position: absolute;
-      font-size: 48px;
-      color: #84d5c2;
-      height: 48px;
-      width: 48px;
-      line-height: 48px;
-    }
-
-    .network-pop .nz-icon-hexagonBorder:hover {
-      transform: scale(1.1);
-      color: #4BB49B;
-    }
-
-    .network-pop .nz-icon-hexagonBorder.error-model-stat {
-      color: #F5BAAC;
-    }
-
-    .network-pop .nz-icon-hexagonBorder.error-model-stat:hover {
-      color: #EC7F66;
-    }
-
-    .network-pop .nz-icon-liubianxing {
-      color: #e2f3ef;
-      font-size: 44px;
-      position: absolute;
-      top: 1px;
-      left: 2px;
-      transform: scale(0.95);
-      z-index: 0;
-    }
-
-    .network-pop .error-model-stat .nz-icon-liubianxing {
-      color: #FADED7;
-    }
-
-    .network-pop .nz-icon.noMove {
-      position: absolute;
-      left: 14px;
-      font-size: 20px;
-      color: #27c09c;
-    }
-
-    .network-pop .error-model-stat .nz-icon.noMove {
-      color: #EC7F66;
-    }
-
-    .network-pop .no-selPop {
-      color: #999 !important;
-    }
-
-    .network-pop .no-selPop .nz-icon-liubianxing {
-      color: rgb(218, 218, 218);
-    }
-
-    .network-pop .no-selPop .nz-icon-chart {
-      color: #999;
-    }
-
-    .network-info {
-      position: absolute;
-      right: 0;
-      top: 50px;
-    }
-
-    .facade-top{
-      min-height: 138px;
-      display: flex;
-      margin: 4px 0;
-      height: calc(16% - 40px);
-      font-size: 12px;
-      z-index: 10;
-      padding-left: 15px;
-    }
-    .facade-top > div{
-      width: 18%;
-      min-width: 315px;
-      background: #FFFFFF;
-      margin-right: 9px;
-      padding: 20px;
-      border: 1px solid #FFFFFF;
-      box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 9px -1px rgba(205,205,205,0.77);
-    }
-    .facade-top-title{
-      font-size: 16px;
-      color: #333333;
-      font-weight: bold;
-      padding: 5px 0;
-    }
-    .facade-top-left{
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
-    .special.label{
-      margin-left: 30px;
-    }
-    .facade-top .facade-top-right{
-      width: auto;
-      min-width: 100px;
-    }
-    .facade-top-right-content{
-      display: flex;
-      justify-content: space-around;
-      justify-items: center;
-      flex-direction: column;
-      height: calc(100% - 30px);
-      align-items:flex-start;
-    }
-    .facade-top-right-content > div{
-      min-width: 84px;
-      height: 22px;
-      display: flex;
-      justify-content: space-between;
-      color: #fff;
-      text-align: center;
-      margin-bottom: 5px;
-      line-height: 22px;
-    }
-    .facade-top-right-content > div > div:last-child{
-      text-align: center;
-      border-radius: 0 4px 4px 0;
-      flex: 1;
-      height: calc(100% - 2px);
-      padding: 0 8px;
-      min-width: 40px;
-    }
-    .content-P1-title{
-      background: #F2866E;
-      border-radius: 4px 0 0 4px;
-      width: 40px;
-      height: 100%;
-    }
-    .content-P1-title + div{
-      border: 1px solid #F4907A;
-      font-size: 12px;
-      color: #F4907A;
-    }
-
-    .content-P2-title{
-      background: #F89984;
-      border-radius: 4px 0 0 4px;
-      width: 40px;
-      height: 100%;
-    }
-    .content-P2-title + div{
-      border: 1px solid #F9A28F;
-      font-size: 12px;
-      color: #F9A28F;
-    }
-
-    .content-P3-title{
-      background: #F7BA78;
-      border-radius: 4px 0 0 4px;
-      width: 40px;
-      height: 100%;
-    }
-    .content-P3-title + div{
-      border: 1px solid #F7BA78;
-      font-size: 12px;
-      color: #F7BA78;
-    }
-
-    .right-content-P1{
-      border: 1px solid ;
-    }
-    .align--center{
-      text-align: center;
-    }
-  }
-  .project-topology-tool {
-    display: inline-flex;
-    height: 30px;
-  }
-
-  .el-dropdown-title {
-    background: #FFFFFF;
-    border: 1px solid $--primary-border-color;
-    border-radius: 2px;
-    width: 66px;
-    height: 28px;
-    display: inline-block;
-    line-height: 28px;
-
-    .icon-cube {
-      margin-left: 15px;
+    100% {
+      transform: scale(0.7);
     }
   }
 
-  .project-box {
-    width: 100%;
-    position: relative;
-    border-radius: 2px;
-    overflow: hidden;
-    background: #fff;
-    .pickTime{
-      margin-right: 10px;
+  @keyframes model-icon-animation {
+    0% {
+      transform: scale(1.2) translateX(1px);
     }
-    .project-title {
-      height: 55px;
-      padding-bottom: 0px;
+    50% {
+      transform: scale(0.9) translateX(0px);
     }
-
-    .drag-header {
-      cursor: move;
-      background: #1a1a1a;
-      color: #fff;
-    }
-
-    .left-bottom {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
+    100% {
+      transform: scale(1.2) translateX(1px);
     }
   }
 
-  .page {
+  .nz-icon-shuidi {
+    position: absolute;
+    font-size: 48px;
+    color: rgba(190, 233, 222, 0.45);
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    line-height: 48px;
+  }
+
+  .model-error.nz-icon-shuidi {
+    color: #FADED7;
+    animation: model-error-animation .6s infinite ease-in-out;
+    animation-direction: normal;
+  }
+
+  .model-error-active.nz-icon-shuidi {
+    color: #FADED7;
+  }
+
+  .nz-icon-model {
+    color: #23BF9A;
+    position: absolute;
+    top: -4px;
+    left: 15px;
+    font-size: 18px;
+    line-height: 48px;
+  }
+
+  .model-error .nz-icon-model {
+    color: #EC7F66;
+    animation: model-icon-animation .6s infinite ease-in-out;
+    animation-direction: normal;
+  }
+
+  .model-error-active .nz-icon-model {
+    color: #EC7F66;
+  }
+
+  .scaleTool-enter-active {
+    animation: scaleTool-in .15s;
+  }
+
+  .scaleTool-leave-active {
+    animation: scaleTool-in .15s reverse;
+  }
+
+  @keyframes scaleTool-in {
+    from {
+      top: 0px;
+      left: 0px;
+      transform: scale(0.5);
+    }
+  }
+
+  .moduleIdRect{
+    /*border: 4px dashed #FA901C;*/
+  }
+  .module-rect-top{
+    border-top: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-right{
+    border-right: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-bottom{
+    border-bottom: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+  .module-rect-left{
+    border-left: 4px dashed #ff8c0a;
+    position: absolute;
+  }
+
+  .network-pop .nz-icon-hexagonBorder{
+    position: absolute;
+    font-size: 48px;
+    color: #84d5c2;
+    height: 48px;
+    width: 48px;
+    line-height: 48px;
+  }
+
+  .network-pop .nz-icon-hexagonBorder:hover {
+    transform: scale(1.1);
+    color: #4BB49B;
+  }
+
+  .network-pop .nz-icon-hexagonBorder.error-model-stat {
+    color: #F5BAAC;
+  }
+
+  .network-pop .nz-icon-hexagonBorder.error-model-stat:hover {
+    color: #EC7F66;
+  }
+
+  .network-pop .nz-icon-liubianxing {
+    color: #e2f3ef;
+    font-size: 44px;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    transform: scale(0.95);
+    z-index: 0;
+  }
+
+  .network-pop .error-model-stat .nz-icon-liubianxing {
+    color: #FADED7;
+  }
+
+  .network-pop .nz-icon.noMove {
+    position: absolute;
+    left: 14px;
+    font-size: 20px;
+    color: #27c09c;
+  }
+
+  .network-pop .error-model-stat .nz-icon.noMove {
+    color: #EC7F66;
+  }
+
+  .network-pop .no-selPop {
+    color: #999 !important;
+  }
+
+  .network-pop .no-selPop .nz-icon-liubianxing {
+    color: rgb(218, 218, 218);
+  }
+
+  .network-pop .no-selPop .nz-icon-chart {
+    color: #999;
+  }
+
+  .network-info {
+    position: absolute;
+    right: 0;
+    top: 50px;
+  }
+
+  .facade-top{
+    min-height: 138px;
     display: flex;
-    height: calc(100% - 65px);
-    width: calc(100% - 10px);
-    margin: 5px;
-    position: relative;
-
-    .tools {
-      width: 300px;
-      height: 100%;
-      border: none;
-      position: absolute;
-      z-index: 1 !important;
-      left: 20px;
-      background-color: #f9f9f9;
-
-      .title {
-        float: left;
-      }
-    }
-
-    .full {
-      flex: 1;
-      overflow: unset !important;
-    }
-
-    .props {
-      width: 500px;
-      height: 100%;
-      border: none;
-      position: absolute;
-      z-index: 1 !important;
-      right: 0;
-      top: 0;
-      background: #FFFFFF;
-      box-shadow: inset 1px 0 0 0 rgba(0, 0, 0, 0.09);
-      border-radius: 0px;
-    }
+    margin: 4px 0;
+    height: calc(16% - 40px);
+    font-size: 12px;
+    z-index: 10;
+    padding-left: 15px;
   }
-  .overview-page{
-    height: 100%;
+  .facade-top > div{
+    width: 18%;
+    min-width: 315px;
+    background: #FFFFFF;
+    margin-right: 9px;
+    padding: 20px;
+    border: 1px solid #FFFFFF;
+    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
-  .special-select svg {
-    width: 75px;
-    height: 30px;
+  .facade-top-title{
+    font-size: 16px;
+    color: #333333;
+    font-weight: bold;
+    padding: 5px 0;
   }
-
-  .special-select .el-select.el-select--small {
-    width: 100%;
+  .facade-top-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
-
-  .special-select /deep/ .el-select-dropdown {
-    width: 130px !important;
-
-    .el-select-dropdown__item {
-      padding: 0 0 0 10px;
-    }
+  .special.label{
+    margin-left: 30px;
   }
-
-  .special-select /deep/ .el-input.el-input--prefix.el-input--suffix, .line-width /deep/ .el-input.el-input--prefix.el-input--suffix {
-    border: 1px solid #DCDFE6;
-    height: 28px;
+  .facade-top .facade-top-right{
+    width: auto;
+    min-width: 100px;
   }
-
-  .special-select /deep/ .el-input__inner, .line-width /deep/ .el-input__inner {
-    display: none;
+  .facade-top-right-content{
+    display: flex;
+    justify-content: space-around;
+    justify-items: center;
+    flex-direction: column;
+    height: calc(100% - 30px);
+    align-items:flex-start;
   }
-
-  .special-select /deep/ .el-input__prefix, .line-width /deep/ .el-input__prefix {
-    height: 28px;
-    line-height: 28px;
-    color: #899FB7;
-    width: 100%;
-  }
-
-  .special-select /deep/ .el-input__prefix > div {
-    width: 100%;
-    height: 100%;
-  }
-
-  .upload-pic-row{
-    width: 420px;
-    margin-bottom: 10px;
-    .upload-pic-label{
-      text-align: right;
-      font-size: 14px;
-      color: #666666;
-      letter-spacing: 0;
-      font-weight: 400;
-      height: 30px;
-      line-height: 30px;
-      padding-right: 8px;
-    }
-    /deep/ .el-upload--text{
-      width: 100%;
-      .el-upload-dragger{
-        width: 100%;
-      }
-    }
-  }
-  .upload-pic-box{
-    width: 284px;
-    height: 30px;
+  .facade-top-right-content > div{
+    min-width: 84px;
+    height: 22px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
     text-align: center;
+    margin-bottom: 5px;
+    line-height: 22px;
+  }
+  .facade-top-right-content > div > div:last-child{
+    text-align: center;
+    border-radius: 0 4px 4px 0;
+    flex: 1;
+    height: calc(100% - 2px);
+    padding: 0 8px;
+    min-width: 40px;
+  }
+  .content-P1-title{
+    background: #F2866E;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P1-title + div{
+    border: 1px solid #F4907A;
+    font-size: 12px;
+    color: #F4907A;
+  }
+
+  .content-P2-title{
+    background: #F89984;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P2-title + div{
+    border: 1px solid #F9A28F;
+    font-size: 12px;
+    color: #F9A28F;
+  }
+
+  .content-P3-title{
+    background: #F7BA78;
+    border-radius: 4px 0 0 4px;
+    width: 40px;
+    height: 100%;
+  }
+  .content-P3-title + div{
+    border: 1px solid #F7BA78;
+    font-size: 12px;
+    color: #F7BA78;
+  }
+
+  .right-content-P1{
+    border: 1px solid ;
+  }
+  .align--center{
+    text-align: center;
+  }
+}
+.project-topology-tool {
+  display: inline-flex;
+  height: 30px;
+}
+
+.el-dropdown-title {
+  background: #FFFFFF;
+  border: 1px solid $--primary-border-color;
+  border-radius: 2px;
+  width: 66px;
+  height: 28px;
+  display: inline-block;
+  line-height: 28px;
+
+  .icon-cube {
+    margin-left: 15px;
+  }
+}
+
+.project-box {
+  width: 100%;
+  height: calc(100% - 20px);
+  margin-top: 10px;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #fff;
+  .pickTime{
+    margin-right: 10px;
+  }
+  .project-title {
+    height: 55px;
+    padding-bottom: 0px;
+  }
+
+  .drag-header {
+    cursor: move;
+    background: #1a1a1a;
+    color: #fff;
+  }
+
+  .left-bottom {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+  }
+}
+
+.page {
+  display: flex;
+  height: calc(100% - 65px);
+  width: calc(100% - 10px);
+  margin: 5px;
+  position: relative;
+
+  .tools {
+    width: 300px;
+    height: 100%;
+    border: none;
+    position: absolute;
+    z-index: 1 !important;
+    left: 20px;
+    background-color: #f9f9f9;
+
+    .title {
+      float: left;
+    }
+  }
+
+  .full {
+    flex: 1;
+    overflow: unset !important;
+  }
+
+  .props {
+    width: 500px;
+    height: 100%;
+    border: none;
+    position: absolute;
+    z-index: 1 !important;
+    right: 0;
+    top: 0;
+    background: #FFFFFF;
+    box-shadow: inset 1px 0 0 0 rgba(0, 0, 0, 0.09);
+    border-radius: 0px;
+  }
+}
+.overview-page{
+  height: 100%;
+}
+.special-select svg {
+  width: 75px;
+  height: 30px;
+}
+
+.special-select .el-select.el-select--small {
+  width: 100%;
+}
+
+.special-select /deep/ .el-select-dropdown {
+  width: 130px !important;
+
+  .el-select-dropdown__item {
+    padding: 0 0 0 10px;
+  }
+}
+
+.special-select /deep/ .el-input.el-input--prefix.el-input--suffix, .line-width /deep/ .el-input.el-input--prefix.el-input--suffix {
+  border: 1px solid #DCDFE6;
+  height: 28px;
+}
+
+.special-select /deep/ .el-input__inner, .line-width /deep/ .el-input__inner {
+  display: none;
+}
+
+.special-select /deep/ .el-input__prefix, .line-width /deep/ .el-input__prefix {
+  height: 28px;
+  line-height: 28px;
+  color: #899FB7;
+  width: 100%;
+}
+
+.special-select /deep/ .el-input__prefix > div {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-pic-row{
+  width: 420px;
+  margin-bottom: 10px;
+  .upload-pic-label{
+    text-align: right;
     font-size: 14px;
     color: #666666;
+    letter-spacing: 0;
     font-weight: 400;
+    height: 30px;
     line-height: 30px;
-    cursor: pointer;
-    .el-icon-plus{
-      color: #FA901C;
+    padding-right: 8px;
+  }
+  /deep/ .el-upload--text{
+    width: 100%;
+    .el-upload-dragger{
+      width: 100%;
     }
   }
-  .top-tool-btn{
-    height: 32px;
-    width: 32px;
-    border: 1px solid $--primary-border-color;
-    outline: none;
-    border-radius: 2px;
-    background-color: #F9F9F9;
-    -webkit-transition: background-color linear .1s;
-    transition: background-color linear .1s;
-    padding: 0;
+}
+.upload-pic-box{
+  width: 284px;
+  height: 30px;
+  text-align: center;
+  font-size: 14px;
+  color: #666666;
+  font-weight: 400;
+  line-height: 30px;
+  cursor: pointer;
+  .el-icon-plus{
+    color: #FA901C;
   }
-  .top-tool-btn:hover{
-    background-color: #fff;
-  }
-  .top-tool-btn:focus{
-    background-color: #fff;
-    border-color: #FBCEA4;
-  }
-  .top-tool-btn:focus .nz-icon{
-    color: #FBCEA4;
-  }
+}
+.top-tool-btn{
+  height: 32px;
+  width: 32px;
+  border: 1px solid $--primary-border-color;
+  outline: none;
+  border-radius: 2px;
+  background-color: #F9F9F9;
+  -webkit-transition: background-color linear .1s;
+  transition: background-color linear .1s;
+  padding: 0;
+}
+.top-tool-btn:hover{
+  background-color: #fff;
+}
+.top-tool-btn:focus{
+  background-color: #fff;
+  border-color: #FBCEA4;
+}
+.top-tool-btn:focus .nz-icon{
+  color: #FBCEA4;
+}
 </style>

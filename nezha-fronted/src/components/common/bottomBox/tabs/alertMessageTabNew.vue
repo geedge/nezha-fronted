@@ -43,6 +43,7 @@ import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
+import { fromRoute } from '@/components/common/js/constants'
 // import {getTime} from "@/components/common/js/tools";
 // import chartDataFormat from "@/components/charts/chartDataFormat";
 
@@ -293,14 +294,16 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if (this.targetTab === 'moduleAlertMessage') {
+      if (this.from === fromRoute.module) {
         this.searchLabel.moduleIds = this.obj.id
-      } else {
+      } else if (this.from === fromRoute.endpoint) {
         this.searchLabel.endpointIds = this.obj.id
+      } else if (this.from === fromRoute.asset) {
+        this.searchLabel.assetIds = this.obj.id
       }
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
-        if (response.code == 200) {
+        if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
           const axiosAll = []

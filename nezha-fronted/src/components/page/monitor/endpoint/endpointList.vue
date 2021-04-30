@@ -1,17 +1,18 @@
 <template>
-  <div class="endpoint-list" v-has="'endpoint_list'">
+  <div>
     <nz-data-list
       ref="dataList"
       :api="url"
-      :tableId="tableId"
-      class="dataList"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
-      :layout="['searchInput', 'elementSet']"
-      :hasSearch="true"
+      :layout="dataListLayout"
+      :search-msg="searchMsg"
       @search="search"
-      :search-msg="searchMsg">
+    >
       <template v-slot:top-tool-right>
+        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
+          <i class="nz-icon nz-icon-funnel"></i>
+        </button>
         <export-excel
           id="expression-template-list"
           v-has="''"
@@ -24,7 +25,7 @@
           class="top-tool-export margin-r-10"
         >
           <template slot="optionZone">
-            <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn margin-l-20"
+            <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn"
                     type="button" @click="add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
@@ -45,7 +46,7 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="searchTableHeight"
+          :height="dataListLayout.indexOf('clickSearch') > -1 ? endpointTableHeight : mainTableHeight"
           :table-data="tableData"
           :tableId="tableId"
           @del="del"
@@ -106,6 +107,8 @@ export default {
       blankObject: {}, // 新增/编辑的endpoint
       tableId: 'endpointTable',
       queryPermission: 'account_view',
+      endpointTableHeight: 'calc(100% - 193px)', // 主列表table高度
+      dataListLayout: ['searchInput', 'elementSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -353,8 +356,5 @@ export default {
   .dataList{
     flex: 1;
     width: 100%;
-  }
-  /deep/ .nz-btn-disabled {
-    opacity: 0.5;
   }
 </style>

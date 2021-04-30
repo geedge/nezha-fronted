@@ -7,7 +7,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-right>
         <export-excel
           id="expression-template-list"
@@ -21,7 +23,7 @@
           class="top-tool-export margin-r-10"
         >
           <template slot="optionZone">
-            <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-l-20"
+            <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createUser')" class="top-tool-btn"
                     type="button" @click="add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>
