@@ -699,6 +699,7 @@ const en = {
       createDc: 'Create data center',
       editDc: 'Edit data center',
       editCabinet: 'Edit cabinet',
+      alert: 'Alert',
       traffic: {
         title: 'Traffic Setting',
         add: 'Add',
@@ -1123,7 +1124,7 @@ const en = {
         alertRuleInfo: 'Alert rule information',
         alertNumTrend: 'Alert num trend',
         affectEntity: 'Affect entity'
-      }
+      },
     },
     silence: {
       silence: 'Alert silence',

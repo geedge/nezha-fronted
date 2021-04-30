@@ -745,6 +745,7 @@ const cn = {
       assets: '资产',
       remark: '备注',
       cabinets: '机柜',
+      alert: '警报',
       traffic: {
         title: '流量配置',
         add: '添加',
