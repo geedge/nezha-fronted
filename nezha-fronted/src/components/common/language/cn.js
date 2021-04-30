@@ -2,6 +2,7 @@ import zhLocale from 'element-ui/lib/locale/lang/zh-CN' // 引入element语言�
 const cn = {
   overall: {
     dashboard: '仪表盘',
+    dc: '数据中心',
     project: '系统',
     monitor: '监控',
     alert: '告警',
@@ -515,6 +516,7 @@ const cn = {
   },
   asset: {
     asset: '资产',
+    alertNum: '资产编号',
     assetType: '资产类型', // '资产类型'
     batchEditAsset: '批量修改资产',
     selectAsset: '已选择的资产',
@@ -677,6 +679,14 @@ const cn = {
         type: 'Agent类型'
       }
     },
+    agent:{
+      name: '名称',
+      type: '类型',
+      createProm: '创建代理服务',
+      agent: {
+        agent: '代理'
+      }
+    },
     terminallog: {
       terminallog: '终端日志',
       status: '状态',
@@ -770,7 +780,7 @@ const cn = {
     model: {
       model: '资产型号',
       name: '资产型号',
-      barnd: '品牌',
+      brand: '品牌',
       ChartTemplate: '图表模板',
       assetNum: '资产编号',
       editModel: '编辑型号',
@@ -828,7 +838,8 @@ const cn = {
         auth: '认证',
         method: '方式',
         encryption: '加密',
-        pin: '密码'
+        pin: '密码',
+        create: '创建SNMP'
       }
     },
     system: {
@@ -970,6 +981,7 @@ const cn = {
     assetLabel: {
       example: '示例',
       assetLabel: '资产标签',
+      addMeta: '创建标签',
       all: '全部',
       addGroup: '创建分组',
       editGroup: '编辑分组',
@@ -1039,7 +1051,9 @@ const cn = {
   alert: {
     alert: '告警',
     message: '告警信息',
+    alertMessage: '告警信息',
     rule: '告警规则',
+    alertRule: '告警规则',
     alertList: '告警信息',
     alertConfig: '告警规则',
     alertName: '告警名称',

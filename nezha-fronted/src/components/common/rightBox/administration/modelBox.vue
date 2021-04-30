@@ -27,7 +27,6 @@
             :multiple="true"
             language="en"
             title="ChartSearch"
-            placeholder="Please select item"
             key-field="id"
             v-model="editModel.chartIds"
             show-field="name"
