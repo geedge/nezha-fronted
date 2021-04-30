@@ -300,7 +300,7 @@
                 @change="expressionChange"
                 @removeExpression="removeExpression"
               ></promql-input>
-              <el-row>
+              <el-row style="margin-top: 18px">
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover placement="top" trigger="hover" width="211">

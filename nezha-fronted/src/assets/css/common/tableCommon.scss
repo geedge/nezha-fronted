@@ -53,7 +53,10 @@
     }
     .top-tool-btn-group {
       display: flex;
-
+      .top-tool-btn:not(:last-of-type):not(:first-of-type) {
+        border-left: none;
+        border-radius: 0;
+      }
       .top-tool-btn:first-of-type:not(:last-of-type) {
         border-radius: $--button-border-radius 0 0 $--button-border-radius;
       }
