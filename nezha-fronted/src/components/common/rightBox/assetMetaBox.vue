@@ -30,20 +30,20 @@
                 @change="switchSearch"
                 v-model="editAssetMeta.search"
                 active-color="#ee9d3f"
-                :active-value="1"
-                :inactive-value="0">
+                active-value="1"
+                inactive-value="0">
               </el-switch>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.display")' prop="display">
               <el-switch
                 v-model="editAssetMeta.display"
                 active-color="#ee9d3f"
-                :active-value="1"
-                :inactive-value="0">
+                active-value="1"
+                inactive-value="0">
               </el-switch>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.type")' prop="type">
-              <el-select  v-model="editAssetMeta.type" size="small" class="right-box__select" placeholder='请选择' popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false" @change="selectType">
+              <el-select  v-model="editAssetMeta.type" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled">
                   <div><i :class="item.icon"></i>&nbsp;&nbsp;<span >{{item.name}}</span></div>
                 </el-option>
@@ -160,8 +160,8 @@ export default {
           id: '',
           name: ''
         },
-        search: 1,
-        display: 1,
+        search: '0',
+        display: '0',
         type: '',
         param: {},
         remark: ''
@@ -246,21 +246,23 @@ export default {
     assetLabel: {
       immediate: true,
       handler (n) {
-        this.editAssetMeta = { ...n }
+        this.editAssetMeta = { ...n, search: `${n.search}`, display: `${n.display}` }
         this.selectType(n.type, true)
       }
     }
   },
   mounted () {
     this.getGroupData()
-    this.switchSearch()
+    this.switchSearch('0')
   },
   methods: {
     switchSearch(value){
       this.typeData.forEach(element => {
-          if( value === 0 ) {
+          if( value == 0 ) {
             element.disabled = false
-          }else {
+            console.log(value);
+          }else if(value == 1) {
+            console.log(value);
             if(element.value == 'radio'){
               element.disabled = false
             }else if(element.value == 'checkbox'){
@@ -268,6 +270,8 @@ export default {
             }else if(element.value == 'select'){
               element.disabled = false
             }
+          }else {
+            return console.log('不为0，也不为1');
           }
       })    
     },

@@ -86,7 +86,7 @@ export default {
           show: true,
           width: 80
         }, {
-          label: this.$t('config.dc.dc'),
+          label: this.$t('config.agent.name'),
           prop: 'dc',
           show: true
         }, {

@@ -210,7 +210,7 @@ const en = {
         panelId: 'ID' // ID
       },
       // 图表-侧滑框
-      createChartTitle: 'New chart', // "新增图表"
+      createChartTitle: 'New Chart Template', // "新增图表"
       editChartTitle: 'Edit', // "编辑图表"
       chartForm: {
         chartId: 'ID',
@@ -677,6 +677,7 @@ const en = {
       type: 'Type', // "类别"
       checkTime: 'Check time',
       dataCenter: 'Data center',
+      name : 'Name',
       agent: {
         agent: 'Agent',
         title: 'Download agent',

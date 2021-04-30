@@ -128,8 +128,8 @@ export default {
         name: '',
         metaKey: '',
         groupId: '',
-        search: 1,
-        display: 1,
+        search: '0',
+        display: '0',
         type: 'text',
         param: {},
         remark: ''

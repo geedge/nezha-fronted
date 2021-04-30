@@ -113,7 +113,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('/cabinet?ids=' + this.editCabinet.id).then(response => {
+        this.$delete('dc/cabinet?ids=' + this.editCabinet.id).then(response => {
           this.prevent_opt.save = false
           if (response.code == 200) {
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })

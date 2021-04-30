@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
+      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm") + "  ID：" + editPromServer.id) : $t("config.agent.createProm")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -11,9 +11,9 @@
     <!-- begin--表单-->
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="promServerForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
+        <el-form ref="agentForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
           <!--DC-->
-          <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
+          <el-form-item :label="$t('config.agent.name')" prop="name">
             <div class="right-box-form-content">
               <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
@@ -32,14 +32,14 @@
             <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--type-->
-          <el-form-item :label="$t('config.promServer.type')" prop="type">
+          <el-form-item :label="$t('config.agent.type')" prop="type">
   <!--          <el-cascader-->
   <!--            id="prom-box-input-type"-->
   <!--            style="width: 100%"-->
   <!--            v-model="editPromServer.type"-->
   <!--            placeholder=""-->
   <!--            size="small"-->
-  <!--            :options="$CONSTANTS.promServer.theData"-->
+  <!--            :options="$CONSTANTS.agent.theData"-->
   <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
   <!--            clearable></el-cascader>-->
             <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
@@ -77,7 +77,7 @@ import { agent2 } from '@/components/common/js/constants'
 export default {
   name: 'agentBox',
   props: {
-    promServer: Object
+    agent: Object
   },
   data () {
     return {
@@ -127,11 +127,11 @@ export default {
     },
     /* 保存 */
     save () {
-      this.$refs.promServerForm.validate(valid => {
+      this.$refs.agentForm.validate(valid => {
         if (valid) {
           this.prevent_opt.save = true
           if (this.editPromServer.id) {
-            this.$put('promServer', this.editPromServer).then(response => {
+            this.$put('agent', this.editPromServer).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -141,7 +141,7 @@ export default {
               this.prevent_opt.save = false
             })
           } else {
-            this.$post('promServer', this.editPromServer).then(response => {
+            this.$post('agent', this.editPromServer).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
@@ -163,7 +163,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('promServer?ids=' + this.editPromServer.id).then(response => {
+        this.$delete('agent?ids=' + this.editPromServer.id).then(response => {
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
             this.esc(true)
@@ -184,7 +184,7 @@ export default {
   },
   watch: {
     // 将prop里的user转为组件内部对象
-    promServer: {
+    agent: {
       immediate: true,
       deep: true,
       handler (n) {

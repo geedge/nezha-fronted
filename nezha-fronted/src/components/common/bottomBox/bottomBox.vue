@@ -20,6 +20,7 @@
       <div class="sub-list__tabs">
         <!--机柜-->
         <cabinet-tab v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+        <alertMessageTabNew v-if="from === fromRoute.dc && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.dc.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <!--告警信息-->
         <alert-message-tab v-if="((from === fromRoute.alertRule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
         <!--asset页的endpoint列表-->
@@ -172,11 +173,18 @@ export default {
         dc: {
           cabinet: [
             { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true },
-            { prop: 'asset', name: this.$t('asset.assets'), active: false }
+            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
           ],
           asset: [
             { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
-            { prop: 'asset', name: this.$t('asset.assets'), active: true }
+            { prop: 'asset', name: this.$t('asset.assets'), active: true },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
+          ],
+          alertMessage: [
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
+            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
           ]
         }
 
