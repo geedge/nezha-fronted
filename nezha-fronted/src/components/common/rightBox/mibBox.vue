@@ -2,7 +2,7 @@
   <div class="right-box right-box-mib" v-clickoutside="{obj:editMib,func:clickOutside}" >
     <!-- begin--标题-->
    <div class="right-box__header">
-      <div class="right-box__header">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
+      <div class="header__title">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editMib, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>

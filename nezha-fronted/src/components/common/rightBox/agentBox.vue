@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="right-box__header">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
+      <div class="header__title">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
