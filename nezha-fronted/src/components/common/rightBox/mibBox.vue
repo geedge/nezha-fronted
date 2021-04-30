@@ -1,51 +1,47 @@
 <template>
   <div class="right-box right-box-mib" v-clickoutside="{obj:editMib,func:clickOutside}" >
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="mib-del" type="button" v-has="'snmp_file_delete'" v-if="editMib.id">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
-
     <!-- begin--标题-->
-    <div class="right-box__header">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
-    <!-- end--标题-->
-
+   <div class="right-box__header">
+      <div class="right-box__header">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editMib, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
     <!-- begin--表单-->
     <div class="right-box__container">
-      <el-form class="right-box-form  right-box-form-left" :model="editMib" label-position = "top" label-width="120px" :rules="rules" ref="mibForm">
-        <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
-          <el-cascader
-            id="mib-input-selected-models"
-            :options="modelOptions"
-            :props="modelProps"
-            :show-all-levels="false"
-            v-model="selectedModels"
-            @change="selectedModelChange"
-            ref="modelSelector"
-            collapse-tags
-            :placeholder="$t('config.mib.modelTip')"
-            size="small"
-            class="right-box__select" 
-            popper-class="right-box-select-dropdown prevent-clickoutside"
-            clearable></el-cascader>
-        </el-form-item>
-        <el-form-item :label="$t('config.mib.remark')" prop="remark">
-          <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editMib.remark" size="small" id="mib-box-input-remark"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!editMib.id}">
-          <el-upload drag :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange" :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload" class="mib-upload right-box-form-row" id="mib-box-input-file">
-            <div slot="tip" class="el-upload__tip" >
-              <span v-if="editMib.fileName">{{editMib.fileName}}</span>
-              <span v-if="uploadErrorMsg" style="color: #F56C6C"><br>{{uploadErrorMsg}}</span>
-            </div>
-            <i class="nz-icon nz-icon-upload"></i>
-            <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-          </el-upload>
-        </el-form-item>
-      </el-form>
+      <div class="container__form">
+        <el-form :model="editMib" label-position = "top" label-width="120px" :rules="rules" ref="mibForm">
+          <el-form-item :label='$t("config.mib.models")' prop="models" :rules="[{validator:checkModels,trigger:'change'}]" >
+            <el-cascader
+              id="mib-input-selected-models"
+              :options="modelOptions"
+              :props="modelProps"
+              :show-all-levels="false"
+              v-model="selectedModels"
+              @change="selectedModelChange"
+              ref="modelSelector"
+              collapse-tags
+              :placeholder="$t('config.mib.modelTip')"
+              size="small"
+              class="right-box__select" 
+              popper-class="right-box-select-dropdown prevent-clickoutside"
+              clearable></el-cascader>
+          </el-form-item>
+          <el-form-item :label="$t('config.mib.remark')" prop="remark">
+            <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editMib.remark" size="small" id="mib-box-input-remark"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!editMib.id}">
+            <el-upload drag :multiple="false" action="" :file-list="uploadFileList" :on-change="uploadChange" :auto-upload="false" accept="" :on-remove="afterClearFile" ref="mibFileUpload" class="mib-upload right-box-form-row" id="mib-box-input-file">
+              <div slot="tip" class="el-upload__tip" >
+                <span v-if="editMib.fileName">{{editMib.fileName}}</span>
+                <span v-if="uploadErrorMsg" style="color: #F56C6C"><br>{{uploadErrorMsg}}</span>
+              </div>
+              <i class="nz-icon nz-icon-upload"></i>
+              <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
 
     <!--底部按钮-->

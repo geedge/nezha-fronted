@@ -1,59 +1,54 @@
 <template>
   <div class="right-box right-box-dc" v-clickoutside="{obj:editDc,func:clickOutside}">
-      <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-        <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="dc-del" type="button" v-has="'dc_delete'" v-if="editDc.id">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
-
       <!-- begin--标题-->
-      <div class="right-box__header">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
-      <!-- end--标题-->
-
+      <div class="right-box__header">
+        <div class="right-box__header">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
+        <div class="header__operation">
+          <span v-cancel="{obj: editDc, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+        </div>
+      </div>
       <!-- begin--表单-->
       <div class="right-box__container">
-        <el-form class="right-box-form right-box-form-left" label-width="120px" size="small" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
-          <el-form-item :label='$t("overall.name")' prop="name">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
-          </el-form-item>
-          <el-form-item :label='$t("asset.location")' prop="location">
-            <el-input placeholder="" v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
-          </el-form-item>
-          <el-form-item :label='$t("asset.tel")' prop="tel">
-            <el-input placeholder="" v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
-          </el-form-item>
-          <el-form-item :label='$t("asset.principal")' prop="principal">
-            <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
-              <el-option v-for="item in userData" :id="'dc-principal-op-'+item.userId" :key="item.userId" :label="item.username" :value="item.userId">
-                <span>{{item.username}}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--<el-form-item :label='$t("config.dc.area")' prop="area">-->
-            <!--<select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="editDc.area.id">-->
-              <!--<template v-slot:trigger>-->
-                <!--<el-input placeholder="" v-model="editDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>-->
-              <!--</template>-->
-            <!--</select-area>-->
-          <!--</el-form-item>-->
-          <el-form-item :label="$t('config.dc.lnglat')" prop="state">
-            <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false"></latlng-picker>
-          </el-form-item>
-          <el-form-item :label='$t("config.dc.state")' prop="state">
-            <el-switch
-              id="dc-box-input-name"
-              v-model="editDc.state"
-              active-value="ON"
-              inactive-value="OFF"
-              active-color="#ee9d3f"
-            >
-            </el-switch>
-          </el-form-item>
-
-        </el-form>
+        <div class="container__form">
+          <el-form label-width="120px" size="small" :model="editDc" label-position = "top" :rules="rules" ref="dcForm">
+            <el-form-item :label='$t("overall.name")' prop="name">
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
+            </el-form-item>
+            <el-form-item :label='$t("asset.location")' prop="location">
+              <el-input placeholder="" v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
+            </el-form-item>
+            <el-form-item :label='$t("asset.tel")' prop="tel">
+              <el-input placeholder="" v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
+            </el-form-item>
+            <el-form-item :label='$t("asset.principal")' prop="principal">
+              <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
+                <el-option v-for="item in userData" :id="'dc-principal-op-'+item.userId" :key="item.userId" :label="item.username" :value="item.userId">
+                  <span>{{item.username}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!--<el-form-item :label='$t("config.dc.area")' prop="area">-->
+              <!--<select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="editDc.area.id">-->
+                <!--<template v-slot:trigger>-->
+                  <!--<el-input placeholder="" v-model="editDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>-->
+                <!--</template>-->
+              <!--</select-area>-->
+            <!--</el-form-item>-->
+            <el-form-item :label="$t('config.dc.lnglat')" prop="state">
+              <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false"></latlng-picker>
+            </el-form-item>
+            <el-form-item :label='$t("config.dc.state")' prop="state">
+              <el-switch
+                id="dc-box-input-name"
+                v-model="editDc.state"
+                active-value="ON"
+                inactive-value="OFF"
+                active-color="#ee9d3f"
+              >
+              </el-switch>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
 
       <!--底部按钮-->

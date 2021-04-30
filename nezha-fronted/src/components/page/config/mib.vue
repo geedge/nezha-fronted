@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <nz-data-list
       v-if="showTab === 'file'"
       ref="dataList"

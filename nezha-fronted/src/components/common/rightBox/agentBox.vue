@@ -1,65 +1,61 @@
 <template>
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="editPromServer.id" id="promServer-edit-del" v-has="'prom_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien"
-              type="button"
-              @click="del">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
-
     <!-- begin--标题-->
-    <div class="right-box__header">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
+    <div class="right-box__header">
+      <div class="right-box__header">{{editPromServer.id ? ($t("config.promServer.editProm") + "  ID：" + editPromServer.id) : $t("config.promServer.createProm")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
     <!-- end--标题-->
-
     <!-- begin--表单-->
     <div class="right-box__container">
-      <el-form ref="promServerForm" :model="editPromServer" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px">
-        <!--DC-->
-        <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
-          <div class="right-box-form-content">
-            <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
-                <span class="config-dropdown-label-txt">{{item.name}}</span>
+      <div class="container__form">
+        <el-form ref="promServerForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
+          <!--DC-->
+          <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
+            <div class="right-box-form-content">
+              <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+                <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
+                  <span class="config-dropdown-label-txt">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </div>
+          </el-form-item>
+
+          <!--host-->
+          <el-form-item label="Host" prop="host">
+            <el-input id="prom-box-input-host" v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
+          </el-form-item>
+          <!--Port-->
+          <el-form-item label="Port" prop="port">
+            <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
+          </el-form-item>
+          <!--type-->
+          <el-form-item :label="$t('config.promServer.type')" prop="type">
+  <!--          <el-cascader-->
+  <!--            id="prom-box-input-type"-->
+  <!--            style="width: 100%"-->
+  <!--            v-model="editPromServer.type"-->
+  <!--            placeholder=""-->
+  <!--            size="small"-->
+  <!--            :options="$CONSTANTS.promServer.theData"-->
+  <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
+  <!--            clearable></el-cascader>-->
+            <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
+              <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
+                <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
             </el-select>
-          </div>
-        </el-form-item>
-
-        <!--host-->
-        <el-form-item label="Host" prop="host">
-          <el-input id="prom-box-input-host" v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
-        </el-form-item>
-        <!--Port-->
-        <el-form-item label="Port" prop="port">
-          <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
-        </el-form-item>
-        <!--type-->
-        <el-form-item :label="$t('config.promServer.type')" prop="type">
-<!--          <el-cascader-->
-<!--            id="prom-box-input-type"-->
-<!--            style="width: 100%"-->
-<!--            v-model="editPromServer.type"-->
-<!--            placeholder=""-->
-<!--            size="small"-->
-<!--            :options="$CONSTANTS.promServer.theData"-->
-<!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
-<!--            clearable></el-cascader>-->
-          <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
-            <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
-              <span class="panel-dropdown-label-txt" >{{item.label}}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Token" prop="token">
-          <el-input id="prom-box-input-token" v-model="editPromServer.token" class="right-box-row-with-btn" placeholder="" size="small" type="text">
-            <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>
-          </el-input>
-        </el-form-item>
-      </el-form>
+          </el-form-item>
+          <el-form-item label="Token" prop="token">
+            <el-input id="prom-box-input-token" v-model="editPromServer.token" class="right-box-row-with-btn" placeholder="" size="small" type="text">
+              <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      
     </div>
     <!-- end--表单-->
     <!--底部按钮-->

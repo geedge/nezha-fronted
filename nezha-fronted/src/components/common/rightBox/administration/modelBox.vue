@@ -125,7 +125,6 @@ export default {
       this.$refs.modelForm.validate((valid) => {
         if (valid) {
           if (this.editModel.id) {
-            console.log(this.editModel)
             this.$put(this.url, this.editModel).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
@@ -170,7 +169,6 @@ export default {
       }
     },
     selectWalk (walk) {
-      console.log(walk)
       if (this.editModule.walk.indexOf(walk) != -1) {
         this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
       } else {
@@ -191,7 +189,6 @@ export default {
     /* 获取chart列表数据 */
     ChartTemplateList () {
       this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0 }).then(res => {
-        console.log(res)
         this.chartlList = res.data.list
       })
     }

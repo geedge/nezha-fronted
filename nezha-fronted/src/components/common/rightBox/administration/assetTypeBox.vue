@@ -170,7 +170,6 @@ export default {
       this.$refs.assetTypeForm.validate((valid) => {
         if (valid) {
           if (this.editAssetType.id) {
-            console.log(this.editAssetType);
             this.$put(this.url, this.editAssetType).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
@@ -198,7 +197,6 @@ export default {
       })
     },
     selectWalk (walk) {
-      console.log(walk);
       if (this.editModule.walk.indexOf(walk) != -1) {
         this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
       } else {
@@ -208,7 +206,6 @@ export default {
     assetType(){
       this.$get('asset/typeConf').then(res => {
         this.assetTypeList = res.data.list
-        console.log(this.assetTypeList);
       })
     }
   }

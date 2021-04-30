@@ -171,12 +171,12 @@ export default {
         },
         dc: {
           cabinet: [
-            { prop: 'asset', name: this.$t('asset.assets'), active: false },
-            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true }
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true },
+            { prop: 'asset', name: this.$t('asset.assets'), active: false }
           ],
           asset: [
-            { prop: 'asset', name: this.$t('asset.assets'), active: true },
-            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false }
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
+            { prop: 'asset', name: this.$t('asset.assets'), active: true }
           ]
         }
 

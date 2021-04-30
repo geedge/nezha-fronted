@@ -1,68 +1,60 @@
 <template>
   <div v-clickoutside="{obj:editExprTemp,func:clickOutside}" class="right-box right-box-alert-config">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="editExprTemp.id" id="alert-box-del" v-has="'alert_silence_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien"
-              type="button" @click="del">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
-
     <!-- begin--标题-->
-    <div class="right-box__header">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
+    <div class="right-box__header">
+      <div class="right-box__header">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
       $t("config.exprTemp.create")}}
     </div>
-    <!-- end--标题-->
-
+      <div class="header__operation">
+        <span v-cancel="{obj: editExprTemp, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
     <!-- begin--表单-->
     <div class="right-box__container">
-      <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules"
-               class="right-box-form right-box-form-left" label-position="top" label-width="120px">
-        <el-form-item :label="$t('config.exprTemp.name')" prop="name">
-          <el-input v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
-        </el-form-item>
-        <el-form-item :label="$t('config.exprTemp.gname')" prop="gname">
-          <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
-          <el-autocomplete
-            v-model="editExprTemp.gname"
-            :fetch-suggestions="querySearch"
-            :placeholder="$t('overall.placeHolder')"
-            class="inline-input"
-            size="small"
-            style="width: 100%;"
-          ></el-autocomplete>
-        </el-form-item>
-        <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
-          <!--<el-input v-model="editExprTemp.expression" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
-          <promql-input
-            :id="'promqlKeys0'"
-            :key="'promqlKeys0'"
-            :expression-list="editExprTemp.expression"
-            :index="0"
-            :plugins="['metric-selector', 'metric-input', 'remove']"
-            :show-temp="false"
-            :showRemove="false"
-            :styleType="2"
-            @change="expressionChange"
-          ></promql-input>
-        </el-form-item>
-        <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
-          <el-input
-            v-model="editExprTemp.remark"
-            :placeholder="$t('alert.description')"
-            maxlength="512"
-            show-word-limit
-            size="small"
-            type="textarea"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-
+      <div class="container__form">
+        <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules" label-position="top" label-width="120px">
+          <el-form-item :label="$t('config.exprTemp.name')" prop="name">
+            <el-input v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('config.exprTemp.gname')" prop="gname">
+            <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
+            <el-autocomplete
+              v-model="editExprTemp.gname"
+              :fetch-suggestions="querySearch"
+              :placeholder="$t('overall.placeHolder')"
+              class="inline-input"
+              size="small"
+              style="width: 100%;"
+            ></el-autocomplete>
+          </el-form-item>
+          <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
+            <!--<el-input v-model="editExprTemp.expression" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
+            <promql-input
+              :id="'promqlKeys0'"
+              :key="'promqlKeys0'"
+              :expression-list="editExprTemp.expression"
+              :index="0"
+              :plugins="['metric-selector', 'metric-input', 'remove']"
+              :show-temp="false"
+              :showRemove="false"
+              :styleType="2"
+              @change="expressionChange"
+            ></promql-input>
+          </el-form-item>
+          <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
+            <el-input
+              v-model="editExprTemp.remark"
+              :placeholder="$t('alert.description')"
+              maxlength="512"
+              show-word-limit
+              size="small"
+              type="textarea"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
     <!-- end--表单-->
-
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
       <button id="alert-box-esc" v-cancel="{obj:editExprTemp,func:esc}"
