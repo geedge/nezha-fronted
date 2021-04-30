@@ -52,23 +52,23 @@ const en = {
     unavailable: 'Unavailable',
     available: 'Available',
     changePin: 'Change password', // 修改密码
-    createChart: 'Create chart',
-    createProject: 'Create project',
-    createEndpoint: 'Create endpoint',
+    createChart: 'New chart',
+    createProject: 'New project',
+    createEndpoint: 'New endpoint',
     batchEndpoint: 'Batch modify endpoint',
-    createAsset: 'Create asset',
-    createAlertRule: 'Create alert rule',
-    createUser: 'Create user',
-    createRole: 'Create role',
-    createPrometheusServer: 'Create prometheus server',
-    createDatacenter: 'Create Data center',
-    createCabinet: 'Create cabinet',
-    createModel: 'Create model',
-    createModule: 'Create module',
-    createMib: 'Create MIB',
-    createAssetType: 'Create asset type',
-    createAssetState: 'Create asset state',
-    createTemplate: 'Create template',
+    createAsset: 'New asset',
+    createAlertRule: 'New alert rule',
+    createUser: 'New user',
+    createRole: 'New role',
+    createPrometheusServer: 'New prometheus server',
+    createDatacenter: 'New Data center',
+    createCabinet: 'New cabinet',
+    createModel: 'New model',
+    createModule: 'New module',
+    createMib: 'New MIB',
+    createAssetType: 'New asset type',
+    createAssetState: 'New asset state',
+    createTemplate: 'New template',
     exportExcel: 'Export',
     importExcel: 'Import',
     importExcelLower: 'import',
@@ -210,7 +210,7 @@ const en = {
         panelId: 'ID' // ID
       },
       // 图表-侧滑框
-      createChartTitle: 'New Chart Template', // "新增图表"
+      createChartTitle: 'New chart template', // "新增图表"
       editChartTitle: 'Edit', // "编辑图表"
       chartForm: {
         chartId: 'ID',
@@ -614,7 +614,7 @@ const en = {
       roles: 'Role',
       language: 'Language', // "语言"
       receiver: 'Receiver', // "用户组"
-      createTime: 'Create time', // "创建时间"
+      createTime: 'New time', // "创建时间"
       enable: 'Enable', // "可用"
       option: 'Operation', // "操作"
       lastLoginTime: 'Last login time', // 最后登录时间
@@ -645,7 +645,7 @@ const en = {
       option: 'Operation', // "操作"
       permission: 'Permission',
       menu: 'Menu',
-      createRole: 'Create role',
+      createRole: 'New role',
       editRole: 'Edit role',
       remark: 'Remark'
     },
@@ -664,7 +664,7 @@ const en = {
       tab: 'Tab',
       parent: 'Previous menu',
       mainMenu: 'Primary menu',
-      createMenu: 'Create menu',
+      createMenu: 'New menu',
       editMenu: 'Edit menu',
       orderNum: 'Order',
       icon: 'Icon'
@@ -696,7 +696,7 @@ const en = {
       assets: 'Assets',
       remark: 'Remark',
       cabinets: 'Cabinets',
-      createDc: 'Create data center',
+      createDc: 'Nre data center',
       editDc: 'Edit data center',
       editCabinet: 'Edit cabinet',
       alert: 'Alert',
@@ -716,7 +716,7 @@ const en = {
     },
     cabinet: {
       editCabinet: 'Edit Cabinet',
-      createCabinet: 'Create Cabinet'
+      createCabinet: 'New Cabinet'
     },
     model: {
       model: 'Asset model',
@@ -725,7 +725,7 @@ const en = {
       ChartTemplate: 'ChartTemplate',
       assetNum: 'AssetNum',
       editModel: 'Edit model',
-      createModel: 'Add model',
+      createModel: 'New model',
       remark: 'Description',
       type: 'Type'
     },
@@ -828,7 +828,7 @@ const en = {
       editMib: 'Edit MIB',
       models: 'Models',
       modelTip: 'Please select models',
-      createMib: 'Create MIB',
+      createMib: 'New MIB',
       mibFiles: 'MIB file',
       uploadTip: 'Please upload MIB file',
       requiredMibFile: 'MIB file is required',
@@ -948,7 +948,7 @@ const en = {
         nameMaxLength: 'The length should be less than 64',
         uriRequired: 'Required',
         filePathReg: 'Please enter the correct file path',
-        create: 'Create notification',
+        create: 'New notification',
         invalid: 'Invalid',
         valid: 'Valid'
       },
@@ -982,28 +982,28 @@ const en = {
       authProtocol:'AuthProtocol',
       snmpEnable: 'SnmpEnable',
       snmpCollect:'SnmpCollect',
-      createModel:'Add Type',
+      createModel:'New Type',
       sshCollect:'SshCollect',
       sshCollectScript:'SshCollectScript',
       parent: 'Parent',
       pname: 'Parent name',
       editAssetType: 'Edit asset type',
-      createAssetType: 'Create asset type'
+      createAssetType: 'New asset type'
     },
     assetState: {
       assetState: 'Asset State',
       monitor: 'Monitor',
       alert: 'Alert',
       assetTotal: 'Total assets',
-      createAssetState: 'Create asset state',
+      createAssetState: 'New asset state',
       editAssetState: 'Edit asset state'
     },
     assetLabel: {
-      addMeta:'Add lables',
+      addMeta: 'Add labels',
       example: 'Example',
       assetLabel: 'Asset labels',
       all: 'All',
-      addGroup: 'Create group',
+      addGroup: 'Add group',
       editGroup: 'Edit group',
       addLabel: 'Create label',
       editLabel: 'Edit label',
@@ -1182,7 +1182,7 @@ const en = {
       alerts: 'Alerts',
       asset: 'Asset',
       editEndpoint: 'Edit endpoint',
-      createEndpoint: 'Created endpoint',
+      createEndpoint: 'New endpoint',
       batchEndpoint: 'Batch Endpoint',
       endpointName: 'Endpoint name',
       tip: {
