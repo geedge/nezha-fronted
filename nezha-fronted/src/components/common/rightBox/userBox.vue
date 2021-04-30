@@ -93,7 +93,7 @@
 export default {
   name: 'accountBox',
   props: {
-    user: Object
+    obj: Object
   },
   computed: {
     isCurrentUser () {
@@ -292,7 +292,7 @@ export default {
   },
   watch: {
     // 将prop里的user转为组件内部对象
-    user: {
+    obj: {
       immediate: true,
       deep: true,
       handler (n) {

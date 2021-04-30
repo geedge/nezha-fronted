@@ -43,22 +43,22 @@
               </el-switch>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.type")' prop="type">
-              <el-select  v-model="editAssetMeta.type" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false" @change="selectType">
+              <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled">
-                  <div><i :class="item.icon"></i>&nbsp;&nbsp;<span >{{item.name}}</span></div>
+                  <div><i :class="item.icon"></i>&nbsp;&nbsp;<span>{{item.name}}</span></div>
                 </el-option>
               </el-select>
             </el-form-item>
             <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="showParam">
               <span>{{$t('config.assetLabel.params')}}</span>
-              <span @click="addParam" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" v-if="editAssetMeta.type!=='datetime'">
+              <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
               <span class="create-square-box">
                 <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
               </span>
             </span>
             </div>
             <el-form-item prop="param" v-if="showParam" class="asset-meta-param">
-              <div v-if="editAssetMeta.type==='radio' || editAssetMeta.type==='checkbox' || editAssetMeta.type==='select'" class="meta-option-box">
+              <div v-if="editAssetMeta.type.toUpperCase()==='RADIO' || editAssetMeta.type.toUpperCase()==='CHECKBOX' || editAssetMeta.type.toUpperCase()==='SELECT'" class="meta-option-box">
                 <el-row class="asset-meta-param-row asset-meta-param-header">
                   <el-col :span="12">
                     {{$t('config.assetLabel.option')}}
@@ -75,7 +75,7 @@
                     <el-input v-model = "item.name" size="small" :rules="{ required: true, message: $t('validate.required'), trigger: 'blur'}" @input="(val)=>{inputChange(index, val)}" :ref="'metaNameOption'+index"></el-input>
                   </el-col>
                   <el-col :span="6">
-                    <el-radio v-if="editAssetMeta.type==='radio' || editAssetMeta.type==='select'" v-model = "item.check" :label="true" @change="radioChange(index)">{{$t('config.assetLabel.default')}}</el-radio>
+                    <el-radio v-if="editAssetMeta.type.toUpperCase()==='RADIO' || editAssetMeta.type.toUpperCase()==='SELECT'" v-model = "item.check" :label="true" @change="radioChange(index)">{{$t('config.assetLabel.default')}}</el-radio>
                     <el-checkbox v-else v-model="item.check" @change="checkBoxChange"> {{$t('config.assetLabel.default')}}</el-checkbox>
                   </el-col>
                   <el-col :span="6">
@@ -90,7 +90,7 @@
                   </el-col>
                 </el-row>
               </div>
-              <div v-if="editAssetMeta.type==='datetime'">
+              <div v-if="editAssetMeta.type.toUpperCase()==='DATETIME'">
                 <el-row style="margin-bottom: 10px">
                   <span class="datetime-header">{{$t('config.assetLabel.dateType')}}: </span>
                   <el-radio-group v-model="editAssetMeta.param.subType">
@@ -108,7 +108,7 @@
                   </el-switch>
                 </el-row>
               </div>
-              <div v-if="editAssetMeta.type==='double'">
+              <div v-if="editAssetMeta.type.toUpperCase()==='DOUBLE'">
                 <el-row>
                   <span class="datetime-header">{{$t('config.assetLabel.decimals')}}: </span>
                   <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate" :min="0" :max="10" :controls="false" size="small"></el-input-number>
@@ -119,11 +119,10 @@
               <el-input placeholder="" maxlength="512" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.example")'>
-              <assetTagEx :type="editAssetMeta.type" :param="editAssetMeta.param"/>
+              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>
             </el-form-item>
           </el-form>
         </div>
-        
       </div>
       <!-- end--表单-->
 
@@ -147,25 +146,12 @@ import assetTagEx from '../../page/asset/components/assetTagEx'
 export default {
   name: 'assetLabelBox',
   props: {
-    assetLabel: {}
+    obj: { type: Object }
   },
   components: { assetTagEx },
   data () {
     return {
-      editAssetMeta: {
-        id: '',
-        name: '',
-        metaKey: '',
-        groupId: {
-          id: '',
-          name: ''
-        },
-        search: '0',
-        display: '0',
-        type: '',
-        param: {},
-        remark: ''
-      },
+      editAssetMeta: {},
       rightBox: { // 面板弹出框相关
         show: false
       },
@@ -176,66 +162,66 @@ export default {
         groupId: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       },
-      value:'',
+      value: '',
       typeData: [
         {
           icon: 'nz-icon nz-icon-text',
-          disabled:true,
-          value: 'text',
+          disabled: true,
+          value: 'TEXT',
           name: this.$t('config.assetLabel.text')
         },
         {
           icon: 'nz-icon nz-icon-multitext',
-          disabled:true,
-          value: 'multitext',
+          disabled: true,
+          value: 'MULTITEXT',
           name: this.$t('config.assetLabel.multitext')
         },
         {
           icon: 'nz-icon nz-icon-textarea',
-          disabled:true,
-          value: 'textarea',
+          disabled: true,
+          value: 'TEXTAREA',
           name: this.$t('config.assetLabel.textarea')
         },
         {
           icon: 'nz-icon nz-icon-radio',
-          disabled:true,
-          value: 'radio',
+          disabled: true,
+          value: 'RADIO',
           name: this.$t('config.assetLabel.radio')
         },
         {
           icon: 'nz-icon nz-icon-checkbox',
-          disabled:true,
-          value: 'checkbox',
+          disabled: true,
+          value: 'CHECKBOX',
           name: this.$t('config.assetLabel.checkbox')
         },
         {
           icon: 'nz-icon nz-icon-xialaxuanze',
-          disabled:true,
-          value: 'select',
+          disabled: true,
+          value: 'SELECT',
           name: this.$t('config.assetLabel.select')
         },
         {
           icon: 'nz-icon nz-icon-integer',
-          disabled:true,
-          value: 'integer',
+          disabled: true,
+          value: 'INTEGER',
           name: this.$t('config.assetLabel.integer')
         },
         {
           icon: 'nz-icon nz-icon-double',
-          disabled:true,
-          value: 'double',
+          disabled: true,
+          value: 'DOUBLE',
           name: this.$t('config.assetLabel.double')
         },
         {
-          icon: 'nz-icon nz-icon-double',
-          disabled:true,
-          value: 'datetime',
+          icon: 'el-icon-time',
+          disabled: true,
+          value: 'DATETIME',
           name: this.$t('config.assetLabel.datetime')
         },
         {
-          icon: 'nz-icon nz-icon-double',
-          disabled:true,
-          value: 'email',
+          icon: 'el-icon-message',
+          disabled: true,
+          value: 'EMAIL',
           name: this.$t('config.assetLabel.email')
         }
       ],
@@ -243,37 +229,56 @@ export default {
     }
   },
   watch: {
-    assetLabel: {
+    obj: {
+      deep: true,
       immediate: true,
       handler (n) {
-        this.editAssetMeta = { ...n, search: `${n.search}`, display: `${n.display}` }
-        this.selectType(n.type, true)
+        this.editAssetMeta = {
+          ...n,
+          search: `${n.search}`,
+          display: `${n.display}`,
+          param: n.param && typeof n.param === 'string' ? JSON.parse(n.param) : {},
+          type: n.type.toUpperCase()
+        }
+        console.info(this.editAssetMeta)
+      }
+    },
+    'editAssetMeta.search': {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        this.switchSearch(n)
       }
     }
   },
   mounted () {
     this.getGroupData()
-    this.switchSearch('0')
   },
   methods: {
-    switchSearch(value){
-      this.typeData.forEach(element => {
-          if( value == 0 ) {
-            element.disabled = false
-            console.log(value);
-          }else if(value == 1) {
-            console.log(value);
-            if(element.value == 'radio'){
-              element.disabled = false
-            }else if(element.value == 'checkbox'){
-              element.disabled = false
-            }else if(element.value == 'select'){
-              element.disabled = false
-            }
-          }else {
-            return console.log('不为0，也不为1');
+    switchSearch (value) {
+      if (value == 0) {
+        this.typeData.forEach(t => {
+          t.disabled = false
+        })
+      } else if (value == 1) {
+        if (this.editAssetMeta.type !== 'RADIO' &&
+            this.editAssetMeta.type !== 'CHECKBOX' &&
+            this.editAssetMeta.type !== 'SELECT') {
+          this.editAssetMeta.type = 'RADIO'
+        }
+        this.typeData.forEach(t => {
+          if (t.value === 'RADIO' || t.value === 'CHECKBOX' || t.value === 'SELECT') {
+            t.disabled = false
+          } else {
+            t.disabled = true
           }
-      })    
+        })
+      } else {
+        this.editAssetMeta.search = '0'
+        this.typeData.forEach(t => {
+          t.disabled = false
+        })
+      }
     },
     clickOutside () {
       this.esc(false)
@@ -285,7 +290,7 @@ export default {
     save () {
       if (this.prevent_opt.save) {
         return
-      };
+      }
       this.prevent_opt.save = true
       this.$refs.editAssetMetaForm.validate((valid) => {
         if (valid) {
@@ -336,7 +341,6 @@ export default {
       if (this.prevent_opt.save) {
         return
       }
-      ;
       this.prevent_opt.save = true
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
@@ -365,9 +369,9 @@ export default {
     },
     selectType (val, init) {
       switch (val) {
-        case 'radio' :
-        case 'checkbox' :
-        case 'select' :
+        case 'RADIO' :
+        case 'CHECKBOX' :
+        case 'SELECT' :
           this.showParam = true
           if (init) return
           this.editAssetMeta.param = {}
@@ -379,7 +383,7 @@ export default {
             check: false
           }]
           break
-        case 'datetime' :
+        case 'DATETIME' :
           this.showParam = true
           if (init) return
           this.editAssetMeta.param = {
@@ -387,7 +391,7 @@ export default {
             interval: false
           }
           break
-        case 'double' :
+        case 'DOUBLE' :
           this.showParam = true
           if (init) return
           this.editAssetMeta.param = {
@@ -408,7 +412,7 @@ export default {
       this.editAssetMeta.param.items.forEach((item, index) => {
         if (index === i) {
           item.check = !!item.check
-        } else if (this.editAssetMeta.type !== 'checkbox') {
+        } else if (this.editAssetMeta.type.toUpperCase() !== 'CHECKBOX') {
           item.check = false
         }
       })
@@ -437,7 +441,7 @@ export default {
       this.$forceUpdate()
     },
     copyParam (index) {
-      if (this.editAssetMeta.type !== 'checkbox') {
+      if (this.editAssetMeta.type.toUpperCase() !== 'CHECKBOX') {
         this.editAssetMeta.param.items.push({
           name: this.editAssetMeta.param.items[index].name,
           check: false

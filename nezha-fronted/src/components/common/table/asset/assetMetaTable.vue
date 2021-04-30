@@ -45,14 +45,16 @@
           <div v-else-if="scope.row[item.prop] === 0">Disabled</div>
         </div>
         <div v-else-if=" item.prop === 'type' ">
-          <div v-if="scope.row[item.prop] == 'TEXT'&&'text'"><i class="nz-icon nz-icon-text"></i>TEXT</div>
-          <div v-else-if="scope.row[item.prop] == 'multitext'"><i class="nz-icon nz-icon-multitext"></i>MULTITEXT</div>
-          <div v-else-if="scope.row[item.prop] == 'textarea'"><i class="nz-icon nz-icon-textarea"></i>TEXTAREA</div>
-          <div v-else-if="scope.row[item.prop] == 'radio'"><i class="nz-icon nz-icon-radio"></i>RADI0</div>
-          <div v-else-if="scope.row[item.prop] == 'checkbox'"><i class="nz-icon nz-icon-checkbox"></i>CHECKBOX</div>
-          <div v-else-if="scope.row[item.prop] == 'xialaxuanze'"><i class="nz-icon nz-icon-xialaxuanze"></i>SELECT</div>
-          <div v-else-if="scope.row[item.prop] == 'integer'"><i class="nz-icon nz-icon-integer"></i>INTEGER</div>
-          <div v-else-if="scope.row[item.prop] == 'double'"><i class="nz-icon nz-icon-double"></i>DOUBLE</div>
+          <div v-if="scope.row[item.prop].toUpperCase() == 'TEXT'"><i class="nz-icon nz-icon-text"></i>&nbsp;&nbsp;TEXT</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'MULTITEXT'"><i class="nz-icon nz-icon-multitext"></i>&nbsp;&nbsp;MULTITEXT</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'TEXTAREA'"><i class="nz-icon nz-icon-textarea"></i>&nbsp;&nbsp;TEXTAREA</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'RADIO'"><i class="nz-icon nz-icon-radio"></i>&nbsp;&nbsp;RADI0</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'CHECKBOX'"><i class="nz-icon nz-icon-checkbox"></i>&nbsp;&nbsp;CHECKBOX</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'SELECT'"><i class="nz-icon nz-icon-xialaxuanze"></i>&nbsp;&nbsp;SELECT</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'INTEGER'"><i class="nz-icon nz-icon-integer"></i>&nbsp;&nbsp;INTEGER</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DOUBLE'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;DOUBLE</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'DATETIME'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;DOUBLE</div>
+          <div v-else-if="scope.row[item.prop].toUpperCase() == 'EMAIL'"><i class="nz-icon nz-icon-double"></i>&nbsp;&nbsp;DOUBLE</div>
         </div>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
@@ -126,7 +128,7 @@ export default {
     }
   },
   methods: {
-    
+
   }
 }
 </script>
