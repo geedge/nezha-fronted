@@ -133,17 +133,11 @@ export default {
       })
     },
     getLinkData () {
-<<<<<<< HEAD
       this.$get('link').then(response => {
         this.$store.commit('setLinkData', response.data.list)
         // this.linkData = response.data.list
         // console.log(this.linkData);
       }) 
-=======
-      this.$get('link').then(response =>{
-        this.$store.commit('setLinkData',response.data.list)
-      })
->>>>>>> 0f37c1d20484cd184721b1c759597e853126b275
     },
     changeLocal (lang) {
       if (lang != localStorage.getItem('nz-language')) {
