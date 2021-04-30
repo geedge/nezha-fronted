@@ -6,11 +6,7 @@
     <div class="header-menu">
       <el-dropdown>
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-<<<<<<< HEAD
         <el-dropdown-menu slot="dropdown">
-=======
-        <el-dropdown-menu>
->>>>>>> 0f37c1d20484cd184721b1c759597e853126b275
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
@@ -199,11 +195,7 @@ export default {
   },
   computed: {
     linkData () {
-<<<<<<< HEAD
       return this.$store.getters.getLinkData
-=======
-      return this.$route.getters.getLinkData
->>>>>>> 0f37c1d20484cd184721b1c759597e853126b275
     },
     route () {
       return this.$route.path
