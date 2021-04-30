@@ -59,7 +59,6 @@ export default {
     detail: Boolean
   },
   data () {
-    const vm = this
     return {
       editRole: {},
       url: 'sys/role',

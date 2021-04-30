@@ -75,6 +75,12 @@ export default {
         }]
       }
     }
+  },
+  methods: {
+    edit (row) {
+      this.object = { ...row }
+      this.rightBox.show = true
+    }
   }
 }
 </script>
