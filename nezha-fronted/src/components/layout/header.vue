@@ -6,7 +6,14 @@
     <div class="header-menu">
       <el-dropdown>
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-        <el-dropdown-menu></el-dropdown-menu>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
+            <span class="link-title">
+              <i class="nz-icon nz-icon-link"></i>
+              <a :href='item.url' :title="item.name" class="nz-a" target="_blank">{{item.name}}</a>
+            </span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown>
         <el-dropdown-menu></el-dropdown-menu>
@@ -125,6 +132,13 @@ export default {
         }
       })
     },
+    getLinkData () {
+      this.$get('link').then(response => {
+        this.$store.commit('setLinkData', response.data.list)
+        // this.linkData = response.data.list
+        // console.log(this.linkData);
+      }) 
+    },
     changeLocal (lang) {
       if (lang != localStorage.getItem('nz-language')) {
         localStorage.setItem('nz-language', lang)
@@ -170,9 +184,13 @@ export default {
     this.$i18n.locale = this.language
     if (sessionStorage.getItem('nz-token')) {
       this.initEvent()
+      this.getLinkData()
     }
   },
   computed: {
+    linkData () {
+      return this.$store.getters.getLinkData
+    },
     route () {
       return this.$route.path
     },
