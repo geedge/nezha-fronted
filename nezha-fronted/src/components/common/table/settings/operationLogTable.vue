@@ -126,9 +126,6 @@ export default {
         return '-'
       }
     }
-  },
-  mounted () {
-    console.info(this.customTableTitle)
   }
 }
 </script>

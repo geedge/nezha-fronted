@@ -851,7 +851,7 @@ export default {
     width: 37.5%;
     margin-right: 2%;
     background: #FFFFFF;
-    border: 1px solid #E7EAED;
+    border: 1px solid $--right-box-border-color;
     border-radius: 2px;
     position: relative;
   }
@@ -875,7 +875,7 @@ export default {
 
     width: 100%;
     background: #FFFFFF;
-    border: 1px solid #E7EAED;
+    border: 1px solid $--right-box-border-color;
     border-radius: 2px;
   }
   /* end--table*/
@@ -884,7 +884,7 @@ export default {
   .search-box{
     width: calc(100% - 10px);
     padding: 10px 5px;
-    border-bottom: 1px solid #E7EAED;
+    border-bottom: 1px solid $--right-box-border-color;
     display: flex;
   }
   /deep/ .new-search .search-input-all{

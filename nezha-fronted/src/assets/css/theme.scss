@@ -50,6 +50,8 @@ $--monitor-color: #98AEC5; //全局停用色灰色
   warningColor: var(--theme-color);
   suspendedColor: $--suspended-color;
   monitorColor: $--monitor-color;
+  primaryBorderColor: $--primary-border-color;
+  rightBoxBorderColor: $--right-box-border-color;
 }
 /* element-ui变量覆盖 */
 /*$--color-primary: red; // 覆盖element-ui的主题色
