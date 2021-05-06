@@ -79,10 +79,10 @@ export default {
       editModule: {},
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
-        { title: 'id', data: 'id' },
-        { title: 'name', data: 'name' },
-        { title: 'desc', data: 'type' },
-        { title: 'Description', data: 'Description' }
+        { title: 'ID', data: 'id' },
+        { title: 'Name', data: 'name' },
+        { title: 'Type', data: 'type' },
+        { title: 'Description', data: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',
