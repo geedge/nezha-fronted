@@ -89,7 +89,7 @@ export default {
       rightBox: { model: { show: false } },
       roles: [],
       rules: {
-        model: [
+        name: [
           { required: true, message: '必填', trigger: 'blur' }
         ],
         brandId: [
