@@ -290,7 +290,7 @@ const cn = {
         tooltip: 'Tooltip',
         displayChart: '图表',
         aggregation: 'Aggregation',
-        varType: 'Vartype',
+        varType: 'Variable type',
         pid: 'Chart 模板',
         selectAsset: '请选择Asset',
         selectEndpoint: '请选择Endpoint'
@@ -1040,12 +1040,12 @@ const cn = {
       create: '创建表达式模板',
       expressionError: '请填写表达式',
       type: 'Type',
-      varType: 'varType'
+      varType: 'Variable type'
     },
     chartTemp: {
       chartTemp: 'Chart 模板',
       type: 'Type',
-      varType: 'varType'
+      varType: 'Variable type'
     }
   },
   alert: {
@@ -1107,6 +1107,7 @@ const cn = {
       }
     },
     silence: {
+      name:'名称',
       silence: '告警静默',
       create: '创建告警静默',
       edit: '修改告警静默',

@@ -73,8 +73,8 @@
           </div>
         </div>
         <div class="el-picker-panel__footer" v-if="showTime">
-          <span class="timezone-area">{{timezone}}</span>
-          <span class="timezone-offset">{{timezoneOffset}}</span>
+          <span class="timezone-area" :title='timezone'>{{timezone}}</span>
+          <span class="timezone-offset">UTC {{timezoneOffset}}</span>
         </div>
       </div>
     </div>

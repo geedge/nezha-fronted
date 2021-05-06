@@ -299,7 +299,7 @@ const en = {
         tooltip: 'Tooltip',
         displayChart: 'Display chart',
         aggregation: 'Aggregation',
-        varType: 'Vartype',
+        varType: 'Variable type',
         pid: 'Chart template',
         selectAsset: 'Please select the Asset',
         selectEndpoint: 'Please select the Endpoint'
@@ -1060,12 +1060,12 @@ const en = {
       create: 'New expression template',
       expressionError: 'Please fill in the "expression" value',
       type: 'Type',
-      varType: 'varType'
+      varType: 'Variable type'
     },
     chartTemp: {
       chartTemp: 'Chart template',
       type: 'Type',
-      varType: 'varType'
+      varType: 'Variable type'
     }
   },
   alert: {
@@ -1127,6 +1127,7 @@ const en = {
       },
     },
     silence: {
+      name:'Name',
       silence: 'Alert silence',
       create: 'New alert silence',
       edit: 'Edit alert silence',

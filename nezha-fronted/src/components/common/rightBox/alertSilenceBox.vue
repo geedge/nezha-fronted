@@ -13,6 +13,13 @@
     <div class="right-box-form-box right-box__container">
       <el-form class="right-box-form right-box-form-left" :model="editAlertSilence" label-position="top"
                label-width="120px" :rules="rules" ref="alertSilenceForm">
+        <el-form-item :label='$t("alert.silence.name")' prop="name" class="range-name">
+          <el-input
+            :placeholder="''"
+            size="small"
+            v-model="editAlertSilence.name">
+          </el-input>
+        </el-form-item>
         <el-form-item :label='$t("alert.silence.time")' prop="time" class="range-time">
           <div>
             <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
@@ -28,7 +35,7 @@
           <div class="datepicker">
             <div class="datepicker-box">
               <span class="datepicker-title">start time</span>
-              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
                               type="datetime"
                               :clearable="false"
@@ -40,7 +47,7 @@
             </div>
             <div class="datepicker-box">
               <span class="datepicker-title">end time</span>
-              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
                               type="datetime"
                               :clearable="false"
@@ -66,8 +73,8 @@
             </el-form-item>
             <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeMatcher(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
           </div>
-          <div style="text-align: center">
-               <span id="module-add-label" type="button" @click="addMatcher" class="right-box-form-add module-add-label" style="margin-right: 140px">
+          <div style="text-align: center;" class="">
+               <span id="module-add-label" type="button" @click="addMatcher" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
           </div>
@@ -165,6 +172,9 @@ export default {
           // { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
           { required: true, trigger: 'change' },
           { validator: validate, trigger: 'change' }
+        ],
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
         ],
       },
       rangeTime: '',
@@ -322,7 +332,7 @@ export default {
       width: 14.2%
     }
 
-    /deep/ .el-date-editor.el-range-editor.el-input__inner.panel-time-picker-hidden.el-date-editor--datetimerange.el-range-editor--mini {
+    /deep/ .el-date-editor.el-range-editor.el-input__inner.el-date-editor--datetimerange.el-range-editor--mini {
       width: 100%;
     }
 
@@ -396,5 +406,16 @@ export default {
   }
   /deep/ .param-box-row-value{
     width: 50%;
+  }
+  .module-add-label{
+    display: inline-block;
+    width: 300px;
+    height: 18px;
+    background: #FFFCF9;
+    border: 1px solid #FFE0BD;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 80px;
   }
 </style>
