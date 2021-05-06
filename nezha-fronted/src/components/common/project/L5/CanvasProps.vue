@@ -22,15 +22,15 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--iconToolState-->
-          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">
-            <el-switch
-              v-model="selection.pen.data.iconToolState"
-              :active-value="true"
-              :inactive-value="false"
-              active-color="#ee9d3f"
-            />
-          </el-form-item>
+<!--          &lt;!&ndash;iconToolState&ndash;&gt;-->
+<!--          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">-->
+<!--            <el-switch-->
+<!--              v-model="selection.pen.data.iconToolState"-->
+<!--              :active-value="true"-->
+<!--              :inactive-value="false"-->
+<!--              active-color="#ee9d3f"-->
+<!--            />-->
+<!--          </el-form-item>-->
 
           <!--metric-->
           <div class="right-box-sub-title" style="margin-bottom: 10px">
@@ -57,7 +57,7 @@
               :from-father-data="true"
               @removeExpression="removeExpression"
             ></promql-input>
-            <el-row>
+            <el-row style="margin-top: 10px">
               <template>
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
@@ -1579,6 +1579,12 @@ export default {
   }
 </style>
 <style lang="scss" scoped>
+  /deep/ .metric-selector-input-box{
+    width: calc(100% - 120px) !important;
+  }
+  /deep/ .query-row .input-box{
+    margin: 0;
+  }
   .legend-title{
     width: 100px;
     margin-right: 10px;
@@ -1718,20 +1724,9 @@ export default {
       padding: 2px 6px;
       color: #EC7F66;
     }
-    /*.form-row-item .nz-icon-minus-position {
-      position: absolute;
-      top: 50%;
-      right: -55px;
-      -webkit-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      background: rgba(236, 127, 102, 0.1);
-      border-radius: 4px;
-      padding: 0 5px;
-
-      .nz-icon-minus {
-        color: #EC7F66;
-      }
-    }*/
+    .form-row-item .nz-icon-minus-position {
+      right: -44px;
+    }
 
     .tooltip-box {
       padding-left: 10px;

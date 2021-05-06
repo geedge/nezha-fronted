@@ -584,7 +584,7 @@ export default {
 
   .query-row .input-box {
     flex: auto;
-    margin: 0 10px;
+    margin-right: 10px;
   }
 
   .metric-btn {

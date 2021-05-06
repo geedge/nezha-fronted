@@ -109,7 +109,7 @@
           <div v-loading="topologyLoading"  class="content-col-content">
             <transition name = "el-zoom-in-center">
               <div v-if="allProject&&allProject.length>0" style="width: 100%;height: 100%;position: relative">
-                <el-carousel :interval="5000" :trigger="'click'" arrow="hover">
+                <el-carousel :interval="5000" :autoplay="false" :trigger="'click'" arrow="hover">
                   <el-carousel-item v-for="(item,index) in allProject" :key="index">
                     <div class="maskLayer" @click="toProject(item)"></div>
                     <span class="project-name">{{item.name}}</span>
@@ -349,7 +349,7 @@ export default {
       })
     },
     queryAllProjectData () {
-      this.$get('/project', { pageSize: -1 }).then(res => {
+      this.$get('monitor/project', { pageSize: -1 }).then(res => {
         this.topologyLoading = true
         const axiosAll = []
         const temp = []

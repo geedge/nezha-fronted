@@ -5,8 +5,8 @@
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
     <div class="main-list">
-      <div class="main-container" style="padding-left: 0">
-        <div v-if="editTopologyFlag" class="edit-topologyLine" style="padding-left: 20px;width: calc(100% - 20px);position: absolute;top: 9px;padding-right: 20px">
+      <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
+        <div v-if="editTopologyFlag" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);">
           <!--工具栏-->
           <span class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
@@ -130,7 +130,7 @@
             </button>
           </div>
         </div>
-        <div class="nz-table2" style="padding: 0 20px 10px 5px;">
+        <div class="nz-table2">
           <!--悬浮network部分-->
           <div class="network-info">
             <div v-if="popDataShow.main">
@@ -1559,7 +1559,7 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data,header) => {
+          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
             const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
             if (group) {
               group.children.push({
@@ -1618,7 +1618,7 @@ export default {
             promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.id}/1`))
             imgArr.push({ ...item })
           })
-          Promise.all(promiseArr).then((res2,header) => {
+          Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index]
@@ -1688,7 +1688,7 @@ export default {
             .get(url)
             .then((res) => {
               return {
-                data: ('data:image/jpeg;base64,' + res.data),
+                data: ('data:image/jpeg;base64,' + res.data)
               }
             })
             .then(data => {
@@ -2650,6 +2650,21 @@ export default {
     }
     .zoom-option:hover{
       cursor: pointer;
+    }
+  }
+  .from-overview{
+    padding:0 !important;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px) !important;
+    .nz-table2{
+      padding: 0 !important;
+      height: 100%;
+    }
+  }
+  .from-project{
+    padding-left: 0;
+    .nz-table2{
+      padding: 0 20px 10px 5px;
     }
   }
 </style>
