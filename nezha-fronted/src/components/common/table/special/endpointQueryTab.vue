@@ -141,7 +141,6 @@ export default {
       setTimeout(() => {
         this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + new Date(this.formatTime).getTime()).then(response => {
           this.loading = false
-          response = JSON.parse(localStorage.getItem('queryData'))
           if (response.status === 'success') {
             const results = response.data.result
             this.queryData = JSON.parse(JSON.stringify(results))
@@ -150,7 +149,7 @@ export default {
             this.$nextTick(this.$refs.dataTable.doLayout())
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {
-                this.scrollbarWrap = this.$refs.dataTable.$refs.singleTable.bodyWrapper
+                // this.scrollbarWrap = this.$refs.dataTable.$refs.singleTable.bodyWrapper
                 // this.toTopBtnHandler(this.scrollbarWrap)
               })
             }
