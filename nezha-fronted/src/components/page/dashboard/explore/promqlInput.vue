@@ -245,10 +245,8 @@ export default {
           const metricMap = new Map()
           metrics.forEach((item) => {
             let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
+            if (/^[a-zA-Z_:][a-zA-Z0-9_:]*/.test(item)) {
+              key = item.split(/[_:]/, 1)[0]
             } else {
               key = item
             }
