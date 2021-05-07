@@ -127,7 +127,7 @@ export default {
         linkId: '',
         reason: '',
         time: [],
-        matcher: [
+        matchers: [
           { name: '', value: '', regex: 0 }
         ],
         name: ''
@@ -172,7 +172,18 @@ export default {
       this.blackObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
       this.object = JSON.parse(JSON.stringify(this.blackObject))
       this.rightBox.show = true
-    }
+    },
+    edit (u) {
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = {
+            ...response.data,
+            matchers: JSON.parse(response.data.matchers)
+          }
+          this.rightBox.show = true
+        }
+      })
+    },
   }
 }
 </script>

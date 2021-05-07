@@ -1112,7 +1112,7 @@ const cn = {
       create: '创建告警静默',
       edit: '修改告警静默',
       time: '时间',
-      matcher: 'Matcher',
+      matchers: 'matchers',
       reason: '描述',
       selectTime: '请选择时间',
       selectMather: '必填项',

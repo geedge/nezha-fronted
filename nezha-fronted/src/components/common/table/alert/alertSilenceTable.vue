@@ -54,7 +54,19 @@
 <!--              <span :title="scope.row.ruleName" class="nz-silence-tag-content">{{scope.row.ruleName}}</span>-->
 <!--            </span>-->
 <!--          </div>-->
-          matchers
+          <span v-for="(item1, i) in labelsSort(scope.row.matchers)" :key="i">
+              <span >
+                <nz-alert-tag
+                  v-if="item1.name !== 'alertname' && item1.name !== 'severity'" :key="i" :cursor-point="tagType(item1.name) !== 'info'"
+                  :label="item1.name"
+                  :type="tagType(item1.name)"
+                  :regex="item1.regex"
+                  style="margin: 5px 0 5px 5px;"
+                >
+                 {{item1.value}}
+                </nz-alert-tag>
+              </span>
+            </span>
         </template>
         <template v-else-if="item.prop === 'state'">
           <span v-if="scope.row.state===1" class="silence-pending">pending</span>
@@ -74,13 +86,13 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="copyRow(scope.row,'alertSilence')"><i class="nz-icon nz-icon-override"></i></button>
+        <button class="table-operation-item" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+<!--            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
             <el-dropdown-item :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('buttons.expire')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -92,8 +104,12 @@
 <script>
 import table from '@/components/common/mixin/table'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import nzAlertTag from '../../../page/alert/nzAlertTag'
 export default {
   name: 'alertSilenceTable',
+  components: {
+    nzAlertTag
+  },
   mixins: [table],
   data () {
     return {
@@ -104,18 +120,18 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: 'matchers',
           prop: 'matchers',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: 'Start time',
           prop: 'startAt',
           show: true,
           width: 300,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
@@ -148,6 +164,39 @@ export default {
         }
         return calcDurationByStringTimeB(record.startAt, this.nowTime)
       }
+    },
+    tagType () {
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
+        }
+      }
+    }
+  },
+  methods: {
+    labelsSort (obj) {
+      obj = obj || []
+      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      if (typeof obj === 'string') obj = JSON.parse(obj)
+      const labels = JSON.parse(JSON.stringify(obj))
+      const result = []
+      const result2 = []
+      for (const key of buildIn) {
+        labels.forEach(item => {
+          if (item.name === key) {
+            result.push(item)
+          }
+        })
+      }
+      labels.forEach(item => {
+        if (buildIn.indexOf(item.name) === -1) {
+          result2.push(item)
+        }
+      })
+      console.log([...result, ...result2])
+      return [...result, ...result2]
     }
   }
 }

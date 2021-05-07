@@ -1074,7 +1074,7 @@ const en = {
     rule: 'Rule', // '规则'
     alertMessage: 'Alert message', // "告警信息"
     alertRule: 'Alert rule', // "告警规则"
-    alertName: 'Alert name', // "告警名称"
+    alertName: 'Name', // "告警名称"
     severity: 'Priority', // "等级"
     description: 'Description', // "描述"
     summary: 'Summary', // "概要"
@@ -1132,7 +1132,7 @@ const en = {
       create: 'New alert silence',
       edit: 'Edit alert silence',
       time: 'Time',
-      matcher: 'Matcher',
+      matchers: 'matchers',
       reason: 'Description',
       selectTime: 'Please select time',
       selectMather: 'Required',
