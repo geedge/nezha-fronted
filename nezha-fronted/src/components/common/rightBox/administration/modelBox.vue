@@ -22,8 +22,11 @@
           <!-- ChartTemplate -->
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
-            :data="chartlList"
+            :data="'visual/panel/chart'"
             :tb-columns="ChartSearchShowFields"
+            :params="{
+              varType: 1, panelId: 0
+            }"
             :multiple="true"
             language="en"
             title="ChartSearch"
@@ -32,6 +35,7 @@
             show-field="name"
             class="form-control"
             @values="(data) => {editModel.chartIds = data.map(d => d.id).join(',')}"
+            :result-format="resultFormat"
           ></v-selectpage>
           </el-form-item>
           <!--remark-->
@@ -109,7 +113,7 @@ export default {
   },
   created () {
     this.getBrandList()
-    this.ChartTemplateList()
+    // this.ChartTemplateList()
   },
   methods: {
     clickOutside () {
@@ -185,12 +189,20 @@ export default {
         })
       })
     },
-    /* 获取chart列表数据 */
-    ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0 }).then(res => {
-        this.chartlList = res.data.list
-      })
+    resultFormat (resp) {
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
     }
+    /* 获取chart列表数据 */
+    // ChartTemplateList () {
+    //   this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0 }).then(res => {
+    //     this.chartlList = res.data.list
+    //   })
+    // }
   }
 }
 </script>

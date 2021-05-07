@@ -201,7 +201,7 @@
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
               <v-selectpage
                 style="flex: 1"
-                :data="assetData"
+                data="asset/asset"
                 :tb-columns="columns"
                 key-field="id"
                 show-field="manageIp"
@@ -835,11 +835,16 @@ export default {
       })
     },
     resultFormat (resp) {
-      if (resp && resp.data) return resp.data.values.gridResult
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
     },
     assetShowChange () {
       this.assetShow = true
-      this.getAssetData()
+      // this.getAssetData()
     },
     getAssetData () {
       this.assetLoading = true
