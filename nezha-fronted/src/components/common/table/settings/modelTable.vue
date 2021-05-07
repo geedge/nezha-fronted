@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
     >
       <template slot="header">
@@ -44,6 +45,12 @@
              {{scope.row.brand.name}}
          </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+        <template v-else-if="item.prop === 'assetNum'">
+          <span class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
+             <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
+          {{scope.row[item.prop]}}
+          </span>
+        </template>
         <span v-else>{{scope.row[item.prop]}}</span>
       </template>
     </el-table-column>
@@ -80,17 +87,20 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('config.model.name'),
           prop: 'name',
           show: true,
-          width: 160
+          width: 160,
+          sortable:'custom'
         }, {
           label: this.$t('config.model.brand'),
           prop: 'brand',
           show: true,
           width: 160
+          ,sortable:'custom'
         }, {
           label: this.$t('config.model.remark'),
           prop: 'remark',
@@ -99,7 +109,8 @@ export default {
           label: this.$t('config.model.assetNum'),
           prop: 'assetNum',
           show: true,
-          width: 200
+          width: 200,
+          sortable:'custom'
         }
       ]
     }

@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -75,19 +76,23 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('config.exprTemp.name'),
           prop: 'name',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.exprTemp.type'),
           prop: 'type',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.exprTemp.varType'),
           prop: 'varType',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.exprTemp.remark'),
           prop: 'remark',

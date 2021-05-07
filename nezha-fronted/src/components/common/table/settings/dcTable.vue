@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -116,11 +117,13 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('asset.location'),
           prop: 'location',
@@ -128,11 +131,13 @@ export default {
         }, {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.dc.assets'),
           prop: 'assetNum',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.dc.alert'),
           prop: 'alertNum',
@@ -156,7 +161,8 @@ export default {
         }, {
           label: this.$t('config.dc.state'),
           prop: 'state',
-          show: true
+          show: true,
+          sortable:'custom'
         }
       ]
     }

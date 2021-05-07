@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -83,11 +84,13 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'name',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
@@ -107,7 +110,8 @@ export default {
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -120,7 +124,8 @@ export default {
           label: this.$t('alert.message'),
           prop: 'alertNum',
           show: true,
-          width: 90
+          width: 90,
+          sortable:'custom'
         }, {
           label: this.$t('alert.config.receiver'),
           prop: 'receivers',

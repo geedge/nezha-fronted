@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -93,20 +94,24 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('config.assetLabel.name'),
           prop: 'name',
           show: true,
-          width: 100
+          width: 100,
+          sortable:'custom'
         }, {
           label: this.$t('config.assetLabel.key'),
           prop: 'metaKey',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.assetLabel.group'),
           prop: 'group',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.assetLabel.search'),
           prop: 'search',

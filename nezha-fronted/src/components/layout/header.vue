@@ -23,14 +23,15 @@
         </div>
       </el-dropdown>
       <el-dropdown>
-        <div class="header-menu__item"><i class="nz-icon nz-icon-create-square"></i></div>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(item, createIndex) in createMenu" :key="createIndex" v-has="item.permission" :index="`${createIndex}`">
-            <div :id="'create-box-'+createIndex">
-              <span>{{item.label}}</span>
-            </div>
-          </el-dropdown-item>
-        </el-dropdown-menu>
+        <div class="header-menu__item" @click="centerDialogVisible = true"><i class="nz-icon nz-icon-guide"></i></div>
+        <!-- <el-dialog
+          title="Get started in 6 steps"
+          :visible.sync="centerDialogVisible"
+          :show="centerDialogVisible"
+          center>
+          <path-navigation></path-navigation>
+        </el-dialog> -->
+        <path-navigation :show.sync="centerDialogVisible"></path-navigation>
       </el-dropdown>
     </div>
     <!--个人操作-->
@@ -68,10 +69,12 @@
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
 import changePin from '../page/config/changePin'
+import PathNavigation from './path_navigation/PathNavigation'
 export default {
   name: 'Header',
   components: {
     'change-password': changePin,
+    PathNavigation
   },
   data () {
     return {
@@ -111,7 +114,8 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showChangePin: false
+      showChangePin: false,
+      centerDialogVisible: false
     }
   },
   methods: {
@@ -239,6 +243,22 @@ export default {
       text-align: center;
       height: 36px;
       line-height: 50px;
+      .el-dialog{
+        width: 1000px;
+        height: 70px;
+        .el-dialog__header{
+          background-color: orange;
+          .el-dialog__title{
+            color: #fff;
+          }
+          .el-dialog__close{
+            color: #fff;
+            line-height: 50px;
+            font-size: 30px;
+          }
+        }
+      }
+      
     }
   }
   .header-menu--item {

@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -90,12 +91,14 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('project.module.moduleName'),
           prop: 'name',
           show: true,
-          minWidth: 200
+          minWidth: 200,
+          sortable:'custom'
         }, {
           label: this.$t('project.module.type'),
           prop: 'type',
@@ -105,18 +108,21 @@ export default {
           label: this.$t('project.project.project'),
           prop: 'project',
           show: true,
-          width: 150
+          width: 150,
+          sortable:'custom'
         },
         {
           label: this.$t('project.endpoint.endpoint'),
           prop: 'endpointNum',
           show: true,
-          width: 150
+          width: 150,
+          sortable:'custom'
         }, {
           label: this.$t('project.module.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 150
+          width: 150,
+          sortable:'custom'
         },
         {
           label: this.$t('overall.remark'),

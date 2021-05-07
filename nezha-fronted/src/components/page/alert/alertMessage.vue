@@ -363,6 +363,7 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
+      console.log(this.searchLabel)
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
@@ -579,19 +580,6 @@ export default {
       }
       this.getTableData()
     },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.pageObj.orderBy = orderBy
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
-    }
   }
 }
 </script>

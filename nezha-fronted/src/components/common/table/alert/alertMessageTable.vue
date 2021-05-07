@@ -31,7 +31,7 @@
         :prop="item.prop"
         :resizable="true"
         :sort-orders="['ascending', 'descending']"
-        :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
+        :sortable="item.sortable"
         :width="`${item.width}`"
       >
         <template slot-scope="scope" :column="item">
@@ -166,23 +166,28 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true,
-          width: 180
+          width: 180,
+          sortable:false,
+          sortable:'custom'
         }, {
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           NotSet: true,
-          minWidth: 250
+          minWidth: 250,
+          sortable:'custom'
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
-          width: 110
+          width: 110,
+          sortable:'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -207,7 +212,8 @@ export default {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
-          width: 150
+          width: 150,
+          sortable:'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
