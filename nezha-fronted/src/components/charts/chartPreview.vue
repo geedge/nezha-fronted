@@ -182,6 +182,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
+import moment from "moment-timezone";
 export default {
   name: 'chartPreview',
   components: {
@@ -878,7 +879,8 @@ export default {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
               if (i === 0) {
-                const tData = new Date(item.data[0])
+                const value = bus.computeTimezone(item.data[0])
+                const tData = new Date(value)
                 str += [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + ' ' +
                     [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
                 str += '<br/>'

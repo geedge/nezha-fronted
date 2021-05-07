@@ -123,8 +123,8 @@
       <div
         class="el-picker-panel__footer"
         v-show="footerVisible && currentView === 'date'">
-        <span class="timezone-area">{{timezone}}</span>
-        <span class="timezone-offset">{{timezoneOffset}}</span>
+        <span class="timezone-area" :title='timezone'>{{timezone}}</span>
+        <span class="timezone-offset">UTC {{timezoneOffset}}</span>
         <el-button
           size="mini"
           type="text"

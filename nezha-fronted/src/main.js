@@ -33,7 +33,18 @@ import bus from '@/libs/bus'
 import theme from '@/assets/css/theme.scss'
 import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from 'v-selectpage'
-Vue.use(vSelectPage)
+Vue.use(vSelectPage, {
+  dataLoad: function (vue, url, params) {
+    if (params.pageNumber) {
+      params.pageNo = params.pageNumber
+    }
+    return new Promise((resolve, reject) => {
+      get(url, params).then(res => {
+        resolve(res)
+      }, e => reject(e))
+    })
+  }
+})
 Vue.use(myDatePicker)
 Vue.component('Pagination', Pagination)
 Vue.component('searchInput', searchInput)

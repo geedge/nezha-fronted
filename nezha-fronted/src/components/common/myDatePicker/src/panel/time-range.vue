@@ -41,8 +41,8 @@
         </div>
       </div>
       <div class="el-time-panel__footer">
-        <span class="timezone-area">{{timezone}}</span>
-        <span class="timezone-offset">{{timezoneOffset}}</span>
+        <span class="timezone-area" :title='timezone'>{{timezone}}</span>
+        <span class="timezone-offset">UTC {{timezoneOffset}}</span>
         <button
           type="button"
           class="el-time-panel__btn cancel"
