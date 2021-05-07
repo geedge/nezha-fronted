@@ -1883,13 +1883,6 @@ li{
 .nz-table .el-table__fixed-body-wrapper {
   height: calc(100% - 33px) !important;
 }
-.ant-table-scroll {
-  max-height: unset !important;
-  height: 100%;
-}
-.ant-table-scroll .el-table {
-  //height: 100% !important;
-}
 /*model侧滑中下拉框*/
 .autocomplete-dropdown {
   display: flex;

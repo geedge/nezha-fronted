@@ -52,7 +52,7 @@ export default {
   .body {
     display: flex;
     flex-direction: column;
-    flex: auto;
+    width: calc(100% - 240px);
     transition: all .2s;
   }
 }

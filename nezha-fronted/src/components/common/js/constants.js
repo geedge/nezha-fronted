@@ -89,7 +89,7 @@ export const asset = {
       non: 0,
       ssh: 1,
       telnet: 2
-    },
+    }
   },
   authProtocolOptions: [
     { value: 1, label: 'SSH' },

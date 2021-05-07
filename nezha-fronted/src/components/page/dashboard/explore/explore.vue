@@ -33,17 +33,17 @@
             @removeExpression="removeExpression"
           ></promql-input>
         </div>
-        <div ref="scrollWrap" class="nz-table2" style="height: auto; padding-bottom: 10px;">
-          <div class="chart-view right-margin" v-show="!showIntroduce"
+        <div ref="scrollWrap" style="height: auto; padding: 0 20px 4px;">
+          <div v-show="!showIntroduce" class="chart-view"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
             <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnit"></chart>
             </div>
           </div>
-          <div class="table-view right-margin" v-show="!showIntroduce"
+          <div v-show="!showIntroduce" class="table-view"
                :class="{'shrink-view':!tableVisible || !defaultTableVisible}" style="position: relative">
-            <div class="view-title" @click="changeTableVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
+            <div class="view-title" style="position:absolute;z-index: 1000;top:4px;" @click="changeTableVisible"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
               <!-- 自定义table列 -->
               <transition name="el-zoom-in-top">
@@ -61,8 +61,7 @@
                         border
                         ref="exploreTable"
                         tooltip-effect="light"
-                        v-loading="tools.loading"
-                        style="width: 100%;">
+                        v-loading="tools.loading">
                 <el-table-column
                   :resizable="false"
                   v-for="(item, index) in tools.customTableTitle"
@@ -85,7 +84,7 @@
                           :append-to-body="false"></pagination>
             </div>
           </div>
-          <div class="introduce-view right-margin" v-show="showIntroduce">
+          <div v-show="showIntroduce" class="introduce-view">
             <div class="info-room">
               <div class="col-md-9 doc-content">
                 <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank" rel="noopener norefferrer"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>

@@ -65,7 +65,6 @@ export default {
     showTab: String
   },
   components: {
-    mibBrowser,
     deleteButton,
     nzDataList,
     credentialsTable,

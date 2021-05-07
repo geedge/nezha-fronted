@@ -1,7 +1,8 @@
 /*列表table通用样式*/
 .list-page {
-  background-color: #f6f6f6;
   height: 100%;
+  width: 100%;
+  background-color: #f6f6f6;
 
   .main-list {
     background-color: white;
@@ -9,6 +10,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
     z-index: 0;
   }
   .main-container {
