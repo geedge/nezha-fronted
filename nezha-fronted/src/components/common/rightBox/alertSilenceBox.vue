@@ -2,7 +2,7 @@
   <div class="right-box right-box-alert-config" v-clickoutside="{obj:editAlertSilence,func:clickOutside}">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") + " ID：" + editAlertSilence.id : $t("alert.silence.create")}}</div>
+      <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") : $t("alert.silence.create")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editAlertSilence, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>

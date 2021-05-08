@@ -121,6 +121,12 @@ export default {
           show: true,
           width: 80,
           sortable: 'custom'
+        },
+        {
+          label: 'Name',
+          prop: 'name',
+          show: true,
+          width: 150
         }, {
           label: 'Matchers',
           prop: 'matchers',
@@ -138,7 +144,7 @@ export default {
           show: true,
           width: 120
         }, {
-          label: 'Reason',
+          label: this.$t('alert.silence.reason'),
           prop: 'reason',
           show: true,
           width: 120

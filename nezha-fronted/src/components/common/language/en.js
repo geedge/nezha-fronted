@@ -1075,6 +1075,7 @@ const en = {
     alertMessage: 'Alert message', // "告警信息"
     alertRule: 'Alert rule', // "告警规则"
     alertName: 'Name', // "告警名称"
+    method: 'Method', // "告警名称"
     severity: 'Priority', // "等级"
     description: 'Description', // "描述"
     summary: 'Summary', // "概要"

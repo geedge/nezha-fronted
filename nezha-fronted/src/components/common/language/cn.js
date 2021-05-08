@@ -1057,6 +1057,7 @@ const cn = {
     alertList: '告警信息',
     alertConfig: '告警规则',
     alertName: '告警名称',
+    method: 'Method',
     severity: '等级',
     description: '描述',
     summary: '概要',

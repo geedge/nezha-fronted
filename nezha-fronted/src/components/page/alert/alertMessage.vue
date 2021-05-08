@@ -120,22 +120,22 @@ export default {
   mixins: [dataListMixin],
   data () {
     return {
-      tablist:[
+      tablist: [
         {
-          state:'1',
-          name:'Active'
+          state: '1',
+          name: 'Active'
         },
         {
-          state:'2',
-          name:'Silebt'
+          state: '2',
+          name: 'Silebt'
         },
         {
-          state:'3',
-          name:'Expired'
+          state: '3',
+          name: 'Expired'
         }
       ],
-      isActive:0,
-      ind:0,
+      isActive: 0,
+      ind: 0,
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
@@ -376,13 +376,13 @@ export default {
       }
     },
     getTableData (ind) {
-      if(ind ==undefined){
-        ind=this.ind
-      }else{
-        this.ind =ind
+      if (ind == undefined) {
+        ind = this.ind
+      } else {
+        this.ind = ind
       }
-      const ii =ind+1
-      this.isActive=ind
+      const ii = ind + 1
+      this.isActive = ind
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.searchTime && this.searchTime.length > 1) {
@@ -393,11 +393,11 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if(ind===0 || ind ===1 || ind ===2){
+      if (ind === 0 || ind === 1 || ind === 2) {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get(this.url+'?state='+ii, this.searchLabel).then(response => {
+      this.$get(this.url + '?state=' + ii, this.searchLabel).then(response => {
         console.log(this.searchLabel)
         this.tools.loading = false
         if (response.code == 200) {
@@ -613,7 +613,7 @@ export default {
         this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
       }
       this.getTableData()
-    },
+    }
   }
 }
 </script>

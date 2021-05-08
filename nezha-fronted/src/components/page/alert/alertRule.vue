@@ -119,7 +119,7 @@ export default {
       if (!this.hasButton('alertMessage_view')) {
         return
       }
-      this.$refs.dataList.showBottomBox('alertMessage', alertRule)
+      this.$refs.dataList.showBottomBox('alertRuleAlertMessage', alertRule)
     },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)

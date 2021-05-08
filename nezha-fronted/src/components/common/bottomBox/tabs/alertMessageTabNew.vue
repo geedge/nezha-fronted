@@ -294,12 +294,15 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
+      console.log(this.obj,123123123123)
       if (this.from === fromRoute.module) {
         this.searchLabel.moduleIds = this.obj.id
       } else if (this.from === fromRoute.endpoint) {
         this.searchLabel.endpointIds = this.obj.id
       } else if (this.from === fromRoute.asset) {
         this.searchLabel.assetIds = this.obj.id
+      } else if (this.from === fromRoute.alertRule) {
+        this.searchLabel.ruleIds = this.obj.id
       }
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
