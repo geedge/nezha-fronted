@@ -39,6 +39,7 @@
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
+          @queryMessage='queryMessage'
           @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
@@ -268,6 +269,12 @@ export default {
         this.queryChartDate()
       })
     },
+    queryMessage (alertMessage) {
+      if (!this.hasButton('alertMessage_view')) {
+        return
+      }
+      this.$refs.dataList.showBottomBox(alertMessage, alertRule)
+    },
     queryChartDate () {
       const $temp = this
       const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
@@ -393,13 +400,11 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if(ind===0){
-        console.log(1);
+      if(ind===0 || ind ===1 || ind ===2){
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
       this.$get(this.url+'?state='+ii, this.searchLabel).then(response => {
-        console.log(this.searchLabel)
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
