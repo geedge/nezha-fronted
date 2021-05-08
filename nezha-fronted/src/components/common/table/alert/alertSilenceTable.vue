@@ -122,12 +122,12 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: 'matchers',
+          label: 'Matchers',
           prop: 'matchers',
           show: true,
           sortable: 'custom'
         }, {
-          label: 'Start time',
+          label: this.$t('alert.silence.startTime'),
           prop: 'startAt',
           show: true,
           width: 300,
@@ -143,12 +143,12 @@ export default {
           show: true,
           width: 120
         }, {
-          label: 'Update time',
+          label: this.$t('alert.silence.upTime'),
           prop: 'utime',
           show: true,
           width: 120
         }, {
-          label: 'State',
+          label: this.$t('alert.silence.state'),
           prop: 'state',
           show: true,
           width: 120

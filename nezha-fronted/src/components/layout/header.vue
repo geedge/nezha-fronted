@@ -23,6 +23,7 @@
         </div>
       </el-dropdown>
       <el-dropdown>
+        <el-dropdown-menu></el-dropdown-menu>
         <div class="header-menu__item" @click="centerDialogVisible = true"><i class="nz-icon nz-icon-guide"></i></div>
         <!-- <el-dialog
           title="Get started in 6 steps"
@@ -141,7 +142,7 @@ export default {
         this.$store.commit('setLinkData', response.data.list)
         // this.linkData = response.data.list
         // console.log(this.linkData);
-      }) 
+      })
     },
     changeLocal (lang) {
       if (lang != localStorage.getItem('nz-language')) {
@@ -258,7 +259,7 @@ export default {
           }
         }
       }
-      
+
     }
   }
   .header-menu--item {

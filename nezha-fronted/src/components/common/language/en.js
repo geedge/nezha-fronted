@@ -1079,6 +1079,7 @@ const en = {
     description: 'Description', // "描述"
     summary: 'Summary', // "概要"
     startAt: 'Start time', // "开始时间"
+    notify: 'Notification', // "通知方式"
     endAt: 'End time', // "结束时间"
     list: {
       // 表头
@@ -1127,7 +1128,7 @@ const en = {
       },
     },
     silence: {
-      name:'Name',
+      name: 'Name',
       silence: 'Alert silence',
       create: 'New alert silence',
       edit: 'Edit alert silence',
@@ -1141,7 +1142,10 @@ const en = {
       module: 'module',
       endpoint: 'endpoint',
       asset: 'asset',
-      timeError: 'The end time must be greater than the start time'
+      timeError: 'The end time must be greater than the start time',
+      state: 'State',
+      startTime: 'Start time',
+      upTime: 'Update Time'
     },
     P1Rule: 'P1: Critical, alert that can cause business paralysis',
     P2Rule: 'P2: Major, alert that requires urgent attention, but does not affect the business yet',
