@@ -61,7 +61,6 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
-        console.log(n)
         if (n) {
           this.getTableData()
         }
@@ -294,7 +293,6 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      console.log(this.obj,123123123123)
       if (this.from === fromRoute.module) {
         this.searchLabel.moduleIds = this.obj.id
       } else if (this.from === fromRoute.endpoint) {
@@ -304,6 +302,8 @@ export default {
       } else if (this.from === fromRoute.alertRule) {
         this.searchLabel.ruleIds = this.obj.id
       }
+      // state 暂时默认1
+      this.searchLabel.state = 1
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

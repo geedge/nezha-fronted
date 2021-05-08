@@ -201,7 +201,6 @@ export default {
           result2.push(item)
         }
       })
-      console.log([...result, ...result2])
       return [...result, ...result2]
     }
   }

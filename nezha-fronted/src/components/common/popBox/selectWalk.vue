@@ -104,7 +104,6 @@ export default {
       this.popBox.show = true
     },
     hideDetail (data, num) {
-      console.log(data, num)
       this.tempWalk.detailShow = false
     },
     showDetail (data, e) {

@@ -292,13 +292,11 @@ export default {
       })
     },
     receiverShowChange (val) {
-      console.log(val)
       if (!val.length) {
         this.$refs.alertRuleForm.validateField('method')
       }
     },
     validateNotify (rule, value, callback) {
-      console.log(value)
       if (this.editAlertRule.receiverShow.length && value.length === 0) {
         callback(new Error(this.$t('validate.required')))
       } else {
