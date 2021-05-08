@@ -14,7 +14,7 @@
     >
       <template v-slot:top-tool-left >
         <div v-for="(item,ind) in tablist">
-          <div class="nz-tab-item-box"   @click="getstate(ind)" :index="ind" :key="item.state">
+          <div class="nz-tab-item-box"   @click="getTableData(ind)" :index="ind" :key="item.state">
             <div class="nz-tab-item" :class="{active:ind==isActive}">{{item.name}}</div>
           </div>
         </div>
@@ -39,8 +39,7 @@
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
-          @reload="getTableData"         
-          @queryMessage="queryMessage"
+          @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
           @toDelete="toDeleteMessage"></alert-message-table>
@@ -136,6 +135,7 @@ export default {
         }
       ],
       isActive:0,
+      ind:0,
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
@@ -247,59 +247,6 @@ export default {
     }
   },
   methods: {
-    queryMessage (alertRule) {
-      if (!this.hasButton('alertMessage_view')) {
-        return
-      }
-      this.$refs.dataList.showBottomBox('alertMessage', alertRule)
-    },
-    getstate(ind){
-      const i =ind+1
-      // console.log(i);
-      this.isActive=ind
-      this.tools.loading = true
-      this.$get(this.url+'?state='+i+'&pageNo=1&pageSize=20').then(response => {
-        this.tools.loading = false
-        if (response.code == 200) {
-          // console.log(response.data);
-          this.nowTime = this.utcTimeToTimezoneStr(response.time)
-          this.tableData = response.data.list
-          const axiosAll = []
-          this.$nextTick(() => {
-            this.tableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels)
-              if (!this.isBuildIn(item.alertRule)) {
-                const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
-              } else {
-                axiosAll.push('')
-              }
-            })
-            axios.all(axiosAll).then(res => {
-              res.forEach((item, index) => {
-                let current = []
-                const response2 = item.data
-                if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                  current = response2.data.result[0].value.map((item, i) => {
-                    if (i == 0) {
-                      return bus.computeTimezone(item)
-                    } else {
-                      return parseFloat(item).toFixed(2)
-                    }
-                  })
-                } else {
-                  current = [null, null]
-                }
-                this.tableData[index].current = current
-              })
-              this.$set(this.tableData, [...this.tableData])
-            })
-          })
-          this.deleteBox.ids = ''
-          this.pageObj.total = response.data.total
-        }
-      })
-    },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
       const labels = JSON.parse(JSON.stringify(obj))
@@ -428,7 +375,14 @@ export default {
         })
       }
     },
-    getTableData () {
+    getTableData (ind) {
+      if(ind ==undefined){
+        ind=this.ind
+      }else{
+        this.ind =ind
+      }
+      const ii =ind+1
+      this.isActive=ind
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.searchTime && this.searchTime.length > 1) {
@@ -439,7 +393,13 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      this.$get(this.url+'?state=1', this.searchLabel).then(response => {
+      if(ind===0){
+        console.log(1);
+        delete this.searchLabel.startAt
+        delete this.searchLabel.endAt
+      }
+      this.$get(this.url+'?state='+ii, this.searchLabel).then(response => {
+        console.log(this.searchLabel)
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
