@@ -106,37 +106,12 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
-          <!-- <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog',scope.row)"><i class="nz-icon nz-icon-view1"></i></button> -->
-           <div class="pointer" @click="detail(scope.row)">
-            <span v-if="!scope.row.current || scope.row.alertRule.buildIn == 1">-</span>
-            <el-popover v-else placement="right" trigger="hover">
-              <div slot="reference">
-                <span :id="'alert-list-detail-'+scope.row.id" class="content-right-option" style="margin:0"><i class="nz-icon nz-icon-view1"></i></span>
-                <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
-              </div>
-              <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-            </el-popover>
-          </div>
-
+          <button class="table-operation-item" @click="showBottomBox('detail',scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <!-- <button class="table-operation-item" @click="detail(scope.row)"><i class="nz-icon nz-icon-view1"></i></button> -->
           <button class="table-operation-item" @click="toDeleteMessage(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
         </div>
       </el-table-column>
     </el-table>
-    <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
-               :title="$t('overall.detail')"
-               :visible.sync="graphShow"
-               width="90%"
-               id="viewGraphDialog"
-               @close="dialogClose"
-               :modal-append-to-body='false'>
-      <div slot="title">
-        {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
-        </div>
-      </div>
-      <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit"></chart>
-    </el-dialog>
   </div>
 </template>
 
@@ -149,14 +124,12 @@ import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
 import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
-import chart from "../../../page/dashboard/overview/chart"
 export default {
   name: 'alertMessageTable',
   components: {
     nzAlertTag,
     alertRuleInfo: alertRuleInfo,
     alertLabel: alertLabel,
-    chart:chart,
   },
   props: {
     nowTime: {
@@ -439,8 +412,8 @@ export default {
       })
     },
     dialogClose() {
-        this.graphShow = false;
-      },
+      this.graphShow = false;
+    },
     getAlertList () {
       if (!this.scrollbarWrap) {
         this.$nextTick(() => {
