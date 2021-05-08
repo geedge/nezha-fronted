@@ -393,8 +393,7 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if(ind===0){
-        console.log(1);
+      if(ind===0 || ind ===1 || ind ===2){
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
