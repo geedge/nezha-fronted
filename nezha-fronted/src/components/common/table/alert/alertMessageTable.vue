@@ -118,6 +118,7 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
+          <button class="table-operation-item" @click="$refs.dataList.showBottomBox('operationLog',scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
           <button class="table-operation-item" @click="toDeleteMessage(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
         </div>
       </el-table-column>
@@ -198,12 +199,7 @@ export default {
           prop: 'remark',
           show: false,
           minWidth: 200
-        }, {
-          label: this.$t('alert.list.state'),
-          prop: 'state',
-          show: true,
-          width: 100
-        }, {
+        },  {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
@@ -213,12 +209,7 @@ export default {
           prop: 'duration',
           show: true,
           width: 150
-        }, {
-          label: this.$t('overall.value'),
-          prop: 'current',
-          show: true,
-          width: 100
-        }
+        },
       ],
       viewAssetState: false,
       tableDataInitNum: 0
@@ -593,7 +584,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style scoped lang=scss>
   .alertLabelInfo{
     border: 1px solid #ebeef5;
     border-bottom: none;
