@@ -679,7 +679,7 @@ const cn = {
         type: 'Agent类型'
       }
     },
-    agent:{
+    agent: {
       name: '名称',
       type: '类型',
       createProm: '创建代理服务',
@@ -963,7 +963,7 @@ const cn = {
       }
     },
     assetType: {
-      name:'名称',
+      name: '名称',
       assetType: '资产类型',
       parent: '父级',
       pname: '父级',
@@ -1060,6 +1060,7 @@ const cn = {
     severity: '等级',
     description: '描述',
     summary: '概要',
+    notify: '通知', // "通知方式"
     startAt: '开始时间',
     endAt: '结束时间',
     list: {
@@ -1107,7 +1108,7 @@ const cn = {
       }
     },
     silence: {
-      name:'名称',
+      name: '名称',
       silence: '告警静默',
       create: '创建告警静默',
       edit: '修改告警静默',
@@ -1121,7 +1122,10 @@ const cn = {
       module: '模块',
       endpoint: 'endpoint',
       asset: '资产',
-      timeError: '结束时间必须大于开始时间'
+      timeError: '结束时间必须大于开始时间',
+      state: '状态',
+      startTime: '开始时间',
+      upTime: '更新时间'
     },
     P1Rule: 'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule: 'P2: 重要，需要紧急关注的警报，但还没有影响业务',

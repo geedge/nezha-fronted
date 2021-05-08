@@ -38,7 +38,10 @@
             <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
         </span>
         <template v-else-if="item.prop === 'alertNum'">
-          <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
+          <span class="link" @click="queryMessage(scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row.alertNum}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>
         <template v-else-if="item.prop === 'receivers'">
@@ -147,6 +150,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+</style>
 <style>
 .severity .P1{
   background: #F5846A;

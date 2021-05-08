@@ -78,17 +78,18 @@
             popper-class="no-style-class"
             size="small"
             value-key="userId"
+            @change="receiverShowChange"
           >
             <el-option
               v-for="item in userData"
-              :key="item.userId"
+              :key="item.id"
               :label="item.username"
-              :value="item.userId">
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <!--notify-->
-        <el-form-item :label="$t('alert.notify')" prop="severity" class="notify-box">
+        <el-form-item :label="$t('alert.notify')" prop="method" class="notify-box" :rules="[{ validator: validateNotify, trigger: 'change'},]">
           <el-select id="alert-box-input-notify" v-model="editAlertRule.method" placeholder=""  popper-class="config-dropdown notify-box" size="small" multiple>
             <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
@@ -267,7 +268,7 @@ export default {
       })
     },
     getUserList () {
-      this.$get('sys/user/list', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('sys/user', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code == 200) {
           this.userData = response.data.list
         }
@@ -289,6 +290,20 @@ export default {
           this.notifyData = response.data.list
         }
       })
+    },
+    receiverShowChange (val) {
+      console.log(val)
+      if (!val.length) {
+        this.$refs.alertRuleForm.validateField('method')
+      }
+    },
+    validateNotify (rule, value, callback) {
+      console.log(value)
+      if (this.editAlertRule.receiverShow.length && value.length === 0) {
+        callback(new Error(this.$t('validate.required')))
+      } else {
+        callback()
+      }
     }
   },
   mounted () {
