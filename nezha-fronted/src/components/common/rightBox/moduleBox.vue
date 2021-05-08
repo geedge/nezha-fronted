@@ -831,13 +831,13 @@ export default {
     min-height: 30px;
     overflow-x: hidden;
     border-radius: 2px;
-    padding: 0;
+    padding: 0 !important;
   }
   /deep/ .ti-tag{
     background-color: #f4f4f5;
     border-color: #e9e9eb;
     color: #909399;
-    padding: 2px 4px;
+    padding: 2px 4px!important;;
   }
 </style>
 <style>

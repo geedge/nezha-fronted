@@ -13,6 +13,13 @@
     <div class="right-box-form-box right-box__container">
       <el-form class="right-box-form right-box-form-left" :model="editAlertSilence" label-position="top"
                label-width="120px" :rules="rules" ref="alertSilenceForm">
+        <el-form-item :label='$t("alert.silence.name")' prop="name" class="range-name">
+          <el-input
+            :placeholder="''"
+            size="small"
+            v-model="editAlertSilence.name">
+          </el-input>
+        </el-form-item>
         <el-form-item :label='$t("alert.silence.time")' prop="time" class="range-time">
           <div>
             <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
@@ -28,7 +35,7 @@
           <div class="datepicker">
             <div class="datepicker-box">
               <span class="datepicker-title">start time</span>
-              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
                               type="datetime"
                               :clearable="false"
@@ -40,7 +47,7 @@
             </div>
             <div class="datepicker-box">
               <span class="datepicker-title">end time</span>
-              <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
+              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
                               type="datetime"
                               :clearable="false"
@@ -54,20 +61,20 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label='$t("alert.silence.matcher")' prop="matcher" class="matcher">
-          <div v-for="(item, index) in editAlertSilence.matcher" :key="index" class="param-box-row">
-            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matcher.' + index + '.name'">
+        <el-form-item :label='$t("alert.silence.matchers")' prop="matchers" class="matchers">
+          <div v-for="(item, index) in editAlertSilence.matchers" :key="index" class="param-box-row">
+            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matchers.' + index + '.name'">
               <el-input placeholder="key" size="mini" v-model="item.name"></el-input>
             </el-form-item>
             <span class="param-box-row-eq">=</span>
-            <el-form-item class="param-box-row-value" :prop="'matcher.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
-              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matcher-value"></el-input>
-              <el-checkbox class="silence-matcher-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
+            <el-form-item class="param-box-row-value" :prop="'matchers.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
+              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matchers-value"></el-input>
+              <el-checkbox class="silence-matchers-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
             </el-form-item>
-            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeMatcher(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
           </div>
-          <div style="text-align: center">
-               <span id="module-add-label" type="button" @click="addMatcher" class="right-box-form-add module-add-label" style="margin-right: 140px">
+          <div style="text-align: center;" class="">
+               <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
           </div>
@@ -155,7 +162,7 @@ export default {
         linkId: '',
         reason: '',
         time: [],
-        matcher: [
+        matchers: [
           { name: '', value: '', regex: 0 }
         ],
         name: ''
@@ -165,6 +172,9 @@ export default {
           // { required: true, message: this.$t('alert.silence.selectTime'), trigger: 'change' },
           { required: true, trigger: 'change' },
           { validator: validate, trigger: 'change' }
+        ],
+        name: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
         ],
       },
       rangeTime: '',
@@ -213,7 +223,7 @@ export default {
           })
           return
         }
-        const params = { ...this.editAlertSilence }
+        const params = { ...this.editAlertSilence, matchers: JSON.stringify(this.editAlertSilence.matchers) }
         if (valid) {
           if (this.editAlertSilence.id) {
             this.$put('/alert/silence', params).then(response => {
@@ -298,15 +308,15 @@ export default {
       this.editAlertSilence.linkId = ''
     },
     // 新增label
-    addMatcher () {
-      this.editAlertSilence.matcher.push({ name: '', value: '', regex: 0 })
+    addmatchers () {
+      this.editAlertSilence.matchers.push({ name: '', value: '', regex: 0 })
     },
     // 移除单个Label
-    removeMatcher (index) {
-      if (this.editAlertSilence.matcher.length === 1) {
-        this.editAlertSilence.matcher = [{ name: '', value: '', regex: 0 }]
+    removematchers (index) {
+      if (this.editAlertSilence.matchers.length === 1) {
+        this.editAlertSilence.matchers = [{ name: '', value: '', regex: 0 }]
       }
-      this.editAlertSilence.matcher.splice(index, 1)
+      this.editAlertSilence.matchers.splice(index, 1)
     }
   }
 }
@@ -322,7 +332,7 @@ export default {
       width: 14.2%
     }
 
-    /deep/ .el-date-editor.el-range-editor.el-input__inner.panel-time-picker-hidden.el-date-editor--datetimerange.el-range-editor--mini {
+    /deep/ .el-date-editor.el-range-editor.el-input__inner.el-date-editor--datetimerange.el-range-editor--mini {
       width: 100%;
     }
 
@@ -348,7 +358,7 @@ export default {
       }
     }
   }
-  .matcher{
+  .matchers{
     /deep/ .el-input__prefix{
       left: 0;
     }
@@ -356,11 +366,11 @@ export default {
       left: 126px;
       padding-top: 10px;
     }
-    .matcher-type{
+    .matchers-type{
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
-      .matcher-type-title{
+      .matchers-type-title{
         width: 125px;
         background:#E7EAED;
         font-family: ArialMT;
@@ -370,7 +380,7 @@ export default {
         font-weight: 400;
         text-align: center;
       }
-      /deep/ .matcher-type-title.el-select--small .el-input__inner{
+      /deep/ .matchers-type-title.el-select--small .el-input__inner{
         background:#E7EAED;
         font-family: ArialMT;
         font-size: 14px;
@@ -380,15 +390,15 @@ export default {
         text-align: center;
         border: none;
       }
-      .matcher-type-content{
+      .matchers-type-content{
         flex: 1;
       }
     }
   }
-  /deep/ .silence-matcher-value{
+  /deep/ .silence-matchers-value{
     width: calc(100% - 100px);
   }
-  .silence-matcher-regex{
+  .silence-matchers-regex{
     margin-left: 10px;
   }
   /deep/ .param-box-row-key{
@@ -396,5 +406,16 @@ export default {
   }
   /deep/ .param-box-row-value{
     width: 50%;
+  }
+  .module-add-label{
+    display: inline-block;
+    width: 300px;
+    height: 18px;
+    background: #FFFCF9;
+    border: 1px solid #FFE0BD;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 18px;
+    margin-right: 80px;
   }
 </style>

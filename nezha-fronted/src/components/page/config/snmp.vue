@@ -1,9 +1,9 @@
 <template>
-    <div style="hight: 100%">
-      <mib-file :show-tab="showTab" v-if="showTab == 'file'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></mib-file>
-      <mib-browser :show-tab="showTab" v-if="showTab == 'browser'" @changeShowTab="changeShowTab" @toFileTab="changeTab(['mib','file'],'file')" @toCredentialTab="changeTab(['mib','credentials'],'credentials')"></mib-browser>
-      <credentials :show-tab="showTab" v-if="showTab == 'credentials'" @changeShowTab="changeShowTab" @toFileTab="changeTab(['mib','file'],'file')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></credentials>
-    </div>
+  <div>
+    <mib-file v-if="showTab === 'file'" :show-tab="showTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toCredentialTab="changeTab(['mib','credentials'],'credentials')"></mib-file>
+    <mib-browser v-if="showTab === 'browser'" :show-tab="showTab" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toFileTab="changeTab(['mib','file'],'file')"></mib-browser>
+    <credentials v-if="showTab === 'credentials'" :show-tab="showTab" @changeShowTab="changeShowTab" @toBrowserTab="changeTab(['mib','browser'],'browser')" @toFileTab="changeTab(['mib','file'],'file')"></credentials>
+  </div>
 </template>
 
 <script>

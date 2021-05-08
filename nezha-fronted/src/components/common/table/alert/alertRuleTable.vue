@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -33,17 +34,15 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="item.prop === 'severity'" class="severity">
-          <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
-          <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
-          <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
+        <span v-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
+            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
         </span>
         <template v-else-if="item.prop === 'alertNum'">
           <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
         </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>
         <template v-else-if="item.prop === 'receivers'">
-          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
+          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
@@ -83,11 +82,13 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'name',
-          show: true
+          show: true,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
@@ -107,7 +108,8 @@ export default {
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
-          show: true
+          show: true,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -120,7 +122,8 @@ export default {
           label: this.$t('alert.message'),
           prop: 'alertNum',
           show: true,
-          width: 90
+          width: 150,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.config.receiver'),
           prop: 'receivers',

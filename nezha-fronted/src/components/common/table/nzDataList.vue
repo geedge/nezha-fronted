@@ -5,7 +5,7 @@
       <!-- 顶部工具栏 -->
       <div class="main-modal"></div>
       <div class="main-container">
-        <div v-show="bottomBox.mainResizeShow" class="top-tools">
+        <div v-show="bottomBox.mainResizeShow" :style="from === fromRoute.project ? 'padding-right: 5px' : ''" class="top-tools">
           <div class="top-tool-left" style="min-width: 300px">
             <slot name="top-tool-left"></slot>
           </div>
@@ -25,10 +25,10 @@
         <div v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
           <slot name="search"></slot>
         </div>
-        <div v-show="bottomBox.mainResizeShow" class="nz-table2">
+        <div v-show="bottomBox.mainResizeShow" :style="from === fromRoute.project ? 'padding-right: 5px' : ''" class="nz-table2">
           <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
         </div>
-        <div v-show="bottomBox.mainResizeShow" class="pagination-bottom">
+        <div v-show="bottomBox.mainResizeShow" :style="from === fromRoute.project ? 'width: calc(100% - 15px);bottom: 18px' : ''" class="pagination-bottom">
           <slot name="pagination"></slot>
         </div>
       </div>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { fromRoute } from '@/components/common/js/constants'
 import bottomBox from '@/components/common/bottomBox/bottomBox'
 import { bottomBoxWindow } from '@/components/common/js/tools'
 
@@ -91,6 +92,7 @@ export default {
   },
   data () {
     return {
+      fromRoute: fromRoute,
       /* 二级页面相关 */
       bottomBox: {
         object: {},

@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -61,12 +62,12 @@
         </template>
         <template v-else-if="item.prop === 'assetNum'">
           <span class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
-             <i class="nz-icon nz-icon-overview-project" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
+             <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
           {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span class="alert-num" @click="showBottomBox('moduleAlertMessage', scope.row)">
+          <span class="alert-num" @click="showBottomBox('alertMessageTab', scope.row)">
             <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
             {{scope.row[item.prop]}}
           </span>
@@ -74,7 +75,7 @@
 
         <template v-else-if="item.prop === 'cabinetNum'">
           <span class="alert-num" @click="showBottomBox('cabinet', scope.row)">
-            <i class="nz-icon nz-icon-cabinet" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
+            <i class="nz-icon nz-icon-cabinet monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
@@ -116,11 +117,13 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('asset.location'),
           prop: 'location',
@@ -128,11 +131,13 @@ export default {
         }, {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.dc.assets'),
           prop: 'assetNum',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.dc.alert'),
           prop: 'alertNum',
@@ -156,7 +161,8 @@ export default {
         }, {
           label: this.$t('config.dc.state'),
           prop: 'state',
-          show: true
+          show: true,
+          sortable:'custom'
         }
       ]
     }

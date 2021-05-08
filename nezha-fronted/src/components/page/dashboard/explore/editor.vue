@@ -776,7 +776,7 @@ export default {
           $temp.quill.setSelection($temp.cursorIndex+text.length);
         },200)//此值必须大于userChangeTimer的值 */
     })
-    this.quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+    this.quill.clipboard.addmatchers(Node.ELEMENT_NODE, (node, delta) => {
       const ops = []
       delta.ops.forEach(op => {
         if (op.insert && typeof op.insert === 'string') {

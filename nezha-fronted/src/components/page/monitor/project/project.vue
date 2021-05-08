@@ -549,13 +549,6 @@ export default {
         }
       }
     },
-    getUserData () {
-      this.$get('sys/user/list').then(response => {
-        if (response.code === 200) {
-          this.userData = response.data.list
-        }
-      })
-    },
     // 刷新拓扑图
     visNetworkReload () {
       this.$refs.facade.$refs.visNetwork.reload()
@@ -617,7 +610,6 @@ export default {
     if (pageSize) {
       this.endpointPageObj.pageSize = pageSize
     }
-    this.getUserData()
   },
   mounted () {
     // 初始化表头

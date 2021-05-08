@@ -2,6 +2,7 @@ import { getChart } from './common'
 import MessageBox from 'element-ui/packages/message-box/src/main'
 import i18n from '../i18n'
 import bus from '@/libs/bus'
+import moment from 'moment-timezone'
 /* 弹窗点击外部后关闭 */
 const exceptClassName = ['prevent-clickoutside', 'config-dropdown', 'nz-pop', 'el-picker', 'chart-box-dropdown', 'metric-dropdown', 'el-cascader__dropdown', 'no-style-class', 'el-message-box', 'nz-dashboard-dropdown', 'el-autocomplete-suggestion', 'nz-temp-box', 'el-time-panel'] // clickoutside排除的class(白名单)  no-style-class：没有任何样式的class
 export const clickoutside = {
@@ -281,7 +282,13 @@ export const bottomBoxWindow = {
   }
 }
 export function stringTimeParseToUnix (stringTime) {
-  const time = new Date(stringTime).getTime()
+  let time = new Date(stringTime).getTime()
+  let offset = localStorage.getItem('nz-sys-timezone')
+  offset = moment.tz(offset).format('Z')
+  offset = Number.parseInt(offset)
+  const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+  console.log(offset,localOffset, time)
+  time = time + localOffset - offset * 60 * 60 * 1000
   return time / 1000
 }
 export function getTime (size, unit) { // 计算时间

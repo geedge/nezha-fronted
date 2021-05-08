@@ -1,38 +1,45 @@
 <template>
   <div class="promqlInput">
     <div class="query-row">
-      <div class="query-input">
-        <!--explore页面的样式-->
-        <template v-if="styleType == 1">
-          <div v-if="plugins.indexOf('metric-selector') > -1">
-            <el-dropdown class="metric-selector">
-              <el-dropdown-menu style="display: none"></el-dropdown-menu>
-              <button class="top-tool-btn" type="button" @click="toggleDropdown">Metric
-                &nbsp;<i class="nz-icon nz-icon-arrow-down"></i></button>
-              <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-model="cascaderValue" v-clickoutside="closeDropdown"
-                                 slot="dropdown" ref="metricSelector" :props="{emitPath:false,}" :loading="loading"
-                                 :options="metricOptions" @change="metricChange">
+      <!--explore页面的样式-->
+      <template v-if="styleType == 1">
+        <div v-if="plugins.indexOf('metric-selector') > -1">
+          <el-dropdown class="metric-selector">
+            <el-dropdown-menu style="display: none"></el-dropdown-menu>
+            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">Metric
+              &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
+            <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
+                               v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
+                               :props="{emitPath:false,}" @change="metricChange">
 
-                <template slot-scope="{ node, data }">
-                  <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
-                    <i class="nz-icon nz-icon-template2"></i>
-                    {{data.label}}
-                  </div>
-                </template>
+              <template slot-scope="{ node, data }">
+                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
+                  <i class="nz-icon nz-icon-template2"></i>
+                  {{data.label}}
+                </div>
+              </template>
 
-              </el-cascader-panel>
-            </el-dropdown>
-          </div>
-          <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-            <el-input @keyup.enter.native="expressionChange" v-model="expressionList[index]" :id="inputId"
-                      @input="metricKeyDown" type="textarea"
-                      :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"></el-input>
-            <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
-            <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
-          </div>
-        </template>
-        <!--right-box里的样式-->
-        <template v-if="styleType == 2">
+            </el-cascader-panel>
+          </el-dropdown>
+        </div>
+        <div v-if="plugins.indexOf('metric-input') > -1" class="input-box" @click="dropDownVisible=false">
+          <el-input :id="inputId" v-model="expressionList[index]" :autosize="{ minRows: 1, maxRows: 6}"
+                    class="not-fixed-height no-resize" type="textarea"
+                    @input="metricKeyDown" @keyup.enter.native="expressionChange"></el-input>
+          <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
+          <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
+        </div>
+        <div class="top-tool-btn-group">
+          <button v-if="plugins.indexOf('add') > -1" class="top-tool-btn"
+               @click="addExpression"><i class="nz-icon nz-icon-plus"></i></button>
+          <button v-if="plugins.indexOf('copy') > -1" class="top-tool-btn"
+               @click="copyExpression"><i class="nz-icon nz-icon-override"></i></button>
+          <button v-if="plugins.indexOf('remove') > -1" class="top-tool-btn"
+               @click="removeExpression"><i class="nz-icon nz-icon-minus"></i></button>
+        </div>
+      </template>
+      <!--right-box里的样式-->
+      <template v-if="styleType == 2">
           <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1"
                   style="width: 100%;">
             <el-col
@@ -69,17 +76,6 @@
             </el-col>
           </el-row>
         </template>
-      </div>
-    </div>
-    <div v-if="styleType == 1" style="margin-left: 10px">
-      <div class="query-options nz-btn-group nz-btn-group-size-normal nz-btn-group-light">
-        <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="addExpression"
-             v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i></div>
-        <div @click="copyExpression" class="option nz-btn nz-btn-size-normal nz-btn-style-light"
-             v-if="plugins.indexOf('copy') > -1"><i class="nz-icon nz-icon-override"></i></div>
-        <div class="option nz-btn nz-btn-size-normal nz-btn-style-light" @click="removeExpression"
-             v-if="plugins.indexOf('remove') > -1"><i class="nz-icon nz-icon-minus"></i></div>
-      </div>
     </div>
     <div v-if="styleType == 2&&showRemove">
       <div class="option" @click="addExpression" v-if="plugins.indexOf('add') > -1"><i class="nz-icon nz-icon-plus"></i>
@@ -249,10 +245,8 @@ export default {
           const metricMap = new Map()
           metrics.forEach((item) => {
             let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
+            if (/^[a-zA-Z_:][a-zA-Z0-9_:]*/.test(item)) {
+              key = item.split(/[_:]/, 1)[0]
             } else {
               key = item
             }
@@ -548,10 +542,11 @@ export default {
     position: relative;
     width: 100%;
     display: flex;
-    margin-bottom: 18px;
   }
 
   .promqlInput .query-row {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
   }
 
@@ -563,10 +558,6 @@ export default {
 
   .input-box .error {
     color: #F56C6C;
-  }
-  .query-row .query-input {
-    display: flex;
-    justify-content: flex-start;
   }
 
   .promqlInput .query-options {
@@ -589,14 +580,9 @@ export default {
     background-color:   rgb(247, 248, 250);
   }
 
-  .query-input .metric-btn {
-    width: 100px;
+  .query-row .input-box {
+    flex: auto;
     margin-right: 10px;
-  }
-
-  .query-input .input-box {
-    width: 100%;
-    height: 100%;
   }
 
   .metric-btn {

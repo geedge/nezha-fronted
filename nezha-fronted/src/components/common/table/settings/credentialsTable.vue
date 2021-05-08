@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -96,15 +97,18 @@ export default {
         label: 'ID',
         prop: 'id',
         show: true,
-        width: 80
+        width: 80,
+        sortable:'custom'
       }, {
         label: this.$t('overall.name'),
         prop: 'name',
-        show: true
+        show: true,
+        sortable:'custom'
       }, {
         label: this.$t('config.mib.credential.type'),
         prop: 'type',
-        show: true
+        show: true,
+        sortable:'custom'
       }, {
         label: this.$t('config.mib.credential.port'),
         prop: 'port',

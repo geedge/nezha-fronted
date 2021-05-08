@@ -25,6 +25,7 @@
       :prop="item.prop"
       :resizable="true"
       :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
       :width="`${item.width}`"
       class="data-column"
     >
@@ -84,11 +85,13 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
-          label: this.$t('config.dc.dc'),
+          label: this.$t('config.agent.name'),
           prop: 'dc',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: 'Host',
           prop: 'host',
@@ -100,11 +103,13 @@ export default {
         }, {
           label: this.$t('config.agent.type'),
           prop: 'type',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('asset.state'),
           prop: 'status',
-          show: true
+          show: true,
+          sortable:'custom'
         }, {
           label: this.$t('config.agent.checkTime'),
           prop: 'checkTime',

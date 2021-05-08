@@ -2,7 +2,7 @@
   <div class="right-box right-box-credential" v-clickoutside="{obj:editCredential,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="right-box__header">{{editCredential.id ? ($t("config.mib.credential.edit") + "  ID：" + editCredential.id) : $t("config.mib.credential.create")}}</div>
+        <div class="header__title">{{editCredential.id ? ($t("config.mib.credential.edit") + "  ID：" + editCredential.id) : $t("config.mib.credential.create")}}</div>
         <div class="header__operation">
           <span v-cancel="{obj: editCredential, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
         </div>
@@ -17,14 +17,14 @@
             <el-form-item :label='$t("config.mib.credential.remark")' prop="remark">
               <el-input placeholder="" v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.mib.credential.type")' prop="type" class="half-form-item">
-              <el-select v-model="editCredential.type" class="right-box-row-with-btn" placeholder="" id="credential-box-input-type" popper-class="chart-box-dropdown-small" @change="typeChange">
+            <el-form-item :label='$t("config.mib.credential.type")' prop="type">
+              <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" @change="typeChange">
                 <el-option v-for="item in $CONSTANTS.snmpProtocolTypes" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("config.mib.credential.port")' prop="port" class="half-form-item" >
+            <el-form-item :label='$t("config.mib.credential.port")' prop="port" >
               <el-input placeholder=""   v-model.number="editCredential.port" size="small" id="credential-box-input-port"></el-input>
             </el-form-item>
             <el-form-item label='Read community' prop="readCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
@@ -33,38 +33,38 @@
             <el-form-item label='Write community' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
               <el-input placeholder=""   v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
-            <el-form-item label="Username" prop="username" v-if="editCredential.type === 3" class="half-form-item">
+            <el-form-item label="Username" prop="username" v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
             </el-form-item>
-            <el-form-item label="Content name" prop="contextname"  v-if="editCredential.type === 3" class="half-form-item">
+            <el-form-item label="Content name" prop="contextname"  v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.contextname" size="small" id="credential-box-input-contextname"></el-input>
             </el-form-item>
 
             <div class="right-box-sub-title" v-if="editCredential.type === 3">{{$t('config.mib.credential.auth')}}</div>
             <div style="margin-bottom: 20px;width: 100%"></div>
 
-            <el-form-item :label='$t("config.mib.credential.method")' prop="authProtocol"  v-if="editCredential.type === 3" class="half-form-item">
-              <el-select v-model="editCredential.config.authProtocol" class="right-box-row-with-btn" placeholder="" id="credential-box-input-type" popper-class="chart-box-dropdown-small">
+            <el-form-item :label='$t("config.mib.credential.method")' prop="authProtocol"  v-if="editCredential.type === 3">
+              <el-select v-model="editCredential.config.authProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside">
                 <el-option v-for="item in $CONSTANTS.snmpAuthMethod" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("config.mib.credential.pin")' prop="authPin" v-if="editCredential.type === 3" class="half-form-item">
+            <el-form-item :label='$t("config.mib.credential.pin")' prop="authPin" v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.authPin" size="small" id="credential-box-input-authPin" type="password" show-password></el-input>
             </el-form-item>
 
             <div class="right-box-sub-title" v-if="editCredential.type === 3">{{$t('config.mib.credential.encryption')}}</div>
             <div style="margin-bottom: 20px;width: 100%"></div>
 
-            <el-form-item :label='$t("config.mib.credential.method")' prop="privProtocol"  v-if="editCredential.type === 3" class="half-form-item">
-              <el-select v-model="editCredential.config.privProtocol" class="right-box-row-with-btn" placeholder="" id="credential-box-input-type" popper-class="chart-box-dropdown-small" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''">
+            <el-form-item :label='$t("config.mib.credential.method")' prop="privProtocol"  v-if="editCredential.type === 3">
+              <el-select v-model="editCredential.config.privProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''">
                 <el-option v-for="item in $CONSTANTS.snmpEncryptionMethod" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("config.mib.credential.pin")' prop="privPin"  v-if="editCredential.type === 3" class="half-form-item">
+            <el-form-item :label='$t("config.mib.credential.pin")' prop="privPin"  v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.privPin" size="small" id="credential-box-input-privPin" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''" type="password" show-password></el-input>
             </el-form-item>
           </el-form>

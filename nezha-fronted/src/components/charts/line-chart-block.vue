@@ -199,6 +199,7 @@ import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
 import { getMetricTypeValue } from '../common/js/tools'
+import moment from 'moment-timezone'
 
 export default {
   name: 'lineChartBlock',
@@ -742,7 +743,7 @@ export default {
               const tip = legend[item.seriesIndex]
               const color = self.bgColorList[item.seriesIndex]
               if (i === 0 && tip.alias.indexOf('Previous ') === -1) {
-                const value = item.data[0]
+                const value = bus.computeTimezone(item.data[0])
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px">'
                 str += bus.timeFormate(tData)
@@ -752,7 +753,7 @@ export default {
                 if (i !== 0) {
                   str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
                 }
-                const value = item.data[0] - self.minusTime
+                const value = bus.computeTimezone(item.data[0])
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
@@ -834,7 +835,11 @@ export default {
             show: true,
             fontSize: 10,
             formatter: function (value) {
-              const tData = new Date(value)
+              let offset = localStorage.getItem('nz-sys-timezone')
+              offset = moment.tz(offset).format('Z')
+              offset = Number.parseInt(offset)
+              const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+              const tData = new Date(value - localOffset + offset * 60 * 60 * 1000)
               let hour = tData.getHours()
               hour = hour > 9 ? hour : '0' + hour // 加0补充为两位数字
               let minute = tData.getMinutes()
@@ -1011,7 +1016,7 @@ export default {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
                       if (i === 0) {
-                        const value = item.data[0]
+                        const value = bus.computeTimezone(item.data[0])
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px">'
                         str += bus.timeFormate(tData)
@@ -1179,7 +1184,7 @@ export default {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
                       if (i === 0 && tip.alias.indexOf('Previous ') === -1) {
-                        const value = item.data[0]
+                        const value = bus.computeTimezone(item.data[0])
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px">'
                         str += bus.timeFormate(tData)
@@ -1189,7 +1194,7 @@ export default {
                         if (i !== 0) {
                           str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
                         }
-                        const value = item.data[0] - self.minusTime
+                        const value = bus.computeTimezone(item.data[0])
                         const tData = new Date(value)
                         str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                         str += bus.timeFormate(tData)

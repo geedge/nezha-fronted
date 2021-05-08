@@ -56,7 +56,7 @@
     </nz-data-list>
     <!--侧滑-->
     <transition name="right-box">
-      <asset-meta-box v-if="rightBox.metaShow" ref="assetMetaBox" v-bind:asset-label="object" @close="closeRightBox"></asset-meta-box>
+      <asset-meta-box v-if="rightBox.metaShow" ref="assetMetaBox" :obj="object" @close="closeRightBox"></asset-meta-box>
     </transition>
     <transition name="right-box">
       <asset-meta-group v-if="rightBox.groupShow" :metaGroup="metaGroup" @close="closeRightBox"
@@ -128,9 +128,9 @@ export default {
         name: '',
         metaKey: '',
         groupId: '',
-        search: 1,
-        display: 1,
-        type: 'text',
+        search: '0',
+        display: '0',
+        type: 'TEXT',
         param: {},
         remark: ''
       },
@@ -227,14 +227,9 @@ export default {
     },
     add () {
       this.object = JSON.parse(JSON.stringify(this.blankObject))
-      console.log(this.object);
       this.rightBox.metaShow = true
     },
     edit (row) {
-      /* this.$get('asset/field/meta/' + row.id).then(res => {
-        this.object = { ...res.data, param: JSON.parse(res.data.param) }
-        this.rightBox.metaShow = true
-      }) */
       this.object = JSON.parse(JSON.stringify(row))
       this.rightBox.metaShow = true
     },

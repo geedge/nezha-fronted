@@ -2,7 +2,7 @@
   <div class="right-box right-box-dc" v-clickoutside="{obj:editDc,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="right-box__header">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
+        <div class="header__title">{{editDc.id ? ($t("config.dc.editDc") + "  ID：" + editDc.id) : $t("config.dc.createDc")}}</div>
         <div class="header__operation">
           <span v-cancel="{obj: editDc, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
         </div>

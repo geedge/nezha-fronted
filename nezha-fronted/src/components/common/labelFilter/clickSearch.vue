@@ -212,7 +212,7 @@ export default {
   justify-content: space-between;
   padding: 15px 0 15px 17px;
   box-sizing: border-box;
-  border: 1px solid #E7EAED;
+  border: 1px solid $--right-box-border-color;
   background-color: #FFFFFF;
   overflow-x: hidden;
   overflow-y: auto;

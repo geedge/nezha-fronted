@@ -197,7 +197,7 @@
 
           <!--   varType   -->
           <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'temp'">
-            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="form-item--end-with-btn" clearable placeholder="" popper-class="chart-box-dropdown-small prevent-clickoutside" size="small" value-key="chartType">
+            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -300,7 +300,7 @@
                 @change="expressionChange"
                 @removeExpression="removeExpression"
               ></promql-input>
-              <el-row>
+              <el-row style="margin-top: 18px">
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover placement="top" trigger="hover" width="211">

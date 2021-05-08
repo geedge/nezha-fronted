@@ -655,19 +655,6 @@ export default {
       }
       this.getTableData()
     },
-    // 数据排序
-    tableDataSort (item) {
-      let orderBy = ''
-      if (item.order === 'ascending') {
-        orderBy = item.prop
-      }
-      if (item.order === 'descending') {
-        orderBy = '-' + item.prop
-      }
-      this.pageObj.orderBy = orderBy
-      this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getTableData()
-    }
   }
 }
 </script>

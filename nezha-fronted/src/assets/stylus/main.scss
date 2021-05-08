@@ -1883,13 +1883,6 @@ li{
 .nz-table .el-table__fixed-body-wrapper {
   height: calc(100% - 33px) !important;
 }
-.ant-table-scroll {
-  max-height: unset !important;
-  height: 100%;
-}
-.ant-table-scroll .el-table {
-  //height: 100% !important;
-}
 /*model侧滑中下拉框*/
 .autocomplete-dropdown {
   display: flex;
@@ -2073,27 +2066,6 @@ li{
   line-height: 20px;
 }
 
-.right-bottom-zoom{
-  position: absolute;
-  top: calc(100% - 100px);
-  left: calc(100% - 45px);
-  height: 90px;
-  width: 35px;
-  border: 1px solid #E7EAED;
-  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
-  .zoom-option{
-    width: 100%;
-    height: 50%;
-    opacity: 0.42;
-    background: #FFF;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
-  .zoom-option:hover{
-    cursor: pointer;
-  }
-}
 .nz-icon-arrow-down{
   font-size: 14px;
 }

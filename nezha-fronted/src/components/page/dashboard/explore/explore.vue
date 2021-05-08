@@ -1,7 +1,7 @@
 <template>
   <div class="explore list-page">
     <div class="main-list">
-      <div class="main-container">
+      <div class="main-container" style="overflow: auto;">
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
           <div class="top-tool-left"></div>
@@ -16,36 +16,34 @@
             </button>
           </div>
         </div>
-        <div class="top-tools" style="width: 100%;box-sizing: border-box; padding-left: 10px;">
-          <div id="explore-promql-box" class="expression-room">
-            <!--坑，这个index居然是从1开始-->
-            <promql-input
-              v-for="index of promqlKeys.length"
-              :id="promqlKeys[index-1]"
-              :key="promqlKeys[index-1]"
-              :ref="'promql-'+(index-1)"
-              :expression-list="expressions"
-              :index="index-1"
-              :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
-              :styleType="1"
-              @addExpression="addExpression"
-              @change="expressionChange"
-              @copyExpression="copyExpression"
-              @removeExpression="removeExpression"
-            ></promql-input>
-          </div>
+        <div id="explore-promql-box" class="top-tools" style="padding-top: 0; flex-wrap: wrap">
+          <!--坑，这个index居然是从1开始-->
+          <promql-input
+            v-for="index of promqlKeys.length"
+            :id="promqlKeys[index-1]"
+            :key="promqlKeys[index-1]"
+            :ref="'promql-'+(index-1)"
+            :expression-list="expressions"
+            :index="index-1"
+            :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
+            :styleType="1"
+            @addExpression="addExpression"
+            @change="expressionChange"
+            @copyExpression="copyExpression"
+            @removeExpression="removeExpression"
+          ></promql-input>
         </div>
-        <div ref="scrollWrap" style="height: 100%; overflow: auto;">
-          <div class="chart-view right-margin" v-show="!showIntroduce"
+        <div ref="scrollWrap" style="height: auto; padding: 0 20px 4px;">
+          <div v-show="!showIntroduce" class="chart-view"
                :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
             <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnit"></chart>
             </div>
           </div>
-          <div class="table-view right-margin" v-show="!showIntroduce"
+          <div v-show="!showIntroduce" class="table-view"
                :class="{'shrink-view':!tableVisible || !defaultTableVisible}" style="position: relative">
-            <div class="view-title" @click="changeTableVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
+            <div class="view-title" style="position:absolute;z-index: 1000;top:4px;" @click="changeTableVisible"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
               <!-- 自定义table列 -->
               <transition name="el-zoom-in-top">
@@ -63,8 +61,7 @@
                         border
                         ref="exploreTable"
                         tooltip-effect="light"
-                        v-loading="tools.loading"
-                        style="width: 100%;">
+                        v-loading="tools.loading">
                 <el-table-column
                   :resizable="false"
                   v-for="(item, index) in tools.customTableTitle"
@@ -87,7 +84,7 @@
                           :append-to-body="false"></pagination>
             </div>
           </div>
-          <div class="introduce-view right-margin" v-show="showIntroduce">
+          <div v-show="showIntroduce" class="introduce-view">
             <div class="info-room">
               <div class="col-md-9 doc-content">
                 <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank" rel="noopener norefferrer"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
@@ -725,7 +722,6 @@ export default {
     padding: 24px;
     background-color: #e9edf2;
     border-top: 3px solid #3274d9;
-    margin-bottom: 16px;
     -webkit-box-shadow: -1px -1px 0 0 hsla(0, 0%, 100%, .1), 1px 1px 0 0 rgba(0, 0, 0, .1);
     box-shadow: -1px -1px 0 0 hsla(0, 0%, 100%, .1), 1px 1px 0 0 rgba(0, 0, 0, .1);
     -webkit-box-flex: 1;
@@ -918,5 +914,8 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .explore .promqlInput:not(:first-of-type) {
+    margin-top: 10px;
   }
 </style>

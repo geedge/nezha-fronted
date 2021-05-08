@@ -23,9 +23,10 @@
           v-loading="slotProps.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="projectTableHeight"
           :table-data="tableData"
           :tableId="tableId"
+          style="padding-right: 0"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
@@ -35,7 +36,8 @@
       </template>
       <template v-slot:pagination>
         <div class="project-page">
-          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" style="width: calc(100% - 15px);padding-bottom: 6px;" @pageNo='pageNo'
+                      @pageSize='pageSize'></Pagination>
         </div>
       </template>
     </nz-data-list>
@@ -68,6 +70,7 @@ export default {
         name: '',
         remark: ''
       },
+      projectTableHeight: 'calc(100% - 58px)',
       tableId: 'projectTable',
       queryPermission: 'account_view',
       searchMsg: { // 给搜索框子组件传递的信息
@@ -140,8 +143,8 @@ export default {
 <style lang="scss">
   .project-list{
     .project-page{
-      margin: 0 10px 0 20px;
-      border: 1px solid #eeeeee;
+      margin: 0 0 0 20px;
+      border: 1px solid $--right-box-border-color;
       border-top: none;
       /deep/ .pagination{
         padding-top: 0;

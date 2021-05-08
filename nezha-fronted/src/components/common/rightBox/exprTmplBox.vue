@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editExprTemp,func:clickOutside}" class="right-box right-box-alert-config">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="right-box__header">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
+      <div class="header__title">{{editExprTemp.id ? $t("config.exprTemp.edit") + " ID：" + editExprTemp.id :
       $t("config.exprTemp.create")}}
     </div>
       <div class="header__operation">

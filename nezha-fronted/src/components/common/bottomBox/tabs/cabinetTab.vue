@@ -56,7 +56,7 @@ export default {
   },
   data () {
     return {
-      url: '/cabinet',
+      url: 'dc/cabinet',
       tableId: 'cabinetTable',
       blankObject: {
         id: '',
@@ -91,6 +91,9 @@ export default {
         ]
       }
     }
+  },
+  created() {
+    console.log(this.$route);
   },
   methods: {
     // 切换tab

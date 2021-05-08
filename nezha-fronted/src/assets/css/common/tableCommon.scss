@@ -1,7 +1,8 @@
 /*列表table通用样式*/
 .list-page {
-  background-color: #f6f6f6;
   height: 100%;
+  width: 100%;
+  background-color: #f6f6f6;
 
   .main-list {
     background-color: white;
@@ -9,6 +10,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
     z-index: 0;
   }
   .main-container {
@@ -53,7 +55,10 @@
     }
     .top-tool-btn-group {
       display: flex;
-
+      .top-tool-btn:not(:last-of-type):not(:first-of-type) {
+        border-left: none;
+        border-radius: 0;
+      }
       .top-tool-btn:first-of-type:not(:last-of-type) {
         border-radius: $--button-border-radius 0 0 $--button-border-radius;
       }
@@ -190,7 +195,7 @@
     .el-table {
       position: absolute;
       width: calc(100% - 40px);
-      border: 1px solid #E7EAED;
+      border: 1px solid $--right-box-border-color;
       border-bottom: none;
 
       .caret-wrapper {
@@ -209,10 +214,10 @@
 
       td {
         padding: 9px 0;
-        border-bottom: 1px solid #E7EAED;
+        border-bottom: 1px solid $--right-box-border-color;
       }
       th {
-        border-color: #E7EAED;
+        border-color: $--right-box-border-color;
       }
       .el-table__header th:first-of-type {
         border-left: none;
@@ -221,7 +226,7 @@
         position: fixed;
         right: 31px;
         height: 49px;
-        border-bottom: 1px solid #E7EAED;
+        border-bottom: 1px solid $--right-box-border-color;
         background-color: white;
       }
       thead {
@@ -284,7 +289,7 @@
   }
   /* start--覆盖el-table边框、gutter等样式 */
   .el-table__body-wrapper, .el-table__fixed-body-wrapper {
-    box-shadow: 1px 0 #E7EAED;
+    box-shadow: 1px 0 $--right-box-border-color;
 
     .cell {
       color: #333;
@@ -298,20 +303,20 @@
   }
   /* 最后一列用box-shadow模拟边框 */
   .el-table:not(.no-operation).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
-    box-shadow: 1px 0 #E7EAED;
+    box-shadow: 1px 0 $--right-box-border-color;
   }
   .el-table:not(.no-operation).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
     border-right: none !important;
-    box-shadow: 1px 0 #E7EAED;
+    box-shadow: 1px 0 $--right-box-border-color;
   }
   .el-table__fixed-body-wrapper {
     td:not(.is-hidden) {
-      border-left: 1px solid #E7EAED;
+      border-left: 1px solid $--right-box-border-color;
     }
   }
   .el-table__fixed-header-wrapper {
     th:not(.is-hidden) {
-      border-left: 1px solid #E7EAED;
+      border-left: 1px solid $--right-box-border-color;
     }
     th:last-of-type {
       border-right: none !important;

@@ -31,7 +31,7 @@
         :prop="item.prop"
         :resizable="true"
         :sort-orders="['ascending', 'descending']"
-        :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
+        :sortable="item.sortable"
         :width="`${item.width}`"
       >
         <template slot-scope="scope" :column="item">
@@ -57,10 +57,8 @@
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
-          <span v-else-if="item.prop === 'severity'" class="severity">
-            <span v-if="scope.row[item.prop] === 'P1'" class="P1">P1</span>
-            <span v-if="scope.row[item.prop] === 'P2'" class="P2">P2</span>
-            <span v-if="scope.row[item.prop] === 'P3'" class="P3">P3</span>
+          <span v-else-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
+            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
           </span>
           <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <template v-else-if="item.prop === 'duration'">
@@ -167,23 +165,28 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable:'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true,
-          width: 180
+          width: 180,
+          sortable:false,
+          sortable:'custom'
         }, {
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           NotSet: true,
-          minWidth: 250
+          minWidth: 250,
+          sortable:'custom'
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
-          width: 110
+          width: 110,
+          sortable:'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -203,7 +206,8 @@ export default {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
-          width: 150
+          width: 150,
+          sortable:'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
