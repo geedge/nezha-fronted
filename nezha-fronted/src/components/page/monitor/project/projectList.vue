@@ -75,20 +75,20 @@ export default {
       queryPermission: 'account_view',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 10,
-          name: 'Project name',
-          type: 'input',
-          label: 'name',
-          disabled: false
-        },
-        {
-          id: 10,
-          name: 'Project id',
-          type: 'input',
-          label: 'ids',
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            name: 'Id',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            name: 'Name',
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }
+        ]
       },
       roles: []
     }

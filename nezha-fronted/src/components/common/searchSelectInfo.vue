@@ -51,7 +51,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('asset.suspended')
     }
   ],
-  endpointState: [ // 资产入库/出库状态
+  endpointState: [
     {
       value: 1,
       label: 'UP'
@@ -63,6 +63,15 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: 'SUSPENDED'
     }
   ],
+  promState: [
+    {
+      value: 1,
+      label: 'UP'
+    }, {
+      value: 0,
+      label: 'DOWN'
+    }
+  ],
   pingStatus: [
     {
       value: '0',
@@ -71,6 +80,15 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     {
       value: '1',
       label: i18n.t('asset.pingActive')
+    }
+  ],
+  credentialType: [
+    {
+      value: 2,
+      label: 'V2'
+    }, {
+      value: 3,
+      label: 'V3'
     }
   ],
   operation: [
@@ -110,7 +128,6 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       value: 'logout',
       label: i18n.t('config.operationlog.operations.logout')
     }
-
   ],
   alertMessageState: [
     {
@@ -140,6 +157,62 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
     {
       value: 'fail',
       label: i18n.t('overall.result.failed')
+    }
+  ],
+  dcState: [
+    {
+      value: 'enable',
+      label: 'Enable'
+    },
+    {
+      value: 'disable',
+      label: 'Disable'
+    }
+  ],
+  varType: [
+    { value: '1', label: i18n.t('asset.asset') },
+    { value: '2', label: i18n.t('asset.endpoint') }
+  ],
+  chartType: [
+    {
+      value: 'line',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.line.label')
+    },
+    {
+      value: 'stackArea',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+    },
+    {
+      value: 'bar',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.bar.label')
+    },
+    {
+      value: 'singleStat',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+    },
+    {
+      value: 'pie',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+    },
+    {
+      value: 'table',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+    },
+    {
+      value: 'alertList',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.alertList.label')
+    },
+    {
+      value: 'text',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.text.label')
+    },
+    {
+      value: 'url',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.url.label')
+    },
+    {
+      value: 'group',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
     }
   ],
   terminalStatus: [

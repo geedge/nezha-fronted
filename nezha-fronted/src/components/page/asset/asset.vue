@@ -143,42 +143,30 @@ export default {
       },
       tableId: 'assetTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [{
-          id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
-          id: 20,
+          name: 'Name',
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }, {
           name: 'SN',
           type: 'input',
           label: 'sn',
           disabled: false
         }, {
-          id: 21,
-          name: 'Host',
+          name: 'IP',
           type: 'input',
-          label: 'host',
+          label: 'manageIp',
           disabled: false
         }, {
-          id: 22,
           name: this.$t('asset.state'),
-          type: 'select',
-          label: 'assetState',
-          disabled: false
-        }, {
-          id: 23,
-          name: 'pingStatus',
-          type: 'select',
-          label: 'pingStatus',
-          disabled: false
-        }, {
-          id: 23,
-          name: this.$t('asset.cabinet'),
-          type: 'input',
-          label: 'cabinetName',
+          type: 'assetState',
+          label: 'stateIds',
           disabled: false
         }]
       },

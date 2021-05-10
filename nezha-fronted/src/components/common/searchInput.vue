@@ -49,7 +49,7 @@
                                 <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectString'">
+                            <div v-if="val.type === 'selectString'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
@@ -89,7 +89,37 @@
                                 <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
                               </ul>
                             </div>
-                            <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'project'">
+                            <div v-if="val.type === 'assetState'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                              <el-scrollbar v-if="assetStateSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                              </ul>
+                            </div>
+                            <div v-if="val.type === 'brand'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                              <el-scrollbar v-if="brandSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                              </ul>
+                            </div>
+                            <div v-if="val.type === 'group'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
+                              <el-scrollbar v-if="groupSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                              </ul>
+                            </div>
+                            <div v-if="val.type === 'project'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                               <el-scrollbar v-if="projectSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
                                     <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
@@ -97,6 +127,16 @@
                               </el-scrollbar>
                               <ul v-else>
                                 <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              </ul>
+                            </div>
+                            <div v-if="val.type === 'severity'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
+                              <el-scrollbar v-if="severitySelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                                <ul>
+                                    <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                </ul>
+                              </el-scrollbar>
+                              <ul v-else>
+                                <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
                               </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'module'">
@@ -222,7 +262,11 @@ export default {
       actionSelect: [],
       dcSelect: [], // 数据中心
       assetSelect: [], // 资产
+      assetStateSelect: [],
+      brandSelect: [],
+      groupSelect: [],
       projectSelect: [],
+      severitySelect: [],
       moduleSelect: [],
       modelSelect: [],
       gnameList: [],
@@ -444,6 +488,22 @@ export default {
           val.val = selectItem.host
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type == 'assetState' && selectItem.searchType == 'assetState') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type === 'brand' && selectItem.searchType === 'brand') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type === 'group' && selectItem.searchType === 'group') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
+        } else if (val.type === 'severity' && selectItem.searchType === 'severity') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
         }
       }
       // this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
@@ -520,6 +580,36 @@ export default {
         }
       })
     },
+    getAssetStateData () {
+      this.$get('asset/stateConf', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.assetStateSelect = response.data.list
+          this.assetStateSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'assetState')
+          })
+        }
+      })
+    },
+    getBrandData () {
+      this.$get('asset/brand', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.brandSelect = response.data.list
+          this.brandSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'brand')
+          })
+        }
+      })
+    },
+    getGroupData () {
+      this.$get('asset/field/group', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.groupSelect = response.data.list
+          this.groupSelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'group')
+          })
+        }
+      })
+    },
     getModelData () {
       this.$get('model', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code === 200) {
@@ -531,11 +621,21 @@ export default {
       })
     },
     getProjectData () {
-      this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('monitor/project', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code === 200) {
           this.projectSelect = response.data.list
           this.projectSelect.forEach((item, index) => {
             this.$set(item, 'searchType', 'project')
+          })
+        }
+      })
+    },
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code === 200) {
+          this.severitySelect = response.data.list
+          this.severitySelect.forEach((item, index) => {
+            this.$set(item, 'searchType', 'severity')
           })
         }
       })
@@ -593,7 +693,7 @@ export default {
     stringSelectInfo (column, selectItem, e) {
       this.stop_click(e)
       this.select_list.forEach(val => {
-        if (val.label == column.label) {
+        if (val.label === column.label) {
           val.val = selectItem.value
           val.valString = selectItem.label
         }
@@ -759,20 +859,34 @@ export default {
           } else if (val.type == 'selectAction') { // 新增日志判断
             objectInfo[val.label] = val.valnum
           } else if (val.type == 'dc') {
-            objectInfo.idcId = val.valnum
+            objectInfo.dcIds = val.valnum
           } else if (val.type == 'asset') {
             objectInfo.asset = val.val
           } else if (val.type == 'module') {
             objectInfo.moduleId = val.valnum
-          } else if (val.type == 'project') {
-            objectInfo.projectId = val.valnum
-          } else if (val.type == 'idc') {
-            objectInfo.dcId = val.valnum
+          } else if (val.type === 'project') {
+            objectInfo.projectIds = val.valnum
+          } else if (val.type === 'assetState') {
+            objectInfo.stateIds = val.valnum
+          } else if (val.type === 'brand') {
+            objectInfo.brandIds = val.valnum
+          } else if (val.type === 'group') {
+            objectInfo.groupIds = val.valnum
+          } else if (val.type === 'selectString') {
+            if (val.label === 'dcState') {
+              objectInfo.state = val.val
+            } else if (val.label === 'promType') {
+              objectInfo.type = val.val
+            } else if (val.label === 'promState') {
+              objectInfo.status = val.val
+            } else if (val.label === 'chartType') {
+              objectInfo.type = val.val
+            }
           } else {
             objectInfo[val.label] = val.val
           }
         }
-        // console.log('search obj', objectInfo)
+        console.log('search obj', objectInfo)
       })
       this.getHeight()
       // 搜索完成后存储在本地历史记录中
@@ -1326,23 +1440,25 @@ export default {
             this.defaultValue != '' ? this.no_condition=this.defaultValue:''; */
     this.restructure_historyDate()
     setTimeout(() => {
-      if (this.$route.path == '/Objects_Objects') {
-        this.schelistget()
+      if (this.$route.path === '/asset') {
+        this.getAssetStateData()
       }
-      if (this.$route.path == '/agent') {
+      if (this.$route.path === '/agent') {
         this.getDcData()
       }
-      if (this.$route.path == '/monitor/project' || this.$route.path == '/alertMessage' || this.$route.path == '/alertRule') {
-        this.getAssetData()
+      if (this.$route.path === '/model') {
+        this.getBrandData()
       }
-      if (this.$route.path == '/alertMessage') {
+      if (this.$route.path === '/assetLabel') {
+        this.getGroupData()
+      }
+      if (this.$route.path === '/monitor/module') {
         this.getProjectData()
-        this.getModuleData()
       }
-      if (this.$route.path == '/asset') {
-        this.getModelData()
+      if (this.$route.path === '/alertRule') {
+        this.getSeverityData()
       }
-      if (this.$route.path == '/exprTemp') {
+      if (this.$route.path === '/exprTemp') {
         this.getGnameList()
       }
     }, 1000)

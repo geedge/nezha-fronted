@@ -155,7 +155,7 @@ export const alertMessage = {
     { value: 'P3', label: i18n.t('alert.config.P3') }
   ],
   states: [
-    { value: '1', label: i18n.t('alert.list.pending') },
+    { value: '1', label: i18n.t('overall.active') },
     { value: '2', label: i18n.t('overall.silence') },
     { value: '3', label: i18n.t('alert.list.expired') }
   ]
@@ -171,6 +171,55 @@ export const statisticsList = [
   { value: 'range', label: i18n.t('dashboard.panel.chartForm.statisticsVal.range') },
   { value: 'different', label: i18n.t('dashboard.panel.chartForm.statisticsVal.different') }
 ]
+
+export const chart = {
+  varType: [
+    { value: '1', label: i18n.t('asset.asset') },
+    { value: '2', label: i18n.t('asset.endpoint') }
+  ],
+  type: [
+    {
+      value: 'line',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.line.label')
+    },
+    {
+      value: 'stackArea',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.stackArea.label')
+    },
+    {
+      value: 'bar',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.bar.label')
+    },
+    {
+      value: 'singleStat',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.singleStat.label')
+    },
+    {
+      value: 'pie',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.pie.label')
+    },
+    {
+      value: 'table',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.table.label')
+    },
+    {
+      value: 'alertList',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.alertList.label')
+    },
+    {
+      value: 'text',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.text.label')
+    },
+    {
+      value: 'url',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.url.label')
+    },
+    {
+      value: 'group',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
+    }
+  ]
+}
 
 export const intervalList = [
   { value: -1, label: i18n.t('dashboard.panel.refreshInterval.never') },

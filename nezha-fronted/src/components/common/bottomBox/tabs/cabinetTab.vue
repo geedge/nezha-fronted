@@ -25,6 +25,11 @@
           @selectionChange="selectionChange"
         ></cabinet-table>
       </template>
+      <template v-slot:top-tool-right>
+        <button id="asset-create-asset" v-has="'panel_chart_add'" class="top-tool-btn margin-r-10" @click.stop="addChart">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+      </template>
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
@@ -84,8 +89,8 @@ export default {
           },
           {
             id: 13,
-            name: this.$t('config.dc.remark'),
-            label: 'remark',
+            name: this.$t('config.dc.description'),
+            label: 'description',
             disabled: false
           }
         ]
@@ -99,6 +104,15 @@ export default {
     // 切换tab
     changeTab (tab) {
       this.$emit('changeTab', tab)
+    },
+    addChart () {
+      this.rightBox.show = true
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.refresh()
+      }
     }
   },
   watch: {

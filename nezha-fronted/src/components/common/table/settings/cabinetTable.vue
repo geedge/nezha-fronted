@@ -114,12 +114,6 @@ export default {
           label: this.$t('config.dc.remark'),
           prop: 'remark',
           show: true
-        },
-        {
-          label: this.$t('config.account.option'),
-          prop: 'option',
-          show: true,
-          width: 120
         }
       ]
     }

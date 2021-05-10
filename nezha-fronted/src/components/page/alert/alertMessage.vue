@@ -12,14 +12,10 @@
       :search-msg="searchMsg"
       @search="search"
     >
-      <template v-slot:top-tool-left >
-        <div v-for="(item,ind) in tablist">
-          <div class="nz-tab-item-box"   @click="getTableData(ind)" :index="ind" :key="item.state">
-            <div class="nz-tab-item" :class="{active:ind==isActive}">{{item.name}}</div>
-          </div>
-        </div>
-      </template>
       <template v-slot:top-tool-right>
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData">
+          <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
         <pick-time v-model="searchTime" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
                 type="button" @click="showExportDialog">
@@ -43,7 +39,7 @@
           @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
-          @toDelete="toDeleteMessage"></alert-message-table>
+          @messageDetail="messageDetail"></alert-message-table>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
@@ -110,6 +106,7 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 export default {
   name: 'alertList',
   components: {
@@ -121,22 +118,8 @@ export default {
   mixins: [dataListMixin],
   data () {
     return {
-      tablist: [
-        {
-          state: '1',
-          name: 'Active'
-        },
-        {
-          state: '2',
-          name: 'Silebt'
-        },
-        {
-          state: '3',
-          name: 'Expired'
-        }
-      ],
-      isActive: 0,
-      ind: 0,
+      stateOptions: alertMessageConstant.states,
+      state: '1',
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
@@ -153,69 +136,41 @@ export default {
 
       tableId: 'alertMessageTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: this.$t('alert.alertName'),
-          type: 'input',
-          label: 'alertName',
-          disabled: false
-        }, /* {
-            id: 3,
-            name: this.$t('alert.list.type'),
-            type: 'select',
-            label: 'alertType',
+        searchLabelList: [
+          {
+            id: 26,
+            name: this.$t('alert.list.id'),
+            type: 'id',
+            label: 'id',
             disabled: false
-          }, */{
-          id: 20,
-          name: this.$t('alert.severity'),
-          type: 'selectString',
-          label: 'severity',
-          disabled: false
-        }, {
-          id: 21,
-          name: this.$t('asset.asset'),
-          type: 'asset',
-          label: 'asset',
-          disabled: false
-        }, {
-          id: 22,
-          name: this.$t('project.project.project'),
-          type: 'project',
-          label: 'project',
-          disabled: false
-        }, {
-          id: 23,
-          name: this.$t('project.module.module'),
-          type: 'module',
-          label: 'module',
-          disabled: false
-        }, {
-          id: 24,
-          name: this.$t('project.endpoint.endpoint'),
-          type: 'input',
-          label: 'endpointId',
-          disabled: false
-        }, {
-          id: 25,
-          name: this.$t('alert.list.state'),
-          type: 'select',
-          label: 'alertMessageState',
-          disabled: false
-        }, {
-          id: 26,
-          name: this.$t('alert.list.id'),
-          type: 'id',
-          label: 'id',
-          disabled: false
-        }, {
-          id: 27,
-          name: this.$t('config.dc.dc'),
-          type: 'idc',
-          label: 'idcId',
-          disabled: false,
-          readonly: true
-        }]
+          },
+          {
+            name: this.$t('alert.alertRule'),
+            type: 'input',
+            label: 'ruleName',
+            disabled: false
+          }, {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }, {
+            name: 'Endpoint',
+            type: 'input',
+            label: 'endpointName',
+            disabled: false
+          }, {
+            name: this.$t('alert.summary'),
+            type: 'input',
+            label: 'summary',
+            disabled: false
+          }, {
+            name: 'Labels',
+            type: 'input',
+            label: 'labels',
+            disabled: false
+          }
+        ]
       },
       requestIndex: 0,
       viewAssetState: false,
@@ -268,6 +223,10 @@ export default {
       this.$nextTick(() => {
         this.queryChartDate()
       })
+    },
+    messageDetail (row) {
+      this.currentMsg = { ...row }
+      this.queryChartDate()
     },
     queryMessage (alertMessage) {
       if (!this.hasButton('alertMessage_view')) {
@@ -382,14 +341,10 @@ export default {
         })
       }
     },
-    getTableData (ind) {
-      if (ind == undefined) {
-        ind = this.ind
-      } else {
-        this.ind = ind
+    getTableData (state) {
+      if (state) {
+        this.state = state
       }
-      const ii = ind + 1
-      this.isActive = ind
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.searchTime && this.searchTime.length > 1) {
@@ -400,16 +355,16 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      if (ind === 0 || ind === 1 || ind === 2) {
+      if (state) {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get(this.url + '?state=' + ii, this.searchLabel).then(response => {
+      this.$get(this.url + '?state=' + this.state, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
-          const axiosAll = []
+          /* const axiosAll = []
           this.$nextTick(() => {
             this.tableData.forEach((item) => {
               item.labels = JSON.parse(item.labels)
@@ -439,7 +394,7 @@ export default {
               })
               this.$set(this.tableData, [...this.tableData])
             })
-          })
+          }) */
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
         }

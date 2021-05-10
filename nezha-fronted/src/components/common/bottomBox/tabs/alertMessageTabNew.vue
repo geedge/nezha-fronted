@@ -11,6 +11,11 @@
       class="full-width-height"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+      <template v-slot:top-tool-right>
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData">
+          <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </template>
       <template v-slot>
         <alertMessageTable
           ref="dataTable"
@@ -43,7 +48,7 @@ import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
-import { fromRoute } from '@/components/common/js/constants'
+import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 // import {getTime} from "@/components/common/js/tools";
 // import chartDataFormat from "@/components/charts/chartDataFormat";
 
@@ -69,67 +74,46 @@ export default {
   },
   data () {
     return {
+      stateOptions: alertMessageConstant.states,
       url: 'alert/message',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
+      state: '1',
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
-        searchLabelList: [{
-          id: 2,
-          name: this.$t('alert.alertName'),
-          type: 'input',
-          label: 'alertName',
-          disabled: false
-        }, {
-          id: 20,
-          name: this.$t('project.project.project'),
-          type: 'project',
-          label: 'project',
-          disabled: false
-        }, {
-          id: 21,
-          name: this.$t('project.module.module'),
-          type: 'module',
-          label: 'module',
-          disabled: false
-        }, {
-          id: 22,
-          name: this.$t('project.endpoint.endpoint'),
-          type: 'input',
-          label: 'endpointId',
-          disabled: false
-        }, {
-          id: 4,
-          name: this.$t('alert.severity'),
-          type: 'selectString',
-          label: 'severity',
-          disabled: false
-        }, {
-          id: 11,
-          name: this.$t('asset.asset'),
-          type: 'asset',
-          label: 'asset',
-          disabled: false
-        }, {
-          id: 12,
-          name: this.$t('alert.list.state'),
-          type: 'select',
-          label: 'alertMessageState',
-          disabled: false
-        },
-        {
-          id: 26,
-          name: this.$t('alert.list.id'),
-          type: 'id',
-          label: 'id',
-          disabled: false
-        }, {
-          id: 27,
-          name: this.$t('config.dc.dc'),
-          type: 'idc',
-          label: 'idcId',
-          disabled: false,
-          readonly: true
-        }]
+        searchLabelList: [
+          {
+            id: 26,
+            name: this.$t('alert.list.id'),
+            type: 'id',
+            label: 'id',
+            disabled: false
+          },
+          {
+            name: this.$t('alert.alertRule'),
+            type: 'input',
+            label: 'ruleName',
+            disabled: false
+          }, {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }, {
+            name: 'Endpoint',
+            type: 'input',
+            label: 'endpointName',
+            disabled: false
+          }, {
+            name: this.$t('alert.summary'),
+            type: 'input',
+            label: 'summary',
+            disabled: false
+          }, {
+            name: 'Labels',
+            type: 'input',
+            label: 'labels',
+            disabled: false
+          }
+        ]
       },
       rightBox: {
         editShow: false,
@@ -282,7 +266,10 @@ export default {
         })
       }
     },
-    getTableData () {
+    getTableData (state) {
+      if (state) {
+        this.state = state
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.searchTime && this.searchTime.length > 1) {
@@ -293,6 +280,10 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
+      if (state) {
+        delete this.searchLabel.startAt
+        delete this.searchLabel.endAt
+      }
       if (this.from === fromRoute.module) {
         this.searchLabel.moduleIds = this.obj.id
       } else if (this.from === fromRoute.endpoint) {
@@ -302,9 +293,7 @@ export default {
       } else if (this.from === fromRoute.alertRule) {
         this.searchLabel.ruleIds = this.obj.id
       }
-      // state 暂时默认1
-      this.searchLabel.state = 1
-      this.$get(this.url, this.searchLabel).then(response => {
+      this.$get(this.url + '?state=' + this.state, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)

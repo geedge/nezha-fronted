@@ -134,34 +134,24 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
-          id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
-          id: 5,
           name: this.$t('config.agent.dataCenter'),
           type: 'dc',
           label: 'dc',
           disabled: false
         }, {
-          id: 6,
           name: this.$t('config.agent.type'),
           type: 'select',
           label: 'promType',
           disabled: false
         }, {
-          id: 8,
-          name: this.$t('project.endpoint.host'),
-          type: 'input',
-          label: 'host',
-          disabled: false
-        }, {
-          id: 9,
-          name: this.$t('project.endpoint.port'),
-          type: 'input',
-          label: 'port',
+          name: this.$t('state.state'),
+          type: 'select',
+          label: 'promState',
           disabled: false
         }]
       },

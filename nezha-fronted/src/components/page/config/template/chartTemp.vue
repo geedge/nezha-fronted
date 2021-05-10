@@ -90,19 +90,29 @@ export default {
       tableId: 'chartTemp',
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [
           {
-            id: 11,
-            name: 'Id',
+            name: 'ID',
             type: 'input',
-            label: 'id',
+            label: 'ids',
             disabled: false
-          }, {
-            id: 12,
-            name: this.$t('config.exprTemp.name'),
+          },
+          {
+            name: this.$t('overall.name'),
             type: 'input',
             label: 'name',
+            disabled: false
+          },
+          {
+            name: this.$t('overall.type'),
+            type: 'selectString',
+            label: 'chartType',
+            disabled: false
+          },
+          {
+            name: this.$t('dashboard.panel.chartForm.varType'),
+            type: 'select',
+            label: 'varType',
             disabled: false
           }
         ]

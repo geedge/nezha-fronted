@@ -95,18 +95,18 @@ export default {
           id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
           id: 2,
           name: this.$t('alert.alertName'),
           type: 'input',
-          label: 'alertName',
+          label: 'name',
           disabled: false
         }, {
           id: 4,
           name: this.$t('alert.severity'),
-          type: 'selectString',
+          type: 'severity',
           label: 'severity',
           disabled: false
         }]

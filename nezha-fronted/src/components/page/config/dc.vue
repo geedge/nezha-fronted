@@ -83,13 +83,32 @@ export default {
       },
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 10,
-          name: this.$t('overall.name'),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            name: this.$t('asset.location'),
+            type: 'input',
+            label: 'location',
+            disabled: false
+          },
+          {
+            name: this.$t('asset.state'),
+            type: 'selectString',
+            label: 'dcState',
+            disabled: false
+          }
+        ]
       },
       regNum: /^[0-9]+.?[0-9]*/,
       tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet

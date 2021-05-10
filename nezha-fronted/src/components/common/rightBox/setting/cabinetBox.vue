@@ -56,6 +56,8 @@ export default {
       }
     }
   },
+  created() {
+  },
   methods: {
     clickOutside () {
       this.esc(false)
@@ -71,7 +73,7 @@ export default {
         if (valid) {
           this.editCabinet.idcId = this.currentDc.id
           if (this.editCabinet.id) {
-            this.$put('cabinet', this.editCabinet).then(res => {
+            this.$put('/dc/cabinet', this.editCabinet).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -81,7 +83,7 @@ export default {
               }
             })
           } else {
-            this.$post('cabinet', this.editCabinet).then(res => {
+            this.$post('/dc/cabinet', this.editCabinet).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })

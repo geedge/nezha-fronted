@@ -11,7 +11,7 @@
           </div>
           <div :class="{'top-tool-main-right-to-left': bottomBox.showSubList}" class="top-tool-right">
             <div v-if="showLayout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
-              <search-input ref="searchInput" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
+              <search-input ref="searchInput" :from="from" :inTransform="bottomBox.inTransform" :searchMsg="searchMsg" @search="search"></search-input>
             </div>
             <slot name="top-tool-right"></slot>
             <button v-if="showLayout.indexOf('elementSet') > -1"  class="top-tool-btn table-column-setting"
