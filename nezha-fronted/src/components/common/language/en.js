@@ -694,7 +694,7 @@ const en = {
       selectArea: 'Select area',
       cabinetNum: 'Cabinet',
       assets: 'Assets',
-      remark: 'Remark',
+      remark: 'Description',
       cabinets: 'Cabinets',
       createDc: 'Nre data center',
       editDc: 'Edit data center',
