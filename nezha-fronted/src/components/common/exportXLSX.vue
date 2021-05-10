@@ -126,7 +126,6 @@ export default {
   },
   mounted () {
     this.getParamsType()
-    console.log(this.importUrl)
   },
   /* watch: {
       permissions: {
@@ -144,9 +143,6 @@ export default {
       }
       this.importFile = this.importFileList[0]
       this.validateFile()
-    },
-    validateFile () {
-
     },
     rollbackImport () {
       let url
