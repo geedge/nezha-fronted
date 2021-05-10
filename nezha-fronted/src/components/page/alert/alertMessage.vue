@@ -106,12 +106,14 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 export default {
   name: 'alertList',
   components: {
     alertMessageTable,
     pickTime,
+    chart,
     nzDataList,
     deleteButton
   },
@@ -226,7 +228,10 @@ export default {
     },
     messageDetail (row) {
       this.currentMsg = { ...row }
-      this.queryChartDate()
+      this.graphShow = true
+      this.$nextTick(() => {
+        this.queryChartDate()
+      })
     },
     queryMessage (alertMessage) {
       if (!this.hasButton('alertMessage_view')) {
@@ -236,8 +241,10 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
-      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
+      // const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
+      // const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
+      const start = this.currentMsg.startAt
+      const end = this.currentMsg.endAt
       this.searchTime = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
@@ -260,8 +267,8 @@ export default {
         axios.all(axiosArr).then(res => {
           try {
             res.forEach((response, promIndex) => {
-              if (response.status == 200) {
-                if (response.data.status == 'success') {
+              if (response.status === 200) {
+                if (response.data.status === 'success') {
                   const queryData = response.data.data.result[0]
                   if (queryData) {
                     const chartData = {

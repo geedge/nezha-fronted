@@ -32,32 +32,49 @@
           @selectionChange="selectionChange"
           @showBottomBox="(target, item) => { $refs.dataList.showBottomBox(target, item) }"
           @toDelete="toDeleteMessage"
+          @messageDetail="messageDetail"
         ></alertMessageTable>
       </template>
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-bottom-data-list>
+    <el-dialog id="viewGraphDialog"
+               :modal-append-to-body='false'
+               :title="$t('overall.detail')"
+               :visible.sync="graphShow"
+               class="line-chart-block-modal nz-dialog endpoint-dialog"
+               width="90%"
+               @close="dialogClose">
+      <div slot="title">
+        {{$t("project.endpoint.dialogTitle")}}
+        <div class="float-right panel-calendar dialog-tool" style="display: flex">
+          <pick-time v-model="searchTime" :refresh-data-func="queryChartDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+        </div>
+      </div>
+      <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getTime } from '@/components/common/js/tools'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
+import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
-// import {getTime} from "@/components/common/js/tools";
-// import chartDataFormat from "@/components/charts/chartDataFormat";
 
 export default {
   name: 'alertMessageTab',
   mixins: [dataListMixin, subDataListMixin],
   components: {
     nzBottomDataList,
-    alertMessageTable
+    alertMessageTable,
+    chart
   },
   props: {
     from: String
@@ -161,8 +178,10 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
-      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
+      // const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
+      // const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
+      const start = this.currentMsg.startAt
+      const end = this.currentMsg.endAt
       this.searchTime = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
@@ -386,6 +405,13 @@ export default {
         this.deleteBox.ids = obj.id + ''
       }
       this.deleteBox.show = true
+    },
+    messageDetail (row) {
+      this.currentMsg = { ...row }
+      this.graphShow = true
+      this.$nextTick(() => {
+        this.queryChartDate()
+      })
     },
     deleteMessage () {
       this.$refs.remarkForm.validate(valid => {

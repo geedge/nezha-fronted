@@ -1,5 +1,5 @@
 <template>
-  <div :class="['alert-labelUp',LRTriangle?'left-triangle':'right-triangle']" :style="{top:that.position.top+'px',left:that.position.left+'px','--mt': that.position.mt+'px',}" ref="alertLabels">
+  <div ref="alertLabels" :class="['alert-labelUp',LRTriangle?'left-triangle':'right-triangle']" :style="{top:that.position.top,left:that.position.left,'--mt': that.position.mt+'px',}">
     <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
@@ -204,12 +204,12 @@ export default {
         const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
         if (position.top + elHeight > clientHeight) {
           return {
-            left: `${position.left + position.width + 20}px`,
+            left: `${position.left + position.width + 120}px`,
             top: `${position.top - elHeight - 20}px`
           }
         } else {
           return {
-            left: `${position.left + position.width + 20}px`,
+            left: `${position.left + position.width + 120}px`,
             top: `${position.top - 20}px`
           }
         }

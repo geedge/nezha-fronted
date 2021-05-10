@@ -128,7 +128,7 @@ import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
-import alertLabel from '../../alert/alertLabel'
+import alertLabel from '../../alert/alertLabel2'
 import { calcDurationByStringTimeB } from '../../js/tools'
 export default {
   name: 'alertMessageTable',
@@ -260,9 +260,9 @@ export default {
           delete labels[key]
         }
       }
-      Object.keys(labels).sort().forEach(key => {
+      /* Object.keys(labels).sort().forEach(key => {
         result.push({ label: key, value: labels[key] })
-      })
+      }) */
       return result
     },
     chartUnitChange: function (unit) {
