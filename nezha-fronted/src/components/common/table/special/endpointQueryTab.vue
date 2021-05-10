@@ -130,9 +130,9 @@ export default {
       rightBox: { show: false },
       minusTime: 0,
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
-      tableId: 'alertSilenceTable',
+      tableId: 'endpointQueryTable',
       pageObj: {
-        pageSize: 10,
+        pageSize: 20,
         pageNo: 1,
         total: 0
       }
@@ -463,7 +463,7 @@ export default {
             this.$refs.endpointChart.endLoading()
           }
           setTimeout(() => {
-            this.$refs.endpointChart.resize()
+            // this.$refs.endpointChart.resize()
           }, 100)
         })
       })
@@ -541,7 +541,8 @@ export default {
   },
   created () {
     // this.getPanelData()
-    this.pageObj.pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    const pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    this.pageObj.pageSize = pageSize || 20
   }
 }
 </script>
