@@ -84,7 +84,7 @@ const en = {
     clickUpload: 'Click to upload',
     upload: 'upload',
     template: 'Template',
-    active: 'active',
+    active: 'Active',
     result: {
       total: 'Total',
       failed: 'Failed',

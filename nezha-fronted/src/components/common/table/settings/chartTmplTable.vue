@@ -37,7 +37,7 @@
         <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
         <span v-else-if="item.prop==='type'">
           <i :class="typeIcon(scope.row)"/>
-        {{chartTypeList.find(title=>title.id == scope.row[item.prop]).name}}
+        {{chartTypeList.find(title=>title.value === scope.row[item.prop]).label}}
         </span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
@@ -66,11 +66,13 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import { chart as chartConstant } from '@/components/common/js/constants'
 export default {
   name: 'roleTable',
   mixins: [table],
   data () {
     return {
+      chartTypeList: chartConstant.type,
       tableTitle: [
         {
           label: 'ID',
@@ -99,49 +101,6 @@ export default {
           show: true
         }
       ],
-      chartTypeList: [
-        {
-          id: 'line',
-          name: this.$t('dashboard.panel.chartForm.typeVal.line.label')
-        },
-        {
-          id: 'stackArea',
-          name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
-        },
-        {
-          id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
-        },
-        {
-          id: 'singleStat',
-          name: this.$t('dashboard.panel.chartForm.typeVal.singleStat.label')
-        },
-        {
-          id: 'pie',
-          name: this.$t('dashboard.panel.chartForm.typeVal.pie.label')
-        },
-        {
-          id: 'table',
-          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
-        },
-        {
-          id: 'alertList',
-          name: this.$t('dashboard.panel.chartForm.typeVal.alertList.label')
-        },
-        {
-          id: 'text',
-          name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
-        },
-        {
-          id: 'url',
-          name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
-        },
-        {
-          id: 'group',
-          name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
-        }
-
-      ]
     }
   },
   methods: {

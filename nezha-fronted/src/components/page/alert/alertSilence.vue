@@ -82,34 +82,14 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            id: 11,
-            name: this.$t('alert.silence.datacenter'),
+            name: 'ID',
             type: 'input',
-            label: 'datacenter',
+            label: 'ids',
             disabled: false
           }, {
-            id: 12,
-            name: this.$t('alert.silence.project'),
+            name: this.$t('alert.silence.matchers'),
             type: 'input',
-            label: 'project',
-            disabled: false
-          }, {
-            id: 13,
-            name: this.$t('alert.silence.module'),
-            type: 'input',
-            label: 'module',
-            disabled: false
-          }, {
-            id: 14,
-            name: this.$t('alert.silence.endpoint'),
-            type: 'input',
-            label: 'endpoint',
-            disabled: false
-          }, {
-            id: 15,
-            name: this.$t('alert.silence.asset'),
-            type: 'input',
-            label: 'asset ',
+            label: 'matchers ',
             disabled: false
           }
         ]

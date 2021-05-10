@@ -22,11 +22,11 @@
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
-      <el-dropdown>
+<!--      <el-dropdown>
         <el-dropdown-menu></el-dropdown-menu>
         <div class="header-menu__item" @click="centerDialogVisible = true"><i class="nz-icon nz-icon-guide"></i></div>
         <path-navigation :show.sync="centerDialogVisible"></path-navigation>
-      </el-dropdown>
+      </el-dropdown>-->
     </div>
     <!--个人操作-->
     <div class="personal">

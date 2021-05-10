@@ -108,16 +108,24 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            id: 11,
             name: 'Id',
             type: 'input',
-            label: 'id',
+            label: 'ids',
             disabled: false
           }, {
-            id: 12,
-            name: this.$t('config.assetLabel.name'),
+            name: 'Name',
             type: 'input',
             label: 'name',
+            disabled: false
+          }, {
+            name: 'Key',
+            type: 'input',
+            label: 'key',
+            disabled: false
+          }, {
+            name: 'Group',
+            type: 'group',
+            label: 'group',
             disabled: false
           }
         ]

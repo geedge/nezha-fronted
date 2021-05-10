@@ -154,16 +154,31 @@ export default {
       panelData: [],
       panelDataDragTmp: [],
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [
-          /*
-                        {
-                        id: 1,
-                        name: this.$t("dashboard.panel.searchItem.name"),
-                        type: 'input',
-                        label: 'name',
-                        disabled: false
-                      } */
+          {
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          },
+          {
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            name: this.$t('overall.type'),
+            type: 'selectString',
+            label: 'chartType',
+            disabled: false
+          },
+          {
+            name: this.$t('dashboard.panel.chartForm.varType'),
+            type: 'select',
+            label: 'varType',
+            disabled: false
+          }
         ]
       },
       searchLabel: {}, // 搜索参数

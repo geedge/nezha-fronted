@@ -107,21 +107,18 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            id: 11,
             name: 'Id',
             type: 'input',
-            label: 'id',
+            label: 'ids',
             disabled: false
           }, {
-            id: 12,
             name: this.$t('config.exprTemp.name'),
             type: 'input',
             label: 'name',
             disabled: false
           }, {
-            id: 13,
             name: this.$t('config.exprTemp.gname'),
-            type: 'selectTemp',
+            type: 'input',
             label: 'gname',
             disabled: false
           }

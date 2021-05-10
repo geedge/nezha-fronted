@@ -111,46 +111,26 @@ export default {
       dataListLayout: ['searchInput', 'elementSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 11,
-          name: 'project id',
-          type: 'input',
-          label: 'projectIds',
-          disabled: false
-        }, {
-          id: 12,
-          name: 'endpoint name',
-          type: 'input',
-          label: 'name',
-          disabled: false
-        },
-        {
-          id: 13,
-          name: 'endpoint id',
-          type: 'input',
-          label: 'id',
-          disabled: false
-        }, {
-          id: 14,
-          name: this.$t('asset.asset'),
-          type: 'query',
-          label: 'query',
-          disabled: false
-        }, {
-          id: 34,
-          name: this.$t('project.project.project'),
-          // name: this.$t('asset.asset'),
-          type: 'input',
-          label: 'projectName',
-          disabled: false
-        }, {
-          id: 35,
-          name: this.$t('project.module.module'),
-          // name: this.$t('asset.asset'),
-          type: 'input',
-          label: 'moduleName',
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            id: 13,
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          }, {
+            name: 'Name',
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }
+        ]
       },
       roles: [],
       rightBox: {

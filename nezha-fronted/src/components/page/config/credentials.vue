@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import mibBrowser from './mibBrowser'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
@@ -88,22 +87,19 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
-          id: 1,
           name: 'ID',
           type: 'input',
           label: 'id',
           disabled: false
         }, {
-          id: 5,
           name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
           disabled: false
         }, {
-          id: 6,
           name: 'Type',
-          type: 'input',
-          label: 'types',
+          type: 'select',
+          label: 'credentialType',
           disabled: false
         }]
       }
