@@ -126,6 +126,7 @@ export default {
   },
   mounted () {
     this.getParamsType()
+    console.log(this.importUrl)
   },
   /* watch: {
       permissions: {

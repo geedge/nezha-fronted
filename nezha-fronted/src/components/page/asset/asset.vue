@@ -25,7 +25,8 @@
         >
           <template slot="optionZone">
             <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
-              <i class="nz-icon nz-icon-create-square"></i></button>
+              <i class="nz-icon nz-icon-create-square"></i>
+            </button>
           </template>
         </export-excel>
         <button id="asset-batch-asset" v-has="'asset_edit'" :title="$t('overall.batchEdit')" class="top-tool-btn margin-r-10" @click.stop="batchEdit">
