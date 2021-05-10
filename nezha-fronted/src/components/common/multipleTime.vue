@@ -15,7 +15,7 @@
     line-height:28px;
     padding-left:5px;
     margin-left:0px;
-    margin-top: 0px !important;
+    margin-top: -3px !important;
     text-align:left;
     border-radius:2px;
     min-width:80px;
@@ -57,6 +57,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 4px;
   }
   .compare-box{
     /*line-height: 50px;*/

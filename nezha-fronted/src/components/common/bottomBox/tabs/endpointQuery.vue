@@ -6,6 +6,7 @@
       :search-msg="searchMsg"
       :tabs="tabs"
       :targetTab="targetTab"
+      :showPagination="false"
       @changeTab="changeTab"
       :customTool="true"
       class="full-width-height"
@@ -220,5 +221,11 @@ export default {
   .full-width-height{
     width: 100%;
     height: 100%;
+  }
+  /deep/ .nz-table2{
+    padding: 0 !important;
+  }
+  /deep/ .sub-container {
+    box-sizing: border-box;
   }
 </style>

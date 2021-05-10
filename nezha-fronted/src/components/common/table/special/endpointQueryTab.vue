@@ -3,7 +3,7 @@
     <el-table
       id="endpointTable"
       ref="dataTable"
-      :data="tableData"
+      :data="currentTableData"
       v-loading="loading"
       :height="'100%'"
       border
@@ -46,6 +46,9 @@
         min-width="180">
       </el-table-column>
     </el-table>
+    <div class="query-page-option">
+      <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+    </div>
     <el-dialog class="line-chart-block-modal nz-dialog endpoint-dialog"
                :title="$t('project.endpoint.dialogTitle')"
                :visible.sync="graphShow"
@@ -56,7 +59,7 @@
                @close="dialogClose">
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
-        <div class="float-right panel-calendar dialog-tool" style="display: flex">
+        <div class="float-right panel-calendar dialog-tool" style="display: flex;margin-right: 30px">
           <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>
           <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'panel_chart_add'" id="endpoint-query-full-chart-save">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
@@ -74,6 +77,7 @@ import chartBox from '@/components/page/dashboard/chartBox'
 import axios from 'axios'
 import bus from '../../../../libs/bus'
 import chart from '@/components/page/dashboard/overview/chart'
+import { sameLabels } from '@/components/common/js/constants'
 
 export default {
   name: 'endpointTable',
@@ -115,16 +119,23 @@ export default {
   data () {
     return {
       tableData: [],
+      currentTableData: [],
       batchDeleteObjs: [],
       currentEndpoint: {},
-      sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
+      sameLabels: sameLabels,
       loading: false,
       panelData: {},
       graphShow: false,
       chartUnit: 5,
       rightBox: { show: false },
       minusTime: 0,
-      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()]
+      searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
+      tableId: 'alertSilenceTable',
+      pageObj: {
+        pageSize: 10,
+        pageNo: 1,
+        total: 0
+      }
     }
   },
   methods: {
@@ -139,16 +150,18 @@ export default {
       this.tableData = []
       this.tableDataCopy = ''
       setTimeout(() => {
-        this.$get("/prom/api/v1/query?query={endpoint='" + this.currentEndpoint.id + "'}&time=" + new Date(this.formatTime).getTime()).then(response => {
+        this.$get("/prom/api/v1/query?query={endpoint_id='" + this.currentEndpoint.id + "'}&time=" + this.$stringTimeParseToUnix(new Date(this.formatTime).getTime())).then(response => {
           this.loading = false
           if (response.status === 'success') {
             const results = response.data.result
             this.queryData = JSON.parse(JSON.stringify(results))
             this.tableData = this.handlerTableData(results)
             this.tableDataCopy = JSON.stringify(this.tableData)
+            this.pageObj.total = this.tableData.length
             this.$nextTick(this.$refs.dataTable.doLayout())
             if (!this.scrollbarWrap) {
               this.$nextTick(() => {
+                this.handleCurrentChange()
                 // this.scrollbarWrap = this.$refs.dataTable.$refs.singleTable.bodyWrapper
                 // this.toTopBtnHandler(this.scrollbarWrap)
               })
@@ -253,6 +266,8 @@ export default {
         const element = temp.hideSameLabels ? item.simpleElement : item.element
         return element.indexOf(this.queryExpression) !== -1
       })
+      this.pageObj.pageNo = 1
+      this.handleCurrentChange()
     },
     dragend () {
       this.$nextTick(() => {
@@ -504,12 +519,29 @@ export default {
           }
         })
       })
+    },
+    pageNo (val) {
+      this.pageObj.pageNo = val
+      this.handleCurrentChange()
+    },
+    pageSize (val) {
+      this.pageObj.pageSize = val
+      localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
+      this.handleCurrentChange()
+    },
+    handleCurrentChange () {
+      this.pageObj.total = this.tableData.length
+      this.currentTableData = this.tableData.slice(
+        (this.pageObj.pageNo - 1) * this.pageObj.pageSize,
+        this.pageObj.pageNo * this.pageObj.pageSize
+      )
     }
   },
   computed: {
   },
   created () {
     // this.getPanelData()
+    this.pageObj.pageSize = localStorage.getItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId)
   }
 }
 </script>
@@ -522,5 +554,25 @@ export default {
     height: calc(100% - 48px)!important;
     padding-bottom: 0!important;
     width: calc(100% - 40px)!important;
+  }
+  .query-page-option{
+    width: 100%;
+    position: absolute;
+    background: #fff;
+    bottom: -34px;
+  }
+  /deep/ .pagination{
+    padding-top: 0;
+  }
+  /deep/ .top-tool-btn--text{
+    background: #fff;
+    border-radius: 2px 0 0 2px;
+    outline: none;
+    height: 32px;
+    border: 1px solid #d8dce1;
+    border-right: none;
+    line-height: 30px;
+    margin-right: -5px;
+    padding: 0 5px;
   }
 </style>

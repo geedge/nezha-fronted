@@ -215,7 +215,8 @@ export const terminalLog = {
   dangerCmd: ['chmod', 'chown', 'kill', 'rm', 'su', 'sudo'],
   infoCmd: ['exit']
 }
-
+// 需要隐藏的内置label
+export const sameLabels = ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter', 'datacenter_id', 'endpoint_id', 'module_id', 'nz_agent_id', 'project_id']
 // 公共组件的跳转来源
 export const fromRoute = {
   panel: 'panel',
