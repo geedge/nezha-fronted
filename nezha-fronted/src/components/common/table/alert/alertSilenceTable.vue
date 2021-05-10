@@ -69,8 +69,8 @@
             </span>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <span v-if="scope.row.state===1" class="silence-pending">pending</span>
-          <span v-if="scope.row.state===2" class="silence-active">active</span>
+          <span v-if="scope.row.state===1" class="silence-active">active</span>
+          <span v-if="scope.row.state===2" class="silence-pending">pending</span>
           <span v-if="scope.row.state===3" class="silence-expired">expired</span>
         </template>
         <template v-else-if="item.prop === 'utime'">
