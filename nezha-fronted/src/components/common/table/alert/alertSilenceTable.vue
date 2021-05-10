@@ -38,7 +38,7 @@
           <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
             <div slot="content">
               {{$t('config.terminallog.endTime')}}<br/>
-              {{scope.row.endAt}}
+              {{utcTimeToTimezoneStr(scope.row.endAt)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>
@@ -74,6 +74,9 @@
           <span v-if="scope.row.state===3" class="silence-expired">expired</span>
         </template>
         <template v-else-if="item.prop === 'utime'">
+          {{utcTimeToTimezoneStr(scope.row[item.prop])}}
+        </template>
+        <template v-else-if="item.prop === 'startAt'">
           {{utcTimeToTimezoneStr(scope.row[item.prop])}}
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>

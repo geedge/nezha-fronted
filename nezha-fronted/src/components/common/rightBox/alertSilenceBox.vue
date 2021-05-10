@@ -225,6 +225,8 @@ export default {
         }
         const params = { ...this.editAlertSilence, matchers: JSON.stringify(this.editAlertSilence.matchers) }
         if (valid) {
+          params.startAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.startAt)))
+          params.endAt = bus.timeFormate(new Date(this.timezoneToUtcTime(params.endAt)))
           if (this.editAlertSilence.id) {
             this.$put('/alert/silence', params).then(response => {
               this.prevent_opt.save = false
