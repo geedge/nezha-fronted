@@ -84,9 +84,10 @@ export default {
         unit: 2,
         operator: '>',
         last: 60,
-        severity: 'P2',
+        severityId: '',
         summary: '',
-        description: ''
+        description: '',
+        method: []
       },
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -118,7 +119,7 @@ export default {
       if (!this.hasButton('alertMessage_view')) {
         return
       }
-      this.$refs.dataList.showBottomBox('alertMessage', alertRule)
+      this.$refs.dataList.showBottomBox('alertRuleAlertMessage', alertRule)
     },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
@@ -144,6 +145,17 @@ export default {
               this.toTopBtnHandler(this.scrollbarWrap)
             })
           }
+        }
+      })
+    },
+    edit (u) {
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = {
+            ...response.data,
+            method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : []
+          }
+          this.rightBox.show = true
         }
       })
     },

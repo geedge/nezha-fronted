@@ -49,7 +49,7 @@
         </template>
         <template v-else-if="item.prop === 'alerts'">
           <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
-            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{scope.row.alertNum}}
           </span>
         </template>

@@ -99,7 +99,6 @@ export default {
       this.visible = false
       this.interval = val.value
       this.interLabel = val.label
-      console.info(this.interval, val)
       if (!this.showTimePicker && val && val.value != -1) {
         this.intervalTimer = setInterval(() => {
           this.$emit('change', this.searchTime)

@@ -260,7 +260,6 @@ export default {
       } else {
         localStorage.removeItem('endpointProjectId')
       }
-      console.log()
       this.tools.loading = true
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
@@ -286,12 +285,10 @@ export default {
         }
         this.searchCheckBox[key] = obj[key].join(',')
       })
-      console.log(obj, this.searchCheckBox)
       this.getTableData()
     },
     getTitleSearch () {
       this.$get('monitor/project', { pageSize: -1 }).then(res => {
-        console.log(res)
         if (res.code === 200) {
           res.data.list.forEach((item) => {
             this.titleSearchList.project.children.push(
@@ -301,7 +298,6 @@ export default {
         }
       })
       this.$get('monitor/module', { pageSize: -1 }).then(res => {
-        console.log(res)
         if (res.code === 200) {
           res.data.list.forEach((item) => {
             this.titleSearchList.module.children.push(

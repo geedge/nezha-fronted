@@ -336,7 +336,6 @@ export default {
             this.isCustom = true
             this.$refs.calendar.focus()
             this.$refs.calendar.pickerVisible = true
-            console.log(this.$refs.calendar)
           }
         } else {
           this.isCustom = false

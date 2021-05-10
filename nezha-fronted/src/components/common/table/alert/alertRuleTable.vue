@@ -34,17 +34,18 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="item.prop === 'severity'" class="severity">
-          <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
-          <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
-          <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
+        <span v-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
+            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
         </span>
         <template v-else-if="item.prop === 'alertNum'">
-          <span class="link" @click="queryMessage(scope.row)">{{scope.row.alertNum + ' ' + $t('overall.active')}}</span>
+          <span class="link" @click="queryMessage(scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row.alertNum}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>
         <template v-else-if="item.prop === 'receivers'">
-          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
+          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
@@ -56,7 +57,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="showBottomBox('detail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <button class="table-operation-item" @click="queryMessage(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -85,12 +86,17 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
+        },
+        {
+          label: this.$t('alert.method'),
+          prop: 'method',
+          show: true,
         }, {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
@@ -111,7 +117,7 @@ export default {
           label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -124,8 +130,8 @@ export default {
           label: this.$t('alert.message'),
           prop: 'alertNum',
           show: true,
-          width: 90,
-          sortable:'custom'
+          width: 150,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.config.receiver'),
           prop: 'receivers',
@@ -149,6 +155,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+</style>
 <style>
 .severity .P1{
   background: #F5846A;

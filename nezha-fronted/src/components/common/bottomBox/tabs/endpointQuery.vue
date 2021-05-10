@@ -84,7 +84,6 @@ export default {
       immediate: true,
       handler (n) {
         this.formatTime = new Date(bus.computeTimezoneTime(new Date()))
-        console.log(n)
       }
     }
   },

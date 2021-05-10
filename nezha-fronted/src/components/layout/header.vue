@@ -23,6 +23,7 @@
         </div>
       </el-dropdown>
       <el-dropdown>
+        <el-dropdown-menu></el-dropdown-menu>
         <div class="header-menu__item" @click="centerDialogVisible = true"><i class="nz-icon nz-icon-guide"></i></div>
         <path-navigation :show.sync="centerDialogVisible"></path-navigation>
       </el-dropdown>

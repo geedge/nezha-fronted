@@ -57,10 +57,8 @@
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
-          <span v-else-if="item.prop === 'severity'" class="severity">
-            <span v-if="scope.row[item.prop] === 'P1'" class="P1">P1</span>
-            <span v-if="scope.row[item.prop] === 'P2'" class="P2">P2</span>
-            <span v-if="scope.row[item.prop] === 'P3'" class="P3">P3</span>
+          <span v-else-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
+            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
           </span>
           <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
           <template v-else-if="item.prop === 'duration'">
@@ -98,16 +96,6 @@
               {{scope.row['state'] == 1 ? "Pending" : ""}}
               {{scope.row['state'] == 2 ? "Expired" : ""}}
           </span>
-          <div v-else-if="item.prop === 'current'" class="too-long-split pointer" @click="detail(scope.row)">
-            <span v-if="!scope.row.current || scope.row.alertRule.buildIn == 1">-</span>
-            <el-popover v-else placement="right" trigger="hover">
-              <div slot="reference">
-                <span :id="'alert-list-detail-'+scope.row.id" class="content-right-option"><i class="nz-icon nz-icon-chart"></i></span>
-                <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
-              </div>
-              <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-            </el-popover>
-          </div>
           <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
           <template v-else>-</template>
         </template>
@@ -118,6 +106,8 @@
         fixed="right">
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
+          <button class="table-operation-item" @click="showBottomBox('detail',scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+          <!-- <button class="table-operation-item" @click="detail(scope.row)"><i class="nz-icon nz-icon-view1"></i></button> -->
           <button class="table-operation-item" @click="toDeleteMessage(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
         </div>
       </el-table-column>
@@ -139,7 +129,7 @@ export default {
   components: {
     nzAlertTag,
     alertRuleInfo: alertRuleInfo,
-    alertLabel: alertLabel
+    alertLabel: alertLabel,
   },
   props: {
     nowTime: {
@@ -203,12 +193,7 @@ export default {
           prop: 'remark',
           show: false,
           minWidth: 200
-        }, {
-          label: this.$t('alert.list.state'),
-          prop: 'state',
-          show: true,
-          width: 100
-        }, {
+        },  {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
@@ -219,12 +204,7 @@ export default {
           prop: 'duration',
           show: true,
           width: 150
-        }, {
-          label: this.$t('overall.value'),
-          prop: 'current',
-          show: true,
-          width: 100
-        }
+        },
       ],
       viewAssetState: false,
       tableDataInitNum: 0
@@ -279,6 +259,12 @@ export default {
         result.push({ label: key, value: labels[key] })
       })
       return result
+    },
+    chartUnitChange:function(unit){
+      this.chartUnit=unit;
+      this.$nextTick(()=>{
+        this.queryChartDate()
+      })
     },
     formatThreshold (value, unit) {
       const unitMethod = chartDataFormat.getUnit(unit)
@@ -425,7 +411,9 @@ export default {
         this.queryChartDate()
       })
     },
-
+    dialogClose() {
+      this.graphShow = false;
+    },
     getAlertList () {
       if (!this.scrollbarWrap) {
         this.$nextTick(() => {
@@ -599,7 +587,19 @@ export default {
 
 </script>
 
-<style scoped>
+<style scoped lang=scss>
+  .pointer{
+    background: #FA901c;
+    border-radius: 2px;
+    border: none;
+    width: 40px;
+    height: 22px;
+    box-sizing: border-box;
+    text-align:center;
+    color: #fff;
+    font-size: 12px;
+    margin-right: 20px;
+  }
   .alertLabelInfo{
     border: 1px solid #ebeef5;
     border-bottom: none;

@@ -2,7 +2,7 @@
   <div class="right-box right-box-alert-config" v-clickoutside="{obj:editAlertSilence,func:clickOutside}">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") + " ID：" + editAlertSilence.id : $t("alert.silence.create")}}</div>
+      <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") : $t("alert.silence.create")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editAlertSilence, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -61,20 +61,20 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label='$t("alert.silence.matcher")' prop="matcher" class="matcher">
-          <div v-for="(item, index) in editAlertSilence.matcher" :key="index" class="param-box-row">
-            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matcher.' + index + '.name'">
+        <el-form-item :label='$t("alert.silence.matchers")' prop="matchers" class="matchers">
+          <div v-for="(item, index) in editAlertSilence.matchers" :key="index" class="param-box-row">
+            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matchers.' + index + '.name'">
               <el-input placeholder="key" size="mini" v-model="item.name"></el-input>
             </el-form-item>
             <span class="param-box-row-eq">=</span>
-            <el-form-item class="param-box-row-value" :prop="'matcher.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
-              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matcher-value"></el-input>
-              <el-checkbox class="silence-matcher-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
+            <el-form-item class="param-box-row-value" :prop="'matchers.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
+              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matchers-value"></el-input>
+              <el-checkbox class="silence-matchers-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
             </el-form-item>
-            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeMatcher(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
           </div>
           <div style="text-align: center;" class="">
-               <span id="module-add-label" type="button" @click="addMatcher" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
+               <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
           </div>
@@ -162,7 +162,7 @@ export default {
         linkId: '',
         reason: '',
         time: [],
-        matcher: [
+        matchers: [
           { name: '', value: '', regex: 0 }
         ],
         name: ''
@@ -223,7 +223,7 @@ export default {
           })
           return
         }
-        const params = { ...this.editAlertSilence }
+        const params = { ...this.editAlertSilence, matchers: JSON.stringify(this.editAlertSilence.matchers) }
         if (valid) {
           if (this.editAlertSilence.id) {
             this.$put('/alert/silence', params).then(response => {
@@ -308,15 +308,15 @@ export default {
       this.editAlertSilence.linkId = ''
     },
     // 新增label
-    addMatcher () {
-      this.editAlertSilence.matcher.push({ name: '', value: '', regex: 0 })
+    addmatchers () {
+      this.editAlertSilence.matchers.push({ name: '', value: '', regex: 0 })
     },
     // 移除单个Label
-    removeMatcher (index) {
-      if (this.editAlertSilence.matcher.length === 1) {
-        this.editAlertSilence.matcher = [{ name: '', value: '', regex: 0 }]
+    removematchers (index) {
+      if (this.editAlertSilence.matchers.length === 1) {
+        this.editAlertSilence.matchers = [{ name: '', value: '', regex: 0 }]
       }
-      this.editAlertSilence.matcher.splice(index, 1)
+      this.editAlertSilence.matchers.splice(index, 1)
     }
   }
 }
@@ -358,7 +358,7 @@ export default {
       }
     }
   }
-  .matcher{
+  .matchers{
     /deep/ .el-input__prefix{
       left: 0;
     }
@@ -366,11 +366,11 @@ export default {
       left: 126px;
       padding-top: 10px;
     }
-    .matcher-type{
+    .matchers-type{
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
-      .matcher-type-title{
+      .matchers-type-title{
         width: 125px;
         background:#E7EAED;
         font-family: ArialMT;
@@ -380,7 +380,7 @@ export default {
         font-weight: 400;
         text-align: center;
       }
-      /deep/ .matcher-type-title.el-select--small .el-input__inner{
+      /deep/ .matchers-type-title.el-select--small .el-input__inner{
         background:#E7EAED;
         font-family: ArialMT;
         font-size: 14px;
@@ -390,15 +390,15 @@ export default {
         text-align: center;
         border: none;
       }
-      .matcher-type-content{
+      .matchers-type-content{
         flex: 1;
       }
     }
   }
-  /deep/ .silence-matcher-value{
+  /deep/ .silence-matchers-value{
     width: calc(100% - 100px);
   }
-  .silence-matcher-regex{
+  .silence-matchers-regex{
     margin-left: 10px;
   }
   /deep/ .param-box-row-key{

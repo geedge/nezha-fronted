@@ -57,24 +57,16 @@
           </el-input>
         </el-form-item>
         <!--severity-->
-        <el-form-item :label="$t('alert.severity')" prop="severity">
-          <el-select id="alert-box-input-severity" v-model="editAlertRule.severity" placeholder=""  popper-class="config-dropdown" size="small">
-            <el-option v-for="item in $CONSTANTS.alertMessage.severityData" :id="'alert-severity-'+item.value" :key="item.value" :label="item.label" :value="item.value">
-              <template v-if="!item.isEdit">{{item.label}}</template>
-              <span v-if="item.isEdit" class="config-dropdown-label-input" @click.stop>
-                <el-input v-model="item.value" size="mini" type="text"></el-input>
+        <el-form-item :label="$t('alert.severity')" prop="severity" class="severity-box">
+          <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" placeholder=""  popper-class="config-dropdown severity-box" size="small">
+            <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
+              <span>
+                 <i class="nz-icon nz-icon-circle" :style="{color:item.color,'font-size':'12px'}"></i> {{item.name}}
               </span>
             </el-option>
           </el-select>
+          <i class="nz-icon nz-icon-circle severity-circle" v-if="editAlertRule.severityId" :style="{color:severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}"></i>
         </el-form-item>
-        <div class="rule-severity-remark">
-          <i class="nz-icon nz-icon-info-normal"></i>
-          <div>
-            <p>{{$t('alert.P1Rule')}}</p>
-            <p>{{$t('alert.P2Rule')}}</p>
-            <p>{{$t('alert.P3Rule')}}</p>
-          </div>
-        </div>
         <!--receiver-->
         <el-form-item :label="$t('config.user.receiver')" prop="receiver">
           <el-select
@@ -86,12 +78,20 @@
             popper-class="no-style-class"
             size="small"
             value-key="userId"
+            @change="receiverShowChange"
           >
             <el-option
               v-for="item in userData"
-              :key="item.userId"
+              :key="item.id"
               :label="item.username"
-              :value="item.userId">
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <!--notify-->
+        <el-form-item :label="$t('alert.notify')" prop="method" class="notify-box" :rules="[{ validator: validateNotify, trigger: 'change'},]">
+          <el-select id="alert-box-input-notify" v-model="editAlertRule.method" placeholder=""  popper-class="config-dropdown notify-box" size="small" multiple>
+            <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -150,7 +150,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
           { type: 'number', message: this.$t('validate.number') }
         ],
-        severity: [
+        severityId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         summary: [
@@ -195,7 +195,9 @@ export default {
       ],
       unitOptions: chartDataFormat.unitOptions(),
 
-      userData: []
+      userData: [],
+      severityData: [],
+      notifyData: []
     }
   },
   methods: {
@@ -210,11 +212,15 @@ export default {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
       this.editAlertRule.expr = this.expressions[0]
+      const params = {
+        ...this.editAlertRule,
+        method: this.editAlertRule.method.join(',')
+      }
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
           this.editAlertRule.receiver = this.editAlertRule.receiverShow.join(',')
           if (this.editAlertRule.id) {
-            this.$put('alert/rule', this.editAlertRule).then(response => {
+            this.$put('alert/rule', params).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -224,7 +230,7 @@ export default {
               }
             })
           } else {
-            this.$post('alert/rule', this.editAlertRule).then(response => {
+            this.$post('alert/rule', params).then(response => {
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -262,7 +268,7 @@ export default {
       })
     },
     getUserList () {
-      this.$get('sys/user/list', { pageNo: 1, pageSize: -1 }).then(response => {
+      this.$get('sys/user', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code == 200) {
           this.userData = response.data.list
         }
@@ -270,10 +276,38 @@ export default {
     },
     metricChange (val) {
       this.editAlertRule.expr = val
+    },
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.severityData = response.data.list
+        }
+      })
+    },
+    getNotifyData () {
+      this.$get('alert/notify/method', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.notifyData = response.data.list
+        }
+      })
+    },
+    receiverShowChange (val) {
+      if (!val.length) {
+        this.$refs.alertRuleForm.validateField('method')
+      }
+    },
+    validateNotify (rule, value, callback) {
+      if (this.editAlertRule.receiverShow.length && value.length === 0) {
+        callback(new Error(this.$t('validate.required')))
+      } else {
+        callback()
+      }
     }
   },
   mounted () {
     this.getUserList()
+    this.getSeverityData()
+    this.getNotifyData()
   },
   watch: {
     alertRule: {
@@ -335,7 +369,7 @@ export default {
   /deep/ .metric-selector-title{
     margin-left: 0 !important;
   }
-   /* 标题样式 */
+  /* 标题样式 */
   .right-box-title{
     font-size: 16px;
     font-weight: 700;
@@ -360,5 +394,16 @@ export default {
     width: 640px;
     box-sizing: border-box;
     margin: -13px 30px 18px 30px;
+  }
+  .severity-circle{
+    position: absolute;
+    left: 10px;
+    top: 0;
+  }
+  .severity-box{
+    position: relative;
+  }
+  .severity-box /deep/ .el-select .el-input__inner{
+    padding-left: 25px;
   }
 </style>

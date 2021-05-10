@@ -626,7 +626,6 @@ export default {
         arr.push(obj)
       })
       this.$put('monitor/endpoint/render', arr).then(res => {
-        console.log(res)
         if (res.code === 200) {
           res.data.list.forEach((item, index) => {
             const obj = item
@@ -652,7 +651,6 @@ export default {
               ...obj
             })
           })
-          console.log(this.endpointTableData)
         }
       })
       this.assetTableData = [...this.assetTableData]

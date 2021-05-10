@@ -551,7 +551,6 @@ export default {
           item.assetName = item.asset.name
           item.type = item.module.type
         })
-        console.log(this.endpointTableData)
       }
     }
   }

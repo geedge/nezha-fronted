@@ -1074,11 +1074,13 @@ const en = {
     rule: 'Rule', // '规则'
     alertMessage: 'Alert message', // "告警信息"
     alertRule: 'Alert rule', // "告警规则"
-    alertName: 'Alert name', // "告警名称"
+    alertName: 'Name', // "告警名称"
+    method: 'Method', // "告警名称"
     severity: 'Priority', // "等级"
     description: 'Description', // "描述"
     summary: 'Summary', // "概要"
     startAt: 'Start time', // "开始时间"
+    notify: 'Notification', // "通知方式"
     endAt: 'End time', // "结束时间"
     list: {
       // 表头
@@ -1127,12 +1129,12 @@ const en = {
       },
     },
     silence: {
-      name:'Name',
+      name: 'Name',
       silence: 'Alert silence',
       create: 'New alert silence',
       edit: 'Edit alert silence',
       time: 'Time',
-      matcher: 'Matcher',
+      matchers: 'matchers',
       reason: 'Description',
       selectTime: 'Please select time',
       selectMather: 'Required',
@@ -1141,7 +1143,10 @@ const en = {
       module: 'module',
       endpoint: 'endpoint',
       asset: 'asset',
-      timeError: 'The end time must be greater than the start time'
+      timeError: 'The end time must be greater than the start time',
+      state: 'State',
+      startTime: 'Start time',
+      upTime: 'Update Time'
     },
     P1Rule: 'P1: Critical, alert that can cause business paralysis',
     P2Rule: 'P2: Major, alert that requires urgent attention, but does not affect the business yet',

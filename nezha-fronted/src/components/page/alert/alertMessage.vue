@@ -12,6 +12,13 @@
       :search-msg="searchMsg"
       @search="search"
     >
+      <template v-slot:top-tool-left >
+        <div v-for="(item,ind) in tablist">
+          <div class="nz-tab-item-box"   @click="getTableData(ind)" :index="ind" :key="item.state">
+            <div class="nz-tab-item" :class="{active:ind==isActive}">{{item.name}}</div>
+          </div>
+        </div>
+      </template>
       <template v-slot:top-tool-right>
         <pick-time v-model="searchTime" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
@@ -32,6 +39,7 @@
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
+          @queryMessage='queryMessage'
           @reload="getTableData"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
@@ -113,6 +121,22 @@ export default {
   mixins: [dataListMixin],
   data () {
     return {
+      tablist: [
+        {
+          state: '1',
+          name: 'Active'
+        },
+        {
+          state: '2',
+          name: 'Silebt'
+        },
+        {
+          state: '3',
+          name: 'Expired'
+        }
+      ],
+      isActive: 0,
+      ind: 0,
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
@@ -245,6 +269,12 @@ export default {
         this.queryChartDate()
       })
     },
+    queryMessage (alertMessage) {
+      if (!this.hasButton('alertMessage_view')) {
+        return
+      }
+      this.$refs.dataList.showBottomBox(alertMessage, alertRule)
+    },
     queryChartDate () {
       const $temp = this
       const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
@@ -352,7 +382,14 @@ export default {
         })
       }
     },
-    getTableData () {
+    getTableData (ind) {
+      if (ind == undefined) {
+        ind = this.ind
+      } else {
+        this.ind = ind
+      }
+      const ii = ind + 1
+      this.isActive = ind
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.searchTime && this.searchTime.length > 1) {
@@ -363,8 +400,11 @@ export default {
         delete this.searchLabel.endAt
       }
       this.tools.loading = true
-      console.log(this.searchLabel)
-      this.$get(this.url, this.searchLabel).then(response => {
+      if (ind === 0 || ind === 1 || ind === 2) {
+        delete this.searchLabel.startAt
+        delete this.searchLabel.endAt
+      }
+      this.$get(this.url + '?state=' + ii, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -579,7 +619,16 @@ export default {
         this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
       }
       this.getTableData()
-    },
+    }
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .active{
+    border-bottom: 3px solid #fa901c;
+    color: #333;
+    cursor: default;
+    font-weight: bold;
+  }
+</style>

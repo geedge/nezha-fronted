@@ -64,7 +64,6 @@ export default {
       this.$emit('showBottomBox', targetTab, JSON.parse(JSON.stringify(row)))
     },
     tableDataSort (item) {
-      console.log(item)
       let orderBy = ''
       if (item.order === 'ascending') {
         orderBy = item.prop
@@ -72,7 +71,6 @@ export default {
       if (item.order === 'descending') {
         orderBy = '-' + item.prop
       }
-      console.log(orderBy)
       this.$emit('orderBy', orderBy)
     }
   }

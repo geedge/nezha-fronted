@@ -699,7 +699,6 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        console.log(n)
         if (n && n.configs) {
           const params = Object.assign({}, n.configs)
           params.params = this.paramToJson(this.editEndpoint.paramObj)

@@ -56,6 +56,8 @@
         <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.endpoint.endpointTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--chartTemp的Tab-->
         <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.chartTemp.chartTempTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <!--alertRule Tab-->
+        <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
       </div>
     </div>
   </div>
@@ -168,6 +170,11 @@ export default {
         chartTemp: {
           chartTempTabTitle: [
             { prop: 'panel', name: 'Template preview' }
+          ]
+        },
+        alertRule: {
+          alertRule: [
+            { prop: 'alertRuleAlertMessage', name: 'Alerts' }
           ]
         },
         dc: {
