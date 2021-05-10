@@ -338,7 +338,7 @@ export default new Vue({
       } else {
         return configTime
       }
-    }
+    },
   },
   created () {
     this.getDefaultDate()

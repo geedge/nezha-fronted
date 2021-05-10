@@ -129,7 +129,7 @@ export default {
   components: {
     nzAlertTag,
     alertRuleInfo: alertRuleInfo,
-    alertLabel: alertLabel,
+    alertLabel: alertLabel
   },
   props: {
     nowTime: {
@@ -157,27 +157,26 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true,
           width: 180,
-          sortable:false,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           NotSet: true,
           minWidth: 250,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
           width: 110,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
@@ -193,18 +192,18 @@ export default {
           prop: 'remark',
           show: false,
           minWidth: 200
-        },  {
+        }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
           width: 150,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
           show: true,
           width: 150
-        },
+        }
       ],
       viewAssetState: false,
       tableDataInitNum: 0
@@ -260,9 +259,9 @@ export default {
       })
       return result
     },
-    chartUnitChange:function(unit){
-      this.chartUnit=unit;
-      this.$nextTick(()=>{
+    chartUnitChange: function (unit) {
+      this.chartUnit = unit
+      this.$nextTick(() => {
         this.queryChartDate()
       })
     },
@@ -411,8 +410,8 @@ export default {
         this.queryChartDate()
       })
     },
-    dialogClose() {
-      this.graphShow = false;
+    dialogClose () {
+      this.graphShow = false
     },
     getAlertList () {
       if (!this.scrollbarWrap) {

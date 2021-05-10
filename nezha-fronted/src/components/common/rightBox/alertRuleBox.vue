@@ -10,7 +10,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editAlertRule.id ? $t("alert.config.editAlertConfig") + "  ID：" + editAlertRule.id : $t("alert.config.createAlertConfig")}}</div>
+    <div class="right-box-title">{{editAlertRule.id ? $t("alert.config.editAlertConfig") : $t("alert.config.createAlertConfig")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->

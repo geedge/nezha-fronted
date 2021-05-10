@@ -43,11 +43,14 @@
         <template v-else-if="item.prop === 'remote'">
           <span>{{getRemoteText(scope.row)}}</span>
         </template>
+        <template v-else-if="item.prop === 'startTime'">
+          <span> {{utcTimeToTimezoneStr(scope.row.startTime)}}</span>
+        </template>
         <template v-else-if="item.prop === 'duration'">
           <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
             <div slot="content">
               {{$t('config.terminallog.endTime')}}<br/>
-              {{scope.row.endTime}}
+              {{utcTimeToTimezoneStr(scope.row.endTime)}}
             </div>
             <span>{{getDuration(scope.row)}}</span>
           </el-tooltip>

@@ -52,6 +52,7 @@
           </el-switch>
         </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+        <span v-else-if="item.prop === 'lastLoginTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else>{{scope.row[item.prop]}}</span>
       </template>
     </el-table-column>
@@ -89,13 +90,13 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.user.name'),
           prop: 'name',
           show: true,
           width: 150,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.user.username'),
           prop: 'username',

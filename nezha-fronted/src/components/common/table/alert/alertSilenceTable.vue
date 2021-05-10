@@ -168,7 +168,7 @@ export default {
         if (record.endAt) {
           return calcDurationByStringTimeB(record.startAt, record.endAt)
         }
-        return calcDurationByStringTimeB(record.startAt, this.nowTime)
+        return calcDurationByStringTimeB(record.startAt, this.utcTimeToTimezoneStr(this.nowTime))
       }
     },
     tagType () {
