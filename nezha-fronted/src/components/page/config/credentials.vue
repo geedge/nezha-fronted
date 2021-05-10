@@ -47,7 +47,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <snmp-credential-box :credential="object" v-if="rightBox.show" ref="credentialBox"  @close="closeRightBox" @reload="getTableData"></snmp-credential-box>
+      <snmp-credential-box :credential="object" v-if="rightBox.show" ref="credentialBox"  @close="closeSnmpBox" @reload="getTableData"></snmp-credential-box>
     </transition>
   </div>
 </template>

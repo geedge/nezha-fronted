@@ -56,6 +56,8 @@ export default {
       }
     }
   },
+  created() {
+  },
   methods: {
     clickOutside () {
       this.esc(false)

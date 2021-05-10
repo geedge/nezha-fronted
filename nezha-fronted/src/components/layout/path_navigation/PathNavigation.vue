@@ -78,7 +78,7 @@
     </transition>
     <!-- cabinet -->
     <transition name="right-box">
-      <cabinet-box v-if="rightBox.cabinet.show" :cabinet="cabinet" ref="cabinetEditBox" @close="closeCabinetBox"></cabinet-box>
+      <cabinet-box v-if="rightBox.cabinet.show" :current-dc="cabinet" :cabinet="cabinet" ref="cabinetEditBox" @close="closeCabinetBox"></cabinet-box>
     </transition>
     <!-- agent -->
     <transition name="right-box">
@@ -173,7 +173,7 @@
       v-if="rightBox.charts.show"></chart-box>
     </transition>
     <transition name="right-box">
-      <alert-rule-box v-if="rightBox.alert.show" ref="alertConfigBox" :alert="alert" @close="closeAlertBox"></alert-rule-box>
+      <alert-rule-box v-if="rightBox.alert.show" :alert-rule="alert" ref="alertConfigBox" :alert="alert" @close="closeAlertBox"></alert-rule-box>
     </transition>
     <!--web-->
     <el-dropdown>
@@ -227,12 +227,10 @@ import axios from 'axios'
 export default {
   props: {
     show: Boolean,
-    params: { type: Object },
     exportFileName: { type: String },
-    link: { type: Object },
-    permissions: { type: Object },
-    showCur: { type: Boolean, default: true },
-    id: { type: String, default: 'export' }
+    id: { type: String, default: 'export' },
+    currentDc: { type: Object },
+    alertRule: Object
   },
   components: {
     DcBox,
@@ -431,9 +429,10 @@ export default {
         unit: 2,
         operator: '>',
         last: 60,
-        severity: 'P2',
+        severityId: '',
         summary: '',
-        description: ''
+        description: '',
+        method: []
       },
       cabinet: {
         id: '',
@@ -525,6 +524,7 @@ export default {
     },
     // Alert
     addAlertRule() {
+      console.log(id)
       this.rightBox.alert.show = true
       this.$emit("update:show", false);
     },
