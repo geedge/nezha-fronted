@@ -194,11 +194,6 @@ export default {
           show: true,
           minWidth: 200
         }, {
-          label: this.$t('alert.list.remark'),
-          prop: 'remark',
-          show: false,
-          minWidth: 200
-        }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
