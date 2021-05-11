@@ -121,7 +121,6 @@ export default {
             param.latitude = attr.latitude
             param.longitude = attr.longitude
             this.$put('/dc', param).then(response => {
-              console.log('修改')
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -142,7 +141,6 @@ export default {
               param.latitude = null
             }
             this.$post('/dc', param).then(response => {
-              console.log('成功')
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
