@@ -62,7 +62,7 @@
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button id="alert-box-save" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save"
-              class="footer__btn footer__btn--light" @click="save">
+              class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

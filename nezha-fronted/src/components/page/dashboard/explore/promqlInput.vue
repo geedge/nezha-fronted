@@ -291,6 +291,7 @@ export default {
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
+      this.cascaderValue = ''
     },
     metricKeyDown (val) {
       if (this.required) {
@@ -431,18 +432,18 @@ export default {
     getAllOptins (key, arr) {
       switch (key) {
         case 'asset':
-          this.$get('asset', { pageNo: 1, pageSize: -1 }).then(response => {
+          this.$get('asset/asset', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
               const arr = []
               response.data.list.forEach(asset => {
                 asset.name = asset.sn
-                const idcF = arr.find(idc => idc.id === asset.idc.id)
-                if (idcF) {
-                  idcF.children.push(asset)
+                const dcF = arr.find(dc => dc.id === asset.dc.id)
+                if (dcF) {
+                  dcF.children.push(asset)
                 } else {
-                  const idc = { ...asset.idc }
-                  idc.children = [asset]
-                  arr.push(idc)
+                  const dc = { ...asset.dc }
+                  dc.children = [asset]
+                  arr.push(dc)
                 }
               })
               this.assetOption = arr
@@ -450,56 +451,28 @@ export default {
           })
           break
         case 'module':
-          this.$get('module', { pageNo: 1, pageSize: -1 }).then(response => {
+          this.$get('monitor/module/tree', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
-              const arr = []
-              response.data.list.forEach(module => {
-                const projectF = arr.find(project => project.id === module.project.id)
-                if (projectF) {
-                  projectF.children.push(module)
-                } else {
-                  const project = { ...module.project }
-                  project.children = [module]
-                  arr.push(project)
-                }
-              })
-              this.moduleOption = arr
+              this.moduleOption = response.data.list
             }
           })
           break
         case 'endpoint':
-          this.$get('endpoint', { pageNo: 1, pageSize: -1 }).then(response => {
+          this.$get('monitor/endpoint/tree', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
-              const arr = []
-              response.data.list.forEach(item => {
-                item.name = item.host
-                const projectF = arr.find(project => item.project.id === project.id)
-                if (projectF) {
-                  const moduleF = projectF.children.find(module => module.id === item.module.id)
-                  if (moduleF) {
-                    moduleF.children.push(item)
-                  } else {
-                    projectF.children.push({ ...item.module, children: [item] })
-                  }
-                } else {
-                  const project = { ...item.project }
-                  project.children = [{ ...item.module, children: [item] }]
-                  arr.push(project)
-                }
-              })
-              this.endpointOption = arr
+              this.endpointOption = response.data.list
             }
           })
           break
         case 'datacenter':
-          this.$get('idc', { pageNo: 1, pageSize: -1 }).then(response => {
+          this.$get('dc', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
               this.datacenterOption = response.data.list
             }
           })
           break
         case 'project':
-          this.$get('project', { pageNo: 1, pageSize: -1 }).then(response => {
+          this.$get('monitor/project', { pageNo: 1, pageSize: -1 }).then(response => {
             if (response.code == 200) {
               this.projectOption = response.data.list
             }
