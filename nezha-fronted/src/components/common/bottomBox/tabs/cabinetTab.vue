@@ -35,7 +35,7 @@
       </template>
     </nz-bottom-data-list>
     <transition name="right-box">
-      <cabinet-box v-if="rightBox.show" :current-dc="obj" :obj="object" ref="cabinetEditBox" @close="closeRightBox"></cabinet-box>
+      <cabinet-box v-if="rightBox.show" :current-dc="obj" :obj="object" ref="cabinetEditBox" v-has="'dc_add'" @close="closeRightBox"></cabinet-box>
     </transition>
   </div>
 </template>

@@ -50,7 +50,6 @@
           </el-form>
         </div>
       </div>
-
       <!--底部按钮-->
       <div class="right-box-bottom-btns">
         <button v-cancel="{obj:editDc,func:esc}" id="dc-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
@@ -71,7 +70,9 @@ export default {
   name: 'dcBox',
   components: { latlngPicker },
   props: {
-    dc: Object,
+    obj: {
+      type: Object
+    },
     userData: Array
   },
   data () {
@@ -89,6 +90,9 @@ export default {
       coordinateFlag: false
     }
   },
+  created() {
+    console.log(this.props)
+  },
   methods: {
     /* 关闭弹框 */
     esc (refresh) {
@@ -98,17 +102,16 @@ export default {
     clickOutside () {
       this.esc(false)
     },
-    /* 弹出选择area弹框 */
-    toSelectArea () {
-      this.$refs.selectArea.openBox(this.editDc.area)
-    },
+    // /* 弹出选择area弹框 */
+    // toSelectArea () {
+    //   this.$refs.selectArea.openBox(this.editDc.area)
+    // },
 
     /* 保存 */
-    save: function () {
+    save () {
       if (this.prevent_opt.save) {
         return
-      }
-      ;
+      };
       this.prevent_opt.save = true
       this.$refs.dcForm.validate((valid) => {
         if (valid) {
@@ -117,7 +120,8 @@ export default {
             const attr = this.$refs.latlngPicker.getAttribute()
             param.latitude = attr.latitude
             param.longitude = attr.longitude
-            this.$put('idc', param).then(response => {
+            this.$put('/dc', param).then(response => {
+              console.log('修改')
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -137,7 +141,8 @@ export default {
             if (!regNum.test(param.latitude)) {
               param.latitude = null
             }
-            this.$post('idc', param).then(response => {
+            this.$post('/dc', param).then(response => {
+              console.log('成功')
               this.prevent_opt.save = false
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -162,7 +167,7 @@ export default {
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete('idc?ids=' + this.editDc.id).then(response => {
+        this.$delete('/dc' + this.editDc.id).then(response => {
           this.prevent_opt.save = false
           if (response.code === 200) {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.deleteSuccess') })
@@ -198,13 +203,15 @@ export default {
   },
   mounted () {
     // this.getAreaData();
+    // console.log(this.editDc)
   },
   watch: {
-    dc: {
+    obj: {
       immediate: true,
       deep: true,
       handler (n, o) {
         this.editDc = JSON.parse(JSON.stringify(n))
+        console.info(this.editDc)
         this.$nextTick(() => {
           this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
         })

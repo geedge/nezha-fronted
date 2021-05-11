@@ -37,12 +37,8 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <dc-box v-if="rightBox.dc.show" :dc="object" :user-data="userData" @close="closeDcBox" @reload="getTableData"></dc-box>
+      <dc-box v-if="rightBox.show" :obj="object" :user-data="userData" @close="closeRightBox" @reload="getTableData"></dc-box>
     </transition>
-    <transition name="right-box">
-      <traffic-setting-box v-if="rightBox.trafficSetting.show" ref="trafficBox" :dc="object" @close="closeTrafficBox"></traffic-setting-box>
-    </transition>
-    <span v-if="dcDataRefresh" style="display: none"></span>
   </div>
 </template>
 <script>
@@ -77,10 +73,6 @@ export default {
         longitude: undefined,
         latitude: undefined
       },
-      rightBox: {
-        dc: { show: false },
-        trafficSetting: { show: false }
-      },
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
@@ -111,66 +103,12 @@ export default {
         ]
       },
       regNum: /^[0-9]+.?[0-9]*/,
-      tabShow: 1, // 控制显示一级页面和二级页面 1 dc 2cabinet
       userData: []
     }
   },
-  computed: {
-    dcDataRefresh () { // 通过vuex更新dc   需要该属性到页面 否则不被监听
-      if (this.$store.getters.getDcDataRefresh) {
-        this.getTableData()
-      }
-      return this.$store.getters.getDcDataRefresh
-    }
-  },
   methods: {
-    assetStatClassName (param) {
-      if (param.column.label == this.$t('config.dc.assets')) {
-        return 'asset-state'
-      }
-      return ''
-    },
-    edit (u) {
-      this.dc = JSON.parse(JSON.stringify(u))
-      if (!this.regNum.test(this.dc.longitude)) {
-        this.dc.longitude = undefined
-      }
-      if (!this.regNum.test(this.dc.latitude)) {
-        this.dc.latitude = undefined
-      }
-      if (!this.dc.area) {
-        this.$set(this.dc, 'area', { id: '', name: '' })
-      }
-      this.rightBox.dc.show = true
-    },
-    detail (u) {
-      this.bottomBox.object = JSON.parse(JSON.stringify(u))
-      if (!this.bottomBox.object.area) {
-        this.$set(this.bottomBox.object, 'area', { id: '', name: '' })
-      }
-      this.bottomBox.targetTab = 'detail'
-      this.bottomBox.showSubList = true
-    },
-    add () {
-      this.object = this.newObject()
-      this.rightBox.dc.show = true
-    },
-    closeDcBox (refresh) {
-      this.rightBox.dc.show = false
-      if (refresh) {
-        this.delFlag = true
-        this.getTableData()
-      }
-    },
-    closeTrafficBox (refresh) {
-      this.rightBox.trafficSetting.show = false
-      if (refresh) {
-        this.delFlag = true
-        this.getTableData()
-      }
-    },
-    statusChange (idc) {
-      this.$put('dc', idc).then(response => {
+    statusChange (dc) {
+      this.$put(this.url, dc).then(response => {
         if (response.code === 200) {
           this.rightBox.show = false
           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -192,15 +130,7 @@ export default {
     },
     regNumTest (val) { // 校验是否是数字
       return this.regNum.test(val)
-    },
-    initEvent () {
-      bus.$on('dc-list-change', () => {
-        this.getTableData()
-      })
     }
-  },
-  beforeDestroy () {
-    bus.$off('dc-list-change')
   },
   mounted () {
     this.getUserData()
