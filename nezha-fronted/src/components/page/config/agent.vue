@@ -270,6 +270,13 @@ export default {
     }
   },
   mounted () {
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'agent') {
+        this.add()
+      }
+    }
   }
 }
 </script>

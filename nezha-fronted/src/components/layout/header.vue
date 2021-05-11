@@ -22,11 +22,10 @@
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
-<!--      <el-dropdown>
+      <el-dropdown>
         <el-dropdown-menu></el-dropdown-menu>
-        <div class="header-menu__item" @click="centerDialogVisible = true"><i class="nz-icon nz-icon-guide"></i></div>
-        <path-navigation :show.sync="centerDialogVisible"></path-navigation>
-      </el-dropdown>-->
+        <div class="header-menu__item" @click="showGuide = true"><i class="nz-icon nz-icon-guide"></i></div>
+      </el-dropdown>
     </div>
     <!--个人操作-->
     <div class="personal">
@@ -56,6 +55,7 @@
       </el-dropdown>
     </div>
     <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>
+    <guide :show-dialog="showGuide" @dialogClosed="dialogClosed"></guide>
   </div>
 </template>
 
@@ -63,12 +63,12 @@
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
 import changePin from '../page/config/changePin'
-import PathNavigation from './path_navigation/PathNavigation'
+import guide from '@/components/common/popBox/guide'
 export default {
   name: 'Header',
   components: {
     'change-password': changePin,
-    PathNavigation
+    guide
   },
   data () {
     return {
@@ -109,7 +109,7 @@ export default {
         }
       ],
       showChangePin: false,
-      centerDialogVisible: false
+      showGuide: false
     }
   },
   methods: {
@@ -162,6 +162,7 @@ export default {
     },
     dialogClosed () {
       this.showChangePin = false
+      this.showGuide = false
     },
     cancel () {
       this.jumpTo(this.$route.path.slice(1, this.$route.path.length))

@@ -42,7 +42,6 @@
   </div>
 </template>
 <script>
-import bus from '@/libs/bus'
 import dcBox from '@/components/common/rightBox/dcBox' // dc弹框
 import trafficSettingBox from '@/components/common/rightBox/trafficSetting/trafficSettingBox'
 import deleteButton from '@/components/common/deleteButton'
@@ -134,6 +133,13 @@ export default {
   },
   mounted () {
     this.getUserData()
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'dc') {
+        this.add()
+      }
+    }
   }
 }
 </script>

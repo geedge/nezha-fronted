@@ -83,7 +83,7 @@
       <chart-temp-box :obj="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess" v-if="rightBox.chartTemp.show"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="closePanelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" ref="panelBox"></panel-box>
+      <panel-box v-if="rightBox.panel.show" ref="panelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel"></panel-box>
     </transition>
   </div>
 </template>
@@ -779,6 +779,14 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
+
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'chart') {
+        this.addChart()
+      }
+    }
   },
   watch: {
     'filter.searchName': function (n, o) {
