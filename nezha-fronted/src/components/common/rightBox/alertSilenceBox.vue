@@ -64,7 +64,14 @@
         <el-form-item :label='$t("alert.silence.matchers")' prop="matchers" class="matchers">
           <div v-for="(item, index) in editAlertSilence.matchers" :key="index" class="param-box-row">
             <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matchers.' + index + '.name'">
-              <el-input placeholder="key" size="mini" v-model="item.name"></el-input>
+              <el-autocomplete
+                class="inline-input silence-matchers-key"
+                placeholder="key"
+                size="mini"
+                v-model="item.name"
+                :fetch-suggestions="querySearch"
+                @select="handleSelect"
+              ></el-autocomplete>
             </el-form-item>
             <span class="param-box-row-eq">=</span>
             <el-form-item class="param-box-row-value" :prop="'matchers.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
@@ -111,7 +118,8 @@
 </template>
 
 <script>
-import bus from '../../../libs/bus'
+import bus from '@/libs/bus'
+import { sameLabels } from '@/components/common/js/constants'
 // import selectAlertSilence from '../alert/selectAlertSilence'
 export default {
   name: 'alertSilenceBox',
@@ -174,8 +182,8 @@ export default {
           { validator: validate, trigger: 'change' }
         ],
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
-        ],
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
       },
       rangeTime: '',
       ruleList: [],
@@ -319,6 +327,25 @@ export default {
         this.editAlertSilence.matchers = [{ name: '', value: '', regex: 0 }]
       }
       this.editAlertSilence.matchers.splice(index, 1)
+    },
+    querySearch (queryString, cb) {
+      const labels = sameLabels.map(item=>{
+        return {
+          name :item,
+          value: item
+        }
+      })
+      const results = queryString ? labels.filter(this.createFilter(queryString)) : labels
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (label) => {
+        return (label.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect (item) {
+      console.log(item)
     }
   }
 }
@@ -366,7 +393,7 @@ export default {
     }
     /deep/ .el-form-item__error{
       left: 126px;
-      padding-top: 10px;
+      padding-top: 5px;
     }
     .matchers-type{
       display: flex;
@@ -399,6 +426,9 @@ export default {
   }
   /deep/ .silence-matchers-value{
     width: calc(100% - 100px);
+  }
+  /deep/ .silence-matchers-key{
+    width: 100%;
   }
   .silence-matchers-regex{
     margin-left: 10px;

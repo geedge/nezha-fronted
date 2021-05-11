@@ -108,6 +108,7 @@
 import table from '@/components/common/mixin/table'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
+import { sameLabels } from '@/components/common/js/constants'
 export default {
   name: 'alertSilenceTable',
   components: {
@@ -154,7 +155,7 @@ export default {
         }, {
           label: this.$t('alert.silence.upTime'),
           prop: 'utime',
-          show: true,
+          show: false,
           width: 120
         }, {
           label: this.$t('alert.silence.state'),
@@ -176,7 +177,7 @@ export default {
     },
     tagType () {
       return (key) => {
-        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+        if (sameLabels.find(item => item === key)) {
           return 'normal'
         } else {
           return 'info'
@@ -187,7 +188,7 @@ export default {
   methods: {
     labelsSort (obj) {
       obj = obj || []
-      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      const buildIn = sameLabels
       if (typeof obj === 'string') obj = JSON.parse(obj)
       const labels = JSON.parse(JSON.stringify(obj))
       const result = []

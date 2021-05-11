@@ -94,10 +94,6 @@ export default {
           sortable: 'custom'
         },
         {
-          label: this.$t('alert.method'),
-          prop: 'method',
-          show: true,
-        }, {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
           show: true
@@ -135,7 +131,12 @@ export default {
         }, {
           label: this.$t('alert.config.receiver'),
           prop: 'receivers',
-          show: true
+          show: false
+        },
+        {
+          label: this.$t('alert.notify'),
+          prop: 'method',
+          show: false
         }
       ]
     }
