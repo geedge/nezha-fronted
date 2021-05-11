@@ -60,7 +60,7 @@ const en = {
     createAlertRule: 'New alert rule',
     createUser: 'New user',
     createRole: 'New role',
-    createPrometheusServer: 'New prometheus server',
+    createPrometheusServer: 'New agent',
     createDatacenter: 'New Data center',
     createCabinet: 'New cabinet',
     createModel: 'New model',
@@ -109,6 +109,7 @@ const en = {
     parent: 'Parent',
     dc: 'Data center',
     labels: 'Labels',
+    moreOption: 'More option',
     silence: 'Silence'
   },
   pageSize: '/page',
@@ -140,7 +141,11 @@ const en = {
     },
     system: {
       configTitle: 'System configuration',
-      configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port'
+      configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port',
+      federation:'Federation',
+      federationEnable:'Enable',
+      federationDisable:'Disable',
+
     },
     name: 'Database name',
     username: 'Username',
@@ -671,9 +676,9 @@ const en = {
     },
     agent: {
       // 侧滑框
-      promId: 'Prometheus server ID', // "Prometheus Server ID"
-      createProm: 'New prometheus server', // "新增Prometheus Server"
-      editProm: 'Edit prometheus server', // "修改Prometheus Server"
+      promId: 'Agent ID', // "Prometheus Server ID"
+      createProm: 'New agent', // "新增Prometheus Server"
+      editProm: 'Edit agent', // "修改Prometheus Server"
       type: 'Type', // "类别"
       checkTime: 'Check time',
       dataCenter: 'Data center',
@@ -1161,7 +1166,7 @@ const en = {
       endpointInfo: 'Endpoint information'
     },
     project: {
-      project: 'Project', // "系统"
+      project: 'Name', // "系统"
       projectName: 'Project name', // "系统名称"
       editProject: 'Edit project', // "编辑系统"
       description: 'Description', // "描述"
@@ -1169,7 +1174,7 @@ const en = {
     },
     module: {
       module: 'Module', // "组件"
-      moduleName: 'Module name', // "组件名称"
+      moduleName: 'Name', // "组件名称"
       editModule: 'Edit module', // "编辑组件"
       description: 'Description', // "描述"
       createModule: 'New module', // "新增组件"
@@ -1191,6 +1196,7 @@ const en = {
       createEndpoint: 'New endpoint',
       batchEndpoint: 'Batch Endpoint',
       endpointName: 'Endpoint name',
+      name: 'Name',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"

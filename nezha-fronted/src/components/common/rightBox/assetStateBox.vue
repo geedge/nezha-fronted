@@ -12,7 +12,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editAssetState.id ? ($t("config.assetState.editAssetState") + "  ID：" + editAssetState.id) : $t("config.assetState.createAssetState")}}</div>
+    <div class="right-box-title">{{editAssetState.id ? ($t("config.assetState.editAssetState")) : $t("config.assetState.createAssetState")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -48,12 +48,12 @@
     </div>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-state-esc"
+    <div class="right-box__footer">
+      <button class="footer__btn footer__btn--light" id="asset-state-esc"
               v-cancel="{obj: editAssetState, func: esc}">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+      <button @click="save" class="footer__btn"
               id="asset-state-save"
       >
         <span>{{$t('overall.save')}}</span>

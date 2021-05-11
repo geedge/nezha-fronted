@@ -12,7 +12,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editMenu.id ? ($t("config.menus.editMenu") + "  ID：" + editMenu.id) : $t("config.menus.createMenu")}}</div>
+    <div class="right-box-title">{{editMenu.id ? ($t("config.menus.editMenu")) : $t("config.menus.createMenu")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -68,12 +68,12 @@
     </div>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editMenu,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editMenu,func:esc}" class="footer__btn footer__btn--light"
               id="menus-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+      <button @click="save" class="footer__btn"
               id="menus-save">
         <span>{{$t('overall.save')}}</span>
       </button>

@@ -17,7 +17,7 @@
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editModule.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
         <!--project-->
-        <el-form-item :label='$t("project.project.project")' prop="projectId">
+        <el-form-item :label='$t("project.project.projectName")' prop="projectId">
           <el-select value-key="id" popper-class="config-dropdown" v-model="editModule.projectId" placeholder="" size="small" id="module-box-input-project" :disabled="!!editModule.id">
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
@@ -237,11 +237,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns right-box__footer">
-      <button v-cancel="{obj:editModule,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editModule,func:esc}" id="module-box-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" v-has="'monitor_module_add'" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" v-has="'monitor_module_add'" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="module-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

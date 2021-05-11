@@ -177,6 +177,7 @@
     </transition>
     <!--web-->
     <el-dropdown>
+      <el-dropdown-menu></el-dropdown-menu>
       <div id="header-open-cli" @click="cli">
       </div>
     </el-dropdown>
@@ -208,11 +209,11 @@
   </div>
 </template>
 <script>
-import DcBox from "@/components/common/rightBox/dcBox";
-import AgentBox from '../../common/rightBox/agentBox';
-import AssetBox from '../../common/rightBox/asset/assetBox';
-import dataListMixin from '@/components/common/mixin/dataList';
-import projectBox from '@/components/common/rightBox/projectBox';
+import DcBox from '@/components/common/rightBox/dcBox'
+import AgentBox from '../../common/rightBox/agentBox'
+import AssetBox from '../../common/rightBox/asset/assetBox'
+import dataListMixin from '@/components/common/mixin/dataList'
+import projectBox from '@/components/common/rightBox/projectBox'
 import moduleBox from '@/components/common/rightBox/moduleBox'
 import addEndpointBox from '@/components/common/rightBox/addEndpointBox'
 import alertRuleBox from '@/components/common/rightBox/alertRuleBox'
@@ -242,9 +243,9 @@ export default {
     addEndpointBox,
     alertRuleBox,
     cabinetBox,
-    'export-excel': exportXLSX,
+    'export-excel': exportXLSX
   },
-  mixins: [dataListMixin,table],
+  mixins: [dataListMixin, table],
   computed: {
     wgetUrl () {
       return 'wget -qO- --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | bash'
@@ -253,7 +254,7 @@ export default {
       return 'curl -o- -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | bash'
     }
   },
-  data() {
+  data () {
     return {
       // dc
       userData: [],
@@ -272,8 +273,8 @@ export default {
       },
       // agert
       osTypes: [{
-          label: 'Centos',
-          name: 'centos'
+        label: 'Centos',
+        name: 'centos'
       }],
       agentParam: {
         osType: 'centos',
@@ -285,7 +286,7 @@ export default {
       agent2: agent2,
       showAgentDownload: false,
       // import
-      importBox: { show: false, title: this.$t('overall.importExcel') , type: 1},
+      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1 },
       importFile: null,
       importFileList: [],
       importResult: null,
@@ -452,11 +453,11 @@ export default {
         param: {
           url: '',
           threshold: ''
-        },
+        }
       }
-    };
+    }
   },
-   mounted() {
+  mounted () {
     this.getStateData()
     this.getTypeTreeData()
     this.getDcData()
@@ -465,68 +466,67 @@ export default {
   },
   methods: {
     // Datacenter
-    addDatacenter() {
+    addDatacenter () {
       this.rightBox.dc.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    addCabinet() {
+    addCabinet () {
       this.rightBox.cabinet.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
     // Angebt
-    addAgent() {
+    addAgent () {
       this.rightBox.agents.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    DownloadAgent() {
-      this.$emit("update:show", false);
+    DownloadAgent () {
+      this.$emit('update:show', false)
       this.toDownloadAgent()
     },
     // Asset
-    addAsset() {
+    addAsset () {
       this.rightBox.asset.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    importAsset() {
+    importAsset () {
       this.showImportBox(1)
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    webTerminal() {
+    webTerminal () {
       this.cli()
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
     // Monitor
-    addPeoject() {
+    addPeoject () {
       this.rightBox.project.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    addModule() {
+    addModule () {
       this.rightBox.module.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    addEndpoint() {
+    addEndpoint () {
       this.rightBox.endpoint.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    importEndpoint() {
+    importEndpoint () {
       this.showImportBox(1)
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
     // Visualization
-    addPanel() {
+    addPanel () {
       // this.rightBox.panel.show = true
       this.rightBox.charts.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
-    addCharts() {
+    addCharts () {
       this.rightBox.charts.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
     // Alert
-    addAlertRule() {
-      console.log(id)
+    addAlertRule () {
       this.rightBox.alert.show = true
-      this.$emit("update:show", false);
+      this.$emit('update:show', false)
     },
     cli () {
       this.$store.commit('openConsole')
@@ -756,7 +756,7 @@ export default {
       this.$refs.chartList.cleanData()
       this.getData(this.filter)
     },
-        panelReloadForDel: function () {
+    panelReloadForDel: function () {
       if (this.showPanel.id === this.panel.id) {
         this.showPanel.id = ''
       }
@@ -792,7 +792,7 @@ export default {
       this.chart.panelName = this.showPanel.name
       this.rightBox.chart.show = true
     },
-     delChartOk () {
+    delChartOk () {
       this.filter.panelId = this.showPanel.id
       this.getData(this.filter)
     },
@@ -972,7 +972,7 @@ export default {
           }
         }
         form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-        if (this.assetimportUrl){
+        if (this.assetimportUrl) {
           this.$post(this.assetimportUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
             if (response.code == 200 && response.msg == 'success') {
               this.importResult = response.data
@@ -984,7 +984,7 @@ export default {
             }
             this.prevent_opt.import = false
           })
-        }else if (this.endpointimportUrl){
+        } else if (this.endpointimportUrl) {
           this.$post(this.endpointimportUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
             if (response.code == 200 && response.msg == 'success') {
               this.importResult = response.data
@@ -1069,7 +1069,7 @@ export default {
   watch: {
 
   }
-};
+}
 </script>
 <style lang="scss">
 .el-dialog__body {

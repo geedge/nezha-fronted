@@ -55,7 +55,7 @@ const cn = {
     createUser: '新增用户',
     createRole: '新增角色',
     createTemplate: '新增模板',
-    createPrometheusServer: '新增prometheus服务',
+    createPrometheusServer: '新增Agent',
     createDatacenter: '新增数据中心',
     active: '活跃',
     type: '类别',
@@ -133,7 +133,10 @@ const cn = {
     },
     system: {
       configTitle: '系统配置',
-      configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port'
+      configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port',
+      federation:'联邦',
+      federationEnable:'可用',
+      federationDisable:'不可用',
     },
     name: '数据库名称',
     username: '用户名',
@@ -666,7 +669,7 @@ const cn = {
       promServerList: 'Prometheus服务',
       promId: 'Prometheus服务ID',
       createProm: '新增Prometheus服务',
-      editProm: '修改Prometheus服务',
+      editProm: '修改Agent',
       type: '类别',
       checkTime: '检查时间',
       dataCenter: '数据中心',
@@ -1174,7 +1177,8 @@ const cn = {
       editEndpoint: '编辑 Endpoint',
       createEndpoint: '新增Endpoint',
       batchEndpoint: '批量 Endpoint',
-      endpointName: 'Endpoint name'
+      endpointName: 'Endpoint name',
+      name: '名称'
     },
     endpoint: {
       createEndpoint: '新增Endpoint',

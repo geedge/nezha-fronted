@@ -150,10 +150,10 @@
                 <el-form-item :label="$t('setup.alertPath')" prop="alertPath" key="sysalertPath" >
                   <el-input v-model="system.alertPath"></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.promentheusFederationEnabled')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
-                  <el-select v-model="system.prometheusFederationEnabled"  style="width: 100%" placeholder="Enable">
-                    <el-option label="Enable" value="1"></el-option>
-                    <el-option label="Close"  value="0"></el-option>
+                <el-form-item :label="$t('setup.system.federation')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
+                  <el-select v-model="system.prometheusFederationEnabled"  style="width: 100%" >
+                    <el-option :label="$t('setup.system.federationEnable')" :value="1"></el-option>
+                    <el-option :label="$t('setup.system.federationDisable')"  :value="0"></el-option>
                   </el-select>
                 </el-form-item>
                <!-- <el-form-item :label="$t('setup.alertPrefix')"  prop="alertPrefix" key="sysalertPrefix">
@@ -251,14 +251,13 @@ export default {
         alertPrefix: '',
         haMode: 1,
         haVip: '',
-        prometheusFederationEnabled:'',
+        prometheusFederationEnabled:1,
       },
       sysRules: {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        prometheusFederationEnabled: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       reloadTime: 5000,
       reloadTimeout: null,
@@ -615,7 +614,7 @@ export default {
   line-height: 46px;
   /* padding-left: 20px !important;
   height: 46px !important; */
-} 
+}
 /deep/ .el-step .el-step__main .el-step__title{
   padding: 0 0 0 20px  ;
   font-family: Roboto-Medium;

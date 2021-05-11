@@ -12,7 +12,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editRole.id ? ($t("config.roles.editRole") + "  ID：" + editRole.id) : $t("config.roles.createRole")}}</div>
+    <div class="right-box-title">{{editRole.id ? ($t("config.roles.editRole")) : $t("config.roles.createRole")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -46,12 +46,12 @@
     </div>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns" v-if="!detail">
-      <button v-cancel="{obj:editRole,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+    <div class="right-box__footer" v-if="!detail">
+      <button v-cancel="{obj:editRole,func:esc}" class="footer__btn footer__btn--light"
               id="roles-esc">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn"
               id="roles-save">
         <span>{{$t('overall.save')}}</span>
       </button>

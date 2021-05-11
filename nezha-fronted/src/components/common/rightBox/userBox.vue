@@ -12,7 +12,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editUser.id ? ($t("config.account.editAccount") + "  ID：" + editUser.id) : $t("config.account.createAccount")}}</div>
+    <div class="right-box-title">{{editUser.id ? ($t("config.account.editAccount")) : $t("config.account.createAccount")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -75,14 +75,14 @@
     </div>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box__footer">
       <button id="account-esc" v-cancel="{obj:editUser,func:esc}"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+              class="footer__btn">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button id="account-save" :class="{'nz-btn-disabled':prevent_opt.save}"
               :disabled="prevent_opt.save"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save"
+              class="footer__btn" @click="save"
       >
         <span>{{$t('overall.save')}}</span>
       </button>

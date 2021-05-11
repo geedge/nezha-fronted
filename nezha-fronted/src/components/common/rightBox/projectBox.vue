@@ -2,7 +2,7 @@
   <div class="right-box right-box-project" v-clickoutside="{obj:editProject,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") + "  ID：" + editProject.id : $t("overall.createProject")}}</div>
+      <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") : $t("overall.createProject")}}</div>
       <!-- end--标题-->
 
       <div class="header__operation">
@@ -22,11 +22,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns right-box__footer">
-      <button v-cancel="{obj:editProject,func:esc}" id="project-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editProject,func:esc}" id="project-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" v-has="'project_add'" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="project-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" v-has="'project_add'" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="project-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

@@ -10,7 +10,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editCabinet.id ? $t("config.dc.editCabinet") + " ID: " + editCabinet.id : $t("overall.createCabinet")}}</div>
+    <div class="right-box-title">{{editCabinet.id ? $t("config.dc.editCabinet") : $t("overall.createCabinet")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -32,11 +32,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editCabinet,func:esc}" id="cab-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editCabinet,func:esc}" id="cab-box-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="cab-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="cab-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

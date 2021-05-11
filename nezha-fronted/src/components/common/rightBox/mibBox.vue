@@ -2,7 +2,7 @@
   <div class="right-box right-box-mib" v-clickoutside="{obj:editMib,func:clickOutside}" >
     <!-- begin--标题-->
    <div class="right-box__header">
-      <div class="header__title">{{editMib.id ? ($t("config.mib.editMib") + "  ID：" + editMib.id) : $t("config.mib.createMib")}}</div>
+      <div class="header__title">{{editMib.id ? ($t("config.mib.editMib")) : $t("config.mib.createMib")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editMib, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -23,7 +23,7 @@
               collapse-tags
               :placeholder="$t('config.mib.modelTip')"
               size="small"
-              class="right-box__select" 
+              class="right-box__select"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               clearable></el-cascader>
           </el-form-item>
@@ -45,11 +45,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editMib,func:esc}" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editMib,func:esc}" id="model-box-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="model-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
