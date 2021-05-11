@@ -150,7 +150,8 @@
     </transition>
 
     <div class="right-box__header">
-      <div class="header__title">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <div class="header__title" v-if="from !== 'temp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <div class="header__title" v-if="from === 'temp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close"></i></span>
       </div>

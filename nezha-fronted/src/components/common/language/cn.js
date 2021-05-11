@@ -205,7 +205,10 @@ const cn = {
         panelId: 'ID'
       },
       createChartTitle: '新增图表',
+      createChartTempTitle: '新增图表模板',
+      createChartByTemp: '通过模板添加图表',
       editChartTitle: '编辑图表',
+      editChartTempTitle: '编辑图表模板', // "编辑图表""
       chartForm: {
         chartId: 'ID',
         chartName: '图表名称',
@@ -1322,7 +1325,8 @@ const cn = {
       unitError: '请选择对应的目录',
       imgError: '请上传图片',
       folder: '目录',
-      selMod: '请个所有节点绑定module'
+      selMod: '请个所有节点绑定module',
+      none: '无'
     },
     update: '更新'
   },

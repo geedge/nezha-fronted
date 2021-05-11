@@ -16,32 +16,32 @@
     <div class="sub-list" style='position: relative;'>
       <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
       <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
-      <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' class="horizontal">
+    <!--  <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' class="horizontal">
         <el-submenu index="1"  popper-class="horizontal" style="width:40px;">
           <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
-          <!--<el-submenu index="1-1">-->
-          <!--<template slot="title">文字大小</template>-->
+          &lt;!&ndash;<el-submenu index="1-1">&ndash;&gt;
+          &lt;!&ndash;<template slot="title">文字大小</template>&ndash;&gt;
           <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
           <el-menu-item @click="changeFontSize(15)" :class="{fontSet:true,menuActive:fontSize==15, middleFont:true}" index="1-2">A</el-menu-item>
           <el-menu-item @click="changeFontSize(20)" :class="{fontSet:true,menuActive:fontSize==20, bigFont:true}" index="1-3">A</el-menu-item>
-          <!--<el-menu-item class="fontSet" index="1-4">大</el-menu-item>-->
-          <!--</el-submenu>-->
-          <!--<el-submenu index="1-2" >-->
-          <!--<template slot="title">字体</template>-->
-          <!--<el-menu-item index="1-2-1">Monosapace</el-menu-item>-->
-          <!--<el-menu-item index="1-2-2">Courier New</el-menu-item>-->
-          <!--</el-submenu>-->
+          &lt;!&ndash;<el-menu-item class="fontSet" index="1-4">大</el-menu-item>&ndash;&gt;
+          &lt;!&ndash;</el-submenu>&ndash;&gt;
+          &lt;!&ndash;<el-submenu index="1-2" >&ndash;&gt;
+          &lt;!&ndash;<template slot="title">字体</template>&ndash;&gt;
+          &lt;!&ndash;<el-menu-item index="1-2-1">Monosapace</el-menu-item>&ndash;&gt;
+          &lt;!&ndash;<el-menu-item index="1-2-2">Courier New</el-menu-item>&ndash;&gt;
+          &lt;!&ndash;</el-submenu>&ndash;&gt;
         </el-submenu>
-<!--        <el-submenu index="2" style="width:50px;" popper-class="horizontal">-->
-<!--          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>-->
-<!--          <el-menu-item @click="showUploadBox" index="2-1">-->
-<!--            <div>{{$t('webshell.upload')}}</div>-->
-<!--          </el-menu-item>-->
-<!--          <el-menu-item @click="showDownloadBox" index="2-2">-->
-<!--            <div>{{$t('webshell.download')}}</div>-->
-<!--          </el-menu-item>-->
-<!--        </el-submenu>-->
-      </el-menu>
+&lt;!&ndash;        <el-submenu index="2" style="width:50px;" popper-class="horizontal">&ndash;&gt;
+&lt;!&ndash;          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>&ndash;&gt;
+&lt;!&ndash;          <el-menu-item @click="showUploadBox" index="2-1">&ndash;&gt;
+&lt;!&ndash;            <div>{{$t('webshell.upload')}}</div>&ndash;&gt;
+&lt;!&ndash;          </el-menu-item>&ndash;&gt;
+&lt;!&ndash;          <el-menu-item @click="showDownloadBox" index="2-2">&ndash;&gt;
+&lt;!&ndash;            <div>{{$t('webshell.download')}}</div>&ndash;&gt;
+&lt;!&ndash;          </el-menu-item>&ndash;&gt;
+&lt;!&ndash;        </el-submenu>&ndash;&gt;
+      </el-menu>-->
 
       <el-tabs :before-leave="beforeLeave"
                @tab-click="handleClick"
@@ -234,7 +234,7 @@
             <el-form-item :label='$t("webshell.host")' prop="host">
               <el-input v-model="customConnect.host" size="small"/>
             </el-form-item>
-            <el-form-item :label='$t("webshell.port")' prop="host">
+            <el-form-item :label='$t("webshell.port")' prop="port">
               <el-input v-model="customConnect.port" size="small"/>
             </el-form-item>
             <el-form-item :label='$t("webshell.authUsername")' prop="authUsername">
@@ -858,11 +858,12 @@ export default {
       if (this.assetShow) {
         this.$refs.assetConnect.validate((valid) => {
           if (valid) {
-            // this.show(id, host, accountId, port)
-            const asset = this.assetData.find(item => item.id == this.assetContent.assetId)
-            this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
-            this.assetShow = false
-            this.prevent_opt.save = false
+            this.$get('asset/asset/' + this.assetContent.assetId).then(res => {
+              const asset = res.data
+              this.addConsole(asset.id, asset.manageIp, '', '', 'asset')
+              this.assetShow = false
+              this.prevent_opt.save = false
+            })
           } else {
             this.prevent_opt.save = false
           }
@@ -905,7 +906,7 @@ export default {
       this.assetContent.assetId = ''
       this.customConnect = {
         host: '',
-        port: '',
+        port: 22,
         authType: 1,
         authUsername: '',
         authPin: '',

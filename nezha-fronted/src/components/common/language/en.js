@@ -215,8 +215,11 @@ const en = {
         panelId: 'ID' // ID
       },
       // 图表-侧滑框
-      createChartTitle: 'New chart template', // "新增图表"
-      editChartTitle: 'Edit', // "编辑图表"
+      createChartTitle: 'New chart', // "新增图表"
+      createChartTempTitle: 'New chart template', // "新增图表"
+      createChartByTemp: 'New chart by template',
+      editChartTitle: 'Edit chart', // "编辑图表""
+      editChartTempTitle: 'Edit chart template', // "编辑图表""
       chartForm: {
         chartId: 'ID',
         chartName: 'Chart Name',
@@ -1344,7 +1347,8 @@ const en = {
       unitError: 'Please select the folder',
       imgError: 'Please upload pictures',
       folder: 'Folder',
-      selMod: 'Please bind module for all nodes'
+      selMod: 'Please bind module for all nodes',
+      none: 'None'
     },
     update: '更新'
   },

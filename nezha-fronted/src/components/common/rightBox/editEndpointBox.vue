@@ -10,7 +10,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{$t("project.endpoint.editEndpoint") + "  ID：" + editEndpoint.id}}</div>
+    <div class="right-box-title">{{$t("project.endpoint.editEndpoint") }}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->

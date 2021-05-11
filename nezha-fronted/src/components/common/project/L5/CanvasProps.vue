@@ -35,11 +35,11 @@
           <!--metric-->
           <div class="right-box-sub-title" style="margin-bottom: 10px">
             <span>{{$t('alert.config.expr')}}</span>
-            <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;">
-              <span class="create-square-box">
-                <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
-              </span>
-            </span>
+<!--            <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;">-->
+<!--              <span class="create-square-box">-->
+<!--                <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>-->
+<!--              </span>-->
+<!--            </span>-->
           </div>
           <el-row :key="index" class="element-item form-row-item" style=""
                   v-for="(item,index) in selection.pen.data.expressArr">
@@ -146,8 +146,9 @@
           </div>
           <!--value mapping-->
           <el-row class="form-row-title">
-            {{$t('dashboard.panel.chartForm.thresholds')}} <span
-            style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >2:Critical）</span>
+            {{$t('dashboard.panel.chartForm.thresholds')}}
+            <span v-if="selection.pen.data.valueMappingSort !=='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >{{selection.pen.data.valueMapping.length}}:Critical）</span>
+            <span v-if="selection.pen.data.valueMappingSort ==='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（{{selection.pen.data.valueMapping.length}}:Critical > … >0:Ok）</span>
           </el-row>
           <div style="width: 100%;margin-top: 10px">
             <div class="thresholds-box">
@@ -232,13 +233,13 @@
             <i class="nz-icon nz-icon-plus"></i>
           </div>
 
-          <!--link-->
-          <el-row class="form-row-title">
-            {{$t('project.topology.link')}}
-          </el-row>
-          <el-form-item :label="'URL'" class="full-form-item" prop="type">
-            <el-input v-model="selection.pen.data.url" class="input" size="small"></el-input>
-          </el-form-item>
+<!--          &lt;!&ndash;link&ndash;&gt;-->
+<!--          <el-row class="form-row-title">-->
+<!--            {{$t('project.topology.link')}}-->
+<!--          </el-row>-->
+<!--          <el-form-item :label="'URL'" class="full-form-item" prop="type">-->
+<!--            <el-input v-model="selection.pen.data.url" class="input" size="small"></el-input>-->
+<!--          </el-form-item>-->
 
         </el-form>
       </el-tab-pane>
@@ -253,7 +254,91 @@
           <!--样式-->
           <el-collapse-item :title="'Style'" name="4" v-if="selection.pen">
             <div class="flex flex-warp">
-              <div class="props-pen-item">
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>X</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.x"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                  >
+                    <template slot="append">px</template>
+                  </el-input-number>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>Y</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.y"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()">
+                    <template slot="append">px</template>
+                  </el-input-number>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>{{$t('project.topology.width')}}</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.width"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0">
+                    <template slot="append">px</template>
+                  </el-input-number>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+                <div>{{$t('project.topology.height')}}</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="2"
+                    controls-position="right"
+                    size="small"
+                    name="x"
+                    class="input"
+                    v-model.number="selection.pen.rect.height"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"
+                    :min="0">
+                    <template slot="append">px</template>
+                  </el-input-number>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.circularBead')}}（0 - 1）</div>
                 <div class="p10 pl0">
                   <el-input-number
@@ -274,7 +359,7 @@
                 </div>
               </div>
 
-              <div class="props-pen-item">
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.rotate')}}（°）</div>
                 <div class="p10 pl0">
                   <el-input-number
@@ -534,13 +619,13 @@
         <div class="project-content node-content">
           <div class="project-content-title">{{$t('project.topology.animation')}}
             <span class="float-right" style="margin-right: 10px">
-              <el-switch
-                v-model="selection.pen.data.animatePlay"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-                @change="()=>{onAnimate()}">
-              </el-switch>
+<!--              <el-switch-->
+<!--                v-model="selection.pen.data.animatePlay"-->
+<!--                :active-value="true"-->
+<!--                :inactive-value="false"-->
+<!--                active-color="#ee9d3f"-->
+<!--                @change="()=>{onAnimate()}">-->
+<!--              </el-switch>-->
             </span>
           </div>
           <div class="project-content-box" style="width: 100%">
@@ -551,7 +636,7 @@
                 <el-select
                   v-model="selection.pen.animateType"
                   size="small"
-
+                  @change="(val)=>{changeAnimatePlay(val,'node')}"
                 >
                   <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
@@ -563,7 +648,8 @@
               <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
                 <el-select v-model="selection.pen.animateType" size="small"
-                           @change="onAnimate">
+                           @change="(val)=>{changeAnimatePlay(val,'line')}"
+                           >
                   <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
                              :label="item.name"></el-option>
                 </el-select>
@@ -1045,7 +1131,8 @@ export default {
         { id: 1, name: this.$t('project.topology.flow') },
         { id: 'beads', name: this.$t('project.topology.beads') },
         { id: 'dot', name: this.$t('project.topology.dot') },
-        { id: 'comet', name: this.$t('project.topology.comet') }
+        { id: 'comet', name: this.$t('project.topology.comet') },
+        { id: 'custom', name: this.$t('project.topology.none') }
       ],
       nodeAnimateOptions: [
         {
@@ -1071,6 +1158,10 @@ export default {
         {
           id: 'fade',
           name: this.$t('project.topology.fade')
+        },
+        {
+          id: '',
+          name: this.$t('project.topology.none')
         }
       ],
       predefineColors: [
@@ -1386,6 +1477,22 @@ export default {
     onClickFromArrow (arrow) {
       this.selection.pen.fromArrow = arrow
       this.drowdown = 0
+      this.onChange()
+    },
+    changeAnimatePlay (val, type) {
+      if (type === 'node') {
+        if (val === 'custom') {
+          this.selection.pen.data.animatePlay = false
+        } else {
+          this.selection.pen.data.animatePlay = true
+        }
+      } else if (type === 'line') {
+        if (val === 'custom') {
+          this.selection.pen.data.animatePlay = false
+        } else {
+          this.selection.pen.data.animatePlay = true
+        }
+      }
       this.onChange()
     },
     onAnimate (val) {
