@@ -13,7 +13,7 @@
       <div class="container__form">
         <el-form ref="agentForm" :model="editPromServer" :rules="rules" label-position = "top" label-width="120px">
           <!--DC-->
-          <el-form-item :label="$t('config.agent.name')" prop="name">
+          <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
             <div class="right-box-form-content">
               <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
