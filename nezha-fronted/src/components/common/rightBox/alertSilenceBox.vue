@@ -80,11 +80,11 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label='$t("alert.silence.reason")' prop="reason" class="range-time">
+        <el-form-item :label='$t("alert.silence.remark")' prop="remark" class="range-time">
           <el-input
             type="textarea"
             :placeholder="$t('alert.description')"
-            v-model="editAlertSilence.reason"
+            v-model="editAlertSilence.remark"
             maxlength="512"
             show-word-limit>
 
@@ -160,7 +160,7 @@ export default {
         ruleId: '',
         type: '',
         linkId: '',
-        reason: '',
+        remark: '',
         time: [],
         matchers: [
           { name: '', value: '', regex: 0 }

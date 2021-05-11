@@ -105,7 +105,7 @@ export default {
         ruleId: '',
         type: 'asset',
         linkId: '',
-        reason: '',
+        remark: '',
         time: [],
         matchers: [
           { name: '', value: '', regex: 0 }

@@ -147,8 +147,8 @@ export default {
           show: true,
           width: 120
         }, {
-          label: this.$t('alert.silence.reason'),
-          prop: 'reason',
+          label: this.$t('alert.silence.remark'),
+          prop: 'remark',
           show: true,
           width: 120
         }, {

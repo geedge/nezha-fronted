@@ -1140,7 +1140,7 @@ const en = {
       edit: 'Edit alert silence',
       time: 'Time',
       matchers: 'matchers',
-      reason: 'Description',
+      remark: 'Description',
       selectTime: 'Please select time',
       selectMather: 'Required',
       datacenter: 'datacenter',

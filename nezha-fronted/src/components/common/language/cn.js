@@ -1118,7 +1118,7 @@ const cn = {
       edit: '修改告警静默',
       time: '时间',
       matchers: 'matchers',
-      reason: '描述',
+      remark: '描述',
       selectTime: '请选择时间',
       selectMather: '必填项',
       datacenter: '数据中心',
