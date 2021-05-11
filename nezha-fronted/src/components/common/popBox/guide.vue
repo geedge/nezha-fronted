@@ -326,6 +326,25 @@ export default {
         flex: 1;
         position: relative;
 
+        &:not(:nth-of-type(2)):before {
+          top: 100px;
+          width: 50%;
+          height: 2px;
+          background-color: #d8d8d8;
+          position: absolute;
+          left: 0;
+          content: "";
+        }
+        &:not(:last-of-type):after {
+          top: 100px;
+          width: 50%;
+          height: 2px;
+          background-color: #d8d8d8;
+          position: absolute;
+          right: 0;
+          content: "";
+        }
+
         &.guide-item--active {
           .item__title {
             color: #101B27;
@@ -359,6 +378,7 @@ export default {
           box-sizing: border-box;
           background-color: #F6F6F6;
           transition: all linear .3s;
+          z-index: 1;
 
           i {
             position: absolute;
