@@ -26,7 +26,7 @@
         ></cabinet-table>
       </template>
       <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'panel_chart_add'" class="top-tool-btn margin-r-10" @click.stop="addChart">
+        <button id="asset-create-asset" v-has="'dc_add'" class="top-tool-btn margin-r-10" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
       </template>
@@ -56,13 +56,11 @@ export default {
     'delete-button': deleteButton,
     cabinetTable
   },
-  props: {
-    obj: Object // 关联的实体对象
-  },
   data () {
     return {
       url: 'dc/cabinet',
       tableId: 'cabinetTable',
+
       blankObject: {
         id: '',
         idcId: '',
@@ -104,15 +102,6 @@ export default {
     // 切换tab
     changeTab (tab) {
       this.$emit('changeTab', tab)
-    },
-    addChart () {
-      this.rightBox.show = true
-    },
-    closeRightBox (refresh) {
-      this.rightBox.show = false
-      if (refresh) {
-        this.refresh()
-      }
     }
   },
   watch: {

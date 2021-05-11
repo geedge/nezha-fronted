@@ -57,6 +57,7 @@ export default {
     }
   },
   created() {
+
   },
   methods: {
     clickOutside () {
@@ -71,7 +72,7 @@ export default {
       this.prevent_opt.save = true
       this.$refs.cabinetForm.validate(valid => {
         if (valid) {
-          this.editCabinet.idcId = this.currentDc.id
+          this.editCabinet.dcId = this.currentDc.id
           if (this.editCabinet.id) {
             this.$put('/dc/cabinet', this.editCabinet).then(res => {
               this.prevent_opt.save = false
@@ -126,6 +127,7 @@ export default {
       deep: true,
       immediate: true,
       handler: function (n, o) {
+        console.info(n)
         if (n) {
           this.editCabinet = JSON.parse(JSON.stringify(n))
         }

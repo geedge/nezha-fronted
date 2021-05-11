@@ -22,8 +22,7 @@
             </el-form-item>
             <el-form-item :label='$t("asset.principal")' prop="principal">
               <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
-                <el-option v-for="item in userData" :id="'dc-principal-op-'+item.userId" :key="item.userId" :label="item.username" :value="item.userId">
-                  <span>{{item.username}}</span>
+                <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -91,7 +90,7 @@ export default {
     }
   },
   created() {
-    console.log(this.props)
+
   },
   methods: {
     /* 关闭弹框 */
@@ -209,7 +208,6 @@ export default {
       deep: true,
       handler (n, o) {
         this.editDc = JSON.parse(JSON.stringify(n))
-        console.info(this.editDc)
         this.$nextTick(() => {
           this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
         })
