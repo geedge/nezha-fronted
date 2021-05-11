@@ -40,7 +40,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <agent-box v-if="rightBox.show" :prom-server="object" @close="closeRightBox"></agent-box>
+      <agent-box v-if="rightBox.show" :agent="object" @close="closeRightBox"></agent-box>
     </transition>
     <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
       <div v-if="showAgentDownload" class="agent-box">

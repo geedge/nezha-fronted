@@ -60,7 +60,7 @@ const en = {
     createAlertRule: 'New alert rule',
     createUser: 'New user',
     createRole: 'New role',
-    createPrometheusServer: 'New prometheus server',
+    createPrometheusServer: 'New agent',
     createDatacenter: 'New Data center',
     createCabinet: 'New cabinet',
     createModel: 'New model',
@@ -141,7 +141,11 @@ const en = {
     },
     system: {
       configTitle: 'System configuration',
-      configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port'
+      configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port',
+      federation:'Federation',
+      federationEnable:'Enable',
+      federationDisable:'Disable',
+
     },
     name: 'Database name',
     username: 'Username',
@@ -672,9 +676,9 @@ const en = {
     },
     agent: {
       // 侧滑框
-      promId: 'Prometheus server ID', // "Prometheus Server ID"
-      createProm: 'New prometheus server', // "新增Prometheus Server"
-      editProm: 'Edit prometheus server', // "修改Prometheus Server"
+      promId: 'Agent ID', // "Prometheus Server ID"
+      createProm: 'New agent', // "新增Prometheus Server"
+      editProm: 'Edit agent', // "修改Prometheus Server"
       type: 'Type', // "类别"
       checkTime: 'Check time',
       dataCenter: 'Data center',

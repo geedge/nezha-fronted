@@ -1444,7 +1444,7 @@ export default {
         this.getAssetStateData()
       }
       if (this.$route.path === '/agent') {
-        this.getDcData()
+        // this.getDcData()
       }
       if (this.$route.path === '/model') {
         this.getBrandData()
