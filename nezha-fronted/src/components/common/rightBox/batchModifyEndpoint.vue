@@ -98,11 +98,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns right-box__footer">
-      <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="ep-add">
+      <button @click="save" class="footer__btn" id="ep-add">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

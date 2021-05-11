@@ -3,8 +3,7 @@
     <div class="right-box right-box-asset" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
-        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta") + " ID：" + editAssetMeta.id :
-          $t("config.assetLabel.addMeta")}}
+        <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("config.assetLabel.addMeta")}}
         </div>
         <div class="header__operation">
           <span v-cancel="{obj: editAssetMeta, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
@@ -127,11 +126,11 @@
       <!-- end--表单-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button v-cancel="{obj:editAssetMeta,func:esc}" id="editAssetMeta-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <div class="right-box__footer">
+        <button v-cancel="{obj:editAssetMeta,func:esc}" id="editAssetMeta-box-esc" class="footer__btn footer__btn--light">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="editAssetMeta-box-save">
+        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="editAssetMeta-box-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

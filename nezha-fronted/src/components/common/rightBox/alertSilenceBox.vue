@@ -97,13 +97,13 @@
     <!-- end--表单-->
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns right-box__footer">
+    <div class="right-box__footer">
       <button v-cancel="{obj:editAlertSilence,func:esc}" id="alert-box-esc"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+              class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="alert-box-save">
+              class="footer__btn" id="alert-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

@@ -109,6 +109,7 @@ const en = {
     parent: 'Parent',
     dc: 'Data center',
     labels: 'Labels',
+    moreOption: 'More option',
     silence: 'Silence'
   },
   pageSize: '/page',
@@ -1161,7 +1162,7 @@ const en = {
       endpointInfo: 'Endpoint information'
     },
     project: {
-      project: 'Project', // "系统"
+      project: 'Name', // "系统"
       projectName: 'Project name', // "系统名称"
       editProject: 'Edit project', // "编辑系统"
       description: 'Description', // "描述"
@@ -1169,7 +1170,7 @@ const en = {
     },
     module: {
       module: 'Module', // "组件"
-      moduleName: 'Module name', // "组件名称"
+      moduleName: 'Name', // "组件名称"
       editModule: 'Edit module', // "编辑组件"
       description: 'Description', // "描述"
       createModule: 'New module', // "新增组件"
@@ -1191,6 +1192,7 @@ const en = {
       createEndpoint: 'New endpoint',
       batchEndpoint: 'Batch Endpoint',
       endpointName: 'Endpoint name',
+      name: 'Name',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
         relation: 'Module associated Endpoint will configure the following ports/paths/parameters by default'// "组件关联的Endpoint将默认配置以下端口/路径/参数"

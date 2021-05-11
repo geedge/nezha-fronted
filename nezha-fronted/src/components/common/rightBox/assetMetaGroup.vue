@@ -12,7 +12,7 @@
       <!-- end--顶部按钮-->
 
       <!-- begin--标题-->
-      <div class="right-box-title">{{editMetaGroup.id ? $t("config.assetMeta.editGroup") + " ID：" + editMetaGroup.id :
+      <div class="right-box-title">{{editMetaGroup.id ? $t("config.assetMeta.editGroup") :
         $t("config.assetMeta.addGroup")}}
       </div>
       <!-- end--标题-->
@@ -31,11 +31,11 @@
       <!-- end--表单-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button v-cancel="{obj:editMetaGroup,func:esc}" id="editMetaGroup-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <div class="right-box__footer">
+        <button v-cancel="{obj:editMetaGroup,func:esc}" id="editMetaGroup-box-esc" class="footer__btn footer__btn--light">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="editMetaGroup-box-save">
+        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="editMetaGroup-box-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

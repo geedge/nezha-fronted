@@ -4,7 +4,7 @@
       <!-- begin--标题-->
       <div class="right-box-title">
       <span v-if="optionType === 'edit'">
-       {{ $t("project.module.editEndpoint")}} {{editEndpoint.id}}
+       {{ $t("project.module.editEndpoint")}}
       </span>
         <span v-if="optionType === 'batch'">
        {{ $t("project.module.batchEndpoint")}}
@@ -23,7 +23,7 @@
     <div class="right-box-form-box  right-box__container" ref="scrollbar">
       <el-form class="right-box-form right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
         <!--name-->
-        <el-form-item :label='$t("project.module.endpointName")' prop="name" label-width="125px" v-if="optionType!=='batch'">
+        <el-form-item :label='$t("project.module.name")' prop="name" label-width="125px" v-if="optionType!=='batch'">
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editEndpoint.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
         <!--project-->
@@ -244,11 +244,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns right-box__footer">
-      <button v-cancel="{obj:editEndpoint,func:esc}" id="module-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editEndpoint,func:esc}" id="module-box-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" v-has="'monitor_endpoint_edit'" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="module-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" v-has="'monitor_endpoint_edit'" class="footer__btn" id="module-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -462,7 +462,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
-            if (this.type === 'add') {
+            if (this.optionType === 'add') {
               this.prevent_opt.save = true
               if (this.editEndpoint.assetId) {
                 this.$emit('close', true, this.editEndpoint, false)
@@ -471,7 +471,7 @@ export default {
                 this.$emit('close', true, this.editEndpoint, true)
                 this.prevent_opt.save = false
               }
-            } else if (this.type === 'edit') {
+            } else if (this.optionType === 'edit') {
               if (this.editEndpoint.id) {
                 this.$put('monitor/endpoint', [params]).then(response => {
                   if (response.code === 200) {

@@ -1,21 +1,12 @@
 <template>
   <transition name="right-box-580">
     <div class="right-box right-box-panel z-top" v-if="rightBox.show" v-clickoutside="{obj:panel,func:clickos}">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns right-box-form-delete">
-        <button @click="del(panel)" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-min-width-82" type="button" v-has="'panel_delete'" v-if="panel.id != ''">
-          <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-          <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-        </button>
-      </div>
-      <!-- end--顶部按钮-->
-
       <!-- begin--标题-->
-      <div class="right-box-title">{{rightBox.title}}</div>
+      <div class="right-box-title right-box__header">{{rightBox.title}}</div>
       <!-- end--标题-->
 
       <!-- begin--表单-->
-      <div class="right-box-form-box">
+      <div class="right-box-form-box right-box__container">
         <el-form class="right-box-form right-box-form-left" label-width="120px"  :model="panel" label-position = "top" ref="panelForm">
           <el-form-item :label='$t("overall.name")' prop="name" :rules="{required: true, message: $t('validate.required'), trigger: 'blur'}">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="panel.name" size="small" id="panel-box-input-name"></el-input>
@@ -25,11 +16,11 @@
       <!-- end--表单-->
 
       <!-- begin--底部按钮-->
-      <div class="right-box-bottom-btns">
-        <button v-cancel="{obj:panel,func:esc}" id="panel-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <div class="right-box__footer">
+        <button v-cancel="{obj:panel,func:esc}" id="panel-box-esc" class="footer__btn footer__btn--light">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="panel-box-save">
+        <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="panel-box-save">
           <span>{{$t('overall.save')}}</span>
         </button>
       </div>

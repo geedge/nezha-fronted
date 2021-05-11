@@ -10,7 +10,7 @@
     <!-- end--顶部按钮-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editModel.id ? ($t("config.model.editModel") + "  ID：" + editModel.id) : $t("config.model.createModel")}}</div>
+    <div class="right-box-title">{{editModel.id ? ($t("config.model.editModel")) : $t("config.model.createModel")}}</div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -74,11 +74,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editModel,func:esc}" id="model-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editModel,func:esc}" id="model-box-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="model-box-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="model-box-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

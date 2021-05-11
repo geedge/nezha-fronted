@@ -242,11 +242,11 @@
     </div>
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button v-cancel="{obj:editAsset,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="asset-edit-cancel">
+    <div class="right-box__footer">
+      <button v-cancel="{obj:editAsset,func:esc}" class="footer__btn footer__btn--light" id="asset-edit-cancel">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="asset-edit-save">
+      <button :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" @click="save" class="footer__btn" id="asset-edit-save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

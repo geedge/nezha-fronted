@@ -2,7 +2,7 @@
   <div v-clickoutside="{obj:editPromServer,func:clickOutside}" class="right-box right-box-prom">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm") + "  ID：" + editPromServer.id) : $t("config.agent.createProm")}}</div>
+      <div class="header__title">{{editPromServer.id ? ($t("config.agent.editProm")) : $t("config.agent.createProm")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editPromServer, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -55,17 +55,17 @@
           </el-form-item>
         </el-form>
       </div>
-      
+
     </div>
     <!-- end--表单-->
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
+    <div class="right-box__footer">
       <button id="prom-esc" v-cancel="{obj:editPromServer,func:esc}"
-              class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+              class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button id="prom-save" :class="{'nz-btn-disabled':prevent_opt.save}"
-              :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save">
+              :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

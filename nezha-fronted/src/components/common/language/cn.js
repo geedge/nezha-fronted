@@ -1174,7 +1174,8 @@ const cn = {
       editEndpoint: '编辑 Endpoint',
       createEndpoint: '新增Endpoint',
       batchEndpoint: '批量 Endpoint',
-      endpointName: 'Endpoint name'
+      endpointName: 'Endpoint name',
+      name: '名称'
     },
     endpoint: {
       createEndpoint: '新增Endpoint',

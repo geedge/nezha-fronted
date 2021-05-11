@@ -108,11 +108,11 @@
     <!-- end--表单-->
 
     <!--底部按钮-->
-    <div class="right-box-bottom-btns">
-      <button id="alert-box-esc" v-cancel="{obj:editAlertRule,func:esc}" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+    <div class="right-box__footer">
+      <button id="alert-box-esc" v-cancel="{obj:editAlertRule,func:esc}" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button id="alert-box-save" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="save">
+      <button id="alert-box-save" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
