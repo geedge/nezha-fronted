@@ -103,6 +103,7 @@ const cn = {
     SyncSave: '保存同时更新 Assets',
     copySuccess: '复制成功',
     moreOption: '更多选项',
+    copy: '复制',
     silence: '静默'
   },
   setup: {

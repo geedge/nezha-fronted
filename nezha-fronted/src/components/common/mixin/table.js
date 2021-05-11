@@ -46,6 +46,10 @@ export default {
           this.$emit('duplicate', row)
           break
         }
+        case 'copy': {
+          this.$emit('copy', row)
+          break
+        }
         default:
           break
       }

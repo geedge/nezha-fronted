@@ -48,7 +48,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
-          @copy="(row) => {copyRow(row, 'exprTmpl')}"
+          @copy="(row) => {copy(row)}"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"

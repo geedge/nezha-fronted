@@ -44,6 +44,10 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>
+        <template v-else-if="item.prop === 'method'">
+          <span v-if="scope.row.methods">{{scope.row.methods.map(label=>label.name).join(',')}}</span>
+          <span v-else>-</span>
+        </template>
         <template v-else-if="item.prop === 'receivers'">
           <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
         </template>
@@ -123,7 +127,7 @@ export default {
           prop: 'description',
           show: true
         }, {
-          label: this.$t('alert.message'),
+          label: this.$t('alert.alert'),
           prop: 'alertNum',
           show: true,
           width: 150,

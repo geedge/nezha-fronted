@@ -49,6 +49,10 @@ export default {
           this.del(row)
           break
         }
+        case 'copy': {
+          this.copy(row)
+          break
+        }
         default:
           break
       }
@@ -134,6 +138,10 @@ export default {
           this.rightBox.show = true
         }
       })
+    },
+    copy (u) {
+      this.object = { ...u, name: 'Copy from ' + u.name, id: '' }
+      this.rightBox.show = true
     },
     esc () {
       this.rightBox.show = false

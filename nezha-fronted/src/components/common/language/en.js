@@ -110,6 +110,7 @@ const en = {
     dc: 'Data center',
     labels: 'Labels',
     moreOption: 'More option',
+    copy: 'Copy',
     silence: 'Silence'
   },
   pageSize: '/page',

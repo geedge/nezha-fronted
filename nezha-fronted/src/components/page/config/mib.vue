@@ -106,6 +106,10 @@ export default {
     },
     toBrowserTab () {
       this.$emit('toBrowserTab')
+    },
+    edit (u) {
+      this.object = { ...u }
+      this.rightBox.show = true
     }
   }
 }

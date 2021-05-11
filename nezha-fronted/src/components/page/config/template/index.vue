@@ -1,6 +1,6 @@
 <template>
   <div>
-    <exprTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'exprTemp'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></exprTemp>
+    <exprTemp class="template-tab" :show-tab="showTab" v-show="showTab == 'exprTemp'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></exprTemp>
     <chartTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'chartTemp'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></chartTemp>
   </div>
 </template>
