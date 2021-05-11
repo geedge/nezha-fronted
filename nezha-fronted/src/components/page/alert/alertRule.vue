@@ -161,8 +161,6 @@ export default {
     }
   },
   mounted () {
-    this.initEvent()
-
     // 是否弹出侧滑
     const add = this.$route.query.add
     if (add) {
