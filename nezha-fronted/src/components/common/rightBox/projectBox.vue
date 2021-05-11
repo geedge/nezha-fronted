@@ -12,7 +12,7 @@
     </div>
     <div class="right-box-form-box right-box__container">
       <el-form class="right-box-form right-box-form-left" :model="editProject" label-position = "top" label-width="120px" :rules="rules" ref="projectForm">
-        <el-form-item :label='$t("project.project.projectName")' prop="name">
+        <el-form-item :label='$t("project.project.project")' prop="name">
           <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name" id="project-box-input-name"></el-input>
         </el-form-item>
         <el-form-item :label='$t("project.project.description")'>

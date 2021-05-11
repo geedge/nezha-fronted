@@ -2,7 +2,7 @@
   <div class="right-box right-box-module" v-clickoutside="{obj:editModule,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">{{editModule.id ? $t("project.module.editModule") + "  ID：" + editModule.id : $t("project.module.createModule")}}</div>
+      <div class="right-box-title">{{editModule.id ? $t("project.module.editModule") : $t("project.module.createModule")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: editModule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
