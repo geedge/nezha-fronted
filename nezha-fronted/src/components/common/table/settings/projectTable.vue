@@ -95,31 +95,31 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('project.project.project'),
           prop: 'name',
           show: true,
           minWidth: 150,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('project.module.module'),
           prop: 'moduleNum',
           show: true,
           width: 150,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('project.endpoint.endpoint'),
           prop: 'endpointNum',
           show: true,
           width: 150,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alertNum',
           show: true,
           width: 150,
-          sortable:'custom'
+          sortable: 'custom'
         },
         {
           label: this.$t('overall.remark'),

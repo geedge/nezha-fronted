@@ -127,7 +127,7 @@ export default {
           sortable: 'custom'
         },
         {
-          label: 'Name',
+          label: this.$t('alert.silence.name'),
           prop: 'name',
           show: true,
           width: 150

@@ -1194,7 +1194,7 @@ const en = {
       privProtocol: 'Priv protocol',
       contextName: 'Context name',
       privpin: 'Priv password',
-      alerts: 'Alerts',
+      alerts: 'Alert',
       asset: 'Asset',
       editEndpoint: 'Edit endpoint',
       createEndpoint: 'New endpoint',

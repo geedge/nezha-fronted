@@ -1148,7 +1148,7 @@ const cn = {
       endpointInfo: 'Endpoint信息'
     },
     project: {
-      project: '系统',
+      project: '名称',
       projectName: '系统名称',
       editProject: '编辑系统',
       description: '描述',
@@ -1175,7 +1175,7 @@ const cn = {
       authProtocol: '认证协议',
       privProtocol: '隐私协议',
       contextName: '内容名称',
-      alerts: 'Alerts',
+      alerts: '告警',
       privpin: '隐私密码',
       asset: 'Asset',
       editEndpoint: '编辑 Endpoint',
