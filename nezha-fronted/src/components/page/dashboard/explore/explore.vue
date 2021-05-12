@@ -28,7 +28,6 @@
             :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
             :styleType="1"
             @addExpression="addExpression"
-            @change="expressionChange"
             @copyExpression="copyExpression"
             @removeExpression="removeExpression"
           ></promql-input>
