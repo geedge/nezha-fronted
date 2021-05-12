@@ -831,7 +831,7 @@ const en = {
     mib: {
       mib: 'MIB file',
       fileName: 'File name',
-      remark: 'Remark',
+      description: 'Description',
       updateUser: 'Update user',
       updateAt: 'Update time',
       editMib: 'Edit MIB',

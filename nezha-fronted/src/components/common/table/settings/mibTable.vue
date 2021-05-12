@@ -96,7 +96,7 @@
 import table from '@/components/common/mixin/table'
 import axios from 'axios'
 export default {
-  name: 'roleTable',
+  name: 'mibTable',
   mixins: [table],
   data () {
     return {
@@ -121,7 +121,7 @@ export default {
           prop: 'modelsDetail',
           show: true
         }, {
-          label: this.$t('config.mib.remark'),
+          label: this.$t('config.mib.description'),
           prop: 'remark',
           show: true
         }, {

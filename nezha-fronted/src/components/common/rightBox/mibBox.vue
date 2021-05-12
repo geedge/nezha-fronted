@@ -16,18 +16,15 @@
               id="mib-input-selected-models"
               :options="modelOptions"
               :props="modelProps"
-              :show-all-levels="false"
               v-model="selectedModels"
               @change="selectedModelChange"
               ref="modelSelector"
-              collapse-tags
-              :placeholder="$t('config.mib.modelTip')"
               size="small"
               class="right-box__select"
-              popper-class="right-box-select-dropdown prevent-clickoutside"
+              popper-class="prevent-clickoutside limit-height"
               clearable></el-cascader>
           </el-form-item>
-          <el-form-item :label="$t('config.mib.remark')" prop="remark">
+          <el-form-item :label="$t('config.mib.description')" prop="remark">
             <el-input maxlength="512" rows="4" show-word-limit type="textarea" placeholder="" v-model="editMib.remark" size="small" id="mib-box-input-remark"></el-input>
           </el-form-item>
           <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!editMib.id}">
@@ -115,34 +112,23 @@ export default {
       this.$emit('close', refresh)
     },
     queryModelInfos: function () {
-      this.$get('model?pageSize=-1').then(response => {
+      this.$get('asset/model?pageSize=-1').then(response => {
         if (response.code == 200) {
           const modelInfos = response.data.list
           const sortModels = {}
           modelInfos.forEach((item) => {
-            if (!sortModels[item.type.value]) { // 没有这个assetType
-              sortModels[item.type.value] = {}
-            }
-            if (!sortModels[item.type.value][item.vendor.value]) {
-              sortModels[item.type.value][item.vendor.value] = []
+            if (!sortModels[item.brand.name]) { // 没有这个assetType
+              sortModels[item.brand.name] = []
             }
             item.label = item.name
             item.value = item.id
-            sortModels[item.type.value][item.vendor.value].push(item)
+            sortModels[item.brand.name].push(item)
           })
-          for (const assetType of Object.keys(sortModels)) {
+          for (const brand of Object.keys(sortModels)) {
             const option = {
-              label: assetType,
-              value: assetType,
-              children: []
-            }
-            for (const vendor of Object.keys(sortModels[assetType])) {
-              const child = {
-                label: vendor,
-                value: vendor,
-                children: sortModels[assetType][vendor]
-              }
-              option.children.push(child)
+              label: brand,
+              value: brand,
+              children: sortModels[brand]
             }
             this.modelOptions.push(option)
           }
@@ -245,6 +231,7 @@ export default {
         this.editMib = JSON.parse(JSON.stringify(n))
         if (this.editMib.models) {
           this.selectedModels = this.editMib.models.split(',')
+          console.log(this.selectedModels)
         } else {
           this.selectedModels = []
         }
