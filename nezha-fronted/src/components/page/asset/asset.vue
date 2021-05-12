@@ -19,8 +19,8 @@
           :permissions="{import: 'asset_add', export: 'asset_view'}"
           class="top-tool-export margin-r-10"
           export-file-name="asset"
-          export-url="/asset/export"
-          import-url="/asset/import"
+          export-url="/asset/asset/export"
+          import-url="/asset/asset/import"
           @afterImport="getTableData"
         >
           <template slot="optionZone">

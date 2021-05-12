@@ -18,7 +18,7 @@
           import-url="monitor/module/import"
           export-file-name="expression-template"
           :params="searchLabel"
-          :permissions="{import: 'asset_add', export: 'asset_add'}"
+          :permissions="{import: 'asset.add', export: 'asset.add'}"
           @afterImport="getTableData"
           class="top-tool-export margin-r-10"
         >

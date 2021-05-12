@@ -147,7 +147,7 @@ export default {
     rollbackImport () {
       let url
       if (this.importUrl.indexOf('asset') > -1) {
-        url = '/asset/cancelImport'
+        url = '/asset/asset/cancelImport'
       } else if (this.importUrl.indexOf('endpoint') > -1) {
         url = '/monitor/endpoint/cancelImport'
       } else if (this.importUrl.indexOf('rule') > -1) {
@@ -216,7 +216,7 @@ export default {
 
       let url = null
       if (this.importUrl.indexOf('asset') > -1) {
-        url = '/asset/template'
+        url = '/asset/asset/template'
       } else if (this.importUrl.indexOf('rule') > -1) {
         url = '/alert/rule/template'
       } else if (this.importUrl.indexOf('panel') > -1) {
