@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nz-data-list
+    <nzDataList
       ref="dataList"
       :api="url"
       :layout="['searchInput', 'elementSet']"
@@ -58,7 +58,7 @@
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
-    </nz-data-list>
+    </nzDataList>
     <transition name="right-box">
       <chart-box :chart="object" :show-panel="showPanel" :from="'temp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
@@ -70,7 +70,6 @@ import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
 import chartBox from '@/components/page/dashboard/chartBox'
 import deleteButton from '@/components/common/deleteButton'
-import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
 
@@ -79,7 +78,6 @@ export default {
   components: {
     chartBox,
     deleteButton,
-    nzDataList,
     chartTmplTable,
     'export-excel': exportXLSX
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="login" @click="langListShow = false">
     <div class="model"></div>
-    <div class="logo"><img height="155" src="../../assets/img/logo-big.png"></div>
+    <div class="logo"><img src="../../assets/img/logo-big.png"></div>
     <div class='login-box'>
       <div class="login-label"></div>
       <div class="login-input">
@@ -14,7 +14,7 @@
         <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')"></input>
       </div>
       <div class="login-foot">
-        <button @click="login" class="login-btn" id="login" v-loading="loading" :class="{'nz-btn-disabled btn-disabled-cursor-not-allowed':!license.valid}">{{$t("login.login")}}</button>
+        <button id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
         <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
           <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
           <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
@@ -27,7 +27,7 @@
       </div>
       <div class="login-license">
         <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
-        <div class="license-info" v-if="!license.valid">INSTALLATION ID:{{license.token}}</div>
+        <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>
         <div class="license-upload" v-if="!license.valid">
           <el-upload
             ref="upload"
@@ -50,7 +50,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import moment from 'moment-timezone'
 export default {
   name: 'login',
   data () {
@@ -75,7 +74,7 @@ export default {
   methods: {
     ...mapActions(['loginSuccess']),
     login () {
-      if (this.loading) {
+      if (this.loading || !this.license.valid) {
         return
       }
       // if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
@@ -112,9 +111,12 @@ export default {
         return true
       }
     },
-    licenseStat: function () {
+    licenseStat () {
+      /*this.license.valid = false
+      this.license.warnInfo = 'hehehe'
+      this.license.token = 'dRqrWja/PzI8FrWVJeGqLw=='*/
       this.$get('/sys/license/state').then(response => {
-        if (response.code === 200) {
+        if (response.code && response.code === 200) {
           this.license.warnInfo = ''
           this.license.valid = true
         } else {
@@ -124,7 +126,7 @@ export default {
         this.license.token = response.token
       })
     },
-    handleChange: function (file, fileList) {
+    handleChange (file, fileList) {
       if (fileList.length > 0) {
         this.uploadFileList = [fileList[fileList.length - 1]]
       }
@@ -144,7 +146,7 @@ export default {
     }
   },
   watch: {
-    /* 'loginData.username': function(n, o) {
+    /* 'loginData.username'(n, o) {
       let lang = localStorage.getItem('nz-language-' + n);
       if (lang) {
         this.lang = lang;
@@ -168,9 +170,13 @@ export default {
 
 <style scoped lang="scss">
 .login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   background-image: url("../../assets/img/login-background.png");
   background-size: cover;
-  position: relative;
 }
 .model {
   height: 100%;
@@ -183,24 +189,20 @@ export default {
 }
 
 .logo {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 2;
+  width: 460px;
+  img{
+    width: 100%;
+  }
 }
 
 .login-box {
-  width: 460px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 50%;
   z-index: 2;
+  width: 460px;
 }
 
 .login-box .login-input {
-  padding: 20px 0;
+  padding: 12px 0;
   height: 60px;
   position: relative;
 }
@@ -233,15 +235,18 @@ export default {
 
 .login-btn {
   color: white;
-  border-radius: 3px;
-  background-image: $btn-normal-background-color;
+  border-radius: $--button-border-radius;
+  background-color: var(--theme-color-light-20);
   border: none;
   outline: none;
   height: 44px;
   width: 320px;
   cursor: pointer;
   font-size: 14px;
-  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.30);
+  transition: all linear .2s;
+}
+.login-btn:not(.nz-btn-disabled):hover {
+  background-color: var(--theme-color-light-30);
 }
 
 .login-foot-lang {
@@ -288,7 +293,8 @@ export default {
   position: absolute;
   bottom: 20px;
   z-index: 100;
-  left: calc(50% - 90px);
+  left: 50%;
+  transform: translateX(-50%);
   a{
     font-size: 14px;
     color: #eee;
@@ -309,22 +315,20 @@ export default {
   text-align: center;
   line-height: 30px;
   .license-warn{
-    color: #EF7458;
+    color: #d92926;
+    text-shadow: 1px 1px 3px #ddd;
   }
-  .license-info{
+  .license-info {
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 1px 1px 3px #333;
     white-space: nowrap;
   }
   .login-btn{
-    height: 30px;
-    width: 120px;
+    height: 40px;
+    width: auto;
+    padding: 0 20px;
   }
-}
-.login-btn.nz-btn-disabled{
-  background-image: none;
-  color: #e5e5e5;
-  background-color: #ffffff;
-  border-color: #e5e5e5 ;
-  cursor: default;
 }
 </style>
 <style>

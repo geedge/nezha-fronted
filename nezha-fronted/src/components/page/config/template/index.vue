@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <exprTemp class="template-tab" :show-tab="showTab" v-show="showTab == 'exprTemp'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></exprTemp>
-    <chartTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'chartTemp'" @changeShowTab="changeShowTab" @toCredentialTab="changeTab(['mib','credentials'],'credentials')" @toBrowserTab="changeTab(['mib','browser'],'browser')"></chartTemp>
+  <div class="temp">
+    <exprTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'exprTemp'" @changeShowTab="changeShowTab"></exprTemp>
+    <chartTemp class="template-tab" :show-tab="showTab" v-if="showTab == 'chartTemp'" @changeShowTab="changeShowTab"></chartTemp>
   </div>
 </template>
 
@@ -9,14 +9,14 @@
 import exprTemp from './exprTemp'
 import chartTemp from './chartTemp'
 export default {
-  name: 'template',
+  name: 'v-template',
   components: {
     exprTemp,
     chartTemp
   },
   data () {
     return {
-      showTab: 'exprTemp'
+      showTab: ''
     }
   },
   methods: {
@@ -45,16 +45,10 @@ export default {
       this.showTab = showTab
     }
   },
-  watch: {
-    $routePath: {
-
-      immediate: true,
-      handler (n, o) {
-        if (n.indexOf('mib') != -1 && this.$route.params.tab) {
-          this.$set(this, 'showTab', this.$route.params.tab)
-        }
-      }
-    }
+  mounted () {
+    this.$nextTick(()=>{
+      this.showTab = 'exprTemp'
+    })
   }
 }
 </script>

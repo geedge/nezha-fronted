@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nz-data-list
+    <nzDataList
       ref="dataList"
       :api="url"
       :layout="['searchInput', 'elementSet']"
@@ -37,7 +37,8 @@
         </export-excel>
 
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>
+                       id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button>
+      </template>
       <template v-slot:default="slotProps">
         <expr-tmpl-table
           ref="dataTable"
@@ -58,7 +59,7 @@
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
-    </nz-data-list>
+    </nzDataList>
     <transition name="right-box">
       <expr-tmpl-box v-if="rightBox.show" :exprTemp="object" @close="closeRightBox"></expr-tmpl-box>
     </transition>
@@ -84,7 +85,6 @@ import bus from '@/libs/bus'
 import exportXLSX from '@/components/common/exportXLSX'
 import exprTmplBox from '@/components/common/rightBox/exprTmplBox'
 import deleteButton from '@/components/common/deleteButton'
-import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import exprTmplTable from '@/components/common/table/settings/exprTmplTable'
 
@@ -93,7 +93,6 @@ export default {
   components: {
     deleteButton,
     exprTmplBox,
-    nzDataList,
     exprTmplTable,
     'export-excel': exportXLSX
   },

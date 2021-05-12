@@ -1,6 +1,6 @@
 import router from './router'
 import store from './store'
-import { post } from './http'
+import { get, post } from './http'
 import ElementUI from 'element-ui'
 import Vue from 'vue'
 import i18n from './components/common/i18n'
@@ -8,19 +8,32 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
 
-const loginWhiteList = ['/login', '/setup', '/sys/license/upload', '/sys/license/state'] // 免登陆白名单
+const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state'] // 免登陆白名单
 const permissionWhiteList = ['/menu', ...loginWhiteList] // 权限白名单
 
 router.beforeEach((to, from, next) => {
-  if (sessionStorage.getItem('nz-token')) {
+  if (to.path === '/login') { // 拦截登录页面，系统初始化检查
+    const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
+    Vue.http.get(configUrl).then(config => {
+      get(config.body.baseUrl + 'setup/inited').then(res => {
+        if (res.code === 200) {
+          if (res.inited === 0) {
+            next({ path: '/setup' })
+          } else {
+            next()
+          }
+        }
+      })
+    })
+  } else if (sessionStorage.getItem('nz-token')) {
     if (permissionWhiteList.indexOf(to.path) !== -1) {
       next()
     } else {
       new Promise(resolve => {
         if (store.getters.menuList.length === 0) {
           const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
-          Vue.http.get(configUrl).then(res => {
-            post(res.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
+          Vue.http.get(configUrl).then(config => {
+            post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
               store.commit('setMenuList', sortByOrderNum(res.data.menus))
               store.commit('setButtonList', res.data.buttons)
               store.commit('setRoleList', res.data.roles)

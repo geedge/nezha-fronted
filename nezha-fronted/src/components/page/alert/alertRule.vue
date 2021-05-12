@@ -12,15 +12,16 @@
       <template v-slot:top-tool-right>
         <export-excel
           id="alert-rule"
+          :permissions="{import: 'alertRule_add'}"
           :params="searchLabel"
-          :permissions="{import: 'rule_import', export: 'rule_export'}"
+          class="top-tool-export margin-r-10"
           export-file-name="AlertRule"
           export-url="/alert/rule/export"
           import-url="/alert/rule/import"
           @afterImport="getTableData"
         >
           <template slot="optionZone">
-            <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn margin-r-10"
+            <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn"
                     @click="add">
               <i class="nz-icon-create-square nz-icon"></i>
             </button>

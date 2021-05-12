@@ -33,6 +33,7 @@ import bus from '@/libs/bus'
 import theme from '@/assets/css/theme.scss'
 import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from 'v-selectpage'
+import nzDataList from '@/components/common/table/nzDataList'
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
     if (params.pageNumber) {
@@ -52,6 +53,7 @@ Vue.component('element-set', elementSet)
 Vue.component('loading', loading)
 Vue.component('pick-time', pickTime)
 Vue.component('myDatePicker', myDatePicker)
+Vue.component('nzDataList', nzDataList)
 
 Vue.prototype.$axios = axios
 Vue.prototype.$post = post
