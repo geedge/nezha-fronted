@@ -1,7 +1,7 @@
 <template>
   <div class="login" @click="langListShow = false">
     <div class="model"></div>
-    <div class="logo"><img height="155" src="../../assets/img/logo-big.png"></div>
+    <div class="logo"><img src="../../assets/img/logo-big.png"></div>
     <div class='login-box'>
       <div class="login-label"></div>
       <div class="login-input">
@@ -191,6 +191,9 @@ export default {
 .logo {
   z-index: 2;
   width: 460px;
+  img{
+    width: 100%;
+  }
 }
 
 .login-box {
