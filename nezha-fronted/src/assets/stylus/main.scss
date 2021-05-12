@@ -362,7 +362,7 @@ li{
 .nz-btn-disabled {
   background-image: none;
   opacity: .6;
-  cursor: default;
+  cursor: default !important;
 }
 .nz-btn-group {
   border-radius: 2px;
