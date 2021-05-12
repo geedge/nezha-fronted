@@ -234,9 +234,12 @@ export default {
     if (pageSize && pageSize !== 'undefined') {
       this.pageObj.pageSize = pageSize
     }
-    this.tools.customTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
-      ? JSON.parse(localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId))
-      : this.$refs.dataTable.tableTitle
+    let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
+    localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : this.$refs.dataTable.tableTitle
+    this.tools.customTableTitle = localStorageTableTitle.map((item, index) => { // 修复切换中英文的问题
+      item.label = this.$refs.dataTable.tableTitle[index].label
+      return item
+    })
     if (!this.fromBottom) {
       this.getTableData()
     }

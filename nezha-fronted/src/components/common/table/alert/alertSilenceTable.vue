@@ -132,7 +132,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: 'Matchers',
+          label: this.$t('alert.silence.matchers'),
           prop: 'matchers',
           show: true,
           sortable: 'custom'

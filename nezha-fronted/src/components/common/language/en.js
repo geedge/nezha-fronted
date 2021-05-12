@@ -1143,7 +1143,7 @@ const en = {
       create: 'New alert silence',
       edit: 'Edit alert silence',
       time: 'Time',
-      matchers: 'matchers',
+      matchers: 'Matchers',
       remark: 'Description',
       selectTime: 'Please select time',
       selectMather: 'Required',
