@@ -11,7 +11,7 @@
 
       </template>
       <template v-slot:top-tool-right>
-        <button id="api-key-add" v-has="'snmp_mibFile_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
+        <button id="api-key-add" v-has="'system_apiKey_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addApiKey">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </template>

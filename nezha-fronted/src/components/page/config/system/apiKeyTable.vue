@@ -72,7 +72,10 @@
               {{scope.row[item.prop]?scope.row[item.prop].name:'-'}}
             </template>
             <template v-else-if="item.prop == 'expireAt'">
-              {{scope.row[item.prop]?scope.row[item.prop]:$t('config.system.apiKey.noExpire')}}
+              {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):$t('config.system.apiKey.noExpire')}}
+            </template>
+            <template v-else-if="item.prop == 'createAt'">
+              {{scope.row[item.prop]?utcTimeToTimezoneStr(scope.row[item.prop]):$t('config.system.apiKey.noExpire')}}
             </template>
             <template v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <template v-else>-</template>
@@ -86,11 +89,11 @@
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
           <template v-if="scope.row.edit">
-            <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-normal-new" :disabled="prevent_opt.save" @click="save(scope.row)"  style="margin-right: 10px"><span>{{$t('overall.save')}}</span></button>
+            <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-normal-new" v-has="'system_apiKey_edit'" :disabled="prevent_opt.save" @click="save(scope.row)"  style="margin-right: 10px"><span>{{$t('overall.save')}}</span></button>
             <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="cancel(scope.row)" :disabled="prevent_opt.save"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" @click="$emit('del',scope.row)" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
+            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
           </template>
         </div>
       </el-table-column>
@@ -177,6 +180,7 @@ export default {
     },
     save: function (obj) {
       const copy = JSON.parse(JSON.stringify(obj))
+      copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt);
       if (copy.role) {
         copy.roleId = copy.role.id
       }

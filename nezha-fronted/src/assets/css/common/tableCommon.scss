@@ -244,12 +244,22 @@
       .table-operation-items {
         display: flex;
         justify-content: center;
-
         .table-operation-item {
           display: flex;
           height: 22px;
           border-radius: $--button-border-radius;
           outline: none;
+        }
+        .table-operation-item.table-operation-item-disable{
+          border: 1px solid $--primary-border-color;
+          outline: none;
+          background-color: $--button-gray-background-color;
+          transition: background-color linear .1s;
+
+          i {
+            font-size: 14px;
+            color: $--button-gray-color;
+          }
         }
         >.table-operation-item {
           justify-content: center;
