@@ -55,7 +55,7 @@
       </el-dropdown>
     </div>
     <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>
-    <guide :show-dialog="showGuide" @dialogClosed="dialogClosed"></guide>
+    <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
   </div>
 </template>
 

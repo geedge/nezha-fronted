@@ -14,8 +14,8 @@
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <export-excel
+          ref="export"
           id="expression-template-list"
-          v-has="''"
           export-url="monitor/endpoint/export"
           import-url="monitor/endpoint/import"
           export-file-name="expression-template"
@@ -319,12 +319,24 @@ export default {
       })
       this.$refs.dataList.$refs.searchInput.sreach_num = 1
     }
-
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'endpoint') {
-        this.add()
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        const importEndpoint = this.$route.query.importEndpoint
+        if (add) {
+          if (add === 'endpoint') {
+            this.add()
+          }
+        }
+        if (importEndpoint) {
+          this.$nextTick(() => {
+            this.$refs.export.showImportBox(1)
+          })
+        }
       }
     }
   }

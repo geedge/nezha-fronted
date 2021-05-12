@@ -18,23 +18,24 @@
         </div>
       </template>
       <template v-slot:top-tool-right>
-        <export-excel
-          id="expression-template-list"
-          export-url="expression/tmpl/export"
-          import-url="expression/tmpl/import"
-          export-file-name="expression-template"
-          :params="searchLabel"
-          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
-          @afterImport="getTableData"
-          class="top-tool-export margin-r-10"
-        >
-          <template slot="optionZone">
-            <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
-                    type="button" @click="add">
-              <i class="nz-icon nz-icon-create-square"></i>
-            </button>
-          </template>
-        </export-excel>
+<!--        <export-excel-->
+<!--          id="expression-template-list"-->
+<!--          export-url="expression/tmpl/export"-->
+<!--          import-url="expression/tmpl/import"-->
+<!--          export-file-name="expression-template"-->
+<!--          :params="searchLabel"-->
+<!--          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"-->
+<!--          @afterImport="getTableData"-->
+<!--          class="top-tool-export margin-r-10"-->
+<!--        >-->
+<!--          <template slot="optionZone">-->
+<!--          -->
+<!--          </template>-->
+<!--        </export-excel>-->
+        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn margin-r-10"
+                type="button" @click="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
 
         <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
                        id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>

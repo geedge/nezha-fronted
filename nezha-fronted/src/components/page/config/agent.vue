@@ -270,11 +270,22 @@ export default {
     }
   },
   mounted () {
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'agent') {
-        this.add()
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        const download = this.$route.query.download
+        if (add) {
+          if (add === 'agent') {
+            this.add()
+          }
+        }
+        if (download) {
+          this.toDownloadAgent()
+        }
       }
     }
   }

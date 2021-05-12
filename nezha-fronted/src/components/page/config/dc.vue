@@ -39,10 +39,14 @@
     <transition name="right-box">
       <dc-box v-if="rightBox.show" :obj="object" :user-data="userData" @close="closeRightBox" @reload="getTableData"></dc-box>
     </transition>
+    <transition name="right-box">
+      <cabinetBox v-if="cabinetBoxShow" :obj="cabinet" :current-dc="{}" @close="closeRightBox" :dcDisabled="false" @reload="getTableData"></cabinetBox>
+    </transition>
   </div>
 </template>
 <script>
 import dcBox from '@/components/common/rightBox/dcBox' // dc弹框
+import cabinetBox from '@/components/common/rightBox/cabinetBox' // dc弹框
 import trafficSettingBox from '@/components/common/rightBox/trafficSetting/trafficSettingBox'
 import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
@@ -55,7 +59,8 @@ export default {
     dcBox,
     deleteButton,
     nzDataList,
-    dcTable
+    dcTable,
+    cabinetBox
   },
   mixins: [dataListMixin],
   data () {
@@ -71,6 +76,14 @@ export default {
         state: 'ON',
         longitude: undefined,
         latitude: undefined
+      },
+      cabinet: {
+        id: '',
+        idcId: '',
+        name: '',
+        remark: '',
+        seq: '',
+        uSize: 1
       },
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -102,7 +115,8 @@ export default {
         ]
       },
       regNum: /^[0-9]+.?[0-9]*/,
-      userData: []
+      userData: [],
+      cabinetBoxShow: false
     }
   },
   methods: {
@@ -129,15 +143,36 @@ export default {
     },
     regNumTest (val) { // 校验是否是数字
       return this.regNum.test(val)
+    },
+    addCabinet () {
+      this.cabinetBoxShow = true
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      this.cabinetBoxShow = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
     }
   },
   mounted () {
     this.getUserData()
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'dc') {
-        this.add()
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        if (add) {
+          if (add === 'dc') {
+            this.add()
+          }
+          if (add === 'cabinet') {
+            this.addCabinet()
+          }
+        }
       }
     }
   }

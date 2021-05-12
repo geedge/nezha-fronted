@@ -14,6 +14,7 @@
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
         <export-excel
+          ref="export"
           id="asset-list"
           :params="searchLabel"
           :permissions="{import: 'asset_add', export: 'asset_view'}"
@@ -434,12 +435,24 @@ export default {
     this.getSearchableMetaData()
     this.getSnmpCredentialData()
     this.getFieldGroupData()
-
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'asset') {
-        this.add()
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        const importAsset = this.$route.query.importAsset
+        if (add) {
+          if (add === 'asset') {
+            this.add()
+          }
+        }
+        if (importAsset) {
+          this.$nextTick(() => {
+            this.$refs.export.showImportBox(1)
+          })
+        }
       }
     }
   }

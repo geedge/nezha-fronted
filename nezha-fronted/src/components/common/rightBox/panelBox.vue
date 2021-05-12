@@ -40,7 +40,7 @@ export default {
   },
   data () {
     return {
-      url: '/panel',
+      url: 'visual/panel',
       editPanel: {},
       rules: {
         name: [

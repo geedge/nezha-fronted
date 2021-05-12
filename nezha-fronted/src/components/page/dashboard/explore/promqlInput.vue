@@ -289,7 +289,7 @@ export default {
       this.expressionList[this.index] = value
       // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
-      this.$emit('change', value)
+      // this.$emit('change', value)
       this.$forceUpdate()
       this.cascaderValue = ''
     },
@@ -299,7 +299,7 @@ export default {
       }
     },
     expressionChange: function () {
-      this.$emit('change')
+      // this.$emit('change')
     },
     setError: function (errMsg) {
       // console.log(errMsg)
@@ -393,7 +393,7 @@ export default {
           this.tempBoxShow = false
           // eslint-disable-next-line vue/no-mutating-props
           this.expressionList[this.index] = params.expression
-          this.$emit('change', params.expression)
+          // this.$emit('change', params.expression)
           return
         }
 
@@ -401,7 +401,7 @@ export default {
           if (res.code === 200) {
             this.tempBoxShow = false
             this.expressionList[this.index] = res.data.expression
-            this.$emit('change', res.data.expression)
+            // this.$emit('change', res.data.expression)
           }
         })
       } else {

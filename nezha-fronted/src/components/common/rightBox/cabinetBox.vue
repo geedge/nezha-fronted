@@ -1,16 +1,21 @@
 <template>
   <div class="right-box right-box-cabinet" v-clickoutside="{obj:editCabinet,func:clickOutside}">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="cab-del" type="button" v-has="'dc_cabinet_delete'" v-if="!editCabinet.id">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
-    </div>
-    <!-- end--顶部按钮-->
+<!--    &lt;!&ndash; begin&#45;&#45;顶部按钮&ndash;&gt;-->
+<!--    <div class="right-box-top-btns right-box-form-delete">-->
+<!--      <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="cab-del" type="button" v-has="'dc_cabinet_delete'" v-if="!editCabinet.id">-->
+<!--        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
+<!--        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; end&#45;&#45;顶部按钮&ndash;&gt;-->
 
     <!-- begin--标题-->
-    <div class="right-box-title">{{editCabinet.id ? $t("config.dc.editCabinet") : $t("overall.createCabinet")}}</div>
+    <div class="right-box__header">
+      <div class="header__title">{{editCabinet.id ? $t("config.dc.editCabinet") : $t("overall.createCabinet")}}</div>
+      <div class="header__operation">
+        <span v-cancel="{obj: editCabinet, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
+    </div>
     <!-- end--标题-->
 
     <!-- begin--表单-->
@@ -20,10 +25,13 @@
           <el-input size='mini' v-model="editCabinet.name" id="cabinet-box-input-name"/>
         </el-form-item>
         <el-form-item :label="$t('config.dc.dc')" prop="idcId">
-          <el-input size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
+          <el-input v-if="dcDisabled" size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
+          <el-select v-if="!dcDisabled" size='mini' v-model="editCabinet.idcId" id="cabinet-box-input-dc" :popper-class="'no-style-class'">
+            <el-option v-for="dc in dcData" :key="dc.id" :value="dc.id" :label="dc.name"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('asset.uSize')" prop="uSize">
-          <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize"></el-input>
+          <el-input v-model.number="editCabinet.uSize" :max="47" size="small" id="cabinet-box-input-uSize"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.dc.remark')">
           <el-input size='mini' v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
@@ -48,14 +56,22 @@ export default {
   name: 'cabinetBox',
   props: {
     obj: { type: Object },
-    currentDc: { type: Object }
+    currentDc: { type: Object },
+    dcDisabled: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
       editCabinet: {},
+      dcData: '',
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        idcId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         uSize: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
@@ -75,9 +91,12 @@ export default {
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
+      if (!this.editCabinet.idcId) {
+        this.editCabinet.idcId = this.currentDc.id
+      }
       this.$refs.cabinetForm.validate(valid => {
         if (valid) {
-          this.editCabinet.idcId = this.currentDc.id
+          this.editCabinet.dcId = this.currentDc.id || this.editCabinet.idcId
           if (this.editCabinet.id) {
             this.$put('/dc/cabinet', this.editCabinet).then(res => {
               this.prevent_opt.save = false
@@ -125,6 +144,11 @@ export default {
       }).catch(() => {
         this.prevent_opt.save = false
       })
+    },
+    getDcData () {
+      this.$get('dc', { pageSize: -1 }).then(res => {
+        this.dcData = res.data.list
+      })
     }
   },
   watch: {
@@ -136,6 +160,11 @@ export default {
           this.editCabinet = JSON.parse(JSON.stringify(n))
         }
       }
+    }
+  },
+  mounted () {
+    if (!this.dcDisabled) {
+      this.getDcData()
     }
   }
 }

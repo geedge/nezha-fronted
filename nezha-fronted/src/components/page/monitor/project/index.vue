@@ -23,15 +23,23 @@ export default {
   data () {
     return {}
   },
-  watch: {},
-  mounted () {
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'project') {
-        this.$refs.dataList.add()
+  watch: {
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        if (add) {
+          if (add === 'project') {
+            this.$nextTick(() => {
+              this.$refs.dataList.add()
+            })
+          }
+        }
       }
     }
+  },
+  mounted () {
   },
   methods: {}
 }

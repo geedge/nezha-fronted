@@ -83,7 +83,7 @@
       <chart-temp-box :obj="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess" v-if="rightBox.chartTemp.show"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="rightBox.panel.show" ref="panelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel"></panel-box>
+      <panel-box v-if="rightBox.panel.show" ref="panelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" @close="closePanelBox" ></panel-box>
     </transition>
   </div>
 </template>
@@ -263,6 +263,7 @@ export default {
       if (!this.hasButton('panel_view')) {
         return
       }
+      this.rightBox.panel.show = true
       this.$refs.panelBox.show(true)
       this.panel = {
         id: '',
@@ -331,9 +332,9 @@ export default {
     },
     closePanelBox (refresh) {
       this.rightBox.panel.show = false
-      /* if (refresh) {
-
-      } */
+      if (refresh) {
+        this.getTableData()
+      }
     },
     // 移除图表:弹出确认框询问
     delChart (data, from) {
@@ -779,14 +780,6 @@ export default {
     this.onScroll()
     document.querySelector('#tableList').addEventListener('mouseenter', this.tableListEnter)
     document.querySelector('#tableList').addEventListener('mouseleave', this.tableListLeave)
-
-    // 是否弹出侧滑
-    const add = this.$route.query.add
-    if (add) {
-      if (add === 'chart') {
-        this.addChart()
-      }
-    }
   },
   watch: {
     'filter.searchName': function (n, o) {
@@ -794,6 +787,23 @@ export default {
       setTimeout(function () {
         temp.search()
       }, 1000)
+    },
+    $route: {
+      immediate: true,
+      handler () {
+        // 是否弹出侧滑
+        const add = this.$route.query.add
+        this.$nextTick(() => {
+          if (add) {
+            if (add === 'chart') {
+              this.addChart()
+            }
+            if (add === 'panel') {
+              this.toAdd()
+            }
+          }
+        })
+      }
     }
   },
   beforeDestroy () {

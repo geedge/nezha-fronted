@@ -4,6 +4,7 @@
     :visible.sync="visible"
     custom-class="guild-pop"
     width="1000px"
+    @close="close"
   >
     <div class="guide-list">
       <div ref="guideShadow" class="guide-shadow"></div>
@@ -119,7 +120,7 @@ export default {
   },
   methods: {
     close () {
-      this.visible = false
+      this.$emit('close')
     },
     enter (index) {
       this.interval = setInterval(() => {
@@ -130,13 +131,27 @@ export default {
       this.interval && clearInterval(this.interval)
     },
     downloadAgent () {
-      // TODO
+      this.$emit('close')
+      this.$router.push({
+        path: '/agent',
+        query: {
+          t: +new Date(),
+          download: 'agent'
+        }
+      })
     },
     openTerminal () {
-      // TODO
+      this.$emit('close')
+      this.$router.push({
+        path: '/asset',
+        query: {
+          t: +new Date()
+        }
+      })
+      this.$store.commit('openConsole')
     },
     jump (route) {
-      this.visible = false
+      this.$emit('close')
       this.$router.push({
         path: route,
         query: {
@@ -145,7 +160,7 @@ export default {
       })
     },
     jumpAndOpen (cmd, open) {
-      this.visible = false
+      this.$emit('close')
       switch (cmd) {
         case 'dc': {
           this.$router.push({
@@ -173,6 +188,16 @@ export default {
             query: {
               t: +new Date(),
               add: 'asset'
+            }
+          })
+          break
+        }
+        case 'importAsset': {
+          this.$router.push({
+            path: '/asset',
+            query: {
+              t: +new Date(),
+              importAsset: 'importAsset'
             }
           })
           break
@@ -207,6 +232,16 @@ export default {
           })
           break
         }
+        case 'importEndpoint': {
+          this.$router.push({
+            path: '/monitor/endpoint',
+            query: {
+              t: +new Date(),
+              importEndpoint: 'importEndpoint'
+            }
+          })
+          break
+        }
         case 'panel': {
           this.$router.push({
             path: '/panel',
@@ -237,12 +272,24 @@ export default {
           })
           break
         }
+        case 'cabinet': {
+          this.$router.push({
+            path: '/dc',
+            query: {
+              t: +new Date(),
+              add: 'cabinet'
+            }
+          })
+          break
+        }
         default: break
       }
+      // location.reload()
     }
   },
   watch: {
     showDialog (n) {
+      console.log(n)
       this.visible = n
     },
     activeIndex (n) {
