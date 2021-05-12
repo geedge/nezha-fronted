@@ -1,70 +1,66 @@
 <template>
-  <div>
-    <el-dialog
-      :title="$t('guide.title')"
-      :visible.sync="visible"
-      custom-class="guild-pop"
-      width="1000px"
-      @closed="dialogClosed"
-      @open="dialogOpened"
-    >
-      <div class="guide-list">
-        <div ref="guideShadow" class="guide-shadow"></div>
-        <div v-for="(guide, index) in guideList" :key="index" :class="{'guide-item--active': index === activeIndex}" class="guide-item"
-             @mouseenter="enter(index)"  @mouseleave="leave(index)"
-        >
-          <div class="item__title">{{guide.title}}</div>
-          <div class="item__icon" @click="jump(guide.route)"><i :class="guide.icon"></i></div>
+  <el-dialog
+    :title="$t('guide.title')"
+    :visible.sync="visible"
+    custom-class="guild-pop"
+    width="1000px"
+  >
+    <div class="guide-list">
+      <div ref="guideShadow" class="guide-shadow"></div>
+      <div v-for="(guide, index) in guideList" :key="index" :class="{'guide-item--active': index === activeIndex}" class="guide-item"
+           @mouseenter="enter(index)"  @mouseleave="leave(index)"
+      >
+        <div class="item__title">{{guide.title}}</div>
+        <div class="item__icon" @click="jump(guide.route)"><i :class="guide.icon"></i></div>
+      </div>
+    </div>
+    <div class="guide-desc">
+      <template v-if="activeIndex === 0">
+        <div class="desc-text">{{$t('guide.dcTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('dc')">{{$t('guide.addDc')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('cabinet')">{{$t('guide.addCabinet')}}</button>
         </div>
-      </div>
-      <div class="guide-desc">
-        <template v-if="activeIndex === 0">
-          <div class="desc-text">{{$t('guide.dcTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('dc')">{{$t('guide.addDc')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('cabinet')">{{$t('guide.addCabinet')}}</button>
-          </div>
-        </template>
-        <template v-if="activeIndex === 1">
-          <div class="desc-text">{{$t('guide.agentTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('guide.addAgent')}}</button>
-            <button class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
-          </div>
-        </template>
-        <template v-if="activeIndex === 2">
-          <div class="desc-text">{{$t('guide.assetTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('asset')">{{$t('guide.addAsset')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('importAsset')">{{$t('guide.importAsset')}}</button>
-            <button class="guide__btn" type="button" @click="openTerminal">{{$t('guide.webTerminal')}}</button>
-          </div>
-        </template>
-        <template v-if="activeIndex === 3">
-          <div class="desc-text">{{$t('guide.monitorTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('project')">{{$t('guide.addProject')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('module')">{{$t('guide.addModule')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('endpoint')">{{$t('guide.addEndpoint')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('importEndpoint')">{{$t('guide.importEndpoint')}}</button>
-          </div>
-        </template>
-        <template v-if="activeIndex === 4">
-          <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
-            <button class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
-          </div>
-        </template>
-        <template v-if="activeIndex === 5">
-          <div class="desc-text">{{$t('guide.alertTip')}}</div>
-          <div class="guide__btn-group">
-            <button class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('guide.addAlertRule')}}</button>
-          </div>
-        </template>
-      </div>
-    </el-dialog>
-  </div>
+      </template>
+      <template v-if="activeIndex === 1">
+        <div class="desc-text">{{$t('guide.agentTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('guide.addAgent')}}</button>
+          <button class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
+        </div>
+      </template>
+      <template v-if="activeIndex === 2">
+        <div class="desc-text">{{$t('guide.assetTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('asset')">{{$t('guide.addAsset')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('importAsset')">{{$t('guide.importAsset')}}</button>
+          <button class="guide__btn" type="button" @click="openTerminal">{{$t('guide.webTerminal')}}</button>
+        </div>
+      </template>
+      <template v-if="activeIndex === 3">
+        <div class="desc-text">{{$t('guide.monitorTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('project')">{{$t('guide.addProject')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('module')">{{$t('guide.addModule')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('endpoint')">{{$t('guide.addEndpoint')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('importEndpoint')">{{$t('guide.importEndpoint')}}</button>
+        </div>
+      </template>
+      <template v-if="activeIndex === 4">
+        <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
+          <button class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
+        </div>
+      </template>
+      <template v-if="activeIndex === 5">
+        <div class="desc-text">{{$t('guide.alertTip')}}</div>
+        <div class="guide__btn-group">
+          <button class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('guide.addAlertRule')}}</button>
+        </div>
+      </template>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -122,14 +118,6 @@ export default {
     }
   },
   methods: {
-    dialogOpened () {
-      if (this.$refs.changePinForm) {
-        this.$refs.changePinForm.resetFields()
-      }
-    },
-    dialogClosed () {
-      this.$emit('dialogClosed')
-    },
     close () {
       this.visible = false
     },
@@ -142,10 +130,10 @@ export default {
       this.interval && clearInterval(this.interval)
     },
     downloadAgent () {
-
+      // TODO
     },
     openTerminal () {
-
+      // TODO
     },
     jump (route) {
       this.visible = false
