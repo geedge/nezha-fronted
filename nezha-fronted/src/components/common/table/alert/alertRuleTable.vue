@@ -49,7 +49,7 @@
           <span v-else>-</span>
         </template>
         <template v-else-if="item.prop === 'receivers'">
-          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.userName" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.userName}}&nbsp;</el-tag>
+          <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.username" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.username}}&nbsp;</el-tag>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>

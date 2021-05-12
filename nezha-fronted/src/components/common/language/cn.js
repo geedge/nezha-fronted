@@ -1464,7 +1464,7 @@ const cn = {
     }
   },
   guide: {
-    title: '6步开始使用',
+    title: '开始使用 通过 6 简单步骤',
     dc: '数据中心',
     dcTip: '数据中心包含机柜和资产，与Prometheus服务相关联；机柜是资产的容器',
     addDc: '新增数据中心',

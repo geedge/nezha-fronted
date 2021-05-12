@@ -154,7 +154,8 @@ export default {
         if (response.code === 200) {
           this.object = {
             ...response.data,
-            method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : []
+            method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : [],
+            receiverShow: response.data.receiver ? response.data.receiver.split(',').map(item => Number(item)) : []
           }
           this.rightBox.show = true
         }

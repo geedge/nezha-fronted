@@ -489,14 +489,14 @@ export default {
     exportCur () {
       const searchLabel = Object.assign({}, this.searchLabel)
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(searchLabel)
+      this.exportExcel({ ...searchLabel, state: this.state })
       this.closeDialog()
     },
     exportAll () {
       const temp = JSON.parse(JSON.stringify(this.searchLabel))
       temp.pageSize = -1
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
-      this.exportExcel(temp)
+      this.exportExcel({ ...temp, state: this.state })
       this.closeDialog()
     },
     getTimeString () {

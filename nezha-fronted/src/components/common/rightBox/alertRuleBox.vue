@@ -218,7 +218,7 @@ export default {
       }
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
-          this.editAlertRule.receiver = this.editAlertRule.receiverShow.join(',')
+          params.receiver = this.editAlertRule.receiverShow.join(',')
           if (this.editAlertRule.id) {
             this.$put('alert/rule', params).then(response => {
               this.prevent_opt.save = false

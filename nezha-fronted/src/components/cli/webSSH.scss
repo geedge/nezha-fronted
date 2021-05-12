@@ -46,7 +46,7 @@
   .console-title-icon:hover:before,
   .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active,
   .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
-    color: $global-text-color-active;
+    color: $box-title-color;
   }
   .el-dialog {
     .el-dialog__body{
@@ -65,7 +65,7 @@
   }
 
   .el-tabs .el-tabs__header {
-    margin-left:90px;
+    margin-left:0px;
     margin-right:150px;
     height:29px;
   }
