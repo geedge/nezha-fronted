@@ -194,7 +194,7 @@
           </div>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px" >
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
@@ -217,7 +217,7 @@
           </el-form>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px" >
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px"destroy-on-close >
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">

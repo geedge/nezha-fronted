@@ -64,10 +64,12 @@ export default {
         name: '',
         username: '',
         email: '',
+        pin: '',
+        pinChange: '',
         status: '1',
         createTime: '',
         receiver: [],
-        roleIds: 0,
+        roleIds: '',
         roles: [],
         lang: '',
         notifications: []
@@ -99,7 +101,32 @@ export default {
         }
         this.getTableData()
       })
-    }
+    },
+    edit (u) {
+      this.$get(`${this.url}/${u.id}`).then(response => {
+        console.log(response)
+        const user = response.user
+        if (response.code === 200) {
+          this.object = {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            status: user.status + '',
+            createAt: this.utcTimeToTimezoneStr(user.createAt),
+            receiver: user.receiver,
+            roleIds: Number(user.roles.map(item => item.id).join(',')),
+            roles: user.roles,
+            lang: user.lang,
+            notifications: user.notifications,
+            pin: '',
+            pinChange: ''
+          }
+          console.log(this.object);
+          this.rightBox.show = true
+        }
+      })
+    },
   },
   computed: {
     isCurrentUser () {

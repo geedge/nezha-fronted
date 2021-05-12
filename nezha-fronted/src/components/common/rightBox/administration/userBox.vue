@@ -22,7 +22,7 @@
           <!--password-->
           <el-form-item :label="$t('config.user.pin')" prop="pin">
             <el-input id="account-input-password" v-model="editUser.pin"  maxlength="16" placeholder=""
-                      show-word-limit size="small" type="password" @blur="pinBlur"></el-input>
+                      show-word-limit size="small" type="password" @blur="pinBlur" autocomplete="new-password"></el-input>
           </el-form-item>
           <!--pinChange-->
           <el-form-item :label="$t('config.user.confirmPin')" label-width="200px" prop="pinChange">
@@ -41,7 +41,8 @@
           <el-form-item :label="$t('config.user.roles')" prop="roleIds">
             <el-select id="account-input-roleIds" v-model="editUser.roleIds" :disabled="(editUser.username==='admin') && editUser.id==1"  clearable collapse-tags placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="()=>{this.$forceUpdate()}">
               <template v-for="role in roles">
-                <el-option :key="role.id" :label="role.i18n?$t(role.i18n):role.name" :value="role.id"></el-option>
+<!--                <el-option :key="role.id" :label="role.i18n?$t(role.i18n+''):role.name" :value="role.id"></el-option>-->
+                <el-option :key="role.id" :label="role.name" :value="role.id"></el-option>
               </template>
             </el-select>
           </el-form-item>
@@ -147,9 +148,9 @@ export default {
       immediate: true,
       handler (n) {
         this.editUser = JSON.parse(JSON.stringify(n))
-        if (this.editUser.roles && this.editUser.roles.length > 0) {
-          this.editUser.roleIds = this.editUser.roles.map(t => t.id)
-        }
+        // if (this.editUser.roles && this.editUser.roles.length > 0) {
+        //   this.editUser.roleIds = this.editUser.roles.map(t => t.id)
+        // }
       }
     }
   },

@@ -20,7 +20,7 @@
           import-url="monitor/endpoint/import"
           export-file-name="expression-template"
           :params="searchLabel"
-          :permissions="{import: 'endpoint_import', export: 'endpoint_import'}"
+          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
           @afterImport="getTableData"
           class="top-tool-export margin-r-10"
         >

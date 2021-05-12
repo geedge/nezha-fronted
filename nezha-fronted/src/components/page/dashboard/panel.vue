@@ -41,8 +41,8 @@
                 id="panel"
                 :params="filter"
                 :permissions="{
-                  import: 'panel_chart_import',
-                  export: 'panel_chart_export'
+                  import: 'panel_chart_add',
+                  export: 'panel_view'
                 }"
                 class="top-tool-export"
                 export-file-name="chart"
