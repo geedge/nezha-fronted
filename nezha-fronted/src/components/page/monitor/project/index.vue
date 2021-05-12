@@ -1,6 +1,6 @@
 <template>
   <div class="main-list">
-    <projectList :class="showList?'projectList':'hide'" />
+    <projectList ref="dataList" :class="showList?'projectList':'hide'"/>
     <projectTopo :class="showList?'projectTopo':'projectTopo ml10'" />
   </div>
 </template>
@@ -25,6 +25,13 @@ export default {
   },
   watch: {},
   mounted () {
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'project') {
+        this.$refs.dataList.add()
+      }
+    }
   },
   methods: {}
 }

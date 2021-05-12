@@ -158,26 +158,16 @@ export default {
           this.rightBox.show = true
         }
       })
-    },
-    initEvent () {
-      bus.$on('alert-rule-list-change', () => {
-        this.getTableData()
-      })
-      bus.$on('dc-list-change', () => {
-        this.getTableData()
-      })
-      bus.$on('alert-message-change', () => {
-        this.getTableData()
-      })
     }
   },
-  beforeDestroy () {
-    bus.$off('alert-rule-list-change')
-    bus.$off('dc-list-change')
-    bus.$off('alert-message-change')
-  },
   mounted () {
-    this.initEvent()
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'alertRule') {
+        this.add()
+      }
+    }
   }
 }
 </script>

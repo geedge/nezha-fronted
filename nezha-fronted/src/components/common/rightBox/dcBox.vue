@@ -89,9 +89,6 @@ export default {
       coordinateFlag: false
     }
   },
-  created() {
-
-  },
   methods: {
     /* 关闭弹框 */
     esc (refresh) {
@@ -197,10 +194,6 @@ export default {
         this.$refs.dcForm.clearValidate(['longitude', 'latitude'])
       }
     }
-  },
-  mounted () {
-    // this.getAreaData();
-    // console.log(this.editDc)
   },
   watch: {
     obj: {

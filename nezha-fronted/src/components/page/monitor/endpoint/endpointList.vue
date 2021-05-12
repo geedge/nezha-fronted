@@ -319,6 +319,14 @@ export default {
       })
       this.$refs.dataList.$refs.searchInput.sreach_num = 1
     }
+
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'endpoint') {
+        this.add()
+      }
+    }
   }
 }
 </script>

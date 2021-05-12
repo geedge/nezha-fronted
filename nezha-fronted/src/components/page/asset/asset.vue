@@ -434,6 +434,14 @@ export default {
     this.getSearchableMetaData()
     this.getSnmpCredentialData()
     this.getFieldGroupData()
+
+    // 是否弹出侧滑
+    const add = this.$route.query.add
+    if (add) {
+      if (add === 'asset') {
+        this.add()
+      }
+    }
   }
 }
 </script>
