@@ -69,7 +69,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <template v-if="scope.row.status == 0">
-          <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="$refs.dataList.showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
+          <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
           <el-dropdown size="medium" trigger="hover" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -102,6 +102,9 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'roleTable',
   mixins: [table],
+  props: {
+    nowTime: {}
+  },
   data () {
     return {
       tableTitle: [

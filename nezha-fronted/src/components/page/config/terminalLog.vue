@@ -21,6 +21,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @shutdown="shutdown"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></terminal-log-table>
       </template>
@@ -129,7 +130,7 @@ export default {
         this.$put('/terminal/kill', { uuid: record.uuid }).then(res => {
           if (res.code === 200) {
             this.$message.success(this.$t('config.terminallog.success'))
-            this.bottomBox.showSubList = false
+            this.$refs.dataList.bottomBox.showSubList = false
             this.getTableData()
           } else {
             this.$message.error(this.$t('config.terminallog.killErrorTip'))

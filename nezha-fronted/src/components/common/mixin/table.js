@@ -34,8 +34,9 @@ export default {
           this.$emit('del', row)
           break
         }
-        case 'record': {
-          this.$emit('showBottomBox', 'record', row)
+        case 'recordTab': {
+          console.log(command, row)
+          this.$emit('showBottomBox', 'recordTab', row)
           break
         }
         case 'cli': {
@@ -48,6 +49,11 @@ export default {
         }
         case 'copy': {
           this.$emit('copy', row)
+          break
+        }
+        case 'shutdown': {
+          // this.$emit('copy', row)
+          this.$emit('shutdown', row)
           break
         }
         default:

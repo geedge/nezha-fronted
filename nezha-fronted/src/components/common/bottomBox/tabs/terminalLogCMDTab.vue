@@ -3,8 +3,9 @@
     :layout="[]"
     :tabs="tabs"
     @changeTab="changeTab"
+    :title="'Session ID'"
   >
-    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div class="record-container">
         <div class="record-container--record-tip">

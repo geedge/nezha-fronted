@@ -3,16 +3,17 @@
     :layout="[]"
     :tabs="tabs"
     @changeTab="changeTab"
+    :title="'Session ID'"
   >
-    <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
+    <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div ref="replayTab" class="replay-tab">
-        <div class="sub-top-tools">
-          <div class="sub-list-tabs">
-            <div class="sub-list-tab-title">ID：{{obj.id}}</div>
-            <div class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.monitor.monitor")}}</div>
-          </div>
-        </div>
+<!--        <div class="sub-top-tools">-->
+<!--          <div class="sub-list-tabs">-->
+<!--            <div class="sub-list-tab-title">ID：{{obj.id}}</div>-->
+<!--            <div class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.monitor.monitor")}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="replay-container">
           <div ref="recordConsole" class="record-console">
             <div :id="obj.uuid" class="record-terminal"></div>
@@ -112,12 +113,11 @@ export default {
       }
       // 登录后，你输入的内容从后台服务返回
       this.terminal.on('data', function (data) {
-        /*
-          let code = data.charCodeAt(0);
-          if(code==13){
-          }else {
-            //that.term.write(data);
-          } */
+          // let code = data.charCodeAt(0);
+          // if(code==13){
+          // }else {
+          //   that.term.write(data);
+          // }
       })
       // 返回
       this.terminalSocket.onmessage = function (evt) {
@@ -301,13 +301,13 @@ export default {
   }
 
   .replay-container {
-    height: calc(100% - 40px);
+    height: 100%;
   }
 
   .record-console {
     padding: 10px 4px 10px 10px;
     background-color: black;
-    height: calc(100% - 80px);
+    height: 100%;
   }
 
   .terminal-replay-progress {
