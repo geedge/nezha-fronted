@@ -420,22 +420,29 @@
 }
 .overview {
   .tooltip--row {
-    display: flex;
+    //display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
     position: relative;
-
+    height: calc(100% - 30px);
     .legend-value {
       font-size: 12px;
       color: #333333;
       position: absolute;
-      left: 155px;
-      top: 35px;
+      //left: 155px;
+      //top: 35px;
     }
-
-    .legend-value + .legend-value {
-      left: 356px;
+    .legend-value-asset{
+      top: 40px;
+      right: 67px;
     }
+    .legend-value-agent{
+      top: 168px;
+      right: 67px;
+    }
+    //.legend-value + .legend-value {
+    //  left: 356px;
+    //}
 
     .tooltip-asset {
       width: 260px;
@@ -609,8 +616,9 @@
     }
 
     .tooltip-chart {
-      width: calc(50% - 7px);
-      height: 100px;
+      width: 100%;
+      height: calc(50% - 10px);
+      padding-bottom: 5px;
       box-shadow: 1px 2px 4px 0 rgba(0, 0, 0, 0.12), -1px 1px 4px -1px rgba(205, 205, 205, 0.47);
     }
   }

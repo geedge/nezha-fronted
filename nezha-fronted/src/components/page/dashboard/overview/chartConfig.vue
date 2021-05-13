@@ -443,23 +443,23 @@ const tooltipPieOption = {
   legend: {
     data: [],
     show: true,
-    left: 70,
-    top: 35,
+    left: '50%',
+    top: '30%',
     icon: 'circle',
     itemHeight: 4,
     orient: 'vertical',
     itemGap: 6,
     textStyle: {
       fontSize: 12,
-      padding: [0, 0, 0, -10]
+      padding: [0, 0, 10, -10]
     }
   },
   series: [
     {
       type: 'pie',
       animation: false,
-      center: [40, 63],
-      radius: [14, 22],
+      center: ['25%', '60%'],
+      radius: [36, 48],
       data: [],
       label: {
         show: true,

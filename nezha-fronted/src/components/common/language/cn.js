@@ -106,7 +106,7 @@ const cn = {
     moreOption: '更多选项',
     copy: '复制',
     silence: '静默',
-    labels: '标签',
+    labels: '标签'
   },
   setup: {
     step0: '欢迎',
@@ -137,9 +137,9 @@ const cn = {
     system: {
       configTitle: '系统配置',
       configTip: '请输入管理员的用户名和密码，并设置Nezha WEB模块的安装信息，如IP:port',
-      federation:'联邦',
-      federationEnable:'可用',
-      federationDisable:'不可用',
+      federation: '联邦',
+      federationEnable: '可用',
+      federationDisable: '不可用'
     },
     name: '数据库名称',
     username: '用户名',
@@ -415,7 +415,10 @@ const cn = {
           type: '类型',
           model: '型号',
           dc: '数据中心'
-        }
+        },
+        ok: 'OK',
+        alarm: 'Alarm',
+        total: 'Total'
       },
       project: {
         project: '系统',
@@ -686,15 +689,22 @@ const cn = {
         download: '下载',
         osType: 'OS 类型',
         autoScript: '自动安装脚本',
-        type: 'Agent类型'
+        type: 'Agent类型',
       }
     },
     agent: {
       name: '名称',
       type: '类型',
       createProm: '创建代理服务',
+      up: 'UP',
+      down: 'Down',
       agent: {
-        agent: '代理'
+        agent: '代理',
+        title: 'Download agent',
+        download: 'Download',
+        osType: 'OS type',
+        autoScript: 'Auto install script',
+        type: 'Agent type'
       }
     },
     terminallog: {

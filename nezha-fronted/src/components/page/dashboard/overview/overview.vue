@@ -631,21 +631,21 @@ export default {
         tooltipPrometheusChart = echarts.init(document.querySelector('#tooltip-chart--prometheus'))
         const endpointOption = chartConfig.getOption('tooltipPie')
         const prometheusOption = chartConfig.getOption('tooltipPie')
-        endpointOption.series[0].label.formatter = data.endpointTotal + ''
+        endpointOption.series[0].label.formatter = data.asset.total + ''
         endpointOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.endpointUp ? data.endpointUp : 0 },
-          { name: vm.$t('dashboard.overview.asset.pingDown'), value: data.endpointDown ? data.endpointDown : 0 },
-          { name: vm.$t('asset.suspended'), value: data.endpointSuspended ? data.endpointSuspended : 0 }
+          { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
+          { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 },
+          { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
         ]
-        endpointOption.title.text = vm.$t('project.endpoint.endpoint')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('dashboard.overview.asset.pingDown'), vm.$t('asset.suspended')]
-        prometheusOption.series[0].label.formatter = data.promTotal + ''
+        endpointOption.title.text = vm.$t('asset.asset')
+        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm'), vm.$t('dashboard.overview.asset.total')]
+        prometheusOption.series[0].label.formatter = data.agent.up + ''
         prometheusOption.series[0].data = [
-          { name: vm.$t('dashboard.overview.asset.pingUp'), value: data.promUp ? data.promUp : 0 },
-          { name: vm.$t('dashboard.overview.asset.pingDown'), value: data.promDown ? data.promDown : 0 }
+          { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },
+          { name: vm.$t('config.agent.down'), value: data.agent.down ? data.agent.down : 0 }
         ]
-        prometheusOption.title.text = 'Prometheus'
-        prometheusOption.legend.data = [vm.$t('dashboard.overview.asset.pingUp'), vm.$t('dashboard.overview.asset.pingDown')]
+        prometheusOption.title.text = vm.$t('config.agent.agent.agent')
+        prometheusOption.legend.data = [vm.$t('config.agent.up'), vm.$t('config.agent.down')]
         tooltipEndpointChart.setOption(endpointOption, true)
         tooltipPrometheusChart.setOption(prometheusOption, true)
       }, 100)
@@ -977,9 +977,7 @@ export default {
       return result
     },
     mapTooltipFormatter (dcStat) {
-      return `<div class="tooltip">
-          <div class="tooltip--title">${dcStat.name}</div>
-          <div class="tooltip--row">
+      /*  <div class="tooltip--row">
             <div class="tooltip-asset">
               <div class="tooltip-asset--title"><span>${this.$t('asset.asset')}</span><span>Total：${dcStat.assetTotal}</span></div>
               <div class="tooltip-asset--row">
@@ -1025,16 +1023,18 @@ export default {
                 <div class="row--label row--label__p3">P3</div><div class="row--value row--value__p3">${dcStat.alertP3}</div>
               </div>
             </div>
-          </div>
+          </div> */
+      return `<div class="tooltip">
+          <div class="tooltip--title">${dcStat.name}</div>
           <div class="tooltip--row">
-            <div class="legend-value">
-              <div>${dcStat.endpointUp}</div>
-              <div>${dcStat.endpointDown}</div>
-              <div>${dcStat.endpointSuspended}</div>
+            <div class="legend-value legend-value-asset">
+              <div>${dcStat.asset.ok}</div>
+              <div>${dcStat.asset.alarm}</div>
+              <div>${dcStat.asset.total}</div>
             </div>
-            <div class="legend-value">
-              <div>${dcStat.promUp}</div>
-              <div>${dcStat.promDown}</div>
+            <div class="legend-value legend-value-agent">
+              <div>${dcStat.agent.up}</div>
+              <div>${dcStat.agent.down}</div>
             </div>
             <div class="tooltip-chart" id="tooltip-chart--endpoint"></div>
             <div class="tooltip-chart" id="tooltip-chart--prometheus"></div>

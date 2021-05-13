@@ -111,7 +111,7 @@ const en = {
     labels: 'Labels',
     moreOption: 'More option',
     copy: 'Copy',
-    silence: 'Silence',
+    silence: 'Silence'
   },
   pageSize: '/page',
   setup: {
@@ -143,9 +143,9 @@ const en = {
     system: {
       configTitle: 'System configuration',
       configTip: 'Please enter username and password for administrator ,and set the Nezha WEB module install information,like IP:port',
-      federation:'Federation',
-      federationEnable:'Enable',
-      federationDisable:'Disable',
+      federation: 'Federation',
+      federationEnable: 'Enable',
+      federationDisable: 'Disable'
 
     },
     name: 'Database name',
@@ -423,7 +423,10 @@ const en = {
           type: 'type',
           model: 'model',
           dc: 'data center'
-        }
+        },
+        ok: 'OK',
+        alarm: 'Alarm',
+        total: 'Total'
       },
       project: {
         project: 'Projects',
@@ -687,7 +690,9 @@ const en = {
       type: 'Type', // "类别"
       checkTime: 'Check time',
       dataCenter: 'Data center',
-      name : 'Name',
+      name: 'Name',
+      up: 'UP',
+      down: 'Down',
       agent: {
         agent: 'Agent',
         title: 'Download agent',
@@ -986,15 +991,15 @@ const en = {
     assetType: {
       assetType: 'Asset Type',
       type: 'Asset Type',
-      name:'Name',
-      vm:'VM',
-      vmh:'VMH',
-      authProtocol:'AuthProtocol',
+      name: 'Name',
+      vm: 'VM',
+      vmh: 'VMH',
+      authProtocol: 'AuthProtocol',
       snmpEnable: 'SnmpEnable',
-      snmpCollect:'SnmpCollect',
-      createModel:'New Type',
-      sshCollect:'SshCollect',
-      sshCollectScript:'SshCollectScript',
+      snmpCollect: 'SnmpCollect',
+      createModel: 'New Type',
+      sshCollect: 'SshCollect',
+      sshCollectScript: 'SshCollectScript',
       parent: 'Parent',
       pname: 'Parent name',
       editAssetType: 'Edit asset type',
@@ -1136,7 +1141,7 @@ const en = {
         alertRuleInfo: 'Alert rule information',
         alertNumTrend: 'Alert num trend',
         affectEntity: 'Affect entity'
-      },
+      }
     },
     silence: {
       name: 'Name',
