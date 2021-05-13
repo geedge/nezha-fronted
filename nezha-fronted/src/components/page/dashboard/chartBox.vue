@@ -1560,7 +1560,7 @@ export default {
       this.$nextTick(() => {
         this.expressions.forEach((ex, index) => {
           if (ex) {
-            this.$refs[`promql-${index}`][0].metricChange(ex)
+            // this.$refs[`promql-${index}`][0].metricChange(ex)
           }
         })
       })
