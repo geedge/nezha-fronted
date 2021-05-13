@@ -352,7 +352,7 @@ export default {
             newWeights.push({ id: chart.id, groupId: item.id, weight: this.dataList.length + i })
           })
         } else {
-          item.children= []
+          item.children = []
         }
       })
       const panelId = this.pagePanelId
@@ -1467,24 +1467,31 @@ export default {
       chartInfo.name = this.$t('asset.assetInfo')
       const detail = []
       if (!this.isModel) {
-        this.$refs['editChart' + chartInfo.id][0].showLoad()
         const assetId = this.additionalInfo.assetId ? this.additionalInfo.assetId : this.additionalInfo.id
-        this.$get('/asset/info?id=' + assetId).then(response => {
-          if (response.code == 200) {
-            response.data && (function () {
-              response.data.Basic && detail.push({
-                title: vm.$t('project.chart.basicTitle'),
-                type: 'basic',
-                data: response.data.Basic
-              })
-              response.data.Attribute && detail.push({
-                title: vm.$t('asset.featureTitle'),
-                type: 'attribute',
-                data: response.data.Attribute
-              })
-            }())
-          }
-          this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter)
+        const arr = []
+        arr.push(this.$get(`/asset/asset/${assetId}`))
+        arr.push(this.$get(`/asset/asset/feature/${assetId}`))
+        this.$refs['editChart' + chartInfo.id][0].showLoad()
+
+        // this.$get('/asset/info?id=' + assetId).then(response => {
+        //   if (response.code == 200) {
+        //     response.data && (function () {
+        //       response.data.Basic && detail.push({
+        //         title: vm.$t('project.chart.basicTitle'),
+        //         type: 'basic',
+        //         data: response.data.Basic
+        //       })
+        //       response.data.Attribute && detail.push({
+        //         title: vm.$t('asset.featureTitle'),
+        //         type: 'attribute',
+        //         data: response.data.Attribute
+        //       })
+        //     }())
+        //   }
+        // })
+        Promise.all(arr).then(res => {
+          console.log(res)
+          // this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter)
         })
       } else {
         detail.push({

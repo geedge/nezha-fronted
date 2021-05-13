@@ -245,6 +245,13 @@ export default {
     },
     exportCur () {
       const params = Object.assign({}, this.params)
+      if (this.exportUrl.indexOf('panel') > -1) {
+        params.pageSize = -1
+        delete params.start_time
+        delete params.end_time
+        delete params.id
+        delete params.searchName
+      }
       params.language = localStorage.getItem('nz-language') || 'en'
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
@@ -252,6 +259,12 @@ export default {
     exportAll () {
       const params = JSON.parse(JSON.stringify(this.params))
       params.pageSize = -1
+      if (this.exportUrl.indexOf('panel') > -1) {
+        delete params.start_time
+        delete params.end_time
+        delete params.id
+        delete params.searchName
+      }
       if (this.importUrl.indexOf('panel') > -1) {
         delete params.panelId
       }
