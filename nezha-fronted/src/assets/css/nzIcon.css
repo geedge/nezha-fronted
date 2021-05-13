@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('./font/iconfont.woff2?t=1620386069576') format('woff2'),
-  url('./font/iconfont.woff?t=1620386069576') format('woff'),
-  url('./font/iconfont.ttf?t=1620386069576') format('truetype');
+  src: url('./font/iconfont.woff2?t=1620896882957') format('woff2'),
+  url('./font/iconfont.woff?t=1620896882957') format('woff'),
+  url('./font/iconfont.ttf?t=1620896882957') format('truetype');
 }
 
 .nz-icon {
@@ -95,6 +95,10 @@
 
 .nz-icon-add:before {
   content: "\e719";
+}
+
+.nz-icon-create-square:before {
+  content: "\ebff";
 }
 
 .nz-icon-cabinet:before {
@@ -581,7 +585,7 @@
   content: "\e681";
 }
 
-.nz-icon-create-square:before {
+.nz-icon-create-square-copy:before {
   content: "\e685";
 }
 

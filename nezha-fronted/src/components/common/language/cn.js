@@ -848,7 +848,8 @@ const cn = {
         method: '方式',
         encryption: '加密',
         pin: '密码',
-        create: '创建SNMP'
+        edit: '编辑证书',
+        create: '创建证书'
       }
     },
     system: {

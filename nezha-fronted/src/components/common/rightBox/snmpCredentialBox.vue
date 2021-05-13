@@ -28,10 +28,10 @@
               <el-input placeholder=""   v-model.number="editCredential.port" size="small" id="credential-box-input-port"></el-input>
             </el-form-item>
             <el-form-item label='Read community' prop="readCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
-              <el-input placeholder=""   v-model="editCredential.config.readCommunity" size="small" id="credential-box-input-readCommunity"></el-input>
+              <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.readCommunity" size="small" id="credential-box-input-readCommunity"></el-input>
             </el-form-item>
             <el-form-item label='Write community' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
-              <el-input placeholder=""   v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
+              <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
             <el-form-item label="Username" prop="username" v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
@@ -51,7 +51,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.pin")' prop="authPin" v-if="editCredential.type === 3">
-              <el-input placeholder=""   v-model="editCredential.config.authPin" size="small" id="credential-box-input-authPin" type="password" show-password></el-input>
+              <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.authPin" size="small" id="credential-box-input-authPin" type="password" show-password></el-input>
             </el-form-item>
 
             <div class="right-box-sub-title" v-if="editCredential.type === 3">{{$t('config.mib.credential.encryption')}}</div>
@@ -65,7 +65,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.pin")' prop="privPin"  v-if="editCredential.type === 3">
-              <el-input placeholder=""   v-model="editCredential.config.privPin" size="small" id="credential-box-input-privPin" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''" type="password" show-password></el-input>
+              <el-input placeholder=""  autocomplete="new-password"  v-model="editCredential.config.privPin" size="small" id="credential-box-input-privPin" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''" type="password" show-password></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -220,7 +220,9 @@ export default {
       deep: true,
       handler (n, o) {
         this.editCredential = JSON.parse(JSON.stringify(n))
-        this.editCredential.config = JSON.parse(this.editCredential.config)
+        if (this.editCredential.config) {
+          this.editCredential.config = JSON.parse(this.editCredential.config)
+        }
       }
     }
   }

@@ -111,6 +111,12 @@ export default {
     },
     toBrowserTab () {
       this.$emit('toBrowserTab')
+    },
+    closeSnmpBox (refresh) {
+      this.rightBox.show = false
+      if (refresh) {
+        this.getTableData()
+      }
     }
   }
 }
