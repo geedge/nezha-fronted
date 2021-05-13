@@ -14,6 +14,7 @@ const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
 
 const serverConfig = require('../static/config.json')//引入根目录下的配置文件
 
@@ -41,7 +42,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    chunkFilename: utils.assetsPath('js[chunkhash].js')
   },
   plugins: [
     /*new GenerateAssetPlugin({
@@ -86,6 +87,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: config.build.index,
       template: 'index.html',
+      hash:false,
       inject: true,
       minify: {
         removeComments: true,
@@ -185,11 +187,15 @@ if(process.env.NODE_ENV == 'development'){
   )
 }else{
   webpackConfig.plugins.push(
-    new WebpackZipPlugin({
-      initialFile: './dist',
-      endPath: './dist',
-      zipName: 'nz-gui.zip',
-      behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
+    // new WebpackZipPlugin({
+    //   initialFile: './dist',
+    //   endPath: './dist',
+    //   zipName: 'nz-gui.zip',
+    //   behindShell: 'cd '+path.join(__dirname,'../dist/')+";md5=`md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8`;mv nz-gui.zip nz-gui-${md5}.zip;"+(process.env.BUILD_MODE=='all'?'mkdir -p ./dist/static;echo "start add map picture to zip file,it will take a few moment,please wait...";cp -r ../static/Tiles dist/static/;zip -gr nz-gui-${md5}.zip dist/static/Tiles>/dev/null;rm -rf dist;':'')
+    // }),
+    new WebpackShellPlugin({
+      onBuildStart: ['/bin/bash '+path.join(__dirname,'script')+'/buildStart.sh'],
+      onBuildEnd: ['/bin/bash '+path.join(__dirname,'script')+'/buildEnd.sh '+process.env.BUILD_MODE]
     }),
     new fileManagerPlugin({
       onStart:[
