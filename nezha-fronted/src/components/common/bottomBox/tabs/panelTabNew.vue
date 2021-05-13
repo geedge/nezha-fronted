@@ -43,6 +43,8 @@
           export-url="visual/panel/export"
           import-url="visual/panel/import"
           @afterImport="getTableData"
+          :showLock="from === fromRoute.asset"
+          @panelLockChange="panelLockChange"
         >
         </top-tool-more-options>
       </template>
@@ -276,7 +278,7 @@ export default {
       } else {
         if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
-            this.$get('/visual/panel/chart', { ids: this.obj.id,groupId:0}).then(res => {
+            this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
               this.panelDataList = res.data.list
               if (this.panelDataList.length > 0) {
                 this.showPanel.id = this.filter.panelId = 0
@@ -428,6 +430,9 @@ export default {
     },
     tableListLeave () {
       this.tableHover = false
+    },
+    panelLockChange (boolean) {
+      this.panelLock = boolean
     }
   },
   mounted () {

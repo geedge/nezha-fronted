@@ -480,7 +480,7 @@ export default {
     blankLabelValue (label) {
       if (label.type.toUpperCase() === this.assetConstants.labelTypeData.CHECKBOX) {
         return []
-      } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT) {
+      } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA) {
         return ['']
       } else {
         return ''

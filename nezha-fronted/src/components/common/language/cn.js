@@ -106,6 +106,7 @@ const cn = {
     moreOption: '更多选项',
     copy: '复制',
     silence: '静默',
+    labels: '标签',
   },
   setup: {
     step0: '欢迎',

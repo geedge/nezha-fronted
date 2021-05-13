@@ -4,9 +4,9 @@
       <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
     </button>
     <el-dropdown-menu slot="dropdown">
-<!--      <el-dropdown-item>
+      <el-dropdown-item v-if="showLock">
         <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? 'Locked' : 'Unlocked'}}</div>
-      </el-dropdown-item>-->
+      </el-dropdown-item>
       <slot name="before"></slot>
       <el-dropdown-item v-if="importUrl">
         <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
@@ -125,6 +125,9 @@ export default {
     triggerButtonClass: { // 触发下拉事件的按钮的class
       type: String,
       default: 'top-tool-btn'
+    },
+    showLock: {
+      type: Boolean, default: false
     }
   },
   data () {
@@ -134,7 +137,8 @@ export default {
       importFileList: [],
       importResult: null,
       exportShow: false,
-      paramsType: ''
+      paramsType: '',
+      panelLock: true
     }
   },
   mounted () {
@@ -346,6 +350,14 @@ export default {
         case '/asset': this.paramsType = 'asset'; break
         case '/model': this.paramsType = 'model'; break
         default: this.paramsType = ''; break
+      }
+    }
+  },
+  watch: {
+    panelLock: {
+      immediate: true,
+      handler (n) {
+        this.$emit('panelLockChange', n)
       }
     }
   }

@@ -48,12 +48,12 @@
                         <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
                         <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
                           <template v-if="value && value.length > 0">
-                            <nz-alert-tag :label="tagItem.tag" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
+                            <nz-alert-tag :label="tagItem.name" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
                                           :cursor-point="false"
                                           :key="tagItem.id"
                                           v-for="(tagItem, tagIndex) in value">
                               <div :id="`tag-${index}-${tagIndex}`" class="tag-value">
-                                <span class="content-text">{{tagItem.value}}</span>
+                                <span class="content-text">{{tagItem.value.join(',')}}</span>
                               </div>
                             </nz-alert-tag>
                           </template>
@@ -328,9 +328,9 @@ export default {
         model: this.$t('asset.model'),
         vendor: this.$t('asset.vendor'),
         purchaseDate: this.$t('asset.procurementDate'),
-        principal: this.$t('asset.principal'),
-        tel: this.$t('asset.principalTel'),
-        pingStatus: this.$t('asset.assetPing'),
+        // principal: this.$t('asset.principal'),
+        // tel: this.$t('asset.principalTel'),
+        // pingStatus: this.$t('asset.assetPing'),
         pingLastReply: this.$t('asset.lastReply'),
         endpoint: this.$t('asset.modules'),
         alert: this.$t('asset.alerts'),
@@ -473,6 +473,7 @@ export default {
       this.panelIdInner = panelId
       this.data = chartItem
       this.detail = detail
+      console.log(detail);
       if (this.detail[0] && this.detail[0].type && this.detail[0].type == 'endpointInfo') { // endpointInfo的小图表
         this.$nextTick(() => {
           this.initChart(this.detail[0].data.stateSeries)
