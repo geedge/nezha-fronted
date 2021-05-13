@@ -94,18 +94,18 @@ export default {
           prop: 'id',
           show: true,
           width: 110,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
           width: 120,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.parent'),
           prop: 'parent',
@@ -116,49 +116,49 @@ export default {
           prop: 'type',
           show: true,
           width: 140,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.state'),
           prop: 'state',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
           width: 110,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.cabinet'),
           prop: 'cabinet',
           show: true,
           width: 110,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.alertNum'),
           prop: 'alertNum',
           show: true,
           width: 140,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.endpointNum2'),
           prop: 'endpointNum',
           show: true,
-          width: 140,
-          sortable:'custom'
+          width: 160,
+          sortable: 'custom'
         }, {
           label: this.$t('asset.brand'),
           prop: 'brand',
           show: true,
           width: 120,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.model'),
           prop: 'model',
           show: true,
           width: 110,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: 'SN',
           prop: 'sn',

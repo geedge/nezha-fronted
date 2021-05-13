@@ -1156,7 +1156,7 @@ const cn = {
     },
     module: {
       module: '模块',
-      moduleName: '模块名称',
+      moduleName: '名称',
       editModule: '编辑模块',
       description: '描述',
       createModule: '新增模块',

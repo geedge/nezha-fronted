@@ -133,10 +133,10 @@ export default {
           prop: 'type',
           show: true
         }, {
-          label: this.$t('project.project.project'),
+          label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         },
         {
           label: this.$t('project.endpoint.asset'),

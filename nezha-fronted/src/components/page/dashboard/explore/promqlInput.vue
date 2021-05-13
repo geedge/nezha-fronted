@@ -25,7 +25,7 @@
         <div v-if="plugins.indexOf('metric-input') > -1" class="input-box" @click="dropDownVisible=false">
           <el-input :id="inputId" v-model="expressionList[index]" :autosize="{ minRows: 1, maxRows: 6}"
                     class="not-fixed-height no-resize" type="textarea"
-                    @input="metricKeyDown" @keyup.enter.native="expressionChange"></el-input>
+                    @input="metricKeyDown" @keyup.enter.native="expressionChange" ref="elInput"></el-input>
           <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
           <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
         </div>
@@ -69,7 +69,7 @@
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                 <el-input v-model="expressionList[index]" @change="metricChange" @input="metricKeyDown"   type="textarea"
-                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize"></el-input>
+                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
                 <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                 <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
               </div>
@@ -286,7 +286,8 @@ export default {
     },
     metricChange: function (value) {
       if (!value) return
-      this.expressionList[this.index] = value
+      // this.expressionList[this.index] = value
+      this.insertText(value)
       // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
       this.$emit('change', value)
@@ -392,7 +393,8 @@ export default {
         if (this.tempBox.vars.length == 0) {
           this.tempBoxShow = false
           // eslint-disable-next-line vue/no-mutating-props
-          this.expressionList[this.index] = params.expression
+          // this.expressionList[this.index] = params.expression
+          this.insertText(params.expression)
           this.$emit('change', params.expression)
           return
         }
@@ -400,7 +402,8 @@ export default {
         this.$post('/expression/tmpl/render', params).then(res => {
           if (res.code === 200) {
             this.tempBoxShow = false
-            this.expressionList[this.index] = res.data.expression
+            // this.expressionList[this.index] = res.data.expression
+            this.insertText(res.data.expression)
             this.$emit('change', res.data.expression)
           }
         })
@@ -491,8 +494,25 @@ export default {
     },
     tempBoxClose () {
       this.cascaderValue = ''
-    }
+    },
+    insertText (insertTxt) {
+      // 获取el-input中的input元素
+      const elInput = this.$refs.elInput.$el.firstElementChild
+      // 获取el-input的值
+      const txt = elInput.value
+      // 获取选区开始位置
+      const startPos = elInput.selectionStart
+      // 获取选区结束位置
+      const endPos = elInput.selectionEnd
+      if (startPos === undefined || endPos === undefined) return
 
+      // 将文本插入光标位置
+      this.expressionList[this.index] = txt.substring(0, startPos) + insertTxt + txt.substring(endPos)
+      // 将光标移至文本末尾
+      elInput.focus()
+      elInput.selectionStart = startPos + insertTxt.length
+      elInput.selectionEnd = startPos + insertTxt.length
+    }
     /* setMsg:function(){
         this.appendMsg
       } */
