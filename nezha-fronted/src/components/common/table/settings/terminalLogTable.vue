@@ -177,7 +177,7 @@ export default {
         if (record.endTime) {
           return calcDurationByStringTimeB(record.startTime, record.endTime)
         }
-        return calcDurationByStringTimeB(record.startTime, this.nowTime)
+        return ''
       }
     }
   }

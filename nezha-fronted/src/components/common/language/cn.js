@@ -823,7 +823,7 @@ const cn = {
     mib: {
       mib: 'MIB文件',
       fileName: '文件名称',
-      remark: '备注',
+      description: '备注',
       updateUser: '更新用户',
       updateAt: '更新时间',
       editMib: '编辑MIB',
