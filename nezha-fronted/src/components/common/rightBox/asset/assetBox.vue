@@ -398,16 +398,17 @@ export default {
             if (this.options.parentAssetOptions.length === 0) {
               this.getParentAsset().then(res => {
                 const asset = this.options.parentAssetOptions.find(a => a.id === n)
-                console.log(asset, 1)
                 if (asset) {
                   this.editAsset.brandId = asset.brand ? asset.brand.id : ''
+                  this.editAsset.brand = asset.brand
                   this.editAsset.modelId = asset.model ? asset.model.id : ''
+                  this.editAsset.model = asset.model
                   this.editAsset.dcId = asset.dc ? asset.dc.id : ''
                   this.editAsset.cabinetId = asset.cabinet ? asset.cabinet.id : ''
                   this.editAsset.cabinetStart = asset.cabinetStart
                   this.editAsset.cabinetEnd = asset.cabinetEnd
-                  if(!asset.cabinet){
-                    asset.cabinet= {}
+                  if (!asset.cabinet) {
+                    asset.cabinet = {}
                   }
                   this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
                   this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
@@ -415,16 +416,17 @@ export default {
               })
             } else {
               const asset = this.options.parentAssetOptions.find(a => a.id === n)
-              console.log(asset, 2)
               if (asset) {
                 this.editAsset.brandId = asset.brand ? asset.brand.id : ''
+                this.editAsset.brand = asset.brand
                 this.editAsset.modelId = asset.model ? asset.model.id : ''
+                this.editAsset.model = asset.model
                 this.editAsset.dcId = asset.dc ? asset.dc.id : ''
                 this.editAsset.cabinetId = asset.cabinet ? asset.cabinet.id : ''
                 this.editAsset.cabinetStart = asset.cabinetStart
                 this.editAsset.cabinetEnd = asset.cabinetEnd
-                if(!asset.cabinet){
-                  asset.cabinet= {}
+                if (!asset.cabinet) {
+                  asset.cabinet = {}
                 }
                 this.lockModelInputValue = `${asset.brand.name} / ${asset.model.name}`
                 this.lockLocationInputValue = `${asset.dc.name} / ${asset.cabinet.name} / ${asset.cabinetStart}-${asset.cabinetEnd}`
@@ -432,6 +434,7 @@ export default {
             }
           }
         }
+        this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
       }
     }
   },

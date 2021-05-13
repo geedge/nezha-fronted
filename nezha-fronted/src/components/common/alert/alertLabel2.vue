@@ -6,11 +6,15 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
       <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
         <div class="alert-label-title">SN</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.sn ? alertLabelData.sn:'--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">IP</div>
+        <div class="alert-label-title">ManageIp</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.manageIp ? alertLabelData.manageIp : '--'}}</div>
       </div>
       <div class="alert-label-box">

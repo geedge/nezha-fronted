@@ -51,7 +51,7 @@
           <span v-else >--</span>
         </template>
         <template v-else-if="item.prop == 'pingInfo'">
-          <div @mouseenter="showTableTooltip( formatPingTime(scope.row.pingInfo.lastUpdate), true, $event)" @mouseleave="hideTableTooltip" >
+          <div @mouseenter="showTableTooltip( formatPingTime(scope.row.pingInfo.lastUpdate), true, $event)" @mouseleave="hideTableTooltip" v-if="scope.row.pingInfo">
             <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}"></div><span>{{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}</span>
           </div>
         </template>
