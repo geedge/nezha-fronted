@@ -302,7 +302,7 @@ export default {
   text-decoration: none;
 }
 .nz-breakcrumb {
-  padding-left: 20px;
+  padding-left: 34px;
   line-height: 50px;
 
   .el-breadcrumb__item .el-breadcrumb__inner {

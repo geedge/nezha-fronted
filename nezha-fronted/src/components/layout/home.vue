@@ -50,6 +50,7 @@ export default {
   display: flex;
   transition: all .2s;
   .body {
+    flex: 1;
     display: flex;
     flex-direction: column;
     width: calc(100% - 240px);

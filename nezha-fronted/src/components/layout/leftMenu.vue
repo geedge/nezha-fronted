@@ -29,7 +29,7 @@
         </el-menu-item>
       </template>
     </el-menu>
-    <div class="left-menu--pin" @click="shrink"><i :class="{'icon-reverse': isShrink}" class="el-icon-s-fold"></i></div>
+    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold"></i></div>
   </div>
 </template>
 
@@ -189,15 +189,13 @@ export default {
 
   .left-menu--pin {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
     height: 20px;
     width: 20px;
     line-height: 20px;
-    color: white;
     font-size: 20px;
     font-weight: 100;
-
+    color: #999999;
+    transition: all .4s;
     i {
       transform: rotateY(0);
       transition: transform .4s;
@@ -205,6 +203,14 @@ export default {
     i.icon-reverse {
       transform: rotateY(180deg);
     }
+  }
+  .left-menu--pin-normal{
+    top: 15px;
+    left: 250px;
+  }
+  .left-menu--pin-reverse{
+    top: 15px;
+    left: 74px;
   }
   >.el-menu.header-logo {
     border-right: none;
