@@ -635,10 +635,10 @@ export default {
         endpointOption.series[0].data = [
           { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
           { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 },
-          { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
+          // { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
         ]
         endpointOption.title.text = vm.$t('asset.asset')
-        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm'), vm.$t('dashboard.overview.asset.total')]
+        endpointOption.legend.data = [vm.$t('dashboard.overview.asset.ok'), vm.$t('dashboard.overview.asset.alarm')]
         prometheusOption.series[0].label.formatter = data.agent.up + ''
         prometheusOption.series[0].data = [
           { name: vm.$t('config.agent.up'), value: data.agent.up ? data.agent.up : 0 },
@@ -1030,7 +1030,6 @@ export default {
             <div class="legend-value legend-value-asset">
               <div>${dcStat.asset.ok}</div>
               <div>${dcStat.asset.alarm}</div>
-              <div>${dcStat.asset.total}</div>
             </div>
             <div class="legend-value legend-value-agent">
               <div>${dcStat.agent.up}</div>

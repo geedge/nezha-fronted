@@ -438,7 +438,7 @@ const tooltipPieOption = {
       fontSize: 14
     },
     top: 8,
-    left: 8
+    right: 8
   },
   legend: {
     data: [],

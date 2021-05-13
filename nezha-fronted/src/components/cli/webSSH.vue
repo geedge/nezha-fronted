@@ -220,9 +220,9 @@
       <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="customShow" @close="closeAssetCustom" class="nz-dialog" width="620px"destroy-on-close >
         <div slot="title">Connect</div>
         <div >
-          <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules="rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
-            <el-form-item :label='$t("webshell.protocol")' prop="authProtocol" @change="protocolChange">
-              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
+          <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
+            <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
+              <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -244,9 +244,6 @@
               v-if="customConnect.authType === 2"
               :label='$t("webshell.authPriKey")'
               prop="authPriKey"
-              :rules="[
-                  { required: customConnect.authType ===2, message:$t('vali date.required'), trigger: 'change'},
-                ]"
             >
               <el-input v-model="customConnect.authPriKey" size="small" autocomplete="new-password"/>
             </el-form-item>
@@ -259,19 +256,13 @@
             <el-form-item
               v-if="customConnect.authProtocol === 2"
               :label='$t("webshell.authUserTip")'
-              prop="authUserTip"
-              :rules="[
-                  { required: customConnect.authProtocol ===2, message:$t('validate.required'), trigger: 'change'},
-                ]">
+              prop="authUserTip">
               <el-input v-model="customConnect.authUserTip" size="small"/>
             </el-form-item>
             <el-form-item
               v-if="customConnect.authProtocol === 2"
               :label='$t("webshell.authPinTip")'
               prop="authPinTip"
-              :rules="[
-                  { required: customConnect.authProtocol ===2, message:$t('validate.required'), trigger: 'change'},
-                ]"
             >
               <el-input v-model="customConnect.authPinTip" size="small"/>
             </el-form-item>
@@ -428,6 +419,37 @@ export default {
         // authPriKey: [
         //   { validator: this.authPriKeyValid, trigger: 'change' }
         // ]
+      },
+      rulesCustom2: {
+        authProtocol: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        host: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: host, trigger: 'change' }
+        ],
+        port: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: port, trigger: 'change' }
+        ],
+        authUsername: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPin: [
+          { required: false, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authUserTip: [
+          { required: false, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPinTip: [
+          { required: false, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPriKey: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
       },
       assetData: [],
       assetLoading: false
@@ -889,6 +911,9 @@ export default {
         this.customConnect.authPriKey = ''
         this.customConnect.port = 23
       }
+     setTimeout(()=>{
+       this.$refs.customConnect.clearValidate()
+     })
     },
     authTypeChange () {
       if (this.customConnect.authType === 1) {
