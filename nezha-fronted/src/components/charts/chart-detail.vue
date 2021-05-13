@@ -43,9 +43,7 @@
 
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
                         <span v-if="key == 'state'">
-                          <span v-if="value==1">{{ $t('asset.inStock')}}</span>
-                          <span v-if="value==2">{{ $t('asset.notInStock')}}</span>
-                          <span v-if="value==3">{{ $t('asset.suspended')}}</span>
+                          {{value}}
                         </span>
                         <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
                         <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
@@ -67,7 +65,7 @@
                           <span v-else></span>
                         </template>
                         <template v-else-if="key == 'pingRtt'">
-                          <div class="active-icon" :class="{'green': item.data.pingStatus == 1, 'red': item.data.pingStatus == 1 != 1}"></div>
+                          <div class="active-icon" :class="{'green-bg': item.data.pingStatus == 1, 'red-bg': item.data.pingStatus == 1 != 1}"></div>
                           <span>{{value ? value + 'ms' : ''}}</span>
                         </template>
                         <template v-else-if="assetKey[key]">

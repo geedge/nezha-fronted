@@ -1491,7 +1491,44 @@ export default {
         // })
         Promise.all(arr).then(res => {
           console.log(res)
-          // this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter)
+          if (res) {
+            const basic = res[0].data
+            // basic.cabinet = basic.cabinet ? basic.cabinet.name : '-'
+            const obj = {
+              purchaseDate: basic.purchaseDate,
+              pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '-',
+              dataCenter: basic.dc ? basic.dc.name : '-',
+              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
+              assetType: basic.type ? basic.type.name : '-',
+              tags: basic.fields,
+              cabinetStart: basic.cabinetStart,
+              principal: basic.dc ? basic.dc.principal : '-',
+              endpoint: basic.endpointNum,
+              cabinetEnd: basic.cabinetEnd,
+              alert: basic.alertNum,
+              vendor: basic.brand ? basic.brand.name : '-',
+              pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : '-',
+              host: basic.pingInfo ? basic.pingInfo.host : '-',
+              tel: basic.tel,
+              model: basic.model ? basic.model.name : '-',
+              id: basic.id,
+              sn: basic.sn,
+              state: basic.state ? basic.state.name : '-',
+              cabinet: basic.cabinet ? basic.cabinet.name : '-'
+            }
+            console.log(obj)
+            basic && detail.push({
+              title: vm.$t('project.chart.basicTitle'),
+              type: 'basic',
+              data: obj
+            })
+            res[1] && detail.push({
+              title: vm.$t('asset.featureTitle'),
+              type: 'attribute',
+              data: res[1].data
+            })
+          }
+          this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail, this.filter.panelId, this.filter)
         })
       } else {
         detail.push({
