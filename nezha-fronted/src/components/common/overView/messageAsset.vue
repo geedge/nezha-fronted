@@ -149,7 +149,7 @@ export default {
           rx: 5,
           ry: 5
         }).fill({ color: `rgba(${rgbColor},0)` }).data({ color: rgbColor })
-      str = this.from === 'asset' ? item.host : item.module
+      str = this.from === 'asset' ? item.name : item.name
       str += ''
       if (str.length >= 15) {
         str = str.slice(0, 12) + '...'

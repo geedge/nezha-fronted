@@ -102,9 +102,10 @@ const cn = {
     },
     SyncSave: '保存同时更新 Assets',
     copySuccess: '复制成功',
+    parent: '父级',
     moreOption: '更多选项',
     copy: '复制',
-    silence: '静默'
+    silence: '静默',
   },
   setup: {
     step0: '欢迎',
@@ -603,7 +604,8 @@ const cn = {
     vendor: '厂商',
     name: 'Name',
     dc: '数据中心',
-    type: '主机地址'
+    type: '主机地址',
+    pingInfo: 'Ping'
   },
   config: {
     config: '设置',

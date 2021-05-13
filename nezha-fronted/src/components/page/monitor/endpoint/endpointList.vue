@@ -32,10 +32,10 @@
           </template>
         </export-excel>
         <delete-button id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
-        <button id="account-batch-modify" v-has="'monitor_endpoint_add'" :class="{'nz-btn-disabled' : batchDeleteObjs.length<1}" class="top-tool-btn margin-r-20"
-                type="button" @click="batchModify">
-          <i class="nz-icon-batch-edit nz-icon"></i>
-        </button>
+<!--        <button id="account-batch-modify" v-has="'monitor_endpoint_add'" :class="{'nz-btn-disabled' : batchDeleteObjs.length<1}" class="top-tool-btn margin-r-20"-->
+<!--                type="button" @click="batchModify">-->
+<!--          <i class="nz-icon-batch-edit nz-icon"></i>-->
+<!--        </button>-->
       </template>
       <template v-slot:search>
         <clickSearch :titleSearchList="titleSearchList" :selectValue.sync="selectValue" @reload="reloadTable"/>

@@ -111,7 +111,7 @@ const en = {
     labels: 'Labels',
     moreOption: 'More option',
     copy: 'Copy',
-    silence: 'Silence'
+    silence: 'Silence',
   },
   pageSize: '/page',
   setup: {
@@ -610,7 +610,8 @@ const en = {
     option: 'Operation', // "操作"
     name: 'Name',
     dc: 'DataCenter',
-    type: 'Types'
+    type: 'Types',
+    pingInfo: 'Ping'
   },
   config: {
     config: 'Settings', // "设置"

@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div v-loading="projectLoading" class="content-col-content">
+          <div v-loading="projectLoading" class="content-col-content" @click="jumpTo('project')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${projectData.total}`" class="item" effect="light" placement="top">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div v-loading="moduleLoading" class="content-col-content">
+          <div v-loading="moduleLoading" class="content-col-content" @click="jumpTo('module')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${moduleData.total}`" class="item" effect="light" placement="top">
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div v-loading="endpointLoading" class="content-col-content">
+          <div v-loading="endpointLoading" class="content-col-content" @click="jumpTo('endpoint')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${endpointData.num}`" class="item" effect="light" placement="top">
@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="content-col-box">
-          <div id="overview-to-alertlist" v-loading="alertMessageLoading" class="content-col-content clickable" @click="jumpTo('alertList')" >
+          <div id="overview-to-alertlist" v-loading="alertMessageLoading" class="content-col-content clickable" @click="jumpTo('alertList')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${alertMessageData.num}`" class="item" effect="light" placement="top">
@@ -432,12 +432,12 @@ export default {
       return new Promise(resolve => {
         this.assetLoading = true
         this.$refs.assetHexagon.startLoading()
-        this.$get('asset/asset', { pageSize: -1 }).then(response => {
+        this.$get('asset/asset', { pageSize: -1}).then(response => {
           this.assetLoading = false
           this.$refs.assetHexagon.endLoading()
           if (response.code === 200) {
             this.assetData = response.data.list.sort((a, b) => b.alertNum - a.alertNum)
-            const alertTopAssets = this.assetData.slice(0, 20)
+            const alertTopAssets = this.assetData.slice(0, 48)
             const requests = alertTopAssets.map(a => axios.get(`stat/alertMessage/severity?assetId=${a.id}`))
             const assetStateData = []
             axios.all(requests).then(result => {
@@ -769,7 +769,7 @@ export default {
         }
       ]
       return new Promise(resolve => {
-        const requests = [axios.get('dc?pageSize=-1'), axios.get('stat/overview/map')]
+        const requests = [axios.get('dc?pageSize=-1'), axios.get('/stat/overview/map')]
         axios.all(requests).then(result => {
           const dcInfos = result[0].data.data.list
           const dcStats = result[1].data.data.list
@@ -943,7 +943,7 @@ export default {
           if (response.code === 200) {
             const moduleData = response.data.list
             moduleData.sort((a, b) => b.alertNum - a.alertNum)
-            const alertTopModules = moduleData.slice(0, 20)
+            const alertTopModules = moduleData.slice(0,48)
             const requests = alertTopModules.map(a => axios.get(`stat/alertMessage/severity?moduleId=${a.id}`))
             const moduleStateData = []
             axios.all(requests).then(result => {
@@ -1140,6 +1140,12 @@ export default {
       if (data == 'asset') {
         bus.$emit('clear-asset-filter') // 清除leftMenu左侧菜单过滤条件
         // if(this.$store.getters.getIdcArr.length===0){return}//如果不存在idc 则不跳转
+      }
+      if (data === 'project' || data === 'module' || data === 'endpoint') {
+        data = 'monitor/' + data
+      }
+      if (data === 'alertList') {
+        data = 'alertMessage'
       }
       this.$router.push({
         path: '/' + data,

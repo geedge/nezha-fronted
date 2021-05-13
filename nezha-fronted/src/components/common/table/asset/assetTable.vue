@@ -50,6 +50,11 @@
           <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
           <span v-else >--</span>
         </template>
+        <template v-else-if="item.prop == 'pingInfo'">
+          <div @mouseenter="showTableTooltip( formatPingTime(scope.row.pingInfo.lastUpdate), true, $event)" @mouseleave="hideTableTooltip" >
+            <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}"></div><span>{{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}</span>
+          </div>
+        </template>
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
         <template v-else-if="item.prop === 'parent'">{{scope.row.parent ? scope.row.parent.name : '-'}}</template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
@@ -83,6 +88,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
+import bus from '@/libs/bus'
 export default {
   name: 'assetTable',
   mixins: [table],
@@ -104,7 +110,7 @@ export default {
           label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
-          width: 120,
+          width: 140,
           sortable: 'custom'
         }, {
           label: this.$t('overall.parent'),
@@ -121,13 +127,18 @@ export default {
           label: this.$t('asset.state'),
           prop: 'state',
           show: true,
-          width: 80,
+          width: 100,
           sortable: 'custom'
+        }, {
+          label: this.$t('asset.pingInfo'),
+          prop: 'pingInfo',
+          show: true,
+          width: 110
         }, {
           label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
-          width: 110,
+          width: 140,
           sortable: 'custom'
         }, {
           label: this.$t('asset.cabinet'),
@@ -207,6 +218,21 @@ export default {
         return ''
       }
       return `[${start}-${end}]`
+    },
+    formatPingTime (str) {
+      if (!str || str == '') {
+        return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
+      }
+      const ds = '-'
+      const ts = ':'
+      const time = new Date(bus.UTCTimeToConfigTimezone(str))
+      const year = time.getFullYear()
+      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
+      const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
+      const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
+      const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
+      const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
+      return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
     }
   }
 }

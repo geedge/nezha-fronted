@@ -1,5 +1,5 @@
 <template>
-  <div ref="alertLabels" :class="['alert-labelUp',LRTriangle?'left-triangle':'right-triangle']" :style="{top:that.position.top,left:that.position.left,'--mt': that.position.mt+'px',}">
+  <div ref="alertLabels" :class="['alert-labelUp',LRTriangle?'left-triangle':'right-triangle']" :style="{top:that.position.top + 'px',left:that.position.left + 'px','--mt': that.position.mt+'px',}">
     <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
@@ -176,7 +176,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-
       }
     },
     LRTriangle: {

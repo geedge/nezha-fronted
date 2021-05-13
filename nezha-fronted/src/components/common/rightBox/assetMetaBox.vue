@@ -117,9 +117,9 @@
             <el-form-item :label='$t("overall.remark")' prop="remark">
               <el-input placeholder="" maxlength="512" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.example")'>
-              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>
-            </el-form-item>
+<!--            <el-form-item :label='$t("config.assetLabel.example")'>-->
+<!--              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>-->
+<!--            </el-form-item>-->
           </el-form>
         </div>
       </div>

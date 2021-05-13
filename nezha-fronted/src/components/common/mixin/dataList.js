@@ -236,10 +236,15 @@ export default {
     }
     let localStorageTableTitle = localStorage.getItem('nz-tableTitle-' + localStorage.getItem('nz-username') + '-' + this.tableId)
     localStorageTableTitle = localStorageTableTitle ? JSON.parse(localStorageTableTitle) : this.$refs.dataTable.tableTitle
-    this.tools.customTableTitle = localStorageTableTitle.map((item, index) => { // 修复切换中英文的问题
-      item.label = this.$refs.dataTable.tableTitle[index].label
+    this.tools.customTableTitle = this.$refs.dataTable.tableTitle.map((item, index) => { // 修复切换中英文的问题
+      item.show = localStorageTableTitle[index].show
       return item
     })
+    if (localStorageTableTitle && (localStorageTableTitle.length > this.$refs.dataTable.tableTitle.length)) {
+      const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length,localStorageTableTitle.length)
+      this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
+      console.log(this.tools.customTableTitle)
+    }
     if (!this.fromBottom) {
       this.getTableData()
     }
