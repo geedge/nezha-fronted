@@ -118,7 +118,7 @@ export default {
       if (this.cabinetInfos.has(cabinetKey) && this.cabinetInfos.get(cabinetKey) && this.cabinetInfos.get(cabinetKey).length > 0) {
         this.showCabinetInfos = this.cabinetInfos.get(cabinetKey)
       } else {
-        this.$get('cabinet?pageSize=-1&dcId=' + dc.id).then(response => {
+        this.$get('dc/cabinet?pageSize=-1&dcId=' + dc.id).then(response => {
           if (response.code == 200) {
             this.cabinetInfos.set(cabinetKey, response.data.list)
             this.showCabinetInfos = response.data.list
@@ -151,7 +151,7 @@ export default {
         this.occupyU = occupyU.map(item => { return item.value })
       } else {
         const us = []
-        this.$get('cabinet/u?id=' + cabinet.id).then(response => {
+        this.$get('dc/cabinet/u?id=' + cabinet.id).then(response => {
           if (response.code == 200) {
             for (let i = 1; i <= response.data.total; i++) {
               const u = {
