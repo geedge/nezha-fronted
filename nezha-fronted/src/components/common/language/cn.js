@@ -1,6 +1,22 @@
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN' // 引入element语言包
 const cn = {
   overall: {
+    uploadCustomPicture: '上传图片',
+    customPicture: '上传图片',
+    endpointTemplate: 'endpoint模板',
+    AddByTemplate: '使用模板创建',
+    oneHour: '1 小时',
+    twoHour: '2 小时',
+    sixHour: '6 小时',
+    twelveHour: '12 小时',
+    oneDay: '1 天',
+    twoDay: '2 天',
+    week: '1 周',
+    startTime: '开始时间',
+    endTime: '结束时间',
+    metric: '指标',
+    locked: '已锁定',
+    unlocked: '已解锁',
     dashboard: '仪表盘',
     dc: '数据中心',
     project: '系统',
@@ -294,12 +310,12 @@ const cn = {
           value: 'Value',
           range: 'Range'
         },
-        legendValue: 'Legend option',
+        legendValue: '图例选项',
         content: '内容',
         tooltip: 'Tooltip',
         displayChart: '图表',
         aggregation: 'Aggregation',
-        varType: 'Variable type',
+        varType: '变量类型',
         pid: 'Chart 模板',
         selectAsset: '请选择Asset',
         selectEndpoint: '请选择Endpoint'
@@ -528,7 +544,7 @@ const cn = {
   },
   asset: {
     asset: '资产',
-    alertNum: '资产编号',
+    alertNum: '告警',
     assetType: '资产类型', // '资产类型'
     batchEditAsset: '批量修改资产',
     selectAsset: '已选择的资产',
@@ -695,21 +711,28 @@ const cn = {
     agent: {
       name: '名称',
       type: '类型',
-      createProm: '创建代理服务',
+      host: '主机名',
+      port: '端口',
+      checkTime: '检查时间',
+      createProm: '创建客户端',
+      editProm: '修改客户端',
       up: 'UP',
       down: 'Down',
       agent: {
-        agent: '代理',
-        title: 'Download agent',
-        download: 'Download',
-        osType: 'OS type',
-        autoScript: 'Auto install script',
-        type: 'Agent type'
+        agent: '客户端',
+        title: '下载客户端',
+        download: '下载',
+        osType: '操作系统',
+        autoScript: '自动安装脚本',
+        type: '客户端类型'
       }
     },
     terminallog: {
       terminallog: '终端日志',
       status: '状态',
+      username: '用户名',
+      SessionID: '会话ID',
+      authtype: '认证方式',
       statusItem: {
         connecting: '连接中',
         connectionFailed: '连接失败',
@@ -802,7 +825,7 @@ const cn = {
       name: '资产型号',
       brand: '品牌',
       ChartTemplate: '图表模板',
-      assetNum: '资产编号',
+      assetNum: '资产',
       editModel: '编辑型号',
       createModel: '创建型号',
       remark: '备注',
@@ -849,7 +872,7 @@ const cn = {
       vendor: '厂商',
       type: '类型',
       mibBrowser: 'MIB浏览器',
-      credentials: '证书',
+      credentials: '凭证',
       noData: '暂无数据',
       credential: {
         type: '协议类型',
@@ -860,7 +883,11 @@ const cn = {
         encryption: '加密',
         pin: '密码',
         edit: '编辑证书',
-        create: '创建证书'
+        create: '创建证书',
+        ReadCommunity: '读团体字',
+        writeCommunity: '写团体字',
+        username: '用户名',
+        contextName: '上下文名称'
       }
     },
     system: {
@@ -869,19 +896,19 @@ const cn = {
         basic: '基础设置',
         alertApi: '告警API',
         assetPingSwith: '资产Ping开关',
-        assetPingInterval: '间隔',
+        assetPingInterval: 'Ping 间隔',
         exporterTarget: 'Exporter路径',
-        scrapeInterval: '获取数据间隔',
-        storageRetention: '本地保留时间',
+        scrapeInterval: '指标抓取间隔',
+        storageRetention: '指标本地保存',
         systemName: '系统名称',
         curUrl: '网站URL',
         timezone: '时区',
         defaultCabinetUsize: '机柜默认U位',
-        sessionTimeout: 'Session超时',
+        sessionTimeout: '登陆会话超时',
         minute: '分',
         second: '秒',
         day: '天',
-        maxSeries: 'Query max series',
+        maxSeries: '指标查询最大条数',
         unsaved: '未保存提示',
         mapConfig: '地图中心点',
         mapTitle: '配置地图',
@@ -890,7 +917,7 @@ const cn = {
         zoom: '缩放',
         lnglat: '坐标',
         sysLogo: '系统Logo',
-        scrapeTimeout: 'Scrape timeout',
+        scrapeTimeout: '指标抓取超时',
         snmpTrapPort: 'SNMP trap端口',
         logoTip: 'Logo支持格式为jpg、jpeg、png且大小小于2M的图片'
       },
@@ -918,8 +945,8 @@ const cn = {
         terminal: '终端',
         terminalNum: '最大终端数量',
         timeout: '超时时间',
-        userTip: 'Telnet user prompt',
-        pinTip: 'Ternet password prompt',
+        userTip: 'Telnet 用户名提示',
+        pinTip: 'Telnet 密码提示',
         localRetention: '本地存储'
       },
       ldap: {
@@ -937,7 +964,7 @@ const cn = {
         timeout: '超时时间'
       },
       link: {
-        link: 'Link',
+        link: '链接',
         name: '名称',
         url: 'Url',
         operation: '操作',
@@ -949,8 +976,10 @@ const cn = {
         create: '创建人'
       },
       notification: {
-        notification: 'Notification',
+        notification: '通知方式',
         name: '名称',
+        state: '状态',
+        account: '通知账号',
         filePath: '文件路径',
         operation: '操作',
         add: '添加',
@@ -1002,6 +1031,7 @@ const cn = {
     assetLabel: {
       example: '示例',
       assetLabel: '资产标签',
+      editMeta: '编辑标签',
       addMeta: '创建标签',
       all: '全部',
       addGroup: '创建分组',
@@ -1044,7 +1074,7 @@ const cn = {
       labelOptionNull: '请填写选项信息'
     },
     exprTemp: {
-      exprTemp: 'expression模板',
+      exprTemp: '表达式模板',
       exprTempInfo: 'Expression 模板详情',
       exprTempRender: 'expression模板渲染',
       exprTempDown: 'expression模板下载',
@@ -1060,11 +1090,11 @@ const cn = {
       edit: '修改表达式模板',
       create: '创建表达式模板',
       expressionError: '请填写表达式',
-      type: 'Type',
-      varType: 'Variable type'
+      type: '类型',
+      varType: '变量类型'
     },
     chartTemp: {
-      chartTemp: 'Chart 模板',
+      chartTemp: '图表模板',
       type: 'Type',
       varType: 'Variable type'
     }
@@ -1221,8 +1251,8 @@ const cn = {
       stateInfo_230011: 'Endpoint 连接错误',
       alerts: '告警',
       labels: '标签',
-      pattern: 'Name pattern',
-      credentials: '资格证书',
+      pattern: '名称格式',
+      credentials: '资格凭证',
       scrape_interval: '时间间隔',
       scrape_interval_placeholder: '默认全局时间间隔',
       scrape_timeout: '超时时间',
@@ -1480,13 +1510,13 @@ const cn = {
   guide: {
     title: '开始使用 通过 6 简单步骤',
     dc: '数据中心',
-    dcTip: '数据中心包含机柜和资产，与Prometheus服务相关联；机柜是资产的容器',
+    dcTip: '数据中心包含机柜和资产，机柜是资产的容器',
     addDc: '新增数据中心',
     addCabinet: '新增机柜',
-    agent: 'Agent',
-    agentTip: 'Prometheus（agent）是本系统的核心，包含“Global”和“Per-datacenter”两种类型，前者汇总数据并发出告警消息，后者从Endpoint中采集监控数据。两者都必须配置',
-    addAgent: '新增agent',
-    downloadAgent: '下载agent',
+    agent: '客户端',
+    agentTip: '客户端包含"Global”和"Per-datacenter”两种类型，前者汇总数据并发出告警消息，后者从Endpoint中采集监控数据。',
+    addAgent: '新增客户端',
+    downloadAgent: '下载客户端',
     asset: '资产',
     assetTip: '资产是被系统监控的主要部分',
     addAsset: '新增资产',

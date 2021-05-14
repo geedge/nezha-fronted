@@ -6,7 +6,7 @@
         <div v-if="plugins.indexOf('metric-selector') > -1">
           <el-dropdown class="metric-selector">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">Metric
+            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{ $t("overall.metric") }}
               &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
                                v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"

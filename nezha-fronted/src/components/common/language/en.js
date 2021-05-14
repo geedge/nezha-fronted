@@ -7,12 +7,28 @@ const en = {
 // 账号用Account，username、password等都属于account的一部分
 // A user is the person who uses the account, the account is an inanimate object that is merely registered to an e-mail address.
   overall: {
+    uploadCustomPicture: 'Upload custom picture',
+    customPicture: 'Custom picture',
+    endpointTemplate: 'Endpoint template',
+    AddByTemplate: 'Add by template',
+    oneHour: '1 hour',
+    twoHour: '2 hours',
+    sixHour: '6 hours',
+    twelveHour: '12 hours',
+    oneDay: '1 day',
+    twoDay: '2 days',
+    week: '1 week',
+    startTime: 'Start time',
+    endTime: 'End time',
+    metric: 'Metric',
+    locked: 'Locked',
+    unlocked: 'Unlocked',
     dashboard: 'Dashboards', // '仪表盘'
-    project: 'Projects', // '系统'
+    project: 'Project', // '系统'
     monitor: 'Monitor', // 监控
     alert: 'Alert', // "告警"
-    asset: 'Assets', // '资产'
-    config: 'Settings', // '设置'
+    asset: 'Asset', // '资产'
+    config: 'Setting', // '设置'
     administration: 'Administration',
     configuration: 'configuration',
     create: 'New', // '新增'
@@ -404,7 +420,7 @@ const en = {
       traffic: 'Traffic',
       projectTopoLogy: 'Project Topology',
       asset: {
-        title: 'Assets',
+        title: 'Asset',
         assetType: 'Asset type',
         modelStat: 'Model',
         dcStat: 'Data center',
@@ -534,7 +550,7 @@ const en = {
   },
   asset: {
     asset: 'Asset',
-    assets: 'Assets', // '资产'
+    assets: 'Asset', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
     createAsset: 'New asset', // '编辑资产'
     batchEditAsset: 'Edit asset in bulk',
@@ -617,7 +633,7 @@ const en = {
     pingInfo: 'Ping'
   },
   config: {
-    config: 'Settings', // "设置"
+    config: 'Setting', // "设置"
     user: {
       userList: 'User list', // "用户列表"
       user: 'User',
@@ -652,7 +668,7 @@ const en = {
       mobile: 'Mobile'
     },
     roles: {
-      roles: 'Roles',
+      roles: 'Role',
       name: 'Name',
       description: 'Description',
       option: 'Operation', // "操作"
@@ -693,6 +709,8 @@ const en = {
       name: 'Name',
       up: 'UP',
       down: 'Down',
+      host: 'Host',
+      port: 'Port',
       agent: {
         agent: 'Agent',
         title: 'Download agent',
@@ -746,7 +764,10 @@ const en = {
     },
     terminallog: {
       terminallog: 'Terminal log',
-      status: 'Statu', // "状态"
+      status: 'State', // "状态"
+      username: 'Username',
+      SessionID: 'Session ID',
+      authtype: 'AuthType',
       statusItem: {
         connecting: 'Connecting',
         connectionFailed: 'Connection failed',
@@ -861,7 +882,11 @@ const en = {
         auth: 'Authentication',
         method: 'Method',
         encryption: 'Encryption',
-        pin: 'Password'
+        pin: 'Password',
+        ReadCommunity: 'Read community',
+        writeCommunity: 'Write community',
+        username: 'Username',
+        contextName: 'Context name'
       }
     },
     system: {
@@ -1014,9 +1039,10 @@ const en = {
       editAssetState: 'Edit asset state'
     },
     assetLabel: {
-      addMeta: 'Add labels',
+      addMeta: 'Add label',
       example: 'Example',
-      assetLabel: 'Asset labels',
+      editMeta: 'Edit lables',
+      assetLabel: 'Asset label',
       all: 'All',
       addGroup: 'Add group',
       editGroup: 'Edit group',
@@ -1234,7 +1260,7 @@ const en = {
       stateInfo_230010: 'Promserver can be used',
       stateInfo_230011: 'Endpoint connection refused',
       alerts: 'Alert',
-      labels: 'Labels',
+      labels: 'Label',
       pattern: 'Name pattern',
       credentials: 'Credentials',
       scrape_interval: 'Scrape interval',

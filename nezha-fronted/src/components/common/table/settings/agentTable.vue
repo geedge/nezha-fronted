@@ -93,11 +93,11 @@ export default {
           show: true,
           sortable:'custom'
         }, {
-          label: 'Host',
+          label: this.$t('config.agent.host'),
           prop: 'host',
           show: true
         }, {
-          label: 'Port',
+          label: this.$t('config.agent.port'),
           prop: 'port',
           show: true
         }, {

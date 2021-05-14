@@ -27,16 +27,16 @@
             <el-form-item :label='$t("config.mib.credential.port")' prop="port" >
               <el-input placeholder=""   v-model.number="editCredential.port" size="small" id="credential-box-input-port"></el-input>
             </el-form-item>
-            <el-form-item label='Read community' prop="readCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
+            <el-form-item :label='$t("config.mib.credential.ReadCommunity")' prop="readCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
               <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.readCommunity" size="small" id="credential-box-input-readCommunity"></el-input>
             </el-form-item>
-            <el-form-item label='Write community' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
+            <el-form-item :label='$t("config.mib.credential.writeCommunity")' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
               <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
-            <el-form-item label="Username" prop="username" v-if="editCredential.type === 3">
+            <el-form-item :label='$t("config.mib.credential.username")' prop="username" v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
             </el-form-item>
-            <el-form-item label="Content name" prop="contextname"  v-if="editCredential.type === 3">
+            <el-form-item :label='$t("config.mib.credential.contextName")' prop="contextname"  v-if="editCredential.type === 3">
               <el-input placeholder=""   v-model="editCredential.config.contextname" size="small" id="credential-box-input-contextname"></el-input>
             </el-form-item>
 

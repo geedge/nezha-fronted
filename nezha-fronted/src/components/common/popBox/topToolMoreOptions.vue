@@ -5,7 +5,7 @@
     </button>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item v-if="showLock">
-        <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? 'Locked' : 'Unlocked'}}</div>
+        <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
       </el-dropdown-item>
       <slot name="before"></slot>
       <el-dropdown-item v-if="importUrl">

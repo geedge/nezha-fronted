@@ -40,7 +40,7 @@
                 <div class="upload-pic-box" @click="uploadPicChange" v-has="'topo_icon_save'">
                   <i class="el-icon-plus"></i>
                   <span>
-                     Upload custom picture
+                     {{ $t('overall.uploadCustomPicture') }}
                   </span>
                 </div>
               </div>
@@ -264,7 +264,7 @@
     </el-dialog>
     <!--Custom picture-->
     <el-dialog
-      title="Custom picture"
+      :title="title"
       :visible.sync="uploadPicShow"
       width="auto"
       @close="uploadPicShow = false"
@@ -369,6 +369,7 @@ export default {
   name: 'topologyL5',
   data () {
     return {
+      title: this.$t("overall.customPicture"),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据

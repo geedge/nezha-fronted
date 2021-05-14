@@ -85,7 +85,7 @@
         </span>
 
         <!--Enpoint template-->
-        <div class="right-box-sub-title">Enpoint template
+        <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
           <el-tooltip placement="top" effect="light">
             <div slot="content">
               {{$t('project.module.tip.defaultEndpointSet')}}

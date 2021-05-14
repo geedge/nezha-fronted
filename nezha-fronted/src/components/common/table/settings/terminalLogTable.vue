@@ -114,11 +114,11 @@ export default {
           show: true,
           width: 80
         }, {
-          label: 'Session ID',
+          label: this.$t('config.terminallog.SessionID'),
           prop: 'uuid',
           show: true
         }, {
-          label: 'Username',
+          label: this.$t('config.terminallog.username'),
           prop: 'username',
           show: true
         },
@@ -148,7 +148,7 @@ export default {
           show: true
         },
         {
-          label: 'AuthType',
+          label: this.$t('config.terminallog.authtype'),
           prop: 'authType',
           show: false
         },

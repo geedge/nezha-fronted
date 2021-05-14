@@ -23,18 +23,18 @@
         <el-form-item :label='$t("alert.silence.time")' prop="time" class="range-time">
           <div>
             <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
-              <el-radio-button label="1">1 hour</el-radio-button>
-              <el-radio-button label="2">2 hour</el-radio-button>
-              <el-radio-button label="6">6hour</el-radio-button>
-              <el-radio-button label="12">12 hour</el-radio-button>
-              <el-radio-button label="24">1 day</el-radio-button>
-              <el-radio-button label="48">2 day</el-radio-button>
-              <el-radio-button label="168">1 week</el-radio-button>
+              <el-radio-button label="1">{{ $t("overall.oneHour") }}</el-radio-button>
+              <el-radio-button label="2">{{ $t("overall.twoHour") }}</el-radio-button>
+              <el-radio-button label="6">{{ $t("overall.sixHour") }}</el-radio-button>
+              <el-radio-button label="12">{{ $t("overall.twelveHour") }}</el-radio-button>
+              <el-radio-button label="24">{{ $t("overall.oneDay") }}</el-radio-button>
+              <el-radio-button label="48">{{ $t("overall.twoDay") }}</el-radio-button>
+              <el-radio-button label="168">{{ $t("overall.week") }}</el-radio-button>
             </el-radio-group>
           </div>
           <div class="datepicker">
             <div class="datepicker-box">
-              <span class="datepicker-title">start time</span>
+              <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
               <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
                               type="datetime"
@@ -46,7 +46,7 @@
               </my-date-picker>
             </div>
             <div class="datepicker-box">
-              <span class="datepicker-title">end time</span>
+              <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
               <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
                               format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
                               type="datetime"
