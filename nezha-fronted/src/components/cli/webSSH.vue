@@ -7,7 +7,7 @@
         <div class="sub-list-resize-copy">一</div>
       </div>
       <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
-  <div :class="{'shell-service-max': isFullScreen,'shell-service':true}" class="sub-box ani-webSHH-height" data-yunlog-scope="popup" id="shell-service" ref="webSShBox" style="height: 0;background: #000">
+  <div :class="{'shell-service-max': isFullScreen,'shell-service':true}" class="sub-box ani-webSHH-height cli" data-yunlog-scope="popup" id="shell-service" ref="webSShBox" style="height: 0;background: #000">
     <div class="resize-modal">
       <div class="sub-list-resize-copy" style="width: 100%">一</div>
     </div>

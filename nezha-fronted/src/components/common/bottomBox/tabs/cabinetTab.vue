@@ -95,8 +95,7 @@ export default {
       }
     }
   },
-  created() {
-    console.log(this.$route);
+  created () {
   },
   methods: {
     // 切换tab

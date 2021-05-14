@@ -1490,7 +1490,6 @@ export default {
         //   }
         // })
         Promise.all(arr).then(res => {
-          console.log(res)
           if (res) {
             const basic = res[0].data
             // basic.cabinet = basic.cabinet ? basic.cabinet.name : '-'
@@ -1516,7 +1515,6 @@ export default {
               // principal: basic.dc ? basic.dc.principal : '-',
               // tel: basic.tel,
             }
-            console.log(obj)
             basic && detail.push({
               title: vm.$t('project.chart.basicTitle'),
               type: 'basic',

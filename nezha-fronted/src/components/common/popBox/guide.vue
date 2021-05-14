@@ -289,7 +289,6 @@ export default {
   },
   watch: {
     showDialog (n) {
-      console.log(n)
       this.visible = n
     },
     activeIndex (n) {

@@ -122,7 +122,6 @@ export default {
             pin: '',
             pinChange: ''
           }
-          console.log(this.object);
           this.rightBox.show = true
         }
       })

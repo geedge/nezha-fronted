@@ -453,7 +453,6 @@ export default {
       } else {
         this.authType = 0
       }
-      console.log(params)
       this.$refs.moduleForm.validate((valid) => {
         if (valid) {
           this.prevent_opt.save = true

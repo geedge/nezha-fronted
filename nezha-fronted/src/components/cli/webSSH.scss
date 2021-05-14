@@ -158,8 +158,8 @@
   width:100%;
 }
 /* 上滑resize工具条 */
-.resize-modal{
-
+.cli .resize-modal{
+ width: 100vw !important;
 }
 .sub-list-resize, .sub-list-resize-copy {
   display: flex;

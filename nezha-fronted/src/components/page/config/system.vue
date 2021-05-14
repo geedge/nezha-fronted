@@ -768,7 +768,6 @@ export default {
     },
     handleLogoChange (file, fileList) {
       const imageTypes = ['image/jpeg', 'image/jpg', 'image/png']
-      console.log(file.raw.type)
       const isImage = imageTypes.some(t => file.raw.type === t)
       const isLt2M = file.raw.size / 1024 / 1024 < 2
 

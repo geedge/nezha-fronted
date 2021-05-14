@@ -243,7 +243,6 @@ export default {
     if (localStorageTableTitle && (localStorageTableTitle.length > this.$refs.dataTable.tableTitle.length)) {
       const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length,localStorageTableTitle.length)
       this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
-      console.log(this.tools.customTableTitle)
     }
     if (!this.fromBottom) {
       this.getTableData()
