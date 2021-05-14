@@ -10,6 +10,9 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
+        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
+          <i class="nz-icon nz-icon-funnel"></i>
+        </button>
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
@@ -30,9 +33,6 @@
             <div>
               <el-dropdown-item>
                 <div id="asset-batch-asset" v-has="'asset_edit'" @click.stop="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <div id="asset-filte" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" v-has="'asset_edit'" @click.stop="showClickSearch"><i class="nz-icon nz-icon-funnel"></i>{{$t('overall.searchCondition')}}</div>
               </el-dropdown-item>
               <el-dropdown-item>
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
