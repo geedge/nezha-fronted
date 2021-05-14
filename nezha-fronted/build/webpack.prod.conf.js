@@ -19,10 +19,11 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 const serverConfig = require('../static/config.json')//引入根目录下的配置文件
 
 // const gitRevisionPlugin = new GitRevisionPlugin();
-// const createJson = function() {
-//   serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
-//   return JSON.stringify(serverConfig);
-// };
+const createJson = function() {
+  // serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
+  serverConfig.version=config.build.version;
+  return JSON.stringify(serverConfig);
+};
 
 const env = require('../config/prod.env')
 /*const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
