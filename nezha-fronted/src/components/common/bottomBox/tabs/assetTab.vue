@@ -52,6 +52,7 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
+import {fromRoute} from "@/components/common/js/constants";
 export default {
   name: 'assetTab',
   mixins: [dataListMixin, subDataListMixin],
@@ -193,6 +194,10 @@ export default {
       deep: true,
       handler (n, o) {
         this.searchLabel.dcIds = n.id
+        if ( this.from === fromRoute.model) {
+          delete this.searchLabel.dcIds
+          this.searchLabel.modelIds = n.id
+        }
         this.getTableData()
       }
     }

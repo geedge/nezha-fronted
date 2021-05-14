@@ -10,30 +10,36 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
-          <i class="nz-icon nz-icon-funnel"></i>
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+          <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <export-excel
-          ref="export"
-          id="asset-list"
-          :params="searchLabel"
-          :permissions="{import: 'asset_add', export: 'asset_view'}"
-          class="top-tool-export margin-r-10"
-          export-file-name="asset"
+        <top-tool-more-options
+          id="model"
+          :params="filter"
+          :permissions="{
+                  import: 'asset_add',
+                  export: 'asset_view'
+                }"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="chart"
           export-url="/asset/asset/export"
           import-url="/asset/asset/import"
           @afterImport="getTableData"
         >
-          <template slot="optionZone">
-            <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
-              <i class="nz-icon nz-icon-create-square"></i>
-            </button>
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <div id="asset-batch-asset" v-has="'asset_edit'" @click.stop="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div id="asset-filte" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" v-has="'asset_edit'" @click.stop="showClickSearch"><i class="nz-icon nz-icon-funnel"></i>{{$t('overall.searchCondition')}}</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
           </template>
-        </export-excel>
-        <button id="asset-batch-asset" v-has="'asset_edit'" :title="$t('overall.batchEdit')" class="top-tool-btn margin-r-10" @click.stop="batchEdit">
-          <i class="nz-icon nz-icon-batch-edit"></i>
-        </button>
-        <delete-button id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        </top-tool-more-options>
       </template>
       <template v-slot:search>
         <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
@@ -85,7 +91,6 @@
 </template>
 
 <script>
-import exportXLSX from '@/components/common/exportXLSX'
 import deleteButton from '@/components/common/deleteButton'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
 import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEditBox'
@@ -93,6 +98,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'asset',
@@ -103,7 +109,7 @@ export default {
     assetBatchEditBox,
     assetTable,
     clickSearch,
-    'export-excel': exportXLSX
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {

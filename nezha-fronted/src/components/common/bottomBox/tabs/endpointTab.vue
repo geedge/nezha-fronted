@@ -193,7 +193,7 @@ export default {
           prop: 'id',
           show: true
         }, {
-          label: this.$t('project.project.project'),
+          label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
           width: '120'
@@ -288,7 +288,7 @@ export default {
           readonly: true
         }, {
           id: 34,
-          name: this.$t('project.project.project'),
+          name: this.$t('project.project.projectName'),
           // name: this.$t('asset.asset'),
           type: 'input',
           label: 'projectName',

@@ -122,7 +122,7 @@
                     id="module-box-input-pattern"
                     v-model="editModule.endpointNameTmpl"
                     :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
+                    :placeholder="$t('overall.placeHolder')"
                   ></el-autocomplete>
                 </el-form-item>
                 <!--scrape_interval-->

@@ -89,7 +89,7 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time v-model="searchTime" :refresh-data-func="queryChartDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryChartDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
         </div>
       </div>
       <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
@@ -132,6 +132,7 @@ export default {
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
       searchTime: [],
+      searchTimeDialog: [],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
@@ -193,7 +194,7 @@ export default {
       return (key, value) => {
         if (key == 'type') {
           if (value == 1) {
-            value = this.$t('project.project.project')
+            value = this.$t('project.project.projectName')
           } else if (value == 2) {
             value = this.$t('module.module.module')
           } else if (value == 3) {
@@ -227,10 +228,12 @@ export default {
       })
     },
     messageDetail (row) {
-      this.currentMsg = { ...row }
-      this.graphShow = true
-      this.$nextTick(() => {
-        this.queryChartDate()
+      this.$get('/alert/rule/' + row.alertRule.id).then(res => {
+        this.currentMsg = { ...row, alertRule: { ...res.data } }
+        this.graphShow = true
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
       })
     },
     queryMessage (alertMessage) {
@@ -245,7 +248,7 @@ export default {
       // const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
       const start = this.currentMsg.startAt
       const end = this.currentMsg.endAt
-      this.searchTime = [start, end]
+      this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
       if (timeDiff < 1) {
@@ -321,7 +324,7 @@ export default {
                     chartData.name += '}'
                     const legend = {
                       name: chartData.name,
-                      alias: alias,
+                      alias: chartData.name,
                       isGray: false
                     }
                     this.legend.push(legend)
@@ -342,7 +345,7 @@ export default {
               this.$refs.messageChart.endLoading()
             })
           } catch (err) {
-            this.$message.error(err)
+            // this.$message.error(err)
             this.$refs.messageChart.endLoading()
           }
         })
@@ -410,13 +413,14 @@ export default {
     promQueryParamConvert (obj) {
       let r = '(' + obj.alertRule.expr + ')'
       let intoLabels = false
+      obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
         r += (function () {
           let group = ' and ' + '(group({'
           let by = ' by ('
 
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
+            if (k != 'alertname' && k != 'severity' && k != 'severity_id') {
               intoLabels = true
               group += k
               group += '='
@@ -581,7 +585,26 @@ export default {
         this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
       }
       this.getTableData()
-    }
+    },
+    computeDistance (str) {
+      let width = 0
+      const html = document.createElement('span')
+      html.innerText = str
+      html.className = 'getTextWidth'
+      document.querySelector('body').appendChild(html)
+      width = document.querySelector('.getTextWidth').offsetWidth
+      document.querySelector('.getTextWidth').remove()
+      return Number('-' + (width + 5))
+    },
+    returnMarkArea () {
+      if (this.currentMsg) {
+        if (this.currentMsg.alertRule.operator == '>' || this.currentMsg.alertRule.operator == '>=') {
+          return [{ yAxis: this.currentMsg.alertRule.threshold }, {}]
+        } else {
+          return [{}, { yAxis: this.currentMsg.alertRule.threshold }]
+        }
+      }
+    },
   }
 }
 </script>

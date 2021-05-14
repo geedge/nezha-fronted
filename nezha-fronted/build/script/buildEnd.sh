@@ -15,7 +15,11 @@ if [[ 'all' == "${BUILD_MODE}" ]];then
 	\cp -rf ../static/Tiles/ $DIST_PATH/static/
 fi
 echo 'start create zip...'
-find ./ * -exec touch -t $(date +%Y%m%d0000.00) {} \;
+
+#find ./ * -exec touch -t $(date +%Y%m%d0000.00) {} \;
+
+find ./ * -exec touch -t 202104301200.00 {} \;
+
 zip -rX nz-gui.zip ./* >/dev/null
 
 MD5=$(md5sum nz-gui.zip |awk '{print $1}'|cut -c 1-8)

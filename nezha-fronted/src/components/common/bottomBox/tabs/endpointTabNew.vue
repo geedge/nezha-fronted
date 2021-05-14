@@ -32,7 +32,7 @@
       </template>
     </nz-bottom-data-list>
     <transition name="right-box">
-      <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :type="'edit'"></edit-endpoint-box-new>
+      <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
     </transition>
   </div>
 </template>

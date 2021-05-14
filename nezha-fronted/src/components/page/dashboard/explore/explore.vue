@@ -86,7 +86,7 @@
           <div v-show="showIntroduce" class="introduce-view">
             <div class="info-room">
               <div class="col-md-9 doc-content">
-                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank" rel="noopener norefferrer"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
+                <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank" rel="noopener noreferrer"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
                 <div class="content-divider"></div>
                 <h2 >
                   Simple time series selection

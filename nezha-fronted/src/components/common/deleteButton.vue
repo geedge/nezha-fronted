@@ -1,6 +1,11 @@
 <template>
   <div :class="['delete-button',(deleteObjs.length<1?'':'delete-button-light')]">
-    <button :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete"><span><i class="nz-icon nz-icon-delete" ></i></span></button>
+    <button v-if="this.type === 'button'" :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete">
+      <span><i class="nz-icon nz-icon-delete" ></i></span>
+    </button>
+    <div v-if="this.type === 'link'" :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete">
+      <span><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
+    </div>
   </div>
 </template>
 
@@ -12,7 +17,14 @@ export default {
     deleteObjs: Array,
     api: String,
     clickFunction: Function,
-    id: String
+    id: String,
+    type: {
+      type: String,
+      default: 'button'
+    },
+    title: {
+      type: String
+    }
   },
   methods: {
     batchDelete: function () {

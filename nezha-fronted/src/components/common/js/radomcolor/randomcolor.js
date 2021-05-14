@@ -1,4 +1,4 @@
-function randomcolor () {
+function randomcolor () {/*
   let e = null
   const t = {}
   r('monochrome', null, [
@@ -309,7 +309,7 @@ function randomcolor () {
     return [t, Math.round(n * s / (o < 1 ? o : 2 - o) * 1e4) / 100, o / 2 * 100]
   }
   return n()
-}
+*/}
 
 export {
   randomcolor

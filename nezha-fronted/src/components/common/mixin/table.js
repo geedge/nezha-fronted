@@ -26,7 +26,6 @@ export default {
     tableOperation ([command, row, param]) {
       switch (command) {
         case 'edit': {
-          console.info(1, command, row)
           this.$emit('edit', row)
           break
         }

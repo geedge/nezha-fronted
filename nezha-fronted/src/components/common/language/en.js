@@ -127,7 +127,11 @@ const en = {
     labels: 'Labels',
     moreOption: 'More option',
     copy: 'Copy',
-    silence: 'Silence'
+    silence: 'Silence',
+    editType: 'Type',
+    searchCondition: 'Search condition',
+    batchDel: 'Batches delete',
+    tempPrev: 'Template preview'
   },
   pageSize: '/page',
   setup: {
@@ -1203,7 +1207,7 @@ const en = {
     },
     project: {
       project: 'Name', // "系统"
-      projectName: 'Project name', // "系统名称"
+      projectName: 'Project', // "系统名称"
       editProject: 'Edit project', // "编辑系统"
       description: 'Description', // "描述"
       createProject: 'New project'// "新增系统"

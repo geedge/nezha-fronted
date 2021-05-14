@@ -18,7 +18,7 @@
             </template>
             <template v-for="(item, index) in linkData">
               <el-menu-item :key="index" :index="'0-' + index">
-                <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener norefferrer" target="_blank">{{item.name}}</a></span>
+                <span class="linkTitle"><a :href='item.url' :title="item.name" class="nz-a" rel="noopener noreferrer" target="_blank">{{item.name}}</a></span>
               </el-menu-item>
             </template>
           </el-submenu>
@@ -253,7 +253,7 @@ export default {
       },
       createMenu: [ // 新增按钮内容
         {
-          label: this.$t('project.project.project'),
+          label: this.$t('project.project.projectName'),
           url: 'project',
           type: 1,
           permission: 'header_add_project'

@@ -458,7 +458,7 @@ const tooltipPieOption = {
     {
       type: 'pie',
       animation: false,
-      center: ['25%', '60%'],
+      center: ['25%', '53%'],
       radius: [36, 48],
       data: [],
       label: {

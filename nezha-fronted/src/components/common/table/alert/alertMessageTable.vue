@@ -128,7 +128,7 @@ import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
-import alertLabel from '../../alert/alertLabel2'
+import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
 export default {
   name: 'alertMessageTable',
@@ -224,7 +224,7 @@ export default {
       return (key, value) => {
         if (key == 'type') {
           if (value == 1) {
-            value = this.$t('project.project.project')
+            value = this.$t('project.project.projectName')
           } else if (value == 2) {
             value = this.$t('module.module.module')
           } else if (value == 3) {

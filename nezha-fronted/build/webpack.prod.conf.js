@@ -197,13 +197,13 @@ if(process.env.NODE_ENV == 'development'){
       onBuildStart: ['/bin/bash '+path.join(__dirname,'script')+'/buildStart.sh'],
       onBuildEnd: ['/bin/bash '+path.join(__dirname,'script')+'/buildEnd.sh '+process.env.BUILD_MODE]
     }),
-    new fileManagerPlugin({
-      onStart:[
-        {
-          delete:[path.join(__dirname,'../dist/') ]
-        }
-      ],
-    })
+    // new fileManagerPlugin({
+    //   onStart:[
+    //     {
+    //       delete:[path.join(__dirname,'../dist/') ]
+    //     }
+    //   ],
+    // })
   )
 }
 

@@ -58,6 +58,8 @@
         <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.chartTemp.chartTempTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+        <!--model 下滑-->
+        <asset-tab v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
       </div>
     </div>
   </div>
@@ -157,26 +159,29 @@ export default {
           moduleTabTitle: [
             // { prop: 'panel', name: 'Detail' },
             { prop: 'endpoint', name: this.$t('asset.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'Alerts' }
+            { prop: 'moduleAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         endpoint: {
           endpointTabTitle: [
             // { prop: 'panel', name: 'Detail' },
             { prop: 'endpointQuery', name: 'Query' },
-            { prop: 'endpointAlertMessage', name: 'Alerts' }
+            { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         chartTemp: {
           chartTempTabTitle: [
-            { prop: 'panel', name: 'Template preview' }
+            { prop: 'panel', name: this.$t('overall.tempPrev') }
           ]
         },
         alertRule: {
           alertRule: [
-            { prop: 'alertRuleAlertMessage', name: 'Alerts' }
+            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') }
           ]
         },
+        model: [
+          { prop: 'asset', name: this.$t('asset.assets'), active: true }
+        ],
         dc: {
           cabinet: [
             { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true },

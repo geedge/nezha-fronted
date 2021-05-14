@@ -11,7 +11,7 @@
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
-              <a :href='item.url' :title="item.name" class="nz-a" target="_blank">{{item.name}}</a>
+              <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-a" target="_blank">{{item.name}}</a>
             </span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -79,7 +79,7 @@ export default {
       // 顶部菜单相关
       createMenu: [ // 新增按钮内容
         {
-          label: this.$t('project.project.project'),
+          label: this.$t('project.project.projectName'),
           url: 'project',
           type: 1,
           permission: 'header_add_project'

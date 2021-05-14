@@ -20,7 +20,7 @@ export default {
   height: calc(100% - 50px);
   background-color: #f6f6f6;
   width: 100%;
-
+  padding-right: 10px;
   &>div {
     height: 100%;
   }

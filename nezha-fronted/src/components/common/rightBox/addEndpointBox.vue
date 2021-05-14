@@ -13,7 +13,7 @@
     <div class="right-box-form-box right-box__container" style="overflow: hidden">
       <el-form class="right-box-form right-box-form-left" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
         <!--project-->
-        <el-form-item :label='$t("project.project.project")' prop="projectId" class="select-warp">
+        <el-form-item :label='$t("project.project.projectName")' prop="projectId" class="select-warp">
           <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small" id="add-endpoint-project">
             <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
           </el-select>

@@ -198,7 +198,7 @@ export default {
           disabled: false
         }, {
           id: 20,
-          name: this.$t('project.project.project'),
+          name: this.$t('project.project.projectName'),
           type: 'project',
           label: 'project',
           disabled: false
@@ -272,7 +272,7 @@ export default {
       return (key, value) => {
         if (key == 'type') {
           if (value == 1) {
-            value = this.$t('project.project.project')
+            value = this.$t('project.project.projectName')
           } else if (value == 2) {
             value = this.$t('module.module.module')
           } else if (value == 3) {

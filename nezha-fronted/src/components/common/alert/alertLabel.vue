@@ -1,129 +1,125 @@
 <template>
   <div :class="calcHeight(that.position,that)" :style="calcPosition(that.position,that)" ref="alertLabels">
-      <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
-        <div class="alert-label-box">
-          <div class="alert-label-title">ID</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">SN</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.sn:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Host</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">State</div>
-          <div class="alert-label-value">{{alertLabelData?(alertStateStr(alertLabelData.state)):''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Ping</div>
-          <div class="alert-label-value">
-            <div v-if="alertLabelData" :class="{'active-icon green':alertLabelData.pingStatus == 1,'active-icon red':alertLabelData.pingStatus == 0}"></div>
-            <span v-if="alertLabelData">{{alertLabelData.pingRtt?alertLabelData.pingRtt+'ms':''}}</span>
-          </div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Asset Type</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.assetType:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Vendor</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.vendor:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Model</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.model:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">PingLastReply</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.pingLastReply:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Alert</div>
-          <div class="alert-label-value">
-            <span v-if="alertLabelData" :class="{danger:alertLabelData.alert>0,success:alertLabelData.alert<=0}">{{alertLabelData.alert + alertActiveStr()}}</span>
-          </div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">DC</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.dataCenter:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Endpoint</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.endpoint:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Administrator</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.principal:''}}</div>
+    <div class="alert-label-info" v-if="type==='asset'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">SN</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.sn ? alertLabelData.sn:'--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">ManageIp</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.manageIp ? alertLabelData.manageIp : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">State</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.state && alertLabelData.state.name ? alertLabelData.state.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Ping</div>
+        <div class="alert-label-value">
+          <div v-if="alertLabelData" :class="{'green-bg': alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.status === 1,'red-bg': alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.status === 0}" class="active-icon"></div>
+          <span v-if="alertLabelData">{{alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.rtt ? alertLabelData.pingInfo.rtt + 'ms':'--'}}</span>
         </div>
       </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Asset Type</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.type && alertLabelData.type.name ? alertLabelData.type.name:'--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Brand</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.brand && alertLabelData.brand.name ? alertLabelData.brand.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Model</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.model && alertLabelData.model.name ? alertLabelData.model.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">PingLastReply</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.lastUpdate ? alertLabelData.pingInfo.lastUpdate : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Alert</div>
+        <div class="alert-label-value">
+          <span v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'danger' : 'success'">{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0 + ' ' + alertActiveStr()}}</span>
+        </div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">DC</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.dc && alertLabelData.dc.name ? alertLabelData.dc.name : '--'}}</div>
+      </div>
+    </div>
 
-      <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
-        <div class="alert-label-box">
-          <div class="alert-label-title">ID</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Name</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Project</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Description</div>
-          <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-        </div>
+    <div class="alert-label-info" v-if="type==='module'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Project</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ?alertLabelData.project.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Description</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '-'}}</div>
+      </div>
+    </div>
 
-      <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
-        <div class="alert-label-box">
-          <div class="alert-label-title">ID</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Name</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.name:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Description</div>
-          <div class="alert-label-value">{{alertLabelData?(alertLabelData.remark?alertLabelData.remark:'-'):''}}</div>
-        </div>
+    <div class="alert-label-info" v-if="type==='project'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.id : '--'}}</div>
       </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Description</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
+      </div>
+    </div>
 
-      <div class="alert-label-info" v-if="type==='endpoint'" v-loading="loading">
-        <div class="alert-label-box">
-          <div class="alert-label-title">ID</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.id:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Project</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.project.name:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Module</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.module.name:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Labels</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.labels:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Host</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.host:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Port</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.port:''}}</div>
-        </div>
-        <div class="alert-label-box">
-          <div class="alert-label-title">Path</div>
-          <div class="alert-label-value">{{alertLabelData?alertLabelData.path:''}}</div>
-        </div>
+    <div class="alert-label-info" v-if="type==='endpoint'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Project</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ? alertLabelData.project.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Module</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Labels</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.labels ? alertLabelData.labels : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Host</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.host ? alertLabelData.host : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Port</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.port ? alertLabelData.port : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Path</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.path ? alertLabelData.path : '--'}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -182,6 +178,28 @@ export default {
   components: {
 
   },
+  watch: {
+    id: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.init()
+      }
+    },
+    that: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+      }
+    },
+    LRTriangle: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+
+      }
+    }
+  },
   computed: {
     calcPosition () {
       const self = this
@@ -215,6 +233,49 @@ export default {
     }
   },
   methods: {
+    init () {
+      this.loading = true
+      if (this.type === 'asset') {
+        this.$get('asset/asset/' + this.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.alertLabelData = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      if (this.type === 'project') {
+        this.$get('monitor/project/' + this.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.alertLabelData = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      if (this.type === 'module') {
+        this.$get('monitor/module/' + this.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.alertLabelData = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      if (this.type === 'endpoint') {
+        this.$get('monitor/endpoint/' + this.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.alertLabelData = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
     alertActiveStr () {
       return this.$t('overall.active')
     },
@@ -226,48 +287,7 @@ export default {
       }
     }
   },
-  mounted () {
-    if (this.type === 'asset') {
-      this.$get('/asset/info?id=' + this.id).then((res) => {
-        if (res.msg === 'success') {
-          this.loading = false
-          this.alertLabelData = res.data.Basic
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    }
-    if (this.type === 'project') {
-      this.$get('/project?id=' + this.id).then((res) => {
-        if (res.msg === 'success') {
-          this.loading = false
-          this.alertLabelData = res.data.list[0]
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    }
-    if (this.type === 'module') {
-      this.$get('/module?id=' + this.id).then((res) => {
-        if (res.msg === 'success') {
-          this.loading = false
-          this.alertLabelData = res.data.list[0]
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    }
-    if (this.type === 'endpoint') {
-      this.$get('/endpoint?id=' + this.id).then((res) => {
-        if (res.msg === 'success') {
-          this.loading = false
-          this.alertLabelData = res.data.list[0]
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    }
-  },
+  mounted () {},
   beforeDestroy () {
 
   }
