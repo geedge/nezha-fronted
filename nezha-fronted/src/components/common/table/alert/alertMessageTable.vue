@@ -128,7 +128,7 @@ import table from '@/components/common/mixin/table'
 import nzAlertTag from '../../../page/alert/nzAlertTag'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import alertRuleInfo from '../../alert/alertRuleInfo'
-import alertLabel from '../../alert/alertLabel2'
+import alertLabel from '../../alert/alertLabel'
 import { calcDurationByStringTimeB } from '../../js/tools'
 export default {
   name: 'alertMessageTable',

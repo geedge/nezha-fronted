@@ -114,7 +114,8 @@ const en = {
     silence: 'Silence',
     editType: 'Type',
     searchCondition: 'Search condition',
-    batchDel: 'Batches delete'
+    batchDel: 'Batches delete',
+    tempPrev: 'Template preview'
   },
   pageSize: '/page',
   setup: {

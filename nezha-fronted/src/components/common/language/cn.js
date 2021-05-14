@@ -109,7 +109,8 @@ const cn = {
     labels: '标签',
     editType: '类型',
     searchCondition: '搜索条件',
-    batchDel: '批量删除'
+    batchDel: '批量删除',
+    tempPrev: '模板预览'
   },
   setup: {
     step0: '欢迎',

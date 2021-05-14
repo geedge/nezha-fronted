@@ -159,24 +159,24 @@ export default {
           moduleTabTitle: [
             // { prop: 'panel', name: 'Detail' },
             { prop: 'endpoint', name: this.$t('asset.endpoint') },
-            { prop: 'moduleAlertMessage', name: 'Alert' }
+            { prop: 'moduleAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         endpoint: {
           endpointTabTitle: [
             // { prop: 'panel', name: 'Detail' },
             { prop: 'endpointQuery', name: 'Query' },
-            { prop: 'endpointAlertMessage', name: 'Alert' }
+            { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         chartTemp: {
           chartTempTabTitle: [
-            { prop: 'panel', name: 'Template preview' }
+            { prop: 'panel', name: this.$t('overall.tempPrev') }
           ]
         },
         alertRule: {
           alertRule: [
-            { prop: 'alertRuleAlertMessage', name: 'Alert' }
+            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         model: [

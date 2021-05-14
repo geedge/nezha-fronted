@@ -2,7 +2,7 @@
   <div>
     <div class="top-tools top-tools--sub">
       <div class="top-tool-left">
-        <div class="sub-list-title">{{title}}：<slot name="title"></slot></div>
+        <div class="sub-list-title">{{bottomHeaderTitle}}：<slot name="title"></slot></div>
         <div class="sub-list-tabs">
           <div v-for="tab in tabs" :key="tab.prop" :class="{'sub-list-tab--active': tab.active || tab.prop=== targetTab}" class="sub-list-tab" @click="changeTab(tab.prop)">{{tab.name}}</div>
         </div>
@@ -82,8 +82,12 @@ export default {
       default: true
     },
     title: {
-      type: String,
-      default: 'Name'
+      type: String
+    }
+  },
+  computed: {
+    bottomHeaderTitle () {
+      return this.title || this.$t('overall.name')
     }
   },
   data () {
