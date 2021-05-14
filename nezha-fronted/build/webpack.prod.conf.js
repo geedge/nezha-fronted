@@ -12,17 +12,17 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const fileManagerPlugin = require('filemanager-webpack-plugin')
 const WebpackZipPlugin = require('webpack-zip-plugin')
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
+// const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 
 const serverConfig = require('../static/config.json')//引入根目录下的配置文件
 
-const gitRevisionPlugin = new GitRevisionPlugin();
-const createJson = function() {
-  serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
-  return JSON.stringify(serverConfig);
-};
+// const gitRevisionPlugin = new GitRevisionPlugin();
+// const createJson = function() {
+//   serverConfig.version=config.build.version +"-"+gitRevisionPlugin.commithash();
+//   return JSON.stringify(serverConfig);
+// };
 
 const env = require('../config/prod.env')
 /*const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
