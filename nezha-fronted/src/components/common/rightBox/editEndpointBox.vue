@@ -17,7 +17,7 @@
     <div class="right-box-form-box">
       <el-form class="right-box-form  right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="endpointForm">
         <!--project-->
-        <el-form-item :label="$t('project.project.project')" prop="project.id">
+        <el-form-item :label="$t('project.project.projectName')" prop="project.id">
           <el-select @change="((val) => {changeProject(val);})" value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small" id="edit-endpoint-input-project">
             <el-option :id="'edit-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>

@@ -79,7 +79,7 @@ export default {
       // 顶部菜单相关
       createMenu: [ // 新增按钮内容
         {
-          label: this.$t('project.project.project'),
+          label: this.$t('project.project.projectName'),
           url: 'project',
           type: 1,
           permission: 'header_add_project'

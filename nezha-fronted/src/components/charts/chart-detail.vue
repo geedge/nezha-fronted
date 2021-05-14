@@ -357,7 +357,7 @@ export default {
         path: this.$t('project.endpoint.path'),
         param: this.$t('project.endpoint.param'),
         state: this.$t('alert.list.state'),
-        project: this.$t('project.project.project'),
+        project: this.$t('project.project.projectName'),
         module: this.$t('project.module.module')
       }
     }

@@ -106,7 +106,8 @@ const cn = {
     moreOption: '更多选项',
     copy: '复制',
     silence: '静默',
-    labels: '标签'
+    labels: '标签',
+    editType: '类型'
   },
   setup: {
     step0: '欢迎',
@@ -1163,7 +1164,7 @@ const cn = {
     },
     project: {
       project: '名称',
-      projectName: '系统名称',
+      projectName: '系统',
       editProject: '编辑系统',
       description: '描述',
       createProject: '新增系统'

@@ -10,7 +10,7 @@
       <div class="container__form">
         <!-- Edit type -->
         <el-form ref="assetEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
-          <el-form-item :label="$t('overall.name')" prop="editType">
+          <el-form-item :label="$t('overall.editType')" prop="editType">
             <el-select v-model="editData.editType" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
             </el-select>

@@ -27,7 +27,7 @@
           <el-input placeholder="" maxlength="64" show-word-limit v-model="editEndpoint.name" size="small" id="module-box-input-name"></el-input>
         </el-form-item>
         <!--project-->
-        <el-form-item :label='$t("project.project.project")' prop="projectId">
+        <el-form-item :label='$t("project.project.projectName")' prop="projectId">
           <el-select value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small" id="module-box-input-project" @change="changeProject" :disabled="disabled">
             <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
@@ -121,18 +121,18 @@
             </el-form-item>
             <transition name="el-zoom-in-top">
               <div v-show="showAllBasicOption" >
-                <!--name pattern-->
-                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">
-                  <!--              <el-input placeholder="" v-model=""></el-input>-->
-                  <el-autocomplete
-                    class="inline-input"
-                    size="small"
-                    id="module-box-input-pattern"
-                    v-model="editEndpoint.endpointNameTmpl"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                  ></el-autocomplete>
-                </el-form-item>
+<!--                &lt;!&ndash;name pattern&ndash;&gt;-->
+<!--                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">-->
+<!--                  &lt;!&ndash;              <el-input placeholder="" v-model=""></el-input>&ndash;&gt;-->
+<!--                  <el-autocomplete-->
+<!--                    class="inline-input"-->
+<!--                    size="small"-->
+<!--                    id="module-box-input-pattern"-->
+<!--                    v-model="editEndpoint.endpointNameTmpl"-->
+<!--                    :fetch-suggestions="querySearch"-->
+<!--                    placeholder="请输入内容"-->
+<!--                  ></el-autocomplete>-->
+<!--                </el-form-item>-->
                 <!--scrape_interval-->
                 <el-form-item :label='$t("project.endpoint.scrape_interval")' prop="scrape_interval" class="half-form-item">
                   <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editEndpoint.configs.scrape_interval" size="small" id="module-box-input-scrape_interval">

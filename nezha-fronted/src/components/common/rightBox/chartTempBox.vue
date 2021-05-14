@@ -373,7 +373,7 @@ export default {
             disabled: false
           }, {
             id: 34,
-            name: this.$t('project.project.project'),
+            name: this.$t('project.project.projectName'),
             // name: this.$t('asset.asset'),
             type: 'input',
             label: 'projectName',

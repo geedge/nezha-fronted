@@ -1884,8 +1884,14 @@ export default {
       outline: none;
     }
 
+    /deep/ .el-input-number:focus {
+      .el-input-number__decrease, .el-input-number__increase {
+        visibility: visible;
+        outline: none;
+      }
+    }
     /deep/ .el-input-number:focus-within {
-      /deep/ .el-input-number__decrease, /deep/ .el-input-number__increase {
+      .el-input-number__decrease, .el-input-number__increase {
         visibility: visible;
         outline: none;
       }
