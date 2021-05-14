@@ -113,7 +113,8 @@ const en = {
     copy: 'Copy',
     silence: 'Silence',
     editType: 'Type',
-    searchCondition: 'Search condition'
+    searchCondition: 'Search condition',
+    batchDel: 'Batches delete'
   },
   pageSize: '/page',
   setup: {

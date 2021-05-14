@@ -108,7 +108,8 @@ const cn = {
     silence: '静默',
     labels: '标签',
     editType: '类型',
-    searchCondition: '搜索条件'
+    searchCondition: '搜索条件',
+    batchDel: '批量删除'
   },
   setup: {
     step0: '欢迎',
