@@ -112,7 +112,8 @@ const en = {
     moreOption: 'More option',
     copy: 'Copy',
     silence: 'Silence',
-    editType: 'Type'
+    editType: 'Type',
+    searchCondition: 'Search condition'
   },
   pageSize: '/page',
   setup: {

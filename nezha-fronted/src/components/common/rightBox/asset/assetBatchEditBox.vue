@@ -3,7 +3,7 @@
     <div class="right-box__header">
       <div class="header__title">{{$t('asset.batchEditAsset')}}</div>
       <div class="header__operation">
-        <span><i class="nz-icon nz-icon-close"></i></span>
+        <span @click="esc"><i class="nz-icon nz-icon-close"></i></span>
       </div>
     </div>
     <div class="right-box__container">

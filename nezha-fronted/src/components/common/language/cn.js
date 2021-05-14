@@ -107,7 +107,8 @@ const cn = {
     copy: '复制',
     silence: '静默',
     labels: '标签',
-    editType: '类型'
+    editType: '类型',
+    searchCondition: '搜索条件'
   },
   setup: {
     step0: '欢迎',

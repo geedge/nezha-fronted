@@ -60,13 +60,14 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="showBottomBox('operationLogTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <button class="table-operation-item" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+<!--        <button class="table-operation-item" @click="showBottomBox('operationLogTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>-->
         <el-dropdown size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+<!--            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
             <el-dropdown-item :command="['delete', scope.row]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -88,19 +89,19 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.model.name'),
           prop: 'name',
           show: true,
-          width: 160,
-          sortable:'custom'
+          width: 450,
+          sortable: 'custom'
         }, {
           label: this.$t('config.model.brand'),
           prop: 'brand',
           show: true,
-          width: 160
-          ,sortable:'custom'
+          width: 160,
+          sortable: 'custom'
         }, {
           label: this.$t('config.model.remark'),
           prop: 'remark',
@@ -110,7 +111,7 @@ export default {
           prop: 'assetNum',
           show: true,
           width: 200,
-          sortable:'custom'
+          sortable: 'custom'
         }
       ]
     }
@@ -118,7 +119,7 @@ export default {
   methods: {
 
   },
-  created() {
+  created () {
   },
   computed: {
 
