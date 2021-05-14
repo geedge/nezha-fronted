@@ -148,10 +148,8 @@ export default {
         this.object.type = this.object.module.type
         this.rightBox.editShow = true
       })
-      console.log(1)
     },
     closeRightEditBox (refresh) {
-      console.log(2)
       this.rightBox.editShow = false
       if (refresh) {
         this.delFlag = true

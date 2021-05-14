@@ -35,7 +35,6 @@ export default {
           break
         }
         case 'recordTab': {
-          console.log(command, row)
           this.$emit('showBottomBox', 'recordTab', row)
           break
         }

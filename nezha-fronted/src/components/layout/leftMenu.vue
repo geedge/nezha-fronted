@@ -29,7 +29,6 @@
         </el-menu-item>
       </template>
     </el-menu>
-    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold"></i></div>
   </div>
 </template>
 
@@ -40,7 +39,6 @@ export default {
   },
   data () {
     return {
-      isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
       systemName: localStorage.getItem('nz-sys-name'),
       logo: ''
     }
@@ -76,13 +74,12 @@ export default {
     },
     route () {
       return this.$route.path
+    },
+    isShrink () {
+      return this.$store.getters.getIsShrink
     }
   },
   methods: {
-    shrink () {
-      this.isShrink = !this.isShrink
-      localStorage.setItem('nz-left-menu-shrink', this.isShrink)
-    },
     jump (route) {
       if (route === this.route) {
         this.refresh()
@@ -185,32 +182,6 @@ export default {
   >.el-menu::-webkit-scrollbar {
     width: 6px;
     height: 14px;
-  }
-
-  .left-menu--pin {
-    position: fixed;
-    height: 20px;
-    width: 20px;
-    line-height: 20px;
-    font-size: 20px;
-    font-weight: 100;
-    color: #999999;
-    transition: all .4s;
-    i {
-      transform: rotateY(0);
-      transition: transform .4s;
-    }
-    i.icon-reverse {
-      transform: rotateY(180deg);
-    }
-  }
-  .left-menu--pin-normal{
-    top: 15px;
-    left: 250px;
-  }
-  .left-menu--pin-reverse{
-    top: 15px;
-    left: 74px;
   }
   >.el-menu.header-logo {
     border-right: none;

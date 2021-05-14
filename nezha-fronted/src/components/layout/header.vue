@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <div class="left-menu--pin" :class="!isShrink?'left-menu--pin-normal':'left-menu--pin-reverse'" @click="shrink"><i :class="{'icon-reverse': isShrink,}" class="el-icon-s-fold"></i></div>
     <el-breadcrumb class="nz-breakcrumb" separator="/">
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -177,7 +178,10 @@ export default {
         history.pushState(null, null, document.URL)
         window.addEventListener('popstate', this.cancel, false)
       }
-    }
+    },
+    shrink () {
+      this.$store.commit('isShrink')
+    },
   },
   mounted () {
     this.$i18n.locale = this.language
@@ -212,6 +216,9 @@ export default {
         }
       }
       return breadcrumb
+    },
+    isShrink () {
+      return this.$store.getters.getIsShrink
     }
   },
   beforeDestroy () {
@@ -296,13 +303,34 @@ export default {
     color: white;
     font-size: 6px;
   }
+  .left-menu--pin {
+    width: 20px;
+    font-size: 20px;
+    font-weight: 100;
+    color: #999999;
+    transition: all .4s;
+    height: 100%;
+    line-height: 50px;
+    margin-left: 10px;
+    i {
+      transform: rotateY(0);
+      transition: transform .4s;
+    }
+    i.icon-reverse {
+      transform: rotateY(180deg);
+    }
+  }
+  .left-menu--pin-normal{
+  }
+  .left-menu--pin-reverse{
+  }
 }
 .link-title a {
   color: inherit;
   text-decoration: none;
 }
 .nz-breakcrumb {
-  padding-left: 34px;
+  padding-left: 15px;
   line-height: 50px;
 
   .el-breadcrumb__item .el-breadcrumb__inner {

@@ -231,7 +231,6 @@ export default {
         this.editMib = JSON.parse(JSON.stringify(n))
         if (this.editMib.models) {
           this.selectedModels = this.editMib.models.split(',')
-          console.log(this.selectedModels)
         } else {
           this.selectedModels = []
         }

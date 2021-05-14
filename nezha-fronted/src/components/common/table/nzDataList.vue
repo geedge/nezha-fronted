@@ -131,7 +131,6 @@ export default {
       bottomBoxWindow.listResize(vm, e)
     },
     showBottomBox (targetTab, row) {
-      console.log(targetTab, row)
       this.bottomBox.targetTab = targetTab
       this.bottomBox.object = JSON.parse(JSON.stringify(row))
       this.bottomBox.showSubList = true

@@ -541,7 +541,6 @@ export default {
     selectEndpointList: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.endpointTableData = JSON.parse(JSON.stringify(n))
         this.endpointTableData.forEach(item => {
           item.configs = JSON.parse(item.configs)
