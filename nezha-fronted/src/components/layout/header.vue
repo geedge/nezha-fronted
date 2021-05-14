@@ -11,7 +11,7 @@
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
-              <a :href='item.url' :title="item.name" class="nz-a" target="_blank">{{item.name}}</a>
+              <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-a" target="_blank">{{item.name}}</a>
             </span>
           </el-dropdown-item>
         </el-dropdown-menu>
