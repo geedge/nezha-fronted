@@ -227,10 +227,12 @@ export default {
       })
     },
     messageDetail (row) {
-      this.currentMsg = { ...row }
-      this.graphShow = true
-      this.$nextTick(() => {
-        this.queryChartDate()
+      this.$get('/alert/rule/' + row.alertRule.id).then(res => {
+        this.currentMsg = { ...row, alertRule: { ...res.data } }
+        this.graphShow = true
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
       })
     },
     queryMessage (alertMessage) {
@@ -410,13 +412,14 @@ export default {
     promQueryParamConvert (obj) {
       let r = '(' + obj.alertRule.expr + ')'
       let intoLabels = false
+      obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
         r += (function () {
           let group = ' and ' + '(group({'
           let by = ' by ('
 
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
+            if (k != 'alertname' && k != 'severity' && k != 'severity_id') {
               intoLabels = true
               group += k
               group += '='
