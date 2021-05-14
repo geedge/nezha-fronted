@@ -184,7 +184,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="filter.from != $CONSTANTS.fromRoute.rule && !isLock"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock"></span>
     </div>
   </div>
 </template>
