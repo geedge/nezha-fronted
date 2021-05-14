@@ -1,4 +1,14 @@
-function randomcolor () {/*
+
+function randomNum(){
+  let array = window.crypto.getRandomValues(new Uint32Array(3))
+
+  let avg = eval(array.join('+'))/3
+
+  return array[0]>avg?avg/array[0]:array[0]/avg;
+
+}
+
+function randomcolor () {
   let e = null
   const t = {}
   r('monochrome', null, [
@@ -107,7 +117,7 @@ function randomcolor () {/*
           return 'hsl(' + n[0] + ', ' + n[1] + '%, ' + n[2] + '%)'
         case 'hsla':
           var s = a(e)
-          var o = t.alpha || Math.random()
+          var o = t.alpha || randomNum()
           return 'hsla(' + s[0] + ', ' + s[1] + '%, ' + s[2] + '%, ' + o + ')'
         case 'rgbArray':
           return i(e)
@@ -115,7 +125,7 @@ function randomcolor () {/*
           return 'rgb(' + i(e).join(', ') + ')'
         case 'rgba':
           var r = i(e)
-          o = t.alpha || Math.random()
+          o = t.alpha || randomNum()
           return 'rgba(' + r.join(', ') + ', ' + o + ')'
         default:
           return (function (e) {
@@ -232,7 +242,7 @@ function randomcolor () {/*
   }
 
   function o (t) {
-    if (e === null) { return Math.floor(t[0] + Math.random() * (t[1] + 1 - t[0])) }
+    if (e === null) { return Math.floor(t[0] + randomNum() * (t[1] + 1 - t[0])) }
     const n = t[1] || 1
     const s = t[0] || 0
     const o = (e = (9301 * e + 49297) % 233280) / 233280
@@ -309,7 +319,7 @@ function randomcolor () {/*
     return [t, Math.round(n * s / (o < 1 ? o : 2 - o) * 1e4) / 100, o / 2 * 100]
   }
   return n()
-*/}
+}
 
 export {
   randomcolor
