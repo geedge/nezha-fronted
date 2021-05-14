@@ -10,7 +10,7 @@ const en = {
     dashboard: 'Dashboards', // '仪表盘'
     project: 'Projects', // '系统'
     monitor: 'Monitor', // 监控
-    alert: 'Alerts', // "告警"
+    alert: 'Alert', // "告警"
     asset: 'Assets', // '资产'
     config: 'Settings', // '设置'
     administration: 'Administration',
@@ -450,7 +450,7 @@ const en = {
         level: 'Priority',
         alertRule: 'Alert rule',
         ruleNum: 'Rule num',
-        alertNum: 'Alert num',
+        alertNum: 'Alert',
         alertRuleTopN: 'Top10 alert message',
         assetTopN: 'Top alert message by Asset',
         moduleTopN: 'Top alert message by Module',
@@ -588,8 +588,8 @@ const en = {
     brand: 'Brand',
     model: 'Model',
     cabinet: 'Cabinet',
-    alertNum: 'Alert num',
-    endpointNum2: 'Endpoint num',
+    alertNum: 'Alert',
+    endpointNum2: 'Endpoint',
     manageIp: 'Manage IP',
     number: 'Number',
     brandAndModel: 'Brand & Model',
@@ -708,7 +708,7 @@ const en = {
       dcName: 'Data center name',
       selectArea: 'Select area',
       cabinetNum: 'Cabinet',
-      assets: 'Assets',
+      assets: 'Asset',
       remark: 'Description',
       cabinets: 'Cabinets',
       createDc: 'New data center',
@@ -746,7 +746,7 @@ const en = {
     },
     terminallog: {
       terminallog: 'Terminal log',
-      status: 'Status', // "状态"
+      status: 'Statu', // "状态"
       statusItem: {
         connecting: 'Connecting',
         connectionFailed: 'Connection failed',
@@ -841,7 +841,7 @@ const en = {
       updateUser: 'Update user',
       updateAt: 'Update time',
       editMib: 'Edit MIB',
-      models: 'Models',
+      models: 'Model',
       modelTip: 'Please select models',
       createMib: 'New MIB',
       mibFiles: 'MIB file',
@@ -1084,7 +1084,7 @@ const en = {
     }
   },
   alert: {
-    alert: 'Alerts', // "告警"
+    alert: 'Alert', // "告警"
     message: 'Message', // '信息'
     rule: 'Rule', // '规则'
     alertMessage: 'Alert message', // "告警信息"
@@ -1109,7 +1109,7 @@ const en = {
       deviceAlert: 'Device alert', // "设备告警"
       pending: 'Pending', // "待处理"
       expired: 'Expired', // "已过期"
-      labels: 'Labels',
+      labels: 'Label',
       current: 'Current',
       remark: 'Remark',
       id: 'ID'
@@ -1125,7 +1125,7 @@ const en = {
       alertConfig: 'Alert rule', // "告警规则"
       createAlertConfig: 'New alert rule', // "新增告警规则"
       editAlertConfig: 'Edit alert rule', // "修改告警规则"
-      alertNum: 'Alert number', // 告警信息数量
+      alertNum: 'Alert', // 告警信息数量
       P1: 'P1',
       P2: 'P2',
       P3: 'P3',
@@ -1149,7 +1149,7 @@ const en = {
       create: 'New alert silence',
       edit: 'Edit alert silence',
       time: 'Time',
-      matchers: 'Matchers',
+      matchers: 'Matcher',
       remark: 'Description',
       selectTime: 'Please select time',
       selectMather: 'Required',
@@ -1205,7 +1205,7 @@ const en = {
       editEndpoint: 'Edit endpoint',
       createEndpoint: 'New endpoint',
       batchEndpoint: 'Batch Endpoint',
-      endpointName: 'Endpoint name',
+      endpointName: 'Endpoint',
       name: 'Name',
       tip: {
         defaultEndpointSet: 'Default endpoint settings', // "默认的Endpoint设置"
@@ -1233,7 +1233,7 @@ const en = {
       stateInfo_230009: 'Promserver unavailable',
       stateInfo_230010: 'Promserver can be used',
       stateInfo_230011: 'Endpoint connection refused',
-      alerts: 'Alerts',
+      alerts: 'Alert',
       labels: 'Labels',
       pattern: 'Name pattern',
       credentials: 'Credentials',
