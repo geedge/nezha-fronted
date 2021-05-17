@@ -662,6 +662,9 @@ export default {
         return
       }
       if (param.from == fromRoute.chartTemp) { // 模板列表
+        this.panelDataList[0].children.forEach((item1, i) => {
+          item1.chartIndex = i
+        })
         this.dataList = this.panelDataList
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {

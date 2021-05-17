@@ -313,8 +313,12 @@ export default {
   padding-top: 15px;
   background-color: white;
   padding-bottom: 50px;
+  height: calc(100% - 50px);
 }
-
+.chart-temp{
+  height: calc(100% - 20px);
+  overflow-y: auto;
+}
 .resize-modal {
   width: calc(100% - 240px);
   opacity: 0.6;

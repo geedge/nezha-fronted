@@ -36,13 +36,15 @@
         </button>
         <top-tool-more-options
           id="asset-list"
-          :params="searchLabel"
+          :params="filter"
           :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
           class="top-tool-export margin-r-10"
           export-file-name="asset-charts"
           export-url="visual/panel/export"
           import-url="visual/panel/import"
           @afterImport="getTableData"
+          :showCur="false"
+          :link="obj"
           :showLock="from === fromRoute.asset"
           @panelLockChange="panelLockChange"
         >
@@ -279,6 +281,11 @@ export default {
         if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
+              res.data.list.forEach(item => {
+                if (!item.children) {
+                  item.children = []
+                }
+              })
               this.panelDataList = res.data.list
               if (this.panelDataList.length > 0) {
                 this.showPanel.id = this.filter.panelId = 0
@@ -454,6 +461,9 @@ export default {
         setTimeout(() => {
           if (n && n.id) {
             this.getTableData(n.id)
+            if ( this.from === fromRoute.asset) {
+              this.searchLabel.assetIds = n.id
+            }
           }
         }, 500)
       }

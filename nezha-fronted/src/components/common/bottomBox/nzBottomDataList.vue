@@ -34,7 +34,7 @@
       ></element-set>
     </transition>
     <div class="sub-container">
-      <div :class="targetTab === 'panel' ? 'bottom-panel' : 'nz-table2'">
+      <div :class="[targetTab === 'panel' ? 'bottom-panel' : 'nz-table2',from === fromRoute.chartTemp ? 'chart-temp': '']">
         <slot></slot>
       </div>
       <div class="pagination-bottom" v-if="showPagination">
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'nzBottomDataList',
   props: {
@@ -92,6 +93,7 @@ export default {
   },
   data () {
     return {
+      fromRoute: fromRoute,
       tools: {
         toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
         tableHover: false, // 控制滚动条和top按钮同时出现
