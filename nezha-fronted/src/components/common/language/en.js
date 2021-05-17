@@ -737,6 +737,7 @@ const en = {
       editDc: 'Edit data center',
       editCabinet: 'Edit cabinet',
       alert: 'Alert',
+      createPanel: 'Create panel',
       traffic: {
         title: 'Traffic Setting',
         add: 'Add',

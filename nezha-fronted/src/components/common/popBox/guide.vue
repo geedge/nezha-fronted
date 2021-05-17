@@ -19,45 +19,45 @@
       <template v-if="activeIndex === 0">
         <div class="desc-text">{{$t('guide.dcTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('dc')">{{$t('guide.addDc')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('cabinet')">{{$t('guide.addCabinet')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('dc_add')}" @click="jumpAndOpen('dc')">{{$t('guide.addDc')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('dc_add')}" @click="jumpAndOpen('cabinet')">{{$t('guide.addCabinet')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 1">
         <div class="desc-text">{{$t('guide.agentTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('agent')">{{$t('guide.addAgent')}}</button>
-          <button class="guide__btn" type="button" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('agent_add')}" @click="jumpAndOpen('agent')">{{$t('guide.addAgent')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('agent_add')}" @click="downloadAgent">{{$t('guide.downloadAgent')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 2">
         <div class="desc-text">{{$t('guide.assetTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('asset')">{{$t('guide.addAsset')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('importAsset')">{{$t('guide.importAsset')}}</button>
-          <button class="guide__btn" type="button" @click="openTerminal">{{$t('guide.webTerminal')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('asset_add')}" @click="jumpAndOpen('asset')">{{$t('guide.addAsset')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('asset_add')}" @click="jumpAndOpen('importAsset')">{{$t('guide.importAsset')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('asset_add')}" @click="openTerminal">{{$t('guide.webTerminal')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 3">
         <div class="desc-text">{{$t('guide.monitorTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('project')">{{$t('guide.addProject')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('module')">{{$t('guide.addModule')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('endpoint')">{{$t('guide.addEndpoint')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('importEndpoint')">{{$t('guide.importEndpoint')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('project_add')}" @click="jumpAndOpen('project')">{{$t('guide.addProject')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('monitor_module_add')}" @click="jumpAndOpen('module')">{{$t('guide.addModule')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('monitor_endpoint_add')}" @click="jumpAndOpen('endpoint')">{{$t('guide.addEndpoint')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('monitor_endpoint_add')}" @click="jumpAndOpen('importEndpoint')">{{$t('guide.importEndpoint')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 4">
         <div class="desc-text">{{$t('guide.visualizationTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
-          <button class="guide__btn" type="button" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('panel_add')}" @click="jumpAndOpen('panel')">{{$t('guide.addPanel')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('panel_chart_add')}" @click="jumpAndOpen('chart')">{{$t('guide.addChart')}}</button>
         </div>
       </template>
       <template v-if="activeIndex === 5">
         <div class="desc-text">{{$t('guide.alertTip')}}</div>
         <div class="guide__btn-group">
-          <button class="guide__btn" type="button" @click="jumpAndOpen('alertRule')">{{$t('guide.addAlertRule')}}</button>
+          <button class="guide__btn" type="button" :class="{'nz-btn-permissions': !hasButton('alertRule_add')}" @click="jumpAndOpen('alertRule')">{{$t('guide.addAlertRule')}}</button>
         </div>
       </template>
     </div>
@@ -82,37 +82,43 @@ export default {
           route: '/dc',
           title: this.$t('guide.dc'),
           icon: 'nz-icon nz-icon-datacenter1',
-          tip: this.$t('guide.dcTip')
+          tip: this.$t('guide.dcTip'),
+          buttonPermissions: 'dc_add'
         },
         {
           route: '/agent',
           title: this.$t('guide.agent'),
           icon: 'nz-icon nz-icon-agent',
-          tip: this.$t('guide.agentTip')
+          tip: this.$t('guide.agentTip'),
+          buttonPermissions: 'agent_add'
         },
         {
           route: '/asset',
           title: this.$t('guide.asset'),
           icon: 'nz-icon nz-icon-menu-assets',
-          tip: this.$t('guide.assetTip')
+          tip: this.$t('guide.assetTip'),
+          buttonPermissions: 'asset_add'
         },
         {
           route: '/monitor/project',
           title: this.$t('guide.monitor'),
           icon: 'nz-icon nz-icon-menu-project',
-          tip: this.$t('guide.monitorTip')
+          tip: this.$t('guide.monitorTip'),
+          buttonPermissions: 'project_add'
         },
         {
           route: '/panel',
           title: this.$t('guide.visualization'),
           icon: 'nz-icon nz-icon-visualization',
-          tip: this.$t('guide.visualizationTip')
+          tip: this.$t('guide.visualizationTip'),
+          buttonPermissions: 'panel_add'
         },
         {
           route: '/alertRule',
           title: this.$t('guide.alert'),
           icon: 'nz-icon nz-icon-menu-alert',
-          tip: this.$t('guide.alertTip')
+          tip: this.$t('guide.alertTip'),
+          buttonPermissions: "alertRule_add"
         }
       ],
       interval: null
@@ -152,6 +158,30 @@ export default {
     },
     jump (route) {
       this.$emit('close')
+      // if(!this.hasButton('dc_add')){
+      //   return
+      // } else if(!this.hasButton('agent_add')){
+      //   return
+      // } else if(!this.hasButton('asset_add')){
+      //   return
+      // } else if(!this.hasButton('project_add')){
+      //   return
+      // } else if(!this.hasButton('panel_add')){
+      //   return
+      // } else if (!this.hasButton('alertRule_add')){
+      //   return
+      // }else{
+      //   console.log('有权限')
+      // }
+      let buttonPermissions = true
+      this.guideList.forEach(ele => {
+        if (!this.hasButton(ele.buttonPermissions)){
+          buttonPermissions = false
+        }
+      })
+      if (!buttonPermissions){
+        return
+      }
       this.$router.push({
         path: route,
         query: {
@@ -467,6 +497,11 @@ export default {
         }
         .guide__btn:hover {
           opacity: .9;
+        }
+        .nz-btn-permissions {
+          pointer-events: none;
+          cursor: default;
+          opacity: 0.4;
         }
       }
     }
