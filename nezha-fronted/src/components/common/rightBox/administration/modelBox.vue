@@ -28,7 +28,7 @@
               varType: 1, panelId: 0
             }"
             :multiple="true"
-            language="en"
+           :language="language"
             title="ChartSearch"
             key-field="id"
             v-model="editModel.chartIds"
@@ -78,15 +78,16 @@ export default {
   },
   data () {
     return {
+      language: localStorage.getItem('nz-language'),
       editModel: {},
       brandList: [], // brand 列表数据
       editModule: {},
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: 'Name', data: 'name' },
-        { title: 'Type', data: 'type' },
-        { title: 'Description', data: 'remark' }
+        { title: this.$t("config.model.titleName"), data: 'name' },
+        { title: this.$t("config.model.titleType"), data: 'type' },
+        { title: this.$t("config.model.remark"), data: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',

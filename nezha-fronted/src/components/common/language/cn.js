@@ -828,6 +828,8 @@ const cn = {
       model: '资产型号',
       name: '资产型号',
       brand: '品牌',
+      titleName: '名称',
+      titleType: '类型',
       ChartTemplate: '图表模板',
       assetNum: '资产',
       editModel: '编辑型号',

@@ -379,12 +379,10 @@ export default {
       handler (n) {
         if (n) {
           this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
-          if (!this.editAsset.authProtocolPort) {
-            if (n.authProtocol === this.assetConstants.authProtocolData.ssh) {
-              this.editAsset.authProtocolPort = 22
-            } else if (n.authProtocol === this.assetConstants.authProtocolData.telnet) {
-              this.editAsset.authProtocolPort = 23
-            }
+          if (n.authProtocol === this.assetConstants.authProtocolData.ssh) {
+            this.editAsset.authProtocolPort = 22
+          } else if (n.authProtocol === this.assetConstants.authProtocolData.telnet) {
+            this.editAsset.authProtocolPort = 23
           }
         }
       }

@@ -759,6 +759,8 @@ const en = {
       model: 'Asset model',
       brand: 'Brand',
       name: 'Name',
+      titleName: 'Name',
+      titleType: 'Type',
       ChartTemplate: 'Chart template',
       assetNum: 'Asset',
       editModel: 'Edit model',
