@@ -258,7 +258,6 @@ export default {
       editAsset: {},
       url: 'asset/asset',
       rightBox: { model: { show: false } },
-
       vmLock: false, // 当自己是虚拟机时，锁定品牌型号位置为parent的，无法修改
       lockModelInputValue: '', // model锁定时的显示内容
       lockLocationInputValue: '', // location锁定时显示的内容
@@ -377,12 +376,26 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n) {
+        if (n.id) {
           this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
-          if (n.authProtocol === this.assetConstants.authProtocolData.ssh) {
-            this.editAsset.authProtocolPort = 22
-          } else if (n.authProtocol === this.assetConstants.authProtocolData.telnet) {
-            this.editAsset.authProtocolPort = 23
+          if (this.editAsset.id) { // 有id表示是修改asset，需要注意不要覆盖掉原有的port
+            const oldPort = this.obj.authProtocolPort // 原有的port
+            const oldAuthProtocol = this.obj.type.authProtocol // 原有的协议
+            if (n.authProtocol === oldAuthProtocol) { // 切换后与原有的协议相同，则恢复到原有的port
+              this.editAsset.authProtocolPort = oldPort
+            } else { // 否则使用默认port
+              if (n.authProtocol === this.assetConstants.authProtocolData.ssh) {
+                this.editAsset.authProtocolPort = 22
+              } else if (n.authProtocol === this.assetConstants.authProtocolData.telnet) {
+                this.editAsset.authProtocolPort = 23
+              }
+            }
+          } else {
+            if (n.authProtocol === this.assetConstants.authProtocolData.ssh) {
+              this.editAsset.authProtocolPort = 22
+            } else if (n.authProtocol === this.assetConstants.authProtocolData.telnet) {
+              this.editAsset.authProtocolPort = 23
+            }
           }
         }
       }
