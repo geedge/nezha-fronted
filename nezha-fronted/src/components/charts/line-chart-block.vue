@@ -38,7 +38,7 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">{{chartData.name}}</span>
-              <span class="chart-title-icon"  v-if="from !== 'chartTemp'"  :class="{'visible':caretShow,'hidden':!caretShow}">
+              <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">
                 <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
@@ -47,7 +47,7 @@
                 <span  v-has="'panel_chart_edit'" :title="$t('dashboard.refresh')" class="" @click="refreshChart">
                   <i class="nz-icon nz-icon-replay"></i>
                 </span>
-                 <span  @click="showAllScreen" class="" :title="$t('dashboard.screen')">
+                 <span  @click="showAllScreen"  v-if="from !== 'chartTemp'" class="" :title="$t('dashboard.screen')">
                   <i class="nz-icon nz-icon-maxview"></i>
                  </span>
                 <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>

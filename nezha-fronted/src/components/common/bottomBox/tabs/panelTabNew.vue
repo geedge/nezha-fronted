@@ -9,46 +9,52 @@
       :showPagination="false"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
-      <template v-if="from === fromRoute.asset" v-slot:top-tool-right>
-        <div class="top-tool-search margin-r-20">
+      <template v-slot:top-tool-right>
+        <span v-if="from === fromRoute.asset">
+          <div class="top-tool-search margin-r-20">
           <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
             <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
           </el-input>
         </div>
-        <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-<!--        <export-excel
-          id="asset-list"
-          :params="searchLabel"
-          :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
-          class="top-tool-export margin-r-10"
-          export-file-name="asset-charts"
-          export-url="visual/panel/export"
-          import-url="visual/panel/import"
-          @afterImport="getTableData"
-        >
-          <template slot="optionZone">
-            <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="addChart">
-              <i class="nz-icon nz-icon-create-square"></i></button>
-          </template>
-        </export-excel>-->
-        <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn margin-r-10" @click.stop="addChart">
-          <i class="nz-icon nz-icon-create-square"></i>
-        </button>
-        <top-tool-more-options
-          id="asset-list"
-          :params="filter"
-          :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
-          class="top-tool-export margin-r-10"
-          export-file-name="asset-charts"
-          export-url="visual/panel/export"
-          import-url="visual/panel/import"
-          @afterImport="getTableData"
-          :showCur="false"
-          :link="obj"
-          :showLock="from === fromRoute.asset"
-          @panelLockChange="panelLockChange"
-        >
-        </top-tool-more-options>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+            <!--        <export-excel
+                      id="asset-list"
+                      :params="searchLabel"
+                      :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+                      class="top-tool-export margin-r-10"
+                      export-file-name="asset-charts"
+                      export-url="visual/panel/export"
+                      import-url="visual/panel/import"
+                      @afterImport="getTableData"
+                    >
+                      <template slot="optionZone">
+                        <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="addChart">
+                          <i class="nz-icon nz-icon-create-square"></i></button>
+                      </template>
+                    </export-excel>-->
+          <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+            <i class="nz-icon nz-icon-create-square"></i>
+          </button>
+          <top-tool-more-options
+            id="asset-list"
+            :params="filter"
+            :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+            class="top-tool-export margin-r-10"
+            export-file-name="asset-charts"
+            export-url="visual/panel/export"
+            import-url="visual/panel/import"
+            @afterImport="getTableData"
+            :showCur="false"
+            :link="obj"
+            :showLock="from === fromRoute.asset"
+            @panelLockChange="panelLockChange"
+          >
+          </top-tool-more-options>
+        </span>
+        <span v-else> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
+                               type="button">
+          <i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>
+        </button></span>
       </template>
       <template v-slot>
         <div class="panel">
@@ -57,7 +63,8 @@
             <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
                 <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
-                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"></chart-list>
+                            @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
+                            @on-add-group-item-chart="addGroupItem"></chart-list>
               </div>
             </div>
           </div>
@@ -193,6 +200,20 @@ export default {
       this.rightBox.show = false
       if (refresh) {
         this.refresh()
+        if (this.from === fromRoute.chartTemp) {
+          this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
+            res.data.list.forEach(item => {
+              if (!item.children) {
+                item.children = []
+              }
+            })
+            this.panelDataList = res.data.list
+            if (this.panelDataList.length > 0) {
+              this.showPanel.id = this.filter.panelId = 0
+              this.getData(this.filter)
+            }
+          })
+        }
       }
     },
     // 编辑图表信息,打开编辑弹窗
@@ -209,7 +230,28 @@ export default {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
-      }).then(() => {})
+      }).then(() => {
+        this.$delete('visual/panel/chart?ids=' + data.id).then(response => {
+          if (response.code === 200) {
+            this.$message({
+              duration: 2000,
+              type: 'success',
+              message: this.$t('tip.deleteSuccess')
+            })
+            this.closeRightBox(true)
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    addGroupItem (groupId) {
+      this.chart = this.newChart()
+      this.chart.groupId = groupId
+      this.chart.panelId = this.showPanel.id
+      this.chart.panelName = this.showPanel.name
+      this.chart.isGroup = true
+      this.rightBox.show = true
     },
     delChartOk () {
       this.getData(this.filter)
@@ -461,7 +503,7 @@ export default {
         setTimeout(() => {
           if (n && n.id) {
             this.getTableData(n.id)
-            if ( this.from === fromRoute.asset) {
+            if (this.from === fromRoute.asset) {
               this.searchLabel.assetIds = n.id
             }
           }

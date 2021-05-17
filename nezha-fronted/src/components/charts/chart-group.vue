@@ -18,13 +18,13 @@
                 {{chartData.name}}
                 <span v-show="!showList" class="collapse-content">({{chartData.children.length}} charts)</span>
               </span>
-              <span class="chart-title-icon"  v-if="from !== 'chartTemp'"  :class="{'visible':caretShow,'hidden':!caretShow}">
+              <span class="chart-title-icon"    :class="{'visible':caretShow,'hidden':!caretShow}">
                 <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
                 </span>
-                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.refresh')" class="" @click="addGroupItemChart">
+                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">
                   <i class="nz-icon nz-icon-plus"></i>
                 </span>
 <!--                 <span  @click="showAllScreen" class="" :title="$t('dashboard.screen')">-->
@@ -33,16 +33,16 @@
                 <span><i class="el-icon-more" @click.stop="dropdownMenuShow=!dropdownMenuShow"></i></span>
 
               </span>
-              <span class="chart-title-icon"  v-else :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.refresh')" class="" @click="addGroupItemChart">
-                  <i class="nz-icon nz-icon-plus"></i>
-                </span>
-              </span>
+<!--              <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">-->
+<!--                <span  v-has="'panel_chart_edit'" :title="$t('dashboard.panel.createChartTitle')" class="" @click="addGroupItemChart">-->
+<!--                  <i class="nz-icon nz-icon-plus"></i>-->
+<!--                </span>-->
+<!--              </span>-->
             </span>
             <ul slot="dropdown" v-show="dropdownMenuShow"  :id="'dropdownUl'+chartIndex"  class="el-dropdown-menu nz-chart-dropdown"  style="" >
               <li  @click="editChart" class="el-dropdown-menu__item">
                 <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
-              <li  v-has="'panel_chart_delete'" class="el-dropdown-menu__item" @click="removeChart">
+              <li  v-has="'panel_chart_delete'" v-if="from !== 'chartTemp'" class="el-dropdown-menu__item" @click="removeChart">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
 <!--              <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`">-->
 <!--                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>-->

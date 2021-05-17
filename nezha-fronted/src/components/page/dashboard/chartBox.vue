@@ -145,13 +145,13 @@
 </style>
 <template>
   <div v-clickoutside="{obj:editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
-    <transition v-if="from !== 'temp'" name="right-box">
+    <transition v-if="from !== 'chartTemp'" name="right-box">
       <panel-box v-if="!showPanel.type" ref="panelBox2" :panel="panel" @reload="panelReload"></panel-box>
     </transition>
 
     <div class="right-box__header">
-      <div class="header__title" v-if="from !== 'temp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
-      <div class="header__title" v-if="from === 'temp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
+      <div class="header__title" v-if="from !== 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTitle") : $t("dashboard.panel.createChartTitle")}}</div>
+      <div class="header__title" v-if="from === 'chartTemp'">{{editChart.id ? $t("dashboard.panel.editChartTempTitle") : $t("dashboard.panel.createChartTempTitle")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editChart, func: clickOutside}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -163,7 +163,7 @@
           <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
             <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model' && from!=='temp'">
+          <el-form-item :label="$t('dashboard.panel.title')" prop="panelName" v-if="showPanel.type != 'project' && showPanel.type != 'asset' && showPanel.type != 'model' && from!=='chartTemp'">
             <select-panel :filter-panel="filterPanel" :panel-lock="true" :disabled="showPanel.type==='dashboard'" :panelData="panelData" :placement="'bottom-start'" @selectPanel="selectPanel" ref="selectPanel">
               <template v-slot:header>
                 <div class="panel-select-header">
@@ -197,7 +197,7 @@
           </div>
 
           <!--   varType   -->
-          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'temp'">
+          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'chartTemp'">
             <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
@@ -417,7 +417,7 @@
       <button v-if="showPanel.type && showPanel.type == 'model'" id="chart-box-Sync" v-has="'panel_chart_edit'" class="footer__btn" @click="SyncSave">
         <span>{{$t('overall.SyncSave')}}</span>
       </button>
-      <button v-else-if="from!=='temp'" id="chart-box-preview" class="footer__btn" @click="preview" >
+      <button v-else-if="from!=='chartTemp'" id="chart-box-preview" class="footer__btn" @click="preview" >
         <span>{{$t('overall.preview')}}</span>
       </button>
       <button id="chart-box-save" v-has="'panel_chart_add'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="confirmAdd" >
@@ -858,8 +858,8 @@ export default {
         }); */
 
       // panelPromise.then(()=>{
-      if (this.panelId || this.from === 'temp') {
-        if (this.from === 'temp') {
+      if (this.panelId || this.from === 'chartTemp') {
+        if (this.from === 'chartTemp') {
           this.panelId = 0
         }
         const chartParams = params || this.editChart
@@ -895,7 +895,7 @@ export default {
     // 更新图表
     updateCharts (params) {
       let panelId = this.panelId ? this.panelId : this.chart.panelId
-      if (this.from === 'temp') {
+      if (this.from === 'chartTemp') {
         panelId = 0
       }
       const chartParams = params || this.editChart
@@ -907,7 +907,7 @@ export default {
       delete chartParams.children
       this.$put('visual/panel/chart', chartParams).then(response2 => {
         if (response2.code === 200) {
-          this.esc()
+          this.esc(true)
           this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
           // this.$refs.chartForm.resetFields();//清空表单
           this.$emit('on-create-success', 'update', response2.data, chartParams)
@@ -1730,7 +1730,7 @@ export default {
           n.param && !n.param.legendValue && this.$set(this.editChart.param, 'legendValue', { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' })
         }
         this.$set(this.editChart, 'panelName', this.showPanel.name)
-        if (this.showPanel.id || this.from === 'temp') {
+        if (this.showPanel.id || this.from === 'chartTemp') {
           this.panelId = this.showPanel.id
         }
         this.$get('visual/panel/chart?panelId=' + this.panelId + '&pageSize=-1').then(response => {

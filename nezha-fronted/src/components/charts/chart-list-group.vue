@@ -677,6 +677,7 @@ export default {
               // if(chartInfo.type === 'table'&&chartInfo.param&&chartInfo.param.last == 1){
               //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
               // }
+
               if (this.from === fromRoute.chartTemp) {
                 return new Promise(resolve => resolve(chartTempData))
               }
@@ -684,6 +685,7 @@ export default {
             })
             // 一个图表的所有element单独获取数据
             axios.all(axiosArr).then((res) => {
+
               if (res.length > 0) {
                 const series = []
                 let singleStatRlt = ''
@@ -901,7 +903,6 @@ export default {
                     }
                   }
                 })
-
                 if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
                   if (chartInfo.type === 'pie') {
                     series.push(pieSeries)

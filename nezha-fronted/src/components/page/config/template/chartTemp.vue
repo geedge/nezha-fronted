@@ -61,7 +61,7 @@
       </template>
     </nzDataList>
     <transition name="right-box">
-      <chart-box :chart="object" :show-panel="showPanel" :from="'temp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.show"></chart-box>
+      <chart-box :chart="object" :show-panel="showPanel" :from="'chartTemp'"  @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.show"></chart-box>
     </transition>
   </div>
 </template>
