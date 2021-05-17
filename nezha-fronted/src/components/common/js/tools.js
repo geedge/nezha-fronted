@@ -380,12 +380,12 @@ export function unixTimeParseToString (unixTime, fmt = 'yyyy-MM-dd hh:mm:ss') {
 export const chartResizeTool = {
   minHeight: 200, // 图表最小高度
   chartPaddingTop: 2, // 图表padding-top
-  chartBlankHeight: 4, // 图表空白占位高度(padding-top + border)
+  chartBlankHeight: 10, // 图表空白占位高度(padding-top + border)
   chartTableBlankHeight: 6, // 表格型图表额外空白占位高度
-  chartBlankWidth: 2, // 图表空白占位宽度
-  containerBlankWidth: 5, // 容器空白占位宽度（#listContainer的padding）
+  chartBlankWidth: 10, // 图表空白占位宽度
+  containerBlankWidth: 30, // 容器空白占位宽度（#listContainer的padding）
   titleHeight: 40, // 标题dom高度
-  stepHeight: 50, // 单元高度
+  // stepHeight: 50, // 单元高度
   timeouter: null,
   stepWidth (containerWidth) { // 单元宽度，参数为容器总宽度
     return (containerWidth - this.containerBlankWidth) / 12
@@ -412,18 +412,14 @@ export const chartResizeTool = {
     const chartBlankWidth = this.chartBlankWidth
     const chartBlankHeight = this.chartBlankHeight
     const titleHeight = this.titleHeight
-    let stepWidth = document.getElementById('listContainer').offsetWidth
-    if (data.groupId) {
-      stepWidth = document.getElementById('listContainer' + data.groupId).offsetWidth - 20
-    }
-    stepWidth = this.stepWidth(stepWidth)
-    const stepHeight = this.stepHeight
+    const domWidth = data.groupId ? document.getElementById('listContainer' + data.groupId).offsetWidth - 20 : document.getElementById('listContainer').offsetWidth
+    const step = this.stepWidth(domWidth)
 
     const mouseOriginalX = event.clientX // 鼠标初始坐标
     const mouseOriginalY = event.clientY
-    const originalWidth = stepWidth * data.span // 图表、阴影初始宽高
+    const originalWidth = step * data.span // 图表、阴影初始宽高
     let shadowNewWidth = originalWidth
-    const originalHeight = data.height
+    const originalHeight = step * data.height
     let shadowNewHeight = originalHeight
 
     // 1.激活背景阴影
@@ -440,16 +436,16 @@ export const chartResizeTool = {
       box.style.width = `${originalWidth + (mouseX - mouseOriginalX) - chartBlankWidth}px`
       box.style.height = `${originalHeight + (mouseY - mouseOriginalY) - chartBlankHeight}px`
       // 监听宽高的变化，变化量每达到step的50%时改变resize-shadow的尺寸并重绘resize-box内容
-      const remainderWidth = (box.offsetWidth + chartBlankWidth - shadowNewWidth) % stepWidth // 宽的余数
-      const remainderHeight = (box.offsetHeight + chartBlankHeight - shadowNewHeight) % stepHeight // 高的余数
+      const remainderWidth = (box.offsetWidth + chartBlankWidth - shadowNewWidth) % step // 宽的余数
+      const remainderHeight = (box.offsetHeight + chartBlankHeight - shadowNewHeight) % step // 高的余数
       boxStepHandler(remainderWidth, remainderHeight)
     }
     function mouseupListener (e) {
       // 将resize-box的宽高设为resize-shadow的宽高
       box.style.width = `${shadow.offsetWidth}px`
       box.style.height = `${Math.round((shadow.offsetHeight) / chartPaddingTop) * chartPaddingTop}px`
-      data.height = Math.round((box.offsetHeight + chartPaddingTop) / stepHeight) * stepHeight
-      data.span = Math.round((box.offsetWidth + chartBlankWidth) / stepWidth)
+      data.height = Math.round((box.offsetHeight + chartPaddingTop) / step)
+      data.span = Math.round((box.offsetWidth + chartBlankWidth) / step)
       // 请求后台，保存变更
       if (data.height != originalData.height || data.span != originalData.span) {
         originalData.height = data.height
@@ -465,29 +461,29 @@ export const chartResizeTool = {
     function boxStepHandler (width, height, chartIndex) { // param: 宽高变化量，大于0放大，小于0缩小
       let widthChange = false
       let heightChange = false
-      if (width > stepWidth / 2) { // 放大shadow宽
+      if (width > step / 2) { // 放大shadow宽
         widthChange = true
         // 判断是否因为百分数计算的宽度有小数的原因导致宽度超过当前行，使图表错误换行
-        const currentWidth = shadow.offsetWidth + stepWidth
-        const currentSpan = Math.round((currentWidth + chartBlankWidth) / stepWidth)
-        const calcWidth = currentSpan * stepWidth - chartBlankWidth // 不会换行的宽度
+        const currentWidth = shadow.offsetWidth + step
+        const currentSpan = Math.round((currentWidth + chartBlankWidth) / step)
+        const calcWidth = currentSpan * step - chartBlankWidth // 不会换行的宽度
         shadow.style.width = `${calcWidth}px`
-      } else if (width <= 0 - (stepWidth / 2)) { // 缩小shadow宽
+      } else if (width <= 0 - (step / 2)) { // 缩小shadow宽
         widthChange = true
-        const currentWidth = shadow.offsetWidth - stepWidth
-        const currentSpan = Math.round(currentWidth / stepWidth)
-        const calcWidth = currentSpan * stepWidth - chartBlankWidth // 不会换行的宽度
+        const currentWidth = shadow.offsetWidth - step
+        const currentSpan = Math.round(currentWidth / step)
+        const calcWidth = currentSpan * step - chartBlankWidth // 不会换行的宽度
         shadow.style.width = `${calcWidth}px`
       }
       if (widthChange) {
         shadowNewWidth = shadow.offsetWidth
       }
-      if (height > stepHeight / 2) { // 放大shadow高
+      if (height > step / 2) { // 放大shadow高
         heightChange = true
-        shadow.style.height = `${Math.round(shadow.offsetHeight / chartPaddingTop) * chartPaddingTop + stepHeight}px`
-      } else if (height <= 0 - (stepHeight / 2)) { // 缩小shadow高
+        shadow.style.height = `${Math.round(shadow.offsetHeight / chartPaddingTop) * chartPaddingTop + step}px`
+      } else if (height <= 0 - (step / 2)) { // 缩小shadow高
         heightChange = true
-        shadow.style.height = `${Math.round(shadow.offsetHeight / chartPaddingTop) * chartPaddingTop - stepHeight}px`
+        shadow.style.height = `${Math.round(shadow.offsetHeight / chartPaddingTop) * chartPaddingTop - step}px`
       }
       if (heightChange) {
         shadowNewHeight = shadow.offsetHeight + chartBlankHeight

@@ -1396,7 +1396,7 @@ export default {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
-          chartBox.style.height = `${item.height}px`
+          chartBox.style.height = `${document.getElementById('listContainer').offsetWidth / 12 * item.height}px`
         }
       })
     },

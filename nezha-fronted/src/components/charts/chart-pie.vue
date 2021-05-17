@@ -183,7 +183,8 @@ export default {
           },
           extraCssText: 'z-index:1000;'
         },
-        series: null
+        series: null,
+        stepWidth: null
       }
     }
   },
@@ -354,6 +355,7 @@ export default {
     },
     initChart: function (type) {
       this.option.series = this.pieData
+      this.stepWidth = document.getElementById('listContainer').offsetWidth / 12
       if (type == 'local') {
         this.initLocal()
       } else {
@@ -382,12 +384,13 @@ export default {
       }
 
       this.$nextTick(() => {
+        const vm = this
         setTimeout(function () {
           const divHeight = self.$refs.legendArea.offsetHeight
           if (!self.chartData.height) {
             getChart(self.chartIndex).resize({ height: (400 - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
           } else {
-            getChart(self.chartIndex).resize({ height: (self.chartData.height - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
+            getChart(self.chartIndex).resize({ height: (self.chartData.height * vm.stepWidth - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
           }
           self.$set(self.option.tooltip, 'formatter', self.formatterFunc)
           self.$set(self.option.tooltip, 'position', function (point, params, dom, rect, size) {

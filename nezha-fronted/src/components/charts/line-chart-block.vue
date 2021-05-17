@@ -198,7 +198,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
-import { getMetricTypeValue } from '../common/js/tools'
+import { getMetricTypeValue, chartResizeTool } from '../common/js/tools'
 import moment from 'moment-timezone'
 
 export default {
@@ -304,7 +304,9 @@ export default {
       screenTitleHeight: 58,
       hasLegendOptions: false,
       /* legendOptions:[], */
-      screenLegendOptions: []
+      screenLegendOptions: [],
+
+      stepWidth: null
     }
   },
   watch: {
@@ -595,7 +597,7 @@ export default {
         // chartId='screenShowArea';
       }
       const chartWidth = ele.clientWidth
-
+      this.stepWidth = document.getElementById('listContainer').offsetWidth / 12
       const stackIconBorderColor = (chartInfo.type === 'stackArea' ? '#53a3cb' : '#7e7e7e')
       const stackIconChooseBorderColor = (chartInfo.type === 'stackArea' ? '#7e7e7e' : '#53a3cb')
       let maxValueCopies = this.getMaxValue(dataArg, chartInfo)
@@ -954,12 +956,13 @@ export default {
           this.computeLegendData(this.legendListMore, dataArg, 'local')
         }
         this.$nextTick(() => {
+          const vm = this
           setTimeout(function () {
             const divHeight = self.$refs.legendArea.offsetHeight
             if (!chartInfo.height) {
-              getChart(self.chartIndex).resize({ height: (400 - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex).resize({ height: (400 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
-              getChart(self.chartIndex).resize({ height: (chartInfo.height - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             }
             if (dataArg && dataArg.length > 0) {
               getChart(self.chartIndex).clear()
@@ -1808,7 +1811,7 @@ export default {
         if (!this.chartInfo.height) {
           getChart(this.chartIndex).resize({ height: (400 - divHeight - this.$chartResizeTool.titleHeight - this.$chartResizeTool.chartBlankHeight) })
         } else {
-          getChart(this.chartIndex).resize({ height: (this.chartInfo.height - divHeight - this.$chartResizeTool.titleHeight - this.$chartResizeTool.chartBlankHeight) })
+          getChart(this.chartIndex).resize({ height: (this.chartInfo.height * this.stepWidth - divHeight - this.$chartResizeTool.titleHeight - this.$chartResizeTool.chartBlankHeight) })
         }
       })
     },

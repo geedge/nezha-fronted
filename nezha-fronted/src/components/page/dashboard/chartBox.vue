@@ -222,7 +222,7 @@
 
             <!--height-->
             <el-form-item :label="$t('dashboard.panel.chartForm.high')" class="form-item--half-width"  prop="height">
-              <el-autocomplete
+<!--              <el-autocomplete
                 id="chart-box-height"
                 v-model="editChart.height"
                 :disabled="editChart.type === 'group'"
@@ -235,7 +235,14 @@
                   <div class="name">{{ item }}</div>
                 </template>
                 <template slot="append">px</template>
-              </el-autocomplete>
+              </el-autocomplete>-->
+
+              <!-- 由px改为span -->
+              <el-select id="chart-box-height"  v-model="editChart.height" :disabled="editChart.type === 'group'" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" value-key="chartSpan">
+                <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
+                  <span class="panel-dropdown-label-txt" > span-{{item}}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <!-- unit -->
@@ -1124,7 +1131,7 @@ export default {
     // 获取metric列表
     getSuggestMetric () {
       // this.$get('/prom/api/v1/label/__name__/values').then(response => {
-      this.$get('/module?pageSize=-1').then(response => {
+      this.$get('monitor/module?pageSize=-1').then(response => {
         if (response.code === 200) {
           this.metricList = response.data.list
           const cascaderMap = new Map()
@@ -1245,7 +1252,7 @@ export default {
       this.editChart.id = data.id
       this.editChart.name = data.name
       this.editChart.span = data.span
-      this.editChart.height = data.height + ''
+      this.editChart.height = data.height
       this.editChart.type = data.type
       this.editChart.unit = data.unit
       this.editChart.remark = data.remark
@@ -1312,7 +1319,7 @@ export default {
       this.editChart.name = ''
       this.editChart.type = 'line'
       this.editChart.span = 12
-      this.editChart.height = 400 + ''
+      this.editChart.height = 4
       this.editChart.unit = unit || 2
       this.editChart.remark = ''
       this.editChart.groupId = this.editChart.groupId || ''
@@ -1360,7 +1367,7 @@ export default {
     chartTypeChange () {
       const chartType = this.editChart.type
       this.editChart.param.url = ''
-      this.editChart.height = 400
+      this.editChart.height = 4
       if (chartType === 'url') {
         this.setIsUrl()
         /* if(this.$refs.chartTag){
@@ -1385,7 +1392,7 @@ export default {
         this.showPicker = [{ bac: false, text: false }]
       } else if (chartType === 'group') {
         this.editChart.span = 12
-        this.editChart.height = 100
+        this.editChart.height = 6
         this.setIsGroup()
       } else {
         this.setIsOtherChart()

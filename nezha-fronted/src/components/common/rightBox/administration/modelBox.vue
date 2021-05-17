@@ -85,9 +85,9 @@ export default {
       chartlList: [], // chart 列表数据
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t("config.model.titleName"), data: 'name' },
-        { title: this.$t("config.model.titleType"), data: 'type' },
-        { title: this.$t("config.model.remark"), data: 'remark' }
+        { title: this.$t('config.model.titleName'), data: 'name' },
+        { title: this.$t('config.model.titleType'), data: 'type' },
+        { title: this.$t('config.model.remark'), data: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',
@@ -95,7 +95,7 @@ export default {
       roles: [],
       rules: {
         name: [
-          { required: true, message: '必填', trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         brandId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

@@ -186,7 +186,8 @@ export default {
           },
           extraCssText: 'z-index:1000;'
         },
-        series: null
+        series: null,
+        stepWidth: null
       }
     }
   },
@@ -309,7 +310,7 @@ export default {
           },
           axisLabel: {
             margin: 8,
-            formatter: function (params) {
+            formatter (params) {
               const dataLength = seriesItem.length || 1
               const chartWidth = (document.getElementById('chart-' + chartItem.id).offsetWidth - 80) / dataLength// 容器宽 - padding - 空余
               const length = Math.ceil((chartWidth) / 16)
@@ -338,7 +339,7 @@ export default {
           axisLabel: {
             show: true,
             fontSize: 10,
-            formatter: function (val, index) {
+            formatter (val, index) {
               let value = val
               if (val !== 0) {
                 value = parseFloat(Number(val).toFixed(2))
@@ -371,7 +372,7 @@ export default {
               symbol: ['circle', 'circle'],
               label: {
                 distance: this.computeDistance(chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(chartItem.param.threshold)),
-                formatter: function (params) {
+                formatter (params) {
                   return chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(params.value)
                 }
               },
@@ -436,7 +437,7 @@ export default {
         this.endLoading()
       }
     },
-    computeDistance: function (str) {
+    computeDistance (str) {
       const span = document.querySelector('.temp-dom')
       span.textContent = str
       const txtWidth = parseFloat(window.getComputedStyle(span).width)
@@ -457,15 +458,16 @@ export default {
         return name.slice(0, charNum) + '...'
       }
     },
-    initChart: function (type) {
+    initChart (type) {
       this.option.series = this.pieData
+      this.stepWidth = document.getElementById('listContainer').offsetWidth / 12
       if (type == 'local') {
         this.initLocal()
       } else {
         this.initScreen()
       }
     },
-    initLocal: function () {
+    initLocal () {
       const self = this
       const dom = document.getElementById('pie-chart-local-' + this.chartIndex)
       if (!this.echart) {
@@ -487,12 +489,13 @@ export default {
       }
 
       this.$nextTick(() => {
+        const vm = this
         setTimeout(function () {
           const divHeight = self.$refs.legendArea.offsetHeight
           if (!self.chartData.height) {
             getChart(self.chartIndex).resize({ height: (400 - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
           } else {
-            getChart(self.chartIndex).resize({ height: (self.chartData.height - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
+            getChart(self.chartIndex).resize({ height: (self.chartData.height * vm.stepWidth - divHeight - self.$chartResizeTool.titleHeight - self.$chartResizeTool.chartBlankHeight) })
           }
           self.$set(self.option.tooltip, 'formatter', self.formatterFunc)
           self.$set(self.option.tooltip, 'position', function (point, params, dom, rect, size) {
@@ -576,7 +579,7 @@ export default {
         }, 100)
       })
     },
-    initScreen: function () {
+    initScreen () {
       const self = this
       const dom = document.getElementById('pie-chart-screen-' + this.chartIndex)
       if (!this.echartScreen) {
@@ -628,7 +631,7 @@ export default {
         }, 100)
       })
     },
-    dealLegendAlias: function (legend, expression) {
+    dealLegendAlias (legend, expression) {
       if (/\{\{.+\}\}/.test(expression)) {
         const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
@@ -741,7 +744,7 @@ export default {
         this.bgColorList.push(randomcolor())
       }
     },
-    formatterFunc: function (params, ticket, callback) {
+    formatterFunc (params, ticket, callback) {
       const chartInfo = this.chartData
       return `
                 <div>

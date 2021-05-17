@@ -285,7 +285,7 @@ export default {
     resize (chartItem) {
       const deHeight = this.$chartResizeTool.titleHeight + this.$chartResizeTool.chartTableBlankHeight
       const container = document.querySelector('#chartTableDiv' + this.chartIndex + ' .table-container')
-      container.style.height = `calc(100% - ${deHeight * 2}px)`
+      container.style.height = `calc(100% - ${deHeight}px)`
       this.tableHeight = `calc(100% - ${this.$refs.Pagination.$el.offsetHeight}px)`
     },
     showLoad (chartItem) {

@@ -224,6 +224,7 @@ import chartBarStatis from './chart-bar-statistics'
 import chartGroup from './chart-group'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
+import { chartResizeTool } from '@/components/common/js/tools'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -254,6 +255,7 @@ export default {
   },
   data () {
     return {
+      chartResizeTool: chartResizeTool,
       filter: {},
       dataList: [], // 看板中所有图表信息
       dataListDragTmp: [],
@@ -272,7 +274,7 @@ export default {
       pagePanelId: '', // 当前分页的panelId
       dragging: null,
       // chartDataCacheGroup:new Map,//图表数据缓存，用于查询：id:{}
-      stepHeight: 50,
+      stepWidth: null,
 
       tempDom: { height: '', width: '' }
       // showShadow:false,
@@ -558,7 +560,7 @@ export default {
           panelId: 0,
           title: this.$t('alert.config.chart.affectEntity'),
           span: 4,
-          height: 350,
+          height: 3,
           type: 'alertRuleInfo',
           prev: 0,
           next: -9,
@@ -572,7 +574,7 @@ export default {
           panelId: 0,
           title: this.$t('alert.config.chart.alertNumTrend'),
           span: 8,
-          height: 350,
+          height: 6,
           type: 'line',
           prev: -10,
           next: -1,
@@ -622,7 +624,7 @@ export default {
           dataId: this.additionalInfo.id,
           title: this.$t('project.chart.endpointInfo'),
           span: 6,
-          height: 350,
+          height: 4,
           type: 'endpointInfo',
           prev: 0,
           next: -9,
@@ -639,7 +641,7 @@ export default {
           panelId: 0,
           title: this.$t('asset.assetInfo'),
           span: 6,
-          height: 350,
+          height: 4,
           type: 'assetInfo',
           prev: -10,
           next: -8,
@@ -1698,7 +1700,7 @@ export default {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
-          chartBox.style.height = `${item.height}px`
+          chartBox.style.height = `${this.stepWidth * item.height}px`
           if (item.type === 'group') {
             chartBox.style.height = 'auto'
           }
@@ -1832,6 +1834,8 @@ export default {
     this.chartDataCacheGroup = new Map()
   },
   mounted () {
+    this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth)
+    console.info(this.stepWidth)
     this.tempDomInit()
   }
 
