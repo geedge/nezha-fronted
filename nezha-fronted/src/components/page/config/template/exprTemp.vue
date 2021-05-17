@@ -18,26 +18,29 @@
         </div>
       </template>
       <template v-slot:top-tool-right>
-        <export-excel
+        <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
+                type="button" @click="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
           id="expression-template-list"
           export-url="expression/tmpl/export"
           import-url="expression/tmpl/import"
           export-file-name="expression-template"
           :params="searchLabel"
           :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
+          class="top-tool-export margin-l-10 margin-r-10"
           @afterImport="getTableData"
-          class="top-tool-export margin-r-10"
         >
-          <template slot="optionZone">
-            <button id="expr-tmpl-list-export" v-has="'expressionTemplate_add'" :title="$t('overall.createTemplate')" class="top-tool-btn"
-                    type="button" @click="add">
-              <i class="nz-icon nz-icon-create-square"></i>
-            </button>
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" :delete-objs="batchDeleteObjs" @after="getTableData" id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button>
+              </el-dropdown-item>
+            </div>
           </template>
-        </export-excel>
-
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button>
+        </top-tool-more-options>
       </template>
       <template v-slot:default="slotProps">
         <expr-tmpl-table
@@ -82,7 +85,7 @@
 
 <script>
 import bus from '@/libs/bus'
-import exportXLSX from '@/components/common/exportXLSX'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import exprTmplBox from '@/components/common/rightBox/exprTmplBox'
 import deleteButton from '@/components/common/deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
@@ -94,7 +97,7 @@ export default {
     deleteButton,
     exprTmplBox,
     exprTmplTable,
-    'export-excel': exportXLSX
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {

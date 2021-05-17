@@ -10,24 +10,29 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <export-excel
+        <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn"
+                @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
           id="alert-rule"
-          :permissions="{import: 'alertRule_add'}"
           :params="searchLabel"
-          class="top-tool-export margin-r-10"
+          :permissions="{import: 'alertRule_add', export: 'alertRule_view'}"
+          class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="AlertRule"
           export-url="/alert/rule/export"
           import-url="/alert/rule/import"
           @afterImport="getTableData"
         >
-          <template slot="optionZone">
-            <button id="alert-add" v-has="'alertRule_add'" :title="$t('overall.createAlertRule')" class="top-tool-btn"
-                    @click="add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="alert-rule-batch-delete" v-has="'alertRule_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
           </template>
-        </export-excel>
-        <delete-button id="alert-rule-batch-delete" v-has="'alertRule_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        </top-tool-more-options>
       </template>
       <template v-slot:default="slotProps">
         <alert-rule-table
@@ -63,6 +68,8 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import alertRuleTable from '@/components/common/table/alert/alertRuleTable'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+
 export default {
   name: 'alert-config',
   components: {
@@ -70,7 +77,8 @@ export default {
     alertRuleBox,
     alertRuleTable,
     nzDataList,
-    'export-excel': exportXLSX
+    'export-excel': exportXLSX,
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {

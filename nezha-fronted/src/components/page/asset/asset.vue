@@ -17,8 +17,9 @@
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
         <top-tool-more-options
+          ref="export"
           id="model"
-          :params="filter"
+          :params="searchLabel"
           :permissions="{
                   import: 'asset_add',
                   export: 'asset_view'
@@ -115,6 +116,7 @@ export default {
   data () {
     return {
       url: 'asset/asset',
+      filter: {},
       // 侧滑
       rightBox: {
         batchShow: false

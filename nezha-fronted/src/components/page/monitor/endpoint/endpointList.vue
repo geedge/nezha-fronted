@@ -13,25 +13,29 @@
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <export-excel
+        <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn"
+                type="button" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <top-tool-more-options
           ref="export"
           id="expression-template-list"
-          export-url="monitor/endpoint/export"
-          import-url="monitor/endpoint/import"
-          export-file-name="expression-template"
           :params="searchLabel"
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="expression-template"
+          export-url="monitor/endpoint/export"
+          import-url="monitor/endpoint/import"
           @afterImport="getTableData"
-          class="top-tool-export margin-r-10"
         >
-          <template slot="optionZone">
-            <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn"
-                    type="button" @click="add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
           </template>
-        </export-excel>
-        <delete-button id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        </top-tool-more-options>
 <!--        <button id="account-batch-modify" v-has="'monitor_endpoint_add'" :class="{'nz-btn-disabled' : batchDeleteObjs.length<1}" class="top-tool-btn margin-r-20"-->
 <!--                type="button" @click="batchModify">-->
 <!--          <i class="nz-icon-batch-edit nz-icon"></i>-->
@@ -76,13 +80,13 @@
 <script>
 import deleteButton from '@/components/common/deleteButton'
 import addEndpointBox from '@/components/common/rightBox/addEndpointBox'
-import exportXLSX from '@/components/common/exportXLSX'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发
@@ -96,9 +100,9 @@ export default {
     addEndpointBox,
     deleteButton,
     endpointTable,
-    'export-excel': exportXLSX,
     clickSearch,
-    batchModifyEndpoint
+    batchModifyEndpoint,
+    topToolMoreOptions,
   },
   mixins: [dataListMixin],
   data () {
