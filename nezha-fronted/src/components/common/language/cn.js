@@ -230,7 +230,7 @@ const cn = {
       createChartTitle: '新增图表',
       createChartTempTitle: '新增图表模板',
       createChartByTemp: '通过模板添加图表',
-      editChartTitle: '编辑图表',
+      editChartTitle: '修改图表',
       editChartTempTitle: '修改图表模板', // "编辑图表""
       chartForm: {
         chartId: 'ID',
