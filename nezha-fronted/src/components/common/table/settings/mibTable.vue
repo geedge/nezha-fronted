@@ -106,12 +106,12 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.mib.fileName'),
           prop: 'fileName',
@@ -127,11 +127,11 @@ export default {
         }, {
           label: this.$t('config.mib.updateUser'),
           prop: 'updateUser',
-          show: true
+          show: false
         }, {
           label: this.$t('config.mib.updateAt'),
           prop: 'updateAt',
-          show: true
+          show: false
         }
       ]
     }
