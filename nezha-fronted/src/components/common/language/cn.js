@@ -231,7 +231,7 @@ const cn = {
       createChartTempTitle: '新增图表模板',
       createChartByTemp: '通过模板添加图表',
       editChartTitle: '编辑图表',
-      editChartTempTitle: '编辑图表模板', // "编辑图表""
+      editChartTempTitle: '修改图表模板', // "编辑图表""
       chartForm: {
         chartId: 'ID',
         chartName: '图表名称',
@@ -557,7 +557,7 @@ const cn = {
     assetStatPre: '最后应答:',
     assetStatDown: '未Ping通',
     pingInactive: '宕机',
-    editAsset: '编辑资产',
+    editAsset: '修改资产',
     createAsset: '新增资产',
     host: 'Host',
     state: '状态',
@@ -649,7 +649,7 @@ const cn = {
       source: '来源',
       userId: '用户ID',
       createUser: '新增用户',
-      editUser: '编辑用户',
+      editUser: '修改用户',
       notCurrentlySupport: '暂不支持',
       pin: '密码',
       oldPin: '旧密码',
@@ -672,7 +672,7 @@ const cn = {
       permission: '权限',
       menu: '菜单',
       createRole: '新增角色',
-      editRole: '编辑角色',
+      editRole: '修改角色',
       remark: '描述'
     },
     menus: {
@@ -718,7 +718,7 @@ const cn = {
       host: '主机名',
       port: '端口',
       checkTime: '检查时间',
-      createProm: '创建客户端',
+      createProm: '新增客户端',
       editProm: '修改客户端',
       up: 'UP',
       down: 'Down',
@@ -811,8 +811,8 @@ const cn = {
         tags: '标签',
         snmpSetting: 'SNMP设置'
       },
-      createDc: '新建数据中心',
-      editDc: '编辑数据中心',
+      createDc: '新增数据中心',
+      editDc: '修改数据中心',
       editCabinet: '编辑机柜',
       usable: '可用',
       suspended: '停用',
@@ -822,8 +822,8 @@ const cn = {
       lnglat: '坐标'
     },
     cabinet: {
-      editCabinet: '编辑机柜',
-      createCabinet: '创建机柜'
+      editCabinet: '修改机柜',
+      createCabinet: '新增机柜'
     },
     model: {
       model: '资产型号',
@@ -833,7 +833,7 @@ const cn = {
       titleType: '类型',
       ChartTemplate: '图表模板',
       assetNum: '资产',
-      editModel: '编辑型号',
+      editModel: '修改型号',
       createModel: '新增型号',
       remark: '备注',
       type: '类型'
@@ -869,10 +869,10 @@ const cn = {
       description: '备注',
       updateUser: '更新用户',
       updateAt: '更新时间',
-      editMib: '编辑MIB',
+      editMib: '修改MIB',
       models: '型号',
       modelTip: '请选择型号',
-      createMib: '添加MIB',
+      createMib: '新增MIB',
       mibFiles: 'MIB文件',
       uploadTip: '请上传MIB文件',
       requiredMibFile: '必须上传MIB文件',
@@ -889,8 +889,8 @@ const cn = {
         method: '方式',
         encryption: '加密',
         pin: '密码',
-        edit: '编辑证书',
-        create: '创建证书',
+        edit: '修改证书',
+        create: '新增证书',
         ReadCommunity: '读团体字',
         writeCommunity: '写团体字',
         username: '用户名',
@@ -1038,13 +1038,13 @@ const cn = {
     assetLabel: {
       example: '示例',
       assetLabel: '资产标签',
-      editMeta: '编辑标签',
+      editMeta: '修改标签',
       addMeta: '新增标签',
       all: '全部',
       addGroup: '创建分组',
       editGroup: '编辑分组',
       addLabel: '新增标签',
-      editLabel: '编辑标签',
+      editLabel: '修改标签',
       groupName: '名称',
       key: '键名',
       name: '名称',
@@ -1053,7 +1053,7 @@ const cn = {
       display: '显示',
       type: '类型',
       params: '参数',
-      updateLabel: '编辑标签',
+      updateLabel: '修改标签',
       deleteLabel: '删除标签',
       infoLabel: '标签信息',
       text: '单行文本',
@@ -1095,7 +1095,7 @@ const cn = {
       remark: '描述',
       errorStr: '请填写 {errorStr} 的值',
       edit: '修改表达式模板',
-      create: '创建表达式模板',
+      create: '新增表达式模板',
       expressionError: '请填写表达式',
       type: '类型',
       varType: '变量类型'
@@ -1169,7 +1169,7 @@ const cn = {
     silence: {
       name: '名称',
       silence: '告警静默',
-      create: '创建告警静默',
+      create: '新增告警静默',
       edit: '修改告警静默',
       time: '时间',
       matchers: '规则',
@@ -1201,14 +1201,14 @@ const cn = {
     project: {
       project: '名称',
       projectName: '系统',
-      editProject: '编辑系统',
+      editProject: '修改系统',
       description: '描述',
       createProject: '新增系统'
     },
     module: {
       module: '模块',
       moduleName: '名称',
-      editModule: '编辑模块',
+      editModule: '修改模块',
       description: '描述',
       createModule: '新增模块',
       tip: {
@@ -1229,7 +1229,7 @@ const cn = {
       alerts: '告警',
       privpin: '隐私密码',
       asset: 'Asset',
-      editEndpoint: '编辑 Endpoint',
+      editEndpoint: '修改 Endpoint',
       createEndpoint: '新增 Endpoint',
       batchEndpoint: '批量 Endpoint',
       endpointName: 'Endpoint name',
@@ -1237,7 +1237,7 @@ const cn = {
     },
     endpoint: {
       createEndpoint: '新增 Endpoint',
-      editEndpoint: '编辑 Endpoint',
+      editEndpoint: '修改 Endpoint',
       endpoint: 'Endpoint',
       endpointId: 'Endpoint ID',
       host: '主机',
