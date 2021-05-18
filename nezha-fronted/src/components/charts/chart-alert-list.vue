@@ -67,7 +67,7 @@
           <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
         </div>
         <!--全屏-->
-        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenDialogClose" >
+        <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenDialogClose" :modal-append-to-body="false">
           <div slot="title">
             <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
@@ -111,7 +111,7 @@
                    width="90%"
                    :append-to-body="true"
                    id="viewGraphDialog"
-                   @close="dialogClose">
+                   @close="dialogClose" :modal-append-to-body="false">
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
             <div class="float-right panel-calendar dialog-tool" style="display: flex">
