@@ -83,7 +83,7 @@
       <chart-temp-box :obj="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess" v-if="rightBox.chartTemp.show"></chart-temp-box>
     </transition>
     <transition name="right-box">
-      <panel-box v-if="rightBox.panel.show" ref="panelBox" :panel="panel" @reload="panelReload" @reloadForDel="panelReloadForDel" @close="closePanelBox" ></panel-box>
+      <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
     </transition>
   </div>
 </template>
@@ -256,8 +256,7 @@ export default {
     },
     edit (u) {
       this.panel = Object.assign({}, u)
-      this.$refs.panelBox.setTitle(this.$t('dashboard.panel.editPanelTitle'))
-      this.$refs.panelBox.show(true)
+      this.rightBox.panel.show = true
     },
     toAdd () {
       if (!this.hasButton('panel_view')) {

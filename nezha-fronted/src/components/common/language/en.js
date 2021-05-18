@@ -229,7 +229,7 @@ const en = {
       createPanelTitle: 'New panel', // "新增面板"
       selectPanelTitle: 'Select', // "选择面板"
       createPanelTitleSec: 'New panel', // "新增面板"
-      editPanelTitle: 'Panel', // "面板"
+      editPanelTitle: 'Edit panel', // "面板"
       singleStatErrorTip: 'Only queries that return single series/table is supported',
       panelForm: {
         panelName: 'Panel name', // "面板名称"

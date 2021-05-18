@@ -208,20 +208,20 @@ export default {
       step: 0,
       activeStep: 0,
       database: {
-        host: "",
+        host: '',
         port: 3306,
-        name: "nz",
-        username: "",
-        pin: "",
+        name: 'nz',
+        username: '',
+        pin: ''
       },
       dbRules: {
         host: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "blur",
+            message: this.$t('validate.required'),
+            trigger: 'blur'
           },
-          { validator: host, trigger: "blur" },
+          { validator: host, trigger: 'blur' }
         ],
         port: [{ validator: port, trigger: 'blur' }],
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
@@ -229,18 +229,18 @@ export default {
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       redis: {
-        host: "",
+        host: '',
         port: 6379,
-        pin: "",
+        pin: ''
       },
       redisRules: {
         host: [
           {
             required: true,
-            message: this.$t("validate.required"),
-            trigger: "blur",
+            message: this.$t('validate.required'),
+            trigger: 'blur'
           },
-          { validator: host, trigger: "blur" },
+          { validator: host, trigger: 'blur' }
         ],
         port: [{ validator: port, trigger: 'blur' }]
       },
@@ -251,13 +251,13 @@ export default {
         alertPrefix: '',
         haMode: 1,
         haVip: '',
-        prometheusFederationEnabled:1,
+        federationEnabled: 1
       },
       sysRules: {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       reloadTime: 5000,
       reloadTimeout: null,

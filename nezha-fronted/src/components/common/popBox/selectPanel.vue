@@ -24,7 +24,7 @@
               <span>{{ node.label }}</span>
               <span class="tree--operation" v-if="!panelLock">
                 <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span>
-                <span @click.stop="editPanel(data)" class="panel-dropdown-btn"><i class="nz-icon nz-icon-edit" v-has="'panel_toEdit'"></i></span>
+                <span class="panel-dropdown-btn" @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i></span>
               </span>
             </div>
           </el-tree>
