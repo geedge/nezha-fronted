@@ -10,7 +10,7 @@
               &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
                                v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
-                               :props="{emitPath:false,}" @change="metricChange">
+                               :props="{emitPath:false,}" @change="metricChangeNew">
 
               <template slot-scope="{ node, data }">
                 <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
@@ -51,7 +51,7 @@
                   style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                 <el-cascader-panel v-loading="tempBoxShowLoading" v-if="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
                                    style="text-align: left;" slot="dropdown" ref="metricSelector"
-                                   :props="{emitPath:false}" :options="metricOptions" @change="metricChange">
+                                   :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
                   <template slot-scope="{ node, data }">
                     <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
@@ -285,6 +285,16 @@ export default {
       cb(result)
     },
     metricChange: function (value) {
+      if (!value) return
+      this.expressionList[this.index] = value
+      // this.insertText(value)
+      // this.$refs.editor.setContent(value)
+      this.dropDownVisible = false
+      this.$emit('change', value)
+      this.$forceUpdate()
+      this.cascaderValue = ''
+    },
+    metricChangeNew (value) {
       if (!value) return
       // this.expressionList[this.index] = value
       this.insertText(value)
