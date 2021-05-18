@@ -24,11 +24,11 @@
           </el-form-item>
 
           <!--host-->
-          <el-form-item label="Host" prop="host">
+          <el-form-item :label="$t('config.agent.host')" prop="host">
             <el-input id="prom-box-input-host" v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--Port-->
-          <el-form-item label="Port" prop="port">
+          <el-form-item :label="$t('config.agent.port')" prop="port">
             <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--type-->

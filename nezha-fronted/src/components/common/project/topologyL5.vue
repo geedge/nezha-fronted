@@ -270,13 +270,13 @@
       @close="uploadPicShow = false"
       destroy-on-close>
       <el-row class="upload-pic-row">
-        <el-col :span="4" class="upload-pic-label">Name</el-col>
+        <el-col :span="4" class="upload-pic-label">{{ $t('overall.name') }}</el-col>
         <el-col :span="20">
           <el-input v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
         </el-col>
       </el-row>
       <el-row class="upload-pic-row">
-        <el-col :span="4" class="upload-pic-label">Folder</el-col>
+        <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
             class="inline-input"

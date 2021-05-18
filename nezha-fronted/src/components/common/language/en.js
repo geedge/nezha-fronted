@@ -18,6 +18,7 @@ const en = {
     oneDay: '1 day',
     twoDay: '2 days',
     week: '1 week',
+    folder: 'Folder',
     startTime: 'Start time',
     endTime: 'End time',
     metric: 'Metric',
@@ -415,6 +416,7 @@ const en = {
     },
     refresh: 'Refresh', // '刷新'
     edit: 'Edit', // '编辑'
+    Connect: 'Connect', // 连接
     delete: 'Delete', // '删除'
     screen: 'Full screen', // '全屏',
     duplicate: 'Duplicate', // 复制
