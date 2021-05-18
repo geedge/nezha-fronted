@@ -48,7 +48,7 @@
       <template v-slot:default="slotProps">
         <asset-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="dataListLayout.indexOf('clickSearch') > -1 ? assetTableHeight : mainTableHeight"
