@@ -225,7 +225,6 @@ import chartGroup from './chart-group'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
 import { chartResizeTool } from '@/components/common/js/tools'
-// import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
   props: {
@@ -1700,7 +1699,7 @@ export default {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
-          chartBox.style.height = `${this.stepWidth * item.height}px`
+          chartBox.style.height = `${Math.floor(this.stepWidth * item.height)}px`
           if (item.type === 'group') {
             chartBox.style.height = 'auto'
           }
@@ -1797,9 +1796,9 @@ export default {
       setTimeout(function () {
         const itemHeight = item.height
         // 1.元素距离页面顶部的距离
-        const mainOffsetTop = ele.offsetTop// offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
+        const mainOffsetTop = ele.offsetTop // offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
         // 2.元素的高度
-        const mainHeight = itemHeight// ele.offsetHeight;//itemHeight;
+        const mainHeight = itemHeight // ele.offsetHeight;//itemHeight;
         // 3.页面滚动的距离
         const windowScrollTop = scrollTop// document.documentElement.scrollTop || document.body.scrollTop;
         // 4.浏览器可见区域的高度
@@ -1828,17 +1827,26 @@ export default {
           }
         }
       }, 500)
+    },
+    resize () {
+      this.init()
+      this.$parent.dateChange()
+    },
+    init () {
+      this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth - 14)
+      this.tempDomInit()
     }
   },
   created () {
     this.chartDataCacheGroup = new Map()
   },
   mounted () {
-    this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth)
-    console.info(this.stepWidth)
-    this.tempDomInit()
+    this.init()
+    window.addEventListener('resize', () => this.resize(), false)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.resize(), false)
   }
-
 }
 
 </script>
