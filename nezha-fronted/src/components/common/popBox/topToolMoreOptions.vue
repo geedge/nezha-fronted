@@ -248,7 +248,7 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
     exportCur () {
-      const params = Object.assign({}, this.params)
+      const params = JSON.parse(JSON.stringify(this.params))
       if (this.exportUrl.indexOf('panel') > -1) {
         params.pageSize = -1
         delete params.start_time
@@ -283,6 +283,10 @@ export default {
     exportExcel (url, params, fileName) {
       if (this.paramsType) {
         params.type = this.paramsType
+      }
+      if (params.from == 'asset') {
+        delete params.type
+        delete params.from
       }
       axios.get(url, { responseType: 'blob', params: params }).then(res => {
         if (window.navigator.msSaveOrOpenBlob) {
