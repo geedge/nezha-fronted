@@ -157,22 +157,6 @@ export default {
       this.$store.commit('openConsole')
     },
     jump (route) {
-      this.$emit('close')
-      // if(!this.hasButton('dc_add')){
-      //   return
-      // } else if(!this.hasButton('agent_add')){
-      //   return
-      // } else if(!this.hasButton('asset_add')){
-      //   return
-      // } else if(!this.hasButton('project_add')){
-      //   return
-      // } else if(!this.hasButton('panel_add')){
-      //   return
-      // } else if (!this.hasButton('alertRule_add')){
-      //   return
-      // }else{
-      //   console.log('有权限')
-      // }
       let buttonPermissions = true
       this.guideList.forEach(ele => {
         if (!this.hasButton(ele.buttonPermissions)){
@@ -182,6 +166,7 @@ export default {
       if (!buttonPermissions){
         return
       }
+      this.$emit('close')
       this.$router.push({
         path: route,
         query: {
@@ -318,7 +303,7 @@ export default {
     }
   },
   watch: {
-    showDialog (n) {
+    showDialog (n, o) {
       this.visible = n
     },
     activeIndex (n) {
