@@ -1274,7 +1274,7 @@ const cn = {
       authTypeWord: 'basic auth',
       authTypeToken: 'bearer token',
       name: '名称',
-      configs: 'Configs',
+      configs: '配置',
       state: '状态',
       allselect: '当前页已全部选择'
     },

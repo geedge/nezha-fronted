@@ -1284,7 +1284,7 @@ const en = {
       authTypeWord: 'basic auth',
       authTypeToken: 'bearer token',
       name: 'Name',
-      configs: 'Configs',
+      configs: 'Config',
       state: 'State',
       allselect: 'The current page has all been selected'
     },
