@@ -77,7 +77,7 @@
         </div>
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')" :visible.sync="screenModal"
-                   width="96%" @close="screenModal = false">
+                   width="96%" @close="screenModal = false" :modal-append-to-body="false">
           <div slot="title">
             <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">

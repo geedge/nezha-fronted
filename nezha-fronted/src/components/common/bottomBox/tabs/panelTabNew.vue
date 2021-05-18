@@ -10,7 +10,7 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <span v-if="from === fromRoute.asset">
+        <div v-if="from === fromRoute.asset" style="display: flex" >
           <div class="top-tool-search margin-r-20">
           <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
             <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
@@ -50,11 +50,11 @@
             @panelLockChange="panelLockChange"
           >
           </top-tool-more-options>
-        </span>
-        <span v-else> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
+        </div>
+        <div v-else> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
                                type="button">
           <i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>
-        </button></span>
+        </button></div>
       </template>
       <template v-slot>
         <div class="panel">
