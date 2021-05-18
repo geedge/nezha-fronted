@@ -3,7 +3,7 @@
     <button v-if="this.type === 'button'" :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete">
       <span><i class="nz-icon nz-icon-delete" ></i></span>
     </button>
-    <div v-if="this.type === 'link'" :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" class="top-tool-btn top-tool-btn--delete" @click="batchDelete">
+    <div v-if="this.type === 'link'" :id="id" :class="{'nz-btn-disabled' : deleteObjs.length<1}" @click="batchDelete">
       <span><i class="nz-icon nz-icon-delete" ></i>{{title}}</span>
     </div>
   </div>
@@ -70,5 +70,6 @@ export default {
   }
   .delete-button-light.delete-button{
     border-radius: 2px;
+    opacity: 1;
   }
 </style>
