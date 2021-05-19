@@ -589,6 +589,7 @@ export default {
     topoScreen (n) {
       getTopology(this.topologyIndex).resize()
       getTopology(this.topologyIndex).centerView(20)
+      // getTopology(this.topologyIndex).fitView(30)
     }
   },
   computed: {
@@ -673,7 +674,9 @@ export default {
                 return
               }
               if (item.rect.ex > position.x || item.rect.ey > position.y) {
-                getTopology(this.topologyIndex).fitView(20)
+                if (this.fromOverView) {
+                  getTopology(this.topologyIndex).fitView(20)
+                }
                 flag = true
               }
             })
@@ -1926,7 +1929,7 @@ export default {
             return
           }
           if (item.rect.ex > position.x || item.rect.ey > position.y) {
-            getTopology(this.topologyIndex).fitView(20)
+            // getTopology(this.topologyIndex).fitView(20)
             flag = true
           }
         })
