@@ -1,119 +1,51 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
-        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-        <!--</button>-->
-      </div>
-      <!-- end--顶部按钮-->
-
-      <!-- begin--标题-->
-      <div class="right-box-title">Asset</div>
-      <!-- end--标题-->
-
-      <!-- begin搜素框-->
-      <div class="top-tools">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
-          <div class="top-tool-search">
-            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
-          <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
-          <!--<i class="nz-icon nz-icon-download1"></i>-->
-          <!--</button>-->
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- end搜素框-->
-
-      <!-- begin--表格-->
-      <div class="right-box-form-box">
-        <el-table
-          class="nz-table"
-          :height="mainTableHeight"
-          style="width: 100%;"
-          :data="tableData"
-          border
-          v-loading="loading"
-          tooltip-effect="light"
-          ref="assetTable"
-          :cell-class-name="messageStyle"
-          @sort-change="tableDataSort"
-        >
-          <el-table-column
-            :resizable="true"
-            v-for="(item, index) in tableTitle"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col_${index}`"
-            :label="item.label"
-            :fixed="item.fixed"
-            :show-overflow-tooltip="item.prop != 'Alert' || item.prop != 'Module'"
-            min-width="110px"
-            :class-name="item.prop == 'option' ? 'content-right-options' : ''"
-            :sortable="$tableSet.sortableShow(item.prop,'asset')"
-            :prop="$tableSet.propTitle(item.prop,'asset')"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item">
-              <div v-if="item.prop=='HOST'">
-                <span>{{scope.row.host}}</span>
-              </div>
-              <div v-if="item.prop=='assetType'">
-                <span>{{scope.row.model.type.value}}</span>
-              </div>
-              <template v-if="item.prop=='SN'">{{scope.row.sn}}</template>
-              <div v-if="item.prop=='state'">
-                <span v-if="scope.row.state==1">{{ $t('asset.inStock')}}</span>
-                <span v-if="scope.row.state==2">{{ $t('asset.notInStock')}}</span>
-                <span v-if="scope.row.state==3">{{ $t('asset.suspended')}}</span>
-              </div>
-              <div v-if="item.prop == 'pingStatus'">
-                <el-popover
-                  placement="right"
-                  width="200"
-                  trigger="hover"
-                  :content="formatPingTime(scope.row.pingLastUpdate)">
-                  <div slot="reference" style="width: 20px">
-                    <div :class="{'active-icon green':scope.row.pingState == 1,'active-icon red':scope.row.pingState == 0}"></div><span>{{scope.row.pingRtt?scope.row.pingRtt+'ms':''}}</span>
-                  </div>
-                </el-popover>
-              </div>
-              <template v-if="item.prop=='Alert'">
-
-                <el-tooltip :content="scope.row.alertNum+' '+$t('overall.active')" placement="top" effect="light" :disabled=" scope.row.alertNum < 99">
-              <span :id="'asset-alerts-'+scope.row.id" class="link">
-                <!--@click="jumpToAlertMsg(scope.row)"-->
-                {{(scope.row.alertNum < 99 ? scope.row.alertNum : 99)}}
-                  <sup class="linkSup" v-if="scope.row.alertNum > 99">+</sup>
-                {{' ' + $t('overall.active')}}
-              </span>
-                </el-tooltip>
-              </template>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <!-- end--表格-->
-
-      <!--底部分頁-->
-      <div class="pagination-bottom">
-        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
+      <div class="right-box-title">{{$t('asset.asset')}}</div>
+      <nz-data-list
+        ref="dataList"
+        :api="url"
+        :custom-table-title.sync="tableTitle"
+        :from="fromRoute.asset"
+        :layout="dataListLayout"
+        :search-msg="searchMsg"
+        @search="search"
+      >
+        <template v-slot:default="slotProps">
+          <asset-table
+            ref="dataTable"
+            v-loading="tools.loading"
+            :api="url"
+            :custom-table-title="tableTitle"
+            :height="mainTableHeight"
+            :table-data="tableData"
+            @orderBy="tableDataSort"
+            @reload="getTableData"></asset-table>
+        </template>
+        <!-- 分页组件 -->
+        <template v-slot:pagination>
+          <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+        </template>
+      </nz-data-list>
     </div>
   </div>
 </template>
 
 <script>
+import nzDataList from '@/components/common/table/nzDataList'
+import dataListMixin from '@/components/common/mixin/dataList'
+import assetTable from '@/components/common/table/asset/assetTable'
 export default {
-  name: 'assetTable',
+  name: 'assetTableProject',
   props: {
     moduleId: {},
     projectId: {}
   },
+  components: {
+    nzDataList,
+    assetTable
+  },
+  mixins: [dataListMixin],
   watch: {
   },
   computed: {
@@ -143,6 +75,9 @@ export default {
   },
   data () {
     return {
+      url: 'asset/asset',
+      tableId: 'projectAsset',
+      dataListLayout: ['searchInput'],
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
@@ -151,30 +86,41 @@ export default {
       mainTableHeight: '100%',
       tableTitle: [
         {
-          label: this.$t('asset.host'),
-          prop: 'HOST',
+          label: 'ID',
+          prop: 'id',
           show: true,
-          width: 130,
-          fixed: 'left'
+          width: 110,
+          sortable: 'custom'
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true,
+          sortable: 'custom'
         },
         {
-          label: this.$t('asset.device'),
-          prop: 'SN',
+          label: this.$t('asset.manageIp'),
+          prop: 'manageIp',
           show: true,
-          width: 130
+          width: 140,
+          sortable: 'custom'
         },
         {
-          label: this.$t('asset.assetType'),
-          prop: 'assetType',
-          show: true
+          label: this.$t('asset.pingInfo'),
+          prop: 'pingInfo',
+          show: true,
+          width: 110
+        },{
+          label: this.$t('asset.alertNum'),
+          prop: 'alertNum',
+          show: true,
+          width: 140,
+          sortable: 'custom'
         }, {
-          label: this.$t('asset.assetState'),
-          prop: 'state',
-          show: true
-        }, {
-          label: this.$t('asset.assetPing'),
-          prop: 'pingStatus',
-          show: true
+          label: this.$t('asset.endpointNum2'),
+          prop: 'endpointNum',
+          show: true,
+          width: 160,
+          sortable: 'custom'
         }, {
           label: this.$t('asset.alerts'),
           prop: 'Alert',
@@ -182,36 +128,30 @@ export default {
           width: 100
         }],
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [{
-          id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
-          id: 20,
+          name: 'Name',
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }, {
           name: 'SN',
           type: 'input',
           label: 'sn',
           disabled: false
         }, {
-          id: 21,
-          name: 'Host',
+          name: 'IP',
           type: 'input',
-          label: 'host',
+          label: 'manageIp',
           disabled: false
         }, {
-          id: 22,
           name: this.$t('asset.state'),
-          type: 'select',
-          label: 'assetState',
-          disabled: false
-        }, {
-          id: 23,
-          name: 'pingStatus',
-          type: 'select',
-          label: 'pingStatus',
+          type: 'assetState',
+          label: 'stateIds',
           disabled: false
         }]
       },
@@ -233,16 +173,16 @@ export default {
   },
   mounted () {
     this.getTableTitle()
-    this.getAssetList()
+    this.getTableData()
   },
   methods: {
-    getAssetList: function () {
-      this.loading = true
+    getTableData: function () {
+      this.tools.loading = true
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.$set(this.searchLabel, 'moduleId', this.moduleId)
-      this.$get('asset', { ...this.searchLabel }).then(response => {
-        this.loading = false
+      this.$set(this.searchLabel, 'moduleIds', this.moduleId)
+      this.$get(this.url, { ...this.searchLabel }).then(response => {
+        this.tools.loading = false
         if (response.code == 200) {
           this.tableData = response.data.list
           this.deleteBox.ids = ''
@@ -252,12 +192,12 @@ export default {
     },
     pageNo (val) {
       this.pageObj.pageNo = val
-      this.getAssetList()
+      this.getTableData()
     },
     pageSize (val) {
       this.pageObj.pageSize = val
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getAssetList()
+      this.getTableData()
     },
     selectChange (s) {
       const ids = []
@@ -277,7 +217,7 @@ export default {
       }
       this.pageObj.orderBy = orderBy
       this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getAssetList()
+      this.getTableData()
     },
     /* 关闭弹框 */
     esc (refresh) {
@@ -334,7 +274,7 @@ export default {
       if (this.$refs.assetTable && this.$refs.assetTable.bodyWrapper) {
         this.$refs.assetTable.bodyWrapper.scrollTop = 0
       }
-      this.getAssetList()
+      this.getTableData()
     }
   },
   beforeDestroy () {
@@ -350,6 +290,9 @@ export default {
   }
   .right-box-title{
     font-weight: bold;
+    padding-left: 20px;
+    position: absolute;
+    z-index: 1;
   }
   .mc{
     position: fixed;
@@ -367,6 +310,9 @@ export default {
   }
   /deep/ .top-tools>div{
     margin-top: 6px;
+  }
+  .right-box  /deep/ .list-page .main-container{
+    background: #fff;
   }
   /* end--table*/
 </style>

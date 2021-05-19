@@ -588,7 +588,7 @@ export default {
     },
     topoScreen (n) {
       getTopology(this.topologyIndex).resize()
-      getTopology(this.topologyIndex).centerView(20)
+      getTopology(this.topologyIndex).centerView()
       // getTopology(this.topologyIndex).fitView(30)
     }
   },
@@ -680,7 +680,7 @@ export default {
                 flag = true
               }
             })
-            getTopology(this.topologyIndex).centerView(20)
+            getTopology(this.topologyIndex).centerView()
             this.penToolTipScale = getTopology(this.topologyIndex).data.scale
             setTimeout(() => {
               getTopology(this.topologyIndex).data.pens.forEach(item => {
@@ -1933,7 +1933,7 @@ export default {
             flag = true
           }
         })
-        getTopology(this.topologyIndex).centerView(20)
+        getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
       }, 100)
     },
@@ -2347,6 +2347,7 @@ export default {
       position: absolute;
       right: 0;
       top: 50px;
+      z-index: 1;
     }
 
     .facade-top{
@@ -2671,7 +2672,9 @@ export default {
   .from-project{
     padding-left: 0;
     .nz-table2{
-      padding: 0 20px 10px 5px;
+      padding: 0 5px 10px 5px;
+      box-sizing: content-box;
+      overflow: hidden;
     }
   }
 </style>

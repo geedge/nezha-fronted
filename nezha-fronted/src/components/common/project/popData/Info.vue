@@ -20,16 +20,12 @@
           </span>
         </div>
         <div class="content-box">
-          <span class="content-title">Port</span>
-          <span class="content-text">{{moduleInfo.port?moduleInfo.port:'--'}}</span>
+          <span class="content-title">Asset</span>
+          <span class="content-text">{{moduleInfo.assetNum?moduleInfo.assetNum:'--'}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">Path</span>
-          <span class="content-text">{{moduleInfo.path?moduleInfo.path:'--'}}</span>
-        </div>
-        <div class="content-box">
-          <span class="content-title">Parameter</span>
-          <span class="content-text">{{moduleInfo.seq?moduleInfo.seq:'--'}}</span>
+          <span class="content-title">Endpoint</span>
+          <span class="content-text">{{moduleInfo.endpointNum?moduleInfo.endpointNum:'--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">Descripsion</span>
@@ -58,15 +54,17 @@ export default {
         remark: '',
         port: '',
         path: '',
-        seq: ''
+        seq: '',
+        assetNum: '',
+        endpointNum: ''
       }
     }
   },
   mounted () {
     this.loading = true
-    this.$get('/module', { id: this.moduleId }).then(res => {
+    this.$get('/monitor/module/' + this.moduleId).then(res => {
       this.loading = false
-      this.moduleInfo = res.data.list[0]
+      this.moduleInfo = res.data
     })
   },
   methods: {},

@@ -1,163 +1,41 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <!-- begin--标题-->
-      <div class="right-box-title">Alert messages</div>
-      <!-- end--标题-->
-
-      <!-- begin搜素框-->
-      <div class="top-tools">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
-          <pick-time :refresh-data-func="getAlertList" v-model="searchTime" :use-chart-unit="false" :use-refresh="false" :default-pick="12" :show-empty="true"></pick-time>
-          <div class="top-tool-search">
-            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
-          </div>
-          <!--<button type="button" @click="showExportDialog" :title="$t('overall.exportExcelLower')"-->
-                  <!--class="nz-btn nz-btn-size-normal nz-btn-style-light margin-l-20" id="alert-list-export">-->
-            <!--<i class="nz-icon nz-icon-download1"></i>-->
-          <!--</button>-->
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- end搜素框-->
-
-      <!-- begin--表格-->
-      <div class="right-box-form-box">
-        <el-table
-          class="nz-table tabelH100"
-          :data="tableData"
-          border
-          ref="alertListTable"
-          tooltip-effect="light"
-          :height="tableHeight"
-          v-loading="loading"
-          :cell-class-name="labelsClassName"
-          @selection-change="selectChange"
-          style="width: 100%;height: 100%"
-          @sort-change="tableDataSort"
-          :id="projectId"
-        >
-          <!--<el-table-column-->
-            <!--:resizable="false"-->
-            <!--type="selection"-->
-            <!--width="38"-->
-            <!--align="center"-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <el-table-column
-            :resizable="true"
-            v-for="(item, index) in tableTitle"
-            v-if="item.show"
-            :width="item.width"
-            :minWidth="item.minWidth"
-            :key="`col-${index}`"
-            :label="item.label"
-            :show-overflow-tooltip="item.prop != 'labels'"
-            min-width="110px"
-            :sortable="$tableSet.sortableShow(item.prop,'alertMessage')"
-            :prop="$tableSet.propTitle(item.prop,'alertMessage')"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item">
-              <template v-if="item.prop == 'alertRule'">
-                <div v-if="scope.row.alertRule.alertName" >
-                  <span @mouseenter="alertMessagehover(scope.row.alertRule, true, $event)" @mouseleave="alertMessagehover(scope.row.alertRule, false)">{{scope.row.alertRule.alertName}}</span>
-                  <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
-                </div>
-                <template v-else>-</template>
-              </template>
-              <template v-else-if="item.prop == 'summary'">
-                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                <template v-else>-</template>
-              </template>
-              <template v-else-if="item.prop == 'description'">
-                <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-                <span v-else>-</span>
-              </template>
-              <span v-else-if="item.prop == 'severity'" class="severity">
-                <span v-if="scope.row[item.prop] == 'P1'" class="P1">P1</span>
-                    <!--<i class="nz-icon nz-icon-arrow-up"></i> {{returnSeverityLabel(scope.row[item.prop])}}-->
-                <span v-if="scope.row[item.prop] == 'P2'" class="P2">P2</span>
-                    <!--{{returnSeverityLabel(scope.row[item.prop])}}-->
-                <span v-if="scope.row[item.prop] == 'P3'" class="P3">P3</span>
-                    <!--<i class="nz-icon nz-icon-arrow-down"></i>&nbsp;{{returnSeverityLabel(scope.row[item.prop])}}-->
-              </span>
-              <template v-else-if="item.prop == 'labels'" class="labels">
-                <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
-                  <span @mouseenter="labelHover(scope.row,scope.$index, item.label, true, $event)" @mouseleave="labelHover(scope.row,scope.$index, item.label, false)">
-                    <nz-alert-tag
-                      v-if="item.label != 'alertname' && item.label != 'severity'" :key="item.label" :cursor-point="tagType(item.label) == 'info' ? false : true"
-                      :label="item.label"
-                      :type="tagType(item.label)"
-                      style="margin: 5px 0 5px 5px;"
-                    >
-                     {{item.value}}
-                    </nz-alert-tag>
-                  </span>
-                  <alertLabel
-                    v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project') && scope.row[item.label] && scope.row[item.label].loading"
-                    :id="scope.row[item.label].id"
-                    :that="scope.row[item.label]"
-                    :type="item.label"
-                  ></alertLabel>
-                </span>
-
-                <!--<el-tooltip
-                  v-for="(item,i) in labelsSort(scope.row.labels)"
-                  :placement="scope.$index==0?'right-start':(scope.$index==tableData.length-1?'right-end':'right')"
-                  effect="light"
-                  :disabled="!(item.label === 'asset' ||item.label === 'module' || item.label === 'project')"
-                  :key="item.label"
-                >
-                  <alertLabel
-                    v-if="item.label === 'asset' ||item.label === 'module' || item.label === 'project'"
-                    slot="content"
-                    :id="scope.row[item.label].id"
-                    :type="item.label"
-                    :labelLoading="scope.row[item.label].loading"
-                  ></alertLabel>
-                  <span @mouseover="labelHover(scope.row,scope.$index,item.label)" >
-                         <nz-alert-tag
-                           :label="item.label" :type="tagType(item.label)" style="margin: 5px 0 5px 5px;"
-                           :cursor-point="tagType(item.label) == 'info' ? false : true"
-                           :key="item.label"
-                           v-if="item.label != 'alertname' && item.label != 'severity'"
-                         >
-                           {{item.value}}
-                         </nz-alert-tag>
-                  </span>
-                </el-tooltip>-->
-
-              </template>
-              <span v-else-if="item.prop == 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
-                {{scope.row['state'] == 1 ? "Pending" : ""}}
-                {{scope.row['state'] == 2 ? "Expired" : ""}}
-              </span>
-              <div v-else-if="item.prop == 'current'" class="too-long-split pointer" @click="detail(scope.row)">
-                <span v-if="!scope.row.current">-</span>
-                <el-popover v-else placement="right" trigger="hover">
-                  <div slot="reference">
-                    <span class="content-right-option" :id="'alert-list-detail-'+scope.row.id"><i class="nz-icon nz-icon-chart"></i></span>
-                    <span>{{formatThreshold(scope.row.current[1],scope.row.alertRule.unit)}}</span>
-                  </div>
-                  <div>{{$unixTimeParseToString(scope.row.current[0])}}</div>
-                </el-popover>
-              </div>
-              <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.delete')" @click="toDeleteMessage(scope.row)" class="content-right-option" :id="'alert-list-delete-'+scope.row.id"><i  class="nz-icon nz-icon-delete"></i></span>
-              </div>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <!-- end--表格-->
-
-      <!--底部分頁-->
-      <div class="pagination-bottom">
-        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
+      <div class="right-box-title">{{$t('dashboard.overview.alert.alertMessage')}}</div>
+      <nz-data-list
+        ref="dataList"
+        :api="url"
+        :custom-table-title.sync="tableTitle"
+        :from="fromRoute.alertMessage"
+        :layout="['searchInput']"
+        :search-msg="searchMsg"
+        @search="search"
+        v-loading="tools.loading"
+      >
+        <template v-slot:top-tool-right>
+          <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData">
+            <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </template>
+        <template v-slot:default="slotProps">
+          <alert-message-table
+            ref="dataTable"
+            :api="url"
+            :custom-table-title="tableTitle"
+            :height="mainTableHeight"
+            :now-time="nowTime"
+            :table-data="tableData"
+            @del="del"
+            @edit="edit"
+            @orderBy="tableDataSort"
+            @reload="getTableData"
+            @selectionChange="selectionChange"></alert-message-table>
+        </template>
+        <!-- 分页组件 -->
+        <template v-slot:pagination>
+          <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
+        </template>
+      </nz-data-list>
     </div>
   </div>
 </template>
@@ -167,6 +45,10 @@ import bus from '@/libs/bus'
 import nzAlertTag from '@/components/page/alert/nzAlertTag'
 import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
 import alertLabel from '@/components/common/alert/alertLabel'
+import nzDataList from '@/components/common/table/nzDataList'
+import dataListMixin from '@/components/common/mixin/dataList'
+import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
+import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 export default {
   name: 'alertTable',
   props: {
@@ -176,8 +58,11 @@ export default {
   components: {
     'nz-alert-tag': nzAlertTag,
     alertRuleInfo: alertRuleInfo,
-    alertLabel: alertLabel
+    alertLabel: alertLabel,
+    nzDataList,
+    alertMessageTable
   },
+  mixins: [dataListMixin],
   watch: {
   },
   computed: {
@@ -207,6 +92,10 @@ export default {
   },
   data () {
     return {
+      url: 'alert/message',
+      state: '1',
+      tableId: '',
+      stateOptions: alertMessageConstant.states,
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
@@ -248,56 +137,41 @@ export default {
       ],
       searchTime: [],
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: this.$t('alert.alertName'),
-          type: 'input',
-          label: 'alertName',
-          disabled: false
-        }, /* {
-            id: 3,
-            name: this.$t('alert.list.type'),
-            type: 'select',
-            label: 'alertType',
+        searchLabelList: [
+          {
+            id: 26,
+            name: this.$t('alert.list.id'),
+            type: 'id',
+            label: 'id',
             disabled: false
-          }, */{
-          id: 20,
-          name: this.$t('alert.severity'),
-          type: 'selectString',
-          label: 'severity',
-          disabled: false
-        }, {
-          id: 21,
-          name: this.$t('asset.asset'),
-          type: 'asset',
-          label: 'asset',
-          disabled: false
-        }, {
-          id: 22,
-          name: this.$t('project.project.projectName'),
-          type: 'project',
-          label: 'project',
-          disabled: false
-        }, {
-          id: 23,
-          name: this.$t('project.module.module'),
-          type: 'module',
-          label: 'module',
-          disabled: false
-        }, {
-          id: 24,
-          name: this.$t('project.endpoint.endpoint'),
-          type: 'input',
-          label: 'endpointId',
-          disabled: false
-        }, {
-          id: 25,
-          name: this.$t('alert.list.state'),
-          type: 'select',
-          label: 'alertMessageState',
-          disabled: false
-        }]
+          },
+          {
+            name: this.$t('alert.alertRule'),
+            type: 'input',
+            label: 'ruleName',
+            disabled: false
+          }, {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }, {
+            name: 'Endpoint',
+            type: 'input',
+            label: 'endpointName',
+            disabled: false
+          }, {
+            name: this.$t('alert.summary'),
+            type: 'input',
+            label: 'summary',
+            disabled: false
+          }, {
+            name: 'Labels',
+            type: 'input',
+            label: 'labels',
+            disabled: false
+          }
+        ]
       },
       tableData: [],
       loading: false,
@@ -317,14 +191,14 @@ export default {
     }
   },
   mounted () {
-    this.getAlertList()
+    this.getTableData()
   },
   methods: {
-    getAlertList: function () {
-      this.loading = true
+    getTableData: function () {
+      this.tools.loading = true
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.$set(this.searchLabel, 'moduleId', this.moduleId)
+      this.$set(this.searchLabel, 'moduleIds', this.moduleId)
       if (this.searchTime && this.searchTime.length > 1) {
         this.$set(this.searchLabel, 'startAt', bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss'))
         this.$set(this.searchLabel, 'endAt', bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss'))
@@ -332,8 +206,8 @@ export default {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get('alert/message', { ...this.searchLabel }).then(response => {
-        this.loading = false
+      this.$get(this.url + '?state=' + this.state, { ...this.searchLabel }).then(response => {
+        this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
@@ -369,12 +243,12 @@ export default {
     },
     pageNo (val) {
       this.pageObj.pageNo = val
-      this.getAlertList()
+      this.getTableData()
     },
     pageSize (val) {
       this.pageObj.pageSize = val
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getAlertList()
+      this.getTableData()
     },
     selectChange (s) {
       const ids = []
@@ -432,7 +306,7 @@ export default {
       }
       this.pageObj.orderBy = orderBy
       this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getAlertList()
+      this.getTableData()
     },
     /* 关闭弹框 */
     esc (refresh) {
@@ -463,7 +337,7 @@ export default {
       if (this.$refs.alertListTable && this.$refs.alertListTable.bodyWrapper) {
         this.$refs.alertListTable.bodyWrapper.scrollTop = 0
       }
-      this.getAlertList()
+      this.getTableData()
     },
 
     showExportDialog () {
@@ -483,6 +357,9 @@ export default {
   }
   .right-box-title{
     font-weight: bold;
+    padding-left: 20px;
+    position: absolute;
+    z-index: 1;
   }
   .mc{
     position: fixed;
@@ -526,6 +403,9 @@ export default {
     font-size: 12px;
     color: #FFFFFF;
     padding: 2px 6px;
+  }
+  .right-box  /deep/ .list-page .main-container{
+    background: #fff;
   }
   /* end--table*/
 </style>

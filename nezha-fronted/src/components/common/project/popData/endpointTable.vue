@@ -1,107 +1,56 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
-        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-        <!--</button>-->
-      </div>
-      <!-- end--顶部按钮-->
-
-      <!-- begin--标题-->
-      <div class="right-box-title">Endpoint</div>
-      <!-- end--标题-->
-
-      <!-- begin搜素框-->
-      <div class="top-tools">
-        <div class="top-tool-main-right" :class="{'top-tool-main-right-to-left': false}">
-          <div class="top-tool-search">
-            <search-input :inTransform="true" :searchMsg="searchMsg" @search="search"></search-input>
+      <div class="right-box-title">{{$t('project.endpoint.endpoint')}}</div>
+      <nz-data-list
+        ref="dataList"
+        :api="url"
+        :custom-table-title.sync="tableTitle"
+        :from="fromRoute.endpoint"
+        :layout="['searchInput']"
+        :search-msg="searchMsg"
+        @search="search"
+      >
+        <template  v-slot:default="slotProps">
+          <endpoint-table
+            ref="dataTable"
+            v-loading="tools.loading"
+            :api="url"
+            :custom-table-title="tableTitle"
+            :height="mainTableHeight"
+            :table-data="tableData"
+            :tableId="tableId"
+            @orderBy="tableDataSort"
+            @reload="getTableData"
+           ></endpoint-table>
+        </template>
+        <template v-slot:pagination>
+          <div class="endpoint-page">
+            <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
           </div>
-        </div>
-        <div class="pagination-top pagination-top-hide display-none"></div>
-      </div>
-      <!-- end搜素框-->
-
-      <!-- begin--表格-->
-      <div class="right-box-form-box">
-        <el-table
-          :data="tableData"
-          border
-          class="nz-table endpoint-table"
-          :height="mainTableHeight"
-          ref="endpointTable"
-          v-loading="loading"
-          style="width: 100%;"
-          @sort-change="tableDataSort"
-        >
-          <el-table-column
-            :resizable="false"
-            v-for="(item, index) in tableTitle"
-            v-if="item.show"
-            :width="item.width"
-            :key="`col-${index}`"
-            :label="item.label"
-            min-width="110px"
-            :sortable="$tableSet.sortableShow(item.prop,'project')"
-            :prop="$tableSet.propTitle(item.prop,'project')"
-            :sort-orders="['ascending', 'descending']"
-          >
-            <template slot-scope="scope" :column="item" >
-              <span v-if="item.prop == 'asset' && scope.row[item.prop]">{{scope.row[item.prop].host}}</span>
-              <span v-else-if="item.prop == 'param'">
-              <template v-if="scope.row.paramObj">
-                <span v-for="(p, i) in scope.row.paramObj" :key="i">{{p.key}}={{p.value}}<span v-if="i < scope.row.paramObj.length-1">，</span></span>
-              </template>
-              <template v-else>-</template>
-            </span>
-              <template v-else-if="item.prop == 'type'">{{currentModule.type}}</template>
-              <div v-else-if="item.prop == 'option'" class="content-right-options">
-                <span :title="$t('overall.view')" @click="detailEndpoint(scope.row)" class="content-right-option" :id="'edp-detail-'+scope.row.id"><i class="nz-icon nz-icon-view"></i></span>
-                &nbsp;
-                <span :title="$t('overall.query')" @click="query(scope.row)" class="content-right-option" :id="'edp-query-'+scope.row.id"><i class="nz-icon nz-icon-search"></i></span>
-                &nbsp;
-                <span :title="$t('overall.edit')" @click="editEndpoint(scope.row)" class="content-right-option" :id="'edp-edit-'+scope.row.id"><i class="nz-icon nz-icon-edit"></i></span>
-              </div>
-              <span v-else-if="item.prop == 'state'" >
-              <el-popover placement="right" width="50" trigger="hover" :popper-class="scope.row.state == '1'?'small-pop':''">
-                <div slot="reference" style="width: 20px">
-                  <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0','active-icon gray':scope.row.state == '2'}"></div>
-                </div>
-                <div >
-                  <div v-if="scope.row.state == '1'">up</div>
-                  <div v-else-if="scope.row.state == '0'">down:<br/>{{getStateErrorMsg(scope.row)}}</div>
-                  <div v-else-if="scope.row.state == '2'">suspended</div>
-                </div>
-              </el-popover>
-            </span>
-              <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
-              <template v-else>-</template>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <!-- end--表格-->
-
-      <!--底部分頁-->
-      <div class="pagination-bottom">
-        <Pagination :pageObj="pageObj" @pageNo='pageNo' @pageSize='pageSize' ref="Pagination"></Pagination>
-      </div>
+        </template>
+      </nz-data-list>
     </div>
   </div>
 </template>
 
 <script>
+import nzDataList from '@/components/common/table/nzDataList'
+import endpointTable from '@/components/common/table/settings/endpointTable'
+import dataListMixin from '@/components/common/mixin/dataList'
 export default {
-  name: 'endpointTable',
+  name: 'endpointTableProject',
   props: {
     moduleId: {},
     projectId: {}
   },
   watch: {
   },
+  components: {
+    nzDataList,
+    endpointTable
+  },
+  mixins: [dataListMixin],
   computed: {
     tagType () {
       return (key) => {
@@ -129,6 +78,8 @@ export default {
   },
   data () {
     return {
+      url: 'monitor/endpoint',
+      tableId:'endpointTableProject',
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
@@ -158,27 +109,29 @@ export default {
           prop: 'state',
           show: true
         }
-        // {
-        //   label: this.$t("project.endpoint.lastUpdate"),
-        //   prop: 'lastUpdate',
-        //   show: true,
-        // },
       ],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: 'ID',
-          type: 'input',
-          label: 'id',
-          disabled: false
-        }, {
-          id: 11,
-          name: this.$t('asset.asset'),
-          type: 'asset',
-          label: 'asset',
-          disabled: false
-        }]
+        searchLabelList: [
+          {
+            id: 13,
+            name: 'ID',
+            type: 'input',
+            label: 'ids',
+            disabled: false
+          }, {
+            name: 'Name',
+            type: 'input',
+            label: 'name',
+            disabled: false
+          },
+          {
+            name: this.$t('asset.asset'),
+            type: 'input',
+            label: 'assetName',
+            disabled: false
+          }
+        ]
       },
       tableData: [],
       loading: false,
@@ -197,16 +150,16 @@ export default {
     }
   },
   mounted () {
-    this.getEndpointList()
+    this.getTableData()
   },
   methods: {
-    getEndpointList: function () {
-      this.loading = true
+    getTableData: function () {
+      this.tools.loading = true
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      this.$set(this.searchLabel, 'moduleId', this.moduleId)
-      this.$get('endpoint', this.searchLabel).then(response => {
-        this.loading = false
+      this.$set(this.searchLabel, 'moduleIds', this.moduleId)
+      this.$get(this.url, this.searchLabel).then(response => {
+        this.tools.loading = false
         if (response.code === 200) {
           // for (let i = 0; i < response.data.list.length; i++) {
           //   try {
@@ -226,12 +179,12 @@ export default {
     },
     pageNo (val) {
       this.pageObj.pageNo = val
-      this.getEndpointList()
+      this.getTableData()
     },
     pageSize (val) {
       this.pageObj.pageSize = val
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getEndpointList()
+      this.getTableData()
     },
     selectChange (s) {
       const ids = []
@@ -251,7 +204,7 @@ export default {
       }
       this.pageObj.orderBy = orderBy
       this.$set(this.searchLabel, 'orderBy', orderBy)
-      this.getEndpointList()
+      this.getTableData()
     },
     /* 关闭弹框 */
     esc (refresh) {
@@ -320,7 +273,7 @@ export default {
       if (this.$refs.endpointTable) {
         this.$refs.endpointTable.bodyWrapper.scrollTop = 0
       }
-      this.getEndpointList()
+      this.getTableData()
     }
   },
   beforeDestroy () {
@@ -336,6 +289,9 @@ export default {
   }
   .right-box-title{
     font-weight: bold;
+    padding-left: 20px;
+    position: absolute;
+    z-index: 1;
   }
   .mc{
     position: fixed;
@@ -353,6 +309,9 @@ export default {
   }
   /deep/ .top-tools>div{
     margin-top: 6px;
+  }
+  .right-box  /deep/ .list-page .main-container{
+    background: #fff;
   }
   /* end--table*/
 </style>
