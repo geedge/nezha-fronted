@@ -144,7 +144,7 @@ export default {
             id: 26,
             name: this.$t('alert.list.id'),
             type: 'id',
-            label: 'id',
+            label: 'ids',
             disabled: false
           },
           {
@@ -244,7 +244,7 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60* 1000)
+      const start = this.searchTime[0] ? this.searchTime[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000)
       const end = this.searchTime[1] ? this.searchTime[1] : bus.computeTimezoneTime(new Date().getTime())
       this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)

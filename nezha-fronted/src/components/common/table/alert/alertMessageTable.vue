@@ -60,12 +60,12 @@
           <span v-else-if="item.prop === 'severity'&&scope.row[item.prop]" class="severity">
             <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row[item.prop].name}}
           </span>
-          <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+          <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row.startAt)}}</span>
           <template v-else-if="item.prop === 'duration'">
             <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
               <div slot="content">
                 {{$t('config.terminallog.endTime')}}<br/>
-                {{scope.row.endAt}}
+                {{utcTimeToTimezoneStr(scope.row.endAt)}}
               </div>
               <span>{{getDuration(scope.row)}}</span>
             </el-tooltip>
@@ -236,7 +236,7 @@ export default {
     },
     getDuration () {
       return function (record) {
-        if (record.endTime) {
+        if (record.endAt) {
           return calcDurationByStringTimeB(record.startAt, record.endAt)
         }
         return calcDurationByStringTimeB(record.startAt, this.nowTime)
