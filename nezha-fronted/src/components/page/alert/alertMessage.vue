@@ -244,10 +244,8 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      // const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
-      // const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
-      const start = this.currentMsg.startAt
-      const end = this.currentMsg.endAt
+      const start = this.searchTime[0] ? this.searchTime[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60* 1000)
+      const end = this.searchTime[1] ? this.searchTime[1] : bus.computeTimezoneTime(new Date().getTime())
       this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'

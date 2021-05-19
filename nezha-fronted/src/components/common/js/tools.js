@@ -289,7 +289,7 @@ export function stringTimeParseToUnix (stringTime) {
   const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
   // console.log(offset,localOffset, time)
   time = time + localOffset - offset * 60 * 60 * 1000
-  return time / 1000
+  return parseInt(time / 1000)
 }
 export function getTime (size, unit) { // 计算时间
   const now = new Date(bus.computeTimezone(new Date().getTime()))
