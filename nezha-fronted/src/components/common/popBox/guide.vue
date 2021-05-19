@@ -12,7 +12,7 @@
            @mouseenter="enter(index)"  @mouseleave="leave(index)"
       >
         <div class="item__title">{{guide.title}}</div>
-        <div :class="{'item__icon--disabled': !hasButton(guide.permissionCode)}" class="item__icon" @click="jump(guide.route)"><i :class="guide.icon"></i></div>
+        <div :class="{'item__icon--disabled': !hasButton(guide.permissionCode)}" class="item__icon" @click="jump(guide)"><i :class="guide.icon"></i></div>
       </div>
     </div>
     <div class="guide-desc">
@@ -137,6 +137,9 @@ export default {
       this.interval && clearInterval(this.interval)
     },
     downloadAgent () {
+      if (!this.hasButton('agent_add')) {
+        return
+      }
       this.$emit('close')
       this.$router.push({
         path: '/agent',
@@ -147,6 +150,9 @@ export default {
       })
     },
     openTerminal () {
+      if (!this.hasButton('asset_connect')) {
+        return
+      }
       this.$emit('close')
       this.$router.push({
         path: '/asset',
@@ -156,28 +162,25 @@ export default {
       })
       this.$store.commit('openConsole')
     },
-    jump (route) {
-      let allowed = false
-      this.guideList.forEach(ele => {
-        if (this.hasButton(ele.permissionCode)) {
-          allowed = true
-        }
-      })
-      if (!allowed) {
+    jump (guide) {
+      if (!this.hasButton(guide.permissionCode)) {
         return
       }
       this.$emit('close')
       this.$router.push({
-        path: route,
+        path: guide.route,
         query: {
           t: +new Date()
         }
       })
     },
     jumpAndOpen (cmd, open) {
-      this.$emit('close')
       switch (cmd) {
         case 'dc': {
+          if (!this.hasButton('dc_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/dc',
             query: {
@@ -188,6 +191,10 @@ export default {
           break
         }
         case 'agent': {
+          if (!this.hasButton('agent_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/agent',
             query: {
@@ -198,6 +205,10 @@ export default {
           break
         }
         case 'asset': {
+          if (!this.hasButton('asset_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/asset',
             query: {
@@ -208,6 +219,10 @@ export default {
           break
         }
         case 'importAsset': {
+          if (!this.hasButton('asset_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/asset',
             query: {
@@ -218,6 +233,10 @@ export default {
           break
         }
         case 'project': {
+          if (!this.hasButton('project_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/monitor/project',
             query: {
@@ -228,6 +247,10 @@ export default {
           break
         }
         case 'module': {
+          if (!this.hasButton('monitor_module_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/monitor/module',
             query: {
@@ -238,6 +261,10 @@ export default {
           break
         }
         case 'endpoint': {
+          if (!this.hasButton('monitor_endpoint_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/monitor/endpoint',
             query: {
@@ -248,6 +275,10 @@ export default {
           break
         }
         case 'importEndpoint': {
+          if (!this.hasButton('monitor_endpoint_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/monitor/endpoint',
             query: {
@@ -258,6 +289,10 @@ export default {
           break
         }
         case 'panel': {
+          if (!this.hasButton('panel_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/panel',
             query: {
@@ -268,6 +303,10 @@ export default {
           break
         }
         case 'chart': {
+          if (!this.hasButton('panel_chart_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/panel',
             query: {
@@ -278,6 +317,10 @@ export default {
           break
         }
         case 'alertRule': {
+          if (!this.hasButton('alertRule_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/alertRule',
             query: {
@@ -288,6 +331,10 @@ export default {
           break
         }
         case 'cabinet': {
+          if (!this.hasButton('dc_add')) {
+            return
+          }
+          this.$emit('close')
           this.$router.push({
             path: '/dc',
             query: {
@@ -394,7 +441,7 @@ export default {
           content: "";
         }
 
-        &.guide-item--active {
+        &.guide-item--active{
           .item__title {
             color: #101B27;
             font-weight: bold;
@@ -408,9 +455,11 @@ export default {
             }
           }
           .item__icon.item__icon--disabled {
-            cursor: not-allowed;
+             cursor: not-allowed;
+             opacity: 0.4;
           }
         }
+
         .item__title {
           padding-top: 20px;
           color: #666;

@@ -100,8 +100,8 @@
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'monitor_endpoint_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

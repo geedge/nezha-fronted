@@ -1563,7 +1563,7 @@ const cn = {
     add: '新增',
     edit: '修改',
     delete: '删除',
-    expired: '过期',
+    expired: '已过期',
     panel: {
       addChart: '新增图标',
       editChart: '修改图表',
