@@ -262,7 +262,7 @@
             color: $--button-gray-color;
           }
         }
-        >.table-operation-item {
+        &>.table-operation-item {
           justify-content: center;
           align-items: center;
           width: 40px;
@@ -278,7 +278,7 @@
             font-size: 12px;
           }
         }
-        >.table-operation-item:hover {
+        &>.table-operation-item:hover {
           opacity: .8;
         }
         .table-operation-item.table-operation-item--more {
@@ -309,32 +309,34 @@
   .el-table__body-wrapper .is-hidden, .el-table__header-wrapper .is-hidden {
     visibility: hidden;
   }
-  .el-table--border td {
-    border-right: none !important;
-  }
-  /* 最后一列用box-shadow模拟边框 */
-  .el-table:not(.no-operation).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
-    box-shadow: 1px 0 $--right-box-border-color;
-  }
-  .el-table:not(.no-operation).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
-    border-right: none !important;
-    box-shadow: 1px 0 $--right-box-border-color;
-  }
-  .el-table__fixed-body-wrapper {
-    td:not(.is-hidden) {
-      border-left: 1px solid $--right-box-border-color;
-    }
-  }
-  .el-table__fixed-header-wrapper {
-    th:not(.is-hidden) {
-      border-left: 1px solid $--right-box-border-color;
-    }
-    th:last-of-type {
+  .nz-table2 {
+    .el-table--border td {
       border-right: none !important;
     }
-  }
-  .el-table--border::after, .el-table--group::after {
-    width: 0;
+    /* 最后一列用box-shadow模拟边框 */
+    .el-table:not(.no-operation).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
+      box-shadow: 1px 0 $--right-box-border-color;
+    }
+    .el-table:not(.no-operation).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
+      border-right: none !important;
+      box-shadow: 1px 0 $--right-box-border-color;
+    }
+    .el-table__fixed-body-wrapper {
+      td:not(.is-hidden) {
+        border-left: 1px solid $--right-box-border-color;
+      }
+    }
+    .el-table__fixed-header-wrapper {
+      th:not(.is-hidden) {
+        border-left: 1px solid $--right-box-border-color;
+      }
+      th:last-of-type {
+        border-right: none !important;
+      }
+    }
+    .el-table--border::after, .el-table--group::after {
+      width: 0;
+    }
   }
   /* end--覆盖el-table边框、gutter等样式 */
   .pagination-bottom {

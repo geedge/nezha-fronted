@@ -243,12 +243,30 @@
   .chart-table, .chart-alert-info {
     width: 100%;
     overflow-x: hidden;
+
     .table-container {
       padding: 0 6px;
       box-sizing: border-box;
-      .nz-table {
+
+      .el-table {
         margin-top: 6px;
         box-sizing: border-box;
+
+        .el-table__body tr:hover>td, .el-table__body tr.hover-row.current-row>td,
+        .el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+        .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td {
+          background-color: #f9f9f9 !important;
+        }
+        td {
+          padding: 9px 0;
+          border-bottom: 1px solid $--right-box-border-color;
+        }
+        th {
+          border-color: $--right-box-border-color;
+        }
+        thead {
+          color: #333;
+        }
       }
     }
   }

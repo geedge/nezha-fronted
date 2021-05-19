@@ -51,7 +51,7 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container" v-cloak v-show="firstShow">
-          <el-table class="nz-table" :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
+          <el-table :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
                     :data="seriesItem" border tooltip-effect="light" v-cloak
                     @sort-change="tableDataSort" >
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
@@ -87,7 +87,7 @@
             </div>
 <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
-          <el-table style="margin-top: 10px;" class="nz-table" height="95%" :data="seriesItemScreen" border
+          <el-table :data="seriesItemScreen" border height="95%" style="margin-top: 10px;"
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
