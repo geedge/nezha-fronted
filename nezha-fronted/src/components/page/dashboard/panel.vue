@@ -57,7 +57,7 @@
                 </template>
                 <template v-slot:after>
                   <el-dropdown-item v-has="'panel_chart_add'">
-                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
+                    <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{$t('overall.AddByTemplate')}}</div>
                   </el-dropdown-item>
                 </template>
               </top-tool-more-options>

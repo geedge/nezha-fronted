@@ -51,9 +51,9 @@
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <panel-tab-new v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
+        <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
         <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
-        <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.endpoint.endpointTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--chartTemp的Tab-->
         <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :detail="detail" :from="from" :tabs="tabs.chartTemp.chartTempTabTitle" :obj="obj" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
@@ -164,7 +164,7 @@ export default {
         },
         endpoint: {
           endpointTabTitle: [
-            // { prop: 'panel', name: 'Detail' },
+            { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointQuery', name: 'Query' },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
           ]

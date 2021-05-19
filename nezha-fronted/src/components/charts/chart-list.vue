@@ -116,7 +116,7 @@
                       @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                      :chart-index="index"></chart-url>
 
-        <chart-detail  v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
+        <chart-detail  v-if="item.type === 'assetInfo' || item.type === 'projectInfo' || item.type === 'endpointInfo' || item.type === 'alertRuleInfo'" :key="'inner' + item.id" :ref="'editChart'+item.id"
                           :from="from" :panel-id="filter.panelId"
                           :chart-index="index"
                           @on-refresh-data="refreshChart"
