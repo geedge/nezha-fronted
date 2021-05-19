@@ -16,7 +16,7 @@ export default {
       },
       /* 工具参数 */
       tools: {
-        loading: false, // 是否显示table加载动画
+        loading: true, // 是否显示table加载动画
         customTableTitle: [], // 自定义列工具的数据
         extraTableTitle: [] // 特殊页面（asset）额外的列
       },

@@ -14,6 +14,7 @@
       <template v-slot>
         <cabinet-table
           ref="dataTable"
+          v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

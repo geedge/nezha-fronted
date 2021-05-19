@@ -47,7 +47,7 @@
       <template  v-slot:default="slotProps">
         <endpoint-table
           ref="dataTable"
-          :loading="tools.loading"
+           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="dataListLayout.indexOf('clickSearch') > -1 ? endpointTableHeight : mainTableHeight"

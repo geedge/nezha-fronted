@@ -97,6 +97,7 @@ export const parentTableCommon = {
   methods: {
     getTableData: function () {
       this.searchLabel.pageSize = -1
+      this.tools.loading = true
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

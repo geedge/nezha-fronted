@@ -106,6 +106,7 @@ export default {
         pageNo: this.pageObj.pageNo,
         pageSize: this.pageObj.pageSize
       }
+      this.tools.loading = true
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

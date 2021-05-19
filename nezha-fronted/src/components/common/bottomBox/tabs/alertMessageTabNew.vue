@@ -9,6 +9,7 @@
       :targetTab="targetTab"
       @changeTab="changeTab"
       class="full-width-height"
+      v-loading="tools.loading"
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
@@ -19,7 +20,6 @@
       <template v-slot>
         <alertMessageTable
           ref="dataTable"
-          v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

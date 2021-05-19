@@ -11,6 +11,7 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
       @search="search"
+      v-loading="tools.loading"
     >
       <template v-slot:top-tool-right>
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData">
@@ -26,7 +27,6 @@
       <template v-slot:default="slotProps">
         <alert-message-table
           ref="dataTable"
-          v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

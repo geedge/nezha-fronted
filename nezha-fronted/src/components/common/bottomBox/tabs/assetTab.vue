@@ -15,6 +15,7 @@
         <asset-table
           ref="dataTable"
           :api="url"
+          v-loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"

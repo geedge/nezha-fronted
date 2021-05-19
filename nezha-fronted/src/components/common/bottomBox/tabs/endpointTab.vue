@@ -320,6 +320,7 @@ export default {
         this.$set(this.endpointSearchLabel, 'moduleIds', this.module.id)
       }
       this.$set(this.endpointSearchLabel, 'pageSize', '-1')
+      this.tools.loading = true
       this.$get('monitor/endpoint', this.endpointSearchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

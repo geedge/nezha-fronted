@@ -1,15 +1,6 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <!-- begin--顶部按钮-->
-      <div class="right-box-top-btns">
-        <!--<button id="edit-ep-del" type="button" @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien nz-btn-style-light ">-->
-        <!--<span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>-->
-        <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
-        <!--</button>-->
-      </div>
-      <!-- end--顶部按钮-->
-
       <!-- begin--标题-->
       <div class="right-box-title">Alert messages</div>
       <!-- end--标题-->
