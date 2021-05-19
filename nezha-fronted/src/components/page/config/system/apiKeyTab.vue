@@ -18,7 +18,7 @@
       <template v-slot:default="slotProps">
         <api-key-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          v-loading="tools.loading"
           :table-id="tableId"
           :api="url"
           :custom-table-title="tools.customTableTitle"

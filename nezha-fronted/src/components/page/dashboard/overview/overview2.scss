@@ -1,6 +1,6 @@
 .overview {
-  height: 100%;
-  padding: 0 10px;
+  height: calc(100% - 20px) !important;
+  padding: 0 0 0 10px;
   background-color: #f6f6f6;
 }
 .overview-content-header{
@@ -71,10 +71,10 @@
   color: #666666;
 }
 .overview-content {
-  padding: 0 10px 15px;
+  padding: 0 10px;
   background-color: white;
   box-sizing: border-box;
-  height: calc(100% - 42px);
+  height: calc(100% - 50px);
   width: 100%;
 }
 .overview-content .content-row-box {

@@ -34,7 +34,7 @@
       <template v-slot="slotProps">
         <module-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          v-loading="tools.loading"
           :api="url"
           :tableId="tableId"
           :custom-table-title="tools.customTableTitle"

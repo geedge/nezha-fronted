@@ -320,14 +320,14 @@ export default {
     closeChartBox (refresh) {
       this.rightBox.chart.show = false
       /* if (refresh) {
-
+         this.getData(this.filter)
       } */
     },
-    closeChartTempBox () {
+    closeChartTempBox (refresh) {
       this.rightBox.chartTemp.show = false
-      /* if (refresh) {
-
-      } */
+      if (refresh) {
+        this.getData(this.filter)
+      }
     },
     closePanelBox (refresh) {
       this.rightBox.panel.show = false

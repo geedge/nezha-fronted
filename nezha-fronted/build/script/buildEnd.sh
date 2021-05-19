@@ -8,7 +8,7 @@ DIST_PATH=$CUR_PATH/dist
 
 echo 'dist dir path is '${DIST_PATH}
 
-cp -f src/assets/img/log1-2.png $DIST_PATH/static
+cp -f src/assets/img/logo1-2.png $DIST_PATH/static
 
 cd $DIST_PATH
 

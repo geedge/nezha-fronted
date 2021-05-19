@@ -19,7 +19,7 @@
       <template v-slot:default="slotProps">
         <notify-method-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          v-loading="tools.loading"
           :table-id="tableId"
           :api="url"
           :custom-table-title="tools.customTableTitle"

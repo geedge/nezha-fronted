@@ -44,10 +44,10 @@
       <template v-slot:search>
         <clickSearch :titleSearchList="titleSearchList" :selectValue.sync="selectValue" @reload="reloadTable"/>
       </template>
-      <template v-slot="slotProps">
+      <template  v-slot:default="slotProps">
         <endpoint-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="dataListLayout.indexOf('clickSearch') > -1 ? endpointTableHeight : mainTableHeight"

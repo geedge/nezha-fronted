@@ -26,7 +26,7 @@
       <template v-slot:default="slotProps">
         <alert-message-table
           ref="dataTable"
-          v-loading="slotProps.loading"
+          v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
