@@ -96,7 +96,7 @@
           </div>
           <el-dropdown-menu slot="dropdown">
 <!--            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
-            <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('buttons.expire')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('buttons.expired')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
