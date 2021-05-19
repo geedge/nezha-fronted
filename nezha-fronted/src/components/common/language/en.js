@@ -11,6 +11,7 @@ const en = {
     customPicture: 'Custom picture',
     endpointTemplate: 'Endpoint template',
     AddByTemplate: 'Add by template',
+    exprTemp: 'Expr temp',
     oneHour: '1 hour',
     twoHour: '2 hours',
     sixHour: '6 hours',
@@ -220,6 +221,7 @@ const en = {
   },
   dashboard: {
     title: 'Dashboard',
+    addChartTemp: 'Add chart temp',
     panel: {
       title: 'Panel', // '面板'
       searchItem: {
@@ -1210,6 +1212,16 @@ const en = {
       projectInfo: 'Project information',
       endpointInfo: 'Endpoint information'
     },
+    topo: {
+      list: 'List',
+      update: 'Update',
+      icon: {
+        list: 'List',
+        delete: 'Delete',
+        save: 'Save',
+        info: 'Info',
+      }
+    },
     project: {
       project: 'Name', // "系统"
       projectName: 'Project', // "系统名称"
@@ -1252,6 +1264,7 @@ const en = {
       editEndpoint: 'Edit endpoint', // "编辑Endpoint"
       endpoint: 'Endpoint', // "Endpoint"
       endpointId: 'Endpoint ID', // "Endpoint ID"
+      list: 'List',
       host: 'Host', // "Host"
       port: 'Port', // "端口"
       param: 'Parameter', // "参数"
@@ -1439,7 +1452,55 @@ const en = {
     add: 'Add',
     edit: 'Edit',
     delete: 'Delete',
-    expire: 'Expire'
+    expired: 'Expired',
+    panel: {
+      addChart: 'Add chart',
+      editChart: 'Edit chart',
+      deleteChart: 'Delete chart'
+    },
+    asset: {
+      view: 'View',
+      connect: 'Connect'
+    },
+    snmp: {
+      view: 'View',
+      add: 'Add',
+      edit: 'Edit',
+      delete: 'Delete',
+      mibBrowser: 'Mib browser',
+    },
+    credential: {
+      view: 'View',
+      add: 'Add',
+      edit: 'Edit',
+      delete: 'Delete',
+    },
+    system: {
+      basic: 'Basic',
+      email: 'Email',
+      terminal: 'Terminal',
+      ldap: 'LDAP',
+      apiKey : {
+        add: 'Add',
+        edit: 'Edit',
+        delete: 'Delete',
+      }
+    },
+    terminalLog: {
+      kill: 'Kill',
+      monitor: 'Monitor'
+    }
+  },
+  system: {
+    notification: {
+      notification: 'Notification'
+    },
+    reset: {
+      reset: 'Reset'
+    },
+    apikey: {
+      apiKey: 'Api Key',
+    }
   },
   ...enLocale
 }

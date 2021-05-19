@@ -5,6 +5,7 @@ const cn = {
     customPicture: '上传图片',
     endpointTemplate: 'endpoint模板',
     AddByTemplate: '使用模板创建',
+    exprTemp: '表达式模板',
     oneHour: '1 小时',
     twoHour: '2 小时',
     sixHour: '6 小时',
@@ -213,6 +214,7 @@ const cn = {
   },
   dashboard: {
     title: '仪表盘',
+    addChartTemp: '添加图表模板',
     panel: {
       title: '面板',
       searchItem: {
@@ -382,7 +384,7 @@ const cn = {
       moreTitleOther: '仅显示 10 条数据。',
       showAll: '全部显示 ',
       showAllOther: '全部数据 ',
-      addChartTemp: 'addChartTemp'
+      addChartTemp: '添加图表'
     },
     metric: {
       name: '指标名称',
@@ -1200,6 +1202,16 @@ const cn = {
       projectInfo: '系统信息',
       endpointInfo: 'Endpoint信息'
     },
+    topo: {
+      list: '列表',
+      update: '更新',
+      icon: {
+        list: '列表',
+        delete: '删除',
+        save: '保存',
+        info: '信息',
+      }
+    },
     project: {
       project: '名称',
       projectName: '系统',
@@ -1242,6 +1254,7 @@ const cn = {
       editEndpoint: '修改 Endpoint',
       endpoint: 'Endpoint',
       endpointId: 'Endpoint ID',
+      list: '列表',
       host: '主机',
       port: '端口',
       param: '参数',
@@ -1550,7 +1563,55 @@ const cn = {
     add: '新增',
     edit: '修改',
     delete: '删除',
-    expire: '过期'
+    expired: '过期',
+    panel: {
+      addChart: '新增图标',
+      editChart: '修改图表',
+      deleteChart: '删除图表'
+    },
+    asset: {
+      view: '查看',
+      connect: '连接'
+    },
+    snmp: {
+      view: '查看',
+      add: '新增',
+      edit: '修改',
+      delete: '删除',
+      mibBrowser: 'MIB浏览器',
+    },
+    credential: {
+      view: '查看',
+      add: '新增',
+      edit: '修改',
+      delete: '删除',
+    },
+    system: {
+      basic: '基础设置',
+      email: 'Email',
+      terminal: '终端',
+      ldap: 'LDAP',
+      apiKey : {
+        add: '新增',
+        edit: '修改',
+        delete: '删除',
+      }
+    },
+    terminalLog: {
+      kill: 'Kill',
+      monitor: '监控'
+    }
+  },
+  system: {
+    notification: {
+      notification: '通知方式'
+    },
+    reset: {
+      reset: '重置'
+    },
+    apikey: {
+      apiKey: 'Api Key',
+    }
   },
   ...zhLocale
 }
