@@ -274,7 +274,7 @@ export default {
       // dc, brand, model, type
     },
     getChartTempData () {
-      this.$get('visual/panel/chart', { pageSize: -1, panelId: 0, returnChildren: 0, varType: this.editChartTemp.varType }).then(response => {
+      this.$get('visual/panel/chart', { pageSize: -1, panelId: 0, returnChildren: 0, varType: this.editChartTemp.varType, groupId: 0 }).then(response => {
         if (response.code === 200) {
           this.chartTempArr = response.data.list
         }

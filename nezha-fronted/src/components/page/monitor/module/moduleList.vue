@@ -90,7 +90,7 @@ export default {
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
         port: 9100,
-        chartIds: [],
+        chartIds: '',
         configs: {
           walk: [],
           snmpCredentialsId: '',

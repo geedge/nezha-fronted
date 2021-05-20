@@ -90,7 +90,8 @@
             :data="'visual/panel/chart'"
             :tb-columns="ChartSearchShowFields"
             :params="{
-              varType: 2, panelId: 0
+              varType: 2, panelId: 0,
+              returnChildren:0,groupId:0,
             }"
             :multiple="true"
             :language="language"
@@ -671,7 +672,7 @@ export default {
   },
   mounted () {
     this.getWalkData()
-    this.ChartTemplateList()
+    // this.ChartTemplateList()
   },
   created () {
     this.getProjectList()
