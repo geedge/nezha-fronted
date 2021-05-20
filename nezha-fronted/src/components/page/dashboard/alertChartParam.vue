@@ -12,13 +12,18 @@
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.alertRule')">
         <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
-          <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.alertName" :value="rule.id"></el-option>
+          <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.name" :value="rule.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.level')">
+      <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.level')" prop="level" class="severity-box">
         <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.level" clearable id="alert-param-level">
-          <el-option v-for="(item, index) in levels" :key="index" :label="item.label" :value="item.value"></el-option>
+          <el-option v-for="item in alertPriority" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
+              <span>
+                 <i class="nz-icon nz-icon-circle" :style="{color:item.color,'font-size':'12px'}"></i> {{item.name}}
+              </span>
+          </el-option>
         </el-select>
+        <i class="nz-icon nz-icon-circle severity-circle" v-if="parameters.level" :style="{color:alertPriority.find(severity => severity.id ===  parameters.level).color,'font-size':'12px'}"></i>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.state')">
         <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.state" clearable id="alert-param-state">
@@ -36,15 +41,18 @@ export default {
   },
   data () {
     return {
+      alertPriority: [],
       parameters: {
         select: [],
         alertRule: '',
         level: '',
-        state: ''
+        state: '1'
       },
       options: [],
       props: {
-        checkStrictly: true
+        checkStrictly: true,
+        label: 'name',
+        value: 'id'
         // lazy:true,
         // lazyLoad:$temp.lazyLoadFunc,
       },
@@ -56,6 +64,7 @@ export default {
   created () {
     this.queryAlertRules()
     this.queryOptionsData()
+    this.queryPriority()
   },
   methods: {
     saveParam: function (opType = 'save') {
@@ -118,81 +127,9 @@ export default {
       }
     },
     queryOptionsData: function () {
-      const param = {
-        pageSize: -1
-      }
-      this.$get('endpoint', param).then(response => {
-        /*
-          * {
-          * project-1:{
-          * data:{},
-          * module-1:{
-          *   data:{},
-          *   endpoints:[]
-          * }
-          * }
-          * }
-          * */
+      this.$get('/monitor/endpoint/tree').then(response => {
         if (response.code == 200) {
-          const data = response.data.list
-          const result = new Map()
-          data.forEach(item => {
-            let project = result.get('project-' + item.project.id)
-            if (!project) {
-              project = new Map()
-              project.set('data', item.project)
-              const module = new Map()
-              module.set('data', item.module)
-              module.set('endpoints', [item])
-              project.set('module-' + item.module.id, module)
-              result.set('project-' + item.project.id, project)
-            } else {
-              let module = project.get('module-' + item.module.id)
-              if (!module) {
-                module = new Map()
-                module.set('data', item.module)
-                module.set('endpoints', [item])
-                project.set('module-' + item.module.id, module)
-                result.set('project-' + item.project.id, project)
-              } else {
-                const endpoints = module.get('endpoints')
-                endpoints.push(item)
-                module.set('endpoints', endpoints)
-                project.set('module-' + item.module.id, module)
-                result.set('project-' + item.project.id, project)
-              }
-            }
-          })
-
-          result.forEach((project, projectKey) => {
-            const option = {}
-            project.forEach((value, moduleKey) => {
-              if (moduleKey == 'data') {
-                option.label = value.name
-                option.value = value.id
-              } else {
-                const module = value
-                const moduleData = module.get('data')
-                let endpoints = module.get('endpoints')
-                endpoints = endpoints.map(item => {
-                  return { label: item.asset.host, value: item.id }
-                })
-                /* //测试代码
-                  for (let i = 1; i < 16; i++) {
-                    endpoints.push({label: '114.51.41.' + i, value: i+8887});
-                  } */
-                if (!option.children) {
-                  option.children = []
-                }
-                option.children.push({
-                  label: moduleData.name,
-                  value: moduleData.id,
-                  children: endpoints
-                })
-              }
-            })
-            this.options.push(option)
-          })
+          this.options = response.data.list
         } else {
           console.error(response.msg)
           this.$message.error(response.msg)
@@ -206,6 +143,19 @@ export default {
       this.$get('alert/rule', param).then(response => {
         if (response.code == 200) {
           this.alertRules = response.data.list
+        } else {
+          console.error(response.msg)
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    queryPriority: function () {
+      const param = {
+        pageSize: -1
+      }
+      this.$get('alert/severity', param).then(response => {
+        if (response.code == 200) {
+          this.alertPriority = response.data.list
         } else {
           console.error(response.msg)
           this.$message.error(response.msg)
@@ -233,6 +183,17 @@ export default {
 <style scoped>
 .alert-chart-param-form .form-item{
   width: 100%;
+}
+.severity-circle{
+  position: absolute;
+  left: 10px;
+  top: 0;
+}
+.severity-box{
+  position: relative;
+}
+.severity-box /deep/ .el-select .el-input__inner{
+  padding-left: 25px;
 }
 </style>
 <style>

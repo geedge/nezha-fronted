@@ -53,20 +53,24 @@
         </div>
         <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
           <alertMessageTable
+            class="nz-table2"
             :id="'tableContainer'+chartIndex"
             :tableData="storedTableData"
             :loading="loadingTable"
-            :tableHeight="tableHeight"
+            :height="'calc(100% - 0px)'"
+            :customTableTitle="tableTitle"
             :tableId="''"
             :projectAlertId="'tableContainer'+chartIndex"
             @tableDataSort="tableDataSort"
-            @deleteMessage="deleteMessage"
+            @del="deleteMessage"
+            @messageDetail="messageDetail"
             ref="alertListTable"
             :form="'chartList'"
             :fromPath="'/alertList'"
+            style="height: calc(100% - 50px)"
             :showTopBtn="false"
           ></alertMessageTable>
-          <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix"></Pagination>
+          <Pagination :pageObj="pageObj" @pageNo='pageNo'  @pageSize='pageSize' ref="Pagination" :append-to-body="false" pop-class="out-popper-fix" style="margin-top: 15px;"></Pagination>
         </div>
         <!--全屏-->
         <el-dialog class="nz-dialog table-chart-dialog" :title="$t('dashboard.panel.view')"  :visible.sync="screenModal" width="96%"  @close="screenDialogClose" :modal-append-to-body="false">
@@ -81,13 +85,18 @@
             :id="'tableContainer'+chartIndex"
             :tableData="storedScreanTableData"
             :loading="loadingTable"
-            :tableHeight="'95%'"
+            :height="'calc(100% - 0px)'"
+            :customTableTitle="tableTitle"
             :tableId="''"
             :projectAlertId="'tableContainer'+chartIndex"
             @tableDataSort="tableDataSort"
-            @deleteMessage="deleteMessage"
-            ref="alertListScreenTable"
-            :showTopBtn="false"
+            @del="deleteMessage"
+            @messageDetail="messageDetail"
+            ref="alertListTable"
+            :form="'chartList'"
+            :fromPath="'/alertList'"
+            style="height: calc(100% - 50px)"
+            :showOption="false"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -117,7 +126,7 @@
           <div slot="title">
             {{$t("project.endpoint.dialogTitle")}}
             <div class="float-right panel-calendar dialog-tool" style="display: flex">
-              <pick-time :refresh-data-func="queryChartDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="alert-sub-chart"></pick-time>
+              <pick-time :refresh-data-func="queryChartDate" :use-refresh="true" :use-chart-unit="false" v-model="searchTimeDialog" style="height: 28px;" @unitChange="chartUnitChange" id="alert-sub-chart"></pick-time>
             </div>
           </div>
           <chart ref="messageChart" name="alertMessageChart" :unit="chartUnit" ></chart>
@@ -238,7 +247,7 @@ export default {
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
-          width: 200
+          width: 300
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
@@ -265,15 +274,6 @@ export default {
           label: this.$t('alert.endAt'),
           prop: 'endAt',
           show: true
-        }, {
-          label: this.$t('alert.list.current'),
-          prop: 'current',
-          show: true
-        }, {
-          label: this.$t('overall.option'),
-          prop: 'option',
-          show: true,
-          width: 90
         }
       ],
       tablelable: [],
@@ -283,6 +283,7 @@ export default {
       showTopBtn: false,
       graphShow: false,
       chartDatas: [],
+      searchTimeDialog: [],
       chartUnit: 5,
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
       isPreview: false,
@@ -394,17 +395,22 @@ export default {
       })
       this.deleteBox.ids = ids.join(',')
     },
-    deleteMessage (deleltebox, cb) {
-      this.$put('alert/message', deleltebox).then(res => {
-        if (res.code === 200) {
-          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-          this.deleteBox.show = false
-          this.deleteBox.ids = ''
-          this.getAlertList()
-          cb()
-        } else {
-          this.$message.error(res.msg)
-        }
+    deleteMessage (row) {
+      const self = this
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('alert/message' + '?ids=' + row.id + '&state=3').then(response => {
+          if (response.code === 200) {
+            self.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            self.getAlertList()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
       })
     },
     chartUnitChange: function (unit) {
@@ -413,11 +419,20 @@ export default {
         this.queryChartDate()
       })
     },
+    messageDetail (row) {
+      this.$get('/alert/rule/' + row.alertRule.id).then(res => {
+        this.currentMsg = { ...row, alertRule: { ...res.data } }
+        this.graphShow = true
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
+      })
+    },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : this.getTime(-1, 'h')
-      const end = this.searchTime[1] ? this.searchTime[1] : this.getTime(0, 'h')
-      this.searchTime = [start, end]
+      const start = this.searchTime[0] ? this.searchTime[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000)
+      const end = this.searchTime[1] ? this.searchTime[1] : bus.computeTimezoneTime(new Date().getTime())
+      this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
       if (timeDiff < 1) {
@@ -568,37 +583,6 @@ export default {
         if (response.code == 200) {
           this.storedTableData = response.data.list
           this.storedScreanTableData = response.data.list
-          const axiosAll = []
-          this.$nextTick(() => {
-            this.storedTableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels)
-              if (item.alertRule.buildIn != 1) {
-                const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
-              } else {
-                axiosAll.push('')
-              }
-            })
-            axios.all(axiosAll).then(res => {
-              res.forEach((item, index) => {
-                let current = []
-                const response2 = item.data
-                if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                  current = response2.data.result[0].value.map((item, i) => {
-                    if (i == 0) {
-                      return bus.computeTimezone(item)
-                    } else {
-                      return parseFloat(item).toFixed(2)
-                    }
-                  })
-                } else {
-                  current = [null, null]
-                }
-                this.storedTableData[index].current = current
-              })
-              this.$set(this.storedTableData, [...this.storedTableData])
-            })
-          })
           this.pageObj.total = response.data.total
           this.isError = false
           this.errorContent = ''
@@ -708,24 +692,36 @@ export default {
       this.getAlerScreetList()
     },
     promQueryParamConvert (obj) {
-      if (obj) {
-        return '(' + obj.alertRule.expr + ') and (' + (function () {
-          let q = '{'
+      let r = '(' + obj.alertRule.expr + ')'
+      let intoLabels = false
+      obj.labels = JSON.parse(obj.labels)
+      if (Object.keys(obj.labels).length > 0) {
+        r += (function () {
+          let group = ' and ' + '(group({'
+          let by = ' by ('
+
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
-              q += k
-              q += '='
-              q += ("'" + obj.labels[k] + "',")
+            if (k != 'alertname' && k != 'severity' && k != 'severity_id') {
+              intoLabels = true
+              group += k
+              group += '='
+              group += ("'" + obj.labels[k] + "',")
+              by += k
+              by += ','
             }
-          };
-          if (q.length > 1) {
-            q = q.substring(0, q.length - 1)
           }
-          q += '}'
-          return q
-        }()) + ')'
+          if (intoLabels) {
+            group = group.substring(0, group.length - 1)
+            by = by.substring(0, by.length - 1)
+            group += '})'
+            by += ')'
+            return group + by + ')'
+          } else {
+            return ''
+          }
+        }())
       }
-      return ''
+      return r
     },
     elementsetShow (s, e) {
       const eventfixed = {

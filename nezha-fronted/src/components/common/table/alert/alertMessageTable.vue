@@ -101,6 +101,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="showOption"
         :resizable="false"
         :width="operationWidth"
         fixed="right">
@@ -140,6 +141,10 @@ export default {
   props: {
     nowTime: {
       type: String
+    },
+    showOption: {
+      type: Boolean,
+      default: true
     }
   },
   mixins: [table, bus],
@@ -520,9 +525,9 @@ export default {
         return 'alert-message-list-labels'
       } else if (row.column.label == this.$t('alert.list.state')) {
         if (row.row.state == 1) {
-          return 'danger'
+          return ''
         } else if (row.row.state == 2) {
-          return 'success'
+          return ''
         }
       } else {
         return ''

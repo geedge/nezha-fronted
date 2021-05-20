@@ -57,7 +57,7 @@
           <span v-for="(item1, i) in labelsSort(scope.row.matchers)" :key="i">
               <span >
                 <nz-alert-tag
-                  v-if="item1.name !== 'alertname' && item1.name !== 'severity'" :key="i" :cursor-point="tagType(item1.name) !== 'info'"
+                  :key="i" :cursor-point="tagType(item1.name) !== 'info'"
                   :label="item1.name"
                   :type="tagType(item1.name)"
                   :regex="item1.regex"
@@ -205,6 +205,7 @@ export default {
           result2.push(item)
         }
       })
+      console.log([...result, ...result2])
       return [...result, ...result2]
     }
   }
