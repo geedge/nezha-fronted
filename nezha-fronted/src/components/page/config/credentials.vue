@@ -97,7 +97,7 @@ export default {
           label: 'name',
           disabled: false
         }, {
-          name: 'Type',
+          name: this.$t('overall.type'),
           type: 'select',
           label: 'credentialType',
           disabled: false

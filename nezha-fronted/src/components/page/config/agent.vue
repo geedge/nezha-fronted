@@ -139,7 +139,7 @@ export default {
           label: 'ids',
           disabled: false
         }, {
-          name: this.$t('config.agent.dataCenter'),
+          name: this.$t('dashboard.overview.dataCenter.dataCenter'),
           type: 'dc',
           label: 'dc',
           disabled: false
@@ -149,7 +149,7 @@ export default {
           label: 'promType',
           disabled: false
         }, {
-          name: this.$t('state.state'),
+          name: this.$t('overall.state'),
           type: 'select',
           label: 'promState',
           disabled: false

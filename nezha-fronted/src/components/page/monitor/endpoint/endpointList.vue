@@ -123,13 +123,13 @@ export default {
             label: 'ids',
             disabled: false
           }, {
-            name: 'Name',
+            name: this.$t('overall.name'),
             type: 'input',
             label: 'name',
             disabled: false
           },
           {
-            name: this.$t('asset.asset'),
+            name: this.$t('overall.asset'),
             type: 'input',
             label: 'assetName',
             disabled: false

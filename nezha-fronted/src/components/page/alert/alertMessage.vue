@@ -168,7 +168,7 @@ export default {
             label: 'summary',
             disabled: false
           }, {
-            name: 'Labels',
+            name: this.$t('overall.labels'),
             type: 'input',
             label: 'labels',
             disabled: false
