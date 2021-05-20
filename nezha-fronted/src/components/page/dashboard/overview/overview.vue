@@ -137,10 +137,10 @@
         <!--第一个图-->
         <div class="content-col-box">
           <div class="content-col-title">
-            <span>{{$t("dashboard.overview.asset.assetType")}}</span>
+            <span>{{$t("dashboard.overview.asset.assetState")}}</span>
           </div>
           <div class="content-col-content">
-            <chart-box ref="assetTypePie" :show-toolbox="false" :tooltip-formatter="assetTypeFormatter" chart-type="pie" name="assetTypePie" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
+            <chart-box ref="assetTypePie" :show-toolbox="false" :tooltip-formatter="assetStateFormatter" chart-type="pie" name="assetTypePie" @is-loading="(isLoading)=>{this.assetTypeLoading = isLoading}"></chart-box>
             <div v-if="!assetTypeLoading && (!assetTypeData || assetTypeData.length === 0)" class="chart-no-data">No Data</div>
           </div>
         </div>
@@ -461,7 +461,7 @@ export default {
     queryAssetTypeData () {
       return new Promise(resolve => {
         this.assetTypeLoading = true
-        this.$get('stat/asset/type').then(response => {
+        this.$get('stat/asset/state').then(response => {
           this.assetTypeLoading = false
           if (response.code === 200) {
             this.assetTypeData = response.data.list
@@ -470,15 +470,15 @@ export default {
             const typeSeriesData = []
 
             const vm = this
-            const assetTotalCount = (function () {
+            /* const assetTotalCount = (function () {
               let count = 0
               vm.assetTypeData.forEach(item => {
                 count += item.num
               })
               return count
-            }())
+            }()) */
             this.assetTypeData.forEach(item => {
-              legendData.push([item.name, (item.num * 100 / assetTotalCount).toFixed(2)])
+              legendData.push([item.name, item.num])
               typeSeriesData.push({ name: item.name, value: item.num })
             })
             const series = [{
@@ -1045,7 +1045,7 @@ export default {
     simpleFormatter (params) {
       return `<div class="tooltip" style="min-width: unset;">${params.value}</div>`
     },
-    assetTypeFormatter (params) {
+    assetStateFormatter (params) {
       return `<div class="tooltip" style="min-width: unset;">${params.name}:&nbsp;${params.value}</div>`
     },
     switchFullScreen () {

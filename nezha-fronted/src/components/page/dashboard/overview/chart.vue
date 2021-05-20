@@ -111,7 +111,7 @@ export default {
           const type = legendData.find(item => {
             return item[0] == name
           })
-          return type ? `${name} (${type[1]}%)` : null
+          return type ? `${name} (${type[1]})` : null
         }
         this.$set(this.option, 'legend', legend)
       }

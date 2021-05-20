@@ -433,6 +433,7 @@ const en = {
       asset: {
         title: 'Asset',
         assetType: 'Asset type',
+        assetState: 'Asset state',
         modelStat: 'Model',
         dcStat: 'Data center',
         num: 'Num',
