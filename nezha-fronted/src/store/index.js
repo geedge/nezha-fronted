@@ -62,7 +62,7 @@ const store = new Vuex.Store({
       return state.showTopoScreen
     },
     getLogo (state) {
-      console.log('get logo', state)
+      // console.log('get logo', state)
       return state.logo
     },
     getIsShrink (state) {
@@ -140,7 +140,7 @@ const store = new Vuex.Store({
       state.showTopoScreen = boolean
     },
     setLogo (state, logo) {
-      console.log('set log', logo)
+      // console.log('set log', logo)
       state.logo = logo
     },
     isShrink (state) {

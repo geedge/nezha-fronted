@@ -131,7 +131,6 @@ export default {
       }
     },
     edit (u) {
-      console.info(u)
       this.$get(`${this.url}/${u.id}`).then(response => {
         if (response.code === 200) {
           this.object = response.data

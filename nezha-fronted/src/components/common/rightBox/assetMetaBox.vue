@@ -239,7 +239,6 @@ export default {
           param: n.param && typeof n.param === 'string' ? JSON.parse(n.param) : {},
           type: n.type.toUpperCase()
         }
-        console.info(this.editAssetMeta)
       }
     },
     'editAssetMeta.search': {

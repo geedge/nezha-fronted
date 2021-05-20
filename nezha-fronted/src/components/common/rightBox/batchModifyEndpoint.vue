@@ -277,7 +277,6 @@ export default {
                 response.data.list[i].labelsModule.push({ key: k, value: tempObj1[k] })
               }
             } catch (err) {
-              // console.info(response.data.list[i], err);
             }
           }
           this.moduleList = response.data.list

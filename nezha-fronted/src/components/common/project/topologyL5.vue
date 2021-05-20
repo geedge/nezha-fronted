@@ -806,7 +806,7 @@ export default {
               }
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
-                  console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
+                  // console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
                   item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
                 }
                 if (item.type === 0) {
@@ -1796,7 +1796,7 @@ export default {
     // 保存
     saveTopology () {
       const topologyData = getTopology(this.topologyIndex).pureData()
-      console.log(JSON.stringify(topologyData))
+      // console.log(JSON.stringify(topologyData))
       let flag = true
       const arr = []
       this.notModuleIDArr = []

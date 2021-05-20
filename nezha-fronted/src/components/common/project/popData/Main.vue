@@ -109,7 +109,6 @@ export default {
     init () {
       this.$get('/module/stat', { id: this.moduleId }).then(res => {
         this.moduleInfo = res.data
-        // console.info(this.moduleInfo);
         endpointChart = echarts.init(document.querySelector('#chart--endpoint'))
         assetChart = echarts.init(document.querySelector('#chart--asset'))
         const endpointOption = chartConfig.getOption('topoPie')

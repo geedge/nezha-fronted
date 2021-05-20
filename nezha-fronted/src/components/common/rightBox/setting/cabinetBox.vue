@@ -127,7 +127,6 @@ export default {
       deep: true,
       immediate: true,
       handler: function (n, o) {
-        console.info(n)
         if (n) {
           this.editCabinet = JSON.parse(JSON.stringify(n))
         }

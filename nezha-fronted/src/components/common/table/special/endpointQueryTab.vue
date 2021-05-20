@@ -271,7 +271,6 @@ export default {
     },
     dragend () {
       this.$nextTick(() => {
-        console.info(1)
         this.$refs.dataTable.doLayout()
       })
     },

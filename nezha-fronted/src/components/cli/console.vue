@@ -212,7 +212,6 @@ export default {
           }
         })
       }
-      console.info(baseUrl, url)
       this.terminalSocket = new WebSocket(url)
       // 连接成功
       this.terminalSocket.onopen = () => {

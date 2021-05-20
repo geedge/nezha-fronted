@@ -62,24 +62,7 @@ export default {
       }
     }
   },
-  watch: {
-    // valueArr: {
-    //   immediate: true,
-    //   handler (n) {
-    //     console.log(n);
-    //     if(n.length){
-    //
-    //   }
-    // }
-    // },
-    // keyName:{
-    //   deep:true,
-    //   immediate: true,
-    //   handler(n) {
-    //     console.log(n);
-    //   }
-    // }
-  },
+  watch: {},
   data () {
     return {
       colors: '#ffffff',

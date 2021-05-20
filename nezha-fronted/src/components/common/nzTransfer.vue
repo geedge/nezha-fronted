@@ -191,8 +191,6 @@ export default {
     rightToLeft () {
       this.$emit('rightToLeft', this.selectedSelection)
       this.selectedData = this.selectedData.filter(d => !this.selectedSelection.find(s => d.id === s.id))
-      console.info(this.selectableSelection)
-      console.info(this.selectedData)
     },
     startLoading () {
       this.loading = true

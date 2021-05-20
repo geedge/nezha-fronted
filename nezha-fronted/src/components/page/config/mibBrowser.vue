@@ -594,7 +594,6 @@ export default {
         }
         this.snmpSetFormVisible = false
       } */
-      console.info(this.searchParam)
       this.loading = true
       setTimeout(() => {
         this.$post('mib/browser', this.searchParam).then(response => {

@@ -775,7 +775,6 @@ export default {
         rule = 'ifOutOctets'
       }
       if (this.trendSearchParam.select.length > 0) {
-        // console.info("select", this.trendSearchParam.select);
         const dc = []
         const tags = []
         this.trendSearchParam.select.forEach(select => {
@@ -878,7 +877,6 @@ export default {
         step: bus.getStep(before, end),
         query: 'sum(irate(' + rule + metricString + '[' + (this.trendSearchParam.timeRange ? this.trendSearchParam.timeRange : '1h') + ']))'
       }
-      // console.info("params", params);
       return params
     },
     initMap () {
@@ -894,7 +892,6 @@ export default {
       const vm = this
       setTimeout(() => {
         const data = param.tooltip.options.data
-        // console.info(tooltipEndpointChart);
         tooltipEndpointChart = echarts.init(document.querySelector('#tooltip-chart--endpoint'))
         tooltipPrometheusChart = echarts.init(document.querySelector('#tooltip-chart--prometheus'))
         const endpointOption = chartConfig.getOption('tooltipPie')
@@ -1031,7 +1028,6 @@ export default {
                     shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
                   }
                   shadowMarker.on('mouseover', (param) => {
-                    // console.info(param);
                     const point = param.containerPoint
                     const event = param.originalEvent
                     this.tooltip.x = event.clientX + point.x - event.layerX - 5

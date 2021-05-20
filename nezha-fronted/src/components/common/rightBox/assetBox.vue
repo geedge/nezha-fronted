@@ -263,7 +263,6 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        // console.info(n);
         this.editAsset = JSON.parse(JSON.stringify(n))
         if (!this.editAsset.accounts) {
           this.$set(this.editAsset, 'accounts', [])

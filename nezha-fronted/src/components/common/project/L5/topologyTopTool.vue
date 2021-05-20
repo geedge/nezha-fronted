@@ -122,14 +122,6 @@ export default {
     },
     undo () { // 撤销
       getTopology(this.index).undo()
-      // if(!this.redoFlag){
-      //   this.$emit('redoIndexChange',getTopology(this.index).caches.index)
-      // }
-      // let a = getTopology(this.index).undo();
-      // console.log(a);
-      // setTimeout(()=>{
-      //   this.redoFlag=true;
-      // },200)
     },
     redo () { // 重做
       getTopology(this.index).redo()
