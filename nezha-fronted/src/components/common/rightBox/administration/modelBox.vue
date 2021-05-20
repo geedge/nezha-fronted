@@ -25,7 +25,8 @@
             :data="'visual/panel/chart'"
             :tb-columns="ChartSearchShowFields"
             :params="{
-              varType: 1, panelId: 0
+              varType: 1, panelId: 0,
+               returnChildren:0,groupId:0,
             }"
             :multiple="true"
            :language="language"
