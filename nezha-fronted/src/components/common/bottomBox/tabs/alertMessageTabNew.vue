@@ -285,6 +285,24 @@ export default {
         })
       }
     },
+    del (row) {
+      const self = this
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(this.url + '?ids=' + row.id + '&state=3').then(response => {
+          if (response.code === 200) {
+            self.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            self.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
     getTableData (state) {
       if (state) {
         this.state = state
