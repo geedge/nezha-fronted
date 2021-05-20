@@ -27,7 +27,7 @@
           <div ref="scrollbar" style="height: 100%;width:100%; overflow: auto;">
             <div v-for="(item, index) in detail" :key="index" class="chart-sub">
               <div class="chart-sub-title" @click="hideElement(index)">
-                <span><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) == -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
+                <span><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) === -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                 <span>{{item.title}}</span>
               </div>
               <el-collapse-transition>
@@ -35,18 +35,18 @@
                   <template v-for="(value, key, i) in item.data">
 
                     <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
-                    <div v-if="(data.from == $CONSTANTS.fromRoute.endpoint || data.from == $CONSTANTS.fromRoute.asset || data.from == $CONSTANTS.fromRoute.model) && data.type == 'assetInfo' && item.type == 'basic' && assetKey[key]" :key="i" class="content-item">
+                    <div v-if="(data.from === fromRoute.endpoint || data.from === fromRoute.asset || data.from === fromRoute.model) && data.type === 'assetInfo' && item.type === 'basic' && assetKey[key]" :key="i" class="content-item">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">{{assetKey[key]}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{assetKey[key]}}</div>
                       </div>
 
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <span v-if="key == 'state'">
+                        <span v-if="key === 'state'">
                           {{value}}
                         </span>
-                        <span v-else-if="key == 'alert'" class="as-button" :class="{'success': value <= 0, 'danger': value > 0}">{{value + ' ' + $t('overall.active')}}</span>
-                        <div v-else-if="key == 'tags'" class="no-overflow" style="padding-bottom: 5px;">
+                        <span v-else-if="key === 'alert'" :class="{'success': value <= 0, 'danger': value > 0}" class="as-button">{{value + ' ' + $t('overall.active')}}</span>
+                        <div v-else-if="key === 'tags'" class="no-overflow" style="padding-bottom: 5px;">
                           <template v-if="value && value.length > 0">
                             <nz-alert-tag :label="tagItem.name" type="normal" style="margin: 5px 5px 0 0; vertical-align: middle;"
                                           :cursor-point="false"
@@ -59,12 +59,12 @@
                           </template>
                           <template v-else>&nbsp;</template>
                         </div>
-                        <template v-else-if="key == 'cabinet'">
+                        <template v-else-if="key === 'cabinet'">
                           <span v-if="value&&item.data.cabinetStart&&item.data.cabinetEnd">{{value + '['+item.data.cabinetStart+'-'+item.data.cabinetEnd+']'}}</span>
                           <span v-else-if="value&&!(item.data.cabinetStart||item.data.cabinetEnd)">{{value}}</span>
                           <span v-else></span>
                         </template>
-                        <template v-else-if="key == 'pingRtt'">
+                        <template v-else-if="key === 'pingRtt'">
                           <div class="active-icon" :class="{'green-bg': item.data.pingStatus == 1, 'red-bg': item.data.pingStatus == 1 != 1}"></div>
                           <span>{{value ? value + 'ms' : ''}}</span>
                         </template>
@@ -76,7 +76,7 @@
                       </div>
                     </div>
                     <!-- endpoint-detail、asset、model的assetInfo的feature-->
-                    <div v-if="(data.from === $CONSTANTS.fromRoute.endpoint || data.from === $CONSTANTS.fromRoute.asset || data.from == $CONSTANTS.fromRoute.model) && data.type == 'assetInfo' && item.type == 'attribute'" :key="i" class="content-item">
+                    <div v-if="(data.from === fromRoute.endpoint || data.from === fromRoute.asset || data.from === fromRoute.model) && data.type === 'assetInfo' && item.type === 'attribute'" :key="i" class="content-item">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">{{key}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
@@ -120,33 +120,19 @@
                     </div>
 
                     <!-- endpoint-detail的endpointInfo的endpoint详情-->
-                    <div v-else-if="data.from === $CONSTANTS.fromRoute.endpoint && data.type == 'endpointInfo' && endpointKey[key]" :key="i" class="content-item">
+                    <div v-else-if="data.from === fromRoute.endpoint && data.type === 'endpointInfo'" :key="i" class="content-item">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">{{endpointKey[key]}}</span>
                         <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{endpointKey[key]}}</div>
                       </div>
                       <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <template v-if="key == 'state'"><div id="littleChart" style="cursor: pointer; height: 26px; width: 100px;" @click="preview"></div></template>
-                        <template v-else-if="endpointKey[key]">
-                          <span class="content-text">{{value ? value : "&nbsp;"}}</span>
-                          <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
-                        </template>
-                      </div>
-                    </div>
-                    <!-- endpoint-detail的endpointInfo的alert详情-->
-                    <div v-else-if="data.from == $CONSTANTS.fromRoute.endpoint && data.type == 'endpointInfo' && item.title == $t('overall.alert')" :key="i" class="content-item">
-                      <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
-                        <span class="content-text">{{key}}</span>
-                        <div class="item-tip-hide item-tip-key el-popover" :class="itemTip(`key-${index}`, key, i, ready)">{{key}}</div>
-                      </div>
-                      <div class="content-item-value item-tip" :id="`value-${index}-${i}`">
-                        <span class="content-text">{{value ? value : "&nbsp;"}}</span>
+                        <span class="content-text">{{value || value === 0 ? value : "&nbsp;"}}</span>
                         <div class="item-tip-hide item-tip-value el-popover" :class="itemTip(`value-${index}`, key, i, ready)">{{value}}</div>
                       </div>
                     </div>
 
                     <!-- alertRule-detail的详情-->
-                    <div v-else-if="data.from == $CONSTANTS.fromRoute.rule && data.type == 'alertRuleInfo' && key != '_module_'" :key="i" class="content-item" @click="showDeep(`deep-${index}-${i}`)">
+                    <div v-else-if="data.from == fromRoute.rule && data.type == 'alertRuleInfo' && key != '_module_'" :key="i" class="content-item" @click="showDeep(`deep-${index}-${i}`)">
                       <div class="content-item-key item-tip" :id="`key-${index}-${i}`">
                         <span class="content-text">
                           <span><i v-if="item.data._module_[key]" :class="{'nz-icon nz-icon-caret-right': deepShow.indexOf(`deep-${index}-${i}`) == -1,'nz-icon nz-icon-caret-bottom': deepShow.indexOf(`deep-${index}-${i}`) > -1}"></i></span>
@@ -217,7 +203,7 @@ import chartPreview from './chartPreview'
 import * as echarts from 'echarts'
 import nzAlertTag from '../page/alert/nzAlertTag'
 import bus from '../../libs/bus'
-
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'chartDetail',
   components: {
@@ -243,6 +229,7 @@ export default {
   },
   data () {
     return {
+      fromRoute,
       ready: false,
       data: {}, // 该图表信息,chartItem
       detail: [], // 展示的详情
@@ -303,13 +290,12 @@ export default {
       },
       endpointKey: {
         id: 'ID',
-        host: this.$t('project.endpoint.host'),
-        port: this.$t('project.endpoint.port'),
-        path: this.$t('project.endpoint.path'),
-        param: this.$t('project.endpoint.param'),
-        state: this.$t('alert.list.state'),
-        project: this.$t('project.project.projectName'),
-        module: this.$t('project.module.module')
+        name: this.$t('overall.name'),
+        type: this.$t('overall.type'),
+        project: this.$t('overall.project'),
+        module: this.$t('project.module.module'),
+        alerts: this.$t('project.endpoint.alerts'),
+        state: this.$t('project.endpoint.state')
       }
     }
   },
@@ -424,11 +410,12 @@ export default {
       this.panelIdInner = panelId
       this.data = chartItem
       this.detail = detail
-      if (this.detail[0] && this.detail[0].type && this.detail[0].type == 'endpointInfo') { // endpointInfo的小图表
+      console.info(this.data, this.detail)
+      /* if (this.detail[0] && this.detail[0].type && this.detail[0].type == 'endpointInfo') { // endpointInfo的小图表
         this.$nextTick(() => {
           this.initChart(this.detail[0].data.stateSeries)
         })
-      }
+      } */
       this.endLoading()
     },
     initChart (series) {
