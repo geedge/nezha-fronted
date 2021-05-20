@@ -25,10 +25,6 @@ export default {
   methods: {
     tableOperation ([command, row, param]) {
       switch (command) {
-        case 'edit': {
-          this.$emit('edit', row)
-          break
-        }
         case 'delete': {
           this.$emit('del', row)
           break
@@ -37,21 +33,8 @@ export default {
           this.$emit('showBottomBox', 'recordTab', row)
           break
         }
-        case 'cli': {
-          this.$emit('cli', row)
-          break
-        }
-        case 'duplicate': {
-          this.$emit('duplicate', row)
-          break
-        }
-        case 'copy': {
-          this.$emit('copy', row)
-          break
-        }
-        case 'shutdown': {
-          // this.$emit('copy', row)
-          this.$emit('shutdown', row)
+        case 'endpointQuery': {
+          this.$emit('showBottomBox', 'endpointQuery', row)
           break
         }
         case 'sync': {
@@ -60,6 +43,7 @@ export default {
           break
         }
         default:
+          this.$emit(command, row)
           break
       }
     },

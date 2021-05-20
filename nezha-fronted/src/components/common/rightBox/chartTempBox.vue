@@ -8,10 +8,18 @@
     </div>
     <div class="right-box__container">
       <div class="container__form">
-        <el-form ref="userForm" :model="editChartTemp" :rules="rules" class="right-box-form right-box-form-left" label-position="top" label-width="120px">
+        <el-form ref="userForm" :model="editChartTemp" :rules="rules" label-position="top" label-width="120px">
           <!--type-->
-          <el-form-item :label="$t('dashboard.panel.chartForm.varType')" prop="varType">
-            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.varType" value-key="chartType" id="chart-box-group" @change="varTypeChange">
+          <el-form-item v-if="from !== fromRoute.endpoint" :label="$t('dashboard.panel.chartForm.varType')" prop="varType">
+            <el-select id="chart-box-group"
+                       v-model="editChartTemp.varType"
+                       class="right-box__select"
+                       clearable
+                       placeholder=""
+                       popper-class="right-box-select-dropdown prevent-clickoutside"
+                       size="small"
+                       value-key="chartType"
+                       @change="varTypeChange">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -19,7 +27,13 @@
           </el-form-item>
           <!--chartTemp list-->
           <el-form-item :label="$t('dashboard.panel.chartForm.pid')" prop="pid">
-            <el-select class="right-box-row-with-btn" placeholder="" clearable popper-class="chart-box-dropdown-small" size="mini" v-model="editChartTemp.pid" value-key="chartType" id="chart-box-group" >
+            <el-select id="chart-box-group"
+                       v-model="editChartTemp.pid"
+                       class="right-box__select" clearable
+                       placeholder=""
+                       popper-class="right-box-select-dropdown prevent-clickoutside"
+                       size="small"
+                       value-key="chartType" >
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTempArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -27,18 +41,21 @@
           </el-form-item>
 
           <!-- 选择资产，穿梭框 -->
-          <div class="form__sub-title">{{editChartTemp.varType === 1 ? 'Asset' : 'Endpoint'}}</div>
-          <nz-transfer ref="transfer"
-                       :page-obj="transfer.pageObj"
-                       :search-msg="transfer.searchMsg"
-                       :table-data="transfer.tableData"
-                       style="margin-bottom: 20px;"
-                       :tableTitle="transferTableTitle"
-                       @leftToRight="addAsset"
-                       @search="search"
-                       @rightToLeft="removeAsset">
-            <template v-slot:title>Selected</template>
-          </nz-transfer>
+          <template v-if="showTransfer">
+            <div class="form__sub-title">{{editChartTemp.varType === 1 ? 'Asset' : 'Endpoint'}}</div>
+            <nz-transfer ref="transfer"
+                         :from="from"
+                         :page-obj="transfer.pageObj"
+                         :search-msg="transfer.searchMsg"
+                         :table-data="transfer.tableData"
+                         :tableTitle="transferTableTitle"
+                         style="margin-bottom: 20px;"
+                         @leftToRight="addAsset"
+                         @rightToLeft="removeAsset"
+                         @search="search">
+              <template v-slot:title>Selected</template>
+            </nz-transfer>
+          </template>
         </el-form>
       </div>
     </div>
@@ -55,6 +72,7 @@
 
 <script>
 import nzTransfer from '@/components/common/nzTransfer'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'chartTemp',
   components: {
@@ -63,20 +81,14 @@ export default {
   props: {
     obj: {
       type: Object
-    }
-  },
-  computed: {
-    isCurrentUser () {
-      return function (username) {
-        return localStorage.getItem('nz-username') == username
-      }
-    }
+    },
+    from: String
   },
   data () {
     return {
+      fromRoute,
       editChartTemp: {},
       url: 'visual/panel/chart/fromTmpl',
-      rightBox: { model: { show: false } },
       rules: { // 表单校验规则
         varType: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -171,6 +183,16 @@ export default {
     this.getChartTempData()
     this.getTableData()
   },
+  computed: {
+    showTransfer () {
+      if (this.from === fromRoute.endpoint) {
+        return false
+      } else if (this.from === fromRoute.asset && this.editChartTemp.varType === 1) {
+        return false
+      }
+      return true
+    }
+  },
   methods: {
     clickOutside () {
       this.esc(false)
@@ -185,14 +207,24 @@ export default {
       this.prevent_opt.save = true
       if (!this.transfer.selectedData.length) {
         this.prevent_opt.save = false
-        if (this.editChartTemp.varType === 1) {
-          this.$message.error(this.$t('dashboard.panel.chartForm.selectAsset'))
-        } else {
-          this.$message.error(this.$t('dashboard.panel.chartForm.selectEndpoint'))
+        if (this.from !== fromRoute.endpoint) { // 来自endpoint时不校验
+          if (this.editChartTemp.varType === 1) {
+            if (this.from !== fromRoute.asset) { // 来自asset且type=1时不校验
+              this.$message.error(this.$t('dashboard.panel.chartForm.selectAsset'))
+            }
+          } else {
+            this.$message.error(this.$t('dashboard.panel.chartForm.selectEndpoint'))
+          }
+          return
         }
-        return
       }
-      this.editChartTemp.varIds = this.transfer.selectedData.map(item => item.id)
+      if (this.from === fromRoute.asset && this.editChartTemp.varType === 1) { // 来自asset时取assetId
+        this.editChartTemp.varIds = this.obj.varIds
+      } else if (this.from === fromRoute.endpoint) { // 来自endpoint时取endpointId
+        this.editChartTemp.varIds = this.obj.varIds
+      } else {
+        this.editChartTemp.varIds = this.transfer.selectedData.map(item => item.id)
+      }
       this.$refs.userForm.validate((valid) => {
         if (valid) {
           if (this.editChartTemp.id) {
@@ -267,7 +299,11 @@ export default {
     },
     getEndpointData () {
       this.$refs.transfer.startLoading()
-      this.$get('monitor/endpoint', { ...this.transfer.searchLabel, ...this.transfer.pageObj }).then(response => {
+      const idFilter = {}
+      if (this.from === fromRoute.asset) {
+        idFilter.assetIds = this.obj.varIds[0]
+      }
+      this.$get('monitor/endpoint', { ...this.transfer.searchLabel, ...this.transfer.pageObj, ...idFilter }).then(response => {
         this.$refs.transfer.endLoading()
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
@@ -278,8 +314,12 @@ export default {
     varTypeChange () {
       this.getChartTempData()
       this.editChartTemp.pid = ''
-      this.transfer.selectedData = []
-      this.$refs.transfer.selectedData = []
+      // 从asset详情页进来的，varType=1时不显示asset列表，varId默认为asset的id; 从endpoint详情页进来的，varId默认为endpoint的id
+      if ((this.from === fromRoute.asset && this.editChartTemp.varType === 1) || this.from === fromRoute.endpoint) {
+        this.transfer.selectedData = this.obj.varIds
+      } else {
+        this.transfer.selectedData = []
+      }
       if (this.editChartTemp.varType === 1) {
         this.transferTableTitle = [
           {
@@ -366,12 +406,6 @@ export default {
             label: 'id',
             disabled: false
           }, {
-            id: 14,
-            name: this.$t('asset.asset'),
-            type: 'query',
-            label: 'query',
-            disabled: false
-          }, {
             id: 34,
             name: this.$t('project.project.projectName'),
             // name: this.$t('asset.asset'),
@@ -386,8 +420,20 @@ export default {
             label: 'moduleName',
             disabled: false
           }]
+        if (this.from !== fromRoute.asset) {
+          this.transfer.searchMsg.searchLabelList.push({
+            id: 14,
+            name: this.$t('asset.asset'),
+            type: 'query',
+            label: 'query',
+            disabled: false
+          })
+        }
       }
-      this.getTableData()
+      this.$nextTick(() => {
+        this.$refs.transfer.selectedData = []
+        this.getTableData()
+      })
     }
   }
 }

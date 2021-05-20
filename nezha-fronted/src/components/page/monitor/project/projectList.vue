@@ -77,13 +77,13 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            name: 'Id',
+            name: 'ID',
             type: 'input',
             label: 'ids',
             disabled: false
           },
           {
-            name: 'Name',
+            name: this.$t('overall.name'),
             type: 'input',
             label: 'name',
             disabled: false

@@ -7,6 +7,7 @@
       <el-dropdown-item v-if="showLock">
         <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
       </el-dropdown-item>
+      <!-- import、export之前的内容 -->
       <slot name="before"></slot>
       <el-dropdown-item v-if="importUrl">
         <div id="chart-import" @click="showImportBox(1)"><i class="nz-icon nz-icon-upload"></i>{{$t('overall.importExcel')}}</div>
@@ -14,10 +15,8 @@
       <el-dropdown-item v-if="exportUrl">
         <div id="chart-export"@click="showImportBox(2)"><i class="nz-icon nz-icon-download1"></i>{{$t('overall.exportExcel')}}</div>
       </el-dropdown-item>
+      <!-- import、export之后的内容 -->
       <slot name="after"></slot>
-<!--      <el-dropdown-item v-has="'panel_chart_add'">
-        <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-download1"></i>Add template</div>
-      </el-dropdown-item>-->
     </el-dropdown-menu>
 
     <el-dialog :close-on-click-modal="importBox.type!=3" :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
@@ -27,9 +26,6 @@
             <div slot="tip" class="el-upload__tip" >{{$t('overall.importTip')}}</div>
             <i class="nz-icon nz-icon-upload"></i>
             <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-            <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-              <span class="top-tool-btn-txt" >{{$t('overall.upload')}}</span>
-            </button>-->
           </el-upload>
         </div>
         <div slot="footer" class="footer">
@@ -74,9 +70,6 @@
             <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
             <div v-if="importResult&&importResult.failDetail" class="result-detail">
               <div style="height: 100%; overflow: auto;">
-                <!-- <ul>
-                   <li v-for="(item,index) in importResult.failDetail"><span>{{item.lineNo}}</span>:<span>{{item.errorMsg}}</span> </li>
-                 </ul>-->
                 <template v-for="(item, index) in importResult.failDetail">
                   <div :key="index" class="import-result-block">
                     <div class="import-result-item">
@@ -94,9 +87,6 @@
             <button :id="id+'-xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" @click="rollbackImport">
               <span>{{$t('overall.rollbackImport')}}</span>
             </button>
-            <!--<button  @click="closeDialog"  class="el-button el-button&#45;&#45;default el-button&#45;&#45;small">-->
-            <!--<span>{{$t('overall.cancel')}}</span>-->
-            <!--</button>-->
           </div>
         </div>
       </div>

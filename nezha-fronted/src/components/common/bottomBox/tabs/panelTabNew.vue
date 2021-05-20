@@ -10,28 +10,13 @@
     >
       <template v-slot:title><span :title="obj.name">{{obj.name}}</span></template>
       <template v-slot:top-tool-right>
-        <div v-if="from === fromRoute.asset" style="display: flex" >
+        <div v-if="from === fromRoute.asset" style="display: flex">
           <div class="top-tool-search margin-r-20">
-          <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
-            <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
-          </el-input>
-        </div>
+            <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
+              <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
+            </el-input>
+          </div>
           <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
-            <!--        <export-excel
-                      id="asset-list"
-                      :params="searchLabel"
-                      :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
-                      class="top-tool-export margin-r-10"
-                      export-file-name="asset-charts"
-                      export-url="visual/panel/export"
-                      import-url="visual/panel/import"
-                      @afterImport="getTableData"
-                    >
-                      <template slot="optionZone">
-                        <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="addChart">
-                          <i class="nz-icon nz-icon-create-square"></i></button>
-                      </template>
-                    </export-excel>-->
           <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
@@ -49,10 +34,46 @@
             :showLock="from === fromRoute.asset"
             @panelLockChange="panelLockChange"
           >
+            <template v-slot:after>
+              <el-dropdown-item v-has="'panel_chart_add'">
+                <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
+              </el-dropdown-item>
+            </template>
           </top-tool-more-options>
         </div>
-        <div v-else-if="from === fromRoute.chartTemp"> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
-                               type="button">
+        <div v-else-if="from === fromRoute.endpoint" style="display: flex">
+          <div class="top-tool-search margin-r-20">
+            <el-input id="queryPanel" ref="queryPanel" v-model="filter.searchName" class="query-input-inactive"  clearable size="small" @blur="blurInput" @clear="clearInput" @focus="focusInput">
+              <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float: right" @click="focusInput"></i>
+            </el-input>
+          </div>
+          <pick-time ref="pickTime" v-model="searchTime" :refresh-data-func="dateChange" :use-chart-unit="false"></pick-time>
+          <button id="endpoint-create-chart" v-has="'panel_chart_add'" :title="$t('overall.createAsset')" class="top-tool-btn margin-r-10" @click.stop="addChart">
+            <i class="nz-icon nz-icon-create-square"></i>
+          </button>
+          <top-tool-more-options
+            id="asset-list"
+            :link="obj"
+            :params="filter"
+            :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
+            :showCur="false"
+            :showLock="from === fromRoute.endpoint"
+            class="top-tool-export margin-r-10"
+            export-file-name="endpoint-charts"
+            export-url="visual/panel/export"
+            import-url="visual/panel/import"
+            @afterImport="getTableData"
+            @panelLockChange="panelLockChange"
+          >
+            <template v-slot:after>
+              <el-dropdown-item v-has="'panel_chart_add'">
+                <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
+              </el-dropdown-item>
+            </template>
+          </top-tool-more-options>
+        </div>
+        <div  v-else-if="from === fromRoute.chartTemp">
+          <button id="panel-lock" :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")'  class="top-tool-btn margin-r-10" @click="panelLock=!panelLock" type="button">
           <i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>
         </button>
           <button  @click="chartBySync" id="chart-sync"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
@@ -74,12 +95,15 @@
             </div>
           </div>
           <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
-          <transition name="right-box">
-            <chart-box :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" ref="addChartModal" v-if="rightBox.show"></chart-box>
-          </transition>
         </div>
       </template>
     </nz-bottom-data-list>
+    <transition name="right-box">
+      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="from" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
+    </transition>
+    <transition name="right-box">
+      <chart-temp-box v-if="rightBox.chartTemp.show" :from="from" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeRightBox" @on-create-success="createSuccess"></chart-temp-box>
+    </transition>
   </div>
 </template>
 
@@ -90,6 +114,7 @@ import bus from '../../../../libs/bus'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import { fromRoute } from '@/components/common/js/constants'
+import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 export default {
   name: 'panelTabNew',
@@ -107,7 +132,12 @@ export default {
       showTopBtn: false, // top按钮
       visible: false,
       rightBox: { // 面板弹出框相关
-        show: false
+        chart: {
+          show: false
+        },
+        chartTemp: {
+          show: false
+        }
       },
       tableHover: false,
       searchTime: bus.getTimezontDateRange(),
@@ -161,7 +191,13 @@ export default {
       showPanel: {
         name: '',
         type: this.from,
-        id: ''
+        id: null
+      },
+      blankChartTemp: {
+        varType: 1,
+        pid: '',
+        panelId: null,
+        varIds: []
       },
       // removeModal: false, // 删除弹出
       // deleteObj: {}, // 删除对象
@@ -174,7 +210,8 @@ export default {
     chartBox,
     chartList,
     nzBottomDataList,
-    topToolMoreOptions
+    topToolMoreOptions,
+    chartTempBox
   },
   methods: {
     // 刷新
@@ -192,7 +229,18 @@ export default {
     /* 图表相关操作--start */
     addChart () {
       this.chart = this.newChart()
-      this.rightBox.show = true
+      this.rightBox.chart.show = true
+    },
+    addChartByTemp () {
+      this.chart = Object.assign({}, this.blankChartTemp)
+      this.chart.panelId = this.showPanel.id
+      if (this.from === fromRoute.endpoint) {
+        this.chart.varType = 2
+      }
+      if (this.from === fromRoute.asset || this.from === fromRoute.endpoint) {
+        this.chart.varIds.push(this.obj.id)
+      }
+      this.rightBox.chartTemp.show = true
     },
     newChart () {
       return JSON.parse(JSON.stringify(this.blankChart))
@@ -202,7 +250,8 @@ export default {
       this.$emit('changeTab', tab)
     },
     closeRightBox (refresh) {
-      this.rightBox.show = false
+      this.rightBox.chart.show = false
+      this.rightBox.chartTemp.show = false
       if (refresh) {
         this.refresh()
         if (this.from === fromRoute.chartTemp) {
@@ -227,7 +276,7 @@ export default {
         data.param = { url: '', threshold: '' }
       }
       this.chart = JSON.parse(JSON.stringify(data))
-      this.rightBox.show = true
+      this.rightBox.chart.show = true
     },
     // 移除图表:弹出确认框询问
     delChart (data, from) {
@@ -256,7 +305,7 @@ export default {
       this.chart.panelId = this.showPanel.id
       this.chart.panelName = this.showPanel.name
       this.chart.isGroup = true
-      this.rightBox.show = true
+      this.rightBox.chart.show = true
     },
     delChartOk () {
       this.getData(this.filter)
@@ -322,10 +371,10 @@ export default {
     },
     // 公用操作
     getTableData (linkId) {
-      if (this.from === this.fromRoute.alertRule || this.from === this.fromRoute.endpoint) {
+      if (this.from === this.fromRoute.alertRule) {
         this.getData(this.filter)
       } else {
-        if (this.from == this.$CONSTANTS.fromRoute.chartTemp) {
+        if (this.from === this.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
             this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
               res.data.list.forEach(item => {
@@ -497,7 +546,7 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    },
+    }
   },
   mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar
