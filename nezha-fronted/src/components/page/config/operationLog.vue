@@ -47,7 +47,6 @@ export default {
       url: 'sys/log',
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [
           {
             id: 11,

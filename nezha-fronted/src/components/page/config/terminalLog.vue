@@ -49,7 +49,6 @@ export default {
       url: 'terminal/session',
       tableId: 'terminalLogTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [
           {
             id: 11,
@@ -67,7 +66,7 @@ export default {
             id: 13,
             name: this.$t('config.terminallog.sourceIp'),
             type: 'input',
-            label: 'remoteAddr',
+            label: 'host',
             disabled: false
           }, {
             id: 14,
