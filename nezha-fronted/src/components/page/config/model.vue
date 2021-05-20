@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     chartBySync (row) {
-      this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
+      this.$post('visual/panel/chart/syncTmpl', { models: [row.id] }).then(res => {
         if (res.code === 200) {
           this.getTableData()
           this.$message.success(this.$t('tip.syncSuccess'))

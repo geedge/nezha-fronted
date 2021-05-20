@@ -44,6 +44,8 @@
                 <i class="nz-icon nz-icon-edit" style="font-size: 16px;"></i><span>{{$t('dashboard.edit')}}</span></li>
               <li  v-has="'panel_chart_delete'" v-if="from !== 'chartTemp'" class="el-dropdown-menu__item" @click="removeChart">
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
+              <li  v-has="'panel_chart_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
+                <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
 <!--              <li  @click="duplicate" class="el-dropdown-menu__item" v-has="`${from}_chart_duplicate`">-->
 <!--                <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>-->
             </ul>

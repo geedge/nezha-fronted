@@ -84,13 +84,13 @@
         </el-form-item>
         </span>
 
-        <!-- ChartTemplate 'visual/panel/chart' -->
+        <!-- ChartTemplate  -->
         <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
           <v-selectpage
-            :data="chartlList"
+            :data="'visual/panel/chart'"
             :tb-columns="ChartSearchShowFields"
             :params="{
-              varType: 1, panelId: 0
+              varType: 2, panelId: 0
             }"
             :multiple="true"
             :language="language"

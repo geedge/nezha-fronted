@@ -71,6 +71,7 @@
                           @on-duplicate-chart-block="duplicateChart"
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
+                          @sync="()=>{chartBySync(item)}"
                           :panel-id="filter.panelId"
                           :is-lock="panelLock"
                           :chart-index="index"
@@ -84,6 +85,7 @@
                      @on-duplicate-chart-block="duplicateChart"
                      @on-drag-chart="editChartForDrag"
                      @on-edit-chart-block="editData"
+                     @sync="()=>{chartBySync(item)}"
                      :chart-data="item"
                      :is-lock="panelLock"
                      :panel-id="filter.panelId"
@@ -97,6 +99,7 @@
                       @on-duplicate-chart-block="duplicateChart"
                       @on-drag-chart="editChartForDrag"
                       @on-edit-chart-block="editData"
+                       @sync="()=>{chartBySync(item)}"
                       :is-lock="panelLock"
                       :panel-id="filter.panelId"
                       :chart-data="item"
@@ -111,6 +114,7 @@
                      @on-drag-chart="editChartForDrag"
                     :is-lock="panelLock"
                      @on-edit-chart-block="editData"
+                     @sync="()=>{chartBySync(item)}"
                      :panel-id="filter.panelId"
                      :chart-data="item"
                       @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
@@ -120,6 +124,7 @@
                           :from="from" :panel-id="filter.panelId"
                           :chart-index="index"
                           @on-refresh-data="refreshChart"
+                       @sync="()=>{chartBySync(item)}"
                           :is-lock="panelLock"
                           :chart-data="item"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
@@ -132,6 +137,7 @@
                     @on-duplicate-chart-block="duplicateChart"
                     @on-drag-chart="editChartForDrag"
                     @on-edit-chart-block="editData"
+                     @sync="()=>{chartBySync(item)}"
                     @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                     :is-lock="panelLock"
                     :panel-id="filter.panelId"
@@ -152,6 +158,7 @@
                           @on-duplicate-chart-block="duplicateChart"
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
+                            @sync="()=>{chartBySync(item)}"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                            :chartData="item"
         ></chart-alert-list>
@@ -163,6 +170,7 @@
                             @on-duplicate-chart-block="duplicateChart"
                             @on-drag-chart="editChartForDrag"
                             @on-edit-chart-block="editData"
+                     @sync="()=>{chartBySync(item)}"
                             :chart-data="item"
                             :is-lock="panelLock"
                             :panel-id="filter.panelId"
@@ -175,6 +183,7 @@
                     @on-duplicate-chart-block="duplicateChart"
                     @on-drag-chart="editChartForDrag"
                     @on-edit-chart-block="editData"
+                          @sync="()=>{chartBySync(item)}"
                     :chart-data="item"
                     :is-lock="panelLock"
                     :panel-id="filter.panelId"
@@ -190,6 +199,7 @@
                       :panelLock="panelLock"
                       :filter="filter"
                       @on-edit-chart-block="editData"
+                       @sync="()=>{chartBySync(item)}"
                       @on-edit-group-chart="editDataGroup"
                       @on-remove-group-chart="removeChartGroup"
                       @on-duplicate-group-chart="duplicateChartGroup"
@@ -1835,6 +1845,16 @@ export default {
     init () {
       this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth - 14)
       this.tempDomInit()
+    },
+    chartBySync (item) {
+      this.$post('visual/panel/chart/syncTmpl', { ids: [item.id] }).then(res => {
+        if (res.code === 200) {
+          this.getData(this.filter)
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   created () {

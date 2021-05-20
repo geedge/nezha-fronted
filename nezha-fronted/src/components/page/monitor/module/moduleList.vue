@@ -144,31 +144,35 @@ export default {
     }
   },
   methods: {
-    edit (u) {
-      this.object = JSON.parse(JSON.stringify(u))
-      this.object.configs = JSON.parse(this.object.configs)
-      this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
-      this.object.paramObj = []
-      this.object.labelModule = []
-      if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
-        Object.keys(this.object.configs.labels).forEach(key => {
-          this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
-        })
-      } else {
-        this.object.labelModule.push({ key: '', value: '' })
-      }
-      if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
-        Object.keys(this.object.configs.params).forEach(key => {
-          this.object.paramObj.push({ key, value: this.object.configs.params[key] })
-        })
-      } else {
-        this.object.paramObj.push({ key: '', value: [] })
-      }
-      if (!this.object.chartIds) {
-        this.object.chartIds = []
-      }
-      this.rightBox.show = true
+    edit (row) {
+      this.$get('monitor/module/' + row.id).then(res => {
+        if (res.code === 200) {
+          this.object = JSON.parse(JSON.stringify(res.data))
+          this.object.configs = JSON.parse(this.object.configs)
+          this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+          this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+          this.object.paramObj = []
+          this.object.labelModule = []
+          if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
+            Object.keys(this.object.configs.labels).forEach(key => {
+              this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+            })
+          } else {
+            this.object.labelModule.push({ key: '', value: '' })
+          }
+          if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
+            Object.keys(this.object.configs.params).forEach(key => {
+              this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+            })
+          } else {
+            this.object.paramObj.push({ key: '', value: [] })
+          }
+          if (!this.object.chartIds) {
+            this.object.chartIds = ''
+          }
+          this.rightBox.show = true
+        }
+      })
     },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
@@ -205,7 +209,7 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    },
+    }
   },
   computed: {
   },

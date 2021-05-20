@@ -76,7 +76,7 @@
           <button id="panel-lock" :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")'  class="top-tool-btn margin-r-10" @click="panelLock=!panelLock" type="button">
           <i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>
         </button>
-          <button  @click="chartBySync" id="chart-sync"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
+          <button  @click="chartBySync" id="chart-sync"  :title="$t('overall.syncChart')" class="top-tool-btn margin-r-10"
                    type="button">
             <i class="nz-icon nz-icon-sync"></i>
           </button>
