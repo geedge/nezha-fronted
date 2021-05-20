@@ -42,7 +42,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">PingLastReply</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.lastUpdate ? alertLabelData.pingInfo.lastUpdate : '--'}}</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.pingInfo && alertLabelData.pingInfo.lastUpdate ? utcTimeToTimezoneStr(alertLabelData.pingInfo.lastUpdate) : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Alert</div>

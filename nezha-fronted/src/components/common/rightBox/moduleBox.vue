@@ -84,6 +84,25 @@
         </el-form-item>
         </span>
 
+        <!-- ChartTemplate 'visual/panel/chart' -->
+        <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
+          <v-selectpage
+            :data="chartlList"
+            :tb-columns="ChartSearchShowFields"
+            :params="{
+              varType: 1, panelId: 0
+            }"
+            :multiple="true"
+            :language="language"
+            title="ChartSearch"
+            key-field="id"
+            v-model="editModule.chartIds"
+            show-field="name"
+            class="form-control"
+            @values="(data) => {editModule.chartIds = data.map(d => d.id).join(',')}"
+            :result-format="resultFormat"
+          ></v-selectpage>
+        </el-form-item>
         <!--Enpoint template-->
         <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
           <el-tooltip placement="top" effect="light">
@@ -266,6 +285,7 @@ export default {
   data () {
     return {
       walkData: [],
+      chartlList: [],
       activeName: 'Basic',
       expandedWalkData: [],
       radio: 'password',
@@ -274,6 +294,13 @@ export default {
         { value: '{{module.name}}-{{asset.name}}' },
         { value: '{{module.name}}-{{asset.manageIp}}' }
       ],
+      ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+        { title: 'ID', data: 'id' },
+        { title: this.$t('config.model.titleName'), data: 'name' },
+        { title: this.$t('config.model.titleType'), data: 'type' },
+        { title: this.$t('config.model.remark'), data: 'remark' }
+      ],
+      language: localStorage.getItem('nz-language'),
       showAllBasicOption: false,
       rules: {
         name: [
@@ -626,10 +653,25 @@ export default {
     },
     paramObjchange (val, index) {
       this.editModule.paramObj[index].value = val.filter(item => item.trim())
+    },
+    resultFormat (resp) {
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
+    },
+    /* 获取chart列表数据 */
+    ChartTemplateList () {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0 }).then(res => {
+        this.chartlList = res.data.list
+      })
     }
   },
   mounted () {
     this.getWalkData()
+    this.ChartTemplateList()
   },
   created () {
     this.getProjectList()

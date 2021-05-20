@@ -52,6 +52,7 @@
           @copy="(row) => {copyRow(row, 'exprTmpl')}"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @sync="chartBySync"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></chartTmplTable>
       </template>
@@ -161,6 +162,16 @@ export default {
       this.object.panelId = this.showPanel.id
       this.object.panelName = this.showPanel.name
       this.rightBox.show = true
+    },
+    chartBySync (row) {
+      this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
+        if (res.code === 200) {
+          this.getTableData()
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     getTableData (params) {
       if (params && Object.keys(params).length > 0) {

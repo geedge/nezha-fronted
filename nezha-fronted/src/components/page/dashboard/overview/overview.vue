@@ -432,7 +432,7 @@ export default {
       return new Promise(resolve => {
         this.assetLoading = true
         this.$refs.assetHexagon.startLoading()
-        this.$get('asset/asset', { pageSize: -1}).then(response => {
+        this.$get('stat/alertMessage/topN', { size: 48, dimension: 'asset' }).then(response => {
           this.assetLoading = false
           this.$refs.assetHexagon.endLoading()
           if (response.code === 200) {
@@ -634,7 +634,7 @@ export default {
         endpointOption.series[0].label.formatter = data.asset.total + ''
         endpointOption.series[0].data = [
           { name: vm.$t('dashboard.overview.asset.ok'), value: data.asset.ok ? data.asset.ok : 0 },
-          { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 },
+          { name: vm.$t('dashboard.overview.asset.alarm'), value: data.asset.alarm ? data.asset.alarm : 0 }
           // { name: vm.$t('dashboard.overview.asset.total'), value: data.asset.total ? data.asset.total : 0 }
         ]
         endpointOption.title.text = vm.$t('asset.asset')
@@ -938,12 +938,12 @@ export default {
     queryAlertStatByModule () {
       return new Promise(resolve => {
         this.$refs.moduleHexagon.startLoading()
-        this.$get('monitor/module', { pageSize: -1 }).then(response => {
+        this.$get('stat/alertMessage/topN', { size: 48, dimension: 'module' }).then(response => {
           this.$refs.moduleHexagon.endLoading()
           if (response.code === 200) {
             const moduleData = response.data.list
             moduleData.sort((a, b) => b.alertNum - a.alertNum)
-            const alertTopModules = moduleData.slice(0,48)
+            const alertTopModules = moduleData.slice(0, 48)
             const requests = alertTopModules.map(a => axios.get(`stat/alertMessage/severity?moduleId=${a.id}`))
             const moduleStateData = []
             axios.all(requests).then(result => {

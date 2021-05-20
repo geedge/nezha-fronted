@@ -28,6 +28,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @sync="chartBySync"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></model-table>
       </template>
@@ -87,7 +88,16 @@ export default {
     }
   },
   methods: {
-
+    chartBySync (row) {
+      this.$post('visual/panel/chart/syncTmpl', { pid: row.id }).then(res => {
+        if (res.code === 200) {
+          this.getTableData()
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
   },
   created() {
 

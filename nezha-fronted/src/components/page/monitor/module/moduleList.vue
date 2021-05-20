@@ -44,6 +44,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @sync="chartBySync"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></module-table>
       </template>
@@ -89,6 +90,7 @@ export default {
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
         port: 9100,
+        chartIds: [],
         configs: {
           walk: [],
           snmpCredentialsId: '',
@@ -163,6 +165,9 @@ export default {
       } else {
         this.object.paramObj.push({ key: '', value: [] })
       }
+      if (!this.object.chartIds) {
+        this.object.chartIds = []
+      }
       this.rightBox.show = true
     },
     getTableData () {
@@ -190,7 +195,17 @@ export default {
           }
         }
       })
-    }
+    },
+    chartBySync (row) {
+      this.$post('visual/panel/chart/syncTmpl', { modules: row.id }).then(res => {
+        if (res.code === 200) {
+          this.getTableData()
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
   },
   computed: {
   },

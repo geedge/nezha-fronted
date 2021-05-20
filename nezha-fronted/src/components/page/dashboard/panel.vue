@@ -59,6 +59,9 @@
                   <el-dropdown-item v-has="'panel_chart_add'">
                     <div id="chart-temp-add" @click="addChartByTemp"><i class="nz-icon nz-icon-add"></i>{{ $t('overall.AddByTemplate') }}</div>
                   </el-dropdown-item>
+                  <el-dropdown-item v-has="'panel_chart_edit'">
+                    <div id="chart-temp-sync" @click="chartBySync"><i class="nz-icon nz-icon-sync"></i>{{ $t('overall.syncChart') }}</div>
+                  </el-dropdown-item>
                 </template>
               </top-tool-more-options>
             </div>
@@ -295,6 +298,16 @@ export default {
       this.chart = Object.assign({}, this.blankChartTemp)
       this.chart.panelId = this.showPanel.id
       this.rightBox.chartTemp.show = true
+    },
+    chartBySync () {
+      this.$post('visual/panel/chart/syncTmpl', { panelId: this.showPanel.id }).then(res => {
+        if (res.code === 200) {
+          this.getData(this.filter)
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     addGroupItem (groupId) {
       this.chart = this.newChart()

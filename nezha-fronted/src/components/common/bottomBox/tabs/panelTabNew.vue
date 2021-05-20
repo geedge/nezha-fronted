@@ -51,10 +51,15 @@
           >
           </top-tool-more-options>
         </div>
-        <div v-else> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
+        <div v-else-if="from === fromRoute.chartTemp"> <button  @click="panelLock=!panelLock" id="panel-lock"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
                                type="button">
           <i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>
-        </button></div>
+        </button>
+          <button  @click="chartBySync" id="chart-sync"  :title='panelLock ? $t("overall.locked") : $t("overall.unlocked")' class="top-tool-btn margin-r-10"
+                   type="button">
+            <i class="nz-icon nz-icon-sync"></i>
+          </button>
+        </div>
       </template>
       <template v-slot>
         <div class="panel">
@@ -482,7 +487,17 @@ export default {
     },
     panelLockChange (boolean) {
       this.panelLock = boolean
-    }
+    },
+    chartBySync () {
+      this.$post('visual/panel/chart/syncTmpl', { pid: this.obj.id }).then(res => {
+        if (res.code === 200) {
+          this.getTableData()
+          this.$message.success(this.$t('tip.syncSuccess'))
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
   },
   mounted () {
     this.scrollbarWrap = this.$refs.dashboardScrollbar

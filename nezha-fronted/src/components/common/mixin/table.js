@@ -54,6 +54,11 @@ export default {
           this.$emit('shutdown', row)
           break
         }
+        case 'sync': {
+          // this.$emit('copy', row)
+          this.$emit('sync', row)
+          break
+        }
         default:
           break
       }
