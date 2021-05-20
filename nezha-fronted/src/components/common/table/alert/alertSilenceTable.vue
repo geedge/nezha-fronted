@@ -89,7 +89,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" v-has="'alertSilence_edit'"  @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" v-has="'alertSilence_edit'" @click="$emit('edit', scope.row)" :disabled="scope.row.state == 3"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['alertSilence_expire']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
@@ -205,7 +205,7 @@ export default {
           result2.push(item)
         }
       })
-      console.log([...result, ...result2])
+      // console.log([...result, ...result2])
       return [...result, ...result2]
     }
   }
