@@ -88,7 +88,7 @@
           <div class="table-list" id="tableList">
             <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
-                <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
+                <chart-list :additional-info="obj" :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
                             @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
                             @on-add-group-item-chart="addGroupItem"></chart-list>
               </div>
@@ -122,8 +122,7 @@ export default {
   props: {
     from: String,
     obj: Object,
-    draggable: { type: Boolean, default: true },
-    detail: Object
+    draggable: { type: Boolean, default: true }
   },
   data () {
     return {

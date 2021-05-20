@@ -13,7 +13,7 @@
       border
       @header-dragend="dragend"
       @sort-change="tableDataSort"
-      @selection-change="selectChange"
+      @selection-change="selectionChange"
     >
       <el-table-column
         :resizable="false"
@@ -493,14 +493,8 @@ export default {
     toDeleteMessage (obj) {
       this.$emit('toDelete', obj)
     },
-    selectChange (s) {
-      const ids = []
-      this.deleteBox.ids = ''
-      s.forEach(item => {
-        ids.push(item.id)
-      })
-      this.deleteBox.ids = ids.join(',')
-      this.$emit('select-change', s)
+    selectionChange (objs) {
+      this.$emit('selectionChange', objs)
     },
     closeDialog () {
       this.importBox.show = false

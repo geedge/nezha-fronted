@@ -1222,7 +1222,7 @@ const en = {
         list: 'List',
         delete: 'Delete',
         save: 'Save',
-        info: 'Info',
+        info: 'Info'
       }
     },
     project: {

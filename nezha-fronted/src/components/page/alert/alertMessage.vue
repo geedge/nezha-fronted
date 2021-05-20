@@ -22,7 +22,7 @@
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
-        <delete-button id="alert-msg-batch-delete" v-has="'message_delete'" :api="url" :clickFunction="openDelMessageBox" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
       </template>
       <template v-slot:default="slotProps">
         <alert-message-table
@@ -227,18 +227,34 @@ export default {
         this.queryChartDate()
       })
     },
-    del (row) {
-      const self = this
+    batchDel () {
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
         cancelButtonText: this.$t('tip.no'),
         type: 'warning'
       }).then(() => {
-        this.$delete(this.url + '?ids=' + row.id + '&state=3').then(response => {
+        this.$delete(this.url + '?ids=' + this.batchDeleteObjs.map(m => m.id).join(',') + '&state=' + this.state).then(response => {
           if (response.code === 200) {
-            self.delFlag = true
+            this.delFlag = true
             this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-            self.getTableData()
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
+    del (row) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(this.url + '?ids=' + row.id + '&state=' + this.state).then(response => {
+          if (response.code === 200) {
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
           } else {
             this.$message.error(response.msg)
           }
@@ -467,34 +483,6 @@ export default {
     },
     openedDialog () {
       this.$refs.remarkForm.clearValidate()
-    },
-    openDelMessageBox () {
-      if (this.batchDeleteObjs.length < 1) return
-      if (this.$refs.dataTable) {
-        this.$refs.dataTable.toDeleteMessage(false)
-      }
-    },
-    toDeleteMessage (obj) {
-      if (obj) {
-        this.deleteBox.ids = obj.id + ''
-      }
-      this.deleteBox.show = true
-    },
-    deleteMessage () {
-      this.$refs.remarkForm.validate(valid => {
-        if (valid) {
-          this.$put(this.url, this.deleteBox).then(res => {
-            if (res.code === 200) {
-              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
-              this.deleteBox.ids = []
-              this.deleteBox.show = false
-              this.getTableData()
-            } else {
-              this.$message.error(res.msg)
-            }
-          })
-        }
-      })
     },
     showExportDialog () {
       this.importBox.show = true

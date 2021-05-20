@@ -238,11 +238,12 @@ import { chartResizeTool } from '@/components/common/js/tools'
 export default {
   name: 'chartList',
   props: {
+    fromRoute,
     isModel: { type: Boolean, default: false },
     additionalInfo: {},
     draggable: { type: Boolean, default: true },
-    detail: Object,
     from: { type: String },
+    obj: Object,
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
     panelDataList: Array
@@ -562,7 +563,7 @@ export default {
         from: params.from
       }
       // alert-rule单独处理
-      if (param.from == fromRoute.alertRule) {
+      if (param.from === fromRoute.alertRule) {
         this.dataList = []
         this.dataList.push({
           id: -10,
@@ -591,74 +592,12 @@ export default {
           buildIn: 1,
           elements: [{
             id: '',
-            expression: `nz_alert_nums{id="${this.detail.id}"}`,
+            expression: `nz_alert_nums{id="${this.obj.id}"}`,
             type: ''
           }]
         })
         this.$set(this.filter, 'start_time', bus.timeFormate(new Date().getTime() - 24 * 60 * 60 * 1000, 'yyyy-MM-dd hh:mm:ss'))
         this.$set(this.filter, 'end_time', bus.timeFormate(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss'))
-        this.$nextTick(() => {
-          this.dataList.forEach((item, index) => {
-            this.$set(item, 'from', params.from)
-            this.setChartSize(item, index)// 设置该图表宽度
-            const chartBox = document.getElementById('chart-' + item.id)
-            this.handleElementInViewport(chartBox, 0, item, index)
-            if (item.type === 'group') {
-              this.$refs['editChart' + item.id][0].$refs.listGroup.getData(params)
-            }
-          })
-        })
-        return
-      }
-      // endpoint单独处理
-      if (param.from == fromRoute.endpoint) {
-        this.dataList = []
-        // this.dataList.push({
-        //   id: -8,
-        //   panelId: 0,
-        //   title: this.$t("alert.alertList"),
-        //   span: 8,
-        //   height: 700,
-        //   type: "alertList",
-        //   prev: -9,
-        //   next: -1,
-        //   buildIn: 1,
-        //   draggable: false,
-        //   resizable: false,
-        //   editable: false,
-        // });
-        this.dataList.push({
-          id: -10,
-          panelId: 0,
-          dataId: this.additionalInfo.id,
-          title: this.$t('project.chart.endpointInfo'),
-          span: 6,
-          height: 4,
-          type: 'endpointInfo',
-          prev: 0,
-          next: -9,
-          buildIn: 1,
-          elements: [{
-            expression: `up{endpoint="${this.additionalInfo.id}"}`
-          }],
-          draggable: false,
-          resizable: false,
-          editable: false
-        })
-        this.dataList.push({
-          id: -9,
-          panelId: 0,
-          title: this.$t('asset.assetInfo'),
-          span: 6,
-          height: 4,
-          type: 'assetInfo',
-          prev: -10,
-          next: -8,
-          buildIn: 1,
-          draggable: false,
-          resizable: false,
-          editable: false
-        })
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
             this.$set(item, 'from', params.from)
@@ -904,7 +843,7 @@ export default {
         this.modelStaticData(chartInfo, filterType)
       } else {
         // 没有数据的设置提示信息暂无数据-针对每一个图
-        const len = chartItem.elements.length
+        const len = chartItem.elements ? chartItem.elements.length : 0
         if (len === 0) {
           this.$nextTick(() => {
             if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
@@ -1399,82 +1338,24 @@ export default {
       const detail = []
       this.$refs['editChart' + chartInfo.id][0].showLoad()
       chartInfo.name = this.$t('project.chart.endpointInfo')
-
-      const basicInfo = JSON.parse(JSON.stringify(this.detail))
-      const basicInfoReq = new Promise((resolve, reject) => {
-        const now = new Date()
-        const startTime = bus.timeFormate(new Date(now).setHours(now.getHours() - 1), 'yyyy-MM-dd hh:mm:ss')
-        const endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
-        // const step = bus.getStep(startTime, endTime)
-        this.$nextTick(() => {
-          let query = chartInfo.elements[0].expression
-          if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea') && chartInfo.param) {
-            chartInfo.param.nullType = chartInfo.param.nullType || 'null'
-            query += '&nullType=' + chartInfo.param.nullType
-          }
-          this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {
-            if (response.status === 'success') {
-              if (response.data.result) {
-                const series = {
-                  name: '',
-                  symbol: 'emptyCircle', // 去掉点
-                  symbolSize: 4,
-                  smooth: 0.2, // 曲线变平滑
-                  showSymbol: false,
-                  data: [],
-                  type: 'line',
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  },
-                  itemStyle: {
-                    color (params) {
-                      if (params.data[1] == '1') {
-                        return '#50d050'
-                      } else {
-                        return '#d64f40'
-                      }
-                    }
-                  }
-                }
-                response.data.result.forEach((queryItem, resInnerPos) => {
-                  // 将秒改为毫秒
-                  series.data = queryItem.values.map((dpsItem, dpsIndex) => {
-                    return [dpsItem[0] * 1000, dpsItem[1]]
-                  })
-                })
-                basicInfo.stateSeries = [series]
-                basicInfo.state = ''
-                resolve({ title: this.$t('project.chart.basicTitle'), data: basicInfo, type: 'endpointInfo' })
-              }
-            }
-          })
-        })
-      })
-
-      const endpointId = this.additionalInfo.id
-      const alertMsg = new Promise((resolve, reject) => {
-        this.$get('/alert/message?endpointId=' + endpointId + '&state=1&pageSize=-1').then(response => {
-          if (response.code == 200) {
-            const alerts = {}
-            if (response.data) {
-              response.data.list.forEach(t => {
-                const alertRule = t.alertRule.alertName
-                if (alerts[alertRule]) {
-                  alerts[alertRule]++
-                } else {
-                  alerts[alertRule] = 1
-                }
-              })
-            }
-            resolve({ title: this.$t('overall.alert'), data: alerts })
-          }
-        })
-      })
-      Promise.all([basicInfoReq, alertMsg]).then(resolves => {
-        resolves.forEach(t => detail.push(t))
-        this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail)
-      })
+      chartInfo.from = fromRoute.endpoint
+      const basicInfo = JSON.parse(JSON.stringify(this.obj))
+      detail.push(
+        {
+          data: {
+            id: basicInfo.id,
+            name: basicInfo.name,
+            type: basicInfo.module.type,
+            project: basicInfo.project.name,
+            module: basicInfo.module.name,
+            alerts: basicInfo.alertNum,
+            state: basicInfo.state === 1 ? 'up' : 'down'
+          },
+          type: 'endpointInfo',
+          title: this.$t('project.chart.basicTitle')
+        }
+      )
+      this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, detail)
     },
     getAssetInfoChartData (chartInfo) {
       const vm = this
@@ -1840,7 +1721,9 @@ export default {
     },
     resize () {
       this.init()
-      this.$parent.dateChange()
+      this.$nextTick(() => {
+        this.$parent.$parent.dateChange()
+      })
     },
     init () {
       this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth - 14)
