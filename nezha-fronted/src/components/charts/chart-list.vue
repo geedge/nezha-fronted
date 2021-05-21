@@ -675,21 +675,9 @@ export default {
               this.dataList.forEach((item, index) => {
                 this.setChartSize(item, index)// 设置该图表宽度
                 this.$set(item, 'from', params.from)
-                if (param.from == fromRoute.asset) {
-                  if (item.type == 'assetInfo') {
-                    this.$set(item, 'draggable', true)
-                    this.$set(item, 'resizable', true)
-                  }
-                } else if (param.from == fromRoute.project) {
-                  if (item.type == 'projectInfo') {
-                    this.$set(item, 'draggable', true)
-                    this.$set(item, 'resizable', true)
-                  }
-                } else if (!param.from) {
-                  this.$set(item, 'draggable', true)
-                  this.$set(item, 'resizable', true)
-                  this.$set(item, 'editable', true)
-                }
+                this.$set(item, 'draggable', true)
+                this.$set(item, 'resizable', true)
+                this.$set(item, 'editable', true)
                 if (!item.isLoaded) {
                   // 获得当前显示在浏览器的图表，从后台获取数据
                   const chartBox = document.getElementById('chart-' + item.id)
