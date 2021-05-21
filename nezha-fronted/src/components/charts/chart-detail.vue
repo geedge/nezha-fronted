@@ -27,7 +27,7 @@
           <div ref="scrollbar" style="height: 100%;width:100%; overflow: auto;">
             <div v-for="(item, index) in detail" :key="index" class="chart-sub">
               <div class="chart-sub-title" @click="hideElement(index)">
-                <span><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) === -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
+                <span v-if="data.from !== fromRoute.endpoint"><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) === -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                 <span>{{item.title}}</span>
               </div>
               <el-collapse-transition>
@@ -340,6 +340,9 @@ export default {
       }
     },
     hideElement (index) {
+      if (this.data.from === fromRoute.endpoint) {
+        return
+      }
       if (this.show.indexOf(index) > -1) {
         this.show.splice(this.show.indexOf(index), 1)
       } else {
