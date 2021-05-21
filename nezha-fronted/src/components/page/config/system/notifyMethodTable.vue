@@ -75,7 +75,7 @@
             <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="cancel(scope.row)" :disabled="prevent_opt.save"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" :class="{'table-operation-item-disable':isBuiltIn(scope.row)}" :disabled="isBuiltIn(scope.row)" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+            <button :class="{'table-operation-item--disable':isBuiltIn(scope.row)}" :disabled="isBuiltIn(scope.row)" class="table-operation-item" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
             <el-dropdown size="medium" trigger="hover" @command="tableOperation">
               <div class="table-operation-item table-operation-item--more">
                 <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>

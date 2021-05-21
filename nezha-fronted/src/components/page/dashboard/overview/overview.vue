@@ -26,12 +26,12 @@
           <div id="overview-to-asset" v-loading="assetLoading" class="content-col-content clickable" @click="jumpTo('asset')">
             <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
-              <el-tooltip :content="`${assetData.length}`" class="item" effect="light" placement="top">
+              <el-tooltip :content="`${assetData}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">
-                  <vue-count-up :decimals="assetData.length < 1000 ? 0 : 1" :duration="1" :end-value="assetData.length | numberFormat"
+                  <vue-count-up :decimals="assetData < 1000 ? 0 : 1" :duration="1" :end-value="assetData | numberFormat"
                                :start-value="0"></vue-count-up>
-                  <span class="overview-row-unit">{{assetData.length| unitFormat}}</span>
-                  <span v-if="assetData.length > 1000 " class="over-num">+</span>
+                  <span class="overview-row-unit">{{assetData | unitFormat}}</span>
+                  <span v-if="assetData > 1000 " class="over-num">+</span>
                 </div>
               </el-tooltip>
               <div class="content-col-content-title">{{$t("dashboard.overview.asset.title")}}</div>
@@ -211,6 +211,7 @@ export default {
       // data
       assetLoading: false,
       assetData: [], // asset总数
+      assetAlertData: [],
       assetTypeLoading: false, // 第三行第一个图
       assetTypeData: [],
       assetStateData: [],
@@ -432,12 +433,17 @@ export default {
       return new Promise(resolve => {
         this.assetLoading = true
         this.$refs.assetHexagon.startLoading()
+        this.$get('stat/asset/total').then(response => {
+          if (response.code === 200) {
+            this.assetData = response.data.num
+          }
+        })
         this.$get('stat/alertMessage/topN', { size: 48, dimension: 'asset' }).then(response => {
           this.assetLoading = false
           this.$refs.assetHexagon.endLoading()
           if (response.code === 200) {
-            this.assetData = response.data.list.sort((a, b) => b.alertNum - a.alertNum)
-            const alertTopAssets = this.assetData.slice(0, 48)
+            this.assetAlertData = response.data.list.sort((a, b) => b.alertNum - a.alertNum)
+            const alertTopAssets = this.assetAlertData.slice(0, 48)
             const requests = alertTopAssets.map(a => axios.get(`stat/alertMessage/severity?assetId=${a.id}`))
             const assetStateData = []
             axios.all(requests).then(result => {
