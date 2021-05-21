@@ -288,7 +288,7 @@ export default {
               id: 21,
               name: 'Host',
               type: 'input',
-              label: 'host',
+              label: 'manageIp',
               disabled: false
             }, {
               id: 22,
@@ -319,7 +319,7 @@ export default {
           },
           {
             label: this.$t('asset.host'),
-            prop: 'host',
+            prop: 'manageIp',
             show: true
           }
         ],
