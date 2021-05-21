@@ -329,6 +329,8 @@ export default {
         this.searchLabel.assetIds = this.obj.id
       } else if (this.from === fromRoute.alertRule) {
         this.searchLabel.ruleIds = this.obj.id
+      } else if (this.from === fromRoute.dc) {
+        this.searchLabel.dcIds = this.obj.id
       }
       this.$get(this.url + '?state=' + this.state, this.searchLabel).then(response => {
         this.tools.loading = false
