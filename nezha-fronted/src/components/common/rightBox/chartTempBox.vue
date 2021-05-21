@@ -50,6 +50,7 @@
                          :table-data="transfer.tableData"
                          :tableTitle="transferTableTitle"
                          style="margin-bottom: 20px;"
+                         @pageNo="pageNoChange"
                          @leftToRight="addAsset"
                          @rightToLeft="removeAsset"
                          @search="search">
@@ -194,6 +195,10 @@ export default {
     }
   },
   methods: {
+    pageNoChange (val) {
+      this.transfer.pageObj.pageNo = val
+      this.getTableData()
+    },
     clickOutside () {
       this.esc(false)
     },
@@ -294,6 +299,7 @@ export default {
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
           this.transfer.pageObj.total = response.data.total
+          this.transfer.pageObj.pages = response.data.pages
         }
       })
     },
@@ -308,6 +314,7 @@ export default {
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
           this.transfer.pageObj.total = response.data.total
+          this.transfer.pageObj.pages = response.data.pages
         }
       })
     },
