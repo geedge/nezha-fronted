@@ -175,7 +175,7 @@ export default {
         form.append('excelFile', this.importFile.raw)
         if (this.paramsType) {
           form.append('type', this.paramsType)
-          if (this.paramsType === 'asset' || this.paramsType === 'model') {
+          if (this.paramsType === 'asset' || this.paramsType === 'endpoint') {
             form.append('linkId', this.link ? this.link.id : '')
           }
         }
@@ -217,12 +217,12 @@ export default {
 
       let url = null
       const param = { language: language }
-      if (this.exportFileName.indexOf('asset') > -1) {
+      if (this.paramsType === 'asset') {
         url = '/asset/asset/template'
         param.type = 'asset'
-      } else if (this.exportFileName.indexOf('dashboard') > -1) {
+      } else if (this.paramsType === 'dashboard') {
         url = 'visual/panel/template'
-      } else if (this.exportFileName.indexOf('endpoint') > -1) {
+      } else if (this.paramsType === 'endpoint') {
         url = '/monitor/endpoint/template'
         param.type = 'endpoint'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
@@ -342,7 +342,7 @@ export default {
       switch (path) {
         case '/panel': this.paramsType = 'dashboard'; break
         case '/asset': this.paramsType = 'asset'; break
-        case '/model': this.paramsType = 'model'; break
+        case '/monitor/endpoint': this.paramsType = 'endpoint'; break
         default: this.paramsType = ''; break
       }
     }
