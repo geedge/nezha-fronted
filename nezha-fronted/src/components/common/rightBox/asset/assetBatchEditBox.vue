@@ -189,11 +189,13 @@
           <!-- 选择资产，穿梭框 -->
           <div class="form__sub-title">{{$t('overall.select')}}</div>
           <nz-transfer ref="transfer"
+                       style="margin-bottom: 20px;"
                        :page-obj="transfer.pageObj"
                        :search-msg="transfer.searchMsg"
                        :table-data="transfer.tableData"
-                       style="margin-bottom: 20px;"
                        :tableTitle="transfer.tableTitle"
+                       @pageNo="pageNoChange"
+                       @search="search"
                        @leftToRight="addAsset"
                        @rightToLeft="removeAsset">
             <template v-slot:title>Selected</template>
@@ -269,7 +271,6 @@ export default {
         selectedData: [],
         searchLabel: {},
         searchMsg: { // 给搜索框子组件传递的信息
-          zheze_none: true,
           searchLabelList: [
             {
               id: 1,
@@ -386,13 +387,22 @@ export default {
         this.labelCascShow = true
       })
     },
+    pageNoChange (val) {
+      this.transfer.pageObj.pageNo = val
+      this.getTableData()
+    },
     getTableData () {
       this.$refs.transfer.startLoading()
-      this.$get(this.url, { ...this.transfer.searchLabel, ...this.transfer.pageObj }).then(response => {
+      const searchLabel = { ...this.transfer.searchLabel }
+      if (this.editData.editType === assetConstants.editTypeData.account) {
+        searchLabel.authProtocol = this.editData.authProtocol
+      }
+      this.$get(this.url, { ...searchLabel, ...this.transfer.pageObj }).then(response => {
         this.$refs.transfer.endLoading()
         if (response.code === 200) {
           this.transfer.tableData = response.data.list
           this.transfer.pageObj.total = response.data.total
+          this.transfer.pageObj.pages = response.data.pages
         }
       })
     },
@@ -412,6 +422,15 @@ export default {
   },
   mounted () {
     this.getTableData()
+  },
+  watch: {
+    'editData.authProtocol': {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        this.getTableData()
+      }
+    }
   }
 }
 </script>

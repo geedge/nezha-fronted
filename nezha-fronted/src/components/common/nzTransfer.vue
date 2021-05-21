@@ -39,6 +39,7 @@
       </div>
       <div class="box__footer">
         <el-pagination
+          @current-change="pageNoChange"
           :current-page.sync="selectablePage.pageNo"
           :page-size="selectablePage.pageSize"
           :total="selectablePage.total"
@@ -46,7 +47,7 @@
           small
         >
           <template>
-            <el-input ref="jumpInput" v-model="selectablePage.pageNo" class="jump-input" @change="selectableChange" @keyup.enter.native="selectableChange"/>
+            <el-input ref="jumpInput" v-model.number="selectablePage.pageNo" class="jump-input" @change="selectableChange" @keyup.enter.native="selectableChange"/>
             <span class="jump-pages">/&nbsp{{selectablePage.pages}}</span>
           </template>
         </el-pagination>
@@ -172,11 +173,14 @@ export default {
       this.$emit('search', this.searchLabel, this.selectablePage)
     },
     selectableChange (current) { // 左侧table翻页
-      this.selectablePage.pageNo = current
+      // this.selectablePage.pageNo = current
       this.$emit('search', this.searchLabel, this.selectablePage)
     },
     selectedChange (current) { // 右侧table翻页
 
+    },
+    pageNoChange (val) {
+      this.$emit('pageNo', val)
     },
     selectableSelectionChange (val) { // 左侧选项变化
       this.selectableSelection = val
