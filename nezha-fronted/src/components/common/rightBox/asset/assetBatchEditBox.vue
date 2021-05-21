@@ -318,7 +318,7 @@ export default {
             show: true
           },
           {
-            label: this.$t('asset.host'),
+            label: this.$t('asset.manageIp'),
             prop: 'manageIp',
             show: true
           }
@@ -429,6 +429,17 @@ export default {
       deep: true,
       handler (n) {
         this.getTableData()
+      }
+    },
+    'editData.editType': {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n !== assetConstants.editTypeData.account) {
+          this.editData.authProtocol = 0
+        } else {
+          this.getTableData()
+        }
       }
     }
   }

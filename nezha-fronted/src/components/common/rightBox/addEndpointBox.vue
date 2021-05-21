@@ -1,8 +1,8 @@
 <template>
-  <div class="right-box right-box-add-endpoint" :class="{'right-box-add-endpoint-snmp': currentModuleCopy.type && currentModuleCopy.type.toLowerCase() == 'snmp'}" v-clickoutside="{obj:endpoint,func:clickOutside}">
+  <div v-clickoutside="{obj:endpoint,func:clickOutside}" :class="{'right-box-add-endpoint-snmp': currentModule.type && currentModule.type.toLowerCase() == 'snmp'}" class="right-box right-box-add-endpoint">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">{{$t("overall.createEndpoint")}}</div>
+      <div class="header__title">{{$t("overall.createEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: object, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
@@ -10,91 +10,92 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box right-box__container" style="overflow: hidden">
-      <el-form class="right-box-form right-box-form-left" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
-        <!--project-->
-        <el-form-item :label='$t("project.project.projectName")' prop="projectId" class="select-warp">
-          <el-select @change="((val) => {changeProject(val)})" value-key="id" popper-class="config-dropdown" v-model="currentProjectCopy" placeholder="" size="small" id="add-endpoint-project">
-            <el-option v-for="item in projectList" :key="item.id" :label="item.name" :value="item" :id="'project-'+item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <!--module-->
-        <el-form-item :label='$t("project.module.module")' prop="moduleId" class="select-warp">
-          <el-select @change="((val) => {changeModule(val)})" value-key="id" popper-class="config-dropdown" v-model="currentModuleCopy" placeholder="" size="small" id="add-endpoint-module" :disabled="!currentProjectCopy.id">
-            <el-option v-for="item in moduleList" :key="item.id" :label="item.name" :value="item" :id="'module-'+item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <!--asset和endpoint-->
-        <div class="asset-and-endpoint">
-          <!--asset-->
-          <div class="right-box-asset-table">
-            <div v-show="!currentModuleCopy.id" class="disabled-asset-table">
-            </div>
-            <div class="search-box">
-              <search-input
-                ref="searchInput"
-                :searchMsg="searchMsg"
-                @search="search"
-                style="width:100%"
-                :show-history="false"
-                :show-search="false"
-                :placeholder="$t('overall.placeHolder')"
-              ></search-input>
-            </div>
-            <el-table
-              ref="multipleTable"
-              :data="assetTableData"
-              tooltip-effect="dark"
-              class="asset-table"
-              :row-class-name="setRowShow"
-              style="width: 100%"
-              height="calc(100% - 97px)"
-              @selection-change="handleSelectionChangeAsset">
-               <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                v-for="(item, index) in assetTableTitle"
-                :key="`col-${index}`"
-                :fixed="item.fixed"
-                :label="item.label"
-                :min-width="`${item.minWidth}`"
-                :prop="item.prop"
-                :resizable="true"
-                :sort-orders="['ascending', 'descending']"
-                :width="`${item.width}`"
-                class="data-column"
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form ref="addEndpoint" :model="endpoint" :rules="rules" label-position = "top">
+          <!--project-->
+          <el-form-item :label='$t("project.project.projectName")' class="select-warp" prop="projectId">
+            <el-select id="add-endpoint-project" v-model="currentProject" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeProject(val)})">
+              <el-option v-for="item in projectList" :id="'project-'+item.id" :key="item.id" :label="item.name" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--module-->
+          <el-form-item :label='$t("project.module.module")' class="select-warp" prop="moduleId">
+            <el-select id="add-endpoint-module" v-model="currentModule" :disabled="!currentProject.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeModule(val)})">
+              <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--asset和endpoint-->
+          <div class="asset-and-endpoint">
+            <!--asset-->
+            <div class="right-box-asset-table">
+              <div v-show="!currentModule.id" class="disabled-asset-table">
+              </div>
+              <div class="search-box">
+                <search-input
+                  ref="searchInput"
+                  :placeholder="$t('overall.placeHolder')"
+                  :searchMsg="searchMsg"
+                  :show-history="false"
+                  :show-search="false"
+                  style="width:100%"
+                  @search="search"
+                ></search-input>
+              </div>
+              <el-table
+                ref="multipleTable"
+                :data="assetTableData"
+                :row-class-name="setRowShow"
+                class="asset-table"
+                height="calc(100% - 97px)"
+                style="width: 100%"
+                tooltip-effect="dark"
+                @selection-change="handleSelectionChangeAsset">
+                <el-table-column
+                  type="selection"
+                  width="55">
+                </el-table-column>
+                <el-table-column
+                  v-for="(item, index) in assetTableTitle"
+                  :key="`col-${index}`"
+                  :fixed="item.fixed"
+                  :label="item.label"
+                  :min-width="`${item.minWidth}`"
+                  :prop="item.prop"
+                  :resizable="true"
+                  :sort-orders="['ascending', 'descending']"
+                  :width="`${item.width}`"
+                  class="data-column"
 
-              >
-                <template slot="header">
-                  <span>{{item.label}}</span>
-                  <div class="col-resize-area"></div>
-                </template>
-                <template slot-scope="scope" :column="item">
-                  <template v-if="item.prop == 'brand'">
-                    <span>{{scope.row[item.prop].name}}</span>
+                >
+                  <template slot="header">
+                    <span>{{item.label}}</span>
+                    <div class="col-resize-area"></div>
                   </template>
-                  <template v-else-if="item.prop == 'model'">
-                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                  <template slot-scope="scope" :column="item">
+                    <template v-if="item.prop == 'brand'">
+                      <span>{{scope.row[item.prop].name}}</span>
+                    </template>
+                    <template v-else-if="item.prop == 'model'">
+                      <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                    </template>
+                    <template v-else-if="item.prop == 'dc'">
+                      <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                    </template>
+                    <template v-else-if="item.prop == 'cabinet'">
+                      <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                    </template>
+                    <template v-else-if="item.prop == 'type'">
+                      <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                    </template>
+                    <template v-else-if="item.prop == 'state'">
+                      <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
+                    </template>
+                    <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
                   </template>
-                  <template v-else-if="item.prop == 'dc'">
-                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
-                  </template>
-                   <template v-else-if="item.prop == 'cabinet'">
-                     <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
-                  </template>
-                  <template v-else-if="item.prop == 'type'">
-                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
-                  </template>
-                  <template v-else-if="item.prop == 'state'">
-                    <span>{{scope.row[item.prop]?scope.row[item.prop].name : ''}}</span>
-                  </template>
-                  <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="table-bottom">
+                </el-table-column>
+              </el-table>
+              <div class="table-bottom">
                 <el-pagination
                   style="padding-top:10px"
                   small
@@ -109,79 +110,80 @@
                     <span class="jump-pages">/&nbsp{{pages.pages}}</span>
                   </template>
                 </el-pagination>
-              <span class="add-endpoint" @click="addEndpoint">
+                <span class="add-endpoint" @click="addEndpoint">
                 <i class="nz-icon nz-icon-arrow-right"></i>
               </span>
+              </div>
+              <div v-if="selectAssetAll" class="asset-allselect">
+                {{$t('project.endpoint.allselect')}}
+              </div>
             </div>
-            <div v-if="selectAssetAll" class="asset-allselect">
-              {{$t('project.endpoint.allselect')}}
-            </div>
-          </div>
-          <!--endpoint-->
-          <div class="right-box-endpoint-table">
-            <div class="search-box" style="display: flex;justify-content: flex-end">
-              <el-button @click="showRightBox" class="top-tool-btn" type="button">
-                <i class="nz-icon-gear nz-icon"></i>
-              </el-button>
-              <el-button @click="editAllEndpoint" class="top-tool-btn" type="button">
-                <i class="nz-icon-batch-edit nz-icon"></i>
-              </el-button>
-            </div>
-            <el-table
-              :data="endpointTableData"
-              ref="endpointTable"
-              style="width:100%;border-radius: 4px;"
-              height="calc(100% - 95px)"
-              id="add-endpoint-asset-table"
-              @selection-change="handleSelectionChangeEndpoint"
-              empty-text=" ">
-              <el-table-column
-                type="selection"
-                width="25"
-                style="padding: 0 1px;">
-              </el-table-column>
-              <el-table-column
-                label-class-name="endpoints-box-endpoints-title"
-                v-for="(title, index) in endpointTableTitle"
-                v-if="title.show"
-                :min-width="title.width"
-                :key="index"
-                :label="title.label"
-                :resizable="true"
-              >
-                <template slot-scope="scope" :column="title">
-                  <span v-if="title.prop == 'asset'">{{scope.row.assetName}}</span>
-                  <span v-else-if="title.prop == 'name'">
+            <!--endpoint-->
+            <div class="right-box-endpoint-table">
+              <div class="search-box" style="display: flex;justify-content: flex-end">
+                <el-button class="top-tool-btn" type="button" @click="showRightBox">
+                  <i class="nz-icon-gear nz-icon"></i>
+                </el-button>
+                <el-button class="top-tool-btn" type="button" @click="editAllEndpoint">
+                  <i class="nz-icon-batch-edit nz-icon"></i>
+                </el-button>
+              </div>
+              <el-table
+                id="add-endpoint-asset-table"
+                ref="endpointTable"
+                :data="endpointTableData"
+                empty-text=" "
+                height="calc(100% - 95px)"
+                style="width:100%;border-radius: 4px;"
+                @selection-change="handleSelectionChangeEndpoint">
+                <el-table-column
+                  style="padding: 0 1px;"
+                  type="selection"
+                  width="25">
+                </el-table-column>
+                <el-table-column
+                  v-for="(title, index) in endpointTableTitle"
+                  v-if="title.show"
+                  :key="index"
+                  :label="title.label"
+                  :min-width="title.width"
+                  :resizable="true"
+                  label-class-name="endpoints-box-endpoints-title"
+                >
+                  <template slot-scope="scope" :column="title">
+                    <span v-if="title.prop == 'asset'">{{scope.row.assetName}}</span>
+                    <span v-else-if="title.prop == 'name'">
                       {{scope.row.name}}
                     </span>
-                  <template v-else-if="title.prop === 'configs'">
-                    <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
-                      <span class="configs-endpoint">{ ... }</span>
-                      <div class="endpointConfigsTips" slot="content">
-<!--                        <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row[title.prop])"></i></span>-->
-                        <pre >{{JSON.stringify(scope.row[title.prop],null,2)}}</pre>
-<!--                        <pre>{{}}</pre>-->
-                      </div>
-                    </el-tooltip>
+                    <template v-else-if="title.prop === 'configs'">
+                      <el-tooltip effect="light" placement="right" popper-class="prevent-clickoutside">
+                        <span class="configs-endpoint">{ ... }</span>
+                        <div slot="content" class="endpointConfigsTips">
+                          <!--                        <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row[title.prop])"></i></span>-->
+                          <pre >{{JSON.stringify(scope.row[title.prop],null,2)}}</pre>
+                          <!--                        <pre>{{}}</pre>-->
+                        </div>
+                      </el-tooltip>
+                    </template>
                   </template>
-                </template>
-              </el-table-column>
-              <el-table-column label="" width="56"  fixed="right">
-                <template slot-scope="scope" style="text-align: center">
+                </el-table-column>
+                <el-table-column fixed="right" label=""  width="56">
+                  <template slot-scope="scope" style="text-align: center">
                   <span @click="editEndpointRow(scope.row, scope.$index)">
                     <i class="nz-icon-gear nz-icon"></i>
                   </span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="table-bottom">
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="table-bottom">
               <span class="add-endpoint" @click="removeEndpoint" style="margin-left: 10px">
                 <i class="nz-icon nz-icon-arrow-left"></i>
               </span>
+              </div>
             </div>
           </div>
-        </div>
-      </el-form>
+        </el-form>
+      </div>
     </div>
 
     <!--底部按钮-->
@@ -204,10 +206,6 @@
 import editEndpointBoxNew from './editEndpointBoxNew'
 export default {
   name: 'endpointBox',
-  props: {
-    currentProject: Object,
-    currentModule: Object
-  },
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
@@ -235,8 +233,8 @@ export default {
       paramBorderColor: '#dcdfe6',
       endpointTouch: false,
       endpoint: { projectId: '', moduleId: '', endpointList: [] },
-      currentModuleCopy: {},
-      currentProjectCopy: { id: '' },
+      currentModule: {},
+      currentProject: { id: '' },
       tempParamObj: [],
       tempLabelModule: [],
       inputKeyErr: [],
@@ -250,12 +248,12 @@ export default {
         projectId: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
-        port: 9100,
+        port: '',
         configs: {
           walk: [],
           snmpCredentialsId: '',
           metrics_path: '',
-          port: 9100,
+          port: '',
           host: '{{asset.manageIp}}',
           scrape_interval: '',
           scrape_timeout: '',
@@ -452,7 +450,7 @@ export default {
       this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
           this.projectList = response.data.list
-          this.getModuleList(this.currentProjectCopy.id)
+          this.getModuleList(this.currentProject.id)
         }
       })
     },
@@ -484,7 +482,7 @@ export default {
     },
 
     changeProject (project) {
-      this.currentModuleCopy = {}
+      this.currentModule = {}
       this.endpoint.moduleId = ''
       this.endpoint.projectId = project.id
       this.editParamBox.show = false
@@ -548,9 +546,9 @@ export default {
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
-      this.endpoint.projectId = this.currentProjectCopy.id
-      this.endpoint.moduleId = this.currentModuleCopy.id
-      if (this.endpointTableData.length == 0) {
+      this.endpoint.projectId = this.currentProject.id
+      this.endpoint.moduleId = this.currentModule.id
+      if (this.endpointTableData.length === 0) {
         this.endpointTouch = true
         this.$refs.addEndpoint.validate()
         return false
@@ -616,12 +614,12 @@ export default {
           assetId: item.id,
           assetName: item.name,
           // asset: item,
-          type: this.currentModuleCopy.type,
-          projectId: this.currentModuleCopy.projectId,
-          configs: { ...JSON.parse(this.currentModuleCopy.configs), host: item.manageIp },
-          moduleId: this.currentModuleCopy.id
+          type: this.currentModule.type,
+          projectId: this.currentModule.projectId,
+          configs: { ...JSON.parse(this.currentModule.configs), host: item.manageIp },
+          moduleId: this.currentModule.id
         }
-        obj.name = this.currentModuleCopy.endpointNameTmpl
+        obj.name = this.currentModule.endpointNameTmpl
         obj.configs = JSON.stringify(obj.configs)
         arr.push(obj)
       })
@@ -673,14 +671,14 @@ export default {
       this.optionType = 'add'
       this.object = JSON.parse(JSON.stringify(u))
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.object.configs.port && (this.object.port = this.object.configs.port)
       this.rightBox.show = true
     },
     showRightBox () {
       this.optionType = 'batch'
-      this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModuleCopy.projectId, moduleId: this.currentModuleCopy.id, assetName: '', type: this.currentModuleCopy.type }
+      this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModule.projectId, moduleId: this.currentModule.id, assetName: '', type: this.currentModule.type }
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+      this.object.configs.port && (this.object.port = this.object.configs.port)
       this.rightBox.show = true
     },
     editAllEndpoint () {
@@ -734,32 +732,11 @@ export default {
     currentProject: {
       immediate: true,
       handler (n, o) {
-        if (n) {
-          this.currentProjectCopy = Object.assign({}, n)
-          this.endpoint.projectId = n.id
-          this.getModuleList(n.id)
-        }
       }
     },
     currentModule: {
       immediate: true,
       handler (n, o) {
-        if (n) {
-          this.endpoint.moduleId = n.id
-          this.currentModuleCopy = JSON.parse(JSON.stringify(n))
-        }
-      }
-    },
-    currentModuleCopy: {
-      immediate: true,
-      handler (n, o) {
-        // if (n.type && n.type.toLowerCase() == 'snmp') {
-        //   this.endpointTableTitle[4].show = false
-        //   this.endpointTableTitle[5].show = false
-        // } else {
-        //   this.endpointTableTitle[4].show = true
-        //   this.endpointTableTitle[5].show = true
-        // }
       }
     }
   }

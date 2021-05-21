@@ -2,16 +2,16 @@
   <div class="right-box right-box-module" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">
-      <span v-if="optionType === 'edit'">
-       {{ $t("project.module.editEndpoint")}}
-      </span>
-        <span v-if="optionType === 'batch'">
-       {{ $t("project.module.batchEndpoint")}}
-      </span>
-        <span v-if="optionType === 'add'">
-       {{ $t("project.module.createEndpoint")}}
-      </span>
+      <div class="header__title">
+        <span v-if="optionType === 'edit'">
+         {{ $t("project.module.editEndpoint")}}
+        </span>
+          <span v-if="optionType === 'batch'">
+         {{ $t("project.module.batchEndpoint")}}
+        </span>
+          <span v-if="optionType === 'add'">
+         {{ $t("project.module.createEndpoint")}}
+        </span>
       </div>
       <!-- end--标题-->
       <div class="header__operation">
@@ -20,40 +20,40 @@
     </div>
 
     <!-- begin--表单-->
-    <div class="right-box-form-box  right-box__container" ref="scrollbar">
-      <el-form class="right-box-form right-box-form-left" :model="editEndpoint" label-position = "top" label-width="120px" :rules="rules" ref="moduleForm">
-        <!--name-->
-        <el-form-item :label='$t("project.module.name")' prop="name" label-width="125px" v-if="optionType!=='batch'">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model="editEndpoint.name" size="small" id="module-box-input-name"></el-input>
-        </el-form-item>
-        <!--project-->
-        <el-form-item :label='$t("project.project.projectName")' prop="projectId">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editEndpoint.projectId" placeholder="" size="small" id="module-box-input-project" @change="changeProject" :disabled="disabled">
-            <el-option :id="'module-project-'+item.id" v-for="item in projectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <!--asset-->
-        <el-form-item :label='$t("project.module.asset")' prop="asset" label-width="125px">
-          <el-input placeholder="" maxlength="64" show-word-limit v-model="editEndpoint.assetName" size="small" id="module-box-input-assetName" :disabled="disabled"></el-input>
-        </el-form-item>
-        <!--module-->
-        <el-form-item :label='$t("project.module.module")' prop="remark">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editEndpoint.moduleId" placeholder="" size="small" :disabled="!editEndpoint.projectId || disabled " id="module-box-input-module">
-            <el-option :id="'module-'+item.id" v-for="item in moduleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+    <div ref="scrollbar" class="right-box__container">
+      <div class="container__form">
+        <el-form ref="moduleForm" :model="editEndpoint" :rules="rules" label-position = "top" label-width="120px">
+          <!--name-->
+          <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
+            <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+          </el-form-item>
+          <!--project-->
+          <el-form-item :label='$t("project.project.projectName")' prop="projectId">
+            <el-select id="module-box-input-project" v-model="editEndpoint.projectId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeProject">
+              <el-option v-for="item in projectList" :id="'module-project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--asset-->
+          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="asset">
+            <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+          </el-form-item>
+          <!--module-->
+          <el-form-item :label='$t("project.module.module")' prop="remark">
+            <el-select id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+              <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <!--type-->
-        <el-form-item :label='$t("project.endpoint.type")' prop="type">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editEndpoint.type" placeholder="" size="small" id="module-box-input-type" :disabled="!!editEndpoint.id || disabled" @change="changeAuthType" >
-            <el-option :id="'module-type-'+item.id" v-for="item in typetList" :key="item.value" :label="item.name" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
+          <!--type-->
+          <el-form-item :label='$t("project.endpoint.type")' prop="type">
+            <el-select id="module-box-input-type" v-model="editEndpoint.type" :disabled="!!editEndpoint.id || disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType" >
+              <el-option v-for="item in typetList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <!-- snmp表单 -->
-        <span class="snmp-form" v-if="editEndpoint.type && editEndpoint.type == 'snmp'">
-          <div class="right-box-sub-title">SNMP settings
-          </div>
+          <!-- snmp表单 -->
+          <span v-if="editEndpoint.type && editEndpoint.type == 'snmp'" class="snmp-form">
+          <div class="right-box-sub-title">SNMP settings</div>
           <div class="right-box-line"></div>
 
           <el-row>
@@ -84,163 +84,164 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!--credentials-->
+            <!--credentials-->
         <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
-          <el-select value-key="id" popper-class="config-dropdown" v-model="editEndpoint.configs.snmpCredentialsId" placeholder="" size="small" id="module-box-input-credentials">
+          <el-select id="module-box-input-credentials" v-model="editEndpoint.configs.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
             <el-option :id="'module-type-'+item.id" v-for="item in credentialList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         </span>
 
-        <!--Enpoint template-->
-        <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
-          <el-tooltip placement="top" effect="light">
-            <div slot="content">
-              {{$t('project.module.tip.defaultEndpointSet')}}
-              <div></div>
-              {{$t('project.module.tip.relation')}}
-            </div>
-            <i class="nz-icon nz-icon-info-normal"></i>
-          </el-tooltip>
-        </div>
-        <div class="right-box-line"></div>
-
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="Basic" name="Basic">
-            <!--path-->
-            <el-form-item :label='$t("project.endpoint.path")' prop="configs.metrics_path" class="half-form-item">
-              <el-input placeholder="" v-model="editEndpoint.configs.metrics_path" size="small" id="module-box-input-path"></el-input>
-            </el-form-item>
-            <!--port-->
-            <el-form-item :label='$t("project.endpoint.port")' prop="port" class="half-form-item">
-              <el-input placeholder="" v-model.number="editEndpoint.port" size="small" id="module-box-input-port"></el-input>
-            </el-form-item>
-            <!--host-->
-            <el-form-item :label='$t("project.endpoint.host")' prop="host">
-              <el-input placeholder="" v-model="editEndpoint.configs.host" size="small" id="module-box-input-host"></el-input>
-            </el-form-item>
-            <transition name="el-zoom-in-top">
-              <div v-show="showAllBasicOption" >
-<!--                &lt;!&ndash;name pattern&ndash;&gt;-->
-<!--                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">-->
-<!--                  &lt;!&ndash;              <el-input placeholder="" v-model=""></el-input>&ndash;&gt;-->
-<!--                  <el-autocomplete-->
-<!--                    class="inline-input"-->
-<!--                    size="small"-->
-<!--                    id="module-box-input-pattern"-->
-<!--                    v-model="editEndpoint.endpointNameTmpl"-->
-<!--                    :fetch-suggestions="querySearch"-->
-<!--                    placeholder="请输入内容"-->
-<!--                  ></el-autocomplete>-->
-<!--                </el-form-item>-->
-                <!--scrape_interval-->
-                <el-form-item :label='$t("project.endpoint.scrape_interval")' prop="scrape_interval" class="half-form-item">
-                  <el-input :placeholder='$t("project.endpoint.scrape_interval_placeholder")' v-model.number="editEndpoint.configs.scrape_interval" size="small" id="module-box-input-scrape_interval">
-                   <template slot="append">s</template>
-                  </el-input>
-                </el-form-item>
-                <!--scrape_timeout-->
-                <el-form-item :label='$t("project.endpoint.scrape_timeout")' prop="scrape_timeout" class="half-form-item">
-                  <el-input :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' v-model.number="editEndpoint.configs.scrape_timeout" size="small" id="module-box-input-scrape_timeout">
-                    <template slot="append">s</template>
-                  </el-input>
-                </el-form-item>
+          <!--Enpoint template-->
+          <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
+            <el-tooltip effect="light" placement="top">
+              <div slot="content">
+                {{$t('project.module.tip.defaultEndpointSet')}}
+                <div></div>
+                {{$t('project.module.tip.relation')}}
               </div>
-            </transition>
+              <i class="nz-icon nz-icon-info-normal"></i>
+            </el-tooltip>
+          </div>
+          <div class="right-box-line"></div>
 
-            <div style="text-align: center">
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="Basic" name="Basic">
+              <!--path-->
+              <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
+                <el-input id="module-box-input-path" v-model="editEndpoint.configs.metrics_path" placeholder="" size="small"></el-input>
+              </el-form-item>
+              <!--port-->
+              <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="port">
+                <el-input id="module-box-input-port" v-model.number="editEndpoint.port" placeholder="" size="small"></el-input>
+              </el-form-item>
+              <!--host-->
+              <el-form-item :label='$t("project.endpoint.host")' prop="host">
+                <el-input id="module-box-input-host" v-model="editEndpoint.configs.host" placeholder="" size="small"></el-input>
+              </el-form-item>
+              <transition name="el-zoom-in-top">
+                <div v-show="showAllBasicOption" >
+                  <!--                &lt;!&ndash;name pattern&ndash;&gt;-->
+                  <!--                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">-->
+                  <!--                  &lt;!&ndash;              <el-input placeholder="" v-model=""></el-input>&ndash;&gt;-->
+                  <!--                  <el-autocomplete-->
+                  <!--                    class="inline-input"-->
+                  <!--                    size="small"-->
+                  <!--                    id="module-box-input-pattern"-->
+                  <!--                    v-model="editEndpoint.endpointNameTmpl"-->
+                  <!--                    :fetch-suggestions="querySearch"-->
+                  <!--                    placeholder="请输入内容"-->
+                  <!--                  ></el-autocomplete>-->
+                  <!--                </el-form-item>-->
+                  <!--scrape_interval-->
+                  <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
+                    <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
+                      <template slot="append">s</template>
+                    </el-input>
+                  </el-form-item>
+                  <!--scrape_timeout-->
+                  <el-form-item :label='$t("project.endpoint.scrape_timeout")' class="half-form-item" prop="scrape_timeout">
+                    <el-input id="module-box-input-scrape_timeout" v-model.number="editEndpoint.configs.scrape_timeout" :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' size="small">
+                      <template slot="append">s</template>
+                    </el-input>
+                  </el-form-item>
+                </div>
+              </transition>
+
+              <div style="text-align: center">
               <span @click="showAllBasicOption=!showAllBasicOption" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none">
                 {{$t('overall.moreOption')}}
                 <i class="nz-icon nz-icon-arrow-down need-rotate" :class="showAllBasicOption?'is-active':''" ></i>
               </span>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="Parameter" name="Parameter">
-            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-params">
-              <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
-                <el-form-item class="param-box-row-key" :prop="'paramObj.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key" ></el-input>
-                </el-form-item>
-                <span class="param-box-row-eq">=</span>
-                <el-form-item class="param-box-row-value" :prop="'paramObj.' + index + '.value'">
-<!--                  <el-select-->
-<!--                    v-model="item.value"-->
-<!--                    multiple-->
-<!--                    filterable-->
-<!--                    allow-create-->
-<!--                    :ref="'select'+ index"-->
-<!--                    placeholder="value" size="mini"-->
-<!--                    default-first-option-->
-<!--                    popper-class="config-dropdown hide-element"-->
-<!--                    @change="(val)=>{paramObjchange(val,index)}"-->
-<!--                  >-->
-<!--                    <span slot="empty" class=""></span>-->
-<!--                  </el-select>-->
-                  <vue-tags-input
-                    v-model="item.tags"
-                    :tags="item.value"
-                    :maxlength="32"
-                    @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
-                    :placeholder="'add parameter'"
-                  />
-                </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-param-'+index" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-            </div>
-            <div style="text-align: center">
+            </el-tab-pane>
+            <el-tab-pane label="Parameter" name="Parameter">
+              <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
+                  <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
+                    <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
+                  </el-form-item>
+                  <span class="param-box-row-eq">=</span>
+                  <el-form-item :prop="'paramObj.' + index + '.value'" class="param-box-row-value">
+                    <!--                  <el-select-->
+                    <!--                    v-model="item.value"-->
+                    <!--                    multiple-->
+                    <!--                    filterable-->
+                    <!--                    allow-create-->
+                    <!--                    :ref="'select'+ index"-->
+                    <!--                    placeholder="value" size="mini"-->
+                    <!--                    default-first-option-->
+                    <!--                    popper-class="config-dropdown hide-element"-->
+                    <!--                    @change="(val)=>{paramObjchange(val,index)}"-->
+                    <!--                  >-->
+                    <!--                    <span slot="empty" class=""></span>-->
+                    <!--                  </el-select>-->
+                    <vue-tags-input
+                      v-model="item.tags"
+                      :maxlength="32"
+                      :placeholder="'add parameter'"
+                      :tags="item.value"
+                      @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
+                    />
+                  </el-form-item>
+                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                </div>
+              </div>
+              <div style="text-align: center">
                <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add module-add-label">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="Labels" name="Labels">
-            <div ref="labelBoxScrollbar" style="height: 100%; overflow: auto;" id="module-box-labels">
-              <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
-                <el-form-item class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" :prop="'labelModule.' + index + '.key'">
-                  <el-input placeholder="key" size="mini" v-model="item.key"></el-input>
-                </el-form-item>
-                <span class="param-box-row-eq">=</span>
-                <el-form-item class="param-box-row-value" :prop="'labelModule.' + index + '.value'">
-                  <el-input placeholder="value" size="mini" v-model="item.value"></el-input>
-                </el-form-item>
-                <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
               </div>
-            </div>
-            <div style="text-align: center">
+            </el-tab-pane>
+            <el-tab-pane label="Labels" name="Labels">
+              <div id="module-box-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
+                  <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                    <el-input v-model="item.key" placeholder="key" size="mini"></el-input>
+                  </el-form-item>
+                  <span class="param-box-row-eq">=</span>
+                  <el-form-item :prop="'labelModule.' + index + '.value'" class="param-box-row-value">
+                    <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
+                  </el-form-item>
+                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                </div>
+              </div>
+              <div style="text-align: center">
                <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add module-add-label">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="Auth" name="Auth" v-if="editEndpoint.type !== 'snmp'">
-            <!--authtype-->
-            <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
-              <el-select @change="changeAuthType" value-key="id" popper-class="config-dropdown" v-model="authType" placeholder="" size="small" id="module-box-input-auth-type">
-                <el-option :id="'module-type-'+item.id" v-for="item in authTypeList" :key="item.value" :label="item.name" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane v-if="editEndpoint.type !== 'snmp'" label="Auth" name="Auth">
+              <!--authtype-->
+              <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
+                <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
+                  <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
 
-            <!--authtype 1-->
-            <el-form-item :label='$t("project.endpoint.username")' prop="authtype" v-if="authType === 1" class="half-form-item">
-              <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.username" size="small" id="module-box-input-uername"></el-input>
-            </el-form-item>
+              <!--authtype 1-->
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="authtype">
+                <el-input id="module-box-input-uername" v-model.number="editEndpoint.configs.basic_auth.username" placeholder='' size="small"></el-input>
+              </el-form-item>
 
-            <el-form-item :label='$t("project.endpoint.pin")' prop="authtype" v-if="authType === 1" class="half-form-item">
-              <el-input placeholder='' v-model.number="editEndpoint.configs.basic_auth.pin" size="small" id="module-box-input-password"></el-input>
-            </el-form-item>
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="authtype">
+                <el-input id="module-box-input-password" v-model.number="editEndpoint.configs.basic_auth.pin" placeholder='' size="small"></el-input>
+              </el-form-item>
 
-            <!--authtype 2-->
-            <el-form-item :label='$t("project.endpoint.bearer_token")' prop="authtype" v-if="authType === 2">
-              <el-input placeholder='' v-model.number="editEndpoint.configs.bearer_token" size="small" id="module-box-input-bearer_token"></el-input>
-            </el-form-item>
+              <!--authtype 2-->
+              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="authtype">
+                <el-input id="module-box-input-bearer_token" v-model.number="editEndpoint.configs.bearer_token" placeholder='' size="small"></el-input>
+              </el-form-item>
 
-          </el-tab-pane>
-        </el-tabs>
-        <div class="configs-copy-value">
-          <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
-          <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
-        </div>
-      </el-form>
+            </el-tab-pane>
+          </el-tabs>
+          <div class="configs-copy-value">
+            <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+            <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
+          </div>
+        </el-form>
+      </div>
     </div>
 
     <!--底部按钮-->

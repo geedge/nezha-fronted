@@ -2,7 +2,7 @@
   <div class="right-box right-box-add-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">{{$t("overall.batchEndpoint")}}</div>
+      <div class="header__title">{{$t("overall.batchEndpoint")}}</div>
       <!-- end--标题-->
       <div class="header__operation">
         <span v-cancel="{obj: endpoint, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
