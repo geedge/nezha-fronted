@@ -70,7 +70,7 @@
         <div id="tableList" class="table-list">
           <div ref="dashboardScrollbar" :class="overScroll10?'border-t-1-de':'border-t-1-tr'" style="height: calc(100% - 20px); overflow: auto;">
             <div class="box-content">
-              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="$CONSTANTS.fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
+              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
           </div>
         </div>
@@ -80,10 +80,10 @@
     <button :class="{'to-top-is-hover': tableHover}" @click="toTop(scrollbarWrap)" class="to-top" style="bottom: 0;" v-show="showTopBtn"><i class="nz-icon nz-icon-top"></i></button>
 
     <transition name="right-box">
-      <chart-box :chart="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" ref="addChartModal" v-if="rightBox.chart.show"></chart-box>
+      <chart-box v-if="rightBox.chart.show" ref="addChartModal" :chart="chart" :from="fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartBox" @reload="panelReload" @reloadOnlyPanel="panelReloadOnlyPanel" @delete-chart="delChart" @on-create-success="createSuccess" @on-delete-success="delChartOk"></chart-box>
     </transition>
     <transition name="right-box">
-      <chart-temp-box :obj="chart" :from="$CONSTANTS.fromRoute.panel" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess" v-if="rightBox.chartTemp.show"></chart-temp-box>
+      <chart-temp-box v-if="rightBox.chartTemp.show" :from="fromRoute.panel" :obj="chart" :panel-data="panelData" :show-panel="showPanel" @close="closeChartTempBox" @on-create-success="createSuccess"></chart-temp-box>
     </transition>
     <transition name="right-box">
       <panel-box v-if="rightBox.panel.show" ref="panelBox" :obj="panel" @close="closePanelBox" @reload="panelReload" @reloadForDel="panelReloadForDel" ></panel-box>
@@ -101,10 +101,12 @@ import panelBox from '@/components/common/rightBox/panelBox'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import Template from '@/components/page/config/template'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'panel',
   data () {
     return {
+      fromRoute,
       overScroll10: false,
       panelLock: true,
       showTopBtn: false, // top按钮
