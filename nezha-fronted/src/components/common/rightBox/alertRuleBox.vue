@@ -1,109 +1,108 @@
 <template>
   <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-config">
-    <!-- begin--顶部按钮-->
-    <div class="right-box-top-btns right-box-form-delete">
-      <button v-if="alertRule.id" id="alert-box-del" v-has="'rule_delete'" class="nz-btn nz-btn-size-normal nz-btn-size-alien" type="button" @click="del">
-        <span class="right-box-top-btn-icon"><i class="nz-icon nz-icon-delete"></i></span>
-        <span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>
-      </button>
+    <div class="right-box__header">
+      <!-- begin--标题-->
+      <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("alert.config.createAlertConfig")}}</div>
+      <!-- end--标题-->
+      <div class="header__operation">
+        <span v-cancel="{obj: editAlertRule, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
+      </div>
     </div>
-    <!-- end--顶部按钮-->
-
-    <!-- begin--标题-->
-    <div class="right-box-title">{{editAlertRule.id ? $t("alert.config.editAlertConfig") : $t("alert.config.createAlertConfig")}}</div>
-    <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box">
-      <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" style="width:100%">
-        <!--name-->
-        <el-form-item :label='$t("alert.config.name")' prop="name">
-          <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
-        </el-form-item>
-        <el-form-item :label='$t("alert.config.expr")' prop="expr" >
-          <promql-input
-            id="alert-box-input-promql"
-            ref="promql"
-            :expression-list.sync="expressions"
-            :index="0"
-            :plugins="['metric-selector','metric-input']"
-            :required="true"
-            :styleType="2"
-            @change="metricChange"
-          ></promql-input>
-        </el-form-item>
-        <!--threshold-->
-        <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
-          <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text">
-            <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator"  class="input-with-select" placeholder="" popper-class="config-dropdown threshold-dropdown" size="small">
-              <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" label-position = "top" label-width="120px">
+          <!--name-->
+          <el-form-item :label='$t("alert.config.name")' prop="name">
+            <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label='$t("alert.config.expr")' prop="expr" >
+            <promql-input
+              id="alert-box-input-promql"
+              ref="promql"
+              :expression-list.sync="expressions"
+              :index="0"
+              :plugins="['metric-selector','metric-input']"
+              :required="true"
+              :styleType="2"
+              @change="metricChange"
+            ></promql-input>
+          </el-form-item>
+          <!--threshold-->
+          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
+            <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text">
+              <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-input>
+          </el-form-item>
+          <!--unit-->
+          <el-form-item :label="$t('alert.config.unit')" prop="unit">
+            <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
+                         placeholder=""
+                         popper-class="no-style-class unit-popper-class"
+                         size="small"
+                         style="width: 100%"
+            >
+            </el-cascader>
+          </el-form-item>
+          <!--last-->
+          <el-form-item :label="$t('alert.config.for')" prop="last">
+            <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" type="text">
+              <template slot="append">{{$t('alert.config.second')}}</template>
+            </el-input>
+          </el-form-item>
+          <!--severity-->
+          <el-form-item :label="$t('alert.severity')" class="severity-box" prop="severity">
+            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
+                <span>
+                   <i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}
+                </span>
+              </el-option>
             </el-select>
-          </el-input>
-        </el-form-item>
-        <!--unit-->
-        <el-form-item :label="$t('alert.config.unit')" prop="unit">
-          <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
-                       placeholder=""
-                       popper-class="no-style-class unit-popper-class"
-                       size="small"
-                       style="width: 100%"
-          >
-          </el-cascader>
-        </el-form-item>
-        <!--last-->
-        <el-form-item :label="$t('alert.config.for')" prop="last">
-          <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" type="text">
-            <template slot="append">{{$t('alert.config.second')}}</template>
-          </el-input>
-        </el-form-item>
-        <!--severity-->
-        <el-form-item :label="$t('alert.severity')" prop="severity" class="severity-box">
-          <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" placeholder=""  popper-class="config-dropdown severity-box" size="small">
-            <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-              <span>
-                 <i class="nz-icon nz-icon-circle" :style="{color:item.color,'font-size':'12px'}"></i> {{item.name}}
-              </span>
-            </el-option>
-          </el-select>
-          <i class="nz-icon nz-icon-circle severity-circle" v-if="editAlertRule.severityId" :style="{color:severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}"></i>
-        </el-form-item>
-        <!--receiver-->
-        <el-form-item :label="$t('config.user.receiver')" prop="receiver">
-          <el-select
-            id="alert-box-input-receiver"
-            v-model.trim="editAlertRule.receiverShow"
-            filterable
-            multiple
-            placeholder=""
-            popper-class="no-style-class"
-            size="small"
-            value-key="userId"
-            @change="receiverShowChange"
-          >
-            <el-option
-              v-for="item in userData"
-              :key="item.id"
-              :label="item.username"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <!--notify-->
-        <el-form-item :label="$t('alert.notify')" prop="method" class="notify-box" :rules="[{ validator: validateNotify, trigger: 'change'},]">
-          <el-select id="alert-box-input-notify" v-model="editAlertRule.method" placeholder=""  popper-class="config-dropdown notify-box" size="small" multiple>
-            <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <!--summary-->
-        <el-form-item :label="$t('alert.summary')" prop="summary">
-          <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
-        </el-form-item>
-        <!--description-->
-        <el-form-item :label="$t('alert.description')" prop="description">
-          <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="512" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
-        </el-form-item>
-      </el-form>
+            <i v-if="editAlertRule.severityId" :style="{color:severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
+          </el-form-item>
+          <!--receiver-->
+          <el-form-item :label="$t('config.user.receiver')" prop="receiver">
+            <el-select
+              id="alert-box-input-receiver"
+              v-model.trim="editAlertRule.receiverShow"
+              class="right-box__select"
+              filterable
+              multiple
+              placeholder=""
+              popper-class="right-box-select-dropdown prevent-clickoutside"
+              size="small"
+              value-key="userId"
+              @change="receiverShowChange"
+            >
+              <el-option
+                v-for="item in userData"
+                :key="item.id"
+                :label="item.username"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--notify-->
+          <el-form-item :label="$t('alert.notify')" :rules="[{ validator: validateNotify, trigger: 'change'},]" class="notify-box" prop="method">
+            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+              <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--summary-->
+          <el-form-item :label="$t('alert.summary')" prop="summary">
+            <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+          <!--description-->
+          <el-form-item :label="$t('alert.description')" prop="description">
+            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="512" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
     <!-- end--表单-->
 
@@ -331,79 +330,7 @@ export default {
 }
 </script>
 <style>
-  .unit-popper-class{
-    z-index: 2052 !important;
-  }
-  .input-with-select{
-    width: 70px !important;
-  }
-  .input-with-select #alert-box-input-operator{
-    padding: 0;
-    text-align: center;
-    border-top:1px solid #d0d4dC;
-    border-bottom:1px solid #d0d4dC;
-    border-radius: 4px 0 0 4px;
-  }
-  .input-with-select #alert-box-input-operator + .el-input__suffix{
-    display: none;
-  }
-</style>
-<style scoped>
-  .rule-severity-remark{
-    display: inline-flex;
-    justify-content: left;
-    justify-items: center;
-    align-items: center;
-    width: calc(100% - 46px);
-    padding: 10px 15px;
-    background: #F6F6F6;
-    color: #999999;
-    margin-top: -13px;
-    margin-bottom: 18px;
-    margin-left: 15px;
-    font-size: 14px;
-  }
-  .rule-severity-remark .nz-icon-info-normal{
-    margin-right: 10px;
-  }
-  /deep/ .metric-selector-title{
-    margin-left: 0 !important;
-  }
-  /* 标题样式 */
-  .right-box-title{
-    font-size: 16px;
-    font-weight: 700;
-    height: 60px;
-    line-height: 60px;
-    padding: 0 0 0 20px;
-    border-bottom:1px solid #E7EAED ;
-    box-sizing: border-box;
-  }
-  /* 表单 */
-  .el-form-item {
-    margin-left: 0  !important;
-    width: 100%  !important;
-    padding: 0 30px;
-    box-sizing: border-box;
-  }
-  .el-form-item__lable{
-    font-family: Roboto-Medium;
-    font-weight: 500;
-  }
-  .rule-severity-remark{
-    width: 640px;
-    box-sizing: border-box;
-    margin: -13px 30px 18px 30px;
-  }
-  .severity-circle{
-    position: absolute;
-    left: 10px;
-    top: 0;
-  }
-  .severity-box{
-    position: relative;
-  }
-  .severity-box /deep/ .el-select .el-input__inner{
-    padding-left: 25px;
-  }
+.hide-icon .el-input__suffix {
+  display: none;
+}
 </style>

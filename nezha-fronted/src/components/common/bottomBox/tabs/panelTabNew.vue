@@ -88,7 +88,7 @@
           <div class="table-list" id="tableList">
             <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
-                <chart-list :additional-info="obj" :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
+                <chart-list :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
                             @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
                             @on-add-group-item-chart="addGroupItem"></chart-list>
               </div>
@@ -254,7 +254,7 @@ export default {
       if (refresh) {
         this.refresh()
         if (this.from === fromRoute.chartTemp) {
-          this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
+          this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
             res.data.list.forEach(item => {
               if (!item.children) {
                 item.children = []
@@ -375,7 +375,7 @@ export default {
       } else {
         if (this.from === this.fromRoute.chartTemp) {
           if (this.obj.type === 'group') {
-            this.$get('/visual/panel/chart', { ids: this.obj.id, groupId: 0 }).then(res => {
+            this.$get('/visual/panel/chart', { ids: this.obj.id }).then(res => {
               res.data.list.forEach(item => {
                 if (!item.children) {
                   item.children = []

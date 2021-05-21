@@ -89,7 +89,7 @@ export default {
         name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
-        port: 9100,
+        port: '',
         chartIds: '',
         configs: {
           walk: [],
@@ -150,7 +150,7 @@ export default {
           this.object = JSON.parse(JSON.stringify(res.data))
           this.object.configs = JSON.parse(this.object.configs)
           this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-          this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+          this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
           this.object.labelModule = []
           if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {

@@ -170,8 +170,8 @@
             <el-form-item :label="$t('config.system.ldap.dn')" prop="ldap_dn">
               <el-input v-model="ldap.ldap_dn" id="system-ldap-ldap_dn"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.ldap.pin')" prop="ldap_pin">
-              <el-input v-model="ldap.ldap_pin" type="password" id="system-ldap-ldap_pin"></el-input>
+            <el-form-item :label="$t('config.system.ldap.pin')" prop="ldap_password">
+              <el-input id="system-ldap-ldap_password" v-model="ldap.ldap_password" type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.ldap.ou')" class="has-tip" prop="ldap_ou">
               <el-input v-model="ldap.ldap_ou" id="system-ldap-ldap_ou"></el-input>
@@ -331,7 +331,7 @@ export default {
       ldap: {
         ldap_address: '',
         ldap_dn: '',
-        ldap_pin: '',
+        ldap_password: '',
         ldap_ou: '',
         ldap_user_filter: '',
         ldap_mapping: '',

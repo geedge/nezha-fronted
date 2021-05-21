@@ -302,7 +302,8 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         port: [
-          { validator: port, trigger: 'blur' }
+          { validator: port, trigger: 'blur' },
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         username: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -444,13 +445,8 @@ export default {
         return
       }
       this.editModule.type = type
-      if (type == 'http') {
-        this.editModule.port = 9100
-      } else {
-        this.$nextTick(() => {
-          this.$refs.selectWalk.show()
-        })
-        this.editModule.port = 161
+      if (type !== 'http') {
+        this.$refs.selectWalk.show()
       }
     },
     /* 保存 */

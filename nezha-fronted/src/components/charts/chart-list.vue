@@ -145,12 +145,12 @@
                     :chart-index="index"
         ></text-chart>
 
-        <chart-alert-list  :from="from" :ref="'editChart'+item.id"
-                           :panel-id="filter.panelId"
+        <chart-alert-list :ref="'editChart'+item.id" :chartData="item"
+                          :from="from"
                           :chart-index="index"
                           v-if="item.type  === 'alertList'"
                           :editChartId="'editChartId' + item.id"
-                           :is-lock="panelLock"
+                          :is-lock="panelLock"
                           :chart-info="item"
                           @on-refresh-data="refreshChart"
                           @on-search-data="searchData"
@@ -158,9 +158,9 @@
                           @on-duplicate-chart-block="duplicateChart"
                           @on-drag-chart="editChartForDrag"
                           @on-edit-chart-block="editData"
-                            @sync="()=>{chartBySync(item)}"
+                          :panel-id="filter.panelId"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                           :chartData="item"
+                          @sync="()=>{chartBySync(item)}"
         ></chart-alert-list>
 
         <chart-pie  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'pie'" :temp-dom="tempDom"
@@ -240,7 +240,6 @@ export default {
   props: {
     fromRoute,
     isModel: { type: Boolean, default: false },
-    additionalInfo: {},
     draggable: { type: Boolean, default: true },
     from: { type: String },
     obj: Object,
@@ -631,12 +630,13 @@ export default {
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+      const groupId = this.from === fromRoute.panel ? '&groupId=0' : ''
+      this.$get('visual/panel/chart?panelId=' + params.panelId + groupId + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
-          // response.data.list = response.data.list.filter((item) => item.groupId === -1 || !item.groupId) // 处理外层存在的groupItem
+          // chart数据存在dataTotalListBak中
           if (response.data.list) {
             this.dataTotalListBak = response.data.list
           } else {
@@ -645,7 +645,7 @@ export default {
 
           let chartListTmp = []
           // 查询条件带name
-          if (this.filter.searchName && this.filter.searchName != '') {
+          if (this.filter.searchName) {
             const searchTitleStr = this.filter.searchName
             this.dataTotalListBak.forEach((item) => {
               if (item.name.indexOf(searchTitleStr) > -1) {
@@ -766,7 +766,7 @@ export default {
               this.$refs['editChart' + chartItem.id][0].setData(chartItem, singleStatRlt,
                 this.filter.panelId, this.filter, '', errorMsg)
             }
-          } else if (chartItem.type == 'text') {
+          } else if (chartItem.type === 'text') {
             if (filterType === 'showFullScreen') { // 全屏查询
               this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
                 panelId, filter, null, filterType)
@@ -789,7 +789,7 @@ export default {
         return
       }
       if (chartItem.type === 'assetInfo') {
-        if (chartItem.from != fromRoute.endpoint) {
+        if (chartItem.from !== fromRoute.endpoint) {
           this.$set(chartItem, 'draggable', true)
           this.$set(chartItem, 'resizable', true)
         }
@@ -800,7 +800,7 @@ export default {
         this.getEndpointInfoChartData(chartItem)
         return
       }
-      if (chartItem.type == 'projectInfo') {
+      if (chartItem.type === 'projectInfo') {
         chartItem.name = this.$t('project.chart.projectInfo')
         this.getProjectInfoChartData(chartItem)
         return
@@ -1350,7 +1350,7 @@ export default {
       chartInfo.name = this.$t('asset.assetInfo')
       const detail = []
       if (!this.isModel) {
-        const assetId = this.additionalInfo.assetId ? this.additionalInfo.assetId : this.additionalInfo.id
+        const assetId = this.obj.assetId ? this.obj.assetId : this.obj.id
         const arr = []
         arr.push(this.$get(`/asset/asset/${assetId}`))
         arr.push(this.$get(`/asset/asset/feature/${assetId}`))
@@ -1448,8 +1448,8 @@ export default {
       const detail = []
       if (!this.isModel) {
         this.$refs['editChart' + chartInfo.id][0].showLoad(chartInfo)
-        this.$get('/project/info?id=' + this.additionalInfo.id).then(response => {
-          if (response.code == 200) {
+        this.$get('/project/info?id=' + this.obj.id).then(response => {
+          if (response.code === 200) {
             response.data && (function () {
               response.data.basic && detail.push({
                 title: vm.$t('project.chart.basicTitle'),
@@ -1516,16 +1516,16 @@ export default {
       }
     },
     getAlertListChartData (chartInfo, filterType) {
-      if (this.additionalInfo) {
-        this.$set(chartInfo, 'param', { endpointId: this.additionalInfo.id })
+      if (this.obj) {
+        this.$set(chartInfo, 'param', { endpointId: this.obj.id })
       }
-      this.$refs['editChart' + chartInfo.id][0].getAlertList(filterType)
+      this.$refs['editChart' + chartInfo.id][0].getAlertList(null, null, chartInfo)
     },
     getAlertRuleChartData (chartInfo) {
       const vm = this
       const detail = []
       const req = new Promise((resolve, reject) => {
-        this.$get('alert/rule/stat?id=' + this.additionalInfo.id).then(response => {
+        this.$get('alert/rule/stat?id=' + this.obj.id).then(response => {
           if (response.code == 200) {
             response.data && (function () {
               if (response.data.project && response.data.project.length > 0) {

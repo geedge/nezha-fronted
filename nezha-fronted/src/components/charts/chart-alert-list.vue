@@ -175,6 +175,7 @@ export default {
   },
   data () {
     return {
+      currentMsg: null,
       tableHeight: 0,
       data: {}, // 该图表信息,chartItem
       unit: {},
@@ -338,7 +339,7 @@ export default {
       const vm = this
       this.$chartResizeTool.start(vm, this.data, e)
     },
-    formatThreshold: function (value, unit) {
+    formatThreshold (value, unit) {
       const unitMethod = chartDataFormat.getUnit(unit)
       if (unitMethod && value) {
         return unitMethod.compute(value, null, 2)
@@ -346,7 +347,7 @@ export default {
         return value
       }
     },
-    computeDistance: function (str) {
+    computeDistance (str) {
       let width = 0
       const html = document.createElement('span')
       html.innerText = str
@@ -356,7 +357,7 @@ export default {
       document.querySelector('.getTextWidth').remove()
       return Number('-' + (width + 5))
     },
-    returnMarkArea: function () {
+    returnMarkArea () {
       if (this.currentMsg) {
         if (this.currentMsg.alertRule.operator == '>' || this.currentMsg.alertRule.operator == '>=') {
           return [{ yAxis: this.currentMsg.alertRule.threshold }, {}]
@@ -382,7 +383,7 @@ export default {
       this.importBox.show = false
       this.deleteBox.show = false
     },
-    screenDialogClose: function () {
+    screenDialogClose () {
       this.screenModal = false
       this.deleteBox.ids = []
       this.$refs.alertListScreenTable.$refs.alertListTable.clearSelection()
@@ -413,7 +414,7 @@ export default {
         })
       })
     },
-    chartUnitChange: function (unit) {
+    chartUnitChange (unit) {
       this.chartUnit = unit
       this.$nextTick(() => {
         this.queryChartDate()
@@ -448,7 +449,7 @@ export default {
         this.$refs.messageChart.startLoading()
       }
       const axiosArr = []
-      const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
+      const paramStr = this.currentMsg ? JSON.stringify(this.promQueryParamConvert(this.currentMsg)) : null
       if (paramStr && paramStr.trim() != '""') {
         axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '') + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
         this.legend = []
@@ -474,7 +475,7 @@ export default {
                         symbol: ['circle', 'circle'],
                         label: {
                           distance: this.computeDistance(chartDataFormat.getUnit(this.currentMsg.alertRule.unit ? this.currentMsg.alertRule.unit : 2).compute(this.currentMsg.alertRule.threshold)),
-                          formatter: function (params) {
+                          formatter (params) {
                             return chartDataFormat.getUnit($temp.currentMsg.alertRule.unit ? $temp.currentMsg.alertRule.unit : 2).compute(params.value)
                           }
                         },
@@ -537,13 +538,73 @@ export default {
         })
       }
     },
-    getAlertList: function (filterType, isPreview = false, chartInfo) {
+    getAlertList (filterType, isPreview = false, chartInfo) {
       this.resize()
       this.loadingTable = true
       this.isPreview = isPreview
       const queryParam = {
         pageSize: this.pageObj.pageSize,
         pageNo: this.pageObj.pageNo
+      }
+      let chart
+      if (chartInfo) {
+        chart = Object.assign({}, chartInfo)
+      } else {
+        chart = Object.assign({}, this.chartInfo)
+      }
+      if (chart && chart.param) { // 按照粒度，project>module>endpoint  查询只传最细粒度
+        const param = chart.param
+        if (param.endpointId) {
+          queryParam.endpointIds = param.endpointId
+        } else {
+          if (param.moduleId) {
+            queryParam.moduleIds = param.moduleId
+          } else {
+            if (param.projectId) {
+              queryParam.projectIds = param.projectId
+            }
+          }
+        }
+
+        if (param.ruleId) {
+          queryParam.ruleIds = param.ruleId
+        }
+        if (param.severity) {
+          queryParam.severityIds = param.severity
+        }
+        if (param.state) {
+          queryParam.state = param.state
+        }
+      }
+      if (this.searchLabel.orderBy) {
+        queryParam.orderBy = this.searchLabel.orderBy
+      }
+      // this.startLoading(filterType);
+      this.$get('/alert/message', queryParam).then(response => {
+        if (response.code === 200) {
+          this.storedTableData = response.data.list
+          this.storedScreanTableData = response.data.list
+          this.pageObj.total = response.data.total
+          this.isError = false
+          this.errorContent = ''
+          this.divFirstShow = true
+
+          this.firstShow = true // 展示操作按键
+          this.loadingTable = false
+          this.endLoading(filterType)
+        } else {
+          this.isError = true
+          this.errorContent = response.msg
+        }
+      })
+    },
+    getAlerScreetList (filterType, isPreview = false, chartInfo) {
+      this.resize()
+      this.loadingTable = true
+      this.isPreview = isPreview
+      const queryParam = {
+        pageSize: this.screenPageObj.pageSize,
+        pageNo: this.screenPageObj.pageNo
       }
       let chart
       if (chartInfo) {
@@ -566,70 +627,10 @@ export default {
         }
 
         if (param.ruleId && param.ruleId != '') {
-          queryParam.ruleId = param.ruleId
+          queryParam.ruleIds = param.ruleId
         }
         if (param.severity && param.severity != '') {
-          queryParam.severity = param.severity
-        }
-        if (param.state && param.state != '') {
-          queryParam.state = param.state
-        }
-      }
-      if (this.searchLabel.orderBy) {
-        queryParam.orderBy = this.searchLabel.orderBy
-      }
-      // this.startLoading(filterType);
-      this.$get('/alert/message', queryParam).then(response => {
-        if (response.code == 200) {
-          this.storedTableData = response.data.list
-          this.storedScreanTableData = response.data.list
-          this.pageObj.total = response.data.total
-          this.isError = false
-          this.errorContent = ''
-          this.divFirstShow = true
-
-          this.firstShow = true // 展示操作按键
-          this.loadingTable = false
-          this.endLoading(filterType)
-        } else {
-          this.isError = true
-          this.errorContent = response.msg
-        }
-      })
-    },
-    getAlerScreetList: function (filterType, isPreview = false, chartInfo) {
-      this.resize()
-      this.loadingTable = true
-      this.isPreview = isPreview
-      const queryParam = {
-        pageSize: this.screenPageObj.pageSize,
-        pageNo: this.screenPageObj.pageNo
-      }
-      let chart
-      if (chartInfo) {
-        chart = Object.assign({}, chartInfo)
-      } else {
-        chart = Object.assign({}, this.chartInfo)
-      }
-      if (chart && chart.param) { // 按照粒度，project>module>endpoint  查询只传最细粒度
-        const param = chart.param
-        if (param.endpointId && param.endpointId != '') {
-          queryParam.endpointId = param.endpointId
-        } else {
-          if (param.moduleId && param.moduleId != '') {
-            queryParam.moduleId = param.moduleId
-          } else {
-            if (param.projectId && param.projectId != '') {
-              queryParam.projectId = param.projectId
-            }
-          }
-        }
-
-        if (param.ruleId && param.ruleId != '') {
-          queryParam.ruleId = param.ruleId
-        }
-        if (param.severity && param.severity != '') {
-          queryParam.severity = param.severity
+          queryParam.severityIds = param.severity
         }
         if (param.state && param.state != '') {
           queryParam.state = param.state
@@ -647,7 +648,7 @@ export default {
           this.$nextTick(() => {
             this.storedScreanTableData.forEach((item) => {
               item.labels = JSON.parse(item.labels)
-              if (item.alertRule.buildIn != 1) {
+              if (item.alertRule.buildIn !== 1) {
                 const paramStr = JSON.stringify(this.promQueryParamConvert(item))
                 axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
               } else {
