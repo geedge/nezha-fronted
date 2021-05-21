@@ -70,14 +70,14 @@
 .nz-chart-dropdown {
   position: absolute;
   top: 30px;
-  left: calc(100% - 110px);
+  left: calc(100% - 210px);
   transform-origin: center top;
   z-index: 1000;
-  width: 110px;
+  width: 200px;
   li {
     padding-left:15px !important;
     padding-right:0px !important;
-    width:94px;
+    width: calc(100% - 15px);
     text-align: left;
     i {
       margin-right: 10px;
