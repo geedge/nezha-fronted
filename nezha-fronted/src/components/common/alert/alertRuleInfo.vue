@@ -3,19 +3,24 @@
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
-        <div class="alert-rule-value">{{alertRuleData?alertRuleData.id:''}}</div>
-      </div>
-      <!--<div class="alert-rule-box">-->
-      <!--<div class="alert-rule-title">ID</div>-->
-      <!--<div class="alert-rule-value">{{alertRuleData.id}}</div>-->
-      <!--</div>-->
-      <div class="alert-rule-box">
-        <div class="alert-rule-title">Expression</div>
-        <div class="alert-rule-value">{{alertRuleData?(alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)):''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : ''}}</div>
       </div>
       <div class="alert-rule-box">
-        <div class="alert-rule-title">Level</div>
-        <div class="alert-rule-value severity">
+        <div class="alert-rule-title">{{$t('alert.alertName')}}</div>
+        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : ''}}</div>
+      </div>
+      <div class="alert-rule-box">
+        <div class="alert-rule-title">{{$t('alert.config.expr')}}</div>
+        <div class="alert-rule-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : ''}}</div>
+      </div>
+      <div class="alert-rule-box">
+        <div class="alert-rule-title">{{$t('alert.config.threshold')}}</div>
+        <div class="alert-rule-value">{{alertRuleData.threshold ? alertRuleData.threshold : ''}}</div>
+      </div>
+      <div class="alert-rule-box">
+        <div class="alert-rule-title">{{$t('alert.severity')}}</div>
+        <div class="alert-rule-value">{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : ''}}</div>
+<!--        <div class="alert-rule-value severity">
           <span v-if="alertRuleData && alertRuleData.severity === 'P1'" class="P1">
             {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P1'}).label}}
           </span>
@@ -25,7 +30,7 @@
           <span v-if="alertRuleData && alertRuleData.severity === 'P3'" class="P3">
             {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P3'}).label}}
           </span>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -38,23 +43,9 @@ export default {
   props: {
     id: {},
     messageLoad: {},
-    that: {}
+    that: {},
+    severityData: Array
   },
-  /* watch:{
-      messageLoad:{
-        handler:function(){
-          this.$get('/alert/rule?id='+this.id).then((res)=>{
-            if(res.msg==='success'){
-              this.loading=false;
-              this.alertRuleData=res.data.list[0];
-            } else{
-              this.$message.error(res.msg);
-            }
-          })
-        },
-        deep:true
-      }
-    }, */
   data () {
     return {
       loading: true,
@@ -72,12 +63,12 @@ export default {
         if (position.top + elHeight > clientHeight) {
           return {
             left: `${position.left + position.width + 20}px`,
-            top: `${position.top - elHeight - 20}px`
+            top: `${position.top - elHeight - 80}px`
           }
         } else {
           return {
             left: `${position.left + position.width + 20}px`,
-            top: `${position.top - 20}px`
+            top: `${position.top - 80}px`
           }
         }
       }
@@ -105,10 +96,10 @@ export default {
     }
   },
   mounted () {
-    this.$get('/alert/rule?id=' + this.id).then((res) => {
+    this.$get('/alert/rule/' + this.id).then((res) => {
       if (res.msg === 'success') {
         this.loading = false
-        this.alertRuleData = res.data.list[0]
+        this.alertRuleData = res.data
       } else {
         this.$message.error(res.msg)
       }
@@ -139,7 +130,7 @@ export default {
     border-style: dashed solid dashed dashed;
     border-color: transparent #fff transparent transparent;
     position: absolute;
-    top: 20px;
+    top: 100px;
     left: 0;
     transform: translate(-100%, -50%);
   }
@@ -163,7 +154,7 @@ export default {
     border-style: dashed solid dashed dashed;
     border-color: transparent #fff transparent transparent;
     position: absolute;
-    bottom: 20px;
+    bottom: 95px;
     left: 0;
     transform: translate(-100%, -50%);
   }

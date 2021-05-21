@@ -2,23 +2,24 @@
   <div class="right-box right-box-project" v-clickoutside="{obj:editProject,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
-      <div class="right-box-title">{{editProject.id ? $t("project.project.editProject") : $t("overall.createProject")}}</div>
+      <div class="header__title">{{editProject.id ? $t("project.project.editProject") : $t("overall.createProject")}}</div>
       <!-- end--标题-->
 
       <div class="header__operation">
         <span v-cancel="{obj: editProject, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
-
     </div>
-    <div class="right-box-form-box right-box__container">
-      <el-form class="right-box-form right-box-form-left" :model="editProject" label-position = "top" label-width="120px" :rules="rules" ref="projectForm">
-        <el-form-item :label='$t("project.project.project")' prop="name">
-          <el-input size="mini" maxlength="64" show-word-limit v-model="editProject.name" id="project-box-input-name"></el-input>
-        </el-form-item>
-        <el-form-item :label='$t("project.project.description")'>
-          <el-input size="mini" type="textarea" maxlength="1024" show-word-limit v-model="editProject.remark" id="project-box-input-remark"></el-input>
-        </el-form-item>
-      </el-form>
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form ref="projectForm" :model="editProject" :rules="rules" label-position = "top" label-width="120px">
+          <el-form-item :label='$t("project.project.project")' prop="name">
+            <el-input id="project-box-input-name" v-model="editProject.name" maxlength="64" show-word-limit size="small"></el-input>
+          </el-form-item>
+          <el-form-item :label='$t("project.project.description")'>
+            <el-input id="project-box-input-remark" v-model="editProject.remark" maxlength="1024" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
 
     <!--底部按钮-->

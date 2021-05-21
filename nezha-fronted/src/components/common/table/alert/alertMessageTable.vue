@@ -41,7 +41,7 @@
                 @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
                 @mouseleave="alertMessageHover(scope.row.alertRule, false)"
               >{{scope.row.alertRule.name}}</span>
-              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :that="scope.row.alertRule"></alertRuleInfo>
+              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule"></alertRuleInfo>
             </div>
             <template v-else>-</template>
           </template>
@@ -162,6 +162,7 @@ export default {
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
       chartUnit: 5,
+      severityData: [],
       tableTitle: [
         {
           label: 'ID',
@@ -248,7 +249,17 @@ export default {
       }
     }
   },
+  mounted () {
+    this.getSeverityData()
+  },
   methods: {
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.severityData = response.data.list
+        }
+      })
+    },
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
       if (typeof obj === 'string') obj = JSON.parse(obj)
@@ -457,31 +468,6 @@ export default {
         }())
       }
       return r
-      /* let result="(" + obj.alertRule.expr + ")";
-        if(obj.labels){
-          if(obj.labels.alertname){
-            delete obj.labels.alertname;
-          }
-          if(obj.labels.severity){
-            delete obj.labels.severity;
-          }
-        }
-        if(Object.keys(obj.labels).length>0){
-          result+=" and ("+function(){
-            let q = "{";
-            for (let k in obj.labels) {
-              q += k;
-              q += "=";
-              q += ("'" + obj.labels[k] + "',");
-            };
-            if (q.length > 1) {
-              q = q.substring(0, q.length-1);
-            }
-            q += "}";
-            return q;
-          }() + ")";
-        }
-        return result; */
     },
     // asset弹框控制
     tabControl (data) {
