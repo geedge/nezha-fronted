@@ -630,8 +630,8 @@ export default {
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
-      const groupId = this.from === fromRoute.panel ? '&groupId=0' : ''
-      this.$get('visual/panel/chart?panelId=' + params.panelId + groupId + '&pageSize=-1').then(response => {
+      // const groupId = true ? '&groupId=0' : ''
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false

@@ -216,19 +216,19 @@ export default {
       const fileName = this.exportFileName + '-' + this.$t('overall.template') + '-' + this.getTimeString() + '.xlsx'
 
       let url = null
-      if (this.importUrl.indexOf('asset') > -1) {
+      const param = { language: language }
+      if (this.exportFileName.indexOf('asset') > -1) {
         url = '/asset/asset/template'
-      } else if (this.importUrl.indexOf('rule') > -1) {
-        url = '/alert/rule/template'
-      } else if (this.importUrl.indexOf('panel') > -1) {
+        param.type = 'asset'
+      } else if (this.exportFileName.indexOf('dashboard') > -1) {
         url = 'visual/panel/template'
-      } else if (this.importUrl.indexOf('endpoint') > -1) {
+      } else if (this.exportFileName.indexOf('endpoint') > -1) {
         url = '/monitor/endpoint/template'
+        param.type = 'endpoint'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
         url = '/expression/tmpl/template'
       }
 
-      const param = { language: language }
       if (!url) {
         console.error('no interface support')
       }

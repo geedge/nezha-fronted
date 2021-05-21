@@ -19,7 +19,7 @@
         </button>
         <top-tool-more-options
           ref="export"
-          id="expression-template-list"
+          id="endpoint-template-list"
           :params="searchLabel"
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
           class="top-tool-export margin-l-10 margin-r-10"
