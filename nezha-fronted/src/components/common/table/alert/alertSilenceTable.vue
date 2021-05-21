@@ -89,7 +89,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button :class="{'table-operation-item--disable': scope.row.state === 3}" class="table-operation-item" v-has="'alertSilence_edit'" @click="$emit('edit', scope.row)" :disabled="scope.row.state === 3"><i class="nz-icon nz-icon-edit"></i></button class="table-operation-item">
+        <button :class="{'table-operation-item--disable': scope.row.state === 3}" class="table-operation-item" v-has="'alertSilence_edit'" @click="$emit('edit', scope.row)" :disabled="scope.row.state === 3"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['alertSilence_expire']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
