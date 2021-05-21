@@ -554,13 +554,13 @@ export default {
       if (chart && chart.param) { // 按照粒度，project>module>endpoint  查询只传最细粒度
         const param = chart.param
         if (param.endpointId && param.endpointId != '') {
-          queryParam.endpointId = param.endpointId
+          queryParam.endpointIds = param.endpointId
         } else {
           if (param.moduleId && param.moduleId != '') {
-            queryParam.moduleId = param.moduleId
+            queryParam.moduleIds = param.moduleId
           } else {
             if (param.projectId && param.projectId != '') {
-              queryParam.projectId = param.projectId
+              queryParam.projectIds = param.projectId
             }
           }
         }
