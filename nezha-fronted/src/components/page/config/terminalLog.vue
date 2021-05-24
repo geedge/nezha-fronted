@@ -66,7 +66,7 @@ export default {
             id: 13,
             name: this.$t('config.terminallog.sourceIp'),
             type: 'input',
-            label: 'host',
+            label: 'remoteAddr',
             disabled: false
           }, {
             id: 14,
