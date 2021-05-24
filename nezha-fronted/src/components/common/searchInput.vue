@@ -836,14 +836,14 @@ export default {
       let labelBool = true
       this.select_list.forEach(val => {
         if (typeof (val.val) !== 'undefined' && val.val != null) {
-          if (val.type == 'select') {
-            if (val.label == 'alertType' || val.label == 'promType') {
+          if (val.type === 'select') {
+            if (val.label === 'alertType' || val.label === 'promType') {
               objectInfo.type = val.valnum
-            } else if (val.label == 'assetState') {
+            } else if (val.label === 'assetState') {
               objectInfo.state = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
-                if (item.label == val.val) {
+                if (item.label === val.val) {
                   labelBool = false
                   objectInfo[val.label] = item.value
                 }
@@ -851,18 +851,20 @@ export default {
               if (labelBool) {
                 objectInfo[val.label] = val.val
               }
+            } else if (val.label === 'promState') {
+              objectInfo.statuses = val.valnum
             } else {
               objectInfo[val.label] = val.valnum
             }
-          } else if (val.type == 'selectSelf') {
+          } else if (val.type === 'selectSelf') {
             objectInfo[val.label] = val.valnum
-          } else if (val.type == 'selectAction') { // 新增日志判断
+          } else if (val.type === 'selectAction') { // 新增日志判断
             objectInfo[val.label] = val.valnum
-          } else if (val.type == 'dc') {
+          } else if (val.type === 'dc') {
             objectInfo.dcIds = val.valnum
-          } else if (val.type == 'asset') {
+          } else if (val.type === 'asset') {
             objectInfo.asset = val.val
-          } else if (val.type == 'module') {
+          } else if (val.type === 'module') {
             objectInfo.moduleId = val.valnum
           } else if (val.type === 'project') {
             objectInfo.projectIds = val.valnum
@@ -877,8 +879,6 @@ export default {
               objectInfo.state = val.val
             } else if (val.label === 'promType') {
               objectInfo.type = val.val
-            } else if (val.label === 'promState') {
-              objectInfo.status = val.val
             } else if (val.label === 'chartType') {
               objectInfo.type = val.val
             }

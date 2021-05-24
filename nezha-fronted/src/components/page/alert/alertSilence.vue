@@ -89,7 +89,7 @@ export default {
           }, {
             name: this.$t('alert.silence.matchers'),
             type: 'input',
-            label: 'matchers ',
+            label: 'matchers',
             disabled: false
           }
         ]

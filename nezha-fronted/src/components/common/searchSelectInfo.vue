@@ -161,11 +161,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   ],
   dcState: [
     {
-      value: 'enable',
+      value: 'ON',
       label: 'Enable'
     },
     {
-      value: 'disable',
+      value: 'OFF',
       label: 'Disable'
     }
   ],

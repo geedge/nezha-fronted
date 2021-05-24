@@ -7,7 +7,9 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.mib"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search"
+    >
       <template v-slot:top-tool-left>
         <div id="module-type-6" class="nz-tab-item-box" @click="toFileTab">
           <div class="nz-tab-item ">{{$t("config.mib.mibFiles")}}</div>
@@ -85,7 +87,6 @@ export default {
         }
       },
       searchMsg: { // 给搜索框子组件传递的信息
-        zheze_none: true,
         searchLabelList: [{
           name: 'ID',
           type: 'input',
