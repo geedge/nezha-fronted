@@ -88,7 +88,7 @@ export default {
           width: 80,
           sortable:'custom'
         }, {
-          label: this.$t('config.agent.name'),
+          label: this.$t('config.agent.dataCenter'),
           prop: 'dc',
           show: true,
           sortable:'custom'

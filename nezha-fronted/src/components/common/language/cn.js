@@ -727,6 +727,7 @@ const cn = {
       checkTime: '检查时间',
       createProm: '新增客户端',
       editProm: '修改客户端',
+      dataCenter: '数据中心',
       up: 'UP',
       down: 'Down',
       agent: {
