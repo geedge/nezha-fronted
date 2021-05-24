@@ -841,6 +841,8 @@ export default {
               objectInfo.type = val.valnum
             } else if (val.label === 'assetState') {
               objectInfo.state = val.valnum
+            } else if (val.label === 'credentialType') {
+              objectInfo.types = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {

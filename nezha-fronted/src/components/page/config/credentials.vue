@@ -90,7 +90,7 @@ export default {
         searchLabelList: [{
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
           name: this.$t('overall.name'),
