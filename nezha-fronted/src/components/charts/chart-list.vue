@@ -1611,6 +1611,9 @@ export default {
       if (chart) {
         const copyChart = { ...chart }
         delete copyChart.id
+        delete copyChart.pid
+        delete copyChart.varId
+        delete copyChart.varType
         copyChart.name = 'Copy_' + copyChart.name
         this.$emit('on-edit-chart', copyChart)
       }
@@ -1619,6 +1622,9 @@ export default {
       if (chart) {
         const copyChart = { ...chart }
         delete copyChart.id
+        delete copyChart.pid
+        delete copyChart.varId
+        delete copyChart.varType
         copyChart.name = 'Copy_' + copyChart.name
         this.$emit('on-edit-chart', copyChart)
       }

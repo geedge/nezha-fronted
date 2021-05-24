@@ -105,6 +105,7 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
+          minWidth: 150,
           sortable: 'custom'
         }, {
           label: this.$t('asset.manageIp'),
