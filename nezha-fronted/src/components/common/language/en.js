@@ -22,7 +22,7 @@ const en = {
     folder: 'Folder',
     key: 'Key',
     state: 'State',
-    projectName: 'project name',
+    projectName: 'Project name',
     startTime: 'Start time',
     endTime: 'End time',
     metric: 'Metric',

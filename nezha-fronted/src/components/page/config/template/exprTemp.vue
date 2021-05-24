@@ -109,7 +109,7 @@ export default {
         zheze_none: true,
         searchLabelList: [
           {
-            name: 'Id',
+            name: 'ID',
             type: 'input',
             label: 'ids',
             disabled: false
