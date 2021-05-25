@@ -104,31 +104,31 @@ export default {
           label: this.$t('project.module.type'),
           prop: 'type',
           show: false,
-          width: 150
+          width: 200
         }, {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
-          width: 150,
+          width: 200,
           sortable: 'custom'
         },
         {
           label: this.$t('project.endpoint.endpoint'),
           prop: 'endpointNum',
           show: true,
-          width: 150,
+          width: 200,
           sortable: 'custom'
         }, {
           label: this.$t('project.module.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 150,
+          width: 200,
           sortable: 'custom'
         },
         {
           label: this.$t('overall.remark'),
           prop: 'remark',
-          show: false,
+          show: true,
           minWidth: 150
         }
       ]

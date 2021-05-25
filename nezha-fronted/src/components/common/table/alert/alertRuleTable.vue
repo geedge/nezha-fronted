@@ -4,6 +4,7 @@
     ref="dataTable"
     :data="tableData"
     :height="height"
+    tooltip-effect="light"
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"
@@ -27,6 +28,7 @@
       :sort-orders="['ascending', 'descending']"
       :sortable="item.sortable"
       :width="`${item.width}`"
+      :show-overflow-tooltip="item.prop === 'description'"
       class="data-column"
     >
       <template slot="header">

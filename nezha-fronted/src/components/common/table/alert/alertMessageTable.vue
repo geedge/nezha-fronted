@@ -168,7 +168,7 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80,
+          width: 160,
           sortable: 'custom'
         }, {
           label: this.$t('alert.rule'),
