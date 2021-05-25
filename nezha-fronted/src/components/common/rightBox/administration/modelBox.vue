@@ -22,7 +22,7 @@
           <!-- ChartTemplate -->
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
-            :data="'visual/panel/chart'"
+            :data="chartlList"
             :tb-columns="ChartSearchShowFields"
             :params="{
               varType: 1, panelId: 0,
@@ -115,7 +115,7 @@ export default {
   },
   created () {
     this.getBrandList()
-    // this.ChartTemplateList()
+    this.ChartTemplateList()
   },
   methods: {
     clickOutside () {
@@ -198,13 +198,13 @@ export default {
         assetData.totalRow = resp.data.total
         return assetData
       }
-    }
+    },
     /* 获取chart列表数据 */
-    // ChartTemplateList () {
-    //   this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0 }).then(res => {
-    //     this.chartlList = res.data.list
-    //   })
-    // }
+    ChartTemplateList () {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 1, panelId: 0, groupId: 0 }).then(res => {
+        this.chartlList = res.data.list
+      })
+    }
   }
 }
 </script>
