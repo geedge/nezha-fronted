@@ -229,6 +229,7 @@
         height: 49px;
         border-bottom: 1px solid $--right-box-border-color;
         background-color: white;
+        box-sizing: content-box;
       }
       thead {
         color: #333;

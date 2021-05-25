@@ -14,6 +14,7 @@
       @header-dragend="dragend"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
+      @row-dblclick="(row)=>{$emit('messageDetail', row)}"
     >
       <el-table-column
         :resizable="false"
@@ -169,7 +170,7 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80,
+          width: 160,
           sortable: 'custom'
         }, {
           label: this.$t('alert.rule'),

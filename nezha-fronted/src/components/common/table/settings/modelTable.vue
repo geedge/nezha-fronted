@@ -95,24 +95,24 @@ export default {
           label: this.$t('config.model.name'),
           prop: 'name',
           show: true,
-          width: 450,
+          width: 350,
           sortable: 'custom'
         }, {
           label: this.$t('config.model.brand'),
           prop: 'brand',
           show: true,
-          width: 160,
+          width: 200,
+          sortable: 'custom'
+        }, {
+          label: this.$t('config.model.assetNum'),
+          prop: 'assetNum',
+          show: true,
+          width: 120,
           sortable: 'custom'
         }, {
           label: this.$t('config.model.remark'),
           prop: 'remark',
           show: true
-        }, {
-          label: this.$t('config.model.assetNum'),
-          prop: 'assetNum',
-          show: true,
-          width: 200,
-          sortable: 'custom'
         }
       ]
     }

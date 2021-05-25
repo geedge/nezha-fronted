@@ -95,34 +95,38 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetLabel.name'),
           prop: 'name',
           show: true,
-          width: 100,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetLabel.key'),
           prop: 'metaKey',
           show: true,
-          sortable:'custom'
+          width: 200,
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetLabel.group'),
           prop: 'group',
           show: true,
-          sortable:'custom'
+          width: 200,
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetLabel.search'),
           prop: 'search',
+          width: 120,
           show: true
         }, {
           label: this.$t('config.assetLabel.display'),
           prop: 'display',
+          width: 120,
           show: true
         }, {
           label: this.$t('config.assetLabel.type'),
           prop: 'type',
+          width: 150,
           show: true
         }, {
           label: this.$t('config.assetLabel.params'),

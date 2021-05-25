@@ -8,6 +8,7 @@
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
+    @row-dblclick="(row)=>{showBottomBox(row.status==0 ? 'monitorTab' : 'cmdTab', row)}"
   >
     <el-table-column
       :resizable="false"

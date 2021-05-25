@@ -49,7 +49,7 @@ export default {
     justify-content: center;
     height: 100%;
     background-color: white;
-    border: 10px solid #eee;
+    border: 10px solid #f6f6f6;
     box-sizing: border-box;
 
     .about-label {
