@@ -160,8 +160,9 @@ export default {
       }
       this.$delete(url + '?seq=' + this.importResult.seq).then(response => {
         if (response.code == 200) {
+          const linkId = this.link ? this.link.id : ''
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-          this.$emit('afterImport')
+          this.$emit('afterImport', linkId)
         } else {
           this.$message.error(response.msg)
         }
@@ -183,7 +184,8 @@ export default {
         this.$post(this.importUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
           if (response.code == 200 && response.msg == 'success') {
             this.importResult = response.data
-            this.$emit('afterImport')
+            const linkId = this.link ? this.link.id : ''
+            this.$emit('afterImport', linkId)
             this.importBox.type = 3
             this.importBox.width = '600px'
           } else {
