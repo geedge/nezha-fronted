@@ -357,7 +357,7 @@ export default {
 .record-console {
   padding: 10px 4px 10px 10px;
   background-color: black;
-  height: calc(100% - 80px);
+  height: calc(100% - 65px);
 }
 .terminal-replay-progress {
   height: 20px;
