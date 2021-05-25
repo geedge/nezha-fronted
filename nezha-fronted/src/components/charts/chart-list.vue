@@ -315,7 +315,6 @@ export default {
       this.tempDom.width = span.offsetWidth
     },
     start (event) {
-      // console.log('start', event, this.dataList);
       event.item.querySelector('.chartTitle').style.background = '#d8dce1'
       const projectAndAssetFeatureInfos = event.item.querySelectorAll('.feature-content')
       if (projectAndAssetFeatureInfos && projectAndAssetFeatureInfos.length > 0) {
@@ -611,9 +610,11 @@ export default {
         return
       }
       if (param.from == fromRoute.chartTemp) { // 模板列表
-        this.panelDataList[0].children.forEach((item1, i) => {
-          item1.chartIndex = i
-        })
+        if (this.panelDataList[0] && this.panelDataList[0].children) {
+          this.panelDataList[0].children.forEach((item1, i) => {
+            item1.chartIndex = i
+          })
+        }
         this.dataList = this.panelDataList
         this.$nextTick(() => {
           this.dataList.forEach((item, index) => {
