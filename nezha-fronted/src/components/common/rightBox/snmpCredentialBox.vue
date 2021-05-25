@@ -220,7 +220,7 @@ export default {
       deep: true,
       handler (n, o) {
         this.editCredential = JSON.parse(JSON.stringify(n))
-        if (this.editCredential.config) {
+        if (this.editCredential.config && typeof this.editCredential.config === 'string') {
           this.editCredential.config = JSON.parse(this.editCredential.config)
         }
       }

@@ -1717,12 +1717,17 @@ export default {
     resize () {
       this.init()
       this.$nextTick(() => {
-        this.$parent.$parent.dateChange()
+        if (this.$parent && this.$parent.$parent) {
+          this.$parent.$parent.dateChange()
+        }
       })
     },
     init () {
-      this.stepWidth = this.chartResizeTool.stepWidth(document.getElementById('listContainer').offsetWidth - 14)
-      this.tempDomInit()
+      const dom = document.getElementById('listContainer')
+      if (dom) {
+        this.stepWidth = this.chartResizeTool.stepWidth(dom.offsetWidth - 14)
+        this.tempDomInit()
+      }
     },
     chartBySync (item) {
       this.$post('visual/panel/chart/syncTmpl', { ids: [item.id] }).then(res => {

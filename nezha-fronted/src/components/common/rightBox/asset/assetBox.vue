@@ -317,40 +317,25 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
-      /* modelCascProp: {
-        lazy: true,
-        value: 'id',
-        label: 'name',
-        lazyLoad (node, resolve) {
-          const { level } = node
-          vm.$get('asset/model', { brandIds: node.data.id }).then(response => {
-            if (response.code === 200) {
-              const models = response.data.list.map(item => ({
-                ...item,
-                leaf: level >= 1
-              }))
-              resolve(models)
-            }
-          })
-        }
-      }, */
       labelCascProp: {
         lazy: true,
         value: 'id',
         label: 'name',
         lazyLoad (node, resolve) {
           const { level } = node
-          vm.$get('asset/field/meta', { groupIds: node.data.id }).then(response => {
-            if (response.code === 200) {
-              const meta = response.data.list.map(item => ({
-                ...item,
-                leaf: level >= 1,
-                disabled: vm.editAsset.fields.some(a => a.id === item.id)
-              }))
-              vm.options.metaOptions = meta
-              resolve(meta)
-            }
-          })
+          if (node && node.data) {
+            vm.$get('asset/field/meta', { groupIds: node.data.id }).then(response => {
+              if (response.code === 200) {
+                const meta = response.data.list.map(item => ({
+                  ...item,
+                  leaf: level >= 1,
+                  disabled: vm.editAsset.fields.some(a => a.id === item.id)
+                }))
+                vm.options.metaOptions = meta
+                resolve(meta)
+              }
+            })
+          }
         }
       }
     }
@@ -463,9 +448,13 @@ export default {
       this.esc(false)
     },
     setLocationData ({ cabinet, dc, u }) {
+      if (cabinet) {
+        this.editAsset.cabinetId = cabinet.id
+      }
       if (dc) {
         this.editAsset.dcId = dc.id
-        this.editAsset.cabinetId = cabinet.id
+      }
+      if (u) {
         this.editAsset.cabinetStart = u[0]
         this.editAsset.cabinetEnd = u[1]
       }
