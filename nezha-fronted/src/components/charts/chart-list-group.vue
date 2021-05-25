@@ -643,7 +643,7 @@ export default {
         this.modelStaticData(chartInfo, filterType)
       } else {
         // 没有数据的设置提示信息暂无数据-针对每一个图
-        const len = chartItem.elements.length
+        const len = chartItem.elements ? chartItem.elements.length : 0
         if (len === 0) {
           this.$nextTick(() => {
             if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
@@ -693,7 +693,6 @@ export default {
             })
             // 一个图表的所有element单独获取数据
             axios.all(axiosArr).then((res) => {
-
               if (res.length > 0) {
                 const series = []
                 let singleStatRlt = ''
