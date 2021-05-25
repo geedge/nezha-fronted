@@ -226,8 +226,8 @@
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" :disabled="customConnect.authProtocol === 2 ">
-              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" placeholder="" size="small" id="webshell-box-input-protocol">
+            <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
+              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -921,6 +921,7 @@ export default {
       } else {
         this.customConnect.authPriKey = ''
         this.customConnect.port = 23
+        this.customConnect.authType = 1
       }
       setTimeout(() => {
         this.$refs.customConnect.clearValidate()
