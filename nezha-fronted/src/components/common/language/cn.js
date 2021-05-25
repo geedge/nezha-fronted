@@ -457,7 +457,7 @@ const cn = {
         module: '模块'
       },
       endpoint: {
-        endpoint: 'Endpoints'
+        endpoint: 'Endpoint'
       },
       dataCenter: {
         dataCenter: '数据中心',

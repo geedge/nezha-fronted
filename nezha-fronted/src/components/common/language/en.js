@@ -458,16 +458,16 @@ const en = {
         total: 'Total'
       },
       project: {
-        project: 'Projects',
+        project: 'Project',
         name: 'Name',
         module: 'Module',
         endpoint: 'Endpoint'
       },
       module: {
-        module: 'Modules'
+        module: 'Module'
       },
       endpoint: {
-        endpoint: 'Endpoints'
+        endpoint: 'Endpoint'
       },
       dataCenter: {
         dataCenter: 'Data center',
@@ -475,7 +475,7 @@ const en = {
         promServer: 'Prom server'
       },
       alert: {
-        alertMessage: 'Alert messages',
+        alertMessage: 'Module name / Alert Message',
         level: 'Priority',
         alertRule: 'Alert rule',
         ruleNum: 'Rule num',
@@ -562,7 +562,7 @@ const en = {
     copySuccess: 'Copy success'
   },
   asset: {
-    asset: 'Asset',
+    asset: 'Module name / Asset ',
     assets: 'Asset', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
     createAsset: 'New asset', // '编辑资产'
@@ -1267,7 +1267,8 @@ const en = {
     endpoint: {
       createEndpoint: 'New endpoint', // "新增Endpoint"
       editEndpoint: 'Edit endpoint', // "编辑Endpoint"
-      endpoint: 'Endpoint', // "Endpoint"
+      endpoint: 'Endpoint ', // "Endpoint"
+      endpoints: 'Module name / Endpoint',
       endpointId: 'Endpoint ID', // "Endpoint ID"
       list: 'List',
       host: 'Host', // "Host"
