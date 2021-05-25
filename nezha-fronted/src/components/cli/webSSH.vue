@@ -496,7 +496,18 @@ export default {
         }
       }
       if (type === 'custom') {
-        console.terminal.custom = { ...this.customConnect, authPin: this.encode(this.customConnect.authPin) }
+        console.terminal.custom = {
+          host: this.customConnect.host,
+          port: this.customConnect.port,
+          authType: this.customConnect.authType,
+          authUsername: encodeURIComponent(this.customConnect.authUsername),
+          authPin: this.encode(this.customConnect.authPin),
+          authPriKey: encodeURIComponent(this.customConnect.authPriKey),
+          authUserTip: encodeURIComponent(this.customConnect.authUserTip),
+          authPinTip: encodeURIComponent(this.customConnect.authPinTip),
+          authProtocolPort: encodeURIComponent(this.customConnect.authProtocolPort),
+          authProtocol: encodeURIComponent(this.customConnect.authProtocol)
+        }
       }
       this.editableTabsValue = newTabName
       this.editableTabs.push(console)
@@ -515,7 +526,7 @@ export default {
       // this.$store.commit('addConsole');
     },
     show (id, host, accountId, port) {
-      this.addConsole(id, host, accountId, port,'asset')
+      this.addConsole(id, host, accountId, port, 'asset')
       this.consoleShow = true
     },
     initDialog () {
@@ -911,9 +922,9 @@ export default {
         this.customConnect.authPriKey = ''
         this.customConnect.port = 23
       }
-     setTimeout(()=>{
-       this.$refs.customConnect.clearValidate()
-     })
+      setTimeout(() => {
+        this.$refs.customConnect.clearValidate()
+      })
     },
     authTypeChange () {
       if (this.customConnect.authType === 1) {
@@ -922,7 +933,7 @@ export default {
     },
     encode (str) {
       // 对编码的字符串转化base64
-      const base64 = btoa(str)
+      const base64 = encodeURIComponent(btoa(str))
       return base64
     },
     closeAssetCustom () {
