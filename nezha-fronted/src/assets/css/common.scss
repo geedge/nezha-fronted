@@ -124,8 +124,12 @@
   display: inline-block;
   margin-right: 5px;
 }
-span:first-letter,div:first-letter{
+.data-column__span{
+  display: inline-block;
+}
+.right-box__footer span{
+  display: inline-block;
+}
+span:first-letter,.el-tabs__item:first-letter,.header__title:first-letter,.operation-dropdown-text:first-letter{
   text-transform: capitalize;
 }
-
-

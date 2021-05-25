@@ -11,7 +11,7 @@
     >
       <template v-slot:top-tool-left>
         <div id="module-type-1" class="nz-tab-item-box">
-          <div class="nz-tab-item nz-tab-item-active">{{$t("config.exprTemp.exprTemp")}}</div>
+          <div class="nz-tab-item nz-tab-item-active ">{{$t("config.exprTemp.exprTemp")}}</div>
         </div>
         <div id="module-type-2"  class="nz-tab-item-box" @click="clickTab([],'chartTemp')"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.chartTemp.chartTemp")}}</div>

@@ -17,7 +17,7 @@
           </template>
           <template v-for="(secondMenu, secondIndex) in menu.children">
             <el-submenu v-if="secondMenu.children && secondMenu.children.length > 0" :key="secondIndex" :index="`${index}-${secondIndex}`">
-              <span slot="title">{{$t(secondMenu.i18n)}}</span>
+              <span slot="title" class="data-column__span">{{$t(secondMenu.i18n)}}</span>
               <el-menu-item v-for="(thirdMenu, thirdIndex) in secondMenu.children" :key="`${index}-${secondIndex}-${thirdIndex}`" :index="thirdMenu.route">{{$t(thirdMenu.i18n)}}</el-menu-item>
             </el-submenu>
             <el-menu-item v-else :key="secondIndex" :index="secondMenu.route">{{$t(secondMenu.i18n)}}</el-menu-item>

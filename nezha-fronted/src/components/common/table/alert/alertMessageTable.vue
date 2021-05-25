@@ -38,6 +38,7 @@
           <template v-if="item.prop === 'alertRule'">
             <div v-if="scope.row.alertRule.name" >
               <span
+                class="data-column__span"
                 @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
                 @mouseleave="alertMessageHover(scope.row.alertRule, false)"
               >{{scope.row.alertRule.name}}</span>

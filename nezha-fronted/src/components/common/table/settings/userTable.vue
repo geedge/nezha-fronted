@@ -29,7 +29,7 @@
       :width="`${item.width}`"
     >
       <template slot="header">
-        <span>{{item.label}}</span>
+        <span class="data-column__span">{{item.label}}</span>
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
