@@ -130,6 +130,9 @@
 .right-box__footer span{
   display: inline-block;
 }
-span:first-letter,.el-tabs__item:first-letter,.header__title:first-letter,.operation-dropdown-text:first-letter{
+.right-box__footer span:first-letter{
+  text-transform: capitalize;
+}
+.data-column__span:first-letter,.el-tabs__item:first-letter,.header__title:first-letter,.operation-dropdown-text:first-letter{
   text-transform: capitalize;
 }
