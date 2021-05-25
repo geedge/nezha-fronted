@@ -25,7 +25,7 @@
         </el-submenu>
         <el-menu-item v-else :key="index" :index="menu.route">
           <i :class="menu.icon"></i>
-          <span slot="title">{{$t(menu.i18n)}}</span>
+          <span slot="title" class="data-column__span">{{$t(menu.i18n)}}</span>
         </el-menu-item>
       </template>
     </el-menu>
