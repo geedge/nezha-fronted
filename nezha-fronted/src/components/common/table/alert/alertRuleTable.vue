@@ -9,6 +9,7 @@
     @header-dragend="dragend"
     @sort-change="tableDataSort"
     @selection-change="selectionChange"
+    @row-dblclick="(row)=>{queryMessage(row)}"
   >
     <el-table-column
       :resizable="false"

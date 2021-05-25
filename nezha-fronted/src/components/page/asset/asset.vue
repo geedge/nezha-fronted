@@ -251,12 +251,11 @@ export default {
     }
   },
   methods: {
-    cli ([id, host, account]) {
+    cli (row) {
       const consoleParam = {
-        id: id,
-        host: host,
-        accountId: account.id,
-        port: account.port
+        id: row.id,
+        host: row.manageIp,
+        port: row.authProtocolPort
       }
       this.$store.commit('addConsole', consoleParam)
     },

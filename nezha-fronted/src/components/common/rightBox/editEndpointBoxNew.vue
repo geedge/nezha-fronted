@@ -155,7 +155,7 @@
               </span>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="Parameter" name="Parameter">
+            <el-tab-pane :label="$t('project.endpoint.param')" name="Parameter">
               <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                 <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                   <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">

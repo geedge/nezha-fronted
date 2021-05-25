@@ -14,6 +14,7 @@
       @header-dragend="dragend"
       @sort-change="tableDataSort"
       @selection-change="selectionChange"
+      @row-dblclick="(row)=>{$emit('messageDetail', row)}"
     >
       <el-table-column
         :resizable="false"

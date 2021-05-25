@@ -609,6 +609,7 @@ export default {
         }
       }
     },
+    deleteMessage () {}
   }
 }
 </script>

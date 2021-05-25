@@ -515,7 +515,7 @@ export default {
       // this.$store.commit('addConsole');
     },
     show (id, host, accountId, port) {
-      this.addConsole(id, host, accountId, port)
+      this.addConsole(id, host, accountId, port,'asset')
       this.consoleShow = true
     },
     initDialog () {

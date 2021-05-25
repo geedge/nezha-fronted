@@ -228,7 +228,7 @@ export default {
       } else if (this.from === fromRoute.endpoint) { // 来自endpoint时取endpointId
         this.editChartTemp.varIds = this.obj.varIds
       } else {
-        this.editChartTemp.varIds = this.transfer.selectedData.map(item => item.id)
+        this.editChartTemp.varIds = this.$refs.transfer.selectedData.map(item => item.id)
       }
       this.$refs.userForm.validate((valid) => {
         if (valid) {

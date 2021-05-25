@@ -88,7 +88,7 @@
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
               v-model="editModule.chartIds"
-              :data="'visual/panel/chart'"
+              :data="chartlList"
               :language="language"
               :multiple="true"
               :params="{
@@ -648,14 +648,14 @@ export default {
     },
     /* 获取chart列表数据 */
     ChartTemplateList () {
-      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0 }).then(res => {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0, returnChildren: 0, groupId: 0 }).then(res => {
         this.chartlList = res.data.list
       })
     }
   },
   mounted () {
     this.getWalkData()
-    // this.ChartTemplateList()
+    this.ChartTemplateList()
   },
   created () {
     this.getProjectList()
