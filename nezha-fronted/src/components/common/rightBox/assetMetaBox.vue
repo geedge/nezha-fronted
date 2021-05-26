@@ -20,7 +20,7 @@
               <el-input placeholder="" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
-              <el-select v-model="editAssetMeta.group.name" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false">
+              <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false">
                 <el-option v-for="(item, index) in groupData" :key="index" :value="item.id" :label="item.name"></el-option>
               </el-select>
             </el-form-item>
@@ -234,11 +234,13 @@ export default {
       handler (n) {
         this.editAssetMeta = {
           ...n,
+          groupId: n.groupId ? Number(n.groupId) : '',
           search: `${n.search}`,
           display: `${n.display}`,
-          param: n.param && typeof n.param === 'string' ? JSON.parse(n.param) : {},
+          param: n.param && ((typeof n.param) === 'string') ? JSON.parse(n.param) : {},
           type: n.type.toUpperCase()
         }
+        this.selectType(this.editAssetMeta.type, true)
       }
     },
     'editAssetMeta.search': {
@@ -293,7 +295,7 @@ export default {
       this.$refs.editAssetMetaForm.validate((valid) => {
         if (valid) {
           const param = { ...this.editAssetMeta }
-          if (param.type === 'radio' || param.type === 'checkbox' || param.type === 'select') {
+          if (param.type === 'RADIO' || param.type === 'CHECKBOX' || param.type === 'SELECT') {
             for (let i = 0; i < param.param.items.length; i++) {
               if (!param.param.items[i].name) {
                 this.$refs['metaNameOption' + i][0].focus()
@@ -303,7 +305,7 @@ export default {
               }
             }
           }
-          if (param.type !== 'radio' && param.type !== 'checkbox' && param.type !== 'select' && param.type !== 'datetime') {
+          if (param.type !== 'RADIO' && param.type !== 'CHECKBOX' && param.type !== 'SELECT' && param.type !== 'DATETIME') {
             delete param.param
           } else {
             param.param = JSON.stringify(param.param)
@@ -402,8 +404,6 @@ export default {
       }
     },
     inputChange (index, val) {
-      // console.log(val)
-      // this.editAssetMeta.param.items[index] = val
       this.$forceUpdate()
     },
     radioChange (i) {
