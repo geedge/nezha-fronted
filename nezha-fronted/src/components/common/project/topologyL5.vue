@@ -1077,7 +1077,6 @@ export default {
 
     // 具体内容点击
     nodeTools (node, tool) {
-      console.log(node)
       this.moduleId = node.data.moduleId
       this.moduleName = node.data.moduleName
       if (tool.id === 'total') {
