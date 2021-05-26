@@ -19,7 +19,7 @@
             <el-form-item :label='$t("config.assetLabel.key")' prop="metaKey">
               <el-input placeholder="" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.assetLabel.group")' prop="groupName">
+            <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
               <el-select v-model="editAssetMeta.group.name" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false">
                 <el-option v-for="(item, index) in groupData" :key="index" :value="item.id" :label="item.name"></el-option>
               </el-select>
@@ -158,7 +158,7 @@ export default {
       rules: {
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
         metaKey: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }, { pattern: /\w/, message: this.$t('validate.onlyWord'), trigger: 'change' }],
-        groupName: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
+        groupId: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       },
       value: '',

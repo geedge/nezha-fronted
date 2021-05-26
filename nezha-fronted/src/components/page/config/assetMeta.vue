@@ -136,6 +136,7 @@ export default {
         name: '',
         metaKey: '',
         groupId: '',
+        group: {},
         search: '0',
         display: '0',
         type: 'TEXT',
