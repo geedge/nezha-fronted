@@ -629,7 +629,6 @@ export default {
   /*'text-align':'left', 'color': '#666',*/
   /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
     width:100px;
-    margin-left: 10px;
     margin-right: 10px;
     height: 32px;
     text-align: left;

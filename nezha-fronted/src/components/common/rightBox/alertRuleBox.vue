@@ -18,16 +18,18 @@
             <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <el-form-item :label='$t("alert.config.expr")' prop="expr" >
-            <promql-input
-              id="alert-box-input-promql"
-              ref="promql"
-              :expression-list.sync="expressions"
-              :index="0"
-              :plugins="['metric-selector','metric-input']"
-              :required="true"
-              :styleType="2"
-              @change="metricChange"
-            ></promql-input>
+            <el-row style="height: 32px; line-height: 32px;">
+              <promql-input
+                id="alert-box-input-promql"
+                ref="promql"
+                :expression-list.sync="expressions"
+                :index="0"
+                :plugins="['metric-selector','metric-input']"
+                :required="true"
+                :styleType="2"
+                @change="metricChange"
+              ></promql-input>
+            </el-row>
           </el-form-item>
           <!--threshold-->
           <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">

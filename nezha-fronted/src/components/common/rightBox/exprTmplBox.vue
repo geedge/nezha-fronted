@@ -28,18 +28,19 @@
             ></el-autocomplete>
           </el-form-item>
           <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
-            <!--<el-input v-model="editExprTemp.expression" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
-            <promql-input
-              :id="'promqlKeys0'"
-              :key="'promqlKeys0'"
-              :expression-list="editExprTemp.expression"
-              :index="0"
-              :plugins="['metric-selector', 'metric-input', 'remove']"
-              :show-temp="false"
-              :showRemove="false"
-              :styleType="2"
-              @change="expressionChange"
-            ></promql-input>
+            <el-row style="height: 32px; line-height: 32px;">
+              <promql-input
+                :id="'promqlKeys0'"
+                :key="'promqlKeys0'"
+                :expression-list="editExprTemp.expression"
+                :index="0"
+                :plugins="['metric-selector', 'metric-input', 'remove']"
+                :show-temp="false"
+                :showRemove="false"
+                :styleType="2"
+                @change="expressionChange"
+              ></promql-input>
+            </el-row>
           </el-form-item>
           <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
             <el-input

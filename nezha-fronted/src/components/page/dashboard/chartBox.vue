@@ -61,7 +61,6 @@
     margin-right: 10px;
     text-align: left;
     padding-left:10px;
-    margin-left: 10px;
     height: 32px;
     border-radius: $--primary-border-radius;
     line-height: 32px;
