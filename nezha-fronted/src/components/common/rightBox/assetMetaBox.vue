@@ -237,9 +237,8 @@ export default {
           search: `${n.search}`,
           display: `${n.display}`,
           param: n.param && typeof n.param === 'string' ? JSON.parse(n.param) : {},
-          type: n.type.toUpperCase(),
+          type: n.type.toUpperCase()
         }
-        console.log(this.editAssetMeta)
       }
     },
     'editAssetMeta.search': {
