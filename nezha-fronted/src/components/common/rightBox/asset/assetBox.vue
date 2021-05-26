@@ -98,10 +98,12 @@
                   <el-input v-model="label.value[0]" :maxlength="4096" size="small" type="textarea"/>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.RADIO">
-                  <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" v-model="label.value[0]" :label="item.name">{{item.name}}</el-radio>
+                  <el-radio-group v-model="label.value[0]">
+                    <el-radio v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name">{{item.name}}</el-radio>
+                  </el-radio-group>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX">
-                  <el-checkbox-group v-model="label.value">
+                  <el-checkbox-group v-model="label.value[0]">
                     <el-checkbox v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-checkbox>
                   </el-checkbox-group>
                 </template>
@@ -483,7 +485,7 @@ export default {
       } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA) {
         return ['']
       } else {
-        return ''
+        return ['']
       }
     },
     getParentAsset () {
