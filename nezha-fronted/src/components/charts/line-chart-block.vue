@@ -979,7 +979,7 @@ export default {
 
             self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
-          }, 100)
+          }, 800)
 
           window.addEventListener('resize', this.chartResize)
           getChart(this.chartIndex).on('magictypechanged', function (params) {

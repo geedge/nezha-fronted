@@ -514,7 +514,9 @@ export default {
               this.filter.panelId = this.showPanel.id
             }
             this.$nextTick(() => {
-              this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+              try {
+                this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
+              } catch (e) {}
             })
           } else {
             this.showPanel.id = ''
