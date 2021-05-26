@@ -1258,6 +1258,7 @@ const cn = {
       createEndpoint: '新增 Endpoint',
       editEndpoint: '修改 Endpoint',
       endpoint: 'Endpoint',
+      endpoints: 'Endpoint',
       endpointId: 'Endpoint ID',
       list: '列表',
       host: '主机',

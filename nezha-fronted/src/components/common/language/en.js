@@ -475,7 +475,7 @@ const en = {
         promServer: 'Prom server'
       },
       alert: {
-        alertMessage: 'Alert Message',
+        alertMessage: 'Alert message',
         level: 'Priority',
         alertRule: 'Alert rule',
         ruleNum: 'Rule num',
