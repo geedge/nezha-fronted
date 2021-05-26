@@ -24,6 +24,9 @@
     display: block;
     min-height: 300px;
   }
+    /deep/ .el-table thead{
+      color: #333;
+    }
 </style>
 <style>
   .char-url-preview html{
@@ -136,7 +139,7 @@
 
       <template  v-if="chart.type==='table'">
         <div id="chartTablePreview" :class="{'visible':tableShow,'hidden':!tableShow}"  class="height-100">
-        <el-table :data="seriesItemScreen" border class="nz-table" height="95%" id="tableContainer" style="margin-top: 10px;"  tooltip-effect="light">
+        <el-table :data="seriesItemScreen" border class="nz-table2" height="95%" id="tableContainer" style="margin-top: 10px;"  tooltip-effect="light">
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
           <el-table-column sortable prop="time" :label="$t('dashboard.panel.chartTableColumn.time')" width="145" ></el-table-column>
@@ -145,7 +148,7 @@
               {{ scope.row.element.alias?scope.row.element.alias:scope.row.element.element}}
             </template>
           </el-table-column>
-          <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="90" class-name="costom-value">
+          <el-table-column sortable prop="value" :label="$t('dashboard.panel.chartTableColumn.value')" width="150" class-name="costom-value">
             <template slot-scope="scope">
               <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}">
                 <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
