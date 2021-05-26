@@ -425,6 +425,7 @@ const cn = {
       asset: {
         title: '资产',
         assetType: '资产类型统计',
+        assetState: '资产状态',
         modelStat: '型号',
         dcStat: '数据中心',
         num: '数量',
