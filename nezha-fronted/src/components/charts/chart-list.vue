@@ -1717,9 +1717,7 @@ export default {
     resize () {
       this.init()
       this.$nextTick(() => {
-        if (this.$parent && this.$parent.$parent) {
-          this.$parent.$parent.dateChange()
-        }
+        this.$parent.$parent.dateChange()
       })
     },
     init () {
@@ -1748,7 +1746,7 @@ export default {
     window.addEventListener('resize', () => this.resize(), false)
   },
   beforeDestroy () {
-    window.removeEventListener('resize', this.resize(), false)
+    window.removeEventListener('resize', this.resize, false)
   }
 }
 
