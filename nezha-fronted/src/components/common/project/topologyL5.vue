@@ -213,7 +213,7 @@
           </div>
           <!--endpoint-->
           <transition name="right-box">
-            <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :projectId="projectInfo.id"
+            <endpointTable v-if="popDataShow.endpoint" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
                            @close="popDataShowUpdate('',true)">endpoint
             </endpointTable>
           </transition>
@@ -235,13 +235,13 @@
     <!--</div>-->
     <!--asset-->
     <transition name="right-box">
-      <assetTable v-if="popDataShow.asset" :moduleId="moduleId" :projectId="projectInfo.id"
+      <assetTable v-if="popDataShow.asset" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
                   @close="popDataShowUpdate('',true)">alert
       </assetTable>
     </transition>
     <!--alert-->
     <transition name="right-box">
-      <alertTable v-if="popDataShow.alert" :moduleId="moduleId" :projectId="projectInfo.id"
+      <alertTable v-if="popDataShow.alert" :moduleId="moduleId" :moduleName="moduleName" :projectId="projectInfo.id"
                   @close="popDataShowUpdate('',true)">alert
       </alertTable>
     </transition>
@@ -453,6 +453,7 @@ export default {
         main: false
       },
       moduleId: '',
+      moduleName: '',
       tooltipPosition: {
         top: 0,
         left: 0,
@@ -1076,7 +1077,9 @@ export default {
 
     // 具体内容点击
     nodeTools (node, tool) {
+      console.log(node)
       this.moduleId = node.data.moduleId
+      this.moduleName = node.data.moduleName
       if (tool.id === 'total') {
         this.popDataShowUpdate('', false, node)
         return

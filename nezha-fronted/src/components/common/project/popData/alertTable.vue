@@ -1,7 +1,7 @@
 <template>
   <div class="mc" @click.self="clickOutside">
     <div class="right-box right-box-project-alert">
-      <div class="right-box-title">{{$t('dashboard.overview.alert.alertMessage')}}</div>
+      <div class="right-box-title">{{ moduleName }} / {{$t('dashboard.overview.alert.alertMessage')}}</div>
       <nz-data-list
         ref="dataList"
         :api="url"
@@ -53,7 +53,8 @@ export default {
   name: 'alertTable',
   props: {
     moduleId: {},
-    projectId: {}
+    projectId: {},
+    moduleName: String
   },
   components: {
     'nz-alert-tag': nzAlertTag,

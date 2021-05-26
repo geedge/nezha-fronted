@@ -475,7 +475,7 @@ const en = {
         promServer: 'Prom server'
       },
       alert: {
-        alertMessage: 'Module name / Alert Message',
+        alertMessage: 'Alert Message',
         level: 'Priority',
         alertRule: 'Alert rule',
         ruleNum: 'Rule num',
@@ -562,7 +562,7 @@ const en = {
     copySuccess: 'Copy success'
   },
   asset: {
-    asset: 'Module name / Asset ',
+    asset: 'Asset ',
     assets: 'Asset', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
     createAsset: 'New asset', // '编辑资产'
@@ -1057,7 +1057,7 @@ const en = {
     assetLabel: {
       addMeta: 'Add label',
       example: 'Example',
-      editMeta: 'Edit lables',
+      editMeta: 'Edit lable',
       assetLabel: 'Asset label',
       all: 'All',
       addGroup: 'Add group',
@@ -1268,7 +1268,7 @@ const en = {
       createEndpoint: 'New endpoint', // "新增Endpoint"
       editEndpoint: 'Edit endpoint', // "编辑Endpoint"
       endpoint: 'Endpoint ', // "Endpoint"
-      endpoints: 'Module name / Endpoint',
+      endpoints: 'Endpoint',
       endpointId: 'Endpoint ID', // "Endpoint ID"
       list: 'List',
       host: 'Host', // "Host"
