@@ -19,6 +19,11 @@
       overflow: hidden;
       white-space: nowrap;
     }
+  /deep/ .el-dialog__body{
+    height: 70vh;
+    display: block;
+    min-height: 300px;
+  }
 </style>
 <style>
   .char-url-preview html{
@@ -75,9 +80,9 @@
       </div>
 
       <template v-if="chart.type==='line' || chart.type==='bar'||chart.type==='stackArea' || chart.type == 'endpointInfo' ||chart.type =='pie'">
-        <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart">
-          <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px"></div>
-          <div class="chart-no-data" v-show="noData">No Data</div>
+        <div id="chartEchartPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart" class="height-100">
+          <div class="line-area" ref="screenShowArea"  id="screenShowArea" style="margin-top:0px;height: calc(70vh - 50px);min-height: 300px;"></div>
+          <div class="chart-no-data height-100" v-show="noData">No Data</div>
 
           <template v-if="!hasLegendOptions">
             <div @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"  class="legend-container legend-container-screen" ref="screenLegendArea" v-show="showLegend">
@@ -118,7 +123,7 @@
 
       <template v-if="chart.type==='singleStat'">
         <div id="chartSingleStatPreview" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"
-         style=" height:100%;display:table;text-align:center;width:calc(100% - 16px);color:#000;" >
+         style=" height:100%;display:table;text-align:center;width:calc(100% - 16px);color:#000;"  class="height-100">
           <div class="line-area" ref="singleStatArea"  id="singleStatArea"  :style="{color:mapping&&mapping.color?mapping.color.text:'#000',background:mapping&&mapping.color?mapping.color.bac:'#fff'}" style="margin-top:0px; text-align:center;
       vertical-align: middle;
       display:table-cell;
@@ -130,7 +135,7 @@
       </template>
 
       <template  v-if="chart.type==='table'">
-        <div id="chartTablePreview" :class="{'visible':tableShow,'hidden':!tableShow}" >
+        <div id="chartTablePreview" :class="{'visible':tableShow,'hidden':!tableShow}"  class="height-100">
         <el-table :data="seriesItemScreen" border class="nz-table" height="95%" id="tableContainer" style="margin-top: 10px;"  tooltip-effect="light">
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="metric" :label="$t('dashboard.panel.chartTableColumn.metric')" ></el-table-column>-->
           <!--                    <el-table-column sortable :show-overflow-tooltip="true" prop="label" :label="$t('dashboard.panel.chartTableColumn.label')" ></el-table-column>-->
@@ -153,24 +158,24 @@
       </template>
 
       <template  v-if="chart.type==='url'">
-        <div id="chartUrlPreview" :class="{'visible':urlShow,'hidden':!urlShow}" class="char-url-preview">
+        <div id="chartUrlPreview" :class="{'visible':urlShow,'hidden':!urlShow}" class="char-url-preview height-100" >
           <iframe id="chartUrlFrame" frameborder="0" width="100%" height="100%" name="showHere" scrolling=auto
                   style="z-index:5000;"
           ></iframe>
         </div>
       </template>
 
-      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart"></chart-alert-list>
+      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
 
       <template v-if="chart.type==='text'">
-          <div  id="chartTextPreview" class="chart-text-preview">
+          <div  id="chartTextPreview" class="chart-text-preview height-100">
             <div style="height: 100%; overflow: auto;">
               <div style="height: 100%;" v-html="chart.param.text" ></div>
             </div>
           </div>
       </template>
 
-      <loading  ref="loadingPreview"></loading>
+      <loading  ref="loadingPreview"  class="height-100"></loading>
     </el-dialog>
 </template>
 <script>
@@ -182,7 +187,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
-import moment from "moment-timezone";
+import moment from 'moment-timezone'
 export default {
   name: 'chartPreview',
   components: {
@@ -243,7 +248,7 @@ export default {
       urlShow: true,
       searchTime: bus.getTimezontDateRange(),
       // oldSearchTime:[],
-      minHeight: 200,
+      minHeight: 500,
       chartSpaceHeight: 5, // top-border: 1,bottom-border: 1,padding-bottome:3
       titleHeight: 58,
       legendHeight: 80,
@@ -283,29 +288,29 @@ export default {
       }
 
       // 设置高度 chart-table
-      this.$nextTick(() => {
-        // const chartBox = document.getElementById('chartPreviewDailog');
-        // let height = this.chart.height;
-        let height = Math.round(this.chart.height / 10) * 10
-        if (height < this.minHeight) {
-          height = this.minHeight
-        }
-
-        const dailogBox = document.querySelector('#chartPreviewDailog  .el-dialog')
-        dailogBox.style.height = `${height}px`
-
-        // const addChartBox = document.querySelector('.right-box-add-chart')
-        // addChartBox.style.cssText =  'z-index:1500 !important';
-        if (chartType === 'table') {
-          const chartDiv = document.getElementById(chartContainerId)
-          chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 25}px`
-          const tableBox = document.getElementById('tableContainer')
-          tableBox.style.height = `${height - this.titleHeight - this.pageHeight - 25}px`// -75-32+25
-        } else {
-          const chartDiv = document.getElementById(chartContainerId)
-          chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 15}px`
-        }
-      })
+      // this.$nextTick(() => {
+      //   // const chartBox = document.getElementById('chartPreviewDailog');
+      //   // let height = this.chart.height;
+      //   let height = Math.round(this.chart.height / 10) * 10
+      //   if (height < this.minHeight) {
+      //     height = this.minHeight
+      //   }
+      //
+      //   const dailogBox = document.querySelector('#chartPreviewDailog  .el-dialog')
+      //   dailogBox.style.height = `${height}px`
+      //
+      //   // const addChartBox = document.querySelector('.right-box-add-chart')
+      //   // addChartBox.style.cssText =  'z-index:1500 !important';
+      //   if (chartType === 'table') {
+      //     const chartDiv = document.getElementById(chartContainerId)
+      //     chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 25}px`
+      //     const tableBox = document.getElementById('tableContainer')
+      //     tableBox.style.height = `${height - this.titleHeight - this.pageHeight - 25}px`// -75-32+25
+      //   } else {
+      //     const chartDiv = document.getElementById(chartContainerId)
+      //     chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 15}px`
+      //   }
+      // })
 
       this.screenModal = true
     },
@@ -779,6 +784,7 @@ export default {
     },
     // chartSite用于区分是全屏显示还是局部显示
     initChart (chartInfo, dataArg, ele, legend) {
+      console.log(123123132)
       const self = this
       let minTime = null
       let maxTime = null
@@ -1023,7 +1029,7 @@ export default {
       }
       this.$nextTick(() => {
         const divHeight = this.$refs.screenLegendArea.offsetHeight
-        this.echartModalStore.resize({ height: (chartInfo.height - this.chartSpaceHeight - divHeight - this.titleHeight) })
+        this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg.length < 1) {
           this.echartModalStore.setOption(chartConfig.getOption('noData'))
@@ -1094,6 +1100,9 @@ export default {
           })
         }
       })
+      setTimeout(() => {
+        this.echartModalStore.resize()
+      }, 100)
     },
     initStaticsBar: function (chartInfo, dataArg, legend) {
       const self = this
@@ -1236,7 +1245,7 @@ export default {
       }
       this.$nextTick(() => {
         const divHeight = this.$refs.screenLegendArea.offsetHeight
-        this.echartModalStore.resize({ height: (chartInfo.height - this.chartSpaceHeight - divHeight - this.titleHeight) })
+        this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg[0].data.length < 1) {
           this.echartModalStore.setOption(chartConfig.getOption('noData'))
@@ -1301,7 +1310,7 @@ export default {
       }
       this.$nextTick(() => {
         const divHeight = this.$refs.screenLegendArea.offsetHeight
-        this.echartModalStore.resize({ height: (chartInfo.height - this.chartSpaceHeight - divHeight - this.titleHeight) })
+        this.echartModalStore.resize()
         this.echartModalStore.clear()
         if (dataArg[0].data.length < 1) {
           this.echartModalStore.setOption(chartConfig.getOption('noData'))

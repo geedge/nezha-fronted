@@ -5,7 +5,7 @@
   <div class="nz-chart-resize" :id="id">
     <div class="resize-shadow" ref="resizeShadow"></div>
     <div class="resize-box resize-box-alert" ref="resizeBox">
-      <div class="chart-alert-info" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
+      <div class="chart-alert-info table-container" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
         <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow, 'drag-disabled': !data.draggable}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
           <el-popover
@@ -23,9 +23,9 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
-              <span class="chart-title-text">{{chartData.name}}</span>
+              <span class="chart-title-text">{{chartData?chartData.name:'-'}}</span>
               <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">
-                <span v-if="chartData.remark">
+                <span v-if="chartData&&chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
                      <i class="nz-icon nz-icon-info-normal"></i>
                   </el-tooltip>
@@ -46,12 +46,12 @@
                 <i class="nz-icon nz-icon-delete" style="font-size: 16px;"></i>{{$t('dashboard.delete')}}</li>
               <li  v-has="'panel_chart_add'" class="el-dropdown-menu__item" @click="duplicate">
                 <i class="el-icon-copy-document" style="font-size: 16px;"></i>{{$t('dashboard.duplicate')}}</li>
-              <li  v-has="'panel_chart_edit'"  v-if="from !== 'chartTemp'&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
+              <li  v-has="'panel_chart_edit'"  v-if="from !== 'chartTemp'&&chartData&&chartData.pid" class="el-dropdown-menu__item" @click="$emit('sync')">
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
             </ul>
           </el-dropdown>
         </div>
-        <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview">
+        <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview" :style="isPreview?'height:100%':''">
           <alertMessageTable
             class="nz-table2"
             :id="'tableContainer'+chartIndex"
@@ -791,8 +791,8 @@ export default {
     },
     resize (chartItem) {
       const deHeight = this.$chartResizeTool.titleHeight + this.$chartResizeTool.chartTableBlankHeight
-      const container = document.querySelector('#chartTableDiv' + this.chartIndex + ' .table-container')
-      container.style.height = `calc(100% - ${deHeight}px)`
+      // const container = document.querySelector('#chartTableDiv' + this.chartIndex + ' .table-container')
+      // container.style.height = `calc(100% - ${deHeight}px)`
       this.tableHeight = 'calc(100% - 34px)'
     },
     showLoad (chartItem) {

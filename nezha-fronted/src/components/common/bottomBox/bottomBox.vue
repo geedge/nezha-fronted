@@ -302,8 +302,10 @@ export default {
 .bottom-panel {
   padding-top: 15px;
   background-color: white;
-  padding-bottom: 50px;
-  height: calc(100% - 50px);
+  /*padding-bottom: 50px;*/
+  /*height: calc(100% - 50px);*/
+  padding-bottom: 10px;
+  height: calc(100% - 30px);
 }
 .chart-temp{
   height: calc(100% - 20px);

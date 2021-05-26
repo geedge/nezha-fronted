@@ -58,7 +58,14 @@ export default {
     presetColors: {
       type: Array,
       default () {
-        return []
+        return [
+          '#19730E', '#37872D', '#73BF69',
+          '#CC9D00', '#E0B400', '#FADE2A',
+          '#AD0317', '#C4162A', '#F2495C',
+          '#1250B0', '#1F60C4', '#5794F2',
+          '#E55400', '#FA6400', '#FF9830',
+          '#7C2EA3', '#8F3BB8', '#B877D9'
+        ]
       }
     }
   },
