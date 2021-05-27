@@ -98,7 +98,7 @@
         <button class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
-            <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="['endpointQuery', scope.row]"><i class="nz-icon nz-icon-search"></i><span class="operation-dropdown-text">{{$t('overall.query')}}</span></el-dropdown-item>

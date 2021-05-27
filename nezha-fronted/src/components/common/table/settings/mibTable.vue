@@ -80,7 +80,7 @@
         <button class="table-operation-item" title="Download" @click="downloadMib(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
         <el-dropdown size="medium" v-has="['snmp_mibFile_edit','snmp_mibFile_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
-            <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-has="'snmp_mibFile_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>

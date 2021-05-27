@@ -274,6 +274,11 @@ export default {
   .header-menu--item:hover {
     color: #313336;
   }
+  .header-menu__item {
+    i {
+      font-size: 20px;
+    }
+  }
   .personal {
     display: flex;
     .el-dropdown {

@@ -67,7 +67,7 @@
         <button class="table-operation-item" @click="queryMessage(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['alertRule_edit','alertRule_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
-            <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-has="'alertRule_edit'" :command="['edit', scope.row]" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
