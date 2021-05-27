@@ -92,6 +92,7 @@
     <el-table-column
       :resizable="false"
       :width="operationWidth"
+      v-if="showOption"
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
@@ -116,6 +117,12 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'endpointTable',
   mixins: [table],
+  props: {
+    showOption: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       tableTitle: [ // 原始table列

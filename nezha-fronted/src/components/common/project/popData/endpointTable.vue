@@ -20,6 +20,7 @@
             :height="mainTableHeight"
             :table-data="tableData"
             :tableId="tableId"
+            :showOption="false"
             @orderBy="tableDataSort"
             @reload="getTableData"
            ></endpoint-table>

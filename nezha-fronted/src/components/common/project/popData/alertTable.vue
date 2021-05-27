@@ -25,6 +25,7 @@
             :height="mainTableHeight"
             :now-time="nowTime"
             :table-data="tableData"
+            :showOption="false"
             @del="del"
             @edit="edit"
             @orderBy="tableDataSort"

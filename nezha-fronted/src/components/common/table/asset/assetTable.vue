@@ -65,6 +65,7 @@
     </el-table-column>
     <el-table-column
       :resizable="false"
+      v-if="showOption"
       :width="operationWidth"
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
@@ -93,6 +94,12 @@ import bus from '@/libs/bus'
 export default {
   name: 'assetTable',
   mixins: [table],
+  props: {
+    showOption: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       tableTitle: [
