@@ -611,6 +611,7 @@ export default {
       return new Promise(resolve => {
         this.$get('stat/alertRule/total').then(response => {
           if (response.code === 200) {
+            this.alertRuleData = 0
             response.data.list.forEach(d => {
               this.alertRuleData += d.num
             })
