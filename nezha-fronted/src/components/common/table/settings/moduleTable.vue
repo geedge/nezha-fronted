@@ -31,7 +31,7 @@
       class="data-column"
     >
       <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
+        <span class="data-column__span data-column__span--modify">{{item.label}}</span>
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
@@ -68,7 +68,7 @@
         <button class="table-operation-item"  @click="showBottomBox('endpoint', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['monitor_module_edit','monitor_module_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
-            <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-has="'monitor_module_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>

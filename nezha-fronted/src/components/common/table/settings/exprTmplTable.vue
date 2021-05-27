@@ -47,7 +47,7 @@
         <button class="table-operation-item" title="Edit"  v-has="'expressionTemplate_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['expressionTemplate_add','expressionTemplate_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
-            <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+            <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-has="'expressionTemplate_add'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.copy')}}</span></el-dropdown-item>

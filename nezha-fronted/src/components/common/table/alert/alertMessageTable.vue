@@ -112,7 +112,7 @@
           <button class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
           <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="hover" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
-              <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+              <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item v-has="'alertMessage_expired'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
