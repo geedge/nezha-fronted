@@ -127,6 +127,22 @@
       justify-content: center;
       align-items: center;
     }
+    .one-third-form-item-left{
+      display: inline-block;
+      width: calc(50% - 5px);
+    }
+    .one-third-form-item-right{
+      display: inline-block;
+      width: calc(50% - 5px);
+    }
+    .form-item--half-width-other-two{
+      display: inline-block;
+      width: calc(50% - 10px);
+    }
+    .form-item--half-width-other{
+      display: inline-block;
+      width: calc(50% - 10px);
+    }
   }
 }
 
