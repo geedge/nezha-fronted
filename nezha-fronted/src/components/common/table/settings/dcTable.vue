@@ -45,7 +45,7 @@
         <template v-else-if="item.prop === 'state'">
           <el-switch
             v-model="scope.row.state"
-            :disabled="!hasButton('dc_toEdit') || !hasButton('dc_toEdit')"
+            :disabled="!hasButton('dc_edit') || !hasButton('dc_edit')"
             active-color="#ee9d3f"
             active-value="ON"
             inactive-value="OFF"
@@ -89,7 +89,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" v-has="'dc_toEdit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" v-has="'dc_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
         <el-dropdown size="medium" v-has="['dc_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>

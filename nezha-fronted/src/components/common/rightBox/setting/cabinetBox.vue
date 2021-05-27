@@ -72,7 +72,7 @@ export default {
       this.prevent_opt.save = true
       this.$refs.cabinetForm.validate(valid => {
         if (valid) {
-          this.editCabinet.dcId = this.currentDc.id
+          this.editCabinet.dcIds = this.currentDc.id
           if (this.editCabinet.id) {
             this.$put('/dc/cabinet', this.editCabinet).then(res => {
               this.prevent_opt.save = false

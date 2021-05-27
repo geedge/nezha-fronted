@@ -38,7 +38,7 @@
         <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
         <span v-else-if="item.prop==='type'">
           <i :class="typeIcon(scope.row)"/>
-        {{chartTypeList.find(title=>title.value === scope.row[item.prop]).label}}
+        {{findTypeLabel(scope.row)}}
         </span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop] || '-'}}</span>
         <template v-else>-</template>
@@ -144,6 +144,10 @@ export default {
           break
       }
       return str
+    },
+    findTypeLabel (row) {
+      const typeItem = this.chartTypeList.find(title => title.value === row.type)
+      return typeItem ? typeItem.label : '-'
     }
   }
 }

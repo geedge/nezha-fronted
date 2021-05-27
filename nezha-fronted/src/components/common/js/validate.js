@@ -139,3 +139,7 @@ export function uSize (rule, value, callback) {
     }
   }, 100)
 }
+
+export function longAndLat (rule, value, callback) { // 校验经纬度
+
+}

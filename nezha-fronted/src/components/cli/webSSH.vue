@@ -1,5 +1,8 @@
 <style lang="scss">
   @import './webSSH.scss';
+  .config-dropdown.w260{
+    width: 260px;
+  }
 </style>
 <template>
   <!--  <div id="shell-service" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
@@ -227,7 +230,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
-              <el-select value-key="id" popper-class="config-dropdown" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
+              <el-select value-key="id" popper-class="config-dropdown w260" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -363,7 +366,15 @@ export default {
       },
       columns: [
         { title: 'id', data: 'id' },
-        { title: 'name', data: 'name' },
+        {
+          title: 'name',
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
         { title: 'Manage Ip', data: 'manageIp' },
         {
           title: 'Type',

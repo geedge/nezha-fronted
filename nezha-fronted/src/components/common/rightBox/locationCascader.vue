@@ -118,7 +118,7 @@ export default {
       if (this.cabinetInfos.has(cabinetKey) && this.cabinetInfos.get(cabinetKey) && this.cabinetInfos.get(cabinetKey).length > 0) {
         this.showCabinetInfos = this.cabinetInfos.get(cabinetKey)
       } else {
-        this.$get('dc/cabinet?pageSize=-1&dcId=' + dc.id).then(response => {
+        this.$get('dc/cabinet?pageSize=-1&dcIds=' + dc.id).then(response => {
           if (response.code == 200) {
             this.cabinetInfos.set(cabinetKey, response.data.list)
             this.showCabinetInfos = response.data.list

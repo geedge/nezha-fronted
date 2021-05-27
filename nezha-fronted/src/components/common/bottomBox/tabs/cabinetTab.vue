@@ -111,7 +111,7 @@ export default {
       handler (n) {
         if (n) {
           this.currentDc = JSON.parse(JSON.stringify(n))
-          this.searchLabel = { dcId: this.currentDc.id }
+          this.searchLabel = { dcIds: this.currentDc.id }
           this.getTableData()
         }
       }
