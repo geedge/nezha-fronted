@@ -225,7 +225,7 @@ const en = {
   dashboard: {
     title: 'Dashboard',
     addChartTemp: 'Add chart temp',
-    connect: 'Connect',
+    connect: ' Open terminal',
     panel: {
       title: 'Panel', // '面板'
       searchItem: {

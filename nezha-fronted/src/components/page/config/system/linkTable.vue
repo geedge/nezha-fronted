@@ -36,12 +36,12 @@
           <template v-if="scope.row.edit">
             <template v-if="item.prop == 'name'">
               <el-popover :content="rules.name.message" placement="top" trigger="manual" v-model="rules.name.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.name)">
-                <el-input slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
+                <el-input maxlength="64" show-word-limit slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
               </el-popover>
             </template>
             <template v-if="item.prop == 'url'">
               <el-popover :content="rules.url.message" placement="top" trigger="manual" v-model="rules.url.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.url)">
-                <el-input slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
+                <el-input maxlength="1024" show-word-limit slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
               </el-popover>
             </template>
           </template>

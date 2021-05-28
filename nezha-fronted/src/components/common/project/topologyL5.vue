@@ -272,13 +272,14 @@
       <el-row class="upload-pic-row">
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.name') }}</el-col>
         <el-col :span="20">
-          <el-input v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
+          <el-input maxlength="64" show-word-limit v-model="uploadPic.name" size="small"  :placeholder="$t('project.topology.placeholderImg')"></el-input>
         </el-col>
       </el-row>
       <el-row class="upload-pic-row">
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
+            maxlength="64" show-word-limit
             class="inline-input"
             v-model="uploadPic.unit"
             :fetch-suggestions="querySearch"

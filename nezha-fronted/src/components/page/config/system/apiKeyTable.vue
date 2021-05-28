@@ -36,7 +36,7 @@
           <template v-if="scope.row.edit">
             <template v-if="item.prop == 'name'">
               <el-popover :content="rules.name.message" placement="top" trigger="manual" v-model="rules.name.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.name)">
-                <el-input slot="reference" v-model="scope.row[item.prop]" size="small" ></el-input>
+                <el-input slot="reference" maxlength="64" show-word-limit v-model="scope.row[item.prop]" size="small" ></el-input>
               </el-popover>
             </template>
             <template v-if="item.prop == 'role'">

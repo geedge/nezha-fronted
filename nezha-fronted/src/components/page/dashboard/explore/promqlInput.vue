@@ -68,7 +68,7 @@
               :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 160px)':'100%',height: '100%',}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
-                <el-input v-model="expressionList[index]" @input="metricKeyDown"   type="textarea"
+                <el-input maxlength="4096" show-word-limit v-model="expressionList[index]" @input="metricKeyDown"   type="textarea"
                           :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
                 <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                 <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>

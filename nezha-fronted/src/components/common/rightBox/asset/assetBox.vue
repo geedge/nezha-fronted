@@ -10,7 +10,7 @@
       <div class="container__form">
         <el-form ref="form" :model="editAsset" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.name')" prop="name">
-            <el-input v-model="editAsset.name" size="small"/>
+            <el-input maxlength="128" show-word-limit v-model="editAsset.name" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('overall.type')" prop="typeId">
             <select-asset-type id="asset-type" :asset-type-data="options.typeOptions" :show-type="editAsset.type" size="small"
@@ -36,13 +36,13 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.manageIp')" prop="manageIp">
-            <el-input v-model="editAsset.manageIp" size="small"/>
+            <el-input  maxlength="64" show-word-limit v-model="editAsset.manageIp" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('asset.sn')" prop="sn">
-            <el-input v-model="editAsset.sn" size="small"/>
+            <el-input  maxlength="128" show-word-limit v-model="editAsset.sn" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('asset.number')" prop="number">
-            <el-input v-model="editAsset.number" size="small"/>
+            <el-input  maxlength="128" show-word-limit v-model="editAsset.number" size="small"/>
           </el-form-item>
           <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
             <el-cascader
@@ -180,7 +180,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('asset.username')" prop="authUsername">
-              <el-input v-model="editAsset.authUsername" size="small"/>
+              <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
             <!-- Key支持私钥 -->
             <template v-if="editAsset.authType === assetConstants.authTypeData.key">
@@ -189,7 +189,7 @@
               </el-form-item>
             </template>
             <el-form-item :label="$t('asset.pin')" prop="authPin">
-              <el-input v-model="editAsset.authPin" size="small" type="password"/>
+              <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small" type="password"/>
             </el-form-item>
             <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
               <el-input v-model="editAsset.authProtocolPort" size="small"/>
@@ -199,16 +199,16 @@
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.telnet">
             <div class="form__sub-title">TELNET</div>
             <el-form-item :label="$t('asset.username')" prop="authUsername">
-              <el-input v-model="editAsset.authUsername" size="small"/>
+              <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.pin')" prop="authPin">
-              <el-input v-model="editAsset.authPin" size="small"  type="password"/>
+              <el-input maxlength="256" show-word-limit v-model="editAsset.authPin" size="small"  type="password"/>
             </el-form-item>
             <el-form-item :label="$t('asset.usernamePrompt')" prop="authUserTip">
-              <el-input v-model="editAsset.authUserTip" size="small"/>
+              <el-input maxlength="64" show-word-limit v-model="editAsset.authUserTip" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.pinPrompt')" prop="authPinTip">
-              <el-input v-model="editAsset.authPinTip" size="small"  type="password"/>
+              <el-input maxlength="64" show-word-limit v-model="editAsset.authPinTip" size="small"  type="password"/>
             </el-form-item>
             <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
               <el-input v-model="editAsset.authProtocolPort" size="small"/>

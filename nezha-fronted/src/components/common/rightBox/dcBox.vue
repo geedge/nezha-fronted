@@ -15,10 +15,10 @@
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editDc.name" size="small" id="dc-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("asset.location")' prop="location">
-              <el-input placeholder="" v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
+              <el-input placeholder="" maxlength="256" show-word-limit v-model="editDc.location" size="small" id="dc-box-input-location"></el-input>
             </el-form-item>
             <el-form-item :label='$t("asset.tel")' prop="tel">
-              <el-input placeholder="" v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
+              <el-input placeholder="" maxlength="128" show-word-limit v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
             </el-form-item>
             <el-form-item :label='$t("asset.principal")' prop="principal">
               <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
