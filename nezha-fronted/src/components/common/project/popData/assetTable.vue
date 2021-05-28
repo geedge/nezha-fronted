@@ -19,6 +19,7 @@
             :custom-table-title="tableTitle"
             :height="mainTableHeight"
             :table-data="tableData"
+            :showOption="false"
             @orderBy="tableDataSort"
             @reload="getTableData"></asset-table>
         </template>

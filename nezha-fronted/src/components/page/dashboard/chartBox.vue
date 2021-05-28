@@ -886,7 +886,7 @@ export default {
             this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
             // this.$refs.chartForm.resetFields()// 清空表单
             this.$emit('on-create-success', 'create', response.data, chartParams, { id: this.panelId, name: this.panelName })
-            this.esc()
+            this.esc(true)
           } else {
             if (response.msg) {
               this.$message.error(response.msg)
