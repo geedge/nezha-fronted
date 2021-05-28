@@ -26,7 +26,7 @@
                 :index="0"
                 :plugins="['metric-selector','metric-input']"
                 :required="true"
-                :styleType="2"
+                :styleType="3"
                 @change="metricChange"
               ></promql-input>
             </el-row>
@@ -101,7 +101,7 @@
           </el-form-item>
           <!--description-->
           <el-form-item :label="$t('alert.description')" prop="description">
-            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="512" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
+            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </div>

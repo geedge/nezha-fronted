@@ -15,7 +15,7 @@
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.name" size="small" id="credential-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.remark")' prop="remark">
-              <el-input placeholder="" v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
+              <el-input placeholder="" maxlength="256" show-word-limit v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.type")' prop="type">
               <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" @change="typeChange">
@@ -28,16 +28,16 @@
               <el-input placeholder=""   v-model.number="editCredential.port" size="small" id="credential-box-input-port"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.ReadCommunity")' prop="readCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
-              <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.readCommunity" size="small" id="credential-box-input-readCommunity"></el-input>
+              <el-input placeholder="" autocomplete="new-password" maxlength="64" show-word-limit v-model="editCredential.config.readCommunity" size="small" id="credential-box-input-readCommunity"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.writeCommunity")' prop="writeCommunity" v-if="editCredential.type ===1 || editCredential.type === 2">
-              <el-input placeholder="" autocomplete="new-password"  v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
+              <el-input placeholder="" autocomplete="new-password" maxlength="64" show-word-limit v-model="editCredential.config.writeCommunity" size="small" id="credential-box-input-writeCommunity" type="password" show-password></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.username")' prop="username" v-if="editCredential.type === 3">
-              <el-input placeholder=""   v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.config.username" size="small" id="credential-box-input-username"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.contextName")' prop="contextname"  v-if="editCredential.type === 3">
-              <el-input placeholder=""   v-model="editCredential.config.contextname" size="small" id="credential-box-input-contextname"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.config.contextname" size="small" id="credential-box-input-contextname"></el-input>
             </el-form-item>
 
             <div class="right-box-sub-title" v-if="editCredential.type === 3">{{$t('config.mib.credential.auth')}}</div>

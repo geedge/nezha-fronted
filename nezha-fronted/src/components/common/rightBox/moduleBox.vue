@@ -30,7 +30,8 @@
               v-model="editModule.remark"
               :autosize="{ minRows: 1, maxRows: 6}"
               class="not-fixed-height no-resize"
-              maxlength="1024"
+              maxlength="256"
+              show-word-limit
               placeholder=""
               size="small"
               type="textarea"></el-input>

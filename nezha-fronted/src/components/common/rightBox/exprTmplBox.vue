@@ -14,7 +14,7 @@
       <div class="container__form">
         <el-form ref="ExprTempForm" :model="editExprTemp" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('config.exprTemp.name')" prop="name">
-            <el-input v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editExprTemp.name" :placeholder="$t('overall.placeHolder')" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('config.exprTemp.gname')" prop="gname">
             <!--<el-input v-model="editExprTemp.gname" size="small" :placeholder="$t('overall.placeHolder')"></el-input>-->
@@ -46,7 +46,7 @@
             <el-input
               v-model="editExprTemp.remark"
               :placeholder="$t('alert.description')"
-              maxlength="512"
+              maxlength="256"
               show-word-limit
               size="small"
               type="textarea"

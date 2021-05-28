@@ -25,11 +25,11 @@
 
           <!--host-->
           <el-form-item :label="$t('config.agent.host')" prop="host">
-            <el-input id="prom-box-input-host" v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
+            <el-input id="prom-box-input-host" maxlength="64" show-word-limit v-model="editPromServer.host" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--Port-->
           <el-form-item :label="$t('config.agent.port')" prop="port">
-            <el-input id="prom-box-input-port" v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
+            <el-input id="prom-box-input-port" maxlength="10" show-word-limit v-model.number="editPromServer.port" placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--type-->
           <el-form-item :label="$t('config.agent.type')" prop="type">
@@ -49,7 +49,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Token" prop="token">
-            <el-input id="prom-box-input-token" v-model="editPromServer.token" class="right-box-row-with-btn" placeholder="" size="small" type="text">
+            <el-input maxlength="64" show-word-limit id="prom-box-input-token" v-model="editPromServer.token" class="right-box-row-with-btn" placeholder="" size="small" type="text">
               <i slot="suffix" class="nz-icon nz-icon-refresh" @click="refreshToken"></i>
             </el-input>
           </el-form-item>

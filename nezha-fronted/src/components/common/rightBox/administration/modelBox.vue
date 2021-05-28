@@ -11,7 +11,7 @@
         <el-form ref="modelForm" :model="editModel" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.model.name')" prop="name">
-            <el-input v-model="editModel.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editModel.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--brand-->
           <el-form-item :label='$t("config.model.brand")' prop="brandId">
@@ -41,7 +41,7 @@
           </el-form-item>
           <!--remark-->
           <el-form-item :label="$t('config.model.remark')" prop="remark">
-            <el-input v-model="editModel.remark" size="small" type="text"></el-input>
+            <el-input maxlength="256" show-word-limit v-model="editModel.remark" size="small" type="text"></el-input>
           </el-form-item>
         </el-form>
       </div>

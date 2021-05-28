@@ -11,7 +11,7 @@
         <el-form ref="assetTypeForm" :model="editAssetType" :rules="rules" label-position="top" label-width="120px">
           <!--name-->
           <el-form-item :label="$t('config.assetType.name')" prop="name">
-            <el-input v-model="editAssetType.name" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editAssetType.name" size="small" type="text"></el-input>
           </el-form-item>
           <!--vm-->
           <el-form-item :label='$t("config.assetType.vm")' prop="vm">
@@ -69,16 +69,16 @@
           </el-form-item>
           <!-- ChartTemplate -->
           <!-- <el-form-item :label="$t('config.type.ChartTemplate')" prop="ChartTemplate">
-            <v-selectpage 
-            :data="chartlList" 
-            :tb-columns="ChartSearchShowFields" 
-            :max-select-limit="3" 
+            <v-selectpage
+            :data="chartlList"
+            :tb-columns="ChartSearchShowFields"
+            :max-select-limit="3"
             :multiple="true"
             title="ChartSearch"
             placeholder="Please select item"
             key-field="id"
-            v-model="editAssetType.chartIds" 
-            show-field="name" 
+            v-model="editAssetType.chartIds"
+            show-field="name"
             class="form-control"
             @values="(data) => {editAssetType.chartIds = data.map(d => d.id).join(',')}"
           ></v-selectpage>
@@ -120,14 +120,14 @@ export default {
   data () {
     return {
       assetConstants,
-      editAssetType: {}, 
+      editAssetType: {},
       editModule: {},
       assetTypeList:[
         {
           id:'',
           authProtocol:''
         }
-      ], 
+      ],
       value:'',
       url: 'asset/typeConf',
       // brandUrl: 'asset/brand',

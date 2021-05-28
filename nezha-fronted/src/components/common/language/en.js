@@ -225,7 +225,7 @@ const en = {
   dashboard: {
     title: 'Dashboard',
     addChartTemp: 'Add chart temp',
-    connect: 'Connect',
+    connect: ' Open terminal',
     panel: {
       title: 'Panel', // '面板'
       searchItem: {
@@ -515,6 +515,7 @@ const en = {
     positiveInteger: 'Positive integer',
     email: 'Invalid email', // '不合法的E-mail地址'
     tel: 'Invalid phone number', // '不合法的电话号码'
+    telephone: 'Phone number cannot be empty',
     host: 'Invalid Host', // '不合法的Host'
     domain: 'Invalid domain',
     usize: 'Must be number(1 - 47)',

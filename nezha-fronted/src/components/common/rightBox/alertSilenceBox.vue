@@ -15,6 +15,7 @@
                label-width="120px" :rules="rules" ref="alertSilenceForm">
         <el-form-item :label='$t("alert.silence.name")' prop="name" class="range-name">
           <el-input
+            maxlength="64" show-word-limit
             :placeholder="''"
             size="small"
             v-model="editAlertSilence.name">
@@ -92,7 +93,7 @@
             type="textarea"
             :placeholder="$t('alert.description')"
             v-model="editAlertSilence.remark"
-            maxlength="512"
+            maxlength="256"
             show-word-limit>
 
           </el-input>

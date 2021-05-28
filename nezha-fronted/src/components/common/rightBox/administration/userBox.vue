@@ -21,21 +21,21 @@
           </el-form-item>
           <!--password-->
           <el-form-item :label="$t('config.user.pin')" prop="pin">
-            <el-input id="account-input-password" v-model="editUser.pin"  maxlength="16" placeholder=""
+            <el-input id="account-input-password" v-model="editUser.pin"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password" @blur="pinBlur" autocomplete="new-password"></el-input>
           </el-form-item>
           <!--pinChange-->
           <el-form-item :label="$t('config.user.confirmPin')" label-width="200px" prop="pinChange">
-            <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="16" placeholder=""
+            <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password"></el-input>
           </el-form-item>
           <!--email-->
           <el-form-item label="E-mail" prop="email">
-            <el-input id="account-input-email" v-model="editUser.email" placeholder="" size="small" type="text"></el-input>
+            <el-input id="account-input-email" v-model="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--mobile-->
           <el-form-item :label="$t('config.user.mobile')" prop="mobile">
-            <el-input id="account-input-mobile" v-model.number="editUser.mobile" placeholder="" size="small" type="text"></el-input>
+            <el-input id="account-input-mobile" v-model.number="editUser.mobile" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--roles-->
           <el-form-item :label="$t('config.user.roles')" prop="roleIds">
@@ -81,7 +81,9 @@
 </template>
 
 <script>
-import { host, port } from '@/components/common/js/validate'
+// import { host, port } from '@/components/common/js/validate'
+import {isvalidPhone} from "../../../../store/validate";
+
 export default {
   name: 'userBox',
   components: {
@@ -108,7 +110,16 @@ export default {
       } else {
         callback()
       }
-    }
+    };
+    const phoneVerification = (rule, value,callback) => {
+      if (!value){
+        callback(new Error(this.$t('validate.telephone')))
+      }else  if (!isvalidPhone(value)){
+        callback(new Error(this.$t('validate.tel')))
+      }else {
+        callback()
+      }
+    };
     return {
       editUser: {},
       url: 'sys/user',
@@ -132,6 +143,10 @@ export default {
         ],
         email: [
           { type: 'email', message: this.$t('validate.email') }
+        ],
+        mobile: [
+          { validator: phoneVerification, required : true, trigger: 'blur' },
+          { required: true, message: '', trigger: 'blur' }
         ]
       },
       rules2: { // 表单校验规则

@@ -22,7 +22,7 @@
     <div class="right-box-form-box">
       <el-form class="right-box-form right-box-form-left" label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
         <el-form-item :label="$t('overall.name')" prop="name">
-          <el-input size='mini' v-model="editCabinet.name" id="cabinet-box-input-name"/>
+          <el-input size='mini' maxlength="64" show-word-limit v-model="editCabinet.name" id="cabinet-box-input-name"/>
         </el-form-item>
         <el-form-item :label="$t('config.dc.dc')" prop="idcId">
           <el-input v-if="dcDisabled" size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
@@ -34,7 +34,7 @@
           <el-input v-model.number="editCabinet.uSize" :max="47" size="small" id="cabinet-box-input-uSize"></el-input>
         </el-form-item>
         <el-form-item :label="$t('config.dc.remark')">
-          <el-input size='mini' v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
+          <el-input size='mini' maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
         </el-form-item>
       </el-form>
     </div>

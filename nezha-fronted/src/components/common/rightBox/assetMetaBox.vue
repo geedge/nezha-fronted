@@ -14,10 +14,10 @@
         <div class="container__form">
           <el-form label-width="120px"  :model="editAssetMeta" label-position = "top" ref="editAssetMetaForm" :rules="rules">
             <el-form-item :label='$t("config.assetLabel.name")' prop="name">
-              <el-input placeholder="" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
+              <el-input placeholder="" maxlength="64" show-word-limit v-model="editAssetMeta.name" size="small" id="editAssetMeta-box-input-name"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.key")' prop="metaKey">
-              <el-input placeholder="" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
+              <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
               <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :popper-append-to-body="false">
@@ -115,7 +115,7 @@
               </div>
             </el-form-item>
             <el-form-item :label='$t("overall.remark")' prop="remark">
-              <el-input placeholder="" maxlength="512" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
+              <el-input placeholder="" maxlength="256" type="textarea" show-word-limit v-model="editAssetMeta.remark" size="small" id="editAssetMeta-box-input-remark"></el-input>
             </el-form-item>
 <!--            <el-form-item :label='$t("config.assetLabel.example")'>-->
 <!--              <assetTagEx :param="editAssetMeta.param" :type="editAssetMeta.type.toUpperCase()"/>-->

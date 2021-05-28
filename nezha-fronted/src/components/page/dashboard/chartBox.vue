@@ -205,7 +205,7 @@
           </el-form-item>
           <!--   remark   -->
           <el-form-item :label="$t('dashboard.panel.chartForm.remark')">
-            <el-input v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
+            <el-input  maxlength="256" show-word-limit v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
           </el-form-item>
 
           <div class="form__sub-title">{{$t('dashboard.panel.chartForm.option')}}</div>
@@ -316,7 +316,7 @@
                   </el-popover>
                 </el-col>
                 <el-col style="width: calc(100% - 160px);">
-                  <el-input size="small" type="text" v-model="legends[index-1]" ></el-input>
+                  <el-input maxlength="512" show-word-limit size="small" type="text" v-model="legends[index-1]" ></el-input>
                 </el-col>
               </el-row>
               <div class="nz-icon-minus-position">
