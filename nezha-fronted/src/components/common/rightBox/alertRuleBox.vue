@@ -336,3 +336,16 @@ export default {
   display: none;
 }
 </style>
+<style scoped>
+  .severity-circle{
+    position: absolute;
+    left: 10px;
+    top: 0;
+  }
+  .severity-box{
+    position: relative;
+  }
+  .severity-box /deep/ .el-select .el-input__inner{
+    padding-left: 25px;
+  }
+</style>
