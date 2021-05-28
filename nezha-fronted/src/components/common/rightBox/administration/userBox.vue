@@ -82,7 +82,7 @@
 
 <script>
 // import { host, port } from '@/components/common/js/validate'
-import {isvalidPhone} from "../../../../store/validate";
+// import {isvalidPhone} from "../../../../store/validate";
 
 export default {
   name: 'userBox',
@@ -111,15 +111,15 @@ export default {
         callback()
       }
     };
-    const phoneVerification = (rule, value,callback) => {
-      if (!value){
-        callback(new Error(this.$t('validate.telephone')))
-      }else  if (!isvalidPhone(value)){
-        callback(new Error(this.$t('validate.tel')))
-      }else {
-        callback()
-      }
-    };
+    // const phoneVerification = (rule, value,callback) => {
+    //   if (!value){
+    //     callback(new Error(this.$t('validate.telephone')))
+    //   }else  if (!isvalidPhone(value)){
+    //     callback(new Error(this.$t('validate.tel')))
+    //   }else {
+    //     callback()
+    //   }
+    // };
     return {
       editUser: {},
       url: 'sys/user',
@@ -143,11 +143,11 @@ export default {
         ],
         email: [
           { type: 'email', message: this.$t('validate.email') }
-        ],
-        mobile: [
-          { validator: phoneVerification, required : true, trigger: 'blur' },
-          { required: true, message: '', trigger: 'blur' }
         ]
+        // mobile: [
+        //   { validator: phoneVerification, required : true, trigger: 'blur' },
+        //   { required: true, message: '', trigger: 'blur' }
+        // ]
       },
       rules2: { // 表单校验规则
         username: [
