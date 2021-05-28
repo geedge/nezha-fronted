@@ -504,6 +504,7 @@ const cn = {
     number: '必须是数字',
     email: '不合法的E-mail地址',
     tel: '不合法的电话号码',
+    telephone: '电话号码不能为空',
     host: '不合法的IP',
     fileSize: '文件过大',
     port: '不合法的端口',
