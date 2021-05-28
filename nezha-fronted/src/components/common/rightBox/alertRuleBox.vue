@@ -26,7 +26,7 @@
                 :index="0"
                 :plugins="['metric-selector','metric-input']"
                 :required="true"
-                :styleType="2"
+                :styleType="3"
                 @change="metricChange"
               ></promql-input>
             </el-row>
