@@ -132,17 +132,17 @@ export default {
           panel: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoints', active: false }
+            { prop: 'endpointTab', name: 'Endpoint', active: false }
           ],
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: 'Endpoints', active: false }
+            { prop: 'endpointTab', name: 'Endpoint', active: false }
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoints', active: true }
+            { prop: 'endpointTab', name: 'Endpoint', active: true }
           ]
         },
         module: {

@@ -65,7 +65,6 @@
 <script>
 import latlngPicker from '../latlngPicker'
 const regNum = /^[0-9]+.?[0-9]*/
-import {isvalidPhone} from "../../../store/validate";
 
 export default {
   name: 'dcBox',
@@ -77,15 +76,6 @@ export default {
     userData: Array
   },
   data () {
-    const phoneVerification = (rule, value,callback) => {
-      if (!value){
-        callback(new Error(this.$t('validate.telephone')))
-      }else  if (!isvalidPhone(value)){
-        callback(new Error(this.$t('validate.tel')))
-      }else {
-        callback()
-      }
-    }
     return {
       editDc: {},
       rules: {
@@ -94,10 +84,6 @@ export default {
         ],
         state: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        tel: [
-          { validator: phoneVerification, required: true, trigger: 'blur' },
-          { required: true, message: '', trigger: 'blur' }
         ]
       },
       areaData: [],
