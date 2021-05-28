@@ -369,7 +369,7 @@ export default {
   name: 'topologyL5',
   data () {
     return {
-      title: this.$t("overall.customPicture"),
+      title: this.$t('overall.customPicture'),
       objChange: false, // project 变化 用于判断 init是否执行完成 执行完成 才可以执行下次变化
       chartDataInfo: {},
       topoPrevData: {}, // 预览数据
@@ -1492,13 +1492,15 @@ export default {
     beforeAvatarUpload (file, fileList) {
       const this_ = this
       const isJPG = (file.raw.type === 'image/jpeg' || file.raw.type === 'image/png')
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = (file.size / 1024 / 1024) < 2
       if (!isJPG) {
         this.$message.error(this_.$t('project.topology.imgFormat'))
+        fileList = fileList.splice(fileList.length - 1, 1)
         return false
       }
       if (!isLt2M) {
         this.$message.error(this_.$t('project.topology.imgSize'))
+        fileList = fileList.splice(fileList.length - 1, 1)
         return false
       }
       const isSize = new Promise(function (resolve, reject) {
