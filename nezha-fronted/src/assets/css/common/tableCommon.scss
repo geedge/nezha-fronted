@@ -240,7 +240,7 @@
       .el-table__body tr:hover>td, .el-table__body tr.hover-row.current-row>td,
       .el-table__body tr.hover-row.el-table__row--striped.current-row>td,
       .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td {
-        background-color: #f9f9f9 !important;
+        background-color: var(--theme-color-light-96) !important;
       }
       .table-operation-title {
         text-align: center;
