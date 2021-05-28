@@ -742,7 +742,7 @@ const en = {
       cabinetNum: 'Cabinet',
       assets: 'Asset',
       remark: 'Description',
-      cabinets: 'Cabinets',
+      cabinets: 'Cabinet',
       createDc: 'New data center',
       editDc: 'Edit data center',
       editCabinet: 'Edit cabinet',
