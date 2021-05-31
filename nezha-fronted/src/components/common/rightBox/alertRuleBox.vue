@@ -18,7 +18,7 @@
             <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <el-form-item :label='$t("alert.config.expr")' prop="expr" >
-            <el-row style="height: 32px; line-height: 32px;">
+            <el-row style="line-height: 32px;">
               <promql-input
                 id="alert-box-input-promql"
                 ref="promql"
