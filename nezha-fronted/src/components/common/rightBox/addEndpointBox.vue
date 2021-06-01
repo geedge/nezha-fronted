@@ -249,6 +249,7 @@ export default {
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
         type: 'http',
         port: '',
+        enabled: 1,
         configs: {
           walk: [],
           snmpCredentialsId: '',
@@ -672,6 +673,9 @@ export default {
       this.object = JSON.parse(JSON.stringify(u))
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.configs.port && (this.object.port = this.object.configs.port)
+      // if (!this.object.enabled && !isNaN(this.object.enabled)) {
+      //   this.object.enabled = 1
+      // }
       this.rightBox.show = true
     },
     showRightBox () {
@@ -679,6 +683,9 @@ export default {
       this.object = { ...JSON.parse(JSON.stringify(this.blankEndpoint)), projectId: this.currentModule.projectId, moduleId: this.currentModule.id, assetName: '', type: this.currentModule.type }
       this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
       this.object.configs.port && (this.object.port = this.object.configs.port)
+      // if (!this.object.enabled && !isNaN(this.object.enabled)) {
+      //   this.object.enabled = 1
+      // }
       this.rightBox.show = true
     },
     editAllEndpoint () {

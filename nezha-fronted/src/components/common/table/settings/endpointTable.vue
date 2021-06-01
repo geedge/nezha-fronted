@@ -86,6 +86,10 @@
             </div>
           </el-popover>
         </template>
+        <template v-else-if="item.prop === 'enabled'">
+          <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
+          <span v-else>{{$t('project.endpoint.disable')}}</span>
+        </template>
         <span v-else>{{scope.row[item.prop] ? scope.row[item.prop] : ''}}</span>
       </template>
     </el-table-column>
@@ -176,6 +180,11 @@ export default {
           show: true,
           sortable: 'custom'
         }
+        // {
+        //   label: this.$t('project.endpoint.status'),
+        //   prop: 'enabled',
+        //   show: false
+        // }
       ]
     }
   },
@@ -194,24 +203,24 @@ export default {
     suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
       if (!status || status === 1 || status == 0) { return '' }
       const arr = status.toString(2).split('')
-      while (arr.length < 5) {
+      while (arr.length < 4) {
         arr.unshift('0')
       }
       arr.pop()
       let str = ''
       arr.forEach((item, index) => {
         if (index === 0) {
-          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
+          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'gray-bg'}"></div></div>`
         }
         if (index === 1) {
-          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
+          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'gray-bg'}"></div></div>`
         }
         if (index === 2) {
-          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
+          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'gray-bg'}"></div></div>`
         }
-        if (index === 3) {
-          str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
-        }
+        // if (index === 3) {
+        //   str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
+        // }
       })
       return str
     }

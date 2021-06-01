@@ -138,7 +138,8 @@ const en = {
     batchDel: 'Batches delete',
     tempPrev: 'Template preview',
     silenceAlert: 'silence alert',
-    quickSilent: 'Quick silent'
+    quickSilent: 'Quick silent',
+    configEndpoint: 'Config'
   },
   pageSize: '/page',
   setup: {
@@ -1308,7 +1309,10 @@ const en = {
       name: 'Name',
       configs: 'Config',
       state: 'State',
-      allselect: 'The current page has all been selected'
+      allselect: 'The current page has all been selected',
+      enable: 'Enable',
+      disable: 'Disable',
+      status: 'Endpoint status'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

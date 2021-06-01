@@ -91,17 +91,22 @@
           </el-select>
         </el-form-item>
         </span>
-
+          <!--module-->
+          <el-form-item :label='$t("project.endpoint.state")' prop="remark">
+            <el-select id="module-box-input-state" v-model="editEndpoint.enabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+              <el-option v-for="item in endpointStateList" :id="'module-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
           <!--Enpoint template-->
-          <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
-            <el-tooltip effect="light" placement="top">
-              <div slot="content">
-                {{$t('project.module.tip.defaultEndpointSet')}}
-                <div></div>
-                {{$t('project.module.tip.relation')}}
-              </div>
-              <i class="nz-icon nz-icon-info-normal"></i>
-            </el-tooltip>
+          <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}
+<!--            <el-tooltip effect="light" placement="top">-->
+<!--              <div slot="content">-->
+<!--                {{$t('project.module.tip.defaultEndpointSet')}}-->
+<!--                <div></div>-->
+<!--                {{$t('project.module.tip.relation')}}-->
+<!--              </div>-->
+<!--              <i class="nz-icon nz-icon-info-normal"></i>-->
+<!--            </el-tooltip>-->
           </div>
           <div class="right-box-line"></div>
 
@@ -330,6 +335,10 @@ export default {
         { name: this.$t('project.endpoint.authTypeNull'), value: 0 },
         { name: this.$t('project.endpoint.authTypeWord'), value: 1 },
         { name: this.$t('project.endpoint.authTypeToken'), value: 2 }
+      ],
+      endpointStateList: [
+        { name: this.$t('project.endpoint.enable'), value: 1 },
+        { name: this.$t('project.endpoint.disable'), value: 0 }
       ],
       configsCopyValue: ''
     }
@@ -782,7 +791,7 @@ export default {
   .half-form-item {
     width: calc(50% - 30px);
     display: inline-block;
-    padding: 0 18px 0 8px;
+    padding: 0 0px 0 8px;
   }
   .half-form-item:nth-child(even){
     padding-left: 0;

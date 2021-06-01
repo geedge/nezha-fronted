@@ -787,7 +787,7 @@ export default {
   .half-form-item {
     width: calc(50% - 21px);
     display: inline-block;
-    padding: 0 18px 0 0px;
+    padding: 0 0px 0 0px;
   }
   .half-form-item:nth-child(even){
     padding-left: 0;

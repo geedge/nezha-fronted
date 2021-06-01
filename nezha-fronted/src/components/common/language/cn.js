@@ -133,7 +133,8 @@ const cn = {
     batchDel: '批量删除',
     tempPrev: '模板预览',
     silenceAlert: '告警静默',
-    quickSilent: '快速静默'
+    quickSilent: '快速静默',
+    configEndpoint: '配置'
   },
   setup: {
     step0: '欢迎',
@@ -1298,7 +1299,10 @@ const cn = {
       name: '名称',
       configs: '配置',
       state: '状态',
-      allselect: '当前页已全部选择'
+      allselect: '当前页已全部选择',
+      enable: '开启',
+      disable: '关闭',
+      status: 'Endpoint 状态'
     },
     metrics: {
       metrics: '指标',
