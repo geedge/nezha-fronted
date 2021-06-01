@@ -89,9 +89,8 @@
                             @close="closeRightBox"
                             @refresh="getTableData"></asset-batch-edit-box>
     </transition>
-    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
-      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+</transition>
   </div>
 </template>
 
@@ -104,7 +103,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
-import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   name: 'asset',

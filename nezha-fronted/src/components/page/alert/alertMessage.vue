@@ -95,9 +95,8 @@
       </div>
       <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
     </el-dialog>
-    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
-      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+</transition>
   </div>
 </template>
 <script>
@@ -112,7 +111,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
-import alertSilenceBox from "@/components/common/dialog/alertSilenceBox";
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 export default {
   name: 'alertList',
   components: {

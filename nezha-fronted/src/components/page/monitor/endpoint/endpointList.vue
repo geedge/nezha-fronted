@@ -76,9 +76,8 @@
     <transition name="right-box">
       <batchModifyEndpoint v-if="rightBox.batchModify" :module="object" @close="closeRightBatchModify" :selectEndpointList="batchDeleteObjs" :disabled="true" :type="'edit'"></batchModifyEndpoint>
     </transition>
-    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
-      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+</transition>
   </div>
 </template>
 <script>
@@ -91,7 +90,7 @@ import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
-import alertSilenceBox from "@/components/common/dialog/alertSilenceBox";
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发

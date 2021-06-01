@@ -45,9 +45,8 @@
     <transition name="right-box">
       <projectBox v-if="rightBox.show" :project="object" @close="closeRightBox"></projectBox>
     </transition>
-    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
-      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+</transition>
   </div>
 </template>
 <script>
@@ -56,7 +55,7 @@ import projectBox from '@/components/common/rightBox/projectBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import projectTable from '@/components/common/table/settings/projectTable'
-import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   name: 'projectList',

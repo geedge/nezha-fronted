@@ -58,9 +58,8 @@
     <transition name="right-box">
       <moduleBox v-if="rightBox.show" :module="object" @close="closeRightBox"></moduleBox>
     </transition>
-    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
-      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+</transition>
   </div>
 </template>
 <script>
@@ -70,7 +69,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
 import exportXLSX from '@/components/common/exportXLSX'
-import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发

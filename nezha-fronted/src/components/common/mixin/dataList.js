@@ -217,6 +217,7 @@ export default {
       this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
       this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
       this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
+      this.objectSilence.name = 'Quick silence'
       if (type !== 'alertMessage' && type !== 'alertRule') {
         this.objectSilence.matchers = [
           { name: type, value: row.name, regex: 0 },
