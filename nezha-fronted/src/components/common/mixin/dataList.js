@@ -1,6 +1,7 @@
 import bus from '@/libs/bus'
 import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
+import {object} from "cytoscape/src/is";
 export default {
   data () {
     return {
@@ -130,6 +131,13 @@ export default {
         this.getTableData()
       }
     },
+    closeSilenceBox (refresh) {
+      this.silenceBoxShow = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
     edit (u) {
       this.$get(`${this.url}/${u.id}`).then(response => {
         if (response.code === 200) {
@@ -204,6 +212,34 @@ export default {
       } else {
         this.dataListLayout.push('clickSearch')
       }
+    },
+    addSilence (row, type) {
+      this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      this.blankSilenceObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.objectSilence = JSON.parse(JSON.stringify(this.blankSilenceObject))
+      if (type !== 'alertMessage' && type !== 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: type, value: row.name, regex: 0 },
+          { name: type + '_id', value: row.id, regex: 0 }
+        ]
+      } else if (type === 'alertMessage') {
+        if (typeof row.labels === 'string') row.labels = JSON.parse(row.labels)
+        const labels = JSON.parse(JSON.stringify(row.labels))
+        this.objectSilence.matchers = []
+        Object.keys(labels).forEach((key, i) => {
+          this.objectSilence.matchers.push(
+            { name: key, value: labels[key], regex: 0 }
+          )
+        })
+      } else if (type === 'alertRule') {
+        this.objectSilence.matchers = [
+          { name: 'alertName', value: row.name, regex: 0 },
+        ]
+      }
+      this.silenceBoxShow = true
+    },
+    closeDialog () {
+      this.silenceBoxShow = false
     }
   },
   watch: {
@@ -240,7 +276,7 @@ export default {
       return item
     })
     if (localStorageTableTitle && (localStorageTableTitle.length > this.$refs.dataTable.tableTitle.length)) {
-      const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length,localStorageTableTitle.length)
+      const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length, localStorageTableTitle.length)
       this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
     }
     if (!this.fromBottom) {

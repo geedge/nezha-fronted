@@ -77,7 +77,6 @@ export const tableCommon = {
       let result = true
       for (const field in this.rules) {
         const rule = this.rules[field]
-        // console.log(field, !data[field])
         if (rule.required && !data[field]) {
           rule.switch = true
           result = false

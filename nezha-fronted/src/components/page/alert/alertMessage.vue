@@ -37,6 +37,7 @@
           @orderBy="tableDataSort"
           @queryMessage='queryMessage'
           @reload="getTableData"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"
           @messageDetail="messageDetail"></alert-message-table>
@@ -94,6 +95,9 @@
       </div>
       <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
     </el-dialog>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -108,6 +112,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
+import alertSilenceBox from "@/components/common/dialog/alertSilenceBox";
 export default {
   name: 'alertList',
   components: {
@@ -115,7 +120,8 @@ export default {
     pickTime,
     chart,
     nzDataList,
-    deleteButton
+    deleteButton,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
@@ -136,7 +142,22 @@ export default {
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
-
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       tableId: 'alertMessageTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [

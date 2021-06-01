@@ -131,7 +131,9 @@ const cn = {
     editType: '类型',
     searchCondition: '搜索条件',
     batchDel: '批量删除',
-    tempPrev: '模板预览'
+    tempPrev: '模板预览',
+    silenceAlert: '告警静默',
+    quickSilent: '快速静默'
   },
   setup: {
     step0: '欢迎',

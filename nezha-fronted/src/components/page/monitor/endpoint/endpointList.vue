@@ -57,6 +57,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, item) => { $refs.dataList.showBottomBox(targetTab, item) }"></endpoint-table>
       </template>
@@ -75,6 +76,9 @@
     <transition name="right-box">
       <batchModifyEndpoint v-if="rightBox.batchModify" :module="object" @close="closeRightBatchModify" :selectEndpointList="batchDeleteObjs" :disabled="true" :type="'edit'"></batchModifyEndpoint>
     </transition>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -87,6 +91,7 @@ import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import alertSilenceBox from "@/components/common/dialog/alertSilenceBox";
 
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发
@@ -103,12 +108,29 @@ export default {
     clickSearch,
     batchModifyEndpoint,
     topToolMoreOptions,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
     return {
       url: 'monitor/endpoint',
       blankObject: {}, // 新增/编辑的endpoint
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 193px)', // 主列表table高度

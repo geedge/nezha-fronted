@@ -98,7 +98,7 @@ export default {
       importBox: { show: false, title: this.$t('overall.exportExcel') },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
       // 创建修改相关
-      blackObject: {
+      blankObject: {
         id: '',
         startAt: '',
         endAt: '',
@@ -176,9 +176,9 @@ export default {
       })
     },
     add () {
-      this.blackObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
-      this.blackObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
-      this.object = JSON.parse(JSON.stringify(this.blackObject))
+      this.blankObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+      this.blankObject.endAt = bus.timeFormate(bus.getOffsetTimezoneData(1), 'yyyy-MM-dd hh:mm:ss')
+      this.object = JSON.parse(JSON.stringify(this.blankObject))
       this.rightBox.show = true
     },
     edit (u) {

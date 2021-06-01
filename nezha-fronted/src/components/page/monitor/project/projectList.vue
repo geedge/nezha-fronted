@@ -31,6 +31,7 @@
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></project-table>
       </template>
@@ -44,6 +45,9 @@
     <transition name="right-box">
       <projectBox v-if="rightBox.show" :project="object" @close="closeRightBox"></projectBox>
     </transition>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -52,6 +56,7 @@ import projectBox from '@/components/common/rightBox/projectBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import projectTable from '@/components/common/table/settings/projectTable'
+import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
 
 export default {
   name: 'projectList',
@@ -59,7 +64,8 @@ export default {
     nzDataList,
     projectBox,
     deleteButton,
-    projectTable
+    projectTable,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
@@ -70,6 +76,22 @@ export default {
         name: '',
         remark: ''
       },
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       projectTableHeight: 'calc(100% - 58px)',
       tableId: 'projectTable',
       queryPermission: 'account_view',

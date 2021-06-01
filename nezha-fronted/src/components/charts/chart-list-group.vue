@@ -341,7 +341,6 @@ export default {
       if (canvas && canvasclone) {
         const image = new Image()
         image.src = canvas.toDataURL()
-        // console.log('clone-image',image);
         const ctxClone = canvasclone.getContext('2d')
         // ctxClone.drawImage(image,0,0);
         image.onload = function () {

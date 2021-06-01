@@ -143,14 +143,12 @@ export default {
     popClass: {
       immediate: true,
       handler (n, o) {
-        // console.log(n)
       }
     },
     pageObj: {
       immediate: true,
       deep: true,
       handler (n, o) {
-        // console.log(n,n)
       }
     }
   }

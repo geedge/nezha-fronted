@@ -45,6 +45,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @sync="chartBySync"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></module-table>
       </template>
@@ -57,6 +58,9 @@
     <transition name="right-box">
       <moduleBox v-if="rightBox.show" :module="object" @close="closeRightBox"></moduleBox>
     </transition>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -66,6 +70,8 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
 import exportXLSX from '@/components/common/exportXLSX'
+import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
+
 export default {
   beforeRouteLeave (to, from, next) { // 路由离开之前触发
     localStorage.removeItem('moduleProjectId')
@@ -77,7 +83,8 @@ export default {
     moduleBox,
     deleteButton,
     moduleTable,
-    'export-excel': exportXLSX
+    'export-excel': exportXLSX,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
@@ -117,6 +124,22 @@ export default {
           value: []
         }]
       }, // 新增/编辑的module
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       tableId: 'moduleTable',
       queryPermission: 'account_view',
       searchMsg: { // 给搜索框子组件传递的信息

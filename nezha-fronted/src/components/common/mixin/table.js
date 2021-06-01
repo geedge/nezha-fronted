@@ -42,6 +42,11 @@ export default {
           this.$emit('sync', row)
           break
         }
+        case 'fastSilence': {
+          // this.$emit('copy', row)
+          this.$emit('addSilence', row, param)
+          break
+        }
         default:
           this.$emit(command, row)
           break

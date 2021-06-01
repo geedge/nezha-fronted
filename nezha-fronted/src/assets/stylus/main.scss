@@ -2182,3 +2182,6 @@ li{
   border-color: $global-text-color-active;
   background-color: $global-text-color-active;
 }
+.nz-dialog.silence-box .el-dialog__body{
+  padding-bottom: 0;
+}

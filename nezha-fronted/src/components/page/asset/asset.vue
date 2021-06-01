@@ -60,6 +60,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
+          @addSilence="addSilence"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></asset-table>
       </template>
       <!-- 分页组件 -->
@@ -88,6 +89,9 @@
                             @close="closeRightBox"
                             @refresh="getTableData"></asset-batch-edit-box>
     </transition>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,6 +104,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import alertSilenceBox from '@/components/common/dialog/alertSilenceBox'
 
 export default {
   name: 'asset',
@@ -110,7 +115,8 @@ export default {
     assetBatchEditBox,
     assetTable,
     clickSearch,
-    topToolMoreOptions
+    topToolMoreOptions,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
@@ -121,6 +127,7 @@ export default {
       rightBox: {
         batchShow: false
       },
+      silenceBoxShow: false,
       dataListLayout: ['searchInput', 'elementSet'],
       assetTableHeight: `calc(100% - ${48 + 201 + 20}px)`,
       blankObject: {
@@ -150,6 +157,21 @@ export default {
         fields: [],
         accounts: []
       },
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
       tableId: 'assetTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
@@ -415,7 +437,7 @@ export default {
           return this.userData[item].username
         }
       }
-    }
+    },
     /* formatPingTime (str) {
       if (!str) {
         return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')

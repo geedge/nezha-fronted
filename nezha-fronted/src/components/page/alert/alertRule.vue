@@ -47,6 +47,7 @@
           @orderBy="tableDataSort"
           @queryMessage="queryMessage"
           @reload="getTableData"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></alert-rule-table>
       </template>
@@ -58,6 +59,9 @@
     <transition name="right-box">
       <alert-rule-box v-if="rightBox.show" ref="alertConfigBox" :alert-rule="object" @close="closeRightBox"></alert-rule-box>
     </transition>
+    <el-dialog :show-close="true" :title="$t('overall.quickSilent')" :visible.sync="silenceBoxShow" append-to-body destroy-on-close class="nz-dialog silence-box" @close="closeDialog">
+      <alert-silence-box :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -69,6 +73,7 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import alertRuleTable from '@/components/common/table/alert/alertRuleTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import alertSilenceBox from "@/components/common/dialog/alertSilenceBox";
 
 export default {
   name: 'alert-config',
@@ -78,7 +83,8 @@ export default {
     alertRuleTable,
     nzDataList,
     'export-excel': exportXLSX,
-    topToolMoreOptions
+    topToolMoreOptions,
+    alertSilenceBox
   },
   mixins: [dataListMixin],
   data () {
@@ -98,6 +104,22 @@ export default {
         description: '',
         method: []
       },
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{

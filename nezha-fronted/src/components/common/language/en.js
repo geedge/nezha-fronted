@@ -136,7 +136,9 @@ const en = {
     editType: 'Type',
     searchCondition: 'Search condition',
     batchDel: 'Batches delete',
-    tempPrev: 'Template preview'
+    tempPrev: 'Template preview',
+    silenceAlert: 'silence alert',
+    quickSilent: 'Quick silent'
   },
   pageSize: '/page',
   setup: {

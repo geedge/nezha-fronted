@@ -1345,7 +1345,6 @@ export default {
       this.onChange()
     },
     bkTypeChange (val) {
-      // console.log(val);
       this.selection.pen.data.gradientType = val
       this.$forceUpdate()
       if (val === 0) {
