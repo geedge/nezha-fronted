@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     changeTab: function (paths, tab) {
-      let path = '/'
+      /* let path = '/'
       if (paths && paths instanceof Array) {
         paths.forEach(p => {
           path += p + '/'
@@ -32,9 +32,9 @@ export default {
         path = path.substring(0, path.length - 1)
       } else {
         path = paths
-      }
+      } */
       this.showTab = tab // 此处需要组建中有showTab 属性
-      this.toPath(path)
+      // this.toPath(path)
     },
     toPath: function (path) {
       this.$router.push({
