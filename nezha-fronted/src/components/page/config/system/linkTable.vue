@@ -82,6 +82,7 @@
 
 <script>
 import { tableCommon } from './systemCommon'
+import bus from "../../../../libs/bus";
 import table from '@/components/common/mixin/table'
 export default {
   name: 'linkTable',
@@ -109,6 +110,9 @@ export default {
         url: { required: true, message: this.$t('validate.required'), switch: false }
       }
     }
+  },
+  beforeUpdate() {
+    bus.$emit('link-data-change')
   },
   methods: {
     addLink: function () {

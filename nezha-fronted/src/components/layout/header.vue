@@ -135,7 +135,6 @@ export default {
       this.$get('link').then(response => {
         this.$store.commit('setLinkData', response.data.list)
         // this.linkData = response.data.list
-        // console.log(this.linkData);
       })
     },
     changeLocal (lang) {
@@ -178,6 +177,9 @@ export default {
         history.pushState(null, null, document.URL)
         window.addEventListener('popstate', this.cancel, false)
       }
+      bus.$on('link-data-change', () => {
+        this.getLinkData()
+      })
     },
     shrink () {
       this.$store.commit('isShrink')
