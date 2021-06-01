@@ -78,7 +78,7 @@
             <button :class="{'table-operation-item--disable':isBuiltIn(scope.row)}" :disabled="isBuiltIn(scope.row)" class="table-operation-item" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
             <el-dropdown size="medium" trigger="hover" @command="tableOperation">
               <div class="table-operation-item table-operation-item--more">
-                <span>…</span><i class="nz-icon nz-icon-arrow-down"></i>
+                <i class="nz-icon nz-icon-more3"></i>
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="['delete', scope.row]" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
