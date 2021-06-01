@@ -208,7 +208,7 @@ export default {
       this.$emit('close', refresh)
     },
     save () {
-      if (this.prevent_opt.save) { return } ;
+      if (this.prevent_opt.save) { return }
       this.prevent_opt.save = true
       if (!this.transfer.selectedData.length) {
         this.prevent_opt.save = false
@@ -216,11 +216,12 @@ export default {
           if (this.editChartTemp.varType === 1) {
             if (this.from !== fromRoute.asset) { // 来自asset且type=1时不校验
               this.$message.error(this.$t('dashboard.panel.chartForm.selectAsset'))
+              return
             }
           } else {
             this.$message.error(this.$t('dashboard.panel.chartForm.selectEndpoint'))
+            return
           }
-          return
         }
       }
       if (this.from === fromRoute.asset && this.editChartTemp.varType === 1) { // 来自asset时取assetId
