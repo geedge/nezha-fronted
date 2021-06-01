@@ -158,8 +158,15 @@ export default {
     .el-submenu.is-opened .el-menu-item:not(.is-active), .el-submenu.is-opened .el-submenu__title {
       background-color: #182534 !important;
     }
+    .is-opened.is-active{
+      background-color: #182534 !important;
+    }
+    .el-submenu.is-active:not(.is-opened)>.el-submenu__title{
+      border-left: 3px #FA901C solid;
+    }
     .el-menu-item.is-active {
       background-color: #101B27 !important;
+      border-left: 3px #FA901C solid;
     }
     .el-menu-item, .el-submenu__title {
       height: 46px;
