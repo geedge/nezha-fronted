@@ -52,7 +52,20 @@
   .el-textarea__inner {
     padding: 5px 70px 4px 15px;
   }
-
+  .container__form-width.container__form{
+    .input-box {
+      .el-textarea {
+        .el-textarea__inner {
+          width: 530px;
+          height: 32px;
+          padding: 5px 70px 4px 10px;
+        }
+        .el-input__count {
+          right: -40px;
+        }
+      }
+    }
+  }
   .el-form-item__content {
     .input-box {
       .el-textarea {
