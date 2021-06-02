@@ -29,6 +29,7 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
+          @statusChange='statusChange'
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></dc-table>
       </template>
       <!-- 分页组件 -->

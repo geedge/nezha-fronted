@@ -103,7 +103,7 @@
                   </el-radio-group>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX">
-                  <el-checkbox-group v-model="label.value[0]">
+                  <el-checkbox-group v-model="label.value">
                     <el-checkbox v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-checkbox>
                   </el-checkbox-group>
                 </template>
@@ -481,9 +481,27 @@ export default {
     },
     blankLabelValue (label) {
       if (label.type.toUpperCase() === this.assetConstants.labelTypeData.CHECKBOX) {
-        return []
+        const arr = []
+        if (label.param && JSON.parse(label.param).items) {
+          JSON.parse(label.param).items.forEach(item => {
+            if (item.check) {
+              arr.push(item.name)
+            }
+          })
+        }
+        return arr
       } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.MULTITEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXT || label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA) {
         return ['']
+      } else if (label.type.toUpperCase() === this.assetConstants.labelTypeData.RADIO || label.type.toUpperCase() === assetConstants.labelTypeData.SELECT) {
+        const arr = ['']
+        if (label.param && JSON.parse(label.param).items) {
+          JSON.parse(label.param).items.forEach(item => {
+            if (item.check) {
+              arr[0] = item.name
+            }
+          })
+        }
+        return arr
       } else {
         return ['']
       }

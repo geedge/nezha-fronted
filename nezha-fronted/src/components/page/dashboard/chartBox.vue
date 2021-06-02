@@ -248,7 +248,7 @@
             <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
               <el-cascader id="chart-box-unit" v-model="editChart.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
-                           popper-class="dc-dropdown prevent-clickoutside"
+                           popper-class="dc-dropdown prevent-clickoutside chart-box-unit"
                            size="small"
                            style="width: 100%"
                            @change="unitSelected"
@@ -1786,5 +1786,9 @@ export default {
   }
   .el-color-dropdown{
     z-index: 2200!important;
+  }
+  .chart-box-unit .el-scrollbar{
+    height: 195px;
+    overflow-y: auto;
   }
 </style>

@@ -49,7 +49,7 @@
             active-color="#ee9d3f"
             active-value="ON"
             inactive-value="OFF"
-            @change="(val)=>{statusChange(scope.row)}"
+            @change="(val)=>{$emit('statusChange', scope.row)}"
           />
         </template>
         <template v-else-if="item.prop === 'longitude'">

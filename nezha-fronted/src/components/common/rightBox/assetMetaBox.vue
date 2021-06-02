@@ -279,6 +279,7 @@ export default {
           t.disabled = false
         })
       }
+      this.selectType(this.editAssetMeta.type, false)
     },
     clickOutside () {
       this.esc(false)

@@ -362,7 +362,7 @@ export default {
             const data = []
             const searchableData = response.data.list.filter(d => d.search === 1)
             const showData = response.data.list.filter(d => d.display === 1).map(item => {
-              return { label: item.name, prop: 'Label', show: false, allowed: true, type: 'label' }
+              return { label: item.name, prop: item.name, show: false, allowed: true, type: 'label' }
             })
             searchableData.forEach(m => {
               if (m.param) {
