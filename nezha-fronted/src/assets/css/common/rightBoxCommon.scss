@@ -62,11 +62,17 @@
         }
         .el-input__count {
           right: -40px;
+          line-height: 29px;
+          height: 25px;
         }
       }
     }
   }
   .el-form-item__content {
+    .el-input-group--prepend {
+      width: 626px;
+      height: 32px;
+    }
     .input-box {
       .el-textarea {
         .el-textarea__inner {
@@ -78,12 +84,6 @@
           right: -40px;
         }
       }
-    }
-  }
-  .el-form-item__content {
-    .el-input-group--prepend {
-      width: 626px;
-      height: 32px;
     }
   }
   .form-row-item {
