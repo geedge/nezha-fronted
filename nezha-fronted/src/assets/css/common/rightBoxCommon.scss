@@ -102,7 +102,12 @@
       }
     }
   }
-
+  .el-form-item {
+    .el-input__count {
+      line-height: 29px;
+      height: 25px;
+    }
+  }
 
   .el-input__inner, .el-textarea__inner {
     padding: 0 10px;
