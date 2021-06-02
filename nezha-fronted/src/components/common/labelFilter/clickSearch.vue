@@ -160,11 +160,10 @@ export default {
           this.titleSearchListCopy[key].children.forEach((item, i) => {
             /* (基础宽度 + 文字宽度) 总和大于文本长时 显示更多 */
             if (index === -1) {
-              if (this.titleSearchListCopy[key].width < this.contentWidth) {
-                this.titleSearchListCopy[key].width += this.getDomWidth(this.titleSearchListCopy[key], item, i)
-              } else {
+              this.titleSearchListCopy[key].width += this.getDomWidth(this.titleSearchListCopy[key], item, i)
+              if (this.titleSearchListCopy[key].width > this.contentWidth) {
                 this.titleSearchListCopy[key].showMore = true
-                this.titleSearchListCopy[key].index = i - 1
+                this.titleSearchListCopy[key].index = i
                 index = i
               }
             }
@@ -183,7 +182,7 @@ export default {
       let width
       if (parentData.type === 'dropdownCheckBox') {
         width = this.computeDistance(`${item.name}:`)
-        const marginRight = 20
+        const marginRight = 22
         width = width + 182 + marginRight// 182是label框的宽度除去name外的部分
       } else {
         width = this.computeDistance(item.name)
