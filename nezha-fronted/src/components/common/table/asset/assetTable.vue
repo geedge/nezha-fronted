@@ -60,7 +60,14 @@
         <template v-else-if="item.prop === 'parent'">{{scope.row.parent ? scope.row.parent.name : '-'}}</template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
         <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '--'}}</template>
-        <template v-else>{{scope.row[item.prop]}}</template>
+        <template v-else>
+          <span v-if="scope.row.fields&&scope.row.fields.find(field => field.name === item.prop)">
+            {{scope.row.fields.find(field => field.name === item.prop).value.join(',')}}
+          </span>
+          <span v-else>
+             {{scope.row[item.prop]}}
+          </span>
+        </template>
       </template>
     </el-table-column>
     <el-table-column
