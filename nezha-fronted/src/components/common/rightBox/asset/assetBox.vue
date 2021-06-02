@@ -304,7 +304,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         authProtocolPort: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          // { required: true, message: this.$t('validate.required'), trigger: 'change' },
           { validator: port, trigger: 'blur' }
         ]
       },
