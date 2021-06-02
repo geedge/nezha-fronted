@@ -436,22 +436,7 @@ export default {
           return this.userData[item].username
         }
       }
-    },
-    /* formatPingTime (str) {
-      if (!str) {
-        return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
-      }
-      const ds = '-'
-      const ts = ':'
-      const time = new Date(bus.UTCTimeToConfigTimezone(str))
-      const year = time.getFullYear()
-      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
-      const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
-      const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
-      const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
-      const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
-      return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
-    }, */
+    }
   },
   mounted () {
     // 初始化数据
