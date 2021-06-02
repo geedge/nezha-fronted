@@ -49,6 +49,46 @@
   overflow-x: hidden;
   overflow-y: auto;
 
+  .el-textarea__inner {
+    padding: 5px 70px 4px 15px;
+  }
+
+  .el-form-item__content {
+    .input-box {
+      .el-textarea {
+        .el-textarea__inner {
+          width: 517px;
+          height: 32px;
+          padding: 5px 70px 4px 10px;
+        }
+        .el-input__count {
+          right: -40px;
+        }
+      }
+    }
+  }
+  .el-form-item__content {
+    .el-input-group--prepend {
+      width: 626px;
+      height: 32px;
+    }
+  }
+  .form-row-item {
+    .input-box {
+      .el-textarea {
+        .el-textarea__inner {
+          width: 466px;
+          height: 32px;
+          padding: 5px 70px 4px 10px;
+        }
+        .el-input__count {
+          right: 0;
+        }
+      }
+    }
+  }
+
+
   .el-input__inner, .el-textarea__inner {
     padding: 0 10px;
     border-radius: $--primary-border-radius;
