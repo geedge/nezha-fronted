@@ -1,5 +1,5 @@
 <template>
-  <div class="props-box">
+  <div class="props-box" :loading="loading">
     <!--删除按钮-->
     <!--<button id="edit-ep-del" type="button" class="nz-btn nz-btn-size-normal nz-btn-size-alien del-btn"-->
     <!--v-if="selection.pen" @click="delTopologyPen">-->
@@ -606,12 +606,30 @@
                   <nezhaColor :value-arr="[{name:'strokeStyle',value:selection.pen.strokeStyle}]" @colorChange="colorChange"/>
                 </div>
               </div>
-              <div class="props-pen-item" v-if="selection.pen.type">
+              <div class="props-pen-item" v-if="selection.pen&&selection.pen.type">
                 <div>{{$t('project.topology.arrowColor')}}</div>
                 <div class="p10 pl0">
                   <nezhaColor :value-arr="[{name:'toArrowColor',value:selection.pen.toArrowColor}]" @colorChange="colorChange"/>
                 </div>
               </div>
+<!--              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">-->
+<!--                <div>{{$t('project.topology.img')}}</div>-->
+<!--                <div class="p10 pl0">-->
+<!--                  <el-select>-->
+<!--                    <el-option-group-->
+<!--                      v-for="group in imgArr"-->
+<!--                      :key="group.label"-->
+<!--                      :label="group.label">-->
+<!--                      <el-option-->
+<!--                        v-for="item in group.options"-->
+<!--                        :key="item.value"-->
+<!--                        :label="item.label"-->
+<!--                        :value="item.value">-->
+<!--                      </el-option>-->
+<!--                    </el-option-group>-->
+<!--                  </el-select>-->
+<!--                </div>-->
+<!--              </div>-->
 
             </div>
           </el-collapse-item>
@@ -1171,7 +1189,8 @@ export default {
         '#1250B0', '#1F60C4', '#5794F2',
         '#E55400', '#FA6400', '#FF9830',
         '#7C2EA3', '#8F3BB8', '#B877D9'
-      ]
+      ],
+      loading: false
     }
   },
   mixins: [rz],
@@ -1189,7 +1208,8 @@ export default {
       type: Number,
       require: true
     },
-    modules: {}
+    modules: {},
+    imgArr: {}
   },
   watch: {
     // 'topologyData.data':{
@@ -1204,7 +1224,21 @@ export default {
     //   },
     //   deep:true,
     //   immediate:false,
-    // }
+    // },
+    selection: {
+      handler () {
+        // this.loading = false
+      },
+      deep: true,
+      immediate: true
+    },
+    imgArr: {
+      handler () {
+        // this.loading = false
+      },
+      deep: true,
+      immediate: true
+    }
   },
   created () {
     const dataOption = getTopology(this.index).data
@@ -2156,5 +2190,11 @@ export default {
   }
   .font20{
     font-size: 20px;
+  }
+  /deep/ .metric-selector-title{
+    margin-left: 10px;
+  }
+  /deep/ .query-row .input-box{
+    margin-right: 0 !important;
   }
 </style>

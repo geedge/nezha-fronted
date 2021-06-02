@@ -13,12 +13,17 @@
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick">
-              <div style="height: 450px">
+              <div style="height: 450px"  v-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
                 <!--<div class="drag-header">——</div>-->
-                <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index">
+                <el-collapse v-model="activeNames" v-for="(item, index) in tools" :key="index" class="collapse-box">
                   <el-collapse-item :title="item.group" :name="item.group">
+                    <template slot="title">
+                      <div style="display: flex;width: 100%;">
+                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                      </div>
+                    </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
                       <a
                         :key="i"
@@ -32,7 +37,7 @@
                         <img :src="btn.data.image" v-if="btn.data.image">
                         <i v-else :class="`iconfont ${btn.icon}`"></i>
                       </a>
-                      <span v-if="item.group==='自定义图片'" class="delIcon" @click="delImg(btn)">x</span>
+                      <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click="tooltipDelete(btn)"></i>
                     </div>
                   </el-collapse-item>
                 </el-collapse>
@@ -145,16 +150,17 @@
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full"></div>
             <!--设置属性-->
             <div v-if="editTopologyFlag&&toolShow.attr" class="props">
-              <CanvasProps ref="CanvasProps"
-                           :index="topologyIndex"
-                           :modules="modules"
-                           :selection.sync="props"
-                           @animate="animateCanvas"
-                           @change="onUpdateProps"
-                           @changeProjectTitle="changeProjectTitle"
-                           @del="delPen"
-                           @notModuleIDArrChange="notModuleIDArrChange">
-              </CanvasProps>
+              <canvas-props ref="CanvasProps"
+                            :index="topologyIndex"
+                            :imgArr = 'tools'
+                            :modules="modules"
+                            :selection.sync="props"
+                            @animate="animateCanvas"
+                            @change="onUpdateProps"
+                            @changeProjectTitle="changeProjectTitle"
+                            @del="delPen"
+                            @notModuleIDArrChange="notModuleIDArrChange">
+              </canvas-props>
             </div>
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
@@ -330,6 +336,7 @@
 
 <script>
 import { Topology, registerNode } from '@topology/core'
+import imgDefault from '@/components/common/project/L5/services/img'
 import {
   Tools,
   canvasRegister,
@@ -377,7 +384,7 @@ export default {
       imgInit: false, // 判断图片是否加载完成
       toolGroup: '基本形状',
       editFlag: true,
-      tools: Tools,
+      tools: [...Tools],
       props: {},
       topologyLoading: false,
       contextmenu: {
@@ -406,6 +413,7 @@ export default {
       topologyIndex: 0,
       iconArray: [],
       imgageLoading: false,
+      imageSave: false,
       toolShow: {
         node: true,
         attr: true,
@@ -489,7 +497,7 @@ export default {
     }
   },
   components: {
-    CanvasProps,
+    'canvas-props': CanvasProps,
     topologyTopTool,
     popDataMain,
     popDataInfo,
@@ -809,7 +817,8 @@ export default {
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
                   // console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
-                  item.image = this.iconArray.find(item1 => item1.id == item.data.imageId).image
+                  const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
+                  item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
                   // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
@@ -1142,12 +1151,12 @@ export default {
       // console.log('onMessage', event, data)
       // console.log(getTopology(this.topologyIndex))
       // this.notModuleIDArr=[];
-      this.toolShow.attr = false
-      this.toolShow.topTool = false
-      this.$nextTick(() => {
-        this.toolShow.attr = true
-        this.toolShow.topTool = true
-      })
+      // this.toolShow.attr = false
+      // this.toolShow.topTool = false
+      // this.$nextTick(() => {
+      //   this.toolShow.attr = true
+      //   this.toolShow.topTool = true
+      // })
       if (data) {
         this.notModuleIDArr.forEach(item => {
           if (item.id === data.id) {
@@ -1315,6 +1324,7 @@ export default {
                 this.penId = data.id
               }
             })
+            this.$refs.CanvasProps.loading = true
             break
           case 'line':
           case 'addLine':
@@ -1335,6 +1345,7 @@ export default {
                 this.penId = data.id
               }
             })
+            this.$refs.CanvasProps.loading = true
             break
           case 'multi':
             this.props = {
@@ -1539,6 +1550,9 @@ export default {
 
     imgUpload () {
       const this_ = this
+      if (!this.imageSave) {
+        this.imageSave = true
+      }
       if (!this.uploadPic.unit) {
         this.$message({
           message: this_.$t('project.topology.unitError'),
@@ -1567,6 +1581,7 @@ export default {
       form.append('width', this.imgWidth)
       form.append('height', this.imgHeight)
       this.$post('monitor/project/topo/icon', form, { 'Content-Type': 'multipart/form-data' }).then(res => {
+        this.imageSave = false
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
@@ -1615,12 +1630,39 @@ export default {
         }
       })
     },
-
+    delCollpseTitle (item) {
+      this.$delete('monitor/project/topo/iconUnit?unit=' + item.group).then(res => {
+        if (res.code == 200) {
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+          this.addNodeInit()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    tooltipDelete (item) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.delImg(item)
+      })
+    },
+    tooltipDeleteTitle (item) {
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.delCollpseTitle(item)
+      })
+    },
     addNodeInit (imgidList) {
       if (!this.fromOverView) {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
-          // this.tools[1].children=[];
+          this.tools = [...Tools]
           const imgArr = []
           const promiseArr = []
           res.data.list.forEach((item, index) => {
@@ -1663,6 +1705,7 @@ export default {
             })
 
             this.imgInit = true
+            this.imgageLoading = false
           })
         })
       } else {
@@ -1687,6 +1730,7 @@ export default {
             }
           })
           this.imgInit = true
+          this.imgageLoading = false
         })
       }
     },
@@ -2087,7 +2131,7 @@ export default {
       }
 
       .buttons {
-        padding: 12px;
+        padding: 11px;
         display: inline-block;
         position: relative;
         vertical-align: middle;
@@ -2098,13 +2142,12 @@ export default {
           width: 16px;
           height: 16px;
           border-radius: 10px;
-          font-size: 12px;
+          font-size: 16px;
           line-height: 16px;
           text-align: center;
-          background: red;
-          right: -8px;
-          top: -8px;
-          color: #fff;
+          right: 2px;
+          top: 2px;
+          color: #fa901c;
           display: none;
           cursor: pointer;
         }
@@ -2147,10 +2190,13 @@ export default {
           height: 100%;
         }
       }
-
+      .buttons{
+        border: 1px solid transparent;
+      }
       .buttons:hover {
+        border-color: #fa901c;
         .delIcon {
-          /*display: inline-block;*/
+          display: inline-block;
         }
       }
     }
@@ -2189,6 +2235,30 @@ export default {
   }
 </style>
 <style lang="scss" scoped>
+  /deep/ .el-collapse-item  .is-active .nz-icon-caret-right{
+    transform: rotate(90deg);
+    color: #FA901C;
+  }
+  /deep/ .el-collapse-item .title-delete{
+    display: none;
+  }
+  /deep/ .el-collapse-item .nz-icon-caret-right{
+    transition: transform .3s;
+    color: #BEBEBE;
+    margin-right: 5px;
+  }
+  /deep/ .el-collapse-item:hover{
+    .el-collapse-item__header{
+      color: #FA901C;
+    }
+    .nz-icon-caret-right{
+      color: #FA901C;
+    }
+    .title-delete{
+      display: block;
+      color: #FA901C;
+    }
+  }
   .project-box{
     @keyframes model-error-animation {
       0% {
@@ -2681,5 +2751,8 @@ export default {
       box-sizing: content-box;
       overflow: hidden;
     }
+  }
+  /deep/ .el-collapse-item__arrow{
+    display: none;
   }
 </style>
