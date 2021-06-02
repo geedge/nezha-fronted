@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-add-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
+  <div class="right-box right-box-modify-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
       <div class="header__title">{{$t("overall.batchEndpoint")}}</div>
@@ -955,7 +955,7 @@ export default {
   .el-table__row.hide-row{
     display: none !important;
   }
-  .right-box-add-endpoint {
+  .right-box-modify-endpoint {
     .right-box-form>.el-form-item {
       margin-left: 0;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="mc" @click.self="clickOutside">
-    <div class="right-box right-box-project-alert">
+    <div class="right-box right-box-project-endpoint">
       <div class="right-box-title">{{ moduleName }} / {{$t('project.endpoint.endpoints')}}</div>
       <nz-data-list
         ref="dataList"

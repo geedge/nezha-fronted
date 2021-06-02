@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editChartTemp, func: esc}" class="right-box right-box-asset">
+  <div v-clickoutside="{obj: editChartTemp, func: esc}" class="right-box right-box-chart-temp">
     <div class="right-box__header">
       <div class="header__title">{{editChartTemp.id ? $t('dashboard.panel.createChartByTemp') :$t('dashboard.panel.createChartByTemp')}}</div>
       <div class="header__operation">

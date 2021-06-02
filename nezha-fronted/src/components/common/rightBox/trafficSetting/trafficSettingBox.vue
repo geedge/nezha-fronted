@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-project" v-clickoutside="{obj:traffic,func:clickOutside}" >
+  <div class="right-box right-box-traffic-setting " v-clickoutside="{obj:traffic,func:clickOutside}" >
 
     <!-- begin--标题-->
     <div class="right-box-title">{{$t('config.dc.traffic.title')}}</div>

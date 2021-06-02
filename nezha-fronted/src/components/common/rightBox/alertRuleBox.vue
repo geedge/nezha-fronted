@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-config">
+  <div v-clickoutside="{obj: editAlertRule, func: clickOutside}" class="right-box right-box-alert-rule">
     <div class="right-box__header">
       <!-- begin--标题-->
       <div class="header__title">{{alertRule.id ? $t("alert.config.editAlertConfig") : $t("alert.config.createAlertConfig")}}</div>

@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editUser, func: esc}" class="right-box right-box-asset">
+  <div v-clickoutside="{obj: editUser, func: esc}" class="right-box right-box-user">
     <div class="right-box__header">
       <div class="header__title">{{editUser.id ? $t('config.user.editUser') : $t('config.user.createUser')}}</div>
       <div class="header__operation">

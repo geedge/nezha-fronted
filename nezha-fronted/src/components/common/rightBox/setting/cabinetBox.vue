@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj: editCabinet, func: esc}" class="right-box right-box-asset">
+  <div v-clickoutside="{obj: editCabinet, func: esc}" class="right-box right-setting-box-cabinet">
     <div class="right-box__header">
       <div class="header__title">{{editCabinet.id ? $t('config.cabinet.editCabinet') : $t('config.cabinet.createCabinet')}}</div>
       <div class="header__operation">

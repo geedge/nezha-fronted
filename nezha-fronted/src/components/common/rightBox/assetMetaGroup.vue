@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box-580">
-    <div class="right-box right-box-panel z-top" v-clickoutside="{obj:editMetaGroup,func:clickOutside}">
+    <div class="right-box right-box-asset-meta-group z-top" v-clickoutside="{obj:editMetaGroup,func:clickOutside}">
       <!-- begin--顶部按钮-->
       <div class="right-box-top-btns right-box-form-delete">
         <button @click="del" class="nz-btn nz-btn-size-normal nz-btn-size-alien" id="alert-box-del" type="button"

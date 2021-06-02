@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-module" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
+  <div class="right-box right-box-edit-endpoint" v-clickoutside="{obj:editEndpoint,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
       <div class="header__title">

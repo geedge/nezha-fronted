@@ -1,5 +1,5 @@
 <template>
-  <div v-clickoutside="{obj:editExprTemp,func:clickOutside}" class="right-box right-box-alert-config">
+  <div v-clickoutside="{obj:editExprTemp,func:clickOutside}" class="right-box right-box-alert-expr">
     <!-- begin--标题-->
     <div class="right-box__header">
       <div class="header__title">{{editExprTemp.id ? $t("config.exprTemp.edit"):

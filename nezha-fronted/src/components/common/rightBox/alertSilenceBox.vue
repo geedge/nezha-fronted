@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-alert-config" v-clickoutside="{obj:editAlertSilence,func:clickOutside}">
+  <div class="right-box right-box-alert-silence" v-clickoutside="{obj:editAlertSilence,func:clickOutside}">
     <!-- begin--标题-->
     <div class="right-box__header">
       <div class="header__title">{{editAlertSilence.id ? $t("alert.silence.edit") : $t("alert.silence.create")}}</div>

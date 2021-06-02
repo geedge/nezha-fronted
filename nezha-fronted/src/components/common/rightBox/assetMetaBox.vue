@@ -1,6 +1,6 @@
 <template>
   <transition name="right-box-580">
-    <div class="right-box right-box-asset" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
+    <div class="right-box right-box-asset-meta" v-clickoutside="{obj:editAssetMeta,func:clickOutside}">
       <!-- begin--标题-->
       <div class="right-box__header">
         <div class="header__title">{{editAssetMeta.id ? $t("config.assetLabel.editMeta"): $t("config.assetLabel.addMeta")}}
