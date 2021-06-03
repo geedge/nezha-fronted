@@ -404,7 +404,7 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            const query = encodeURIComponent(filterItem.expression)
+            const query = filterItem.expression
             // if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
             //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
             // }
@@ -1630,7 +1630,7 @@ export default {
         const step = bus.getStep(startTime, endTime)
         axiosArr = this.chart.elements.map((ele) => {
           const filterItem = ele
-          const query = encodeURIComponent(filterItem.expression)
+          const query = filterItem.expression
           if (chartItem.type === 'table' && chartItem.param && chartItem.param.last == 1) {
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           }

@@ -1524,7 +1524,7 @@ export default {
         if (type === 'list') { // 普通模式,主控台使用
           axiosArr = this.data.elements.map((ele) => {
             const filterItem = ele
-            let query = encodeURIComponent(filterItem.expression)
+            let query = filterItem.expression
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               !this.chartInfo.param && (this.chartInfo.param = {})
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
@@ -1537,7 +1537,7 @@ export default {
             endTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
             this.data.elements.forEach((ele) => {
               const filterItem = ele
-              let query = encodeURIComponent(filterItem.expression)
+              let query = filterItem.expression
               if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
                 !this.chartInfo.param && (this.chartInfo.param = {})
                 this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
@@ -1549,14 +1549,14 @@ export default {
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
           // 概览模式,需要区分单独一个和多个
           if (this.stableFilter.chartCount === 'multiple') {
-            let query = encodeURIComponent(this.data.name)
+            let query = this.data.name
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
             axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           } else {
-            let query = encodeURIComponent(this.data.elements[0].expression)
+            let query = this.data.elements[0].expression
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType

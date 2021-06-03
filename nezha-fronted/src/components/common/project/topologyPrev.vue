@@ -657,7 +657,7 @@ export default {
           data.pens && data.pens.forEach((item, index) => {
             this.chartGetData.push({ id: item.id, res: [] })
             const arr = item.data.expressArr.map((ele) => {
-              let query = encodeURIComponent(ele)
+              let query = ele
               if (!query) {
                 return new Promise(resolve => {
                   resolve({ data: '', status: 'no query' })
