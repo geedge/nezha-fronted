@@ -1710,27 +1710,31 @@ export default {
         })
       } else {
         this.imgageLoading = true
-        const promiseArr = []
-        imgidList.forEach((item, index) => {
-          if (item.data.imageId) {
-            promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
-          } else {
-            promiseArr.push('')
-          }
-        })
-        Promise.all(promiseArr).then(res2 => {
-          this.iconArray = imgidList.map(item => {
-            return {
-              id: item.data.imageId
+        this.$get('monitor/project/topo/icon').then((imageAllId) => {
+          const promiseArr = []
+          imgidList.forEach((item, index) => {
+            if (item.data.imageId && imageAllId.data.list.find(image => item.data.imageId === image.id)) {
+              promiseArr.push(this.dealImg(`monitor/project/topo/icon/${item.data.imageId}/1`))
+            } else if (item.data.imageId) {
+              promiseArr.push(imgDefault)
+            } else {
+              promiseArr.push('')
             }
           })
-          this.iconArray.forEach((item, index) => {
-            if (item.id) {
-              item.image = res2[index]
-            }
+          Promise.all(promiseArr).then((res2) => {
+            this.iconArray = imgidList.map(item => {
+              return {
+                id: item.data.imageId
+              }
+            })
+            this.iconArray.forEach((item, index) => {
+              if (item.id) {
+                item.image = res2[index]
+              }
+            })
+            this.imgInit = true
+            this.imgageLoading = false
           })
-          this.imgInit = true
-          this.imgageLoading = false
         })
       }
     },
