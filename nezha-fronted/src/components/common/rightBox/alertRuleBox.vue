@@ -56,7 +56,7 @@
             </el-input>
           </el-form-item>
           <!--severity-->
-          <el-form-item :label="$t('alert.severity')" class="severity-box" prop="severity">
+          <el-form-item :label="$t('alert.severity')" class="severity-box" prop="severityId">
             <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
                 <span>
