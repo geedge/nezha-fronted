@@ -979,10 +979,10 @@ export default {
           id: 'stackArea',
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
         },
-        {
-          id: 'bar',
-          name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
-        },
+        // {
+        //   id: 'bar',
+        //   name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
+        // },
         {
           id: 'table',
           name: this.$t('dashboard.panel.chartForm.typeVal.table.label')

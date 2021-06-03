@@ -1,17 +1,18 @@
 <template>
   <div class="tooltip-box" style="display: flex;" v-if="(isChart||chartData.tooltipShow)&&chartData.expressArr.length">
     <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressArr.length)">
-      <line-chart-block v-show="isChart || chartData.type !== 'table'"
-                        :key="'inner' + chartData.id"
-                        :from="'project'"
-                        :ref="chartData.type !== 'table'?'editChart' + chartData.type:'editChart'"
-                        :temp-dom="tempDom"
-                        :panel-id="-1"
-                        :is-lock="true"
-                        :chart-index="0"
-                        :chartTitleShow="false"
-                        :chart-data="chartData">
-      </line-chart-block>
+        <line-chart-block v-show="isChart || chartData.type !== 'table'"
+                          :key="'inner' + chartData.id"
+                          id="listContainer"
+                          :from="'project'"
+                          :ref="chartData.type !== 'table'?'editChart' + chartData.type:'editChart'"
+                          :temp-dom="tempDom"
+                          :panel-id="-1"
+                          :is-lock="true"
+                          :chart-index="0"
+                          :chartTitleShow="false"
+                          :chart-data="chartData">
+        </line-chart-block>
       <chart-table  v-show="isChart || chartData.type === 'table'"
                     :key="'inner' + 1"
                     :from="'project'"
@@ -61,7 +62,7 @@ export default {
   data () {
     return {
       tempDom: { height: 400, width: '' },
-      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 400, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'connected' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
+      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 12, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'connected' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
       chartData: {},
       filter: {
         end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'),
