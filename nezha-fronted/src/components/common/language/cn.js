@@ -645,6 +645,10 @@ const cn = {
   },
   config: {
     config: '设置',
+    assetMeta: {
+      addGroup: '新增组',
+      editGroup: '修改组'
+    },
     user: {
       userList: '用户列表',
       user: '用户',

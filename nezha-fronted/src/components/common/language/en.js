@@ -651,6 +651,10 @@ const en = {
   },
   config: {
     config: 'Setting', // "设置"
+    assetMeta: {
+      addGroup: 'Add group',
+      editGroup: 'Edit group'
+    },
     user: {
       userList: 'User list', // "用户列表"
       user: 'User',
