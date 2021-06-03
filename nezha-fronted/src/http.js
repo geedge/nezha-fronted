@@ -11,6 +11,32 @@ err => Promise.reject(err)
 )
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008] // 账号锁定等
 const licenceErrorCode = [711001]
+
+// 若get请求的url中带问号，则将url上的参数截取，改为对象形式传参
+axios.interceptors.request.use(
+  config => {
+    if (config.method === 'get') {
+      const url = config.url
+      const index = url.indexOf('?')
+      if (index > -1) {
+        const pre = url.substring(0, index)
+        const suf = url.substring(index + 1, url.length)
+        const paramsArr = suf.split('&')
+        const params = {}
+        paramsArr.forEach(p => {
+          const i = p.indexOf('=')
+          if (i > -1) {
+            params[p.substring(0, i)] = p.substring(i + 1, p.length)
+          } else {
+            params[p] = ''
+          }
+        })
+        config = { ...config, url: pre, params: params }
+      }
+    }
+    return config
+  }
+)
 axios.interceptors.response.use(
   response => {
     if (licenceErrorCode.indexOf(response.data.code) !== -1) {
