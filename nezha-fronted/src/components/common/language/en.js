@@ -563,7 +563,8 @@ const en = {
     noAccess: 'No access',
     confirmDuplicate: 'Are you sure to duplicate this chart?',
     confirmCancel: 'Changes you made are not saved?',
-    copySuccess: 'Copy success'
+    copySuccess: 'Copy success',
+    lnglatError: 'Wrong format of latitude and longitude'
   },
   asset: {
     asset: 'Asset ',

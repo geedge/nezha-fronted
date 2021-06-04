@@ -2,7 +2,7 @@
   <div class="latlng">
     <div class="input-box">
       <div class="input-box-item">
-        <el-input  v-model="lnglat" >
+        <el-input  v-model="lnglat" @change="setLatlng" @focus="oldlnglat = lnglat" @blur="changeLnglat">
           <template slot="prepend" v-if="showZoom">{{$t('config.system.basic.lnglat')}}</template>
         </el-input>
       </div>
@@ -35,6 +35,7 @@ export default {
   data () {
     return {
       lnglat: '',
+      oldlnglat: '',
       mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
       map: null,
       marker: null,
@@ -48,6 +49,18 @@ export default {
       this.queryDefaultMapConfig()
     }
     this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+  },
+  watch: {
+    initData: {
+      handler () {
+        if (this.initData) {
+          this.mapParam = JSON.parse(JSON.stringify(this.initData))
+        } else {
+          this.queryDefaultMapConfig()
+        }
+        this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+      }
+    }
   },
   mounted () {
   },
@@ -121,6 +134,21 @@ export default {
         this.mapParam.latitude = lat
         this.mapParam.longitude = lng
         this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+      }
+    },
+    changeLnglat () {
+      const lnglat = this.lnglat.split(',')
+      if (lnglat.length !== 2) {
+        this.lnglat = this.oldlnglat
+        this.$message.error(this.$t('tip.lnglatError'))
+        return false
+      }
+      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,5}|1[0-7]?\d{1}\.\d{1,5}|180\.0{1,5})$/
+      const latReg = /^[\-\+]?([0-8]?\d{1}\.\d{1,5}|90\.0{1,5})$/
+      if (!lngReg.test(lnglat[0]) || !latReg.test(lnglat[1])) {
+        this.lnglat = this.oldlnglat
+        this.$message.error(this.$t('tip.lnglatError'))
+        return false
       }
     },
     queryDefaultMapConfig: function () {

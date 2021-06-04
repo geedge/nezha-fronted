@@ -446,7 +446,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const param = Object.assign({}, this[type])
-
           if (type == 'basic') {
             const mapConfig = this.$refs.latlngPicker.getAttribute()
             param.map_center_config = JSON.stringify(mapConfig)
