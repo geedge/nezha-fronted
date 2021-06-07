@@ -287,7 +287,7 @@ export default {
               }
             })
             if (!showMore) {
-              this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length - 1
+              this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length
             }
           }
         })
