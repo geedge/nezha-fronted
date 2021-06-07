@@ -534,7 +534,7 @@ export default {
         }
       }, 10)
 
-      // this.$store.commit('addConsole');
+      this.$store.commit('addConsoleNum')
     },
     show (id, host, accountId, port) {
       this.addConsole(id, host, accountId, port, 'asset')
