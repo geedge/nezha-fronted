@@ -285,7 +285,7 @@
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
-            maxlength="64" show-word-limit
+            :maxlength="64" show-word-limit
             class="inline-input"
             v-model="uploadPic.unit"
             :fetch-suggestions="querySearch"
