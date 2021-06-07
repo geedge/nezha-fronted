@@ -285,7 +285,7 @@
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
-            maxlength="64" show-word-limit
+            :maxlength="64" show-word-limit
             class="inline-input"
             v-model="uploadPic.unit"
             :fetch-suggestions="querySearch"
@@ -541,10 +541,10 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.id) {
-          if (getTopology(this.topologyIndex)) {
-            getTopology(this.topologyIndex).destroy()
-            setTopology(this.topologyIndex, null)
-          }
+          // if (getTopology(this.topologyIndex)) {
+          //   getTopology(this.topologyIndex).destroy()
+          //   setTopology(this.topologyIndex, null)
+          // }
           if (!this.objChange) {
             this.editTopologyFlag = false
             this.topologyLoading = true
@@ -690,6 +690,7 @@ export default {
                 flag = true
               }
             })
+            getTopology(this.topologyIndex).resize()
             getTopology(this.topologyIndex).centerView()
             this.penToolTipScale = getTopology(this.topologyIndex).data.scale
             setTimeout(() => {
