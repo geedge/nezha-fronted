@@ -45,7 +45,7 @@
           {{scope.row[item.prop].name}}
         </template>
         <template v-else-if="item.prop === 'module'">
-          <i class="nz-icon nz-icon-overview-module monitorColor"/>
+          <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
           {{scope.row[item.prop].name}}
         </template>
         <template v-else-if="item.prop === 'alerts'">

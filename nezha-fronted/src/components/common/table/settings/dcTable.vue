@@ -61,20 +61,20 @@
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'assetNum'">
-          <span class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
+          <span style="cursor: pointer" class="asset-num"  @click="showBottomBox('asset', scope.row)">
              <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
           {{scope.row[item.prop]}}
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-          <span class="alert-num" @click="showBottomBox('alertMessageTab', scope.row)">
+          <span style="cursor: pointer" class="alert-num" @click="showBottomBox('alertMessageTab', scope.row)">
             <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
             {{scope.row[item.prop]}}
           </span>
         </template>
 
         <template v-else-if="item.prop === 'cabinetNum'">
-          <span class="alert-num" @click="showBottomBox('cabinet', scope.row)">
+          <span style="cursor: pointer" class="cabinet-num" @click="showBottomBox('cabinet', scope.row)">
             <i class="nz-icon nz-icon-cabinet monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'colorEF7458'"/>
             {{scope.row[item.prop]}}
           </span>

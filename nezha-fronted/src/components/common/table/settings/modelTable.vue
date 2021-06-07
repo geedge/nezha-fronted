@@ -46,7 +46,7 @@
          </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'assetNum'">
-          <span class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
+          <span style="cursor: pointer" class="endpoint-num"  @click="showBottomBox('asset', scope.row)">
              <i class="nz-icon nz-icon-overview-project monitorColor" :class="scope.row[item.prop]>0?'color23BF9A':'color23BF9A'"/>
           {{scope.row[item.prop]}}
           </span>
