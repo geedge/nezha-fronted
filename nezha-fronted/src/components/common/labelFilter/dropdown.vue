@@ -14,7 +14,7 @@
       popper-class="click-search-dropdown"
       size="mini"
       @blur="$emit('blur', item, false, $event)"
-      @change="$emit('change')"
+      @change="change"
       @focus="$emit('focus', item, true, $event)"
     ></el-cascader>
   </div>
@@ -34,6 +34,9 @@ export default {
   methods: {
     casHover (item, isHover, e) {
       return this.$set(item, 'isHover', isHover)
+    },
+    change (value) {
+      this.$emit('change', value)
     }
   },
   computed: {
@@ -56,6 +59,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

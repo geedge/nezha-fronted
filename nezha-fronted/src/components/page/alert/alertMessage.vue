@@ -409,6 +409,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTime && this.searchTime.length > 1) {
         this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTime[0]))
         this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTime[1]))
@@ -421,7 +422,7 @@ export default {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get(this.url + '?state=' + this.state, this.searchLabel).then(response => {
+      this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)

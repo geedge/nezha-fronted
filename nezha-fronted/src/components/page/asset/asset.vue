@@ -208,6 +208,7 @@ export default {
       snmpCredentialData: [],
       fieldGroupData: [],
       titleSearchList: {
+        ready: false,
         dc: {
           label: this.$t('overall.dc'),
           key: 'dcIds',
@@ -216,7 +217,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         type: {
           label: this.$t('overall.type'),
@@ -226,7 +227,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         ping: {
           label: 'ping',
@@ -239,7 +240,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         model: {
           label: this.$t('asset.model'),
@@ -249,7 +250,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         assetLabel: {
           label: 'More',
@@ -259,7 +260,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         }
       },
       selectValue: {
@@ -298,7 +299,8 @@ export default {
       return new Promise(resolve => {
         this.$get('asset/typeConf?pageSize=-1').then(response => {
           if (response.code === 200) {
-            this.titleSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
+            resolve(response.data.list.map(d => { return { ...d, value: d.id } }))
+            // this.titleSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
           }
           resolve()
         })
@@ -329,7 +331,8 @@ export default {
         this.$get('dc', { pageSize: -1 }).then(response => {
           if (response.code === 200) {
             this.dcData = response.data.list
-            this.titleSearchList.dc.children = response.data.list.map(d => { return { ...d, value: d.id } })
+            resolve(response.data.list.map(d => { return { ...d, value: d.id } }))
+            // this.titleSearchList.dc.children = response.data.list.map(d => { return { ...d, value: d.id } })
           }
           resolve()
         })
@@ -372,7 +375,8 @@ export default {
                 }
               }
             })
-            this.titleSearchList.assetLabel.children = data
+            // this.titleSearchList.assetLabel.children = data
+            resolve(data)
             setTimeout(() => {
               const title = this.tools.customTableTitle
               const originalTitle = title.slice(0, this.$refs.dataTable.tableTitle.length) // 原title
@@ -404,7 +408,8 @@ export default {
                 titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
               }
             })
-            this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
+            resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+            // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
           }
           resolve()
         })
@@ -440,12 +445,15 @@ export default {
   },
   mounted () {
     // 初始化数据
-    this.getModelData()
+    Promise.all([this.getModelData(), this.getTypeData(), this.getDcData(), this.getSearchableMetaData()]).then(res => {
+      this.titleSearchList.model.children = res[0]
+      this.titleSearchList.type.children = res[1]
+      this.titleSearchList.dc.children = res[2]
+      this.titleSearchList.assetLabel.children = res[3]
+      this.titleSearchList.ready = true
+    })
     this.getStateData()
     this.getTypeTreeData()
-    this.getTypeData()
-    this.getDcData()
-    this.getSearchableMetaData()
     this.getSnmpCredentialData()
     this.getFieldGroupData()
   },

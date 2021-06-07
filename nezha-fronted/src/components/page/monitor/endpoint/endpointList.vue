@@ -42,7 +42,7 @@
 <!--        </button>-->
       </template>
       <template v-slot:search>
-        <clickSearch :titleSearchList="titleSearchList" :selectValue.sync="selectValue" @reload="reloadTable"/>
+        <click-search :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"></click-search>
       </template>
       <template  v-slot:default="slotProps">
         <endpoint-table
@@ -165,6 +165,7 @@ export default {
       },
       titleSearch: {},
       titleSearchList: {
+        ready: false,
         project: {
           label: 'Project',
           key: 'projectIds',
@@ -173,7 +174,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         module: {
           label: 'Module',
@@ -183,7 +184,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         },
         state: {
           label: 'State',
@@ -193,7 +194,7 @@ export default {
           show: true,
           showMore: false,
           width: 0,
-          index: 0
+          index: -1
         }
       },
       selectValue: {
@@ -293,29 +294,34 @@ export default {
       this.getTableData()
     },
     getTitleSearch () {
-      this.$get('monitor/project', { pageSize: -1 }).then(res => {
-        if (res.code === 200) {
-          res.data.list.forEach((item) => {
-            this.titleSearchList.project.children.push(
-              { key: item.name, value: item.id, name: item.name }
-            )
-          })
-        }
+      const titleRequest = new Promise(resolve => {
+        this.$get('monitor/project', { pageSize: -1 }).then(res => {
+          if (res.code === 200) {
+            resolve(res.data.list)
+          }
+        })
       })
-      this.$get('monitor/module', { pageSize: -1 }).then(res => {
-        if (res.code === 200) {
-          res.data.list.forEach((item) => {
-            this.titleSearchList.module.children.push(
-              { key: item.name, value: item.id, name: item.name }
-            )
-          })
-        }
+      const moduleRequest = new Promise(resolve => {
+        this.$get('monitor/module', { pageSize: -1 }).then(res => {
+          if (res.code === 200) {
+            resolve(res.data.list)
+          }
+        })
       })
-      this.titleSearchList.state.children = [
-        { key: 'Down', value: 0, name: 'Down' },
-        { key: 'Up', value: 1, name: 'Up' },
-        { key: 'Suspended', value: 2, name: 'Suspended' }
-      ]
+      Promise.all([titleRequest, moduleRequest]).then(res => {
+        this.titleSearchList.project.children = res[0].map(item => {
+          return { key: item.name, value: item.id, name: item.name }
+        })
+        this.titleSearchList.module.children = res[1].map(item => {
+          return { key: item.name, value: item.id, name: item.name }
+        })
+        this.titleSearchList.state.children = [
+          { key: 'Down', value: 0, name: 'Down' },
+          { key: 'Up', value: 1, name: 'Up' },
+          { key: 'Suspended', value: 2, name: 'Suspended' }
+        ]
+        this.titleSearchList.ready = true
+      })
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {
@@ -330,7 +336,6 @@ export default {
     if (localStorage.getItem('endpointProjectId')) {
       this.searchLabel.projectIds = localStorage.getItem('endpointProjectId')
     }
-    this.getTitleSearch()
   },
   mounted () {
     if (localStorage.getItem('endpointProjectId')) {
@@ -344,6 +349,8 @@ export default {
       })
       this.$refs.dataList.$refs.searchInput.sreach_num = 1
     }
+
+    this.getTitleSearch()
   },
   watch: {
     $route: {

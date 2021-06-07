@@ -11,6 +11,7 @@
     <span class="el-popover table-tooltip"></span>
     <!-- 临时文本dom，用来计算文本长度 -->
     <span class="temp-dom"></span>
+    <span class="temp-dom--12"></span>
   </div>
 </template>
 
@@ -60,6 +61,11 @@ export default {
 .temp-dom {
   visibility: hidden;
   font-size: 14px;
+  position: fixed;
+}
+.temp-dom--12 {
+  visibility: hidden;
+  font-size: 12px;
   position: fixed;
 }
 </style>

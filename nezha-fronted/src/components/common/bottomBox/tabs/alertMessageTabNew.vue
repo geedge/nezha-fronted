@@ -343,7 +343,7 @@ export default {
               item.labels = JSON.parse(item.labels)
               if (!this.isBuildIn(item.alertRule)) {
                 const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
+                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1)))
               } else {
                 axiosAll.push('')
               }
