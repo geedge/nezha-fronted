@@ -815,6 +815,7 @@ const cn = {
       dc: '数据中心',
       area: '地区',
       dcName: '数据中心名称',
+      description: '描述',
       selectArea: '选择地区',
       cabinetNum: '机柜数量',
       assets: '资产',

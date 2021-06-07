@@ -100,7 +100,7 @@
             <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
           <!--description-->
-          <el-form-item :label="$t('alert.description')" prop="description">
+          <el-form-item :label="$t('overall.remark')" prop="description">
             <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
         </el-form>

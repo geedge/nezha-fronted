@@ -24,7 +24,7 @@
               popper-class="prevent-clickoutside limit-height"
               clearable></el-cascader>
           </el-form-item>
-          <el-form-item :label="$t('config.mib.description')" prop="remark">
+          <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input maxlength="256" rows="4" show-word-limit type="textarea" placeholder="" v-model="editMib.remark" size="small" id="mib-box-input-remark"></el-input>
           </el-form-item>
           <el-form-item :label="$t('config.mib.mibFiles')" prop="file" :rules="[{validator:checkMibFile,trigger:'change'}]" :class="{'add-required':!editMib.id}">

@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <!--remark-->
-          <el-form-item :label='$t("project.module.description")' prop="remark">
+          <el-form-item :label='$t("overall.remark")' prop="remark">
             <el-input
               id="module-box-input-remark"
               v-model="editModule.remark"

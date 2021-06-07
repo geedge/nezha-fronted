@@ -104,7 +104,7 @@
         <div class="export-xlsx">
           <el-dialog :visible.sync="deleteBox.show" :title="$t('overall.delete')" :modal-append-to-body='false' :show-close="true" width="300px" @close="closeDialog" class="nz-message">
             <div class="upload-body">
-              <el-input type="textarea" :placeholder="$t('alert.description')" v-model="deleteBox.remark"></el-input>
+              <el-input type="textarea" :placeholder="$t('overall.remark')" v-model="deleteBox.remark"></el-input>
               <div style="text-align: right; margin-top: 10px;">
                 <button @click="closeDialog" class="el-button el-button--default el-button--small" >
                   <span>{{$t('tip.no')}}</span>
@@ -259,7 +259,7 @@ export default {
           prop: 'summary',
           show: true
         }, {
-          label: this.$t('alert.description'),
+          label: this.$t('overall.remark'),
           prop: 'description',
           show: true
         }, {

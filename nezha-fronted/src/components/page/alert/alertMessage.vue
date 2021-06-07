@@ -66,7 +66,7 @@
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]" prop="remark">
-              <el-input v-model="deleteBox.remark" :placeholder="$t('alert.description')" type="textarea"></el-input>
+              <el-input v-model="deleteBox.remark" :placeholder="$t('overall.remark')" type="textarea"></el-input>
             </el-form-item>
           </el-form>
           <div style="text-align: right; margin-top: 10px;">

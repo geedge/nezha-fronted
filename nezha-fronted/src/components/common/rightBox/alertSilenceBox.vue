@@ -88,10 +88,10 @@
           </div>
         </el-form-item>
 
-        <el-form-item :label='$t("alert.silence.remark")' prop="remark" class="range-time">
+        <el-form-item :label='$t("overall.remark")' prop="remark" class="range-time">
           <el-input
             type="textarea"
-            :placeholder="$t('alert.description')"
+            :placeholder="$t('overall.remark')"
             v-model="editAlertSilence.remark"
             maxlength="256"
             show-word-limit>

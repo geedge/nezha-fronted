@@ -88,7 +88,7 @@ export default {
           show: true,
           sortable:'custom'
         }, {
-          label: this.$t('config.roles.description'),
+          label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
         }

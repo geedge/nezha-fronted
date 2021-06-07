@@ -88,7 +88,7 @@ export default {
           },
           {
             id: 13,
-            name: this.$t('config.dc.description'),
+            name: this.$t('overall.remark'),
             label: 'description',
             disabled: false
           }

@@ -127,7 +127,7 @@ export default {
           prop: 'summary',
           show: true
         }, {
-          label: this.$t('alert.description'),
+          label: this.$t('overall.remark'),
           prop: 'description',
           show: true
         }, {

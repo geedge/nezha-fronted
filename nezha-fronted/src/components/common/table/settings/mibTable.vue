@@ -121,7 +121,7 @@ export default {
           prop: 'modelsDetail',
           show: true
         }, {
-          label: this.$t('config.mib.description'),
+          label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
         }, {

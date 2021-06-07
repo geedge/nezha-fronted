@@ -198,7 +198,7 @@ export default {
           show: true,
           minWidth: 200
         }, {
-          label: this.$t('alert.description'),
+          label: this.$t('overall.remark'),
           prop: 'description',
           show: true,
           minWidth: 200

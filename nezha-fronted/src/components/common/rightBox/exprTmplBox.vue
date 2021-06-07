@@ -45,7 +45,7 @@
           <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
             <el-input
               v-model="editExprTemp.remark"
-              :placeholder="$t('alert.description')"
+              :placeholder="$t('overall.remark')"
               maxlength="256"
               show-word-limit
               size="small"
