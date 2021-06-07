@@ -67,7 +67,7 @@ const store = new Vuex.Store({
     },
     getIsShrink (state) {
       return state.isShrink
-    },
+    }
   },
   mutations: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
@@ -88,9 +88,11 @@ const store = new Vuex.Store({
     },
     addConsole (state, data) { // 打开console，并新建一个console
       state.consoleShow = true
-      state.consoleCount++
       state.isAddConsole = true
       state.consoleParam = data
+      setTimeout(() => {
+        state.isAddConsole = false
+      }, 100)
     },
     addConsoleNum (state) {
       state.consoleCount++
@@ -145,7 +147,7 @@ const store = new Vuex.Store({
     },
     isShrink (state) {
       state.isShrink = !state.isShrink
-      localStorage.setItem('nz-left-menu-shrink',  state.isShrink)
+      localStorage.setItem('nz-left-menu-shrink', state.isShrink)
     }
   },
   actions: {
