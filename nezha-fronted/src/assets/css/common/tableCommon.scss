@@ -193,7 +193,7 @@
     flex: auto;
     height: calc(100% - 58px);
 
-    .el-table {
+    .el-table:not(.chart-table) {
       position: absolute;
       width: calc(100% - 40px);
       border: 1px solid $--right-box-border-color;
@@ -313,10 +313,10 @@
       border-right: none !important;
     }
     /* 最后一列用box-shadow模拟边框 */
-    .el-table:not(.no-operation).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
+    .el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
       box-shadow: 1px 0 $--right-box-border-color;
     }
-    .el-table:not(.no-operation).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
+    .el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
       border-right: none !important;
       box-shadow: 1px 0 $--right-box-border-color;
     }
@@ -333,7 +333,7 @@
         border-right: none !important;
       }
     }
-    .el-table--border::after, .el-table--group::after {
+    .el-table--border:not(.chart-table)::after, .el-table--group:not(.chart-table)::after {
       width: 0;
     }
   }

@@ -745,7 +745,8 @@ export default {
     select () {
       const objectInfo = {}
       this.change_sreach_show = true
-      this.name = '', this.id = ''
+      this.name = ''
+      this.id = ''
       if (this.input_sreach != '') {
         this.select_list[this.sreach_num].val = this.input_sreach
         this.input_sreach = ''

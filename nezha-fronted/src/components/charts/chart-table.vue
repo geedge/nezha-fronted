@@ -53,7 +53,7 @@
           </el-dropdown>
         </div>
         <div class="mt-10 table-container" v-cloak v-show="firstShow">
-          <el-table :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight"
+          <el-table :id="'tableContainer'+chartIndex" ref="tableContainer" :height="tableHeight" class="chart-table"
                     :data="seriesItem" border tooltip-effect="light" v-cloak
                     @sort-change="tableDataSort" >
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"

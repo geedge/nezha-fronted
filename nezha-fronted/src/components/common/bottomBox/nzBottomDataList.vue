@@ -17,7 +17,7 @@
           <i class="nz-icon-gear nz-icon"></i>
         </button>
       </div>
-      <div  class="top-tool-right" v-else>
+      <div v-else class="top-tool-right">
         <slot name="top-tool-right"></slot>
       </div>
     </div>

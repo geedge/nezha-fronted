@@ -7,6 +7,7 @@
       :search-msg="searchMsg"
       :tabs="tabs"
       :targetTab="targetTab"
+      @search="search"
       @changeTab="changeTab"
       class="full-width-height"
     >

@@ -8,6 +8,7 @@
       :tabs="tabs"
       :targetTab="targetTab"
       @changeTab="changeTab"
+      @search="search"
       class="full-width-height"
       v-loading="tools.loading"
     >
@@ -309,6 +310,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'state', this.state)
       if (this.searchTime && this.searchTime.length > 1) {
         this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTime[0]))
         this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTime[1]))
@@ -332,7 +334,7 @@ export default {
       } else if (this.from === fromRoute.dc) {
         this.searchLabel.dcIds = this.obj.id
       }
-      this.$get(this.url + '?state=' + this.state, this.searchLabel).then(response => {
+      this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -576,7 +578,9 @@ export default {
       if (orderBy) {
         this.$set(this.searchLabel, 'orderBy', orderBy)
       }
-      this.$refs.alertMessageTable.$refs.alertListTable.bodyWrapper.scrollTop = 0
+      if (this.$refs.dataTable) {
+        this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
+      }
       this.getTableData()
     },
     fillProject (module) {
