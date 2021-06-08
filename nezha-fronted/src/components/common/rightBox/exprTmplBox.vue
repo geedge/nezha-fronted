@@ -42,7 +42,7 @@
               ></promql-input>
             </el-row>
           </el-form-item>
-          <el-form-item :label="$t('config.exprTemp.remark')" prop="remark">
+          <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input
               v-model="editExprTemp.remark"
               :placeholder="$t('overall.remark')"

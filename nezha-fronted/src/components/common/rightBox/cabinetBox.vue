@@ -33,7 +33,7 @@
         <el-form-item :label="$t('asset.uSize')" prop="uSize">
           <el-input v-model.number="editCabinet.uSize" :max="47" size="small" id="cabinet-box-input-uSize"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('config.dc.remark')">
+        <el-form-item :label="$t('overall.remark')">
           <el-input size='mini' maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
         </el-form-item>
       </el-form>

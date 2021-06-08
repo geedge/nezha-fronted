@@ -204,7 +204,7 @@
             </el-select>
           </el-form-item>
           <!--   remark   -->
-          <el-form-item :label="$t('dashboard.panel.chartForm.remark')">
+          <el-form-item :label="$t('overall.remark')">
             <el-input  maxlength="256" show-word-limit v-model="editChart.remark" :autosize="{ minRows: 1, maxRows: 6}" type="textarea"/>
           </el-form-item>
 

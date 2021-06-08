@@ -89,7 +89,7 @@ export default {
           show: true
         },
         {
-          label: this.$t('config.dc.remark'),
+          label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
         }

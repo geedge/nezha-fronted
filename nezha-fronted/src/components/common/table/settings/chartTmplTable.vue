@@ -98,7 +98,7 @@ export default {
           show: true,
           sortable: 'custom'
         }, {
-          label: this.$t('config.exprTemp.remark'),
+          label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
         }

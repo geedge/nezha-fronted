@@ -114,7 +114,7 @@ export default {
         prop: 'port',
         show: true
       }, {
-        label: this.$t('config.mib.credential.remark'),
+        label: this.$t('overall.remark'),
         prop: 'remark',
         show: true
       }]

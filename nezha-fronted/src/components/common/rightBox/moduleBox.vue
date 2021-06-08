@@ -287,7 +287,7 @@ export default {
         { title: 'ID', data: 'id' },
         { title: this.$t('config.model.titleName'), data: 'name' },
         { title: this.$t('config.model.titleType'), data: 'type' },
-        { title: this.$t('config.model.remark'), data: 'remark' }
+        { title: this.$t('overall.remark'), data: 'remark' }
       ],
       language: localStorage.getItem('nz-language'),
       showAllBasicOption: false,

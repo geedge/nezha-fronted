@@ -40,7 +40,7 @@
           ></v-selectpage>
           </el-form-item>
           <!--remark-->
-          <el-form-item :label="$t('config.model.remark')" prop="remark">
+          <el-form-item :label="$t('overall.remark')" prop="remark">
             <el-input maxlength="256" show-word-limit v-model="editModel.remark" size="small" type="text"></el-input>
           </el-form-item>
         </el-form>
@@ -88,7 +88,7 @@ export default {
         { title: 'ID', data: 'id' },
         { title: this.$t('config.model.titleName'), data: 'name' },
         { title: this.$t('config.model.titleType'), data: 'type' },
-        { title: this.$t('config.model.remark'), data: 'remark' }
+        { title: this.$t('overall.remark'), data: 'remark' }
       ],
       url: 'asset/model',
       brandUrl: 'asset/brand',

@@ -110,7 +110,7 @@ export default {
           width: 120,
           sortable: 'custom'
         }, {
-          label: this.$t('config.model.remark'),
+          label: this.$t('overall.remark'),
           prop: 'remark',
           show: true
         }

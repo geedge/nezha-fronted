@@ -14,7 +14,7 @@
             <el-form-item :label='$t("overall.name")' prop="name">
               <el-input placeholder="" maxlength="64" show-word-limit v-model="editCredential.name" size="small" id="credential-box-input-name"></el-input>
             </el-form-item>
-            <el-form-item :label='$t("config.mib.credential.remark")' prop="remark">
+            <el-form-item :label='$t("overall.remark")' prop="remark">
               <el-input placeholder="" maxlength="256" show-word-limit v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.type")' prop="type">

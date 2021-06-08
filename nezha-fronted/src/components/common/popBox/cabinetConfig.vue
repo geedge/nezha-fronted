@@ -25,7 +25,7 @@
             <div :class="{'right-box-form-content-txt':!popBox.isEdit}" >{{cabinet.uSize}}</div>
             <el-slider v-model.number="cabinet.uSize" :max="47" v-if="popBox.isEdit"></el-slider>
           </el-form-item>
-          <el-form-item :label="this.$t('asset.remark')">
+          <el-form-item :label="this.$t('overall.remark')">
             <el-input size='mini' v-model="cabinet.remark" type="textarea" :rows="2" v-if="popBox.isEdit"/>
             <div class="right-box-form-content-txt" v-if="!popBox.isEdit">{{cabinet.remark}}</div>
           </el-form-item>

@@ -62,7 +62,7 @@
     </div>
     <!--删除弹窗-->
     <div class="export-xlsx">
-      <el-dialog :modal-append-to-body='false' :show-close="true" :title="$t('alert.list.remark')" :visible.sync="deleteBox.show" class="nz-message"  width="450px" @close="closeDialog" @opened="openedDialog">
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="$t('overall.remark')" :visible.sync="deleteBox.show" class="nz-message"  width="450px" @close="closeDialog" @opened="openedDialog">
         <div class="upload-body">
           <el-form ref="remarkForm" :model="deleteBox">
             <el-form-item :rules="[{required:true,message: $t('validate.required'), trigger: 'change'}]" prop="remark">
