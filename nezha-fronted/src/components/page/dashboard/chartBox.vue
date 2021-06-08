@@ -1036,97 +1036,101 @@ export default {
       this.confirmAdd()
     },
     confirmAdd () {
-      this.prevent_opt.save = true
-      this.elementTarget = [] // 初始化清空参数
-      if (this.editChart.type !== 'url' && this.editChart.type != 'text') {
-        /* if(this.editChart.type == 'alertList'){
-            this.$refs.alertParamBox.saveParam();
-          }else{
-            this.$refs.chartTag.forEach((item, index) => {//循环指标列表
-              // 触发每个tag组件内部进行校验
-              item.saveTarget(index);
-            });
-          } */
-        if (this.editChart.type == 'alertList') {
-          this.$refs.alertParamBox.saveParam()
-          return
-        }
-        if (this.editChart.type == 'singleStat' || this.editChart.type == 'pie' || this.editChart.type == 'table' || this.editChart.type == 'bar') {
-          // this.$set(this.editChart.param, "statistics", this.statistics);
-        } else {
-          delete this.editChart.param.statistics
-        }
-        if (this.expressions[0]) {
-          this.editChart.elements = []
-          this.expressions.forEach((expr, i) => {
-            this.editChart.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
-          })
-        }
-        if (this.editChart.id) {
-          this.updateCharts()
-        } else {
-          this.addCharts()
-        }
-      } else {
-        if (this.editChart.type == 'url') {
-          this.$refs.chartForm.validate((valid) => {
-            const params = {
-              name: this.editChart.name, // this.editChart
-              span: this.editChart.span,
-              height: this.editChart.height,
-              type: this.editChart.type,
-              unit: this.editChart.unit,
-              param: {
-                url: this.editChart.param.url
-              },
-              sync: this.editChart.sync,
-              remark: this.editChart.remark,
-              groupId: this.editChart.groupId,
-              varType: this.editChart.varType
+      this.$refs.chartForm.validate((valid) => {
+        if (valid) {
+          this.prevent_opt.save = true
+          this.elementTarget = [] // 初始化清空参数
+          if (this.editChart.type !== 'url' && this.editChart.type != 'text') {
+            /* if(this.editChart.type == 'alertList'){
+                this.$refs.alertParamBox.saveParam();
+              }else{
+                this.$refs.chartTag.forEach((item, index) => {//循环指标列表
+                  // 触发每个tag组件内部进行校验
+                  item.saveTarget(index);
+                });
+              } */
+            if (this.editChart.type == 'alertList') {
+              this.$refs.alertParamBox.saveParam()
+              return
             }
+            if (this.editChart.type == 'singleStat' || this.editChart.type == 'pie' || this.editChart.type == 'table' || this.editChart.type == 'bar') {
+              // this.$set(this.editChart.param, "statistics", this.statistics);
+            } else {
+              delete this.editChart.param.statistics
+            }
+            if (this.expressions[0]) {
+              this.editChart.elements = []
+              this.expressions.forEach((expr, i) => {
+                this.editChart.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
+              })
+            }
+            if (this.editChart.id) {
+              this.updateCharts()
+            } else {
+              this.addCharts()
+            }
+          } else {
+            if (this.editChart.type == 'url') {
+              this.$refs.chartForm.validate((valid) => {
+                const params = {
+                  name: this.editChart.name, // this.editChart
+                  span: this.editChart.span,
+                  height: this.editChart.height,
+                  type: this.editChart.type,
+                  unit: this.editChart.unit,
+                  param: {
+                    url: this.editChart.param.url
+                  },
+                  sync: this.editChart.sync,
+                  remark: this.editChart.remark,
+                  groupId: this.editChart.groupId,
+                  varType: this.editChart.varType
+                }
 
-            if (valid) {
-              params.elements = []
-              if (this.isedit) {
-                params.id = this.editChart.id
-                this.updateCharts(params)
-              } else {
-                this.addCharts(params)
-              }
-            }
-          })
-        } else {
-          this.$refs.chartForm.validate((valid) => {
-            const text = this.$refs.richTextEditor.getContent()
-            if (!text) {
-              valid = false
-            }
-            const params = {
-              name: this.editChart.name, // this.editChart
-              span: this.editChart.span,
-              height: this.editChart.height,
-              type: this.editChart.type,
-              param: {
-                text: text
-              },
-              sync: this.editChart.sync,
-              remark: this.editChart.remark,
-              groupId: this.editChart.groupId,
-              varType: this.editChart.varType
-            }
+                if (valid) {
+                  params.elements = []
+                  if (this.isedit) {
+                    params.id = this.editChart.id
+                    this.updateCharts(params)
+                  } else {
+                    this.addCharts(params)
+                  }
+                }
+              })
+            } else {
+              this.$refs.chartForm.validate((valid) => {
+                const text = this.$refs.richTextEditor.getContent()
+                if (!text) {
+                  valid = false
+                }
+                const params = {
+                  name: this.editChart.name, // this.editChart
+                  span: this.editChart.span,
+                  height: this.editChart.height,
+                  type: this.editChart.type,
+                  param: {
+                    text: text
+                  },
+                  sync: this.editChart.sync,
+                  remark: this.editChart.remark,
+                  groupId: this.editChart.groupId,
+                  varType: this.editChart.varType
+                }
 
-            if (valid) {
-              params.elements = []
-              if (this.isedit) {
-                params.id = this.editChart.id
-                this.updateCharts(params)
-              } else {
-                this.addCharts(params)
-              }
+                if (valid) {
+                  params.elements = []
+                  if (this.isedit) {
+                    params.id = this.editChart.id
+                    this.updateCharts(params)
+                  } else {
+                    this.addCharts(params)
+                  }
+                }
+              })
             }
-          })
+          }
         }
-      }
+      })
     },
     // 获取metric列表
     getSuggestMetric () {
@@ -1754,6 +1758,9 @@ export default {
           this.editData(this.editChart, this.showPanel.id)
         } else {
           this.createData(this.showPanel.id, '', n.unit)
+        }
+        if ( this.editChart.param && !this.editChart.param.statistics) {
+          this.editChart.param.statistics = 'null'
         }
       }
     }
