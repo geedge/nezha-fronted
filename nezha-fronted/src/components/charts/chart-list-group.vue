@@ -757,7 +757,7 @@ export default {
                       // 循环处理每个elements下获取的数据列
                       if (chartItem.type === 'singleStat') {
                         if (response.data.result.length === 1) {
-                          const statistics = chartItem.param.statistics
+                          const statistics = chartItem.param.statistics || 'null'
                           if (response.data.result[0].values) {
                             singleStatRlt = bus.getSingleStatRlt(statistics, response.data.result[0].values)
                           }

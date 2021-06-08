@@ -367,7 +367,7 @@ export default {
       }
       this.data = chartItem
       this.unit = chartDataFormat.getUnit(this.data.unit)
-      const statistics = chartItem.param.statistics
+      const statistics = chartItem.param.statistics || 'null'
       seriesItem = this.getStatisticsResult(statistics, seriesItem)
       seriesItem && (seriesItem = seriesItem.map(item => {
         if (chartItem.param && chartItem.param.valueMapping && chartItem.param.valueMapping.type) {
@@ -582,6 +582,17 @@ export default {
             }
           })
 
+          break
+        }
+        default : {
+          copy.sort((x, y) => { return parseFloat(y.data[0]) - parseFloat(x.data[0]) })
+          result = copy.map(item => {
+            return {
+              element: item.element,
+              time: bus.timeFormate(new Date(item.data[0]), 'yyyy-MM-dd hh:mm:ss'),
+              value: item.data[1]
+            }
+          })
           break
         }
       }

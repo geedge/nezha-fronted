@@ -470,7 +470,7 @@ export default {
                   if (response.data.result) {
                     if (chartItem.type === 'singleStat') {
                       if (response.data.result.length === 1) {
-                        const statistics = chartItem.param.statistics
+                        const statistics = chartItem.param.statistics || 'null'
                         if (response.data.result[0].values) {
                           singleStatRlt = bus.getSingleStatRlt(statistics, response.data.result[0].values)
                           this.noData = false
