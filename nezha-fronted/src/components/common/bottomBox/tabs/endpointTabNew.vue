@@ -71,19 +71,20 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
-          id: 12,
-          name: 'endpoint name',
-          type: 'input',
-          label: 'name',
-          disabled: false
-        },
-        {
-          id: 13,
-          name: 'endpoint id',
-          type: 'input',
-          label: 'id',
-          disabled: false
-        }]
+            id: 13,
+            name: this.$t('project.endpoint.endpointId'),
+            type: 'input',
+            label: 'id',
+            disabled: false
+          },
+          {
+            id: 12,
+            name: this.$t('project.endpoint.endpointName'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }
+        ]
       },
       nowTime: '',
       rightBox: {

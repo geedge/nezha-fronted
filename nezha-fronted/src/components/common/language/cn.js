@@ -753,7 +753,7 @@ const cn = {
       terminallog: '终端日志',
       status: '状态',
       username: '用户名',
-      SessionID: '会话ID',
+      SessionID: '会话 ID',
       authtype: '认证方式',
       statusItem: {
         connecting: '连接中',
@@ -793,7 +793,7 @@ const cn = {
       duration: '持续',
       remote: '远程连接',
       replay: '回放',
-      source: '源IP',
+      source: '源 IP',
       log: '日志',
       killErrorTip: '踢出失败',
       monitor: { monitor: '监控' },
@@ -809,7 +809,12 @@ const cn = {
         play: '播放',
         replay: '重播',
         skipTip: '跳过无操作时间'
-      }
+      },
+      loginHost: '登陆主机',
+      loginUser: '登陆用户',
+      sourceIp: '源 IP',
+      sourceUser: '源用户',
+      SessionId: '会话 ID'
     },
     dc: {
       dc: '数据中心',
@@ -866,7 +871,7 @@ const cn = {
       createDate: '操作时间',
       ip: 'IP',
       userId: 'UserId',
-      operaId: '数据ID',
+      operaId: '数据 ID',
       time: '耗时',
       params: '请求参数',
       state: '请求结果',
@@ -1269,6 +1274,7 @@ const cn = {
       editEndpoint: '修改 Endpoint',
       endpoint: 'Endpoint',
       endpoints: 'Endpoint',
+      endpointName: 'Endpoint 名称',
       endpointId: 'Endpoint ID',
       list: '列表',
       host: '主机',

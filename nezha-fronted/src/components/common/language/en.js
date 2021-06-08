@@ -1279,6 +1279,7 @@ const en = {
       editEndpoint: 'Edit endpoint', // "编辑Endpoint"
       endpoint: 'Endpoint ', // "Endpoint"
       endpoints: 'Endpoint',
+      endpointName: 'Endpoint name',
       endpointId: 'Endpoint ID', // "Endpoint ID"
       list: 'List',
       host: 'Host', // "Host"
