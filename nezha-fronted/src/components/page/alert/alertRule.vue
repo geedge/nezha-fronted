@@ -137,7 +137,7 @@ export default {
           id: 4,
           name: this.$t('alert.severity'),
           type: 'severity',
-          label: 'severity',
+          label: 'severityIds',
           disabled: false
         }]
       },

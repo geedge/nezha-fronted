@@ -861,6 +861,8 @@ export default {
             }
           } else if (val.type === 'selectSelf') {
             objectInfo[val.label] = val.valnum
+          } else if (val.type === 'severity') {
+            objectInfo[val.label] = val.valnum
           } else if (val.type === 'selectAction') { // 新增日志判断
             objectInfo[val.label] = val.valnum
           } else if (val.type === 'dc') {
