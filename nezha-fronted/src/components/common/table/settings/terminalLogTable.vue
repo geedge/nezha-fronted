@@ -38,8 +38,14 @@
         <template v-else-if="item.prop === 'status'">
           <span>{{getStatusText(scope.row.status)}}</span>
         </template>
-        <template v-else-if="item.prop === 'uuid'">
-          <span>{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
+        <template  v-else-if="item.prop === 'uuid'">
+          <el-popover
+            placement="right-start"
+            width="200"
+            trigger="hover"
+            :content="scope.row.uuid">
+            <span slot="reference">{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
+          </el-popover>
         </template>
         <template v-else-if="item.prop === 'remote'">
           <span>{{getRemoteText(scope.row)}}</span>
