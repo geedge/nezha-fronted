@@ -884,6 +884,8 @@ export default {
               objectInfo.type = val.val
             } else if (val.label === 'chartType') {
               objectInfo.type = val.val
+            } else if (val.label === 'protocol') {
+              objectInfo.type = val.val
             }
           } else {
             objectInfo[val.label] = val.val
