@@ -164,7 +164,7 @@
                             <!-- 新增protocol二层下拉 -->
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="TypeSelect.length!=0&&val.type == 'selectType'&&secondShow">
                                 <ul>
-                                    <li v-for="(item,key) in TypeSelect" :key="key" @click="tr_selectProtocolInfo(item)">{{item.name}}</li>
+<!--                                    <li v-for="(item,key) in TypeSelect" :key="key" @click="tr_selectProtocolInfo(item)">{{item.name}}</li>-->
                                 </ul>
                             </div>
 <!--                           时间计划-->
@@ -885,7 +885,7 @@ export default {
             } else if (val.label === 'chartType') {
               objectInfo.type = val.val
             } else if (val.label === 'protocol') {
-              objectInfo.type = val.val
+              objectInfo.protocol = val.val
             }
           } else {
             objectInfo[val.label] = val.val
