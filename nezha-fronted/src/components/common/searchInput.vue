@@ -886,6 +886,10 @@ export default {
               objectInfo.type = val.val
             } else if (val.label === 'protocol') {
               objectInfo.protocol = val.val
+            }else if(val.label === 'operation'){
+              objectInfo.operation = val.val
+            }else if(val.label === 'state'){
+              objectInfo.state = val.val
             }
           } else {
             objectInfo[val.label] = val.val
