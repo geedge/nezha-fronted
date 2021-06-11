@@ -48,7 +48,7 @@ module.exports = {
     version:'1.2',
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'nezha',
+    assetsSubDirectory: 'static',
     assetsPublicPath: './',
 
     /**

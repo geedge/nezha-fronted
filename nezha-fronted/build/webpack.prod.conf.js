@@ -43,7 +43,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js[chunkhash].js')
+    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
   },
   plugins: [
     /*new GenerateAssetPlugin({
@@ -63,6 +63,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           warnings: false
         }
       },
+      exclude: /manifest.+js/,
       sourceMap: config.build.productionSourceMap,
       parallel: true
     }),
@@ -163,7 +164,7 @@ if(process.env.NODE_ENV == 'development'){
         {
           move:[
             { source: path.join(__dirname,'../dist','/static/config.json'), destination: path.join(__dirname,'../dist/config.json') },
-            { source: path.join(__dirname,'../dist','/static'), destination: path.join(__dirname,'../dist','/nezha') }
+
           ],
           mkdir:[
             path.join(__dirname,'../dist','/static')
