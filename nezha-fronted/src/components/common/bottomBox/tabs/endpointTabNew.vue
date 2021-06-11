@@ -74,7 +74,7 @@ export default {
             id: 13,
             name: this.$t('project.endpoint.endpointId'),
             type: 'input',
-            label: 'id',
+            label: 'ids',
             disabled: false
           },
           {
