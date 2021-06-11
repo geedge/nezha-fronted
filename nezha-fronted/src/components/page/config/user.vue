@@ -124,13 +124,6 @@ export default {
           this.rightBox.show = true
         }
       })
-    },
-  },
-  computed: {
-    isCurrentUser () {
-      return function (username) {
-        return localStorage.getItem('nz-username') === username
-      }
     }
   }
 }
