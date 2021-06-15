@@ -208,7 +208,7 @@ export default {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get(this.url + '?state=' + this.state, { ...this.searchLabel }).then(response => {
+      this.$get(this.url, { state: this.state, ...this.searchLabel }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)

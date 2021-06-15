@@ -1029,6 +1029,7 @@ export default {
     },
 
     getNodesArr () {
+      const arr = []
       if (!getTopology(this.topologyIndex)) return
       this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
@@ -1037,26 +1038,35 @@ export default {
             moduleName: '',
             show: false,
             error: false,
-            expressArr: []
+            expressArr: [],
+            state:{}
           }
         }
         return item.type === 0
       })
-      // this.nodesArr=this.nodesArr.map(item=>{
-      //   if(!item.data){
-      //     item.data={
-      //       moduleId:'',
-      //       moduleName:'',
-      //       show:false,
-      //       error:false,
-      //       expressArr:[],
-      //     }
-      //   }
-      //   return {
-      //     rect:item.rect,
-      //     data:item.data
-      //   }
-      // });
+      this.nodesArr.forEach(item=>{
+        item.data.error = false
+        item.data.state = {
+          endpoint: false,
+          asset: false,
+          total: false,
+          other: false,
+          info: false,
+          alert: false,
+          main: false,
+          error: false
+        }
+        arr.push(this.$get('stat/module/abnormal',{moduleId: item.data.moduleId}))
+      });
+      Promise.all(arr).then(res => {
+        this.nodesArr.forEach( (item, index) => {
+          item.data.state.error = item.data.error = !res[index].data.list[0].state
+          item.data.state.asset = !!res[index].data.list[0].asset
+          item.data.state.alert = !!res[index].data.list[0].alert
+          item.data.state.endpoint = !!res[index].data.list[0].endpoint
+        })
+        this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
+      })
       // 打开动画 是否更新顶部图标
       this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
     },
