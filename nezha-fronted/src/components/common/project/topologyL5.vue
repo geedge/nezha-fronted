@@ -850,7 +850,7 @@ export default {
                 data.bkImage = undefined
               }
               Promise.all(promiseArr).then(res => {
-                console.log(res)
+                // console.log(res)
                 res.forEach((response, index) => {
                   const item = data.pens[index]
                   if (item.type === 0) {

@@ -639,7 +639,7 @@ const en = {
     assetPing: 'Ping',
     lastReply: 'Ping last reply',
     modules: 'Endpoint', // '组件'
-    alerts: 'Alerts', // '告警信息'
+    alerts: 'Alert', // '告警信息'
     dataCenter: 'Data center', // DC
     vendor: 'Vendor', // '厂商'
     procurementDate: 'Purchase date', // '购买日期'

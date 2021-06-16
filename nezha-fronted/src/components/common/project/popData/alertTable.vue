@@ -125,7 +125,7 @@ export default {
           prop: 'summary',
           show: true,
           minWidth: 100
-        }, {
+        },{
           label: this.$t('alert.list.state'),
           prop: 'state',
           show: true,
@@ -140,13 +140,6 @@ export default {
       searchTime: [],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
-          {
-            id: 26,
-            name: this.$t('alert.list.id'),
-            type: 'id',
-            label: 'id',
-            disabled: false
-          },
           {
             name: this.$t('alert.alertRule'),
             type: 'input',
@@ -168,7 +161,7 @@ export default {
             label: 'summary',
             disabled: false
           }, {
-            name: 'Labels',
+            name: this.$t('alert.list.labels'),
             type: 'input',
             label: 'labels',
             disabled: false

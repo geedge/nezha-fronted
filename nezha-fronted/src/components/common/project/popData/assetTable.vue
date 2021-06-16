@@ -97,6 +97,7 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
+          width: 110,
           sortable: 'custom'
         },
         {
@@ -123,11 +124,6 @@ export default {
           show: true,
           width: 160,
           sortable: 'custom'
-        }, {
-          label: this.$t('asset.alerts'),
-          prop: 'Alert',
-          show: true,
-          width: 100
         }],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
@@ -136,24 +132,14 @@ export default {
           label: 'ids',
           disabled: false
         }, {
-          name: 'Name',
+          name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
           disabled: false
-        }, {
-          name: 'SN',
-          type: 'input',
-          label: 'sn',
-          disabled: false
-        }, {
-          name: 'IP',
+        },{
+          name: this.$t('asset.manageIp'),
           type: 'input',
           label: 'manageIp',
-          disabled: false
-        }, {
-          name: this.$t('asset.state'),
-          type: 'assetState',
-          label: 'stateIds',
           disabled: false
         }]
       },
