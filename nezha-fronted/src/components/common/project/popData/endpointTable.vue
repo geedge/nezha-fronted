@@ -122,12 +122,6 @@ export default {
             label: 'ids',
             disabled: false
           }, {
-            name: this.$t('overall.name'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          },
-          {
             name: this.$t('asset.asset'),
             type: 'input',
             label: 'assetName',
