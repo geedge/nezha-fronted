@@ -93,7 +93,7 @@
             <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="cancel(scope.row)" :disabled="prevent_opt.save"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
-            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i></button>
+            <button class="table-operation-item" @click="$emit('del',scope.row)" v-has="'system_apiKey_delete'"><i class="nz-icon nz-icon-delete"></i></button>
           </template>
         </div>
       </el-table-column>

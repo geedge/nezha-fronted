@@ -146,9 +146,7 @@ export default {
       tableData: [],
       loading: false,
       tableHeight: '100%',
-      searchLabel: {
-
-      },
+      searchLabel: {},
       deleteBox: {}
     }
   },

@@ -70,8 +70,8 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-has="'alertRule_edit'" :command="['edit', scope.row]" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'alertRule_delete'" :command="['delete', scope.row]" :disabled="isBuiltIn(scope.row)"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'alertRule_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'alertRule_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertRule']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
