@@ -822,13 +822,13 @@ export default {
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
-                  // promiseArr.push(this.$get('/monitor/module/stat', { id: item.data.moduleId }))
+                  promiseArr.push(this.$get('stat/module/abnormal',{moduleId: item.data.moduleId}))
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
                   item.data.state.alert = false
                 } else {
-                  // promiseArr.push({ type: 1 })
+                  promiseArr.push({ type: 1 })
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
@@ -850,27 +850,19 @@ export default {
                 data.bkImage = undefined
               }
               Promise.all(promiseArr).then(res => {
+                console.log(res)
                 res.forEach((response, index) => {
                   const item = data.pens[index]
                   if (item.type === 0) {
-                    item.data.state = response.data
-                    item.data.state.asset = false
-                    item.data.state.endpoint = false
-                    item.data.state.alert = false
-                    if (item.data.state.assetStat.down > 0) {
-                      item.data.state.asset = true
-                    }
-                    if (item.data.state.endpointStat.down > 0) {
-                      item.data.state.endpoint = true
-                    }
-                    if (item.data.state.alertStat.P1 > 0 || item.data.state.alertStat.P3 > 0 || item.data.state.alertStat.P2 > 0) {
-                      item.data.state.alert = true
-                    }
-                    item.data.state.error = item.data.state.asset || item.data.state.endpoint || item.data.state.alert
+                    item.data.state.error = item.data.error = !res[index].data.list[0].state
+                    item.data.state.asset = !!res[index].data.list[0].asset
+                    item.data.state.alert = !!res[index].data.list[0].alert
+                    item.data.state.endpoint = !!res[index].data.list[0].endpoint
                   }
                 })
                 self.saveData = { ...data }
                 resolve(data)
+
               })
             }, 100)
           }
@@ -1043,29 +1035,6 @@ export default {
           }
         }
         return item.type === 0
-      })
-      this.nodesArr.forEach(item=>{
-        item.data.error = false
-        item.data.state = {
-          endpoint: false,
-          asset: false,
-          total: false,
-          other: false,
-          info: false,
-          alert: false,
-          main: false,
-          error: false
-        }
-        arr.push(this.$get('stat/module/abnormal',{moduleId: item.data.moduleId}))
-      });
-      Promise.all(arr).then(res => {
-        this.nodesArr.forEach( (item, index) => {
-          item.data.state.error = item.data.error = !res[index].data.list[0].state
-          item.data.state.asset = !!res[index].data.list[0].asset
-          item.data.state.alert = !!res[index].data.list[0].alert
-          item.data.state.endpoint = !!res[index].data.list[0].endpoint
-        })
-        this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
       })
       // 打开动画 是否更新顶部图标
       this.nodesArr = JSON.parse(JSON.stringify(this.nodesArr))
