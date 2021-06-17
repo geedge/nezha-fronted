@@ -48,7 +48,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 export default {
-  name: 'roleTable',
+  name: 'operationLog',
   mixins: [table],
   data () {
     return {

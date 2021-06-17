@@ -245,7 +245,7 @@
 <script>
 import searchSelectInfo from './searchSelectInfo' // 搜索框组件--下拉框内容
 export default {
-  name: 'index',
+  name: 'searchInput',
   data () {
     return {
       selectDom: { top: '', left: '', tempTop: '', show: true }, // 选择弹框的位置

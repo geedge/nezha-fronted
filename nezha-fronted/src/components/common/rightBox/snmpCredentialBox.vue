@@ -88,7 +88,7 @@
 import { port } from '../js/validate'
 
 export default {
-  name: 'credentialBox',
+  name: 'snmpCredentialBox',
 
   props: {
     credential: Object

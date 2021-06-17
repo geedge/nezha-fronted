@@ -75,7 +75,7 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
-  name: 'alert-config',
+  name: 'alertRule',
   components: {
     deleteButton,
     alertRuleBox,

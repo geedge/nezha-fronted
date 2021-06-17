@@ -75,7 +75,7 @@
 import nzTransfer from '@/components/common/nzTransfer'
 import { fromRoute } from '@/components/common/js/constants'
 export default {
-  name: 'chartTemp',
+  name: 'chartTempBox',
   components: {
     nzTransfer
   },

@@ -70,7 +70,7 @@
 import table from '@/components/common/mixin/table'
 import { chart as chartConstant } from '@/components/common/js/constants'
 export default {
-  name: 'roleTable',
+  name: 'chartTmplTable',
   mixins: [table],
   data () {
     return {

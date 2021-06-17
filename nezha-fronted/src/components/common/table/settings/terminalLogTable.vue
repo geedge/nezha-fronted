@@ -107,7 +107,7 @@ import { terminalLog } from '@/components/common/js/constants'
 import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 import table from '@/components/common/mixin/table'
 export default {
-  name: 'roleTable',
+  name: 'terminalLogTable',
   mixins: [table],
   props: {
     nowTime: {}

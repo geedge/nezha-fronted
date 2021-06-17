@@ -125,7 +125,7 @@ import chartDataFormat from '../../charts/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { nzNumber } from '../js/validate'
 export default {
-  name: 'alertConfigBox',
+  name: 'alertRuleBox',
   props: {
     alertRule: Object
   },

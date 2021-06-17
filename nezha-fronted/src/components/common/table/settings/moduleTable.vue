@@ -85,7 +85,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 export default {
-  name: 'userTable',
+  name: 'moduleTable',
   mixins: [table],
   data () {
     return {

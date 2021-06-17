@@ -65,7 +65,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import alertSilenceTable from '@/components/common/table/alert/alertSilenceTable'
 
 export default {
-  name: 'silence',
+  name: 'alertSilence',
   components: {
     alertSilenceTable,
     deleteButton,

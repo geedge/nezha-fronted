@@ -51,7 +51,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 export default {
-  name: 'alertTable',
+  name: 'alertTableProject',
   props: {
     moduleId: {},
     projectId: {},

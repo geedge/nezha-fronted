@@ -40,7 +40,7 @@ import multipleTime from './multipleTime'
 import chartUnit from './chartUnit'
 let timeout
 export default {
-  name: 'intervalRefresh',
+  name: 'pickTime',
   components: {
     'time-picker': timePicker,
     'chart-unit': chartUnit,

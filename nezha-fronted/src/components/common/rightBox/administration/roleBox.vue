@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: 'userBox',
+  name: 'roleBox',
   components: {
   },
   props: {

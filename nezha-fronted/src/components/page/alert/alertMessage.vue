@@ -113,7 +113,7 @@ import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 export default {
-  name: 'alertList',
+  name: 'alertMessage',
   components: {
     alertMessageTable,
     pickTime,

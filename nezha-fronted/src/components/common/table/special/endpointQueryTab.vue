@@ -80,7 +80,7 @@ import chart from '@/components/page/dashboard/overview/chart'
 import { sameLabels } from '@/components/common/js/constants'
 
 export default {
-  name: 'endpointTable',
+  name: 'endpointQueryTab',
   components: {
     chartBox,
     chart

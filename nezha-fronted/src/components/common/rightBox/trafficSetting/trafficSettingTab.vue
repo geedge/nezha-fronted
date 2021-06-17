@@ -222,7 +222,7 @@
 import subBox from './subBox'
 import loading from '../../loading'
 export default {
-  name: 'assetConfigTab',
+  name: 'trafficSettingTab',
   components: {
     'sub-box': subBox,
     loading: loading

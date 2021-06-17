@@ -84,7 +84,7 @@
 import table from '@/components/common/mixin/table'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
-  name: 'roleTable',
+  name: 'alertRuleTable',
   mixins: [table],
   data () {
     return {

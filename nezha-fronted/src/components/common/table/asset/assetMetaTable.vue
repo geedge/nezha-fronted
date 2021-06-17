@@ -86,7 +86,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 export default {
-  name: 'roleTable',
+  name: 'assetLabelTable',
   mixins: [table],
   data () {
     return {

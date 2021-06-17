@@ -116,7 +116,7 @@
 <script>
 import editEndpointBoxNew from './editEndpointBoxNew'
 export default {
-  name: 'endpointBox',
+  name: 'batchModifyEndpointBox',
   props: {
     currentProject: Object,
     currentModule: Object,

@@ -205,7 +205,7 @@
 <script>
 import editEndpointBoxNew from './editEndpointBoxNew'
 export default {
-  name: 'endpointBox',
+  name: 'addEndpointBox',
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
