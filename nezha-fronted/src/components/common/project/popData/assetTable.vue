@@ -92,20 +92,17 @@ export default {
           prop: 'id',
           show: true,
           width: 110,
-          sortable: 'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           width: 110,
-          sortable: 'custom'
         },
         {
           label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
           width: 140,
-          sortable: 'custom'
         },
         {
           label: this.$t('asset.pingInfo'),
@@ -117,13 +114,11 @@ export default {
           prop: 'alertNum',
           show: true,
           width: 140,
-          sortable: 'custom'
         }, {
           label: this.$t('asset.endpointNum2'),
           prop: 'endpointNum',
           show: true,
           width: 160,
-          sortable: 'custom'
         }],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
