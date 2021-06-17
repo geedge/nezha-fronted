@@ -106,6 +106,7 @@ export default {
     },
     exportUrl: { type: String, default: '' },
     params: { type: Object },
+    params2: { type: Object },
     exportFileName: { type: String },
     importUrl: { type: String, default: '' }, // 为空时不显示导入按钮
     link: { type: Object }, // 为空时不显示导出按钮
@@ -241,6 +242,19 @@ export default {
     },
     exportCur () {
       const params = JSON.parse(JSON.stringify(this.params))
+      if (this.params2){
+        Object.keys(this.params2).forEach(key=>{
+          if ( params[key] ) {
+            if ( params[key].prototype.toString.call(val) === '[object Object]' ){
+              Object.assign(params[key],this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]'){
+              params[key].concat(this.params2[key])
+            }
+          } else {
+            params[key] = this.params2[key]
+          }
+        })
+      }
       if (this.exportUrl.indexOf('panel') > -1) {
         params.pageSize = -1
         delete params.start_time
@@ -254,6 +268,19 @@ export default {
     },
     exportAll () {
       const params = JSON.parse(JSON.stringify(this.params))
+      if (this.params2){
+        Object.keys(this.params2).forEach(key=>{
+          if ( params[key] ) {
+            if ( params[key].prototype.toString.call(val) === '[object Object]' ){
+              Object.assign(params[key],this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]'){
+              params[key].concat(this.params2[key])
+            }
+          } else {
+            params[key] = this.params2[key]
+          }
+        })
+      }
       params.pageSize = -1
       if (this.exportUrl.indexOf('panel') > -1) {
         delete params.start_time

@@ -21,6 +21,7 @@
           ref="export"
           id="endpoint-template-list"
           :params="searchLabel"
+          :params2="searchCheckBox"
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
           class="top-tool-export margin-l-10 margin-r-10"
           export-file-name="expression-template"
@@ -201,7 +202,8 @@ export default {
         projectIds: [],
         moduleIds: [],
         states: []
-      }
+      },
+      searchCheckBox: {}
     }
   },
   methods: {
@@ -256,16 +258,7 @@ export default {
         ...this.searchLabel,
         ...this.searchCheckBox
       }
-      if (this.searchLabel.projectIds) {
-        localStorage.setItem('endpointProjectId', this.searchLabel.projectIds)
-        if (params.projectIds) {
-          params.projectIds += ',' + this.searchLabel.projectIds
-        } else {
-          params.projectIds = this.searchLabel.projectIds
-        }
-      } else {
-        localStorage.removeItem('endpointProjectId')
-      }
+      localStorage.removeItem('endpointProjectId')
       this.tools.loading = true
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
@@ -334,22 +327,14 @@ export default {
   },
   created () {
     if (localStorage.getItem('endpointProjectId')) {
-      this.searchLabel.projectIds = localStorage.getItem('endpointProjectId')
+      this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
     }
   },
   mounted () {
     if (localStorage.getItem('endpointProjectId')) {
-      this.$refs.dataList.$refs.searchInput.select_list.push({
-        id: 11,
-        name: 'project id',
-        type: 'input',
-        label: 'projectIds',
-        disabled: false,
-        val: localStorage.getItem('endpointProjectId')
-      })
-      this.$refs.dataList.$refs.searchInput.sreach_num = 1
+      this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
+      // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
     }
-
     this.getTitleSearch()
   },
   watch: {
