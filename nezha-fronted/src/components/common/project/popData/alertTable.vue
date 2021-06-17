@@ -117,7 +117,7 @@ export default {
           minWidth: 200
         }, {
           label: this.$t('alert.severity'),
-          prop: 'severity',
+          prop: 'severityId',
           show: true,
           width: 110
         }, {
