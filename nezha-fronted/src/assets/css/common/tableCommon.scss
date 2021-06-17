@@ -431,3 +431,16 @@
   height: 1px;
   background-color: white;
 }
+.el-input.is-disabled .el-input__inner {
+  background-color: #F5F7FA;
+  border-color: #E4E7ED;
+  color: #C0C4CC;
+  cursor: not-allowed;
+  text-align: center;
+}
+.temp-form-box-input.el-input .el-input__inner {
+  width: 480px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

@@ -95,15 +95,15 @@
       <el-form v-model="tempBox" class="temp-form-box" ref="tempFormBox" v-if="tempBoxShow">
         <span class="temp-form-box-title">Expression</span>
         <el-form-item prop="expression">
-          <el-input v-model="tempBox.expression" size="small" disabled></el-input>
+          <el-input class="temp-form-box-input" v-model="tempBox.expression" size="small" disabled></el-input>
         </el-form-item>
         <span class="temp-form-box-title" v-if="tempBox.vars.length">Variable</span>
         <el-form-item v-for="(item,index) in tempBox.vars"  :prop="item" :key="index">
           <el-row>
-            <el-col :span="6" class="temp-form-box-col">
-              <el-input v-model="tempBox.vars[index]" :id="'tempBox'+index"  size="small" :disabled="true"></el-input>
+            <el-col :span="7" class="temp-form-box-col">
+              <el-input v-model="tempBox.vars[index]" :id="'tempBox'+index" size="small" :disabled="true"></el-input>
             </el-col>
-            <el-col :span="17" v-if="format(item).key">
+            <el-col :span="16" v-if="format(item).key">
               <!--<el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>-->
               <!--<el-select v-model="tempBox[item]" size="small" style="width: 100%" :popper-class="'nz-temp-box'">-->
                 <!--<el-option v-for="(item1,index) in format(item).arr" :key="index" :label="item1[format(item).value]" :value="item1[format(item).value]">-->
