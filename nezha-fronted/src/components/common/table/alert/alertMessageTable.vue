@@ -59,8 +59,8 @@
             <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
             <span v-else>-</span>
           </template>
-          <span v-else-if="item.prop === 'severityId'&&scope.row[item.prop]" class="severity">
-            <i class="nz-icon nz-icon-circle" :style="{color:scope.row[item.prop].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row['severity'].name}}
+          <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">
+            <i class="nz-icon nz-icon-circle" :style="{color:scope.row['severity'].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row['severity'].name}}
           </span>
           <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row.startAt)}}</span>
           <template v-else-if="item.prop === 'duration'">
