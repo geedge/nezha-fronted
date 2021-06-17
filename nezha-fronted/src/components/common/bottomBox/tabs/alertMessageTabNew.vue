@@ -101,8 +101,8 @@ export default {
           {
             id: 26,
             name: this.$t('alert.list.id'),
-            type: 'id',
-            label: 'id',
+            type: 'input',
+            label: 'ids',
             disabled: false
           },
           {
