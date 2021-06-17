@@ -540,6 +540,7 @@ const en = {
   },
   tip: {
     confirmDelete: 'Are you sure you want to delete?', // Are you sure you want to delete?
+    confirmExpired: 'Are you sure you want to expired?',
     confirmOvertime: "Are you sure it's off?",
     killTerm: 'Are you sure you want to kill terminal?',
     confirmBatchDelete: 'Are you sure to delete these {0} pieces of data',

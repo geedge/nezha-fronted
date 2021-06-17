@@ -194,6 +194,23 @@ export default {
         }
       })
     },
+    del (row) {
+      this.$confirm(this.$t('tip.confirmExpired'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(this.url + '?ids=' + row.id + '&state=' + this.state).then(response => {
+          if (response.code === 200) {
+            this.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            this.getTableData()
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+      })
+    },
   }
 }
 </script>
