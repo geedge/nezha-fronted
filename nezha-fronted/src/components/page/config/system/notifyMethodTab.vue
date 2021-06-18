@@ -7,7 +7,8 @@
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.notify"
       :layout="['searchInput', 'elementSet']"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      @search="search">
       <template v-slot:top-tool-left>
 
       </template>
@@ -93,7 +94,7 @@ export default {
           id: 1,
           name: 'ID',
           type: 'input',
-          label: 'id',
+          label: 'ids',
           disabled: false
         }, {
           id: 5,
