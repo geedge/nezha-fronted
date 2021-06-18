@@ -1616,7 +1616,7 @@ export default {
         delete copyChart.varId
         delete copyChart.varType
         copyChart.name = 'Copy_' + copyChart.name
-        this.$emit('on-edit-chart', copyChart)
+        this.$emit('on-edit-chart', copyChart, true)
       }
     },
     duplicateChartGroup (chart) {
@@ -1627,7 +1627,7 @@ export default {
         delete copyChart.varId
         delete copyChart.varType
         copyChart.name = 'Copy_' + copyChart.name
-        this.$emit('on-edit-chart', copyChart)
+        this.$emit('on-edit-chart', copyChart, true)
       }
     },
     // 编辑图表

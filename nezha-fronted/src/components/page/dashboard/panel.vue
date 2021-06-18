@@ -323,29 +323,36 @@ export default {
       return JSON.parse(JSON.stringify(this.blankChart))
     },
     // 编辑图表信息,打开编辑弹窗
-    editChart (data) {
-      this.$get('visual/panel/chart/' + data.id).then(res => {
-        if (res.code === 200) {
-          const chartData = res.data.data
-          console.log(typeof chartData.param);
-          if (typeof chartData.param === 'string') {
-            chartData.param = JSON.parse(chartData.param)
+    editChart (data, copy) {
+      if (copy) {
+        this.chart = JSON.parse(JSON.stringify(data))
+        this.chart.panelId = this.showPanel.id
+        this.chart.panelName = this.showPanel.name
+        this.rightBox.chart.show = true
+      } else {
+        this.$get('visual/panel/chart/' + data.id).then(res => {
+          if (res.code === 200) {
+            const chartData = res.data.data
+            console.log(typeof chartData.param)
+            if (typeof chartData.param === 'string') {
+              chartData.param = JSON.parse(chartData.param)
+            }
+            if (!chartData.param) {
+              chartData.param = { url: '', threshold: '' }
+            } else if (!chartData.param.threshold) {
+              chartData.param.threshold = ''
+            } else if (!chartData.param.url) {
+              chartData.param.url = ''
+            }
+            this.chart = JSON.parse(JSON.stringify(chartData))
+            this.chart.panelId = this.showPanel.id
+            this.chart.panelName = this.showPanel.name
+            this.rightBox.chart.show = true
+          } else {
+            this.$message.error(res.msg)
           }
-          if (!chartData.param) {
-            chartData.param = { url: '', threshold: '' }
-          } else if (!chartData.param.threshold) {
-            chartData.param.threshold = ''
-          } else if (!chartData.param.url) {
-            chartData.param.url = ''
-          }
-          this.chart = JSON.parse(JSON.stringify(chartData))
-          this.chart.panelId = this.showPanel.id
-          this.chart.panelName = this.showPanel.name
-          this.rightBox.chart.show = true
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+        })
+      }
     },
     closeChartBox (refresh) {
       this.rightBox.chart.show = false
