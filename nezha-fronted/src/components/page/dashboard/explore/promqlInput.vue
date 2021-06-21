@@ -101,7 +101,7 @@
         <el-form-item v-for="(item,index) in tempBox.vars"  :prop="item" :key="index">
           <el-row>
             <el-col :span="7" class="temp-form-box-col">
-              <el-input v-model="tempBox.vars[index]" :id="'tempBox'+index" size="small" :disabled="true"></el-input>
+              <el-input class="temp-form-box-input" v-model="tempBox.vars[index]" :id="'tempBox'+index" size="small" :disabled="true"></el-input>
             </el-col>
             <el-col :span="16" v-if="format(item).key">
               <!--<el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>-->
