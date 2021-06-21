@@ -313,13 +313,14 @@
       border-right: none !important;
     }
     /* 最后一列用box-shadow模拟边框 */
-    .el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__body-wrapper td:nth-last-child(2) {
-      box-shadow: 1px 0 $--right-box-border-color;
-    }
-    .el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
-      border-right: none !important;
-      box-shadow: 1px 0 $--right-box-border-color;
-    }
+    //.el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__body-wrapper td:nth-last-child(3) {
+    //  //box-shadow: 1px 0 $--right-box-border-color;
+    //  border-left: 1px solid $--right-box-border-color;
+    //}
+    //.el-table:not(.no-operation):not(.chart-table).el-table--border .el-table__header-wrapper th:nth-last-child(3) {
+    //  border-right: none !important;
+    //  box-shadow: 1px 0 $--right-box-border-color;
+    //}
     .el-table__fixed-body-wrapper {
       td:not(.is-hidden) {
         border-left: 1px solid $--right-box-border-color;
