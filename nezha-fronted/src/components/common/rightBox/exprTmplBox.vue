@@ -28,7 +28,7 @@
             ></el-autocomplete>
           </el-form-item>
           <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
-            <el-row style="height: 32px; line-height: 32px;">
+            <el-row style="line-height: 32px;">
               <promql-input
                 :id="'promqlKeys0'"
                 :key="'promqlKeys0'"
