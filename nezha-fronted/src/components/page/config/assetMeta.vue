@@ -239,8 +239,12 @@ export default {
       this.rightBox.metaShow = true
     },
     edit (row) {
-      this.object = JSON.parse(JSON.stringify(row))
-      this.rightBox.metaShow = true
+      this.$get(`${this.url}/${row.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = response.data
+          this.rightBox.metaShow = true
+        }
+      })
     },
     closeRightBox (refresh) {
       this.rightBox.metaShow = false

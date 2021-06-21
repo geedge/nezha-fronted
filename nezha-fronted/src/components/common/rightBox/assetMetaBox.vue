@@ -150,6 +150,7 @@ export default {
   components: { assetTagEx },
   data () {
     return {
+      ready: false,
       editAssetMeta: {},
       rightBox: { // 面板弹出框相关
         show: false
@@ -253,6 +254,9 @@ export default {
   },
   mounted () {
     this.getGroupData()
+    setTimeout(() => {
+      this.ready = true
+    }, 500)
   },
   methods: {
     switchSearch (value) {
@@ -369,39 +373,42 @@ export default {
       })
     },
     selectType (val, init) {
-      switch (val) {
-        case 'RADIO' :
-        case 'CHECKBOX' :
-        case 'SELECT' :
-          this.showParam = true
-          if (init) return
-          this.editAssetMeta.param = {}
-          this.editAssetMeta.param.items = [{
-            name: 'Option 1',
-            check: false
-          }, {
-            name: 'Option 2',
-            check: false
-          }]
-          break
-        case 'DATETIME' :
-          this.showParam = true
-          if (init) return
-          this.editAssetMeta.param = {
-            subType: 'date',
-            interval: false
+      if (init) {
+        this.showParam = true
+      } else {
+        if (this.ready) {
+          switch (val) {
+            case 'RADIO' :
+            case 'CHECKBOX' :
+            case 'SELECT' :
+              this.showParam = true
+              this.editAssetMeta.param = {}
+              this.editAssetMeta.param.items = [{
+                name: 'Option 1',
+                check: false
+              }, {
+                name: 'Option 2',
+                check: false
+              }]
+              break
+            case 'DATETIME' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                subType: 'date',
+                interval: false
+              }
+              break
+            case 'DOUBLE' :
+              this.showParam = true
+              this.editAssetMeta.param = {
+                decimals: 2
+              }
+              break
+            default:
+              this.showParam = false
+              break
           }
-          break
-        case 'DOUBLE' :
-          this.showParam = true
-          if (init) return
-          this.editAssetMeta.param = {
-            decimals: 2
-          }
-          break
-        default:
-          this.showParam = false
-          break
+        }
       }
     },
     inputChange (index, val) {

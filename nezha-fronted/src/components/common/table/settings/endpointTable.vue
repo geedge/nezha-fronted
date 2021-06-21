@@ -210,13 +210,13 @@ export default {
       let str = ''
       arr.forEach((item, index) => {
         if (index === 0) {
-          str += `<div>DC <div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div></div>`
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> DC</div>`
         }
         if (index === 1) {
-          str += `<div>ASSET <div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div></div>`
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> ASSET</div>`
         }
         if (index === 2) {
-          str += `<div>ENDPOINT <div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div></div>`
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> ENDPOINT</div>`
         }
         // if (index === 3) {
         //   str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
