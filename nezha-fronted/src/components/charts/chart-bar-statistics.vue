@@ -173,7 +173,7 @@ export default {
           left: 10,
           right: 30,
           containLabel: true,
-          bottom: 8// 156
+          bottom: 20// 156
         },
         tooltip: {
           trigger: 'item',
