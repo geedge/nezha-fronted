@@ -107,17 +107,10 @@ export default {
         const user = response.user
         if (response.code === 200) {
           this.object = {
-            id: user.id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
+            ...user,
             status: user.status + '',
             createAt: this.utcTimeToTimezoneStr(user.createAt),
-            receiver: user.receiver,
             roleIds: Number(user.roles.map(item => item.id).join(',')),
-            roles: user.roles,
-            lang: user.lang,
-            notifications: user.notifications,
             pin: '',
             pinChange: ''
           }
