@@ -218,6 +218,7 @@ export default {
   }
   .color-tab{
     height: 28px;
+    line-height: 28px;
     border-radius: 5px 5px 0 0;
     border: 1px solid #EBEEF5;
     border-bottom: none;
@@ -240,14 +241,14 @@ export default {
   /*border-right-color: #DCDFE6;*/
   /*}*/
   .color-tab div:hover{
-    color: #409EFF;
+    color: var(--theme-color);
   }
   .color-tab .color-active{
     background-color: #FFF;
     font-size: 14px;
-    color: #FA901C;
+    color: var(--theme-color);
     font-weight: 700;
-    border-color:  #FA901C;;
+    border-color: var(--theme-color);
   }
 
   .color {

@@ -10,96 +10,99 @@
     <!-- end--标题-->
 
     <!-- begin--表单-->
-    <div class="right-box-form-box right-box__container">
-      <el-form class="right-box-form right-box-form-left" :model="editAlertSilence" label-position="top"
-               label-width="120px" :rules="rules" ref="alertSilenceForm">
-        <el-form-item :label='$t("alert.silence.name")' prop="name" class="range-name">
-          <el-input
-            maxlength="64" show-word-limit
-            :placeholder="''"
-            size="small"
-            v-model="editAlertSilence.name">
-          </el-input>
-        </el-form-item>
-        <el-form-item :label='$t("alert.silence.time")' prop="time" class="range-time">
-          <div>
-            <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
-              <el-radio-button label="1">{{ $t("overall.oneHour") }}</el-radio-button>
-              <el-radio-button label="2">{{ $t("overall.twoHour") }}</el-radio-button>
-              <el-radio-button label="6">{{ $t("overall.sixHour") }}</el-radio-button>
-              <el-radio-button label="12">{{ $t("overall.twelveHour") }}</el-radio-button>
-              <el-radio-button label="24">{{ $t("overall.oneDay") }}</el-radio-button>
-              <el-radio-button label="48">{{ $t("overall.twoDay") }}</el-radio-button>
-              <el-radio-button label="168">{{ $t("overall.week") }}</el-radio-button>
-            </el-radio-group>
-          </div>
-          <div class="datepicker">
-            <div class="datepicker-box">
-              <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
-              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
-                              format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'startAt')}" v-model="editAlertSilence.startAt"
-                              type="datetime"
-                              :clearable="false"
-                              popper-class="panel-time-picker-popper"
-                              :placeholder="$t('dashboard.panel.startTime')"
-                              align="right"
-              >
-              </my-date-picker>
+    <div class="right-box__container">
+      <div class="container__form">
+        <el-form ref="alertSilenceForm" :model="editAlertSilence"
+                 :rules="rules" label-position="top" label-width="120px">
+          <el-form-item :label='$t("alert.silence.name")' class="range-name" prop="name">
+            <el-input
+              v-model="editAlertSilence.name" :placeholder="''"
+              maxlength="64"
+              show-word-limit
+              size="small">
+            </el-input>
+          </el-form-item>
+          <el-form-item :label='$t("alert.silence.time")' class="range-time" prop="time">
+            <div>
+              <el-radio-group v-model="rangeTime" size="small" @change="rangeTimeChange">
+                <el-radio-button label="1">{{ $t("overall.oneHour") }}</el-radio-button>
+                <el-radio-button label="2">{{ $t("overall.twoHour") }}</el-radio-button>
+                <el-radio-button label="6">{{ $t("overall.sixHour") }}</el-radio-button>
+                <el-radio-button label="12">{{ $t("overall.twelveHour") }}</el-radio-button>
+                <el-radio-button label="24">{{ $t("overall.oneDay") }}</el-radio-button>
+                <el-radio-button label="48">{{ $t("overall.twoDay") }}</el-radio-button>
+                <el-radio-button label="168">{{ $t("overall.week") }}</el-radio-button>
+              </el-radio-group>
             </div>
-            <div class="datepicker-box">
-              <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
-              <my-date-picker prefix-icon=" " class=" " size="mini" ref="calendar"
-                              format="yyyy/MM/dd HH:mm:ss" @change="(val)=>{dateChange(val,'endAt')}" v-model="editAlertSilence.endAt"
-                              type="datetime"
-                              :clearable="false"
-                              popper-class="panel-time-picker-popper"
-                              :placeholder="$t('dashboard.panel.startTime')"
-                              align="right"
-              >
-              </my-date-picker>
+            <div class="datepicker">
+              <div class="datepicker-box">
+                <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
+                <my-date-picker ref="calendar" v-model="editAlertSilence.startAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
+                                align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
+                                popper-class="panel-time-picker-popper"
+                                prefix-icon=" "
+                                size="mini"
+                                type="datetime"
+                                @change="(val)=>{dateChange(val,'startAt')}"
+                >
+                </my-date-picker>
+              </div>
+              <div class="datepicker-box">
+                <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
+                <my-date-picker ref="calendar" v-model="editAlertSilence.endAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
+                                align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
+                                popper-class="panel-time-picker-popper"
+                                prefix-icon=" "
+                                size="mini"
+                                type="datetime"
+                                @change="(val)=>{dateChange(val,'endAt')}"
+                >
+                </my-date-picker>
+              </div>
+              <!--( :range-separator="")-->
             </div>
-            <!--( :range-separator="")-->
-          </div>
-        </el-form-item>
+          </el-form-item>
 
-        <el-form-item :label='$t("alert.silence.matchers")' prop="matchers" class="matchers">
-          <div v-for="(item, index) in editAlertSilence.matchers" :key="index" class="param-box-row">
-            <el-form-item class="param-box-row-key" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" :prop="'matchers.' + index + '.name'">
-              <el-autocomplete
-                class="inline-input silence-matchers-key"
-                placeholder="key"
-                size="mini"
-                v-model="item.name"
-                :fetch-suggestions="querySearch"
-                @select="handleSelect"
-              ></el-autocomplete>
-            </el-form-item>
-            <span class="param-box-row-eq">=</span>
-            <el-form-item class="param-box-row-value" :prop="'matchers.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" >
-              <el-input placeholder="value" size="mini" v-model="item.value"  class="silence-matchers-value"></el-input>
-              <el-checkbox class="silence-matchers-regex" v-model="item.regex" :true-label="1" :false-label="0" >Regex</el-checkbox>
-            </el-form-item>
-            <span class="param-box-row-symbol" :id="'moduel-remove-label-'+index" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-          </div>
-          <div style="text-align: center;" class="">
+          <el-form-item :label='$t("alert.silence.matchers")' class="matchers" prop="matchers">
+            <div v-for="(item, index) in editAlertSilence.matchers" :key="index" class="param-box-row">
+              <el-form-item :prop="'matchers.' + index + '.name'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" class="param-box-row-key">
+                <el-autocomplete
+                  v-model="item.name"
+                  :fetch-suggestions="querySearch"
+                  class="inline-input silence-matchers-key"
+                  placeholder="key"
+                  size="mini"
+                  @select="handleSelect"
+                ></el-autocomplete>
+              </el-form-item>
+              <span class="param-box-row-eq">=</span>
+              <el-form-item :prop="'matchers.' + index + '.value'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },]" class="param-box-row-value" >
+                <el-input v-model="item.value" class="silence-matchers-value" placeholder="value"  size="mini"></el-input>
+                <el-checkbox v-model="item.regex" :false-label="0" :true-label="1" class="silence-matchers-regex" >Regex</el-checkbox>
+              </el-form-item>
+              <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+            </div>
+            <div class="" style="text-align: center;">
                <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">
               <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
             </span>
-          </div>
-        </el-form-item>
+            </div>
+          </el-form-item>
 
-        <el-form-item :label='$t("overall.remark")' prop="remark" class="range-time">
-          <el-input
-            type="textarea"
-            :placeholder="$t('overall.remark')"
-            v-model="editAlertSilence.remark"
-            maxlength="256"
-            show-word-limit>
+          <el-form-item :label='$t("overall.remark")' class="range-time" prop="remark">
+            <el-input
+              v-model="editAlertSilence.remark"
+              :placeholder="$t('overall.remark')"
+              maxlength="256"
+              show-word-limit
+              type="textarea">
 
-          </el-input>
-        </el-form-item>
+            </el-input>
+          </el-form-item>
 
-      </el-form>
+        </el-form>
+      </div>
+
 
     </div>
     <!-- end--表单-->
