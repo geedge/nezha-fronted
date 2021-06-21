@@ -333,7 +333,7 @@ export default {
         this.$get('visual/panel/chart/' + data.id).then(res => {
           if (res.code === 200) {
             const chartData = res.data.data
-            console.log(typeof chartData.param)
+            // console.log(typeof chartData.param)
             if (typeof chartData.param === 'string') {
               chartData.param = JSON.parse(chartData.param)
             }

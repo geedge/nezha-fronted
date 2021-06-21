@@ -787,7 +787,7 @@ export default {
     },
     // chartSite用于区分是全屏显示还是局部显示
     initChart (chartInfo, dataArg, ele, legend) {
-      console.log(123123132)
+      // console.log(123123132)
       const self = this
       let minTime = null
       let maxTime = null
