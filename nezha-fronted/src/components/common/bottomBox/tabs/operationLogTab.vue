@@ -41,6 +41,15 @@ export default {
     nzBottomDataList,
     operationLogTable
   },
+  props: {
+    obj: Object
+  },
+  watch: {
+    obj (n) {
+      this.searchLabel = { userId: n.id }
+      this.getTableData()
+    }
+  },
   data () {
     return {
       url: 'sys/log',
