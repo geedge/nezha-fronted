@@ -282,6 +282,9 @@ export default {
       this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
         if (response.code == 200) {
           this.severityData = response.data.list
+          if (!this.editAlertRule.id && this.severityData.length > 0) {
+            this.editAlertRule.severityId = this.severityData[0].id
+          }
         }
       })
     },
