@@ -2537,7 +2537,7 @@ export default {
     width: 100%;
     position: relative;
     border-radius: 2px;
-    overflow: hidden;
+    overflow: visible;
     background: #fff;
     .pickTime{
       margin-right: 10px;
@@ -2733,7 +2733,6 @@ export default {
     .nz-table2{
       padding: 0 5px 10px 5px;
       box-sizing: content-box;
-      overflow: hidden;
     }
   }
   /deep/ .el-collapse-item__arrow{
