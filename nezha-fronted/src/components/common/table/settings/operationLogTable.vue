@@ -28,6 +28,7 @@
       :sort-orders="['ascending', 'descending']"
       :width="`${item.width}`"
       class="data-column"
+      :show-overflow-tooltip="item.ShowOverflowTooltip"
     >
       <template slot="header">
         <span class="data-column__span">{{item.label}}</span>
@@ -106,12 +107,14 @@ export default {
         {
           label: this.$t('config.operationlog.params'),
           prop: 'params',
-          show: false
+          show: false,
+          ShowOverflowTooltip: true
         },
         {
           label: this.$t('config.operationlog.response'),
           prop: 'response',
-          show: false
+          show: false,
+          ShowOverflowTooltip: true
         }
       ]
     }
