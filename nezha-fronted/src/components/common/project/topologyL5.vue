@@ -165,6 +165,7 @@
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
                  :key="index"
+                 v-show="(item.rect.y - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) > - 10)"
                  :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
                  class="network-pop"
             >
@@ -822,7 +823,7 @@ export default {
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
-                  promiseArr.push(this.$get('stat/module/abnormal',{moduleId: item.data.moduleId}))
+                  promiseArr.push(this.$get('stat/module/abnormal', { moduleId: item.data.moduleId }))
                   item.data.state = {}
                   item.data.state.asset = false
                   item.data.state.endpoint = false
@@ -862,7 +863,6 @@ export default {
                 })
                 self.saveData = { ...data }
                 resolve(data)
-
               })
             }, 100)
           }
@@ -1031,7 +1031,7 @@ export default {
             show: false,
             error: false,
             expressArr: [],
-            state:{}
+            state: {}
           }
         }
         return item.type === 0
@@ -2537,7 +2537,7 @@ export default {
     width: 100%;
     position: relative;
     border-radius: 2px;
-    overflow: hidden;
+    overflow: visible;
     background: #fff;
     .pickTime{
       margin-right: 10px;
@@ -2733,7 +2733,6 @@ export default {
     .nz-table2{
       padding: 0 5px 10px 5px;
       box-sizing: content-box;
-      overflow: hidden;
     }
   }
   /deep/ .el-collapse-item__arrow{
