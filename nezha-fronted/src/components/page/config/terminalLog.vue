@@ -17,6 +17,7 @@
           :height="mainTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
+          :terminalLog="true"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"

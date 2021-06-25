@@ -70,6 +70,7 @@
       </template>
     </el-table-column>
     <el-table-column
+      v-if="terminalLogTab || terminalLog"
       :resizable="false"
       :width="operationWidth"
       fixed="right">
@@ -110,7 +111,9 @@ export default {
   name: 'terminalLogTable',
   mixins: [table],
   props: {
-    nowTime: {}
+    nowTime: {},
+    terminalLogTab: Boolean,
+    terminalLog: Boolean
   },
   data () {
     return {

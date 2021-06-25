@@ -18,6 +18,7 @@
         :height="subTableHeight"
         :now-time="nowTime"
         :table-data="tableData"
+        :terminaLogTab="true"
         @del="del"
         @edit="edit"
         @orderBy="tableDataSort"

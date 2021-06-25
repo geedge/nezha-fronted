@@ -21,6 +21,7 @@
           :height="subTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
+          :endpointTab="true"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
