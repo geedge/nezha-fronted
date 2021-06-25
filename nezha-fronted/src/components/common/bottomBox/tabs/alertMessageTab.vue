@@ -414,7 +414,7 @@ export default {
       }
       const axiosArr = []
       const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
-      axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '') + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+      axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
       this.legend = []
       this.chartDatas = []
       axios.all(axiosArr).then(res => {
@@ -538,7 +538,7 @@ export default {
                 item.labels = JSON.parse(item.labels)
                 if (item.alertRule.buildIn != 1) {
                   const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
+                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1)))
                 } else {
                   axiosAll.push('')
                 }
