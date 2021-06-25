@@ -66,6 +66,7 @@ import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
+import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 
@@ -199,14 +200,14 @@ export default {
         this.$refs.messageChart.startLoading()
         const axiosArr = []
         const paramStr = JSON.stringify(this.promQueryParamConvert(this.currentMsg))
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '') + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
           try {
             res.forEach((response, promIndex) => {
-              if (response.status == 200) {
-                if (response.data.status == 'success') {
+              if (response.status === 200) {
+                if (response.data.status === 'success') {
                   const queryData = response.data.data.result[0]
                   if (queryData) {
                     const chartData = {
@@ -259,7 +260,7 @@ export default {
                     chartData.name += '}'
                     const legend = {
                       name: chartData.name,
-                      alias: alias,
+                      alias: chartData.name,
                       isGray: false
                     }
                     this.legend.push(legend)
@@ -274,13 +275,14 @@ export default {
               }
             })
             this.$nextTick(() => {
+              console.log(this.legend, this.chartDatas)
               this.$refs.messageChart.setRandomColors(this.chartDatas.length)
               this.$refs.messageChart.setLegend(this.legend)
               this.$refs.messageChart.setSeries(this.chartDatas)
               this.$refs.messageChart.endLoading()
             })
           } catch (err) {
-            this.$message.error(err)
+            // this.$message.error(err)
             this.$refs.messageChart.endLoading()
           }
         })
@@ -339,52 +341,22 @@ export default {
         if (response.code === 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
-          const axiosAll = []
-          this.$nextTick(() => {
-            this.tableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels)
-              if (!this.isBuildIn(item.alertRule)) {
-                const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1)))
-              } else {
-                axiosAll.push('')
-              }
-            })
-            axios.all(axiosAll).then(res => {
-              res.forEach((item, index) => {
-                let current = []
-                const response2 = item.data
-                if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                  current = response2.data.result[0].value.map((item, i) => {
-                    if (i == 0) {
-                      return bus.computeTimezone(item)
-                    } else {
-                      return parseFloat(item).toFixed(2)
-                    }
-                  })
-                } else {
-                  current = [null, null]
-                }
-                this.tableData[index].current = current
-              })
-              this.$set(this.tableData, [...this.tableData])
-            })
-          })
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
         }
       })
     },
     promQueryParamConvert (obj) {
-      let r = '(' + obj.alertRule.expr + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
       let intoLabels = false
+      obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
         r += (function () {
           let group = ' and ' + '(group({'
           let by = ' by ('
 
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity') {
+            if (k != 'alertname' && k != 'severity' && k != 'severity_id') {
               intoLabels = true
               group += k
               group += '='
@@ -429,10 +401,12 @@ export default {
       this.deleteBox.show = true
     },
     messageDetail (row) {
-      this.currentMsg = { ...row }
-      this.graphShow = true
-      this.$nextTick(() => {
-        this.queryChartDate()
+      this.$get('/alert/rule/' + row.alertRule.id).then(res => {
+        this.currentMsg = { ...row, alertRule: { ...res.data } }
+        this.graphShow = true
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
       })
     },
     deleteMessage () {
@@ -608,6 +582,25 @@ export default {
       this.pageObj.orderBy = orderBy
       this.$set(this.searchLabel, 'orderBy', orderBy)
       this.getTableData()
+    },
+    computeDistance (str) {
+      let width = 0
+      const html = document.createElement('span')
+      html.innerText = str
+      html.className = 'getTextWidth'
+      document.querySelector('body').appendChild(html)
+      width = document.querySelector('.getTextWidth').offsetWidth
+      document.querySelector('.getTextWidth').remove()
+      return Number('-' + (width + 5))
+    },
+    returnMarkArea () {
+      if (this.currentMsg) {
+        if (this.currentMsg.alertRule.operator == '>' || this.currentMsg.alertRule.operator == '>=') {
+          return [{ yAxis: this.currentMsg.alertRule.threshold }, {}]
+        } else {
+          return [{}, { yAxis: this.currentMsg.alertRule.threshold }]
+        }
+      }
     }
   }
 }
