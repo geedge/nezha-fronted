@@ -19,6 +19,7 @@
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
+          :assetTab="true"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
