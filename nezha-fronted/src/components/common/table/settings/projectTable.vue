@@ -68,14 +68,13 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-<!--        <button class="table-operation-item" @click="changeProjectTopo(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>-->
-        <button class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
+        <button class="table-operation-item" @click="changeProjectTopo(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown size="medium" v-has="['project_edit','project_delete']" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-<!--            <el-dropdown-item :command="['edit', scope.row]" v-has="'project_edit'"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
+            <el-dropdown-item :command="['edit', scope.row]" v-has="'project_edit'"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item :command="['delete', scope.row, `sys/user?ids=${scope.row.id}`]" v-has="'project_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'project']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
           </el-dropdown-menu>
