@@ -62,6 +62,13 @@ export default {
           //   disabled: false
           // }
           {
+            id: 1,
+            name: 'ID',
+            type: 'input',
+            label: 'id',
+            disabled: false
+          },
+          {
             id: 5,
             name: this.$t('overall.name'),
             type: 'input',
