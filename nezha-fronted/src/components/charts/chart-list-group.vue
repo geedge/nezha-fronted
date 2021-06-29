@@ -146,6 +146,20 @@
                     :chart-index="item.chartIndex"
         ></text-chart>
 
+        <diagramChart :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'diagram'"
+                      @on-refresh-data="refreshChart"
+                      @on-remove-chart-block="removeChart"
+                      @on-duplicate-chart-block="duplicateChart"
+                      @on-drag-chart="editChartForDrag"
+                      @on-edit-chart-block="editData"
+                      @sync="()=>{chartBySync(item)}"
+                      @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                      :is-lock="panelLock"
+                      :panel-id="filter.panelId"
+                      :chart-data="item"
+                      :chart-index="index"
+        ></diagramChart>
+
         <chart-alert-list  :from="from" :ref="'editChart'+item.id"
                            :panel-id="filter.panelId"
                           :chart-index="item.chartIndex"
@@ -208,6 +222,7 @@ import draggable from 'vuedraggable'
 import chartDataFormat from './chartDataFormat'
 import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
+import diagramChart from './diagram-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
 import { fromRoute } from '@/components/common/js/constants'
@@ -238,7 +253,8 @@ export default {
     draggable,
     textChart,
     chartPie,
-    chartBarStatis
+    chartBarStatis,
+    diagramChart
     // visNetwork,
   },
   watch: {

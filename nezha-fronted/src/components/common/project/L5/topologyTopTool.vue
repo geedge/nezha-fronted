@@ -106,7 +106,7 @@ export default {
     }
   },
   mounted () {
-    const dataOption = getTopology(this.index).data
+    const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data
     Object.keys(this.option).forEach(key => {
       if (key === 'scale') {
         this.scaleNum = (JSON.stringify(dataOption[key]) ? parseInt(dataOption[key] * 100) : this.scaleNum)

@@ -269,6 +269,8 @@ const en = {
         thresholds: 'Thresholds',
         group: 'Group',
         remark: 'Description',
+        lock: 'Lock',
+        align: 'Align',
         typeVal: {
           line: {
             label: 'Line Chart' // "曲线图"
@@ -298,6 +300,9 @@ const en = {
           text: {
             label: 'Text'
           },
+          diagram: {
+            label: 'Diagram'
+          },
           group: {
             label: 'Group'
           }
@@ -312,6 +317,15 @@ const en = {
           range: 'Range',
           different: 'Different',
           null: 'None'
+        },
+        alignList: {
+          left: 'Left',
+          right: 'Right',
+          center: 'Center'
+        },
+        lockList: {
+          on: 'ON',
+          off: 'OFF'
         },
         width: 'Width', // "宽"
         high: 'Height', // "高"
@@ -1424,7 +1438,8 @@ const en = {
       imgError: 'Please upload pictures',
       folder: 'Folder',
       selMod: 'Please bind module for all nodes',
-      none: 'None'
+      none: 'None',
+      previewExit: 'Continue'
     },
     update: '更新'
   },

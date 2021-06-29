@@ -253,6 +253,8 @@ const cn = {
         thresholds: '阈值',
         group: '组',
         remark: '描述',
+        lock: '锁',
+        align: '对齐方式',
         typeVal: {
           line: {
             label: '曲线图'
@@ -282,6 +284,9 @@ const cn = {
           text: {
             label: '文本'
           },
+          diagram: {
+            label: '示意图'
+          },
           group: {
             label: '组'
           }
@@ -296,6 +301,15 @@ const cn = {
           range: 'Range',
           different: 'Different',
           null: 'None'
+        },
+        alignList: {
+          left: '左对齐',
+          right: '右对齐',
+          center: '居中'
+        },
+        lockList: {
+          on: '开',
+          off: '关'
         },
         width: '宽',
         high: '高',
@@ -727,7 +741,7 @@ const cn = {
         download: '下载',
         osType: 'OS 类型',
         autoScript: '自动安装脚本',
-        type: 'Agent类型',
+        type: 'Agent类型'
       }
     },
     agent: {
@@ -1230,7 +1244,7 @@ const cn = {
         list: '列表',
         delete: '删除',
         save: '保存',
-        info: '信息',
+        info: '信息'
       }
     },
     project: {
@@ -1419,7 +1433,8 @@ const cn = {
       imgError: '请上传图片',
       folder: '目录',
       selMod: '请个所有节点绑定module',
-      none: '无'
+      none: '无',
+      previewExit: '继续编辑'
     },
     update: '更新'
   },
@@ -1604,23 +1619,23 @@ const cn = {
       add: '新增',
       edit: '修改',
       delete: '删除',
-      mibBrowser: 'MIB浏览器',
+      mibBrowser: 'MIB浏览器'
     },
     credential: {
       view: '查看',
       add: '新增',
       edit: '修改',
-      delete: '删除',
+      delete: '删除'
     },
     system: {
       basic: '基础设置',
       email: 'Email',
       terminal: '终端',
       ldap: 'LDAP',
-      apiKey : {
+      apiKey: {
         add: '新增',
         edit: '修改',
-        delete: '删除',
+        delete: '删除'
       }
     },
     terminalLog: {
@@ -1636,7 +1651,7 @@ const cn = {
       reset: '重置'
     },
     apikey: {
-      apiKey: 'Api Key',
+      apiKey: 'Api Key'
     }
   },
   ...zhLocale

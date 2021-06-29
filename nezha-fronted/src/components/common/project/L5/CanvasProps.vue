@@ -11,7 +11,7 @@
       <el-tab-pane :label="$t('project.topology.data')" name="1">
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
-          <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type" class="half-form-item">
+          <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type&&!fromDiagram" class="half-form-item">
             <el-select v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')" popper-class="asset-dropdown" size="small"
                        @change="moduleIdChange" >
               <el-option
@@ -1209,7 +1209,11 @@ export default {
       require: true
     },
     modules: {},
-    imgArr: {}
+    imgArr: {},
+    fromDiagram: {
+      type: Boolean,
+      default: false
+    }
   },
   watch: {
     // 'topologyData.data':{
@@ -1232,6 +1236,16 @@ export default {
       deep: true,
       immediate: true
     },
+    fromDiagram: {
+      handler () {
+        if (this.selection.pen && this.selection.pen.data) {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.selection.pen.data.iconToolState = false
+        }
+      },
+      deep: true,
+      immediate: true
+    },
     imgArr: {
       handler () {
         // this.loading = false
@@ -1241,7 +1255,7 @@ export default {
     }
   },
   created () {
-    const dataOption = getTopology(this.index).data
+    const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data
     if (!dataOption.data) {
       dataOption.data = {}
     }

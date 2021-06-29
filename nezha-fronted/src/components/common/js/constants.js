@@ -172,6 +172,17 @@ export const statisticsList = [
   { value: 'different', label: i18n.t('dashboard.panel.chartForm.statisticsVal.different') }
 ]
 
+export const alignList = [
+  { value: 'left', label: i18n.t('dashboard.panel.chartForm.alignList.left') },
+  { value: 'center', label: i18n.t('dashboard.panel.chartForm.alignList.center') },
+  { value: 'right', label: i18n.t('dashboard.panel.chartForm.alignList.right') }
+]
+
+export const lockList = [
+  { value: 1, label: i18n.t('dashboard.panel.chartForm.lockList.on') },
+  { value: 0, label: i18n.t('dashboard.panel.chartForm.lockList.off') }
+]
+
 export const chart = {
   varType: [
     { value: '1', label: i18n.t('asset.asset') },

@@ -141,6 +141,29 @@
     position: relative;
     top: 1px;
   }
+  .topology-box{
+    width: 100%;
+    height: 242px;
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    position: relative;
+  }
+  .topology-dialog{
+    position: fixed !important;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  .topology-mc{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
 </style>
 <template>
   <div v-clickoutside="{obj:editChart, func:clickOutside}" :class="boxClass" class="right-box right-box-chart">
@@ -245,7 +268,7 @@
             </el-form-item>
 
             <!-- unit -->
-            <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
+            <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'&& editChart.type !=='diagram'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
               <el-cascader id="chart-box-unit" v-model="editChart.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
                            popper-class="dc-dropdown prevent-clickoutside chart-box-unit"
@@ -254,6 +277,22 @@
                            @change="unitSelected"
               >
               </el-cascader>
+            </el-form-item>
+            <!--Align-->
+            <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.align')" class="form-item--half-width" prop="unit">
+              <el-select id="chart-box-statistics" v-model="editChart.param.align" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
+                <el-option v-for="item in alignList" :key="item.value" :label="item.label" :value="item.value">
+                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!--lock-->
+            <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="unit">
+              <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
+                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value">
+                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item v-if="isUrl" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
@@ -275,11 +314,20 @@
             </el-form-item>
           </div>
 
+          <div class="form__sub-title" v-if="editChart.type ==='diagram'">{{$t('dashboard.panel.chartForm.content')}} <i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></div>
+          <!--topoData-->
+          <el-form-item v-if="editChart.type ==='diagram'" >
+            <div class="topology-box">
+              <div class="topology-mc"></div>
+              <diagram :topoData="editChart.param.topo" :fromChartBox="true" :topologyIndexF="-1"/>
+            </div>
+          </el-form-item>
+
           <el-form-item v-if="editChart.type == 'line' || editChart.type == 'bar' || editChart.type == 'stackArea'" :label='$t("dashboard.panel.chartForm.threshold")' class="form-item--half-width"  prop="param.threshold">
             <el-input id="chart-box-threshold" v-model="editChart.param.threshold" size="small" type="input"></el-input>
           </el-form-item>
 
-          <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'&& editChart.type != 'group'" class="form__sub-title">
+          <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'&& editChart.type != 'group' && editChart.type != 'diagram'" class="form__sub-title">
             <span>{{$t('alert.config.expr')}}</span>
             <span v-if="!isSingleStat" @click="addExpression">
               <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
@@ -294,7 +342,7 @@
             <alert-chart-param @on-enter-complate="getAlertParam" ref="alertParamBox"></alert-chart-param>
           </el-row>
           <div style="margin-bottom: 20px">
-            <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'&& editChart.type != 'group'">
+            <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'&& editChart.type != 'group' && editChart.type != 'diagram'">
               <promql-input
                 :expression-list="expressions"
                 :id="promqlKeys[index-1]"
@@ -432,6 +480,8 @@
     </div>
     <!--preview -->
     <chart-preview :panelId="panelId" ref="chartsPreview" :fromEndpoint="fromEndpoint"></chart-preview>
+    <!--topplogy-->
+    <diagram :topoData="editChart.param.topo" class="topology-dialog" v-if="topologyDialog" @change="topologyDialogChange" :topologyIndexF="-2" ref="topologyDialog" :fromTopologyDialog="true"/>
   </div>
 </template>
 
@@ -448,6 +498,7 @@ import selectPanel from '../../common/popBox/selectPanel'
 import nezhaColor from '../../common/nezhaColor'
 import i18n from '../../common/i18n'
 import { fromRoute } from '@/components/common/js/constants'
+import diagram from '@/components/common/ChartDiagram/diagram'
 const rz = {
   methods: {
     rz (e) {
@@ -481,7 +532,8 @@ export default {
       },
       filterPanel: '',
       statisticsList: this.$CONSTANTS.statisticsList,
-
+      alignList: this.$CONSTANTS.alignList,
+      lockList: this.$CONSTANTS.lockList,
       promqlCount: 1,
       promqlKeys: [],
       elementIds: [],
@@ -549,6 +601,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.url.label')
         },
         {
+          id: 'diagram',
+          name: this.$t('dashboard.panel.chartForm.typeVal.diagram.label')
+        },
+        {
           id: 'group',
           name: this.$t('dashboard.panel.chartForm.typeVal.group.label')
         }
@@ -590,7 +646,8 @@ export default {
       varTypeArr: [
         { name: 'Asset', id: 1 },
         { name: 'Endpoint', id: 2 }
-      ]
+      ],
+      topologyDialog: false
       // metricStore: []
     }
   },
@@ -600,7 +657,8 @@ export default {
     'promql-input': promqlInput,
     'rich-text-editor': richTextEditor,
     selectPanel,
-    nezhaColor
+    nezhaColor,
+    diagram
   },
   mounted () {
     this.$nextTick(() => {
@@ -1398,6 +1456,12 @@ export default {
         this.editChart.span = 12
         this.editChart.height = 6
         this.setIsGroup()
+      } else if (chartType === 'diagram') {
+        this.editChart.param = {
+          lock: 0,
+          align: 'center',
+          topo: {}
+        }
       } else {
         this.setIsOtherChart()
         if (chartType === 'bar' || chartType === 'line' || chartType === 'stackArea') {
@@ -1678,6 +1742,12 @@ export default {
     },
     getMetricOptions () {
       return this.metricOptions
+    },
+    topologyDialogChange (flag, data) {
+      this.topologyDialog = flag
+      if (data) {
+        this.editChart.param.topo = data
+      }
     }
   },
   created () {
@@ -1759,7 +1829,7 @@ export default {
         } else {
           this.createData(this.showPanel.id, '', n.unit)
         }
-        if ( this.editChart.param && !this.editChart.param.statistics) {
+        if (this.editChart.param && !this.editChart.param.statistics) {
           this.editChart.param.statistics = 'null'
         }
       }

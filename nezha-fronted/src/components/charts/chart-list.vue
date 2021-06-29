@@ -145,6 +145,20 @@
                     :chart-index="index"
         ></text-chart>
 
+        <diagramChart :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'diagram'"
+                    @on-refresh-data="refreshChart"
+                    @on-remove-chart-block="removeChart"
+                    @on-duplicate-chart-block="duplicateChart"
+                    @on-drag-chart="editChartForDrag"
+                    @on-edit-chart-block="editData"
+                    @sync="()=>{chartBySync(item)}"
+                    @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+                    :is-lock="panelLock"
+                    :panel-id="filter.panelId"
+                    :chart-data="item"
+                    :chart-index="index"
+        ></diagramChart>
+
         <chart-alert-list :ref="'editChart'+item.id" :chartData="item"
                           :from="from"
                           :chart-index="index"
@@ -229,6 +243,7 @@ import draggable from 'vuedraggable'
 import chartDataFormat from './chartDataFormat'
 import chartAlertList from './chart-alert-list'
 import textChart from './text-chart'
+import diagramChart from './diagram-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
 import chartGroup from './chart-group'
@@ -259,7 +274,8 @@ export default {
     textChart,
     chartPie,
     chartGroup,
-    chartBarStatis
+    chartBarStatis,
+    diagramChart
     // visNetwork,
   },
   data () {
@@ -815,6 +831,18 @@ export default {
         return
       }
 
+      if (chartItem.type == 'diagram') {
+        if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
+          if (filterType === 'showFullScreen') { // 全屏查询
+            this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+              this.filter.panelId, null, filterType)
+          } else {
+            this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+              this.filter.panelId, null, '')
+          }
+        }
+        return
+      }
       if (chartItem.type == 'text') {
         if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
           if (filterType === 'showFullScreen') { // 全屏查询
