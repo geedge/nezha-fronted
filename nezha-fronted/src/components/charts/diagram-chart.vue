@@ -59,7 +59,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock" :fromChart="true"></span>
     </div>
   </div>
 </template>

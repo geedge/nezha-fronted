@@ -686,7 +686,9 @@ export default {
         }
         getTopology(this.topologyIndex).lock(1)
         if (this.fromTopologyDialog && !this.isPreview) {
-          this.editTopology()
+          setTimeout(() => {
+            this.editTopology()
+          }, 100)
         }
         resolve()
       })
