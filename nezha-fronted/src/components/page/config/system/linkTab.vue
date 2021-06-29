@@ -53,19 +53,22 @@ export default {
       tableId: 'linkTable',
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
-        searchLabelList: [{
-          id: 1,
-          name: this.$t('config.system.link.create'),
-          type: 'input',
-          label: 'createBy',
-          disabled: false
-        }, {
-          id: 5,
-          name: this.$t('overall.name'),
-          type: 'input',
-          label: 'name',
-          disabled: false
-        }]
+        searchLabelList: [
+          // {
+          //   id: 1,
+          //   name: this.$t('config.system.link.create'),
+          //   type: 'input',
+          //   label: 'createBy',
+          //   disabled: false
+          // }
+          {
+            id: 5,
+            name: this.$t('overall.name'),
+            type: 'input',
+            label: 'name',
+            disabled: false
+          }
+        ]
       }
     }
   },
