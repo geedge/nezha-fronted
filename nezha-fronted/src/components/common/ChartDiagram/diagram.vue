@@ -438,7 +438,7 @@ export default {
         top: 0,
         left: 0,
         show: false,
-        height: 400
+        height: 250
       },
       chartData: {},
       chartGetData: [],
@@ -523,7 +523,6 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n)
         setTimeout(() => {
           this.init()
         }, 100)
@@ -589,7 +588,7 @@ export default {
                 })
               }
               query += '&nullType=' + 'connected'
-              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + '10m')
             })
             axiosArr.push({ item, arr })
             promiseArr.push(pensPromise(item, arr, index))
@@ -1643,7 +1642,6 @@ export default {
     editTopology (val) {
       this.editTopologyFlag = true
       setTimeout(() => {
-        console.log(getTopology(this.topologyIndex))
         getTopology(this.topologyIndex).lock(0)
         getTopology(this.topologyIndex).data.pens.forEach((item, index) => { // 停止动画 以及赋值默认data
           if (item.animatePlay) {

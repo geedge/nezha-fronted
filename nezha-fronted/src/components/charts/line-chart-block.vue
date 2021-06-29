@@ -236,7 +236,11 @@ export default {
     chartTitleShow: {
       type: Boolean,
       default: true
-    }
+    },
+    fromTopo: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     getButtonCode () {
@@ -937,6 +941,9 @@ export default {
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
       }
+      if (this.fromTopo) {
+        option.minInterval = 20 * 60 * 1000
+      }
       // params.series = dataArg;
       if (chartSite === 'local') { // 本地显示
         if (legend) {
@@ -962,7 +969,7 @@ export default {
           setTimeout(function () {
             const divHeight = self.$refs.legendArea.offsetHeight
             if (!chartInfo.height) {
-              getChart(self.chartIndex).resize({ height: (400 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+              getChart(self.chartIndex).resize({ height: (250 - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             } else {
               getChart(self.chartIndex).resize({ height: (chartInfo.height * vm.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
             }

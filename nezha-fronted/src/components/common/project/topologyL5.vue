@@ -468,7 +468,7 @@ export default {
         top: 0,
         left: 0,
         show: false,
-        height: 400
+        height: 250
       },
       chartData: {},
       chartGetData: [],

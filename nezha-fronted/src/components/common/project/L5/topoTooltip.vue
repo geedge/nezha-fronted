@@ -10,6 +10,7 @@
                           :panel-id="-1"
                           :is-lock="true"
                           :chart-index="0"
+                          :fromTopo="true"
                           :chartTitleShow="false"
                           :chart-data="chartData">
         </line-chart-block>
@@ -61,8 +62,8 @@ export default {
   },
   data () {
     return {
-      tempDom: { height: 400, width: '' },
-      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 12, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'connected' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
+      tempDom: { height: 250, width: '' },
+      chartDataTemp: { id: 8832, prev: null, next: null, panelId: 0, title: '123', span: 12, height: 0, createAt: '2021-01-27 07:36:19', unit: 2, weight: 0, pid: null, buildIn: null, seq: null, param: { last: 0, legendValue: { total: 'off', min: 'off', avg: 'off', last: 'off', max: 'off' }, threshold: '', url: '', nullType: 'connected' }, sync: null, asset: null, isLoaded: true, from: '__vue_devtool_undefined__', draggable: true, resizable: true, editable: true },
       chartData: {},
       filter: {
         end_time: bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss'),
@@ -77,7 +78,7 @@ export default {
   },
   methods: {
     tempDomInit () {
-      this.tempDom.width = 400
+      this.tempDom.width = 250
     },
     process (item) {
       const chartData = { ...this.chartDataTemp, ...item }
@@ -332,13 +333,13 @@ export default {
     max-height: 400px;
     min-height: 200px;
     height: 100%;
+    box-sizing: border-box;
     .tooltip-box-chart{
       border: 1px solid #E7EAED;
-      width: 400px;
+      width: 300px;
       max-height: 400px;
       min-height: 200px;
       height: 100%;
-      margin-right: 10px;
     }
     .tooltip-box-info{
       border: 1px solid #E7EAED;
