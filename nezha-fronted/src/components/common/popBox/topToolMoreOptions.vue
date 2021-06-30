@@ -230,6 +230,8 @@ export default {
         param.type = 'endpoint'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
         url = '/expression/tmpl/template'
+      } else if (this.importUrl.indexOf('alert') > -1) {
+        url = '/alert/rule/template'
       }
 
       if (!url) {
