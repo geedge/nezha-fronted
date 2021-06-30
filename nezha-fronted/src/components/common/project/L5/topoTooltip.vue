@@ -81,7 +81,7 @@ export default {
       this.tempDom.width = 250
     },
     process (item) {
-      const chartData = { ...this.chartDataTemp, ...item }
+      const chartData = { ...this.chartDataTemp, ...item, name: item.chartTitle }
       chartData.elements = []
       chartData.expressArr.forEach((item1, index) => {
         chartData.elements.push({

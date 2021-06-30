@@ -41,7 +41,7 @@
         </div>
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="text-content"  >
-            <diagram style="height: 100%;width: 100%" :topoData="chartData.param.topo" :fromChart="true" :topologyIndexF="chartData.id" ref="diagram"/>
+            <diagram style="height: 100%;width: 100%" :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id" ref="diagram"/>
           </div>
         </div>
         <!--全屏-->
@@ -53,7 +53,7 @@
           </div>
           <div class="rich-text-screen-container"  >
             <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
-              <diagram :topoData="chartData.param.topo" :fromChart="true" :topologyIndexF="chartData.id + '-' + 'chartIndex'"/>
+              <diagram :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id + '-' + 'chartIndex'"/>
             </div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -67,7 +67,7 @@
 <script>
 import loading from '../common/loading'
 import 'quill/dist/quill.snow.css'
-import diagram from "@/components/common/ChartDiagram/diagram";
+import diagram from '@/components/common/ChartDiagram/diagram'
 export default {
   name: 'diagram-chart',
   components: {
@@ -96,7 +96,11 @@ export default {
   },
   data () {
     return {
-      data: {}, // 该图表信息,chartItem
+      data: {
+        param: {
+          topo: {}
+        }
+      }, // 该图表信息,chartItem
       noData: false,
       unit: {},
       text: '', // 保存信息
@@ -202,6 +206,7 @@ export default {
       this.firstShow = true // 展示操作按键
 
       this.panelIdInner = panelId
+      console.log(chartItem)
       this.data = chartItem
       this.text = chartItem.param.text
       this.screenText = chartItem.param.text

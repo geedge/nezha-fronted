@@ -1432,7 +1432,7 @@ const cn = {
       unitError: '请选择对应的目录',
       imgError: '请上传图片',
       folder: '目录',
-      selMod: '请个所有节点绑定module',
+      selMod: '请为所有节点绑定module',
       none: '无',
       previewExit: '继续编辑'
     },

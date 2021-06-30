@@ -147,7 +147,7 @@
           </div>
           <div :class="['page',fromOverView?'overview-page':'']" :style="`border: 1px solid ${theme.rightBoxBorderColor};`">
             <!--画布部分-->
-            <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full"></div>
+            <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full" @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->
             <div v-if="editTopologyFlag&&toolShow.attr" class="props">
               <canvas-props ref="CanvasProps"
@@ -161,6 +161,9 @@
                             @del="delPen"
                             @notModuleIDArrChange="notModuleIDArrChange">
               </canvas-props>
+            </div>
+            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag && 0" :style="this.contextmenu">
+              <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
@@ -354,6 +357,7 @@ import {
 import { getTopology, setTopology } from '../js/common'
 import CanvasProps from './L5/CanvasProps'
 import topologyTopTool from './L5//topologyTopTool'
+import CanvasContextMenu from './L5/CanvasContextMenu'
 import popDataMain from './popData/Main'
 import popDataInfo from './popData/Info'
 import alertTable from './popData/alertTable'
@@ -506,7 +510,8 @@ export default {
     assetTable,
     endpointTable,
     topoTooltip,
-    topologyPrev
+    topologyPrev,
+    CanvasContextMenu
   },
   props: {
     topologyIndexF: {
@@ -610,15 +615,6 @@ export default {
   },
   created () {
     canvasRegister()
-    if (process.client) {
-      document.onclick = event => {
-        this.contextmenu = {
-          left: null,
-          top: null,
-          bottom: null
-        }
-      }
-    }
   },
   mounted () {
     if (!this.fromOverView) { // 从overview来的 加载相应图片 优化首页加载速度
@@ -626,6 +622,7 @@ export default {
     }
     document.getElementById('topology-canvas' + this.topologyIndexF).addEventListener('mousemove', this.canvasMove)
     window.addEventListener('resize', this.winResize)
+    window.addEventListener('click', this.contextmenuNone)
   },
   methods: {
     init () {
@@ -1970,6 +1967,13 @@ export default {
         this.getNodesArr()
       }, 100)
     },
+    contextmenuNone () {
+      this.contextmenu = {
+        left: null,
+        top: null,
+        bottom: null
+      }
+    },
     canvasMove (e) { // 画布上的移动 确定tooltip的位置
       if (this.tooltipPosition.show) {
         return
@@ -2057,6 +2061,22 @@ export default {
     },
     changeScreen () {
       this.$store.commit('setShowTopoScreen', !this.topoScreen)
+    },
+    onContextMenu (event) {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (event.clientY + 360 < document.body.clientHeight) {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          top: event.clientY + 'px'
+        }
+      } else {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          bottom: document.body.clientHeight - event.clientY + 'px'
+        }
+      }
     }
   },
   destroyed () {
@@ -2068,6 +2088,7 @@ export default {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
     }
     window.removeEventListener('resize', this.winResize)
+    window.removeEventListener('resize', this.contextmenuNone)
   }
 }
 </script>
@@ -2737,5 +2758,9 @@ export default {
   }
   /deep/ .el-collapse-item__arrow{
     display: none;
+  }
+  .context-menu {
+    position: fixed;
+    z-index: 10;
   }
 </style>

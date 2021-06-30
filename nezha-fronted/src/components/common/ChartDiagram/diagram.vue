@@ -134,7 +134,7 @@
           </div>
           <div :class="['page',fromOverView?'overview-page':'']">
             <!--画布部分-->
-            <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full"></div>
+            <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full"  @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->
             <div v-if="editTopologyFlag&&toolShow.attr" class="props">
               <canvas-props ref="CanvasProps"
@@ -149,6 +149,9 @@
                             @del="delPen"
                             @notModuleIDArrChange="notModuleIDArrChange">
               </canvas-props>
+            </div>
+            <div class="context-menu" v-if="contextmenu.left && editTopologyFlag" :style="this.contextmenu">
+              <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
@@ -333,6 +336,7 @@ import endpointTable from '../project/popData/endpointTable'
 import topoTooltip from '../project/L5/topoTooltip'
 import { getMetricTypeValue } from '../js/tools'
 import bus from '../../../libs/bus'
+import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
 // 注册到画布
 registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
@@ -476,7 +480,8 @@ export default {
     alertTable,
     assetTable,
     endpointTable,
-    topoTooltip
+    topoTooltip,
+    CanvasContextMenu
   },
   props: {
     topologyIndexF: {
@@ -523,6 +528,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        this.topologyLoading = true
         setTimeout(() => {
           this.init()
         }, 100)
@@ -549,6 +555,7 @@ export default {
     }
     document.getElementById('topology-canvas' + this.topologyIndexF).addEventListener('mousemove', this.canvasMove)
     window.addEventListener('resize', this.winResize)
+    window.addEventListener('click', this.contextmenuNone)
   },
   methods: {
     init () {
@@ -1835,6 +1842,13 @@ export default {
         this.getNodesArr()
       }, 100)
     },
+    contextmenuNone () {
+      this.contextmenu = {
+        left: null,
+        top: null,
+        bottom: null
+      }
+    },
     canvasMove (e) { // 画布上的移动 确定tooltip的位置
       if (this.tooltipPosition.show) {
         return
@@ -1919,6 +1933,22 @@ export default {
     },
     penToBottom () {
       getTopology(this.topologyIndex).bottom()
+    },
+    onContextMenu (event) {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (event.clientY + 360 < document.body.clientHeight) {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          top: event.clientY + 'px'
+        }
+      } else {
+        this.contextmenu = {
+          left: event.clientX + 'px',
+          bottom: document.body.clientHeight - event.clientY + 'px'
+        }
+      }
     }
   },
   destroyed () {
@@ -1930,6 +1960,7 @@ export default {
       document.getElementById('topology-canvas' + this.topologyIndexF).removeEventListener('mousemove', this.canvasMove)
     }
     window.removeEventListener('resize', this.winResize)
+    window.removeEventListener('resize', this.contextmenuNone)
   }
 }
 </script>
@@ -2606,5 +2637,9 @@ export default {
   }
   .h100{
     height: calc(100% - 30px) !important;
+  }
+  .context-menu {
+    position: fixed;
+    z-index: 10;
   }
 </style>

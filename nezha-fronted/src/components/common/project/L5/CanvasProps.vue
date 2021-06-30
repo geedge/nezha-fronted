@@ -22,6 +22,9 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item v-if="!selection.pen.type&&fromDiagram" :label="$t('project.topology.name')" class="full-form-item" prop="type">
+            <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
+          </el-form-item>
 <!--          &lt;!&ndash;iconToolState&ndash;&gt;-->
 <!--          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">-->
 <!--            <el-switch-->
@@ -98,7 +101,7 @@
           <div class="tooltip-box">
             <!--title-->
             <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
-              <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
+              <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>
             </el-form-item>
             <!--chart aggregation-->
             <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">

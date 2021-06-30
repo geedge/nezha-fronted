@@ -7,74 +7,39 @@
       <a :class="{disabled:!props.node && !props.nodes}" @click="onBottom()">置底</a>
     </div>
     <div class="line"></div>
-    <div v-if="props.nodes">
-      <a @click="onCombine()">组合</a>
-      <div>
-        <a @click="onCombine(true)">包含</a>
-      </div>
-    </div>
-    <div v-if="props.node && props.node.name === 'combine'">
-      <a @click="onUncombine()">取消组合/包含</a>
-    </div>
-    <div>
-      <a
-        :class="{disabled:!props.node && !props.nodes}"
-        @click="onLock()"
-      >{{ props.locked ? '解锁' : '锁定' }}</a>
-    </div>
-    <div class="line"></div>
     <div>
       <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">删除</a>
     </div>
     <div class="line"></div>
     <div>
-      <a @click="canvas.undo()" class="flex">
-        <span class="full">撤消</span>
-        <span class="ml50">Ctrl + Z</span>
-      </a>
-    </div>
-    <div>
-      <a @click="canvas.redo()">
-        恢复
-        <span class="ml50">Ctrl + Shift+ Z</span>
-      </a>
-    </div>
-    <div class="line"></div>
-    <div>
-      <a @click="canvas.cut()" class="flex">
+      <a @click="canvascut()" class="flex">
         <span class="full">剪切</span>
         <span class="ml50">Ctrl + X</span>
       </a>
     </div>
     <div>
-      <a @click="canvas.copy()" class="flex">
+      <a @click="canvascopy()" class="flex">
         <span class="full">复制</span>
         <span class="ml50">Ctrl + C</span>
       </a>
     </div>
     <div>
-      <a @click="canvas.paste()" class="flex">
+      <a @click="canvaspaste()" class="flex">
         <span class="full">粘贴</span>
         <span class="ml50">Ctrl + V</span>
-      </a>
-    </div>
-    <div class="line"></div>
-    <div>
-      <a :class="{disabled:!props.node || !props.node.image}" @click="onCopyImage()" class="flex">
-        <span class="full">复制节点图片地址</span>
       </a>
     </div>
   </div>
 </template>
 
 <script >
+import { getTopology } from '../../js/common'
 export default {
   data () {
     return {}
   },
   props: {
-    canvas: {
-      type: Object,
+    index: {
       require: true
     },
     props: {
@@ -85,46 +50,46 @@ export default {
   methods: {
     onTop () {
       if (this.props.node) {
-        this.canvas.top(this.props.node)
+        getTopology(this.index).top(this.props.node)
       }
 
       if (this.props.nodes) {
         for (const item of this.props.nodes) {
-          this.canvas.top(item)
+          getTopology(this.index).top(item)
         }
       }
 
-      this.canvas.render()
+      getTopology(this.index).render()
     },
 
     onBottom () {
       if (this.props.node) {
-        this.canvas.bottom(this.props.node)
+        getTopology(this.index).bottom(this.props.node)
       }
 
       if (this.props.nodes) {
         for (const item of this.props.nodes) {
-          this.canvas.bottom(item)
+          getTopology(this.index).bottom(item)
         }
       }
 
-      this.canvas.render()
+      getTopology(this.index).render()
     },
 
     onCombine (stand) {
       if (!this.props.nodes) {
         return
       }
-      this.canvas.combine(this.props.nodes, stand)
-      this.canvas.render()
+      getTopology(this.index).combine(this.props.nodes, stand)
+      getTopology(this.index).render()
     },
 
     onUncombine () {
       if (!this.props.node) {
         return
       }
-      this.canvas.uncombine(this.props.node)
-      this.canvas.render()
+      getTopology(this.index).uncombine(this.props.node)
+      getTopology(this.index).render()
     },
 
     onLock () {
@@ -144,12 +109,21 @@ export default {
           item.locked = this.props.locked
         }
       }
-      this.canvas.render(true)
+      getTopology(this.index).render(true)
     },
 
     onDel () {
-      this.canvas.delete()
-    }
+      getTopology(this.index).delete()
+    },
+    canvascut () {
+      getTopology(this.index).cut()
+    },
+    canvascopy () {
+      getTopology(this.index).copy()
+    },
+    canvaspaste () {
+      getTopology(this.index).paste()
+    },
   }
 }
 </script>
