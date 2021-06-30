@@ -16,7 +16,7 @@
           v-has="''"
           export-url="monitor/module/export"
           import-url="monitor/module/import"
-          export-file-name="expression-template"
+          export-file-name="module"
           :params="searchLabel"
           :permissions="{import: 'asset.add', export: 'asset.add'}"
           @afterImport="getTableData"

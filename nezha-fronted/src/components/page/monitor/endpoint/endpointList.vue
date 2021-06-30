@@ -24,7 +24,7 @@
           :params2="searchCheckBox"
           :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
           class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="expression-template"
+          export-file-name="endpoint"
           export-url="monitor/endpoint/export"
           import-url="monitor/endpoint/import"
           @afterImport="getTableData"

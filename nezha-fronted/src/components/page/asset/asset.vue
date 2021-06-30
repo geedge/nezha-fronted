@@ -25,7 +25,7 @@
                   export: 'asset_view'
                 }"
           class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="chart"
+          export-file-name="asset"
           export-url="/asset/asset/export"
           import-url="/asset/asset/import"
           @afterImport="getTableData"
