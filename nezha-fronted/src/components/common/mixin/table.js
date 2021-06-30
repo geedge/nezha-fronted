@@ -68,11 +68,15 @@ export default {
     },
     tableDataSort (item) {
       let orderBy = ''
+      let str = item.prop
+      if (str === 'dc') {
+        str = 'datacenter'
+      }
       if (item.order === 'ascending') {
-        orderBy = item.prop
+        orderBy = str
       }
       if (item.order === 'descending') {
-        orderBy = '-' + item.prop
+        orderBy = '-' + str
       }
       this.$emit('orderBy', orderBy)
     }

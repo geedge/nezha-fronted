@@ -86,12 +86,12 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.agent.dataCenter'),
           prop: 'dc',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.agent.host'),
           prop: 'host',
@@ -104,12 +104,12 @@ export default {
           label: this.$t('config.agent.type'),
           prop: 'type',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.state'),
           prop: 'status',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.agent.checkTime'),
           prop: 'checkTime',

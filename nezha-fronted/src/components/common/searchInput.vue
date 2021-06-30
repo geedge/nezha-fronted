@@ -1652,14 +1652,17 @@ export default {
         top: 0px;
     }
     .localStorage_list_box .list_box_content{
-        text-align: left;
-        padding: 5px 0;
-        box-sizing: border-box;
-        border-bottom: 1px solid #dfdfdf;
+      text-align: left;
+      padding: 5px 0;
+      box-sizing: border-box;
+      border-bottom: 1px solid #dfdfdf;
     }
     .localStorage_list_box ul li{
-        padding: 5px 10px;
-        line-height: 20px;
+      padding: 5px 10px;
+      line-height: 20px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
     .localStorage_list_box ul li:hover{
         background: #f0f0f0;
@@ -1670,7 +1673,8 @@ export default {
         color: #2e2e2e;
     }
     .localStorage_list_box ul li .value{
-        font-weight: 600;
+      font-weight: 600;
+      width: 350px;
     }
     .localStorage_list_box .list_box_clear{
         padding-left: 10px;

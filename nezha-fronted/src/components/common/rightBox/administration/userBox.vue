@@ -109,7 +109,7 @@ export default {
       } else {
         callback()
       }
-    };
+    }
     return {
       editUser: {},
       url: 'sys/user',
