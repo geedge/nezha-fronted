@@ -141,7 +141,7 @@ export default {
         }, {
           name: this.$t('dashboard.overview.dataCenter.dataCenter'),
           type: 'dc',
-          label: 'dc',
+          label: 'dcIds',
           disabled: false
         }, {
           name: this.$t('config.agent.type'),
