@@ -22,6 +22,9 @@
           :assetTab="true"
           @del="del"
           @edit="edit"
+          @cli="cli"
+          @duplicate="duplicate"
+          @addSilence="addSilence"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -45,6 +48,7 @@
                  @close="closeRightBox"
                  @refresh="getTableData"></asset-box>
     </transition>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
 </template>
 
@@ -54,14 +58,17 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
-import {fromRoute} from "@/components/common/js/constants";
+import { fromRoute } from "@/components/common/js/constants";
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+
 export default {
   name: 'assetTab',
   mixins: [dataListMixin, subDataListMixin],
   components: {
     nzBottomDataList,
     assetTable,
-    assetBox
+    assetBox,
+    alertSilenceBox
   },
   data () {
     return {
@@ -96,6 +103,11 @@ export default {
           disabled: false
         }]
       },
+      blankSilenceObject: {
+        startAt: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       searchLabel: { dcIds: this.obj.id },
       brandData: [],
       modelData: [],
@@ -107,6 +119,10 @@ export default {
     }
   },
   methods: {
+    duplicate (row) {
+      this.object = { ...row, id: '', name: `${row.name}-copy` }
+      this.rightBox.show = true
+    },
     getStateData () {
       return new Promise(resolve => {
         this.$get('asset/stateConf').then(response => {
@@ -176,8 +192,15 @@ export default {
           resolve()
         })
       })
+    },
+    cli (row) {
+      const consoleParam = {
+        id: row.id,
+        host: row.manageIp,
+        port: row.authProtocolPort
+      }
+      this.$store.commit('addConsole', consoleParam)
     }
-
   },
   watch: {
     obj: {

@@ -25,6 +25,7 @@
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
+          @addSilence="addSilence"
           @reload="getTableData"
           @selectionChange="selectionChange"
         ></endpoint-table>
@@ -36,6 +37,7 @@
     <transition name="right-box">
       <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
     </transition>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
 </template>
 
@@ -45,7 +47,8 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
-import {fromRoute} from "@/components/common/js/constants";
+import { fromRoute } from "@/components/common/js/constants";
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   name: 'terminalLogTab',
@@ -53,7 +56,8 @@ export default {
   components: {
     nzBottomDataList,
     endpointTable,
-    EditEndpointBoxNew
+    EditEndpointBoxNew,
+    alertSilenceBox
   },
   watch: {
     obj: {
@@ -72,21 +76,26 @@ export default {
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
-            id: 13,
-            name: this.$t('project.endpoint.endpointId'),
-            type: 'input',
-            label: 'ids',
-            disabled: false
-          },
-          {
-            id: 12,
-            name: this.$t('project.endpoint.endpointName'),
-            type: 'input',
-            label: 'name',
-            disabled: false
-          }
+          id: 13,
+          name: this.$t('project.endpoint.endpointId'),
+          type: 'input',
+          label: 'ids',
+          disabled: false
+        },
+        {
+          id: 12,
+          name: this.$t('project.endpoint.endpointName'),
+          type: 'input',
+          label: 'name',
+          disabled: false
+        }
         ]
       },
+      blankSilenceObject: {
+        startAt: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       nowTime: '',
       rightBox: {
         editShow: false,

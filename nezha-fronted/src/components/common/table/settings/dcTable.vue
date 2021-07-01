@@ -118,12 +118,12 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('asset.location'),
           prop: 'location',
@@ -132,12 +132,12 @@ export default {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.dc.assets'),
           prop: 'assetNum',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.dc.alert'),
           prop: 'alertNum',
@@ -162,10 +162,13 @@ export default {
           label: this.$t('config.dc.state'),
           prop: 'state',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }
       ]
     }
+  },
+  mounted () {
+    console.log(this.userData)
   },
   methods: {
     showTableTooltip,

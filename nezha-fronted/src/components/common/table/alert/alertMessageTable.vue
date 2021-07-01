@@ -148,7 +148,8 @@ export default {
     showOption: {
       type: Boolean,
       default: true
-    }
+    },
+    alertMessageTabNew: Boolean
   },
   mixins: [table, bus],
   data () {

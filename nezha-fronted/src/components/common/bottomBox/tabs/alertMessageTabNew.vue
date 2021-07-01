@@ -26,10 +26,12 @@
           :height="mainTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
+          :alertMessageTabNew="true"
           @del="del"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
+          @addSilence="addSilence"
           @selectionChange="selectionChange"
           @showBottomBox="(target, item) => { $refs.dataList.showBottomBox(target, item) }"
           @toDelete="toDeleteMessage"
@@ -55,6 +57,7 @@
       </div>
       <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
     </el-dialog>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
 </template>
 
@@ -69,6 +72,7 @@ import alertMessageTable from '@/components/common/table/alert/alertMessageTable
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
+import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
   name: 'alertMessageTab',
@@ -76,6 +80,7 @@ export default {
   components: {
     nzBottomDataList,
     alertMessageTable,
+    alertSilenceBox,
     chart
   },
   props: {
@@ -97,6 +102,22 @@ export default {
       url: 'alert/message',
       tableId: 'alertMessageModule', // 需要分页的table的id，用于记录每页数量
       state: '1',
+      blankSilenceObject: {
+        id: '',
+        startAt: '',
+        endAt: '',
+        ruleId: '',
+        type: 'asset',
+        linkId: '',
+        remark: '',
+        time: [],
+        matchers: [
+          { name: '', value: '', regex: 0 }
+        ],
+        name: ''
+      },
+      objectSilence: {},
+      silenceBoxShow: false,
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
           {
