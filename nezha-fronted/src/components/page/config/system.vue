@@ -106,8 +106,8 @@
             <el-form-item :label="$t('config.system.email.smtpAccount')" prop="email_auth_account">
               <el-input  v-model="email.email_auth_account" :disabled="email.email_enable == 'off'" id="system-email-email_smtp_account"> autocomplete="off"</el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.email.smtpPin')" class="has-tip" prop="email_auth_pin">
-              <el-input v-model="email.email_auth_pin" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
+            <el-form-item :label="$t('config.system.email.smtpPin')" class="has-tip" prop="email_auth_password">
+              <el-input v-model="email.email_auth_password" type="password" :show-password="false" :disabled="email.email_enable == 'off'"  autocomplete="off" id="system-email-email_smtp_password"></el-input>
               <div class="el-form-item__tip">{{$t("config.system.email.pinTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.sendAccount')" class="has-tip" prop="email_send_account">
@@ -295,7 +295,7 @@ export default {
         email_port: 25,
         email_timeout: 10,
         email_auth_account: '',
-        email_auth_pin: '',
+        email_auth_password: '',
         email_send_account: '',
         email_test_account: '',
         email_security_type: 'NONE'

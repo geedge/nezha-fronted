@@ -9,7 +9,7 @@
                           :temp-dom="tempDom"
                           :panel-id="-1"
                           :is-lock="true"
-                          :chart-index="0"
+                          :chart-index="-2"
                           :fromTopo="true"
                           :chartTitleShow="false"
                           :chart-data="chartData">
@@ -81,6 +81,7 @@ export default {
       this.tempDom.width = 250
     },
     process (item) {
+      console.log(item)
       const chartData = { ...this.chartDataTemp, ...item, name: item.chartTitle }
       chartData.elements = []
       chartData.expressArr.forEach((item1, index) => {

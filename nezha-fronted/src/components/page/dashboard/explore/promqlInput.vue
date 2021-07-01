@@ -13,7 +13,7 @@
                                :props="{emitPath:false,}" @change="metricChangeNew">
 
               <template slot-scope="{ node, data }">
-                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
+                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
                   <i class="nz-icon nz-icon-template2"></i>
                   {{data.label}}
                 </div>
@@ -54,7 +54,7 @@
                                    :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
                   <template slot-scope="{ node, data }">
-                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}">
+                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
                       <i class="nz-icon nz-icon-template2"></i>
                       {{data.label}}
                     </div>

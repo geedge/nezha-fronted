@@ -654,16 +654,20 @@ export default {
           const step = bus.getStep(startTime, endTime)
           data.pens && data.pens.forEach((item, index) => {
             this.chartGetData.push({ id: item.id, res: [] })
-            const arr = item.data.expressArr.map((ele) => {
-              let query = ele
-              if (!query) {
-                return new Promise(resolve => {
-                  resolve({ data: '', status: 'no query' })
-                })
-              }
-              query += '&nullType=' + 'connected'
-              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
-            })
+            let arr = []
+            console.log(item.data.valueMappingShow)
+            if (item.data.valueMappingShow) {
+              arr = item.data.expressArr.map((ele) => {
+                let query = ele
+                if (!query) {
+                  return new Promise(resolve => {
+                    resolve({ data: '', status: 'no query' })
+                  })
+                }
+                query += '&nullType=' + 'connected'
+                return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+              })
+            }
             axiosArr.push({ item, arr })
             promiseArr.push(pensPromise(item, arr, index))
           })
@@ -1028,6 +1032,7 @@ export default {
             show: false,
             error: false,
             expressArr: [],
+            expressAllArr: [],
             state: {}
           }
         }
@@ -1170,8 +1175,11 @@ export default {
             }],
             valueMappingSort: 'asc',
             expressArr: [''],
+            expressAllArr: [''],
             legends: [''],
+            legendsAll: [''],
             tooltipShow: true,
+            valueMappingShow: true,
             panelName: 'topologyName',
             unit: 2,
             type: 'line',
@@ -1206,8 +1214,11 @@ export default {
             }],
             valueMappingSort: 'asc', /* desc */
             expressArr: [''],
+            expressAllArr: [''],
             legends: [''],
+            legendsAll: [''],
             tooltipShow: true,
+            valueMappingShow: true,
             panelName: 'topologyName',
             unit: 2,
             type: 'line',
@@ -1766,6 +1777,10 @@ export default {
             item.data.expressArr = ['']
             item.data.legends = ['']
           }
+          if (!item.data.expressAllArr || !item.data.expressAllArr.length) {
+            item.data.expressAllArr = ['']
+            item.data.legendsAll = ['']
+          }
           item.animateType = item.data.animateType
           if (item.type === 0) {
             item.fillStyle = item.data.fillStyle
@@ -1866,6 +1881,14 @@ export default {
           item.data.expressArr = item.data.expressArr.filter((expression, i) => {
             if (!expression) {
               item.data.legends.splice(i, 1)
+              return false
+            } else {
+              return true
+            }
+          })
+          item.data.expressAllArr = item.data.expressAllArr.filter((expression, i) => {
+            if (!expression) {
+              item.data.legendsAll.splice(i, 1)
               return false
             } else {
               return true

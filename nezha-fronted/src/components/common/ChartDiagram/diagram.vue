@@ -248,6 +248,8 @@
       :title="title"
       :visible.sync="uploadPicShow"
       width="auto"
+      class="no-style-class"
+      :append-to-body="true"
       @close="uploadPicShow = false"
       destroy-on-close>
       <el-row class="upload-pic-row">
@@ -587,16 +589,19 @@ export default {
           const step = bus.getStep(startTime, endTime)
           data.pens && data.pens.forEach((item, index) => {
             this.chartGetData.push({ id: item.id, res: [] })
-            const arr = item.data.expressArr.map((ele) => {
-              let query = ele
-              if (!query) {
-                return new Promise(resolve => {
-                  resolve({ data: '', status: 'no query' })
-                })
-              }
-              query += '&nullType=' + 'connected'
-              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + '10m')
-            })
+            let arr = []
+            if (item.data.valueMappingShow) {
+              arr = item.data.expressArr.map((ele) => {
+                let query = ele
+                if (!query) {
+                  return new Promise(resolve => {
+                    resolve({ data: '', status: 'no query' })
+                  })
+                }
+                query += '&nullType=' + 'connected'
+                return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+              })
+            }
             axiosArr.push({ item, arr })
             promiseArr.push(pensPromise(item, arr, index))
           })
@@ -1068,6 +1073,7 @@ export default {
             expressArr: [''],
             legends: [''],
             tooltipShow: true,
+            valueMappingShow: true,
             panelName: 'topologyName',
             unit: 2,
             type: 'line',
@@ -1104,6 +1110,7 @@ export default {
             expressArr: [''],
             legends: [''],
             tooltipShow: true,
+            valueMappingShow: true,
             panelName: 'topologyName',
             unit: 2,
             type: 'line',

@@ -25,7 +25,7 @@
           <el-form-item v-if="!selection.pen.type&&fromDiagram" :label="$t('project.topology.name')" class="full-form-item" prop="type">
             <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
           </el-form-item>
-<!--          &lt;!&ndash;iconToolState&ndash;&gt;-->
+          <!--iconToolState-->
 <!--          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">-->
 <!--            <el-switch-->
 <!--              v-model="selection.pen.data.iconToolState"-->
@@ -35,15 +35,21 @@
 <!--            />-->
 <!--          </el-form-item>-->
 
+          <!--value mapping-->
+          <el-row class="form-row-title">
+            {{$t('dashboard.panel.chartForm.thresholds')}}
+            <span v-if="selection.pen.data.valueMappingSort !=='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >{{selection.pen.data.valueMapping.length}}:Critical）</span>
+            <span v-if="selection.pen.data.valueMappingSort ==='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（{{selection.pen.data.valueMapping.length}}:Critical > … >0:Ok）</span>
+            <el-form-item class="float-right" prop="type" style="height: 100%;">
+              <el-switch
+                v-model="selection.pen.data.valueMappingShow"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+              />
+            </el-form-item>
+          </el-row>
           <!--metric-->
-          <div class="right-box-sub-title" style="margin-bottom: 10px">
-            <span>{{$t('alert.config.expr')}}</span>
-<!--            <span @click="addExpression" class="float-right" style="height: 19px;display: inline-block;line-height: 1;">-->
-<!--              <span class="create-square-box">-->
-<!--                <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>-->
-<!--              </span>-->
-<!--            </span>-->
-          </div>
           <el-row :key="index" class="element-item form-row-item" style=""
                   v-for="(item,index) in selection.pen.data.expressArr">
             <promql-input
@@ -52,108 +58,33 @@
               :index="index"
               :key="index"
               :plugins="['metric-selector', 'metric-input', 'remove']"
-              :ref="'promql-'+index"
+              :ref="'promql-'+'-1'"
               :showRemove="false"
               :styleType="2"
               :metricOptionsParent="metricOptions"
               @change="expressionChange"
               :from-father-data="true"
-              @removeExpression="removeExpression"
             ></promql-input>
             <el-row style="margin-top: 10px">
               <template>
+                <!--chart aggregation-->
                 <el-col class="legend-title">
-                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover placement="top" trigger="hover" width="211">
-                    <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
-                    <i class="nz-icon nz-icon-info-normal" slot="reference" @mouseover="rz"
-                       style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
-                  </el-popover>
+                  {{$t('dashboard.panel.chartForm.aggregation')}}&nbsp;
                 </el-col>
-                <el-col style="width: calc(100% - 120px);">
-                  <el-input size="small" type="text" v-model="selection.pen.data.legends[index]"></el-input>
+                <el-col style="width: calc(100% - 120px)">
+                  <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                             size="mini"
+                             style="width: 100%"
+                             v-model="selection.pen.data.aggregation" value-key="chartType">
+                    <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
+                      <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                    </el-option>
+                  </el-select>
                 </el-col>
               </template>
             </el-row>
-            <div class="nz-icon-minus-position">
-              <span class="nz-icon-minus-medium">
-                <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
-          </span>
-              <span class="nz-icon-copy">
-                <i @click="copyExpression(index)" class="nz-icon nz-icon-override"></i>
-              </span>
-            </div>
           </el-row>
-
-          <!--tooltip-->
-          <el-row class="form-row-title">
-            {{$t('dashboard.panel.chartForm.tooltip')}}
-            <el-form-item class="float-right" prop="type" style="height: 100%;">
-              <el-switch
-                v-model="selection.pen.data.tooltipShow"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-              />
-            </el-form-item>
-          </el-row>
-
-          <div class="tooltip-box">
-            <!--title-->
-            <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
-              <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>
-            </el-form-item>
-            <!--chart aggregation-->
-            <el-form-item :label="$t('dashboard.panel.chartForm.aggregation')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
-                         size="mini"
-                         v-model="selection.pen.data.aggregation" value-key="chartType">
-                <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
-                  <span class="panel-dropdown-label-txt">{{item.name}}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <!--chart unit-->
-            <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit"
-                          v-show="selection.pen.data.type !='text'">
-              <el-cascader :options="unitOptions"
-                           :props="{ expandTrigger: 'hover',emitPath:false }"
-                           :show-all-levels="false"
-                           filterable
-                           :placeholder="$t('el.select.placeholder')"
-                           popper-class="dc-dropdown"
-                           size="mini"
-                           v-model="selection.pen.data.unit"
-              >
-              </el-cascader>
-            </el-form-item>
-            <!--displayChart-->
-            <el-form-item :label="$t('dashboard.panel.chartForm.displayChart')" class="half-form-item" prop="type">
-              <el-switch
-                v-model="selection.pen.data.displayChart"
-                :active-value="true"
-                :inactive-value="false"
-                active-color="#ee9d3f"
-              />
-            </el-form-item>
-            <!--chart type-->
-            <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
-                         size="mini"
-                         v-model="selection.pen.data.type" value-key="chartType">
-                <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
-                  <span class="panel-dropdown-label-txt">{{item.name}}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <!--value mapping-->
-          <el-row class="form-row-title">
-            {{$t('dashboard.panel.chartForm.thresholds')}}
-            <span v-if="selection.pen.data.valueMappingSort !=='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（0:Ok > … >{{selection.pen.data.valueMapping.length}}:Critical）</span>
-            <span v-if="selection.pen.data.valueMappingSort ==='desc'" style="font-size: 12px;color: #666666;letter-spacing: 0;font-weight: 400;margin-left: 10px">（{{selection.pen.data.valueMapping.length}}:Critical > … >0:Ok）</span>
-          </el-row>
-          <div style="width: 100%;margin-top: 10px">
+          <div style="width: 100%;margin-top: 10px;box-sizing: border-box;padding-left: 10px">
             <div class="thresholds-box">
               <el-row class="thresholds-title">
                 <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}
@@ -234,6 +165,103 @@
           </div>
           <div @click="valueMappingAdd()" style="text-align: center" class="value-mapping-add">
             <i class="nz-icon nz-icon-plus"></i>
+          </div>
+
+          <!--tooltip-->
+          <el-row class="form-row-title">
+            {{$t('dashboard.panel.chartForm.tooltip')}}
+            <el-form-item class="float-right" prop="type" style="height: 100%;">
+              <el-switch
+                v-model="selection.pen.data.tooltipShow"
+                :active-value="true"
+                :inactive-value="false"
+                active-color="#ee9d3f"
+              />
+            </el-form-item>
+          </el-row>
+
+          <div class="tooltip-box">
+            <!--title-->
+            <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
+              <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>
+            </el-form-item>
+            <!--chart unit-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit"
+                          v-show="selection.pen.data.type !='text'">
+              <el-cascader :options="unitOptions"
+                           :props="{ expandTrigger: 'hover',emitPath:false }"
+                           :show-all-levels="false"
+                           filterable
+                           :placeholder="$t('el.select.placeholder')"
+                           popper-class="dc-dropdown"
+                           size="mini"
+                           v-model="selection.pen.data.unit"
+              >
+              </el-cascader>
+            </el-form-item>
+<!--            &lt;!&ndash;displayChart&ndash;&gt;-->
+<!--            <el-form-item :label="$t('dashboard.panel.chartForm.displayChart')" class="half-form-item" prop="type">-->
+<!--              <el-switch-->
+<!--                v-model="selection.pen.data.displayChart"-->
+<!--                :active-value="true"-->
+<!--                :inactive-value="false"-->
+<!--                active-color="#ee9d3f"-->
+<!--              />-->
+<!--            </el-form-item>-->
+            <!--chart type-->
+            <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
+              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                         size="mini"
+                         v-model="selection.pen.data.type" value-key="chartType">
+                <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
+                  <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <!--value mapping-->
+            <el-row :key="index" class="element-item form-row-item" style=""
+                    v-for="(item,index) in selection.pen.data.expressAllArr">
+              <promql-input
+                :expression-list="selection.pen.data.expressAllArr"
+                :id="index"
+                :index="index"
+                :key="index"
+                :plugins="['metric-selector', 'metric-input', 'remove']"
+                :ref="'promql-'+index"
+                :showRemove="false"
+                :styleType="2"
+                :metricOptionsParent="metricOptions"
+                @change="expressionChange"
+                :from-father-data="true"
+                @removeExpression="removeExpression"
+              ></promql-input>
+              <el-row style="margin-top: 10px">
+                <template>
+                  <el-col class="legend-title">
+                    {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                    <el-popover placement="top" trigger="hover" width="211">
+                      <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                      <i class="nz-icon nz-icon-info-normal" slot="reference" @mouseover="rz"
+                         style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
+                    </el-popover>
+                  </el-col>
+                  <el-col style="width: calc(100% - 120px);">
+                    <el-input size="small" type="text" v-model="selection.pen.data.legendsAll[index]"></el-input>
+                  </el-col>
+                </template>
+              </el-row>
+              <div class="nz-icon-minus-position">
+              <span class="nz-icon-minus-medium">
+                <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
+          </span>
+                <span class="nz-icon-copy">
+                <i @click="copyExpression(index)" class="nz-icon nz-icon-override"></i>
+              </span>
+              </div>
+            </el-row>
+            <div @click="addExpression()" style="text-align: center" class="value-mapping-add">
+              <i class="nz-icon nz-icon-plus"></i>
+            </div>
           </div>
 
 <!--          &lt;!&ndash;link&ndash;&gt;-->
@@ -1235,6 +1263,10 @@ export default {
     selection: {
       handler () {
         // this.loading = false
+        if (this.selection.pen && this.selection.pen.data && !this.selection.pen.data.expressAllArr) {
+          this.selection.pen.data.expressAllArr = ['']
+          this.selection.pen.data.legendsAll = ['']
+        }
       },
       deep: true,
       immediate: true
@@ -1559,16 +1591,16 @@ export default {
       return this.metricOptions
     },
     addExpression () {
-      this.selection.pen.data.expressArr.push('')
-      this.selection.pen.data.legends.push('')
+      this.selection.pen.data.expressAllArr.push('')
+      this.selection.pen.data.legendsAll.push('')
     },
     expressionChange (item) {
 
     },
     removeExpression (index) {
-      if (this.selection.pen.data.expressArr.length > 1) {
-        this.selection.pen.data.expressArr.splice(index, 1)
-        this.selection.pen.data.legends.splice(index, 1)
+      if (this.selection.pen.data.expressAllArr.length > 1) {
+        this.selection.pen.data.expressAllArr.splice(index, 1)
+        this.selection.pen.data.legendsAll.splice(index, 1)
         this.$nextTick(() => {
           this.expressions.forEach((ex, index) => {
             if (ex) {
@@ -1579,8 +1611,8 @@ export default {
       }
     },
     copyExpression (index) {
-      this.selection.pen.data.expressArr.push(this.selection.pen.data.expressArr[index])
-      this.selection.pen.data.legends.push(this.selection.pen.data.legends[index])
+      this.selection.pen.data.expressAllArr.push(this.selection.pen.data.expressAllArr[index])
+      this.selection.pen.data.legendsAll.push(this.selection.pen.data.legendsAll[index])
       this.$nextTick(() => {
         this.expressions.forEach((ex, index) => {
           if (ex) {
@@ -1746,11 +1778,11 @@ export default {
     width: 100px;
     margin-right: 10px;
     text-align: left;
-    padding-left:10px;
+    padding-left:0px;
     margin-left: 10px;
     height: 32px;
     line-height: 32px;
-    background: #E7EAED;
+    font-size: 14px;
     color: #606266;
   }
   .project-title {
@@ -1866,10 +1898,9 @@ export default {
 
     .element-item {
       padding: 10px 10px 10px 0;
-      border: 1px dashed #dfe7f2;
-      width: calc(100% - 60px);
+      width: 100%;
       margin-bottom: 10px;
-      margin-left: 10px;
+      margin-top: 10px;
     }
 
     .right-box-form .element-item.form-row-item {
@@ -1986,6 +2017,8 @@ export default {
     height: 24px;
     line-height: 24px;
     color:  #FA901C;
+    box-sizing: border-box;
+    margin-left: 10px;
   }
   .mb10 {
     margin-bottom: 10px;
@@ -2213,5 +2246,21 @@ export default {
   }
   /deep/ .query-row .input-box{
     margin-right: 0 !important;
+  }
+  /deep/ .el-cascader-node{
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+  /deep/ .nz-cascade-temp{
+    box-sizing: border-box;
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+  /deep/ .metric-selector-title{
+    background: #fff !important;
   }
 </style>
