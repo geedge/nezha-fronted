@@ -1014,10 +1014,10 @@ export default {
         //   id: 'bar',
         //   name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
         // },
-        {
-          id: 'table',
-          name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
-        }
+        // {
+        //   id: 'table',
+        //   name: this.$t('dashboard.panel.chartForm.typeVal.table.label')
+        // }
       ],
       aggregationList: [
         {

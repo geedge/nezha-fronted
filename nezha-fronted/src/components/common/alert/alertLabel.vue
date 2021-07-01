@@ -104,20 +104,16 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Labels</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.labels ? alertLabelData.labels : '--'}}</div>
+        <div class="alert-label-title">Configs</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.configs ? alertLabelData.configs : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Host</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.host ? alertLabelData.host : '--'}}</div>
+        <div class="alert-label-title">ManageIp</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.asset ? alertLabelData.asset.manageIp : '--'}}</div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Port</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.port ? alertLabelData.port : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Path</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.path ? alertLabelData.path : '--'}}</div>
       </div>
     </div>
   </div>

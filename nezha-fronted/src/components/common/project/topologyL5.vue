@@ -6,9 +6,9 @@
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
     <div class="main-list">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
-        <div v-if="editTopologyFlag" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);">
+        <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
-          <span class="project-topology-tool">
+          <span v-if="!isPreview" class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
@@ -99,10 +99,15 @@
 
         </span>
           <span class="float-right">
-          <button @click="previewTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+          <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
                   style="margin-right: 20px"
           >
              {{$t('project.topology.preview')}}
+           </button>
+            <button @click="previewExit" v-if="isPreview" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+                    style="margin-right: 20px"
+            >
+             {{$t('project.topology.previewExit')}}
            </button>
            <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
                    :disabled="prevent_opt.save"
@@ -115,7 +120,7 @@
            </button>
          </span>
         </div>
-        <div v-if="!editTopologyFlag&&!fromOverView" class="top-tools" style="padding-left: 10px">
+        <div v-if="(!editTopologyFlag&&!fromOverView) && !isPreview" class="top-tools" style="padding-left: 10px">
           <div>{{topologyInfo.name}}</div>
           <div v-if="!editTopologyFlag&&!fromPrev&&!fromOverView" class="top-tool-right">
             <pick-time
@@ -498,7 +503,9 @@ export default {
         unit: ''
       },
       unitArr: [],
-      topoScreenState: '' // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
+      topoScreenState: '', // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
+      isPreview: false,
+      previewData: ''
     }
   },
   components: {
@@ -528,6 +535,10 @@ export default {
       default: false
     },
     fromPrev: {
+      type: Boolean,
+      default: false
+    },
+    fromChart: {
       type: Boolean,
       default: false
     },
@@ -775,6 +786,9 @@ export default {
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           let data = res.data.topo
+          if (this.isPreview) {
+            data = this.previewData
+          }
           // data = JSON.parse(localStorage.getItem('topoData'))
           if (!res.data.topo || !data.pens) {
             data = {
@@ -1840,6 +1854,8 @@ export default {
     },
     // 保存
     saveTopology () {
+      this.previewData = ''
+      this.isPreview = false
       const topologyData = getTopology(this.topologyIndex).pureData()
       // console.log(JSON.stringify(topologyData))
       let flag = true
@@ -1930,6 +1946,8 @@ export default {
     },
     // 取消
     cancelTopology () {
+      this.isPreview = false
+      this.previewData = ''
       this.editTopologyFlag = false
       this.$nextTick(() => {
         getTopology(this.topologyIndex).lock(1)
@@ -1941,14 +1959,46 @@ export default {
     },
     // 预览
     previewTopology () {
-      const data = JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))
-      data.pens.forEach((item) => {
+      const topologyData = getTopology(this.topologyIndex).pureData()
+      this.previewData = topologyData
+      this.isPreview = true
+      this.editTopologyFlag = false
+      topologyData.rule = false
+      topologyData.grid = false
+      topologyData.gridSize = 10
+      topologyData.pens.forEach(item => {
         item.animatePlay = item.data.animatePlay
+        item.data.animateType = item.animateType
+        if (item.type === 0 && JSON.stringify(item.data.imageId)) {
+          item.image = ''
+          item.animateFrames = []
+          item.animateReady = null
+          delete item.img
+          delete item.lastImage
+        }
+        item.data.expressArr = item.data.expressArr.filter((expression, i) => {
+          if (!expression) {
+            item.data.legends.splice(i, 1)
+            return false
+          } else {
+            return true
+          }
+        })
       })
-      this.topoPrevData = JSON.parse(JSON.stringify(data))
-      this.topoPrevData.rule = false
-      this.topoPrevData.grid = false
-      this.previewShow = true
+      if (this.penToolTipScale == getTopology(this.topologyIndex).data.scale) {
+        getTopology(this.topologyIndex).data.scale = this.oldScale
+      }
+      this.$nextTick(() => {
+        this.previewData = topologyData
+        getTopology(this.topologyIndex).lock(1)
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
+        this.reload()
+      })
+    },
+    previewExit () { // 继续编辑
+      this.isPreview = false
+      this.editTopology()
     },
 
     // 联动 project

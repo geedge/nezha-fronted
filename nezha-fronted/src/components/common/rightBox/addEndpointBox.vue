@@ -628,6 +628,11 @@ export default {
         if (res.code === 200) {
           res.data.list.forEach((item, index) => {
             const obj = item
+            if (obj.name.length > 64) {
+              const length = obj.name.length - 64
+              const lastIndex = obj.name.lastIndexOf('-')
+              obj.name = obj.name.substring(0, 64 - length) + obj.name.substring(lastIndex)
+            }
             obj.configs = JSON.parse(obj.configs)
             obj.labelModule = []
             if (obj.configs.labels !== '{}' && obj.configs.labels) {

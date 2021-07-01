@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-echarts" ref="resizeBox">
       <div class="line-chart-block" :id="'lineChartDiv'+chartIndex" @mouseenter="mouseEnterChart" @mouseleave="mouseLeaveChart">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div  v-if="from!=='project'" :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
+        <div  v-if="from!=='project'&&from!=='topology'" :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="clearfix chartTitle">
           <el-popover
             v-if="isError"
             placement="top-start"
@@ -64,6 +64,9 @@
                 <i class="nz-icon nz-icon-sync" style="font-size: 16px;"></i>{{$t('overall.syncChart')}}</li>
             </ul>
           </el-dropdown>
+        </div>
+        <div  v-if="from==='topology'" :class="{'drag-disabled': this.filter.from == $CONSTANTS.fromRoute.alertRule}" :id="'chartTitle'+chartIndex" class="topology-chart-title">
+          <span class="topology-chart-title-text">{{chartData.name}}</span>
         </div>
         <div class="line-area"  ref="lineChartArea"  :id="'lineChartArea'+chartIndex" v-show="firstShow" style="width:100%;"></div>
         <div class="chart-no-data" v-show="noData">No Data</div>
@@ -1344,6 +1347,7 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
+      console.log(chartItem, seriesItem, panelId, filter, legend, area, errorMsg)
       legend && this.setColor(legend.length)
       legend && legend.forEach((t, i) => { t.color = this.bgColorList[i] })
       this.filter.from = filter.from

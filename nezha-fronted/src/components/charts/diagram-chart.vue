@@ -41,7 +41,7 @@
         </div>
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="text-content"  >
-            <diagram style="height: 100%;width: 100%" :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id" ref="diagram"/>
+            <diagram style="height: 100%;width: 100%" :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id" :isPanel="true" ref="diagram"/>
           </div>
         </div>
         <!--全屏-->
@@ -53,7 +53,7 @@
           </div>
           <div class="rich-text-screen-container"  >
             <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
-              <diagram :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id + '-' + 'chartIndex'"/>
+              <diagram :topoData="data.param.topo" :fromChart="true" :isScreen="true" :topologyIndexF="chartData.id + '-' + 'chartIndex'"/>
             </div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>

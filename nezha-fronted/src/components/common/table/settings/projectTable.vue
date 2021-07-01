@@ -64,8 +64,7 @@
     </el-table-column>
     <el-table-column
       :resizable="false"
-      :width="operationWidth"
-      fixed="right">
+      :width="operationWidth">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" @click="changeProjectTopo(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
@@ -102,32 +101,25 @@ export default {
           label: this.$t('project.project.project'),
           prop: 'name',
           show: true,
-          minWidth: 150,
           sortable: 'custom'
         }, {
           label: this.$t('project.module.module'),
           prop: 'moduleNum',
           show: true,
-          width: 150,
+          width: 100,
           sortable: 'custom'
         }, {
           label: this.$t('project.endpoint.endpoint'),
           prop: 'endpointNum',
           show: true,
-          width: 150,
+          width: 120,
           sortable: 'custom'
         }, {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alertNum',
           show: true,
-          width: 150,
+          width: 100,
           sortable: 'custom'
-        },
-        {
-          label: this.$t('overall.remark'),
-          prop: 'remark',
-          show: false,
-          minWidth: 150
         }
       ]
     }

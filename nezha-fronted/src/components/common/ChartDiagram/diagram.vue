@@ -6,7 +6,7 @@
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
     <div class="main-list">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'" style="background: #fff">
-        <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);">
+        <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
           <span v-if="!isPreview" class="project-topology-tool">
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
@@ -202,11 +202,11 @@
             <!--节点连线相关的 tooltip-->
             <div v-if="tooltipPosition.show&&!editTopologyFlag"
                  ref="topoTooltip"
-                 :style="{position:'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px','z-index':10,height:tooltipPosition.height+'px'}"
+                 :style="{position:isScreen?'fixed' : 'absolute',top:tooltipPosition.top+'px',left:tooltipPosition.left+'px','z-index':10,height:tooltipPosition.height+'px'}"
                  @mouseout="tooltipOut"
                  @mouseover="tooltipOver"
             >
-              <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
+              <topoTooltip :chartDataParent="chartData" :filterTime="filterTime" :isPanel="isPanel"/>
             </div>
           </div>
           <!--endpoint-->
@@ -515,6 +515,14 @@ export default {
       default: false
     },
     fromTopologyDialog: {
+      type: Boolean,
+      default: false
+    },
+    isPanel: {
+      type: Boolean,
+      default: false
+    },
+    isScreen: {
       type: Boolean,
       default: false
     }
@@ -1138,6 +1146,7 @@ export default {
           setTimeout(() => {
             this.tooltipPosition.show = true
             const ePosition = window.ePosition
+            console.log(ePosition)
             const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
             const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
             this.tooltipPosition.left = ePosition.layerX + 20
@@ -1154,6 +1163,10 @@ export default {
                 } else {
                   this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
                 }
+              }
+              if (this.isScreen) {
+                this.tooltipPosition.left = ePosition.offsetX + 50
+                this.tooltipPosition.top = ePosition.offsetY + 80
               }
             })
           }, 100)
@@ -1748,6 +1761,14 @@ export default {
         item.data.expressArr = item.data.expressArr.filter((expression, i) => {
           if (!expression) {
             item.data.legends.splice(i, 1)
+            return false
+          } else {
+            return true
+          }
+        })
+        item.data.expressAllArr = item.data.expressAllArr.filter((expression, i) => {
+          if (!expression) {
+            item.data.legendsAll.splice(i, 1)
             return false
           } else {
             return true
