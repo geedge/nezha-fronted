@@ -35,11 +35,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'principal'">
-          <template v-if="scope.row.principal">
-            <template v-for="item in userData">
-              <template v-if="scope.row.principal == item.userId">{{item.username}}</template>
-            </template>
-          </template>
+          <template v-if="scope.row.adminUser">{{ scope.row.adminUser.username }}</template>
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'state'">
@@ -168,7 +164,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.userData)
+    console.log(this.customTableTitle)
   },
   methods: {
     showTableTooltip,
