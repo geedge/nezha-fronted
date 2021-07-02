@@ -434,6 +434,7 @@ export default {
             localStorage.setItem('nz-sys-terminal-record-local-retention', this.terminal.terminal_record_local_retention)
           }
           if (type == 'email') {
+            this.email.email_auth_password = ''
             this.$refs.emailForm.clearValidate()
           }
           this[type + 'Copy'] = Object.assign({}, this[type])
