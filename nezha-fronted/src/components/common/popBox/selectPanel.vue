@@ -186,7 +186,7 @@ export default {
   justify-content: space-between;
   width: calc(100% - 28px);
 }
-.tree--node span {
+.tree--node span:nth-of-type(1) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
