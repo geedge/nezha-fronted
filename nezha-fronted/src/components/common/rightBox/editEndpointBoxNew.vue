@@ -472,7 +472,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.moduleForm.validate((valid) => {
           if (valid) {
-            if (this.optionType === 'add') {
+            if (this.optionType === 'add' || this.optionType === 'batch') {
               this.prevent_opt.save = true
               if (this.editEndpoint.assetId) {
                 this.$emit('close', true, this.editEndpoint, false)
