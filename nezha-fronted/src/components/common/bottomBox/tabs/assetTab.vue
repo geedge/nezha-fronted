@@ -200,6 +200,35 @@ export default {
         port: row.authProtocolPort
       }
       this.$store.commit('addConsole', consoleParam)
+    },
+    getTableData (params) {
+      if (params && Object.keys(params).length > 0) {
+        for (const key in params) {
+          this.$set(this.searchLabel, key, params[key])
+        }
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.tools.loading = true
+      if (this.obj) {
+        this.$set(this.searchLabel, 'modelIds', this.obj.id)
+      }
+      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
     }
   },
   watch: {
@@ -208,7 +237,7 @@ export default {
       deep: true,
       handler (n, o) {
         this.searchLabel.dcIds = n.id
-        if ( this.from === fromRoute.model) {
+        if (this.from === fromRoute.model) {
           delete this.searchLabel.dcIds
           this.searchLabel.modelIds = n.id
         }
