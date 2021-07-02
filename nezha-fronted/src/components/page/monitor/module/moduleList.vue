@@ -72,10 +72,6 @@ import exportXLSX from '@/components/common/exportXLSX'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
-  beforeRouteLeave (to, from, next) { // 路由离开之前触发
-    localStorage.removeItem('moduleProjectId')
-    next()
-  },
   name: 'moduleList',
   components: {
     nzDataList,
@@ -268,6 +264,9 @@ export default {
         }
       }
     }
+  },
+  destroyed () {
+    localStorage.removeItem('moduleProjectId')
   }
 }
 </script>

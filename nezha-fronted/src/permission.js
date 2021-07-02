@@ -48,6 +48,9 @@ router.beforeEach((to, from, next) => {
           if (hasMenu(store.getters.menuList, to.path)) {
             next()
           } else {
+            if (to.path === '/monitor/monitor/project' || to.path === '/monitor/monitor/module' || to.path === '/monitor/monitor/endpoint') {
+              return
+            }
             ElementUI.Message.error(i18n.t('tip.noAccess'))
           }
         }

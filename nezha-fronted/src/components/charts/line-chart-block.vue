@@ -1347,7 +1347,6 @@ export default {
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {
-      console.log(chartItem, seriesItem, panelId, filter, legend, area, errorMsg)
       legend && this.setColor(legend.length)
       legend && legend.forEach((t, i) => { t.color = this.bgColorList[i] })
       this.filter.from = filter.from

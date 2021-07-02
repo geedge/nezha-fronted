@@ -94,10 +94,6 @@ import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {
-  beforeRouteLeave (to, from, next) { // 路由离开之前触发
-    localStorage.removeItem('endpointProjectId')
-    next()
-  },
   name: 'endpointList',
   components: {
     EditEndpointBoxNew,
@@ -356,6 +352,9 @@ export default {
         }
       }
     }
+  },
+  destroyed () {
+    localStorage.removeItem('endpointProjectId')
   }
 }
 </script>
