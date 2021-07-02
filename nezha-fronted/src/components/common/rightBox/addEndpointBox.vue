@@ -119,7 +119,7 @@
               </div>
             </div>
             <!--endpoint-->
-            <div class="right-box-endpoint-table">
+            <div class="right-box-endpoint-table"  :class="showError?'error' : ''">
               <div class="search-box" style="display: flex;justify-content: flex-end">
                 <el-button class="top-tool-btn" type="button" @click="showRightBox">
                   <i class="nz-icon-gear nz-icon"></i>
@@ -181,6 +181,7 @@
               </span>
               </div>
             </div>
+            <div v-if="showError" class="el-form-item__error">{{this.$t('validate.required')}}</div>
           </div>
         </el-form>
       </div>
@@ -432,7 +433,8 @@ export default {
           label: 'state',
           disabled: false
         }]
-      }
+      },
+      showError: false,
     }
   },
   methods: {
@@ -565,8 +567,11 @@ export default {
         }
         endpointList.push(endpoint)
       })
+      if (endpointList.length === 0) {
+        this.showError = true
+      }
       this.$refs.addEndpoint.validate((valid) => {
-        if (valid) {
+        if (valid && !this.showError) {
           this.$post('monitor/endpoint', endpointList).then(response => {
             this.prevent_opt.save = false
             if (response.code === 200) {
@@ -606,6 +611,7 @@ export default {
       })
     },
     addEndpoint () {
+      this.showError = false
       const arr = []
       this.assetSelection.forEach(item => {
         if (this.endpointTableData.find(endpoint => endpoint.assetId === item.id)) {
@@ -1229,5 +1235,8 @@ export default {
         padding: 2px 4px;
       }
     }
+  }
+  .error{
+    border-color: #F56C6C !important;
   }
 </style>

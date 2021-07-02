@@ -7,7 +7,7 @@
     <div class="resize-box resize-box-alert" ref="resizeBox">
       <div class="chart-alert-info table-container" :id="'chartTableDiv'+chartIndex" @mouseenter="caretShow=true" @mouseleave="caretShow=false">
         <loading :ref="'localLoading'+chartIndex"></loading>
-        <div class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow, 'drag-disabled': !data.draggable}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
+        <div v-if="showTitle" class="clearfix chartTitle" :class="{'dragTitle':dragTitleShow, 'drag-disabled': !data.draggable}" :id="'chartTitle'+chartIndex" v-show="!isPreview">
           <el-popover
             v-if="isError"
             :close-delay=10
@@ -159,6 +159,10 @@ export default {
       type: Number,
       default: 0
     },
+    showTitle: {
+      type: Boolean,
+      default: true
+    },
     editChartId: {
       type: String,
       default: 'editChartId'
@@ -233,7 +237,6 @@ export default {
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true,
-          width: 180
         }, /* {
           label: this.$t("alert.list.type"),
           prop: 'type',
@@ -905,3 +908,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.table-container{
+  height: calc(100% - 40px);
+}
+</style>

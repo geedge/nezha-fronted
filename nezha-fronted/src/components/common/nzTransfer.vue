@@ -59,7 +59,7 @@
         </button>
       </div>
     </div>
-    <div :style="calcStyle" class="nz-transfer__box nz-transfer__box--right">
+    <div :style="calcStyle" class="nz-transfer__box nz-transfer__box--right" :class="showError?'error' : ''">
       <div class="box__header">
         <slot name="title"></slot>
         <slot></slot>
@@ -131,6 +131,10 @@ export default {
     },
     tableTitle: {
       type: Array
+    },
+    showError: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -314,5 +318,8 @@ export default {
 }
 .hide-row {
   display: none !important;
+}
+.error{
+  border-color: #F56C6C !important;
 }
 </style>

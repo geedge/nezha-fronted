@@ -340,7 +340,7 @@ import { getMetricTypeValue } from '../js/tools'
 import bus from '../../../libs/bus'
 import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
 // 注册到画布
-registerNode('rectangleImg', myShape, myAnchors, myIconRect2, null)
+registerNode('rectangleImg', myShape, myAnchors, myIconRect2, myTextRect2)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
 const canvasOptions = {

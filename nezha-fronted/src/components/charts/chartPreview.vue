@@ -168,12 +168,20 @@
         </div>
       </template>
 
-      <chart-alert-list v-if="chart.type === 'alertList'" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
+      <chart-alert-list v-if="chart.type === 'alertList'" :showTitle="false" ref="alertListChart" id="chartAlertListPreview" :chart-info="chart" :chart-data="chart"  class="height-100"></chart-alert-list>
 
       <template v-if="chart.type==='text'">
           <div  id="chartTextPreview" class="chart-text-preview height-100">
             <div style="height: 100%; overflow: auto;">
               <div style="height: 100%;" v-html="chart.param.text" ></div>
+            </div>
+          </div>
+      </template>
+
+        <template v-if="chart.type==='diagram'">
+          <div  id="chartDiagramPreview" class="chart-text-preview height-100">
+            <div style="height: 100%; overflow: auto;">
+                <diagram :topoData="chart.param.topo" :fromChartBox="true" :topologyIndexF="-3"/>
             </div>
           </div>
       </template>
@@ -190,12 +198,14 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
+import diagram from '@/components/common/ChartDiagram/diagram'
 import moment from 'moment-timezone'
 export default {
   name: 'chartPreview',
   components: {
     loading: loading,
-    'chart-alert-list': chartAlertList
+    'chart-alert-list': chartAlertList,
+    diagram
   },
   props: {
     panelId: Number,
@@ -288,6 +298,8 @@ export default {
         chartContainerId = 'chartAlertListPreview'
       } else if (chartType == 'text') {
         chartContainerId = 'chartTextPreview'
+      } else if (chartType == 'diagram') {
+        chartContainerId = 'chartDiagramPreview'
       }
 
       // 设置高度 chart-table
@@ -356,7 +368,7 @@ export default {
         //
       }
       // 后台获得数据
-      if (this.chart.type !== 'url' && this.chart.type !== 'text') {
+      if (this.chart.type !== 'url' && this.chart.type !== 'text' && this.chart.type !== 'diagram') {
         this.$refs.loadingPreview.startLoading()
         this.getChartData()
       } else if (this.chart.type == 'url') {

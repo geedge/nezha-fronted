@@ -116,7 +116,7 @@
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'project'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">

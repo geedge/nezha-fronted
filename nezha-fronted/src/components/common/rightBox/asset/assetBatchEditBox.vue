@@ -188,18 +188,22 @@
 
           <!-- 选择资产，穿梭框 -->
           <div class="form__sub-title">{{$t('overall.select')}}</div>
-          <nz-transfer ref="transfer"
-                       style="margin-bottom: 20px;"
-                       :page-obj="transfer.pageObj"
-                       :search-msg="transfer.searchMsg"
-                       :table-data="transfer.tableData"
-                       :tableTitle="transfer.tableTitle"
-                       @pageNo="pageNoChange"
-                       @search="search"
-                       @leftToRight="addAsset"
-                       @rightToLeft="removeAsset">
-            <template v-slot:title>Selected</template>
-          </nz-transfer>
+          <div style="position: relative">
+            <nz-transfer ref="transfer"
+                         :showError="showError"
+                         style="margin-bottom: 20px;"
+                         :page-obj="transfer.pageObj"
+                         :search-msg="transfer.searchMsg"
+                         :table-data="transfer.tableData"
+                         :tableTitle="transfer.tableTitle"
+                         @pageNo="pageNoChange"
+                         @search="search"
+                         @leftToRight="addAsset"
+                         @rightToLeft="removeAsset">
+              <template v-slot:title>Selected</template>
+            </nz-transfer>
+            <div v-if="showError" class="el-form-item__error">{{this.$t('validate.required')}}</div>
+          </div>
         </el-form>
       </div>
     </div>
@@ -330,8 +334,28 @@ export default {
           total: 0
         }
       },
-      rules: {},
-      metaData: []
+      rules: {
+        editType: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authProtocol: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authUsername: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPin: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authUserTip: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        authPinTip: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
+      },
+      metaData: [],
+      showError: false
     }
   },
   methods: {
@@ -345,10 +369,17 @@ export default {
     },
     save () {
       this.editData.ids = this.transfer.selectedData.map(d => d.id)
-      this.$put('asset/asset/bulkEdit', this.editData).then(res => {
-        if (res.code === 200) {
-          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-          this.esc(true)
+      if (this.editData.ids.length === 0) {
+        this.showError = true
+      }
+      this.$refs.assetEditForm.validate((valid) => {
+        if (valid && !this.showError) {
+          this.$put('asset/asset/bulkEdit', this.editData).then(res => {
+            if (res.code === 200) {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true)
+            }
+          })
         }
       })
     },
@@ -411,6 +442,7 @@ export default {
       this.transfer.tableData.forEach(d => {
         this.$set(d, 'hide', this.transfer.selectedData.some(s => s.id === d.id))
       })
+      this.showError = false
     },
     removeAsset (toRemove) {
       this.transfer.selectedData = this.transfer.selectedData.filter(d => !toRemove.find(s => d.id === s.id))

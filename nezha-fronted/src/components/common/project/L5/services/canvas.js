@@ -252,6 +252,7 @@ export function myIconRect2 (node) {
   node.fullIconRect = node.rect
 }
 export function myTextRect2 (node) {
+  node.data.text = ''
   node.textRect = new Rect(
     node.rect.x + node.paddingLeft,
     node.rect.y + node.rect.height - 20 - node.paddingBottom,
