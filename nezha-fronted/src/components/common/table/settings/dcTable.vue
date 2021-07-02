@@ -164,7 +164,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.customTableTitle)
+    // console.log(this.customTableTitle)
   },
   methods: {
     showTableTooltip,

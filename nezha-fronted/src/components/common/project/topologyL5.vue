@@ -666,7 +666,7 @@ export default {
           data.pens && data.pens.forEach((item, index) => {
             this.chartGetData.push({ id: item.id, res: [] })
             let arr = []
-            console.log(item.data.valueMappingShow)
+            // console.log(item.data.valueMappingShow)
             if (item.data.valueMappingShow) {
               arr = item.data.expressArr.map((ele) => {
                 let query = ele
