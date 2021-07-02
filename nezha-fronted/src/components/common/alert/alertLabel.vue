@@ -96,6 +96,10 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
       </div>
       <div class="alert-label-box">
+        <div class="alert-label-title">name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
         <div class="alert-label-title">Project</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.project && alertLabelData.project.name ? alertLabelData.project.name : '--'}}</div>
       </div>
@@ -104,16 +108,12 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">Configs</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.configs ? alertLabelData.configs : '--'}}</div>
+        <div class="alert-label-title">Alert</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : '--'}}</div>
       </div>
       <div class="alert-label-box">
-        <div class="alert-label-title">ManageIp</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.asset ? alertLabelData.asset.manageIp : '--'}}</div>
-      </div>
-      <div class="alert-label-box">
-        <div class="alert-label-title">Port</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.port ? alertLabelData.port : '--'}}</div>
+        <div class="alert-label-title">State</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.state ? alertLabelData.state : '--'}}</div>
       </div>
     </div>
   </div>
