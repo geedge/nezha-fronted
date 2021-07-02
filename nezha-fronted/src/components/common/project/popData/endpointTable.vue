@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import nzDataList from '@/components/common/table/nzDataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import dataListMixin from '@/components/common/mixin/dataList'
 export default {
@@ -49,7 +48,6 @@ export default {
   watch: {
   },
   components: {
-    nzDataList,
     endpointTable
   },
   mixins: [dataListMixin],

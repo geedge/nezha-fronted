@@ -46,7 +46,6 @@ import bus from '@/libs/bus'
 import nzAlertTag from '@/components/page/alert/nzAlertTag'
 import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
 import alertLabel from '@/components/common/alert/alertLabel'
-import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
@@ -61,7 +60,6 @@ export default {
     'nz-alert-tag': nzAlertTag,
     alertRuleInfo: alertRuleInfo,
     alertLabel: alertLabel,
-    nzDataList,
     alertMessageTable
   },
   mixins: [dataListMixin],

@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 export default {
@@ -44,7 +43,6 @@ export default {
     moduleName: String
   },
   components: {
-    nzDataList,
     assetTable
   },
   mixins: [dataListMixin],
