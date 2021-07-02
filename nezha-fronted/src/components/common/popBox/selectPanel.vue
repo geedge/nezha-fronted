@@ -152,6 +152,10 @@ export default {
     cursor: move;
     .tree--node>span:first-of-type {
       cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-break: break-word;
     }
     .tree--node>span:last-of-type>span {
       cursor: pointer;
@@ -181,6 +185,12 @@ export default {
   display: flex;
   justify-content: space-between;
   width: calc(100% - 28px);
+}
+.tree--node span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
 }
 .tree--operation {
   opacity: 0;
