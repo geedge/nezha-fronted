@@ -247,6 +247,19 @@ export function myTextRect (node) {
   )
   node.fullTextRect = node.rect
 }
+export function myIconRect2 (node) {
+  node.iconRect = new Rect(node.rect.x + node.paddingLeft, node.rect.y + node.paddingTop, node.rect.width - (node.paddingLeft + node.paddingRight), node.rect.height - (node.paddingTop + node.paddingBottom))
+  node.fullIconRect = node.rect
+}
+export function myTextRect2 (node) {
+  node.textRect = new Rect(
+    node.rect.x + node.paddingLeft,
+    node.rect.y + node.rect.height - 20 - node.paddingBottom,
+    0,
+    0
+  )
+  node.fullTextRect = node.rect
+}
 /* 自定义图片组件 */
 
 /* 自定义立方体 */

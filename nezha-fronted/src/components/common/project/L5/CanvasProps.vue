@@ -50,121 +50,123 @@
             </el-form-item>
           </el-row>
           <!--metric-->
-          <el-row :key="index" class="element-item form-row-item" style=""
-                  v-for="(item,index) in selection.pen.data.expressArr">
-            <promql-input
-              :expression-list="selection.pen.data.expressArr"
-              :id="index"
-              :index="index"
-              :key="index"
-              :plugins="['metric-selector', 'metric-input', 'remove']"
-              :ref="'promql-'+'-1'"
-              :showRemove="false"
-              :styleType="2"
-              :metricOptionsParent="metricOptions"
-              @change="expressionChange"
-              :from-father-data="true"
-            ></promql-input>
-            <el-row style="margin-top: 10px">
-              <template>
-                <!--chart aggregation-->
-                <el-col class="legend-title">
-                  {{$t('dashboard.panel.chartForm.aggregation')}}&nbsp;
-                </el-col>
-                <el-col style="width: calc(100% - 120px)">
-                  <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
-                             size="mini"
-                             style="width: 100%"
-                             v-model="selection.pen.data.aggregation" value-key="chartType">
-                    <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
-                      <span class="panel-dropdown-label-txt">{{item.name}}</span>
-                    </el-option>
-                  </el-select>
-                </el-col>
-              </template>
+          <div v-show="selection.pen.data.valueMappingShow">
+            <el-row :key="index" class="element-item form-row-item" style=""
+                    v-for="(item,index) in selection.pen.data.expressArr">
+              <promql-input
+                :expression-list="selection.pen.data.expressArr"
+                :id="index"
+                :index="index"
+                :key="index"
+                :plugins="['metric-selector', 'metric-input', 'remove']"
+                :ref="'promql-'+'-1'"
+                :showRemove="false"
+                :styleType="2"
+                :metricOptionsParent="metricOptions"
+                @change="expressionChange"
+                :from-father-data="true"
+              ></promql-input>
+              <el-row style="margin-top: 10px">
+                <template>
+                  <!--chart aggregation-->
+                  <el-col class="legend-title">
+                    {{$t('dashboard.panel.chartForm.aggregation')}}&nbsp;
+                  </el-col>
+                  <el-col style="width: calc(100% - 120px)">
+                    <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                               size="mini"
+                               style="width: 100%"
+                               v-model="selection.pen.data.aggregation" value-key="chartType">
+                      <el-option :key="item.id" :label="item.name" :value="item.name" v-for="item in aggregationList">
+                        <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                </template>
+              </el-row>
             </el-row>
-          </el-row>
-          <div style="width: 100%;margin-top: 10px;box-sizing: border-box;padding-left: 10px">
-            <div class="thresholds-box">
-              <el-row class="thresholds-title">
-                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}
-                  <span @click="changeValueMappingSort">
+            <div style="width: 100%;margin-top: 10px;box-sizing: border-box;padding-left: 10px">
+              <div class="thresholds-box">
+                <el-row class="thresholds-title">
+                  <el-col class="thresholds-cell" :span="4">{{$t('project.topology.level')}}
+                    <span @click="changeValueMappingSort">
                     <i  :class="['nz-icon','nz-icon-arrow-up1',selection.pen.data.valueMappingSort==='desc'?'is-arrow-active':'']"></i>
                     <i  :class="['nz-icon','nz-icon-arrow-down2',selection.pen.data.valueMappingSort==='desc'?'':'is-arrow-active']"></i>
                   </span>
-                </el-col>
-                <el-col class="thresholds-cell" :span="4">{{$t('project.topology.color')}}</el-col>
-                <el-col class="thresholds-cell" :span="6">{{$t('project.topology.value')}}</el-col>
-                <el-col class="thresholds-cell" :span="8">{{$t('project.topology.animation')}}</el-col>
-                <el-col class="thresholds-cell" :span="2"></el-col>
-              </el-row>
+                  </el-col>
+                  <el-col class="thresholds-cell" :span="4">{{$t('project.topology.color')}}</el-col>
+                  <el-col class="thresholds-cell" :span="6">{{$t('project.topology.value')}}</el-col>
+                  <el-col class="thresholds-cell" :span="8">{{$t('project.topology.animation')}}</el-col>
+                  <el-col class="thresholds-cell" :span="2"></el-col>
+                </el-row>
 
-              <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
-                <el-col class="thresholds-cell" :span="4">
+                <el-row v-for="(item,index) in selection.pen.data.valueMapping" :key="index">
+                  <el-col class="thresholds-cell" :span="4">
                   <span v-if="selection.pen.data.valueMappingSort==='desc'">
                      {{index===0?selection.pen.data.valueMapping.length-1:(item.level-1)}}
                   </span>
-                  <span v-else>
+                    <span v-else>
                     {{item.level}}
                   </span>
-                </el-col>
-                <el-col class="thresholds-cell" :span="4">
+                  </el-col>
+                  <el-col class="thresholds-cell" :span="4">
                    <span v-if="item.level!==0">
                     <div style="display: inline-block">
                       <nezhaColor :value-arr="[{name:'fill',value:item.color.fill,key:'bac'},{name:'line',value:item.color.line,key:'line'},{name:'text',value:item.color.text,key:'text'}]" @colorChange="(val,key)=>{colorChangeTable(item,val,key)}" :single="false" :color-val="item.color" :presetColors="predefineColors"/>
                     </div>
                   </span>
-                  <span v-else>base</span>
-                </el-col>
-                <el-col class="thresholds-cell" :span="6" style="display: flex">
-                  <el-input
-                    v-if="item.level!==0"
-                    v-model.number="item.value"
-                    @change="valueMappingValueChange(item)"
-                    size="small"
-                  >
-                    <template slot="prepend"> > </template>
-                  </el-input>
-                  <span v-else>base</span>
-                </el-col>
-                <el-col class="thresholds-cell" :span="8">
-                  <!--线-->
-                  <el-select
-                    v-model="item.animateType"
-                    size="small"
-                    v-if="selection.pen&&selection.pen.type&&item.level!==0">
-                    <el-option
-                      v-for="(item,index) in lineAnimateOptions"
-                      :value="item.id"
-                      :key="index"
-                      :label="item.name">
-                    </el-option>
-                  </el-select>
-                  <!--点-->
-                  <el-select
-                    v-model="item.animateType"
-                    size="small"
-                    v-if="selection.pen&&!selection.pen.type&&item.level!==0">
-                    <el-option
-                      v-for="(item,index) in nodeAnimateOptions"
-                      :value="item.id"
-                      :key="index"
-                      :label="item.name">
-                    </el-option>
-                  </el-select>
-                  <!--默认-->
-                  <span v-if="item.level===0">base</span>
-                </el-col>
-                <el-col class="thresholds-cell" :span="2" style="text-align: center">
-                  <i v-if="item.level!==0" @click="valueMappingDel(index, item)"
-                     class="nz-icon nz-icon-minus">
-                  </i>
-                </el-col>
-              </el-row>
+                    <span v-else>base</span>
+                  </el-col>
+                  <el-col class="thresholds-cell" :span="6" style="display: flex">
+                    <el-input
+                      v-if="item.level!==0"
+                      v-model.number="item.value"
+                      @change="valueMappingValueChange(item)"
+                      size="small"
+                    >
+                      <template slot="prepend"> > </template>
+                    </el-input>
+                    <span v-else>base</span>
+                  </el-col>
+                  <el-col class="thresholds-cell" :span="8">
+                    <!--线-->
+                    <el-select
+                      v-model="item.animateType"
+                      size="small"
+                      v-if="selection.pen&&selection.pen.type&&item.level!==0">
+                      <el-option
+                        v-for="(item,index) in lineAnimateOptions"
+                        :value="item.id"
+                        :key="index"
+                        :label="item.name">
+                      </el-option>
+                    </el-select>
+                    <!--点-->
+                    <el-select
+                      v-model="item.animateType"
+                      size="small"
+                      v-if="selection.pen&&!selection.pen.type&&item.level!==0">
+                      <el-option
+                        v-for="(item,index) in nodeAnimateOptions"
+                        :value="item.id"
+                        :key="index"
+                        :label="item.name">
+                      </el-option>
+                    </el-select>
+                    <!--默认-->
+                    <span v-if="item.level===0">base</span>
+                  </el-col>
+                  <el-col class="thresholds-cell" :span="2" style="text-align: center">
+                    <i v-if="item.level!==0" @click="valueMappingDel(index, item)"
+                       class="nz-icon nz-icon-minus">
+                    </i>
+                  </el-col>
+                </el-row>
+              </div>
             </div>
-          </div>
-          <div @click="valueMappingAdd()" style="text-align: center" class="value-mapping-add">
-            <i class="nz-icon nz-icon-plus"></i>
+            <div @click="valueMappingAdd()" style="text-align: center" class="value-mapping-add">
+              <i class="nz-icon nz-icon-plus"></i>
+            </div>
           </div>
 
           <!--tooltip-->
@@ -180,7 +182,7 @@
             </el-form-item>
           </el-row>
 
-          <div class="tooltip-box">
+          <div class="tooltip-box" v-show="selection.pen.data.tooltipShow">
             <!--title-->
             <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
               <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>

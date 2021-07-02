@@ -320,8 +320,8 @@ import {
   imageTemp,
   myShape,
   myAnchors,
-  myIconRect,
-  myTextRect,
+  myIconRect2,
+  myTextRect2,
   onChangeAnimate,
   onChangeAnimateLine,
   myCubec,
@@ -340,7 +340,7 @@ import { getMetricTypeValue } from '../js/tools'
 import bus from '../../../libs/bus'
 import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
 // 注册到画布
-registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
+registerNode('rectangleImg', myShape, myAnchors, myIconRect2, null)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
 
 const canvasOptions = {
@@ -506,6 +506,7 @@ export default {
 
     },
     topoData: {},
+    chartInfo: {},
     fromChartBox: {
       type: Boolean,
       default: false
@@ -636,8 +637,11 @@ export default {
             })
             getTopology(this.topologyIndex).resize()
             getTopology(this.topologyIndex).centerView()
-            if (this.fromChartBox || this.fromChart) {
+            if (this.fromChartBox || this.fromChart) { // 是否来自panel 和 chartBox
               getTopology(this.topologyIndex).fitView(20)
+              if (this.chartInfo && this.chartInfo.param && this.chartInfo.param.lock) { // 判断节点 以及画布 是否可以拖动
+                getTopology(this.topologyIndex).lock(2)
+              }
             }
             this.penToolTipScale = getTopology(this.topologyIndex).data.scale
             setTimeout(() => {

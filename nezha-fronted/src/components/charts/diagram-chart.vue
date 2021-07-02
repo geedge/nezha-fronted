@@ -41,7 +41,7 @@
         </div>
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="text-content"  >
-            <diagram style="height: 100%;width: 100%" :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id" :isPanel="true" ref="diagram"/>
+            <diagram style="height: 100%;width: 100%" :topoData="data.param.topo" :fromChart="true" :topologyIndexF="chartData.id" :isPanel="true" ref="diagram" :chartInfo="chartData"/>
           </div>
         </div>
         <!--全屏-->
@@ -59,7 +59,7 @@
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
         </el-dialog>
       </div>
-      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock" :fromChart="true"></span>
+      <span class="vue-resizable-handle" @mousedown="startResize" v-if="!isLock" :fromChart="true" :chartInfo="chartData"></span>
     </div>
   </div>
 </template>
