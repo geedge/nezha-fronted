@@ -64,7 +64,7 @@
     </el-table-column>
     <el-table-column
       :resizable="false"
-      :width="operationWidth">
+      :width="155">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" @click="changeProjectTopo(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
@@ -101,7 +101,8 @@ export default {
           label: this.$t('project.project.project'),
           prop: 'name',
           show: true,
-          sortable: 'custom'
+          sortable: 'custom',
+          minWidth: 80
         }, {
           label: this.$t('project.module.module'),
           prop: 'moduleNum',
