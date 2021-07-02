@@ -257,11 +257,13 @@ export default {
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
-          show: true
+          show: true,
+          width: 200
         }, {
           label: this.$t('overall.remark'),
           prop: 'description',
-          show: true
+          show: true,
+          width: 200
         }, {
           label: this.$t('alert.list.state'),
           prop: 'state',
@@ -270,11 +272,13 @@ export default {
         }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
-          show: true
+          show: true,
+          width: 160
         }, {
           label: this.$t('alert.endAt'),
           prop: 'endAt',
-          show: true
+          show: true,
+          width: 160
         }
       ],
       tablelable: [],
