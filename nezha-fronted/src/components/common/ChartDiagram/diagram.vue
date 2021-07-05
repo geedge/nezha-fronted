@@ -616,7 +616,7 @@ export default {
           })
           Promise.all(promiseArr).then((res) => {
             getTopology(this.topologyIndex).open(data)
-            console.log(data)
+            // console.log(data)
             getTopology(this.topologyIndex).lock(1)
             this.objChange = false
             let flag = false

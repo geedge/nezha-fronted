@@ -1754,7 +1754,6 @@ export default {
   created () {
     this.getSuggestMetric()
     this.queryMetrics()
-    console.log(this.isEdit)
   },
   watch: {
     chart: {
