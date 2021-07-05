@@ -74,11 +74,13 @@
 <script>
 import { host, port } from '../../common/js/validate'
 import { agent2 } from '@/components/common/js/constants'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'agentBox',
   props: {
     agent: Object
   },
+  mixins: [editRigthBox],
   data () {
     return {
       agent2: agent2,
@@ -188,6 +190,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editPromServer = JSON.parse(JSON.stringify(n))
       }
     },

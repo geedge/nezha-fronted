@@ -55,11 +55,14 @@
 </template>
 
 <script>
+import editRigthBox from '../mixin/editRigthBox'
+
 export default {
   name: 'modelBox',
   props: {
     mib: Object
   },
+  mixins: [editRigthBox],
   data () {
     const $temp = this
     return {
@@ -228,6 +231,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editMib = JSON.parse(JSON.stringify(n))
         if (this.editMib.models) {
           this.selectedModels = this.editMib.models.split(',')

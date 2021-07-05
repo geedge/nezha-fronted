@@ -100,6 +100,8 @@
 <script>
 import { asset as assetConstants} from '@/components/common/js/constants'
 import selectWalk from '../../popBox/selectWalk'
+import editRigthBox from '../../mixin/editRigthBox'
+
 export default {
   name: 'assetTypeBox',
   components: {
@@ -117,6 +119,7 @@ export default {
       }
     }
   },
+  mixins: [editRigthBox],
   data () {
     return {
       assetConstants,
@@ -148,6 +151,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editAssetType = JSON.parse(JSON.stringify(n))
       }
     }

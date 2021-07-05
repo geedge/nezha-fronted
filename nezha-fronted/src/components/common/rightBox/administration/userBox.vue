@@ -82,6 +82,7 @@
 
 <script>
 // import { host, port } from '@/components/common/js/validate'
+import editRigthBox from '../../mixin/editRigthBox'
 
 export default {
   name: 'userBox',
@@ -92,6 +93,7 @@ export default {
       type: Object
     }
   },
+  mixins: [editRigthBox],
   computed: {
     isCurrentUser () {
       return function (username) {
@@ -157,6 +159,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit =true
+        }
         this.editUser = JSON.parse(JSON.stringify(n))
         // if (this.editUser.roles && this.editUser.roles.length > 0) {
         //   this.editUser.roleIds = this.editUser.roles.map(t => t.id)

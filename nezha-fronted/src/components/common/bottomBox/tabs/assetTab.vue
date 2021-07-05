@@ -210,9 +210,6 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      if (this.obj) {
-        this.$set(this.searchLabel, 'modelIds', this.obj.id)
-      }
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {

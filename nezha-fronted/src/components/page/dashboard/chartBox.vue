@@ -499,7 +499,7 @@ import nezhaColor from '../../common/nezhaColor'
 import i18n from '../../common/i18n'
 import { fromRoute } from '@/components/common/js/constants'
 import diagram from '@/components/common/ChartDiagram/diagram'
-import rightBoxMain from '@/components/common/mixin/rightBox'
+import editRigthBox from '../../common/mixin/editRigthBox'
 const rz = {
   methods: {
     rz (e) {
@@ -520,7 +520,7 @@ export default {
       default: false
     }
   },
-  mixins: [rz, rightBoxMain],
+  mixins: [rz,editRigthBox],
   data () {
     return {
       fromRoute,

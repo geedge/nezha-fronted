@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'cabinetBox',
   props: {
@@ -62,6 +63,7 @@ export default {
       default: true
     }
   },
+  mixins: [editRigthBox],
   data () {
     return {
       editCabinet: {},
@@ -156,6 +158,9 @@ export default {
       deep: true,
       immediate: true,
       handler: function (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         if (n) {
           this.editCabinet = JSON.parse(JSON.stringify(n))
         }

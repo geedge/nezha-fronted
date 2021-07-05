@@ -64,6 +64,8 @@
 
 <script>
 import latlngPicker from '../latlngPicker'
+import editRigthBox from '../mixin/editRigthBox'
+
 const regNum = /^[0-9]+.?[0-9]*/
 
 export default {
@@ -75,6 +77,7 @@ export default {
     },
     userData: Array
   },
+  mixins: [editRigthBox],
   data () {
     return {
       editDc: {},
@@ -201,6 +204,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editDc = JSON.parse(JSON.stringify(n))
         this.$nextTick(() => {
           this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)

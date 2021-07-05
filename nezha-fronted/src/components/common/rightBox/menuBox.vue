@@ -83,6 +83,8 @@
 <script>
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import editRigthBox from '../mixin/editRigthBox'
+
 export default {
   name: 'menuBox',
   components: {
@@ -106,6 +108,7 @@ export default {
       return enabled.length === 0
     }
   },
+  mixins: [editRigthBox],
   data () {
     return {
       rules: { // 表单校验规则
@@ -237,6 +240,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editMenu = JSON.parse(JSON.stringify(n))
         if (this.editMenu.perms && this.editMenu.perms != '') {
           this.$set(this.editMenu, 'permissions', this.editMenu.perms.split(',').map(t => { return { value: t } }))

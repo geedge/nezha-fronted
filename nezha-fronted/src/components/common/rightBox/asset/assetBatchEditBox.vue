@@ -221,6 +221,7 @@
 <script>
 import nzTransfer from '@/components/common/nzTransfer'
 import { asset as assetConstants } from '@/components/common/js/constants'
+import editRigthBox from '../../mixin/editRigthBox'
 export default {
   name: 'assetBatchEditBox',
   components: {
@@ -237,6 +238,7 @@ export default {
       type: Array
     }
   },
+  mixins: [editRigthBox],
   data () {
     const vm = this
     return {
@@ -467,6 +469,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         if (n !== assetConstants.editTypeData.account) {
           this.editData.authProtocol = 0
         } else {

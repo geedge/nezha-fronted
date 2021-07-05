@@ -125,12 +125,13 @@
 import bus from '@/libs/bus'
 import { sameLabels } from '@/components/common/js/constants'
 // import selectAlertSilence from '../alert/selectAlertSilence'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'alertSilenceBox',
   components: {
     // selectAlertSilence
   },
-
+  mixins: [editRigthBox],
   props: {
     alertSilence: Object
   },
@@ -139,6 +140,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         const obj = JSON.parse(JSON.stringify(n))
         if (obj.ruleId == -1) {
           obj.ruleId = null

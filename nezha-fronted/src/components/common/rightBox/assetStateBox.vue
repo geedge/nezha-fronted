@@ -62,12 +62,14 @@
   </div>
 </template>
 <script>
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'asset-state-right-box',
   props: {
     assetState: Object,
     assetStateData: Array // 所有数据，用于选择下拉框显示内容
   },
+  mixins: [editRigthBox],
   data () {
     return {
       rules: { // 表单校验规则
@@ -138,6 +140,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         if (n) {
           this.editAssetState = JSON.parse(JSON.stringify(n))
         }
