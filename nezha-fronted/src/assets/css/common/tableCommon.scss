@@ -228,10 +228,10 @@
       .gutter {
         position: fixed;
         right: 31px;
-        height: 49px;
+        height: 42px;
         border-bottom: 1px solid $--right-box-border-color;
         background-color: white;
-        box-sizing: content-box;
+        box-sizing: border-box;
       }
       thead {
         color: #333;
