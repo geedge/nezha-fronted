@@ -118,8 +118,8 @@ export default {
       const alert = item.alert[0]
       if (alert.P1 > 0) {
         return {
-          color: '#FAAFAF',
-          hoverColor: '#FFCDCD'
+          color: '#DA4D4D',
+          hoverColor: '#E87F7F'
         }
       } else if (alert.P2 > 0) {
         return {
