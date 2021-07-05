@@ -7,7 +7,7 @@ export default {
   mounted () {
     if( this.isEdit ) {
       window.onbeforeunload = () => {
-        return window.confirm("确认操作吗？")
+        return "确认离开当前页面吗？未保存的数据将会丢失"
       }
     }
   },
