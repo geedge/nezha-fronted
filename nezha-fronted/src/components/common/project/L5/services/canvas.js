@@ -216,6 +216,53 @@ export const imageTemp = {
     fullIconRect: { width: 80, height: 90, center: { x: 972, y: 456 }, ex: 1012, ey: 496 }
   }
 }
+export const imageTemp2 = {
+  name: 'rectangleImg2',
+  icon: 'icon-image',
+  data: {
+    type: 0,
+    rect: {
+      x: 922,
+      y: 406,
+      width: 100,
+      height: 100
+    },
+    imageRatio: true,
+    lineWidth: 0,
+    rotate: 0,
+    offsetRotate: 0,
+    globalAlpha: 1,
+    dash: 0,
+    strokeStyle: '#000000',
+    animatePos: 0,
+    name: 'rectangleImg2',
+    lineDashOffset: 0,
+    text: '',
+    textOffsetX: 0,
+    textOffsetY: 0,
+    visible: true,
+    zRotate: 0,
+    animateDuration: 0,
+    animateFrames: [],
+    animateFrame: 0,
+    borderRadius: 0,
+    icon: '',
+    image: '',
+    imageAlign: 'center',
+    bkType: 0,
+    gradientAngle: 0,
+    gradientRadius: 0.01,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingLeftNum: 5,
+    paddingRightNum: 5,
+    paddingTopNum: 5,
+    paddingBottomNum: 5,
+    fullIconRect: { width: 80, height: 90, center: { x: 972, y: 456 }, ex: 1012, ey: 496 }
+  }
+}
 /* 自定义图片组件 */
 export function myShape (ctx, node) { // 自定义图片组件
   ctx.beginPath()
@@ -252,13 +299,13 @@ export function myIconRect2 (node) {
   node.fullIconRect = node.rect
 }
 export function myTextRect2 (node) {
-  node.data.text = ''
-  node.textRect = new Rect(
-    node.rect.x + node.paddingLeft,
-    node.rect.y + node.rect.height - 20 - node.paddingBottom,
-    0,
-    0
-  )
+  // node.textRect = new Rect(
+  //   node.rect.x + node.paddingLeft,
+  //   node.rect.y + node.rect.height + 10,
+  //   node.rect.width - (node.paddingLeft + node.paddingRight),
+  //   20
+  // )
+  node.textRect = {}
   node.fullTextRect = node.rect
 }
 /* 自定义图片组件 */

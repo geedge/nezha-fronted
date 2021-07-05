@@ -279,13 +279,13 @@
               </el-cascader>
             </el-form-item>
             <!--Align-->
-            <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.align')" class="form-item--half-width" prop="unit">
+            <!--<el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.align')" class="form-item&#45;&#45;half-width" prop="unit">
               <el-select id="chart-box-statistics" v-model="editChart.param.align" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
                 <el-option v-for="item in alignList" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="unit">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">

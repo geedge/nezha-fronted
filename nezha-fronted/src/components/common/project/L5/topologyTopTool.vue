@@ -16,7 +16,7 @@
             width="111"
             trigger="click"
             class="scale-number-box"
-            popper-class="scale-number-popover"
+            popper-class="scale-number-popover no-style-class"
            >
             <div class="scale-num-pop" style=" width: 91px;min-width: 91px">
               <div>缩放级别</div>
@@ -106,7 +106,7 @@ export default {
     }
   },
   mounted () {
-    const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data
+    const dataOption = getTopology(this.index).data
     Object.keys(this.option).forEach(key => {
       if (key === 'scale') {
         this.scaleNum = (JSON.stringify(dataOption[key]) ? parseInt(dataOption[key] * 100) : this.scaleNum)

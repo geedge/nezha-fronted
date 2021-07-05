@@ -50,7 +50,8 @@
             </el-form-item>
           </el-row>
           <!--metric-->
-          <div v-show="selection.pen.data.valueMappingShow">
+          <transition name="el-zoom-in-top">
+            <div v-show="selection.pen.data.valueMappingShow">
             <el-row :key="index" class="element-item form-row-item" style=""
                     v-for="(item,index) in selection.pen.data.expressArr">
               <promql-input
@@ -168,9 +169,9 @@
               <i class="nz-icon nz-icon-plus"></i>
             </div>
           </div>
-
+          </transition>
           <!--tooltip-->
-          <el-row class="form-row-title">
+          <el-row class="form-row-title" :style="{'margin-top': '10px'}">
             {{$t('dashboard.panel.chartForm.tooltip')}}
             <el-form-item class="float-right" prop="type" style="height: 100%;">
               <el-switch
@@ -181,8 +182,8 @@
               />
             </el-form-item>
           </el-row>
-
-          <div class="tooltip-box" v-show="selection.pen.data.tooltipShow">
+          <transition name="el-zoom-in-top">
+            <div class="tooltip-box" v-show="selection.pen.data.tooltipShow">
             <!--title-->
             <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
               <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>
@@ -201,16 +202,6 @@
               >
               </el-cascader>
             </el-form-item>
-<!--            &lt;!&ndash;displayChart&ndash;&gt;-->
-<!--            <el-form-item :label="$t('dashboard.panel.chartForm.displayChart')" class="half-form-item" prop="type">-->
-<!--              <el-switch-->
-<!--                v-model="selection.pen.data.displayChart"-->
-<!--                :active-value="true"-->
-<!--                :inactive-value="false"-->
-<!--                active-color="#ee9d3f"-->
-<!--              />-->
-<!--            </el-form-item>-->
-            <!--chart type-->
             <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
               <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                          size="mini"
@@ -221,7 +212,7 @@
               </el-select>
             </el-form-item>
             <!--value mapping-->
-            <el-row :key="index" class="element-item form-row-item" style=""
+            <el-row :key="index" class="element-item form-row-item" style="width: calc(100% - 60px);"
                     v-for="(item,index) in selection.pen.data.expressAllArr">
               <promql-input
                 :expression-list="selection.pen.data.expressAllArr"
@@ -253,7 +244,8 @@
                 </template>
               </el-row>
               <div class="nz-icon-minus-position">
-              <span class="nz-icon-minus-medium">
+              <span class="nz-icon-minus-medium" style="box-sizing: border-box;
+    padding: 10px;">
                 <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
           </span>
                 <span class="nz-icon-copy">
@@ -265,7 +257,7 @@
               <i class="nz-icon nz-icon-plus"></i>
             </div>
           </div>
-
+          </transition>
 <!--          &lt;!&ndash;link&ndash;&gt;-->
 <!--          <el-row class="form-row-title">-->
 <!--            {{$t('project.topology.link')}}-->
@@ -628,7 +620,7 @@
                     v-model.number="selection.pen.data.lineWidth"
                     :readonly="readonly"
                     required
-                    :min="selection.pen.type?1:(selection.pen.name==='rectangleImg' ||selection.pen.name==='myCube'?0:1)"
+                    :min="selection.pen.type?1:(selection.pen.name==='rectangleImg2' || selection.pen.name==='rectangleImg' || selection.pen.name==='myCube' ?0:1)"
                     @change="onChange('lineWidth')"></el-input-number>
                 </div>
               </div>
@@ -717,6 +709,72 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+<!--    选中多个-->
+    <div v-else-if="selection.pens" class="">
+      <el-collapse v-model="activeNames">
+        <!--对齐方式-->
+        <el-collapse-item title="对齐" name="1" v-if="selection.pens">
+          <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">
+            <i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"
+               @click="onNodesAlign(item.value)"></i>
+          </label>
+        </el-collapse-item>
+        <!--排版-->
+        <el-collapse-item title="排版" name="2" v-if="selection.pens">
+          <div class="mt10">
+            <div class="flex middle mb10">
+              <label>最大宽度：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
+                                 v-model.number="layout.maxWidth" title="超出最大宽度换行"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle mb10">
+              <label>节点宽度：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
+                                 v-model.number="layout.nodeWidth" title="固定每个节点的宽度"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle mb10">
+              <label>节点高度：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
+                                 v-model.number="layout.nodeHeight" title="固定每个节点的高度"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle mb10">
+              <label>水平个数：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" type="number" controls-position="right" class="input" size="small"
+                                 v-model.number="layout.maxCount"
+                                 title="超出最大个数，将自动计算水平间距（下面水平间距设置将无效）"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle mb10">
+              <label>水平间距：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
+                                 v-model.number="layout.spaceWidth" title="节点之间水平间距（px）"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle mb10">
+              <label>垂直间距：</label>
+              <div class="full pr10">
+                <el-input-number :precision="2" controls-position="right" type="number" class="input" size="small"
+                                 v-model.number="layout.spaceHeight" title="节点之间垂直间距（px）"></el-input-number>
+              </div>
+            </div>
+            <div class="flex middle">
+              <label></label>
+              <div class="full pr10">
+                <button class="button primary" @click="onLayout">开始排版</button>
+              </div>
+            </div>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
     <!-- 选中为空 -->
     <div v-else style="height: 100%">
       <div class="project-title">
@@ -1265,7 +1323,7 @@ export default {
     selection: {
       handler () {
         // this.loading = false
-        if (this.selection.pen && this.selection.pen.data && !this.selection.pen.data.expressAllArr) {
+        if (this.selection.pen && this.selection.pen.data && (!this.selection.pen.data.expressAllArr || this.selection.pen.data.expressAllArr.length===0)) {
           this.selection.pen.data.expressAllArr = ['']
           this.selection.pen.data.legendsAll = ['']
         }
@@ -1943,7 +2001,7 @@ export default {
 
     /deep/ .el-collapse-item__header {
       padding: 0 10px;
-      background-color: #F9F9F9;
+      background-color: #eeeeee;
       height: 32px;
       font-size: 14px;
       color: #333333;
