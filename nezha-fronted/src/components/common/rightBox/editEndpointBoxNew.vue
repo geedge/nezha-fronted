@@ -456,52 +456,56 @@ export default {
     },
     /* 保存 */
     save () {
-      this.editEndpoint.configs.params = this.paramToJson(this.editEndpoint.paramObj)
-      this.editEndpoint.configs.labels = this.labelsToJson(this.editEndpoint.labelModule)
-      this.editEndpoint.paramObj = this.editEndpoint.paramObj.filter(item => item.value && item.value.length)
-      this.editEndpoint.labelModule = this.editEndpoint.labelModule.filter(item => item.value)
-      const params = { ...this.editEndpoint }
-      params.configs.walk = params.walk
-      params.configs.port = params.port
-      params.configs = JSON.stringify(params.configs)
-      if (this.authType === 2 && !this.editEndpoint.configs.bearer_token) {
-        this.$message.error("'token' is required")
-      } else if (this.authType === 1 && !(this.editEndpoint.configs.basic_auth.username && this.editEndpoint.configs.basic_auth.pin)) {
-        this.$message.error("'username' and 'password' is required")
-      } else {
-        this.authType = 0
-      }
-      this.$nextTick(() => {
-        this.$refs.moduleForm.validate((valid) => {
-          if (valid) {
-            if (this.optionType === 'add' || this.optionType === 'batch') {
-              this.prevent_opt.save = true
-              if (this.editEndpoint.assetId) {
-                this.$emit('close', true, this.editEndpoint, false)
-                this.prevent_opt.save = false
-              } else {
-                this.$emit('close', true, this.editEndpoint, true)
-                this.prevent_opt.save = false
-              }
-            } else if (this.optionType === 'edit') {
-              if (this.editEndpoint.id) {
-                this.$put('monitor/endpoint', [params]).then(response => {
-                  if (response.code === 200) {
-                    this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-                    this.$store.commit('setReloadFacade')
-                    this.esc(true)
-                  } else {
-                    this.$message.error(response.msg)
-                  }
+      this.prevent_opt.save = true
+      setTimeout(() => {
+        this.editEndpoint.configs.params = this.paramToJson(this.editEndpoint.paramObj)
+        this.editEndpoint.configs.labels = this.labelsToJson(this.editEndpoint.labelModule)
+        this.editEndpoint.paramObj = this.editEndpoint.paramObj.filter(item => item.value && item.value.length)
+        this.editEndpoint.labelModule = this.editEndpoint.labelModule.filter(item => item.value)
+        const params = { ...this.editEndpoint }
+        params.configs.walk = params.walk
+        params.configs.port = params.port
+        params.configs = JSON.stringify(params.configs)
+        if (this.authType === 2 && !this.editEndpoint.configs.bearer_token) {
+          this.$message.error("'token' is required")
+        } else if (this.authType === 1 && !(this.editEndpoint.configs.basic_auth.username && this.editEndpoint.configs.basic_auth.pin)) {
+          this.$message.error("'username' and 'password' is required")
+        } else {
+          this.authType = 0
+        }
+        this.$nextTick(() => {
+          this.$refs.moduleForm.validate((valid) => {
+            if (valid) {
+              if (this.optionType === 'add' || this.optionType === 'batch') {
+                this.prevent_opt.save = true
+                if (this.editEndpoint.assetId) {
+                  this.$emit('close', true, this.editEndpoint, false)
                   this.prevent_opt.save = false
-                })
+                } else {
+                  this.$emit('close', true, this.editEndpoint, true)
+                  this.prevent_opt.save = false
+                }
+              } else if (this.optionType === 'edit') {
+                if (this.editEndpoint.id) {
+                  this.$put('monitor/endpoint', [params]).then(response => {
+                    if (response.code === 200) {
+                      this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                      this.$store.commit('setReloadFacade')
+                      this.esc(true)
+                    } else {
+                      this.$message.error(response.msg)
+                    }
+                    this.prevent_opt.save = false
+                  })
+                }
               }
+            } else {
+              this.prevent_opt.save = false
+              return false
             }
-          } else {
-            return false
-          }
+          })
         })
-      })
+      }, 10)
     },
     /* 删除 */
     del () {

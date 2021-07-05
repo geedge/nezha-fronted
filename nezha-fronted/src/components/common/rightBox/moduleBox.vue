@@ -454,49 +454,52 @@ export default {
     },
     /* 保存 */
     save () {
-      this.editModule.configs.params = this.paramToJson(this.editModule.paramObj)
-      this.editModule.configs.labels = this.labelsToJson(this.editModule.labelModule)
-      const params = { ...this.editModule }
-      params.configs.walk = params.walk
-      params.configs.port = params.port
-      params.configs = JSON.stringify(params.configs)
-      if (this.authType === 2 && !this.editModule.configs.bearer_token) {
-        this.$message.error("'token' is required")
-      } else if (this.authType === 1 && !(this.editModule.configs.basic_auth.username && this.editModule.configs.basic_auth.pin)) {
-        this.$message.error("'username' and 'password' is required")
-      } else {
-        this.authType = 0
-      }
-      this.$refs.moduleForm.validate((valid) => {
-        if (valid) {
-          this.prevent_opt.save = true
-          if (this.editModule.id) {
-            this.$put('monitor/module', params).then(response => {
-              if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-                this.$store.commit('setReloadFacade')
-                this.esc(true)
-              } else {
-                this.$message.error(response.msg)
-              }
-              this.prevent_opt.save = false
-            })
-          } else {
-            this.$post('monitor/module', params).then(response => {
-              if (response.code === 200) {
-                this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-                this.$store.commit('setReloadFacade')
-                this.esc(true)
-              } else {
-                this.$message.error(response.msg)
-              }
-              this.prevent_opt.save = false
-            })
-          }
+      setTimeout(() => {
+        this.editModule.configs.params = this.paramToJson(this.editModule.paramObj)
+        this.editModule.configs.labels = this.labelsToJson(this.editModule.labelModule)
+        const params = { ...this.editModule }
+        params.configs.walk = params.walk
+        params.configs.port = params.port
+        params.configs = JSON.stringify(params.configs)
+        if (this.authType === 2 && !this.editModule.configs.bearer_token) {
+          this.$message.error("'token' is required")
+        } else if (this.authType === 1 && !(this.editModule.configs.basic_auth.username && this.editModule.configs.basic_auth.pin)) {
+          this.$message.error("'username' and 'password' is required")
         } else {
-          return false
+          this.authType = 0
         }
-      })
+        this.$refs.moduleForm.validate((valid) => {
+          if (valid) {
+            this.prevent_opt.save = true
+            if (this.editModule.id) {
+              this.$put('monitor/module', params).then(response => {
+                if (response.code === 200) {
+                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.$store.commit('setReloadFacade')
+                  this.esc(true)
+                } else {
+                  this.$message.error(response.msg)
+                }
+                this.prevent_opt.save = false
+              })
+            } else {
+              this.$post('monitor/module', params).then(response => {
+                if (response.code === 200) {
+                  this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                  this.$store.commit('setReloadFacade')
+                  this.esc(true)
+                } else {
+                  this.$message.error(response.msg)
+                }
+                this.prevent_opt.save = false
+              })
+            }
+          } else {
+            this.prevent_opt.save = false
+            return false
+          }
+        })
+      }, 10)
     },
     /* 删除 */
     del () {

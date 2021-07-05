@@ -55,7 +55,7 @@
             </el-select>
           </el-form-item>
           <el-form-item   class="half-form-item">
-            <button class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" @click="downloadAgent">{{$t('config.agent.agent.download')}}</button>
+            <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" @click="downloadAgent">{{$t('config.agent.agent.download')}}</button>
           </el-form-item>
           <div class="right-box-sub-title">{{$t('config.agent.agent.autoScript')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
@@ -177,7 +177,8 @@ export default {
       },
       wgetVisible: false,
       curlVisible: false,
-      federationEnabled: !Number(localStorage.getItem('nz-prometheus-federation-enabled'))
+      federationEnabled: !Number(localStorage.getItem('nz-prometheus-federation-enabled')),
+      downloadAgentFlag: false
     }
   },
   methods: {
@@ -245,7 +246,9 @@ export default {
       }
     },
     downloadAgent: function () {
+      this.downloadAgentFlag = true
       axios.get('agent/download?os=' + this.agentParam.osType, { responseType: 'blob' }).then(data => {
+        this.downloadAgentFlag = false
         let fileName = 'confagent'
         const disposition = data.headers['content-disposition']
         if (disposition) {
@@ -266,6 +269,8 @@ export default {
           link.click()
           window.URL.revokeObjectURL(link.href)
         }
+      }).catch(()=>{
+        this.downloadAgentFlag = false
       })
     }
   },
