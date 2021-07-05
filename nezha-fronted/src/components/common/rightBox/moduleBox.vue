@@ -259,6 +259,7 @@
 <script>
 import { noSpecialChar, port, nzNumber } from '../js/validate'
 import selectWalk from '../popBox/selectWalk'
+import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
 
 export default {
@@ -271,6 +272,7 @@ export default {
     'select-walk': selectWalk,
     VueTagsInput
   },
+  mixins: [editRigthBox],
   data () {
     return {
       walkData: [],
@@ -674,6 +676,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editModule = JSON.parse(JSON.stringify(n))
         this.activeName = 'Basic'
 

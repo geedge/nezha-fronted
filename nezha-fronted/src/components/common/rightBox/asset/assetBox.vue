@@ -242,6 +242,8 @@ import { host, port } from '@/components/common/js/validate'
 import { asset as assetConstants } from '@/components/common/js/constants'
 import selectAssetType from '@/components/common/popBox/selectAssetType'
 import locationCascader from '@/components/common/rightBox/locationCascader'
+import editRigthBox from '../../mixin/editRigthBox'
+
 export default {
   name: 'assetBox',
   components: {
@@ -253,6 +255,7 @@ export default {
       type: Object
     }
   },
+  mixins: [editRigthBox],
   data () {
     const vm = this
     return {
@@ -347,6 +350,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editAsset = JSON.parse(JSON.stringify(n))
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
         this.editAsset.stateId = n.state ? n.state.id : ''

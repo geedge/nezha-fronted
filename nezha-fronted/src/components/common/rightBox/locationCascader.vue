@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'locationCascader',
   components: {
@@ -62,6 +63,7 @@ export default {
     disabled: { type: Boolean },
     dcOption: { type: Array }
   },
+  mixins: [editRigthBox],
   data () {
     return {
       initData: null,
@@ -387,6 +389,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.$emit('change', n)
       }
     },

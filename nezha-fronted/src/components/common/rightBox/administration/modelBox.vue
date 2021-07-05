@@ -60,6 +60,8 @@
 <script>
 // import { host, port } from '@/components/common/js/validate'
 import selectWalk from '../../popBox/selectWalk'
+import editRigthBox from '../../mixin/editRigthBox'
+
 export default {
   name: 'modelBox',
   components: {
@@ -77,6 +79,7 @@ export default {
       }
     }
   },
+  mixins: [editRigthBox],
   data () {
     return {
       language: localStorage.getItem('nz-language'),
@@ -109,6 +112,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editModel = JSON.parse(JSON.stringify(n))
       }
     }

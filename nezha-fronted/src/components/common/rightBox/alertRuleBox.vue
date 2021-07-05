@@ -124,6 +124,7 @@
 import chartDataFormat from '../../charts/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { nzNumber } from '../js/validate'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'alertRuleBox',
   props: {
@@ -132,6 +133,7 @@ export default {
   components: {
     'promql-input': promqlInput
   },
+  mixins: [editRigthBox],
   data () {
     return {
       promqlCount: 1,
@@ -318,6 +320,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id) {
           this.expressions = [this.editAlertRule.expr]

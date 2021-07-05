@@ -72,6 +72,8 @@
 
 <script>
 import promqlInput from '../../page/dashboard/explore/promqlInput'
+import editRigthBox from '../mixin/editRigthBox'
+
 export default {
   name: 'exprTempBox',
   components: {
@@ -80,11 +82,15 @@ export default {
   props: {
     exprTemp: Object
   },
+  mixins: [editRigthBox],
   watch: {
     exprTemp: {
       deep: true,
       immediate: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         const obj = { ...n }
         obj.expression = [obj.expression]
         this.editExprTemp = Object.assign(this.editExprTemp, obj)

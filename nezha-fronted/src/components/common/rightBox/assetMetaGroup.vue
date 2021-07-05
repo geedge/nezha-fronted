@@ -41,12 +41,14 @@
 </template>
 
 <script>
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'assetMetaGroup',
   props: {
     metaGroup: {}
   },
   components: {},
+  mixins: [editRigthBox],
   data () {
     return {
       editMetaGroup: {
@@ -63,6 +65,9 @@ export default {
     metaGroup: {
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editMetaGroup = { ...n }
       }
     }

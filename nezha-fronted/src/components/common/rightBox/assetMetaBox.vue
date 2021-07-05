@@ -142,12 +142,14 @@
 
 <script>
 import assetTagEx from '../../page/asset/components/assetTagEx'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'assetLabelBox',
   props: {
     obj: { type: Object }
   },
   components: { assetTagEx },
+  mixins: [editRigthBox],
   data () {
     return {
       ready: false,
@@ -233,6 +235,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editAssetMeta = {
           ...n,
           groupId: n.groupId ? Number(n.groupId) : '',

@@ -499,6 +499,8 @@ import nezhaColor from '../../common/nezhaColor'
 import i18n from '../../common/i18n'
 import { fromRoute } from '@/components/common/js/constants'
 import diagram from '@/components/common/ChartDiagram/diagram'
+import editRigthBox from '../../common/mixin/editRigthBox'
+
 const rz = {
   methods: {
     rz (e) {
@@ -519,7 +521,7 @@ export default {
       default: false
     }
   },
-  mixins: [rz],
+  mixins: [rz,editRigthBox],
   data () {
     return {
       fromRoute,
@@ -1759,6 +1761,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         if ((n.param && n.param.valueMapping) && (n.type === 'singleStat' || n.type === 'table')) {
           n.param.valueMapping.mapping.forEach(item => {
             this.showPicker.push({ bac: false, text: false })

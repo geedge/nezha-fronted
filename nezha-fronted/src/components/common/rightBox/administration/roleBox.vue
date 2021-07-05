@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import editRigthBox from '../../mixin/editRigthBox'
 export default {
   name: 'roleBox',
   components: {
@@ -58,6 +59,7 @@ export default {
     },
     detail: Boolean
   },
+  mixins: [editRigthBox],
   data () {
     return {
       editRole: {},
@@ -79,6 +81,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editRole = JSON.parse(JSON.stringify(n))
         if (this.editRole.roles && this.editRole.roles.length > 0) {
           this.editRole.roleIds = this.editRole.roles.map(t => t.id)

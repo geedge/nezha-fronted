@@ -34,12 +34,14 @@
   </div>
 </template>
 <script>
+import editRigthBox from '../mixin/editRigthBox'
 import { noSpecialChar } from '../../common/js/validate'
 export default {
   name: 'projectBox',
   props: {
     project: Object
   },
+  mixins: [editRigthBox],
   data () {
     return {
       editProject: {},
@@ -119,6 +121,9 @@ export default {
     project: {
       immediate: true,
       handler (n, o) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.editProject = JSON.parse(JSON.stringify(n))
       }
     }

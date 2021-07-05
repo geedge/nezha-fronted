@@ -74,6 +74,8 @@
 <script>
 import nzTransfer from '@/components/common/nzTransfer'
 import { fromRoute } from '@/components/common/js/constants'
+import editRigthBox from '../mixin/editRigthBox'
+
 export default {
   name: 'chartTempBox',
   components: {
@@ -85,6 +87,7 @@ export default {
     },
     from: String
   },
+  mixins: [editRigthBox],
   data () {
     return {
       fromRoute,
@@ -176,6 +179,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (n.id) {
+          this.isEdit = false
+        }
         this.editChartTemp = JSON.parse(JSON.stringify(n))
       }
     }

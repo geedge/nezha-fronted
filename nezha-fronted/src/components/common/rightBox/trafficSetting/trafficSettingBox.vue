@@ -28,6 +28,7 @@
 
 <script>
 import trafficSettingTab from './trafficSettingTab'
+import editRigthBox from '../../mixin/editRigthBox'
 import { getUUID } from '../../js/common'
 
 export default {
@@ -41,6 +42,7 @@ export default {
       required: true
     }
   },
+  mixins: [editRigthBox],
   mounted () {
     this.queryTrafficSettings()
   },
@@ -316,7 +318,10 @@ export default {
     dc: {
       immediate: true,
       deep: true,
-      handler () {
+      handler (n) {
+        if (n.id) {
+          this.isEdit = true
+        }
         this.queryAssetList()
       }
     }
