@@ -818,7 +818,6 @@ export default {
               }
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
-                  // console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
                   const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
                   item.image = img ? img.image : imgDefault
                 }
@@ -851,7 +850,6 @@ export default {
                 data.bkImage = undefined
               }
               Promise.all(promiseArr).then(res => {
-                // console.log(res)
                 res.forEach((response, index) => {
                   const item = data.pens[index]
                   if (item.type === 0) {

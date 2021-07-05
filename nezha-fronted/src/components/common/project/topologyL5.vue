@@ -647,7 +647,6 @@ export default {
           data.pens && data.pens.forEach((item, index) => {
             this.chartGetData.push({ id: item.id, res: [] })
             let arr = []
-            // console.log(item.data.valueMappingShow)
             if (item.data.valueMappingShow) {
               arr = item.data.expressArr.map((ele) => {
                 let query = ele
@@ -813,7 +812,6 @@ export default {
               }
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
-                  // console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
                   const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
                   item.image = img ? img.image : imgDefault
                 }
@@ -846,7 +844,6 @@ export default {
                 data.bkImage = undefined
               }
               Promise.all(promiseArr).then(res => {
-                // console.log(res)
                 res.forEach((response, index) => {
                   const item = data.pens[index]
                   if (item.type === 0) {
@@ -1838,7 +1835,6 @@ export default {
       this.previewData = ''
       this.isPreview = false
       const topologyData = getTopology(this.topologyIndex).pureData()
-      // console.log(JSON.stringify(topologyData))
       let flag = true
       const arr = []
       this.notModuleIDArr = []

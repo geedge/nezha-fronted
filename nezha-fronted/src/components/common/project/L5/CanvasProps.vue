@@ -243,9 +243,9 @@
                   </el-col>
                 </template>
               </el-row>
-              <div class="nz-icon-minus-position">
-              <span class="nz-icon-minus-medium" style="box-sizing: border-box;
+              <div class="nz-icon-minus-position" style="box-sizing: border-box;
     padding: 10px;">
+              <span class="nz-icon-minus-medium">
                 <i @click="removeExpression(index)" class="nz-icon nz-icon-minus"></i>
           </span>
                 <span class="nz-icon-copy">

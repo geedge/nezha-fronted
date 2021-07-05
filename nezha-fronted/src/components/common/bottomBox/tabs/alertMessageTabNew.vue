@@ -296,7 +296,6 @@ export default {
               }
             })
             this.$nextTick(() => {
-              // console.log(this.legend, this.chartDatas)
               this.$refs.messageChart.setRandomColors(this.chartDatas.length)
               this.$refs.messageChart.setLegend(this.legend)
               this.$refs.messageChart.setSeries(this.chartDatas)

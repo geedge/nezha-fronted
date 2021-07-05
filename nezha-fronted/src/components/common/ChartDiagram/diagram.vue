@@ -616,7 +616,6 @@ export default {
           })
           Promise.all(promiseArr).then((res) => {
             getTopology(this.topologyIndex).open(data)
-            // console.log(data)
             getTopology(this.topologyIndex).lock(1)
             this.objChange = false
             let flag = false
@@ -772,7 +771,6 @@ export default {
             }
             data.pens.forEach(item => {
               if (item.type === 0 && item.data.imageId) {
-                // console.log(item,item.data.imageId,this.iconArray.find(item1 => item1.id == 44))
                 const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
                 item.image = img ? img.image : imgDefault
               }
@@ -1041,7 +1039,6 @@ export default {
 
     onMessage (event, data, e) {
       // console.log('onMessage', event, data)
-      // console.log(getTopology(this.topologyIndex))
       // this.notModuleIDArr=[];
       // this.toolShow.attr = false
       // this.toolShow.topTool = false
@@ -1152,7 +1149,6 @@ export default {
           setTimeout(() => {
             this.tooltipPosition.show = true
             const ePosition = window.ePosition
-            console.log(ePosition)
             const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
             const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
             this.tooltipPosition.left = ePosition.layerX + 20
@@ -1748,8 +1744,6 @@ export default {
       this.previewData = ''
       this.isPreview = false
       const topologyData = getTopology(this.topologyIndex).pureData()
-      // console.log(JSON.stringify(topologyData))
-
       this.editTopologyFlag = false
       topologyData.rule = false
       topologyData.grid = false

@@ -287,7 +287,6 @@ export function stringTimeParseToUnix (stringTime) {
   offset = moment.tz(offset).format('Z')
   offset = Number.parseInt(offset)
   const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
-  // console.log(offset,localOffset, time)
   time = time + localOffset - offset * 60 * 60 * 1000
   return parseInt(time / 1000)
 }
