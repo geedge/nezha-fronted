@@ -232,30 +232,26 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 160,
-          sortable: 'custom'
+          width: 160
         },{
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
-          show: true,
+          show: true
         }, {
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
           NotSet: true,
-          minWidth: 250,
-          sortable: 'custom'
+          minWidth: 250
         }, {
           label: this.$t('alert.severity'),
           prop: 'severityId',
           show: true,
-          width: 110,
-          sortable: 'custom'
+          width: 110
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
-          show: true,
-          minWidth: 200
+          show: true
         }, {
           label: this.$t('overall.remark'),
           prop: 'description',
@@ -270,8 +266,7 @@ export default {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
-          width: 150,
-          sortable: 'custom'
+          width: 150
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
