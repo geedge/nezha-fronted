@@ -206,6 +206,20 @@ export default {
   methods: {
     showTableTooltip,
     hideTableTooltip,
+    tableDataSort (item) {
+      let orderBy = ''
+      let str = item.prop
+      if (str === 'dc') {
+        orderBy = str
+      }
+      if (item.order === 'ascending') {
+        orderBy = str
+      }
+      if (item.order === 'descending') {
+        orderBy = '-' + str
+      }
+      this.$emit('orderBy', orderBy)
+    },
     messageStyle (title, row) {
       if (title.prop === 'alertNum') {
         if (row.alertNum > 0) {
