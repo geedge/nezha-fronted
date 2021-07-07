@@ -18,25 +18,6 @@ export const Tools = [
   {
     group: 'General',
     children: [
-      // {
-      //   name: 'rectangle',
-      //   icon: 'icon-rect',
-      //   data: {
-      //     text: 'rect',
-      //     rect: {
-      //       width: 100,
-      //       height: 100
-      //     },
-      //     paddingLeft: 10,
-      //     paddingRight: 10,
-      //     paddingTop: 10,
-      //     paddingBottom: 10,
-      //     name: 'rectangleImg',
-      //     icon: '\ue680',
-      //     iconFamily: 'nz-icon',
-      //     iconColor: ''
-      //   }
-      // },
       {
         name: 'rectangle',
         icon: 'icon-cube',
@@ -295,7 +276,7 @@ export function myTextRect (node) {
   node.fullTextRect = node.rect
 }
 export function myIconRect2 (node) {
-  node.iconRect = new Rect(node.rect.x + node.paddingLeft, node.rect.y + node.paddingTop, node.rect.width - (node.paddingLeft + node.paddingRight), node.rect.height - (node.paddingTop + node.paddingBottom))
+  node.iconRect = node.rect
   node.fullIconRect = node.rect
 }
 export function myTextRect2 (node) {

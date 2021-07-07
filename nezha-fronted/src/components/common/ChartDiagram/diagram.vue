@@ -361,7 +361,33 @@ export default {
       imgInit: false, // 判断图片是否加载完成
       toolGroup: '基本形状',
       editFlag: true,
-      tools: [...Tools],
+      tools: [
+        ...Tools,
+        {
+          group: '123',
+          children: [
+            {
+              name: 'rectangle2',
+              icon: 'icon-rect',
+              data: {
+                text: 'rect',
+                rect: {
+                  width: 100,
+                  height: 100
+                },
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                name: 'rectangleImg2',
+                icon: '\ue6cf',
+                iconFamily: 'nz-icon',
+                iconColor: ''
+              }
+            }
+          ]
+        }
+      ],
       props: {},
       topologyLoading: false,
       contextmenu: {
@@ -833,7 +859,12 @@ export default {
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
             pen.fontColor = selLevel.color.text
-            pen.fillStyle = selLevel.color.fill
+            console.log(pen.iconFamily)
+            if (pen.iconFamily) {
+              pen.fillStyle = 'transparent'
+              pen.iconColor = selLevel.color.fill
+            }
+
             pen.strokeStyle = selLevel.color.line
             pen.bkType = 0
           }
@@ -1063,6 +1094,7 @@ export default {
             error: false,
             animatePlay: false,
             fillStyle: data.fillStyle,
+            iconColor: data.fillStyle,
             strokeStyle: data.strokeStyle,
             gradientColor: '#bae7ff',
             gradientType: 0,
@@ -1557,7 +1589,30 @@ export default {
       if (!this.fromOverView) {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
-          this.tools = [...Tools]
+          this.tools = [...Tools, {
+            group: '123',
+            children: [
+              {
+                name: 'rectangle2',
+                icon: 'icon-rect',
+                data: {
+                  text: 'rect',
+                  rect: {
+                    width: 100,
+                    height: 100
+                  },
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  name: 'rectangleImg2',
+                  icon: '\ue6cf',
+                  iconFamily: 'nz-icon',
+                  iconColor: '#000'
+                }
+              }
+            ]
+          }]
           const imgArr = []
           const promiseArr = []
           res.data.list.forEach((item, index) => {
@@ -1685,6 +1740,7 @@ export default {
           item.animateType = item.data.animateType
           if (item.type === 0) {
             item.fillStyle = item.data.fillStyle
+            item.iconColor = item.data.fillStyle
             item.strokeStyle = item.data.strokeStyle
             item.animatePlay = false
             item.fontColor = '#000000'
