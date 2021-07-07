@@ -23,7 +23,7 @@
               </span>
           </el-option>
         </el-select>
-        <i class="nz-icon nz-icon-circle severity-circle" v-if="parameters.level" :style="{color:alertPriority.find(severity => severity.id ===  parameters.level).color,'font-size':'12px'}"></i>
+        <i class="nz-icon nz-icon-circle severity-circle" v-if="parameters.level" :style="{color: alertPriority.length > 0 && alertPriority.find(severity => severity.id ===  parameters.level).color,'font-size':'12px'}"></i>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.state')">
         <el-select class="form-item" size="small" popper-class="alert-form-pop no-style-class" v-model="parameters.state" clearable id="alert-param-state">

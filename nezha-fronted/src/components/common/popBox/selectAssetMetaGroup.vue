@@ -130,6 +130,12 @@ export default {
   justify-content: space-between;
   width: calc(100% - 28px);
 }
+.tree--node span:nth-of-type(1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+}
 .tree--operation {
   opacity: 0;
 }

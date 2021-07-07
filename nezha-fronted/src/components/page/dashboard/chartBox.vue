@@ -1761,7 +1761,13 @@ export default {
       immediate: true,
       handler (n) {
         if (n.id) {
-          this.isEdit = true
+          this.isEdit = true;
+          if (!n.param.state && n.param.state != Number) {
+            n.param.state = "1"
+          }
+          if (n.param.severity && n.param.severity != Number) {
+            n.param.severity = 1
+          }
         }
         if ((n.param && n.param.valueMapping) && (n.type === 'singleStat' || n.type === 'table')) {
           n.param.valueMapping.mapping.forEach(item => {

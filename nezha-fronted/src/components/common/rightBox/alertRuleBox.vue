@@ -64,7 +64,7 @@
                 </span>
               </el-option>
             </el-select>
-            <i v-if="editAlertRule.severityId" :style="{color:severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
+            <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
           </el-form-item>
           <!--receiver-->
           <el-form-item :label="$t('config.user.receiver')" prop="receiver">

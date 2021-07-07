@@ -232,52 +232,52 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 80
-        }, {
+          width: 160,
+          sortable: 'custom'
+        },{
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true,
-        }, /* {
-          label: this.$t("alert.list.type"),
-          prop: 'type',
-          show: true,
-          width: 100
         }, {
-          label: this.$t("alert.list.linked"),
-          prop: 'linkObject',
-          show: true,
-          width: 140
-        }, */{
           label: this.$t('alert.list.labels'),
           prop: 'labels',
           show: true,
-          width: 300
+          NotSet: true,
+          minWidth: 250,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.severity'),
-          prop: 'severity',
+          prop: 'severityId',
           show: true,
-          width: 100
+          width: 110,
+          sortable: 'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
           show: true,
-          width: 200
+          minWidth: 200
         }, {
           label: this.$t('overall.remark'),
           prop: 'description',
           show: true,
-          width: 200
+          minWidth: 200
         }, {
           label: this.$t('alert.list.state'),
           prop: 'state',
           show: true,
           width: 100
-        }, {
+        },{
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
-          width: 160
+          width: 150,
+          sortable: 'custom'
         }, {
+          label: this.$t('config.terminallog.duration'),
+          prop: 'duration',
+          show: true,
+          width: 150
+        },{
           label: this.$t('alert.endAt'),
           prop: 'endAt',
           show: true,
@@ -328,6 +328,14 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
+        if (n.id) {
+          if (!n.param.state && n.param.state != Number) {
+            n.param.state = "1"
+          }
+          if (n.param.severity && n.param.severity != Number) {
+            n.param.severity = 1
+          }
+        }
         this.data = Object.assign({}, n)
       }
     },
@@ -700,7 +708,7 @@ export default {
       this.getAlerScreetList()
     },
     promQueryParamConvert (obj) {
-      let r = '(' + obj.alertRule.expr + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
