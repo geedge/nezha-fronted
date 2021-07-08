@@ -401,10 +401,17 @@
                 </div>
               </div>
 
-              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type&&!selection.pen.iconFamily">
                 <div>{{$t('project.topology.bac')}}</div>
                 <div class="p10 pl0">
                   <nezhaColor :value-arr="[{name:'fillStyle',value:selection.pen.fillStyle}]" @colorChange="colorChange"/>
+                </div>
+              </div>
+
+              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type&&selection.pen.iconFamily">
+                <div>{{$t('project.topology.iconColor')}}</div>
+                <div class="p10 pl0">
+                  <nezhaColor :value-arr="[{name:'iconColor',value:selection.pen.iconColor}]" @colorChange="colorChange"/>
                 </div>
               </div>
 

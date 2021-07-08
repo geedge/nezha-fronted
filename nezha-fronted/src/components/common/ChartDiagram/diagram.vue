@@ -364,7 +364,7 @@ export default {
       tools: [
         ...Tools,
         {
-          group: '123',
+          group: 'Diagram',
           children: [
             {
               name: 'rectangle2',
@@ -380,9 +380,28 @@ export default {
                 paddingTop: 10,
                 paddingBottom: 10,
                 name: 'rectangleImg2',
-                icon: '\ue6cf',
+                icon: '\ue730',
                 iconFamily: 'nz-icon',
-                iconColor: ''
+                iconColor: '#0c62e3'
+              }
+            },
+            {
+              name: 'rectangle2',
+              icon: 'icon-rect',
+              data: {
+                text: 'rect',
+                rect: {
+                  width: 100,
+                  height: 100
+                },
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                name: 'rectangleImg2',
+                icon: '\ue732',
+                iconFamily: 'nz-icon',
+                iconColor: '#0c62e3'
               }
             }
           ]
@@ -1125,6 +1144,10 @@ export default {
             title: '',
             url: ''
           }
+          if (data.iconFamily) {
+            data.data.fillStyle = 'transparent'
+            data.data.iconColor = data.iconColor || data.fillStyle || '#bae7ff'
+          }
         } else if (data.type == 1 && !data.data) {
           // 连线是否自动计算锚点
           // data.manualCps=true;
@@ -1590,7 +1613,7 @@ export default {
         this.$get('monitor/project/topo/icon').then(res => {
           this.imgageLoading = true
           this.tools = [...Tools, {
-            group: '123',
+            group: 'Diagram',
             children: [
               {
                 name: 'rectangle2',
@@ -1606,9 +1629,28 @@ export default {
                   paddingTop: 10,
                   paddingBottom: 10,
                   name: 'rectangleImg2',
-                  icon: '\ue6cf',
+                  icon: '\ue730',
                   iconFamily: 'nz-icon',
-                  iconColor: '#000'
+                  iconColor: '#0c62e3'
+                }
+              },
+              {
+                name: 'rectangle2',
+                icon: 'icon-rect',
+                data: {
+                  text: 'rect',
+                  rect: {
+                    width: 100,
+                    height: 100
+                  },
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  name: 'rectangleImg2',
+                  icon: '\ue732',
+                  iconFamily: 'nz-icon',
+                  iconColor: '#0c62e3'
                 }
               }
             ]
@@ -1740,7 +1782,10 @@ export default {
           item.animateType = item.data.animateType
           if (item.type === 0) {
             item.fillStyle = item.data.fillStyle
-            item.iconColor = item.data.fillStyle
+            if (item.iconFamily) {
+              item.fillStyle = 'transparent'
+              item.iconColor = item.data.iconColor || item.data.fillStyle || '#bae7ff'
+            }
             item.strokeStyle = item.data.strokeStyle
             item.animatePlay = false
             item.fontColor = '#000000'
