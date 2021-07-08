@@ -9,7 +9,7 @@
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
           <span v-if="!isPreview" class="project-topology-tool">
-          <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
+          <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'" class="no-style-class">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
             <el-dropdown-menu slot="dropdown" @click="dropdownClick">

@@ -12,7 +12,7 @@
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
           <el-form-item label="Module" prop="moduleId" v-if="!selection.pen.type&&!fromDiagram" class="half-form-item">
-            <el-select v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')" popper-class="asset-dropdown" size="small"
+            <el-select :popper-append-to-body="false" v-model="selection.pen.data.moduleId" :placeholder="$t('el.select.placeholder')" popper-class="asset-dropdown" size="small"
                        @change="moduleIdChange" >
               <el-option
                 v-for="item in modules"
@@ -74,7 +74,7 @@
                     {{$t('dashboard.panel.chartForm.aggregation')}}&nbsp;
                   </el-col>
                   <el-col style="width: calc(100% - 120px)">
-                    <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                    <el-select :popper-append-to-body="false" class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                                size="mini"
                                style="width: 100%"
                                v-model="selection.pen.data.aggregation" value-key="chartType">
@@ -131,7 +131,7 @@
                   </el-col>
                   <el-col class="thresholds-cell" :span="8">
                     <!--线-->
-                    <el-select
+                    <el-select :popper-append-to-body="false"
                       v-model="item.animateType"
                       size="small"
                       v-if="selection.pen&&selection.pen.type&&item.level!==0">
@@ -143,7 +143,7 @@
                       </el-option>
                     </el-select>
                     <!--点-->
-                    <el-select
+                    <el-select :popper-append-to-body="false"
                       v-model="item.animateType"
                       size="small"
                       v-if="selection.pen&&!selection.pen.type&&item.level!==0">
@@ -203,7 +203,7 @@
               </el-cascader>
             </el-form-item>
             <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="half-form-item" prop="type">
-              <el-select class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+              <el-select :popper-append-to-body="false" class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                          size="mini"
                          v-model="selection.pen.data.type" value-key="chartType">
                 <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTypeList">
@@ -418,7 +418,7 @@
               <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">
                 <div>{{$t('project.topology.gradient')}}</div>
                 <div class="p10 pl0 gradient-to">
-                  <el-select v-model="selection.pen.gradientType" size="small"
+                  <el-select :popper-append-to-body="false" v-model="selection.pen.gradientType" size="small"
                              @change="bkTypeChange" style="width: 60px;border-radius: 4px 0 0 4px;background: #F5F7FA" class="color-before-select" popper-class="color-before-select">
                     <div slot="prefix">
                       <i :class="['nz-icon',bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).label,bkTypeOption.find(item1=>item1.id==selection.pen.data.gradientType).fontSize]"></i>
@@ -458,7 +458,7 @@
               <div class="props-pen-item special-select">
                 <div>{{$t('project.topology.lineDash')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.dash" size="small"
+                  <el-select :popper-append-to-body="false" v-model="selection.pen.dash" size="small"
                              @change="onChange">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -488,7 +488,7 @@
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
                 <div>{{$t('project.topology.lineType')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.name" size="small"
+                  <el-select :popper-append-to-body="false" v-model="selection.pen.name" size="small"
                              @change="onClickName">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -518,7 +518,7 @@
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
                 <div>{{$t('project.topology.fromArrow')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.fromArrow" size="small"
+                  <el-select :popper-append-to-body="false" v-model="selection.pen.fromArrow" size="small"
                              @change="onClickFromArrow">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -567,7 +567,7 @@
               <div class="props-pen-item special-select" v-if="selection.pen&&selection.pen.type">
                 <div>{{$t('project.topology.toArrow')}}</div>
                 <div class="p10 pl0">
-                  <el-select v-model="selection.pen.toArrow" size="small"
+                  <el-select :popper-append-to-body="false" v-model="selection.pen.toArrow" size="small"
                              @change="onClickToArrow">
                     <div slot="prefix">
                       <div class="icon-item">
@@ -647,7 +647,7 @@
 <!--              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">-->
 <!--                <div>{{$t('project.topology.img')}}</div>-->
 <!--                <div class="p10 pl0">-->
-<!--                  <el-select>-->
+<!--                  <el-select :popper-append-to-body= 'false'>-->
 <!--                    <el-option-group-->
 <!--                      v-for="group in imgArr"-->
 <!--                      :key="group.label"-->
@@ -683,7 +683,7 @@
             <div class="project-content-item" v-if="!selection.pen.type">
               <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
-                <el-select
+                <el-select :popper-append-to-body="false"
                   v-model="selection.pen.animateType"
                   size="small"
                   @change="(val)=>{changeAnimatePlay(val,'node')}"
@@ -697,7 +697,7 @@
             <div class="project-content-item half" v-if="selection.pen.type">
               <label>{{$t('project.topology.animationType')}}</label>
               <div class="full pr10">
-                <el-select v-model="selection.pen.animateType" size="small"
+                <el-select :popper-append-to-body="false" v-model="selection.pen.animateType" size="small"
                            @change="(val)=>{changeAnimatePlay(val,'line')}"
                            >
                   <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
@@ -899,7 +899,7 @@
            <div class="project-content-item half special-select">
              <label>{{$t('project.topology.defaultStartArrow')}}</label>
              <div class="full pr10 h32">
-               <el-select v-model="topologyData.data.fromArrow" size="small"
+               <el-select :popper-append-to-body='false' v-model="topologyData.data.fromArrow" size="small"
 
                           @change="changeTopologyOpt(topologyData.data.fromArrow,'fromArrow')">
                  <div slot="prefix">
@@ -949,7 +949,7 @@
            <div class="project-content-item half special-select">
              <label>{{$t('project.topology.defaultEndArrow')}}</label>
              <div class="full pr10 h32">
-               <el-select v-model="topologyData.data.toArrow" size="small"
+               <el-select :popper-append-to-body='false' v-model="topologyData.data.toArrow" size="small"
 
                           @change="changeTopologyOpt('toArrow')">
                  <div slot="prefix">
@@ -1697,7 +1697,7 @@ export default {
             text: '#000000'
           },
           showColor: undefined,
-          animateType: this.selection.pen.type ? 1 : 'upDown',
+          animateType: this.selection.pen.type ? 1 : '',
           value: 0,
           level: 1,
           showType: 'fill'// bac text border
@@ -1716,7 +1716,7 @@ export default {
             text: '#000000'
           },
           showColor: undefined,
-          animateType: this.selection.pen.type ? 1 : 'upDown',
+          animateType: this.selection.pen.type ? 1 : '',
           value: 0,
           level: this.selection.pen.data.valueMapping.length,
           showType: 'fill'// bac text border
