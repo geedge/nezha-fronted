@@ -1439,7 +1439,8 @@ const en = {
       folder: 'Folder',
       selMod: 'Please bind module for all nodes',
       none: 'None',
-      previewExit: 'Continue'
+      previewExit: 'Continue',
+      iconColor: 'Icon color'
     },
     update: '更新'
   },

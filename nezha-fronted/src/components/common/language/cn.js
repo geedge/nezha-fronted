@@ -1434,7 +1434,8 @@ const cn = {
       folder: '目录',
       selMod: '请为所有节点绑定module',
       none: '无',
-      previewExit: '继续编辑'
+      previewExit: '继续编辑',
+      iconColor: '图标颜色'
     },
     update: '更新'
   },

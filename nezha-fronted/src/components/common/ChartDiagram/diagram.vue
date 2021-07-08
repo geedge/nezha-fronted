@@ -35,7 +35,7 @@
                         class="btn"
                       >
                         <img :src="btn.data.image" v-if="btn.data.image">
-                        <i v-else :class="`iconfont ${btn.icon}`"></i>
+                        <i v-else :class="`nz-icon ${btn.data.iconName}`"></i>
                       </a>
                       <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click="tooltipDelete(btn)"></i>
                     </div>
@@ -382,6 +382,7 @@ export default {
                 name: 'rectangleImg2',
                 icon: '\ue730',
                 iconFamily: 'nz-icon',
+                iconName: 'nz-icon-rectangle1',
                 iconColor: '#0c62e3'
               }
             },
@@ -399,8 +400,9 @@ export default {
                 paddingTop: 10,
                 paddingBottom: 10,
                 name: 'rectangleImg2',
-                icon: '\ue732',
+                icon: '\ue731',
                 iconFamily: 'nz-icon',
+                iconName: 'nz-icon-EMAC1',
                 iconColor: '#0c62e3'
               }
             }
@@ -1632,8 +1634,8 @@ export default {
                 data: {
                   text: 'rect',
                   rect: {
-                    width: 100,
-                    height: 100
+                    width: 30,
+                    height: 20
                   },
                   paddingLeft: 10,
                   paddingRight: 10,
@@ -1642,6 +1644,7 @@ export default {
                   name: 'rectangleImg2',
                   icon: '\ue730',
                   iconFamily: 'nz-icon',
+                  iconName: 'nz-icon-rectangle1',
                   iconColor: '#0c62e3'
                 }
               },
@@ -1651,16 +1654,17 @@ export default {
                 data: {
                   text: 'rect',
                   rect: {
-                    width: 100,
-                    height: 100
+                    width: 30,
+                    height: 30
                   },
                   paddingLeft: 10,
                   paddingRight: 10,
                   paddingTop: 10,
                   paddingBottom: 10,
                   name: 'rectangleImg2',
-                  icon: '\ue732',
+                  icon: '\ue731',
                   iconFamily: 'nz-icon',
+                  iconName: 'nz-icon-EMAC1',
                   iconColor: '#0c62e3'
                 }
               }
