@@ -24,10 +24,9 @@
                         <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
                       </div>
                     </template>
-                    <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
+                    <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons"  :title="btn.data.text">
                       <a
                         :key="i"
-                        :title="btn.data.text"
                         :draggable="btn.data"
                         @dragstart.stop="onDrag($event, btn)"
                         @mousedown="dragFlag=false"
@@ -35,7 +34,8 @@
                         class="btn"
                       >
                         <img :src="btn.data.image" v-if="btn.data.image">
-                        <i v-else :class="`nz-icon ${btn.data.iconName}`"></i>
+                        <i v-else-if="btn.data.iconName" f :class="`nz-icon ${btn.data.iconName}`"></i>
+                        <i v-else :class="`iconfont ${btn.icon}`"></i>
                       </a>
                       <i v-if="item.group!=='General'" class="delIcon nz-icon nz-icon-delete" @click="tooltipDelete(btn)"></i>
                     </div>
