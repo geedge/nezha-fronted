@@ -669,6 +669,7 @@ export default {
           } else {
             Promise.all(promiseArr).then((res) => {
               getTopology(this.topologyIndex).open(data)
+              getTopology(this.topologyIndex).lock(1)
               this.objChange = false
               let flag = false
               const position = {
