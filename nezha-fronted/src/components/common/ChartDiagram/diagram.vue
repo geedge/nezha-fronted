@@ -659,53 +659,61 @@ export default {
             axiosArr.push({ item, arr })
             promiseArr.push(pensPromise(item, arr, index))
           })
-          Promise.all(promiseArr).then((res) => {
-            getTopology(this.topologyIndex).open(data)
-            getTopology(this.topologyIndex).lock(1)
-            this.objChange = false
-            let flag = false
-            const position = {
-              x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
-              y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
-            }
-            this.oldScale = getTopology(this.topologyIndex).data.scale
-            getTopology(this.topologyIndex).data.pens.forEach(item => {
-              if (flag) {
-                return
-              }
-              if (item.rect.ex > position.x || item.rect.ey > position.y) {
-                if (this.fromOverView) {
-                  getTopology(this.topologyIndex).fitView(20)
-                }
-                flag = true
-              }
-            })
-            getTopology(this.topologyIndex).resize()
-            getTopology(this.topologyIndex).centerView()
-            if (this.fromChartBox || this.fromChart) { // 是否来自panel 和 chartBox
-              getTopology(this.topologyIndex).fitView(20)
-              if (this.chartInfo && this.chartInfo.param && this.chartInfo.param.lock) { // 判断节点 以及画布 是否可以拖动
-                getTopology(this.topologyIndex).lock(2)
-              }
-            }
-            this.penToolTipScale = getTopology(this.topologyIndex).data.scale
+          if (this.fromTopologyDialog && !this.isPreview) {
             setTimeout(() => {
+              getTopology(this.topologyIndex).open(data)
+              getTopology(this.topologyIndex).centerView()
+              getTopology(this.topologyIndex).resize()
+              this.editTopology()
+            }, 100)
+          } else {
+            Promise.all(promiseArr).then((res) => {
+              getTopology(this.topologyIndex).open(data)
+              this.objChange = false
+              let flag = false
+              const position = {
+                x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
+                y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
+              }
+              this.oldScale = getTopology(this.topologyIndex).data.scale
               getTopology(this.topologyIndex).data.pens.forEach(item => {
-                if (item.animatePlay) {
-                  item.stopAnimate()
-                  setTimeout(() => {
-                    item.startAnimate()
-                  })
+                if (flag) {
+                  return
                 }
-              }, 100)
+                if (item.rect.ex > position.x || item.rect.ey > position.y) {
+                  if (this.fromOverView) {
+                    getTopology(this.topologyIndex).fitView(20)
+                  }
+                  flag = true
+                }
+              })
+              getTopology(this.topologyIndex).resize()
+              getTopology(this.topologyIndex).centerView()
+              if (this.fromChartBox || this.fromChart) { // 是否来自panel 和 chartBox
+                getTopology(this.topologyIndex).fitView(20)
+                if (this.chartInfo && this.chartInfo.param && this.chartInfo.param.lock) { // 判断节点 以及画布 是否可以拖动
+                  getTopology(this.topologyIndex).lock(2)
+                }
+              }
+              this.penToolTipScale = getTopology(this.topologyIndex).data.scale
+              setTimeout(() => {
+                getTopology(this.topologyIndex).data.pens.forEach(item => {
+                  if (item.animatePlay) {
+                    item.stopAnimate()
+                    setTimeout(() => {
+                      item.startAnimate()
+                    })
+                  }
+                }, 100)
+              })
+              // if(this.fromPrev){
+              //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+              // }
+              // getTopology(this.topologyIndex).fitView();
+              this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
+              this.getNodesArr()
             })
-            // if(this.fromPrev){
-            //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-            // }
-            // getTopology(this.topologyIndex).fitView();
-            this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-            this.getNodesArr()
-          })
+          }
         })
       })
     },
@@ -754,11 +762,6 @@ export default {
           getTopology(this.topologyIndex).data.name = ''
         }
         getTopology(this.topologyIndex).lock(1)
-        if (this.fromTopologyDialog && !this.isPreview) {
-          setTimeout(() => {
-            this.editTopology()
-          }, 100)
-        }
         resolve()
       })
     },
@@ -878,7 +881,6 @@ export default {
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
             pen.fontColor = selLevel.color.text
-            console.log(pen.iconFamily)
             if (pen.iconFamily) {
               pen.fillStyle = 'transparent'
               pen.iconColor = selLevel.color.fill
@@ -1543,9 +1545,13 @@ export default {
                 data: {
                   ...imageTemp2.data,
                   text: res.data.imageName,
-                  image: data,
+                  image: data.data,
                   imageId: res.data.id,
-                  unit: this.uploadPic.unit
+                  unit: this.uploadPic.unit,
+                  rect: {
+                    width: data.width,
+                    height: data.height
+                  }
                 }
               })
             } else {
@@ -1556,9 +1562,13 @@ export default {
                   data: {
                     ...imageTemp2.data,
                     text: res.data.imageName,
-                    image: data,
+                    image: data.data,
                     imageId: res.data.id,
-                    unit: this.uploadPic.unit
+                    unit: this.uploadPic.unit,
+                    rect: {
+                      width: data.width,
+                      height: data.height
+                    }
                   }
                 }]
               })
@@ -1664,9 +1674,10 @@ export default {
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
+            console.log(res2)
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index]
+              item.image = res2[index].data
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1674,9 +1685,13 @@ export default {
                   data: {
                     ...imageTemp2.data,
                     text: item.imageName,
-                    image: res2[index],
+                    image: res2[index].data,
                     imageId: item.id,
-                    unit: item.unit
+                    unit: item.unit,
+                    rect: {
+                      width: res2[index].width,
+                      height: res2[index].height
+                    }
                   }
                 })
               } else {
@@ -1687,9 +1702,13 @@ export default {
                     data: {
                       ...imageTemp2.data,
                       text: item.imageName,
-                      image: res2[index],
+                      image: res2[index].data,
                       imageId: item.id,
-                      unit: item.unit
+                      unit: item.unit,
+                      rect: {
+                        width: res2[index].width,
+                        height: res2[index].height
+                      }
                     }
                   }]
                 })
@@ -1721,7 +1740,7 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index]
+                item.image = res2[index].data
               }
             })
             this.imgInit = true
@@ -1739,11 +1758,13 @@ export default {
             .get(url)
             .then((res) => {
               return {
-                data: ('data:image/jpeg;base64,' + res.data)
+                data: ('data:image/jpeg;base64,' + res.data),
+                width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
+                height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
               }
             })
             .then(data => {
-              resolve(data.data, data.header)
+              resolve(data)
               // changeImage(data,(img)=>{
               //   resolve(img)
               // })
@@ -1776,6 +1797,10 @@ export default {
             item.stopAnimate()
           }
           if (!item.data.expressArr.length) {
+            item.data.expressArr = ['']
+            item.data.legends = ['']
+          }
+          if (!item.data.expressAllArr.length) {
             item.data.expressArr = ['']
             item.data.legends = ['']
           }
