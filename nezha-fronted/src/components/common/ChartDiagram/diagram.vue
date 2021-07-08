@@ -1139,6 +1139,8 @@ export default {
             valueMappingSort: 'asc',
             expressArr: [''],
             legends: [''],
+            expressAllArr: [''],
+            legendsAll: [''],
             tooltipShow: true,
             valueMappingShow: true,
             panelName: 'topologyName',
@@ -1180,6 +1182,8 @@ export default {
             valueMappingSort: 'asc', /* desc */
             expressArr: [''],
             legends: [''],
+            expressAllArr: [''],
+            legendsAll: [''],
             tooltipShow: true,
             valueMappingShow: true,
             panelName: 'topologyName',
@@ -1260,6 +1264,10 @@ export default {
             if (data.data.expressArr.length === 0 && event !== 'node') {
               data.data.expressArr.push('')
               data.data.legends.push('')
+            }
+            if (data.data.expressAllArr.length === 0 && event !== 'node') {
+              data.data.expressAllArr.push('')
+              data.data.legendsAll.push('')
             }
             this.props = {
               node: data,
@@ -1806,8 +1814,8 @@ export default {
             item.data.legends = ['']
           }
           if (!item.data.expressAllArr.length) {
-            item.data.expressArr = ['']
-            item.data.legends = ['']
+            item.data.expressAllArr = ['']
+            item.data.legendsAll = ['']
           }
           item.animateType = item.data.animateType
           if (item.type === 0) {
@@ -1941,6 +1949,14 @@ export default {
         item.data.expressArr = item.data.expressArr.filter((expression, i) => {
           if (!expression) {
             item.data.legends.splice(i, 1)
+            return false
+          } else {
+            return true
+          }
+        })
+        item.data.expressAllArr = item.data.expressAllArr.filter((expression, i) => {
+          if (!expression) {
+            item.data.legendsAll.splice(i, 1)
             return false
           } else {
             return true

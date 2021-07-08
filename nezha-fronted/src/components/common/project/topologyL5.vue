@@ -1286,6 +1286,10 @@ export default {
               data.data.expressArr.push('')
               data.data.legends.push('')
             }
+            if (data.data.expressAllArr.length === 0 && event !== 'node') {
+              data.data.expressAllArr.push('')
+              data.data.legendsAll.push('')
+            }
             this.props = {
               node: data,
               line: null,
@@ -1956,6 +1960,14 @@ export default {
         item.data.expressArr = item.data.expressArr.filter((expression, i) => {
           if (!expression) {
             item.data.legends.splice(i, 1)
+            return false
+          } else {
+            return true
+          }
+        })
+        item.data.expressAllArr = item.data.expressAllArr.filter((expression, i) => {
+          if (!expression) {
+            item.data.legendsAll.splice(i, 1)
             return false
           } else {
             return true
