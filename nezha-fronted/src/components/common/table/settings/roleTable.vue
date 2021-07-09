@@ -41,11 +41,9 @@
           <template v-else-if="scope.row.name">
             <span>{{scope.row.name}}</span>
           </template>
-          <template v-else>
-            <span>-</span>
-          </template>
         </template>
-        <span v-else>{{scope.row[item.prop]}}</span>
+        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column

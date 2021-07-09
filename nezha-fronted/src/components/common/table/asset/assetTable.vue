@@ -49,7 +49,7 @@
         <template v-else-if="item.prop === 'dc'">{{scope.row.dc ? scope.row.dc.name : '-'}}</template>
         <template v-else-if="item.prop === 'cabinet'">
           <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
-          <span v-else >--</span>
+          <span v-else >-</span>
         </template>
         <template v-else-if="item.prop == 'pingInfo'">
           <div @mouseenter="showTableTooltip( formatPingTime(scope.row.pingInfo.lastUpdate), true, $event)" @mouseleave="hideTableTooltip" v-if="scope.row.pingInfo">
