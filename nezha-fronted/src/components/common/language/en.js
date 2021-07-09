@@ -1440,9 +1440,21 @@ const en = {
       selMod: 'Please bind module for all nodes',
       none: 'None',
       previewExit: 'Continue',
-      iconColor: 'Icon color'
+      iconColor: 'Icon color',
+      maxWidth: 'Max width',
+      nodeWidth: 'Node width',
+      nodeHeight: 'Node height',
+      spaceWidth: 'Space width',
+      spaceHeight: 'Space height',
+      onLayout: 'Layout',
+      top: 'Top',
+      bottom: 'Bottom',
+      delete: 'Delete',
+      cut: 'Cut',
+      copy: 'Copy',
+      paste: 'Paste'
     },
-    update: '更新'
+    update: 'Update'
   },
   date: {
     week: {

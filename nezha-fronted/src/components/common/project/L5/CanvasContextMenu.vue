@@ -1,37 +1,40 @@
 <template>
   <div class="menus">
     <div>
-      <a :class="{disabled:!props.node && !props.nodes}" @click="onTop()">置顶</a>
+      <a :class="{disabled:!props.node && !props.nodes}" @click="onTop()">{{$t('project.topology.top')}}</a>
     </div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes}" @click="onBottom()">置底</a>
+      <a :class="{disabled:!props.node && !props.nodes}" @click="onBottom()">{{$t('project.topology.bottom')}}</a>
     </div>
     <div class="line"></div>
     <div>
-      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">删除</a>
+      <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">{{$t('project.topology.delete')}}</a>
     </div>
-    <div v-if="props.nodes">
-      <a @click="onCombine()">组合</a>
-    </div>
-    <div v-if="props.node && props.node.name === 'combine'">
-      <a @click="onUncombine()">取消组合</a>
-    </div>
+<!--    <div v-if="props.nodes">-->
+<!--      <a @click="onCombine()">组合</a>-->
+<!--      <div>-->
+<!--        <a @click="onCombine(true)">包含</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div v-if="props.node && props.node.name === 'combine'">-->
+<!--      <a @click="onUncombine()">取消组合/包含</a>-->
+<!--    </div>-->
     <div class="line"></div>
     <div>
       <a @click="canvascut()" class="flex">
-        <span class="full">剪切</span>
+        <span class="full">{{$t('project.topology.cut')}}</span>
         <span class="ml50">Ctrl + X</span>
       </a>
     </div>
     <div>
       <a @click="canvascopy()" class="flex">
-        <span class="full">复制</span>
+        <span class="full">{{$t('project.topology.copy')}}</span>
         <span class="ml50">Ctrl + C</span>
       </a>
     </div>
     <div>
       <a @click="canvaspaste()" class="flex">
-        <span class="full">粘贴</span>
+        <span class="full">{{$t('project.topology.paste')}}</span>
         <span class="ml50">Ctrl + V</span>
       </a>
     </div>

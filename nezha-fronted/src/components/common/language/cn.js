@@ -1435,7 +1435,19 @@ const cn = {
       selMod: '请为所有节点绑定module',
       none: '无',
       previewExit: '继续编辑',
-      iconColor: '图标颜色'
+      iconColor: '图标颜色',
+      maxWidth: '最大宽度',
+      nodeWidth: '节点宽度',
+      nodeHeight: '节点高度',
+      spaceWidth: '水平间距',
+      spaceHeight: '垂直间距',
+      onLayout: '开始排版',
+      top: '置顶',
+      bottom: '置底',
+      delete: '删除',
+      cut: '剪切',
+      copy: '复制',
+      paste: '粘贴'
     },
     update: '更新'
   },
