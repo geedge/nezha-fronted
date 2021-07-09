@@ -1,6 +1,6 @@
 <template>
-  <div class="tooltip-box" style="display: flex;" v-if="(isChart||chartData.tooltipShow)&&chartData.expressAllArr.length">
-    <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressAllArr.length)">
+  <div class="tooltip-box" style="display: flex;" v-if="(isChart||chartData.tooltipShow)&&chartData.expressAllArr&&chartData.expressAllArr.length">
+    <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressAllArr&&chartData.expressAllArr.length)">
         <line-chart-block v-show="isChart || chartData.type !== 'table'"
                           :key="'inner' + chartData.id"
                           :class="isPanel? 'topology-tool-tip' : ''"
@@ -35,10 +35,10 @@ import lineChartBlock from '../../../charts/line-chart-block'
 import chartTable from '../../../charts/chart-table'
 import bus from '../../../../libs/bus'
 import ExpressionInfo from '../popData/expressionInfo'
-import {fromRoute} from "@/components/common/js/constants";
-import chartTempData from "@/components/charts/chartTempData";
-import axios from "axios";
-import chartDataFormat from "@/components/charts/chartDataFormat";
+import { fromRoute } from '@/components/common/js/constants'
+import chartTempData from '@/components/charts/chartTempData'
+import axios from 'axios'
+import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
   name: 'topoTooltip',
   components: {
@@ -79,7 +79,7 @@ export default {
         panelId: 0,
         searchName: '',
         start_time: bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss')
-      },
+      }
     }
   },
   mounted () {
@@ -92,7 +92,7 @@ export default {
     process (item) {
       const chartData = { ...this.chartDataTemp, ...item, name: item.chartTitle }
       chartData.elements = []
-      chartData.expressAllArr.forEach((item1, index) => {
+      chartData.expressAllArr && chartData.expressAllArr.forEach((item1, index) => {
         chartData.elements.push({
           expression: item1,
           legend: chartData.legendsAll[index],
