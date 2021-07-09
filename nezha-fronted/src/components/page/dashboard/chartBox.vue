@@ -1122,6 +1122,8 @@ export default {
               this.expressions.forEach((expr, i) => {
                 this.editChart.elements.push({ id: this.elementIds[i], expression: expr, type: 'expert', legend: this.legends[i] })
               })
+            } else {
+              this.editChart.elements = []
             }
             if (this.editChart.id) {
               this.updateCharts()
