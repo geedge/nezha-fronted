@@ -10,6 +10,12 @@
     <div>
       <a :class="{disabled:!props.node && !props.nodes && !props.line}" @click="onDel()">删除</a>
     </div>
+    <div v-if="props.nodes">
+      <a @click="onCombine()">组合</a>
+    </div>
+    <div v-if="props.node && props.node.name === 'combine'">
+      <a @click="onUncombine()">取消组合</a>
+    </div>
     <div class="line"></div>
     <div>
       <a @click="canvascut()" class="flex">
