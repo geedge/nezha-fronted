@@ -171,6 +171,16 @@ export default {
     .el-menu-item.is-active {
       padding-left: 37px !important;
     }
+    .el-submenu.is-active {
+      .el-submenu__title {
+        padding-left: 17px !important;
+      }
+    }
+    .is-opened.el-submenu.is-active {
+      .el-submenu__title {
+        padding-left: 20px !important;
+      }
+    }
     .el-menu-item, .el-submenu__title {
       height: 46px;
       line-height: 46px;
