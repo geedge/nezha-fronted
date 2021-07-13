@@ -379,7 +379,18 @@ export default {
     },
     selectType (val, init) {
       if (init) {
-        this.showParam = true
+        switch (val) {
+          case 'RADIO' :
+          case 'CHECKBOX' :
+          case 'SELECT' :
+          case 'DATETIME' :
+          case 'DOUBLE' :
+            this.showParam = true
+            break
+          default:
+            this.showParam = false
+            break
+        }
       } else {
         if (this.ready) {
           switch (val) {
