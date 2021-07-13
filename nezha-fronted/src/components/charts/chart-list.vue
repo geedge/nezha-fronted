@@ -833,9 +833,14 @@ export default {
 
       if (chartItem.type == 'diagram') {
         if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
-          if (filterType === 'showFullScreen') { // 全屏查询
-            this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
-              this.filter.panelId, null, filterType)
+
+          if (filterType === 'refresh') {
+            this.$get('visual/panel/chart/' + chartItem.id).then(res => {
+              const data = res.data.data
+              data.param = JSON.parse(data.param)
+              this.$refs['editChart' + chartItem.id][0].setData(data, null,
+                this.filter.panelId, null, '')
+            })
           } else {
             this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
               this.filter.panelId, null, '')
