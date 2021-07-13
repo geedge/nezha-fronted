@@ -293,6 +293,12 @@ export default {
         padding: 20px 20px 0;
       }
     }
+    .chart-list{
+      .nz-table2 {
+        box-sizing: border-box;
+        padding: 0;
+      }
+    }
   }
 }
 .main-and-sub-transition {
