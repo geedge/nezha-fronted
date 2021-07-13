@@ -71,7 +71,7 @@ const cn = {
     createProject: '新增系统',
     createEndpoint: '新增 Endpoint',
     batchEndpoint: '批量修改Endpoint',
-    createAsset: '新增资产',
+    createAsset: '新增图表',
     createAlertRule: '新增告警规则',
     createUser: '新增用户',
     createRole: '新增角色',
