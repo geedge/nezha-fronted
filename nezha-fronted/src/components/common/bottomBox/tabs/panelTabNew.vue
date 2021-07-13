@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height">
+  <div class="full-width-height chart-list">
     <nz-bottom-data-list
       :layout="[]"
       :tabs="tabs"
