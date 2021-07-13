@@ -135,7 +135,7 @@ export default {
         id: '',
         name: '',
         metaKey: '',
-        groupId: '',
+        groupIds: '',
         group: {},
         search: '0',
         display: '0',
@@ -172,8 +172,8 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
-      if (!this.searchLabel.groupId) {
-        delete this.searchLabel.groupId
+      if (!this.searchLabel.groupIds) {
+        delete this.searchLabel.groupIds
       }
       this.$get(this.url, this.searchLabel).then(response => {
         this.tools.loading = false
@@ -217,7 +217,7 @@ export default {
 
             if (selectKey === group.id) {
               this.showGroup = -1
-              this.searchLabel.groupId = ''
+              this.searchLabel.groupIds = ''
               this.getTableData()
               this.$refs.selectGroup.$refs.tree.setCurrentKey(this.showGroup)
             }
@@ -231,7 +231,7 @@ export default {
     },
     groupChange (item) {
       this.showGroup = item
-      this.searchLabel.groupId = item.id !== -1 ? item.id : ''
+      this.searchLabel.groupIds = item.id !== -1 ? item.id : ''
       this.getTableData()
     },
     add () {
