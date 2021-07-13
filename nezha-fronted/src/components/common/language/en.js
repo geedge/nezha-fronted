@@ -77,7 +77,7 @@ const en = {
     createProject: 'New project',
     createEndpoint: 'New endpoint',
     batchEndpoint: 'Batch modify endpoint',
-    createAsset: 'New chart',
+    createAsset: 'New asset',
     createAlertRule: 'New alert rule',
     createUser: 'New user',
     createRole: 'New role',
