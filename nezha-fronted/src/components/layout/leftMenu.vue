@@ -168,6 +168,9 @@ export default {
       background-color: #101B27 !important;
       border-left: 3px #FA901C solid;
     }
+    .el-menu-item.is-active {
+      padding-left: 37px !important;
+    }
     .el-menu-item, .el-submenu__title {
       height: 46px;
       line-height: 46px;
