@@ -1055,7 +1055,8 @@ const cn = {
         role: '角色',
         create: '创建人',
         creatAt: '创建时间',
-        expireAt: '过期时间'
+        expireAt: '过期时间',
+        noExpire: '无有效期'
       }
     },
     assetType: {
