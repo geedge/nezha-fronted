@@ -91,7 +91,8 @@
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.MULTITEXT">
                   <div v-for="(value, i) in label.value" :key="i" class="label__multi-text">
                     <el-input v-model="label.value[i]" size="small"/>
-                    <span><i class="nz-icon nz-icon-minus"></i></span>
+                    <span @click="addMultiTextRow(label)" style="margin: 0 5px"><i class="nz-icon nz-icon-plus"></i></span>
+                    <span @click="removeMultiTextRow(label, i)"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.TEXTAREA">
@@ -484,6 +485,12 @@ export default {
     },
     addMultiTextRow (label) {
       label.value.push('')
+    },
+    removeMultiTextRow (label, index) {
+      if (label.value.length === 1) {
+        return
+      }
+      label.value.splice(index, 1)
     },
     blankLabelValue (label) {
       if (label.type.toUpperCase() === this.assetConstants.labelTypeData.CHECKBOX) {
