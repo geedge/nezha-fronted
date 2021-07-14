@@ -1442,6 +1442,7 @@ const en = {
       previewExit: 'Continue',
       iconColor: 'Icon color',
       maxWidth: 'Max width',
+      maxCount: 'Max count',
       nodeWidth: 'Node width',
       nodeHeight: 'Node height',
       spaceWidth: 'Space width',

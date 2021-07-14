@@ -729,45 +729,53 @@
         <!--排版-->
         <el-collapse-item title="排版" name="2" v-if="selection.pens">
           <div class="mt10">
+<!--            <div class="flex middle mb10">-->
+<!--              <label>{{$t('project.topology.maxWidth')}}：</label>-->
+<!--              <div class="full pr10">-->
+<!--                <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"-->
+<!--                                 v-model.number="layout.maxWidth" ></el-input-number>-->
+<!--              </div>-->
+<!--            </div>-->
             <div class="flex middle mb10">
-              <label>{{$t('project.topology.maxWidth')}}：</label>
+              <label>{{$t('project.topology.maxCount')}}：</label>
               <div class="full pr10">
-                <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.maxWidth" title="超出最大宽度换行"></el-input-number>
+                <el-input-number :precision="0" type="number" controls-position="right" class="input" size="small"
+                                 v-model.number="layout.maxCount"
+                                 title=""></el-input-number>
               </div>
             </div>
             <div class="flex middle mb10">
               <label>{{$t('project.topology.nodeWidth')}}：</label>
               <div class="full pr10">
                 <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.nodeWidth" title="固定每个节点的宽度"></el-input-number>
+                                 v-model.number="layout.nodeWidth" title=""></el-input-number>
               </div>
             </div>
             <div class="flex middle mb10">
               <label>{{$t('project.topology.nodeHeight')}}：</label>
               <div class="full pr10">
                 <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.nodeHeight" title="固定每个节点的高度"></el-input-number>
+                                 v-model.number="layout.nodeHeight" title=""></el-input-number>
               </div>
             </div>
             <div class="flex middle mb10">
               <label>{{$t('project.topology.spaceWidth')}}：</label>
               <div class="full pr10">
                 <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.spaceWidth" title="节点之间水平间距（px）"></el-input-number>
+                                 v-model.number="layout.spaceWidth" title=""></el-input-number>
               </div>
             </div>
             <div class="flex middle mb10">
               <label>{{$t('project.topology.spaceHeight')}}：</label>
               <div class="full pr10">
                 <el-input-number :precision="0" controls-position="right" type="number" class="input" size="small"
-                                 v-model.number="layout.spaceHeight" title="节点之间垂直间距（px）"></el-input-number>
+                                 v-model.number="layout.spaceHeight" title=""></el-input-number>
               </div>
             </div>
             <div class="flex middle">
               <label></label>
               <div class="full pr10">
-                <button class="button primary" @click="onLayout">{{$t('project.topology.onLayout')}}</button>
+                <button class="button primary nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="onLayout">{{$t('project.topology.onLayout')}}</button>
               </div>
             </div>
           </div>
@@ -1163,7 +1171,7 @@ export default {
           desc: '水平居中'
         }],
       layout: { // 显示对应属性
-        maxWidth: 1000,
+        maxWidth: undefined,
         nodeWidth: 0,
         nodeHeight: 0,
         maxCount: 0,

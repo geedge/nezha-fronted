@@ -1438,6 +1438,7 @@ const cn = {
       previewExit: '继续编辑',
       iconColor: '图标颜色',
       maxWidth: '最大宽度',
+      maxCount: '水平个数',
       nodeWidth: '节点宽度',
       nodeHeight: '节点高度',
       spaceWidth: '水平间距',
