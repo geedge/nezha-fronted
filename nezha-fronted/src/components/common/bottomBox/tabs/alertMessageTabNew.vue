@@ -17,6 +17,7 @@
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData">
           <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
+        <pick-time v-model="searchTimeHeader" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
       </template>
       <template v-slot>
         <alertMessageTable
@@ -44,6 +45,7 @@
     </nz-bottom-data-list>
     <el-dialog id="viewGraphDialog"
                :modal-append-to-body='false'
+               destroy-on-close
                :title="$t('overall.detail')"
                :visible.sync="graphShow"
                class="line-chart-block-modal nz-dialog endpoint-dialog"
@@ -169,6 +171,7 @@ export default {
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
       legend: [],
       searchTime: [],
+      searchTimeHeader: [],
       searchTimeSelect: bus.getTimezontDateRange(),
       currentMsg: {},
       chartUnit: 5,
@@ -201,10 +204,10 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      // const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
-      // const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
-      const start = this.currentMsg.startAt
-      const end = this.currentMsg.endAt
+      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
+      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
+      // const start = this.currentMsg.startAt
+      // const end = this.currentMsg.endAt
       this.searchTime = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
@@ -333,9 +336,9 @@ export default {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.$set(this.searchLabel, 'state', this.state)
-      if (this.searchTime && this.searchTime.length > 1) {
-        this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTime[0]))
-        this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTime[1]))
+      if (this.searchTimeHeader && this.searchTimeHeader.length > 1) {
+        this.$set(this.searchLabel, 'startAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[0]))
+        this.$set(this.searchLabel, 'endAt', this.timezoneToUtcTimeStr(this.searchTimeHeader[1]))
       } else {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
@@ -366,7 +369,8 @@ export default {
         }
       })
     },
-    promQueryParamConvert (obj) {
+    promQueryParamConvert (alert) {
+      const obj = { ...alert }
       let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
@@ -425,6 +429,7 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true
         this.$nextTick(() => {
+          this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryChartDate()
         })
       })
