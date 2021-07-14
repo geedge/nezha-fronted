@@ -82,6 +82,7 @@
     </div>
     <el-dialog id="viewGraphDialog"
                :modal-append-to-body='false'
+               destroy-on-close
                :title="$t('overall.detail')"
                :visible.sync="graphShow"
                class="line-chart-block-modal nz-dialog endpoint-dialog"
@@ -286,6 +287,7 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true
         this.$nextTick(() => {
+          this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryChartDate()
         })
       })
@@ -298,8 +300,8 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTime[0] ? this.searchTime[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000)
-      const end = this.searchTime[1] ? this.searchTime[1] : bus.computeTimezoneTime(new Date().getTime())
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000)
+      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)
       let step = '15s'
@@ -463,7 +465,8 @@ export default {
         }
       })
     },
-    promQueryParamConvert (obj) {
+    promQueryParamConvert (alert) {
+      const obj = { ...alert }
       let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
