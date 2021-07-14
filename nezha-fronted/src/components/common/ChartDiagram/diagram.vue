@@ -405,6 +405,26 @@ export default {
                 iconName: 'nz-icon-EMAC1',
                 iconColor: '#0c62e3'
               }
+            },
+            {
+              name: 'rectangle2',
+              icon: 'icon-rect',
+              data: {
+                text: 'rect',
+                rect: {
+                  width: 100,
+                  height: 100
+                },
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                name: 'rectangleImg2',
+                icon: '\ue62f',
+                iconFamily: 'nz-icon',
+                iconName: 'nz-icon-circle',
+                iconColor: '#0c62e3'
+              }
             }
           ]
         }
@@ -884,6 +904,7 @@ export default {
           const selLevel = pen.data.valueMapping.find(item => item.level === maxLevel)
           if (selLevel) {
             pen.fontColor = selLevel.color.text
+            pen.fillStyle = selLevel.color.fill
             if (pen.iconFamily) {
               pen.fillStyle = 'transparent'
               pen.iconColor = selLevel.color.fill
@@ -1673,6 +1694,26 @@ export default {
                   icon: '\ue731',
                   iconFamily: 'nz-icon',
                   iconName: 'nz-icon-EMAC1',
+                  iconColor: '#0c62e3'
+                }
+              },
+              {
+                name: 'rectangle2',
+                icon: 'icon-rect',
+                data: {
+                  text: 'rect',
+                  rect: {
+                    width: 100,
+                    height: 100
+                  },
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  name: 'rectangleImg2',
+                  icon: '\ue62f',
+                  iconFamily: 'nz-icon',
+                  iconName: 'nz-icon-circle',
                   iconColor: '#0c62e3'
                 }
               }
