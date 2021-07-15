@@ -389,9 +389,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.$emit('change', n)
       }
     },

@@ -21,10 +21,8 @@
 </template>
 
 <script>
-import editRigthBox from '../../mixin/editRigthBox'
 export default {
   name: 'subBox',
-  mixins: [editRigthBox],
   data () {
     return {
       editTagsBox: { show: false, top: 0, left: 0 },

@@ -235,9 +235,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editAssetMeta = {
           ...n,
           groupId: n.groupId ? Number(n.groupId) : '',

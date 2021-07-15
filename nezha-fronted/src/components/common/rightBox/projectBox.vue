@@ -121,9 +121,7 @@ export default {
     project: {
       immediate: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editProject = JSON.parse(JSON.stringify(n))
       }
     }

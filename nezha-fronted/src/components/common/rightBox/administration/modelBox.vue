@@ -112,9 +112,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editModel = JSON.parse(JSON.stringify(n))
       }
     }

@@ -65,9 +65,7 @@ export default {
     metaGroup: {
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editMetaGroup = { ...n }
       }
     }

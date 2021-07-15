@@ -137,12 +137,12 @@ export default {
       rightBox: { model: { show: false } },
       roles: [],
       rules: {
-          name: [
-            { required: true, message: '必填', trigger: 'blur' }
-          ],
-          brandId: [
-            { required: true, message: this.$t('validate.required'), trigger: 'change' }
-          ]
+        name: [
+          { required: true, message: '必填', trigger: 'blur' }
+        ],
+        brandId: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ]
       }
     }
   },
@@ -151,9 +151,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editAssetType = JSON.parse(JSON.stringify(n))
       }
     }

@@ -88,9 +88,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         const obj = { ...n }
         obj.expression = [obj.expression]
         this.editExprTemp = Object.assign(this.editExprTemp, obj)

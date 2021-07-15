@@ -190,9 +190,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editPromServer = JSON.parse(JSON.stringify(n))
       }
     },

@@ -320,9 +320,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id) {
           this.expressions = [this.editAlertRule.expr]

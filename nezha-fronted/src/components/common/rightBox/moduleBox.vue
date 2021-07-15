@@ -679,9 +679,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editModule = JSON.parse(JSON.stringify(n))
         this.activeName = 'Basic'
 

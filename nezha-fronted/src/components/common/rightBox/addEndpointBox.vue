@@ -205,11 +205,13 @@
 
 <script>
 import editEndpointBoxNew from './editEndpointBoxNew'
+import editRigthBox from '../mixin/editRigthBox'
 export default {
   name: 'addEndpointBox',
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
+  mixins: [editRigthBox],
   data () {
     return {
       rules: {
@@ -434,7 +436,7 @@ export default {
           disabled: false
         }]
       },
-      showError: false,
+      showError: false
     }
   },
   methods: {
@@ -755,6 +757,7 @@ export default {
     currentModule: {
       immediate: true,
       handler (n, o) {
+        this.isEdit = true
       }
     }
   }

@@ -158,9 +158,7 @@ export default {
       deep: true,
       immediate: true,
       handler: function (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         if (n) {
           this.editCabinet = JSON.parse(JSON.stringify(n))
         }

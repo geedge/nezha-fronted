@@ -159,9 +159,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit =true
-        }
+        this.isEdit = true
         this.editUser = JSON.parse(JSON.stringify(n))
         // if (this.editUser.roles && this.editUser.roles.length > 0) {
         //   this.editUser.roleIds = this.editUser.roles.map(t => t.id)

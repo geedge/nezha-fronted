@@ -5,9 +5,9 @@ export default {
     }
   },
   mounted () {
-    if( this.isEdit ) {
+    if (this.isEdit) {
       window.onbeforeunload = () => {
-        return "确认离开当前页面吗？未保存的数据将会丢失"
+        return '确认离开当前页面吗？未保存的数据将会丢失'
       }
     }
   },

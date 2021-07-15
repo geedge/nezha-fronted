@@ -351,9 +351,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editAsset = JSON.parse(JSON.stringify(n))
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
         this.editAsset.stateId = n.state ? n.state.id : ''

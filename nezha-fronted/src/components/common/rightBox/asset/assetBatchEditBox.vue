@@ -469,9 +469,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         if (n !== assetConstants.editTypeData.account) {
           this.editData.authProtocol = 0
         } else {

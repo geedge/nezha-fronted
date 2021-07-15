@@ -231,9 +231,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editMib = JSON.parse(JSON.stringify(n))
         if (this.editMib.models) {
           this.selectedModels = this.editMib.models.split(',')

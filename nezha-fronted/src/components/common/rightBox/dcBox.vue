@@ -204,9 +204,7 @@ export default {
       immediate: true,
       deep: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         this.editDc = JSON.parse(JSON.stringify(n))
         this.$nextTick(() => {
           this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)

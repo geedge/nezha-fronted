@@ -179,9 +179,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
-        if (n.id) {
-          this.isEdit = false
-        }
+        this.isEdit = true
         this.editChartTemp = JSON.parse(JSON.stringify(n))
       }
     }

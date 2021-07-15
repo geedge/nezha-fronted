@@ -1762,10 +1762,10 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        this.isEdit = true
         if (n.id) {
-          this.isEdit = true;
           if (!n.param.state && n.param.state != Number) {
-            n.param.state = "1"
+            n.param.state = '1'
           }
           if (n.param.severity && n.param.severity != Number) {
             n.param.severity = 1

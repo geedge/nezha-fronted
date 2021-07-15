@@ -140,9 +140,7 @@ export default {
       deep: true,
       immediate: true,
       handler (n, o) {
-        if (n.id) {
-          this.isEdit = true
-        }
+        this.isEdit = true
         const obj = JSON.parse(JSON.stringify(n))
         if (obj.ruleId == -1) {
           obj.ruleId = null
