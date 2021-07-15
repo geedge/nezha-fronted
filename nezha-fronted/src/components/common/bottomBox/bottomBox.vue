@@ -107,7 +107,6 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
-        console.log(n)
         if ((this.from === fromRoute.asset) && n) {
           if (n.childrenNum) {
             const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }

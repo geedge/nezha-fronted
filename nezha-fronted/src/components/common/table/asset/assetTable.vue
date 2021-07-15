@@ -59,7 +59,10 @@
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
         <template v-else-if="item.prop === 'parent'">{{scope.row.parent ? scope.row.parent.name : '-'}}</template>
         <template v-else-if="item.prop === 'children'">
-          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum"> {{scope.row.childrenNum}}</div>
+          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum">
+            <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
+            {{scope.row.childrenNum}}</div>
+          <span v-else-if="scope.row.type.vm===1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>
           <span v-else> - </span>
         </template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>

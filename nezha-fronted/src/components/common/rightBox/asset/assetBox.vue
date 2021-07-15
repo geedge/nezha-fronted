@@ -46,7 +46,6 @@
           </el-form-item>
           <el-form-item :label="$t('asset.brandAndModel')" class="placeholder-emphasize" prop="brandAndModel">
             <el-cascader
-              v-if="!vmLock"
               v-model="editAsset.brandAndModel"
               :placeholder="lockModelInputValue"
               :options="options.brandAndModelOptions"
@@ -55,7 +54,6 @@
               size="small"
               style="width: 100%;"
             ></el-cascader>
-            <el-input v-else v-model="lockModelInputValue" disabled size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('asset.location')" prop="location">
             <location-cascader v-if="!vmLock" ref="locationCascader" :dc-option="options.dcOptions" :default-model-u-size="1" @change="setLocationData"></location-cascader>
@@ -369,7 +367,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n.id) {
-          // this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
+          this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
           if (this.editAsset.id) { // 有id表示是修改asset，需要注意不要覆盖掉原有的port
             const oldPort = this.obj.authProtocolPort // 原有的port
             const oldAuthProtocol = this.obj.type.authProtocol // 原有的协议

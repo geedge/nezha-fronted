@@ -1473,7 +1473,6 @@ export default {
       getTopology(this.index).updateProps()
     },
     onLayout () { // 改变布局
-      console.log(this.layout)
       layout(getTopology(this.index).activeLayer.pens, this.layout)
       getTopology(this.index).updateProps()
     },
