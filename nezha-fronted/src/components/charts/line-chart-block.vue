@@ -945,7 +945,7 @@ export default {
         delete option.yAxis.maxInterval
       }
       if (this.fromTopo) {
-        option.minInterval = 20 * 60 * 1000
+        option.xAxis.minInterval = 20 * 60 * 1000
       }
       // params.series = dataArg;
       if (chartSite === 'local') { // 本地显示

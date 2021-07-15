@@ -40,6 +40,7 @@
         <panel-tab-new v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <alertMessageTabNew v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <endpointTabNew v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <assetSubTab v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessageSub" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
@@ -63,6 +64,7 @@
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import alertMessageTabNew from './tabs/alertMessageTabNew'
+import assetSubTab from './tabs/assetSubTab'
 import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
 import endpointTabNew from './tabs/endpointTabNew'
@@ -90,7 +92,8 @@ export default {
     alertMessageTabNew,
     endpointQuery,
     panelTabNew,
-    assetTab
+    assetTab,
+    assetSubTab
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -98,7 +101,23 @@ export default {
     obj: Object, // 关联的实体对象
     from: String, // 来自哪个页面
     tabList: Array, // 动态页签列表
-    targetTab: String, // 展示哪个页签
+    targetTab: String // 展示哪个页签
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      handler (n) {
+        console.log(n)
+        if ((this.from === fromRoute.asset) && n) {
+          if (n.childrenNum) {
+            const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
+            this.tabs.asset.panel.push(assetSub)
+            this.tabs.asset.alertMessage.push(assetSub)
+            this.tabs.asset.endpoint.push(assetSub)
+          }
+        }
+      }
+    }
   },
   data () {
     return {
@@ -137,12 +156,18 @@ export default {
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: 'Endpoint', active: false }
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: true }
+            { prop: 'endpointTab', name: 'Endpoint', active: true },
+          ],
+          alertMessageSub: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
           ]
         },
         module: {

@@ -58,6 +58,10 @@
         </template>
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
         <template v-else-if="item.prop === 'parent'">{{scope.row.parent ? scope.row.parent.name : '-'}}</template>
+        <template v-else-if="item.prop === 'children'">
+          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum"> {{scope.row.childrenNum}}</div>
+          <span v-else> - </span>
+        </template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
         <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '--'}}</template>
         <template v-else>
@@ -131,6 +135,11 @@ export default {
           show: true,
           width: 140,
           sortable: 'custom'
+        }, {
+          label: this.$t('overall.children'),
+          prop: 'children',
+          show: false,
+          width: 110
         }, {
           label: this.$t('overall.parent'),
           prop: 'parent',
@@ -208,7 +217,7 @@ export default {
     hideTableTooltip,
     tableDataSort (item) {
       let orderBy = ''
-      let str = item.prop
+      const str = item.prop
       if (str === 'dc') {
         orderBy = str
       }

@@ -349,6 +349,7 @@ const canvasOptions = {
   disableEmptyLine: true,
   autoExpandDistance: 0,
   minScale: 0.01
+  // scaleKey: -1
 }
 export default {
   name: 'diagram',
@@ -1811,11 +1812,26 @@ export default {
           this.$axios
             .get(url)
             .then((res) => {
-              return {
+              const imageInfo = {
                 data: ('data:image/jpeg;base64,' + res.data),
-                width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
-                height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
+                // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
+                // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
+                width: res.headers.width === -1 ? 100 : Number(res.headers.width),
+                height: res.headers.height === -1 ? 100 : Number(res.headers.height)
               }
+              if (imageInfo.width > 900 || imageInfo.height > 900) {
+                if (imageInfo.height > imageInfo.width) {
+                  imageInfo.width = imageInfo.width * 900 / imageInfo.height
+                  imageInfo.height = 900
+                } else if (imageInfo.height < imageInfo.width) {
+                  imageInfo.height = imageInfo.height * 900 / imageInfo.width
+                  imageInfo.width = 900
+                } else {
+                  imageInfo.height = 900
+                  imageInfo.width = 900
+                }
+              }
+              return imageInfo
             })
             .then(data => {
               resolve(data)

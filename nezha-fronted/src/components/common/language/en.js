@@ -128,6 +128,8 @@ const en = {
     SyncSave: 'Save&Sync',
     copySuccess: 'Copy success',
     parent: 'Parent',
+    children: 'Sub asset',
+    assetSubTab: 'Sub asset',
     dc: 'Data center',
     labels: 'Label',
     moreOption: 'More option',

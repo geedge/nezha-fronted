@@ -369,7 +369,7 @@ export default {
       immediate: true,
       handler (n) {
         if (n.id) {
-          this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
+          // this.vmLock = n.vm === 1 // vm == 1 时，锁定model和location
           if (this.editAsset.id) { // 有id表示是修改asset，需要注意不要覆盖掉原有的port
             const oldPort = this.obj.authProtocolPort // 原有的port
             const oldAuthProtocol = this.obj.type.authProtocol // 原有的协议

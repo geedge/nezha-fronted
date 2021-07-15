@@ -208,7 +208,7 @@ export const imageTemp2 = {
       width: 100,
       height: 100
     },
-    imageRatio: true,
+    imageRatio: false,
     lineWidth: 0,
     rotate: 0,
     offsetRotate: 0,
@@ -280,13 +280,12 @@ export function myIconRect2 (node) {
   node.fullIconRect = node.rect
 }
 export function myTextRect2 (node) {
-  // node.textRect = new Rect(
-  //   node.rect.x + node.paddingLeft,
-  //   node.rect.y + node.rect.height + 10,
-  //   node.rect.width - (node.paddingLeft + node.paddingRight),
-  //   20
-  // )
-  node.textRect = {}
+  node.textRect = new Rect(
+    node.rect.x + node.paddingLeft,
+    node.rect.y + node.rect.height + 10,
+    node.rect.width - (node.paddingLeft + node.paddingRight),
+    20
+  )
   node.fullTextRect = node.rect
 }
 /* 自定义图片组件 */

@@ -124,6 +124,8 @@ const cn = {
     SyncSave: '保存同时更新 Assets',
     copySuccess: '复制成功',
     parent: '父级',
+    children: '子级',
+    assetSubTab: '子级 asset',
     moreOption: '更多选项',
     copy: '复制',
     silence: '静默',

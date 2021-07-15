@@ -363,7 +363,8 @@ const canvasOptions = {
   translateKey: 'None',
   disableEmptyLine: true,
   autoExpandDistance: 0,
-  minScale: 0.01
+  minScale: 0.01,
+  scaleKey: -1
 }
 export default {
   name: 'topologyL5',

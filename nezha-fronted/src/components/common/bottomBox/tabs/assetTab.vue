@@ -238,6 +238,10 @@ export default {
           delete this.searchLabel.dcIds
           this.searchLabel.modelIds = n.id
         }
+        if (this.from === fromRoute.asset) {
+          delete this.searchLabel.dcIds
+          this.searchLabel.pids = n.id
+        }
         this.getTableData()
       }
     }
