@@ -116,7 +116,7 @@ export default {
 
 <style scoped>
   .notify-table{
-    height: 90%;
+    height:  calc(100% - 110px)
 
   }
   .notify-table .el-table{
@@ -126,6 +126,7 @@ export default {
     margin-left: 20px;
     display: flex;
     width: calc(100% - 60px);
+    height: 100px;
     background: #F6F6F6;
     color: #999999;
     margin-bottom: 10px;

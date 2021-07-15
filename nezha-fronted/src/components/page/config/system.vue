@@ -1,6 +1,6 @@
 <template>
   <div class="system">
-    <el-tabs type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
+    <el-tabs style="overflow: auto" type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
@@ -954,7 +954,7 @@ export default {
     }
     .full-table {
       .el-tabs__content{
-        height: 90%;
+        height:  calc( 100% - 100px);
       }
       .list-page .main-container{
         padding: unset;
