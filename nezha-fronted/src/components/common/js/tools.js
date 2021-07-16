@@ -222,6 +222,10 @@ export const bottomBoxWindow = {
       }
       vm.bottomBox.isFullScreen = false
       window.resizing = false
+      vm.$nextTick(() => {
+        const table = vm.$refs.dataTable || vm.$parent.$refs.dataTable
+        table.$refs.dataTable.doLayout()
+      })
     }, 210)
   },
   fullScreen (vm) {
