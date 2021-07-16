@@ -826,6 +826,13 @@ export default {
         temp.search()
       }, 1000)
     },
+    searchTime: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        localStorage.setItem('panelTime', JSON.stringify(n))
+      }
+    },
     $route: {
       immediate: true,
       handler () {
@@ -852,6 +859,7 @@ export default {
     if (this.scrollbarWrap) {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
     };
+    localStorage.removeItem('panelTime')
   }
 }
 </script>

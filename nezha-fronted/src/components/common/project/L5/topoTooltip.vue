@@ -128,8 +128,9 @@ export default {
           }
         })
       } else {
-        const endTime = this.filter.end_time
-        const startTime = this.filter.start_time
+        const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
+        const endTime = panelTime[1] || bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
+        const startTime = panelTime[0] || bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss')
         const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {

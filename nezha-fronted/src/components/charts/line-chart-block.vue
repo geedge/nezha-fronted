@@ -243,7 +243,7 @@ export default {
     fromTopo: {
       type: Boolean,
       default: false
-    },
+    }
   },
   computed: {
     getButtonCode () {
@@ -945,7 +945,25 @@ export default {
         delete option.yAxis.maxInterval
       }
       if (this.fromTopo) {
-        option.xAxis.minInterval = 20 * 60 * 1000
+        const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
+        if (panelTime[0]) {
+          const numInterval = new Date(panelTime[1]).getTime() - new Date(panelTime[0]).getTime()
+          console.log(numInterval)
+
+          if (numInterval >= 60 * 60 * 1000) {
+            option.xAxis.minInterval = 20 * 60 * 1000
+          } else if (numInterval >= 30 * 60 * 1000 && numInterval < 60 * 60 * 1000) {
+            option.xAxis.minInterval = 10 * 60 * 1000
+          } else if (numInterval >= 15 * 60 * 1000 && numInterval < 30 * 60 * 1000) {
+            option.xAxis.minInterval = 5 * 60 * 1000
+          } else if (numInterval >= 5 * 60 * 1000 && numInterval < 15 * 60 * 1000) {
+            option.xAxis.minInterval = 1 * 60 * 1000
+          } else {
+            option.xAxis.minInterval = 15 * 1000
+          }
+        } else {
+          option.xAxis.minInterval = 20 * 60 * 1000
+        }
       }
       // params.series = dataArg;
       if (chartSite === 'local') { // 本地显示
