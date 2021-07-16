@@ -57,12 +57,26 @@
           </div>
         </template>
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
-        <template v-else-if="item.prop === 'parent'">{{scope.row.parent ? scope.row.parent.name : '-'}}</template>
+        <template v-else-if="item.prop === 'parent'">
+          <span
+            v-if="scope.row.parent"
+            @mouseenter="labelHover(scope.row, 'asset', true, $event)"
+            @mouseleave="labelHover(scope.row, 'asset', false)">
+            {{scope.row.parent.name}}
+                <alertLabel
+                  v-if="scope.row.loading"
+                  :id="scope.row.pid"
+                  :that="scope.row"
+                  :type="'asset'"
+                ></alertLabel>
+              </span>
+          <span v-else> - </span>
+        </template>
         <template v-else-if="item.prop === 'children'">
-          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum">
+          <div  @click="$emit('showBottomBox', 'assetSubTab', scope.row)" v-if="scope.row.childrenNum" style="cursor: pointer">
             <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
             {{scope.row.childrenNum}}</div>
-          <span v-else-if="scope.row.type.vm===1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>
+<!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
           <span v-else> - </span>
         </template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
@@ -107,9 +121,13 @@
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
 import bus from '@/libs/bus'
+import alertLabel from '@/components/common/alert/alertLabel'
 export default {
   name: 'assetTable',
   mixins: [table],
+  components: {
+    alertLabel: alertLabel
+  },
   props: {
     showOption: {
       type: Boolean,
@@ -257,6 +275,16 @@ export default {
       this.bottomBox.asset = Object.assign({}, asset)
       this.bottomBox.targetTab = 'endpoint'
       this.bottomBox.showSubList = true
+    },
+    // label 鼠标划入
+    labelHover (item, type, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+      }
+      this.$set(item, 'loading', loading)
+      // this.$set(this.tableData,index,item);// 调用父组件
     },
     returnCabinet (start, end) { // 返回机柜u位信息
       if (!start || !end) {

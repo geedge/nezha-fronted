@@ -20,6 +20,7 @@
           ref="export"
           id="model"
           :params="searchLabel"
+          :params2="searchCheckBox"
           :permissions="{
                   import: 'asset_add',
                   export: 'asset_view'

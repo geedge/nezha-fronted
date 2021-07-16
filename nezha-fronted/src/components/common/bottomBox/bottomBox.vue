@@ -108,11 +108,17 @@ export default {
       immediate: true,
       handler (n) {
         if ((this.from === fromRoute.asset) && n) {
+          const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
           if (n.childrenNum) {
-            const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
-            this.tabs.asset.panel.push(assetSub)
-            this.tabs.asset.alertMessage.push(assetSub)
-            this.tabs.asset.endpoint.push(assetSub)
+            if (!this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
+              this.tabs.asset.panel.push(assetSub)
+              this.tabs.asset.alertMessage.push(assetSub)
+              this.tabs.asset.endpoint.push(assetSub)
+            }
+          } else if (this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
+            this.tabs.asset.panel = this.tabs.asset.panel.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.alertMessage = this.tabs.asset.alertMessage.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.endpoint = this.tabs.asset.endpoint.filter(item => item.prop !== assetSub.prop)
           }
         }
       }
@@ -155,12 +161,12 @@ export default {
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false }
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: true },
+            { prop: 'endpointTab', name: 'Endpoint', active: true }
           ],
           alertMessageSub: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
