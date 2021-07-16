@@ -60,6 +60,7 @@
         <template v-else-if="item.prop === 'parent'">
           <span
             v-if="scope.row.parent"
+            style="cursor: pointer"
             @mouseenter="labelHover(scope.row, 'asset', true, $event)"
             @mouseleave="labelHover(scope.row, 'asset', false)">
             {{scope.row.parent.name}}
@@ -157,15 +158,15 @@ export default {
           width: 140,
           sortable: 'custom'
         }, {
-          label: this.$t('overall.children'),
-          prop: 'children',
-          show: false,
-          width: 110
-        }, {
           label: this.$t('overall.parent'),
           prop: 'parent',
           show: false,
           width: 110
+        }, {
+          label: this.$t('overall.children'),
+          prop: 'children',
+          show: false,
+          width: 120
         }, {
           label: this.$t('overall.type'),
           prop: 'type',

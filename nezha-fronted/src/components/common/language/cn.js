@@ -123,8 +123,8 @@ const cn = {
     },
     SyncSave: '保存同时更新 Assets',
     copySuccess: '复制成功',
-    parent: '父级',
-    children: '子级',
+    parent: '父级 asset',
+    children: '子级 asset',
     assetSubTab: '子级 asset',
     moreOption: '更多选项',
     copy: '复制',
@@ -1451,7 +1451,8 @@ const cn = {
       delete: '删除',
       cut: '剪切',
       copy: '复制',
-      paste: '粘贴'
+      paste: '粘贴',
+      textContent: 'Text content'
     },
     update: '更新'
   },

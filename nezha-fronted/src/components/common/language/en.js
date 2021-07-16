@@ -127,9 +127,9 @@ const en = {
     },
     SyncSave: 'Save&Sync',
     copySuccess: 'Copy success',
-    parent: 'Parent',
-    children: 'Sub asset',
-    assetSubTab: 'Sub asset',
+    parent: 'Parent asset',
+    children: 'Children asset',
+    assetSubTab: 'Children asset',
     dc: 'Data center',
     labels: 'Label',
     moreOption: 'More option',
@@ -1455,7 +1455,8 @@ const en = {
       delete: 'Delete',
       cut: 'Cut',
       copy: 'Copy',
-      paste: 'Paste'
+      paste: 'Paste',
+      textContent: 'Text content'
     },
     update: 'Update'
   },
