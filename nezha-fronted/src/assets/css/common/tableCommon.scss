@@ -298,6 +298,9 @@
     }
   }
   /* start--覆盖el-table边框、gutter等样式 */
+  .el-table__body-wrapper {
+    overflow: auto;
+  }
   .el-table__body-wrapper, .el-table__fixed-body-wrapper {
     box-shadow: 1px 0 $--right-box-border-color;
 

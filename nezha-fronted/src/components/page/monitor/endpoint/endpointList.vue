@@ -304,35 +304,6 @@ export default {
         { key: 'Suspended', value: 2, name: 'Suspended' }
       ]
       this.titleSearchList.state.show = true
-/*
-      const titleRequest = new Promise(resolve => {
-        this.$get('monitor/project', { pageSize: -1 }).then(res => {
-          if (res.code === 200) {
-            resolve(res.data.list)
-          }
-        })
-      })
-      const moduleRequest = new Promise(resolve => {
-        this.$get('monitor/module', { pageSize: -1 }).then(res => {
-          if (res.code === 200) {
-            resolve(res.data.list)
-          }
-        })
-      })
-      Promise.all([titleRequest, moduleRequest]).then(res => {
-        this.titleSearchList.project.children = res[0].map(item => {
-          return { key: item.name, value: item.id, name: item.name }
-        })
-        this.titleSearchList.module.children = res[1].map(item => {
-          return { key: item.name, value: item.id, name: item.name }
-        })
-        this.titleSearchList.state.children = [
-          { key: 'Down', value: 0, name: 'Down' },
-          { key: 'Up', value: 1, name: 'Up' },
-          { key: 'Suspended', value: 2, name: 'Suspended' }
-        ]
-      })
-*/
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {

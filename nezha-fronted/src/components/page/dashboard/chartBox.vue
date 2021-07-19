@@ -314,7 +314,10 @@
             </el-form-item>
           </div>
 
-          <div class="form__sub-title" v-if="editChart.type ==='diagram'">{{$t('dashboard.panel.chartForm.content')}} <i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></div>
+          <div v-if="editChart.type ==='diagram'" class="form__sub-title">
+            <span>{{$t('dashboard.panel.chartForm.content')}}</span>
+            <span style="cursor: pointer"><i class="nz-icon nz-icon-edit" @click="topologyDialogChange(true)"></i></span>
+          </div>
           <!--topoData-->
           <el-form-item v-if="editChart.type ==='diagram'" >
             <div class="topology-box">
