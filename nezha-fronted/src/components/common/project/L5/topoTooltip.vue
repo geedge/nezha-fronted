@@ -490,7 +490,10 @@ export default {
         color: #666666;
         letter-spacing: 0;
         line-height: 18px;
-        font-weight: 400
+        font-weight: 400;
+        word-break: break-word;
+        white-space: pre-wrap;
+        padding-right: 5px;
       }
     }
     .tooltip-box-info{
