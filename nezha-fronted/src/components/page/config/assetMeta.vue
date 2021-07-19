@@ -24,7 +24,7 @@
         </select-group>
       </template>
       <template v-slot:top-tool-right>
-        <button id="meta-add-meta" v-has="'asset_label_add'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
+        <button id="meta-add-meta" v-has="'asset_label_add'" :title="$t('overall.createLabel')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>

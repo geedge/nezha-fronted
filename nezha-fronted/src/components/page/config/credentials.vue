@@ -22,7 +22,7 @@
         </div>
       </template>
       <template v-slot:top-tool-right>
-        <button id="mib-add" v-has="'credential_add'" :title="$t('overall.createMib')" class="top-tool-btn margin-r-10" type="button" @click="add">
+        <button id="mib-add" v-has="'credential_add'" :title="$t('overall.createdCredentials')" class="top-tool-btn margin-r-10" type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
         <delete-button id="mib-list-batch-delete" v-has="'credential_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>

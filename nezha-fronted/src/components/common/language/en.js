@@ -37,6 +37,7 @@ const en = {
     administration: 'Administration',
     configuration: 'configuration',
     create: 'New', // '新增'
+    createLabel: 'New label',
     edit: 'Edit', // '编辑'
     delete: 'Delete', // '删除'
     view: 'View',
@@ -79,6 +80,7 @@ const en = {
     batchEndpoint: 'Batch modify endpoint',
     createAsset: 'New asset',
     createAlertRule: 'New alert rule',
+    createAlertSilence: 'New alert silence',
     createUser: 'New user',
     createRole: 'New role',
     createPrometheusServer: 'New agent',
@@ -87,6 +89,7 @@ const en = {
     createModel: 'New model',
     createModule: 'New module',
     createMib: 'New MIB',
+    createdCredentials: 'New credential',
     createAssetType: 'New asset type',
     createAssetState: 'New asset state',
     createTemplate: 'New template',
@@ -914,7 +917,7 @@ const en = {
       vendor: 'Vendor',
       type: 'Type',
       mibBrowser: 'MIB browser',
-      credentials: 'Credentials',
+      credentials: 'Credential',
       noData: 'No Data',
       credential: {
         type: 'Protocol type',
@@ -1520,23 +1523,23 @@ const en = {
       add: 'Add',
       edit: 'Edit',
       delete: 'Delete',
-      mibBrowser: 'Mib browser',
+      mibBrowser: 'Mib browser'
     },
     credential: {
       view: 'View',
       add: 'Add',
       edit: 'Edit',
-      delete: 'Delete',
+      delete: 'Delete'
     },
     system: {
       basic: 'Basic',
       email: 'Email',
       terminal: 'Terminal',
       ldap: 'LDAP',
-      apiKey : {
+      apiKey: {
         add: 'Add',
         edit: 'Edit',
-        delete: 'Delete',
+        delete: 'Delete'
       }
     },
     terminalLog: {
@@ -1552,7 +1555,7 @@ const en = {
       reset: 'Reset'
     },
     apikey: {
-      apiKey: 'Api Key',
+      apiKey: 'Api Key'
     }
   },
   ...enLocale

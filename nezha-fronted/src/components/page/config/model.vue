@@ -10,7 +10,7 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <button id="account-add" v-has="'model_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10"
+        <button id="account-add" v-has="'model_add'" :title="$t('overall.createModel')" class="top-tool-btn margin-r-10"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>

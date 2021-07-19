@@ -13,7 +13,7 @@
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>
         </button>
-        <button id="account-add" v-has="'monitor_endpoint_add'" class="top-tool-btn"
+        <button id="account-add" v-has="'monitor_endpoint_add'" :title="$t('overall.createEndpoint')" class="top-tool-btn"
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
