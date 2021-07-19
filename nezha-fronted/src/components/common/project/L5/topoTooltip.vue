@@ -3,7 +3,7 @@
     <div class="tooltip-box-chart" style="" v-if="isChart||(chartData.displayChart&&chartData.tooltipShow&&chartData.expressAllArr&&chartData.expressAllArr.length)">
         <line-chart-block v-show="isChart || chartData.type !== 'table'"
                           :key="'inner' + chartData.id"
-                          :class="isPanel? 'topology-tool-tip' : ''"
+                          :class="isPanel? 'topology-tool-tip line-chart' : 'line-chart'"
                           id="listContainer"
                           :from="'topology'"
                           :ref="chartData.type !== 'table'?'editChart' + chartData.type:'editChart'"
@@ -15,6 +15,9 @@
                           :chartTitleShow="false"
                           :chart-data="chartData">
         </line-chart-block>
+      <div v-if="chartData.remark" class="chart-remark">
+        {{chartData.remark}}
+      </div>
       <chart-table  v-show="isChart || chartData.type === 'table'"
                     :key="'inner' + 1"
                     :from="'project'"
@@ -469,10 +472,26 @@ export default {
     box-sizing: border-box;
     .tooltip-box-chart{
       border: 1px solid #E7EAED;
-      width: 300px;
       max-height: 400px;
       min-height: 200px;
       height: 100%;
+      display: flex;
+      overflow: hidden;
+      .line-chart{
+        width: 300px;
+        flex: 1;
+        /deep/ .resize-box{
+          border: none;
+        }
+      }
+      .chart-remark{
+        width: 110px;
+        font-size: 12px;
+        color: #666666;
+        letter-spacing: 0;
+        line-height: 18px;
+        font-weight: 400
+      }
     }
     .tooltip-box-info{
       border: 1px solid #E7EAED;
@@ -493,6 +512,12 @@ export default {
 }
   .topology-tool-tip /deep/ .topology-chart-title{
     margin-top: -23px;
+    border-bottom: 1px dashed #DCE1E7;
+    padding-left: 0;
+    margin-left: 10px;
+    padding: 0;
+    box-sizing: border-box;
+    width: 388px;
   }
   .topology-tool-tip /deep/ .line-area{
     margin-top: -15px;

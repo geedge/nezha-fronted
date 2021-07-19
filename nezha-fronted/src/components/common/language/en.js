@@ -1456,7 +1456,17 @@ const en = {
       cut: 'Cut',
       copy: 'Copy',
       paste: 'Paste',
-      textContent: 'Text content'
+      textContent: 'Text content',
+      textAlign: 'Text align',
+      textBaseline: 'Text baseline',
+      textOffsetX: 'Text offsetX',
+      textOffsetY: 'Text offsetY',
+      left: 'left',
+      center: 'center',
+      right: 'right',
+      topOffsetY: 'top',
+      middleOffsetY: 'middle',
+      bottomOffsetY: 'bottom'
     },
     update: 'Update'
   },

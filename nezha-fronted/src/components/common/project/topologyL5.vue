@@ -4,7 +4,7 @@
 </style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
-    <div class="main-list">
+    <div class="main-list" style="height: calc(100% - 30px)">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
@@ -1783,7 +1783,7 @@ export default {
             item.fillStyle = item.data.fillStyle
             item.strokeStyle = item.data.strokeStyle
             item.animatePlay = false
-            item.fontColor = '#000000'
+            item.fontColor = item.data.fontColor || '#222222'
             item.gradientType = item.data.gradientType ? item.data.gradientType : 0
             if (!item.data.gradientColor) {
               item.data.gradientType = 0
@@ -1801,7 +1801,7 @@ export default {
             item.fromArrowColor = item.data.arrowColor
             item.toArrowColor = item.data.arrowColor
             item.animatePlay = false
-            item.fontColor = '#000000'
+            item.fontColor = item.data.fontColor || '#222222'
           }
         })
         getTopology(this.topologyIndex).caches = {

@@ -749,3 +749,11 @@
     color: $--button-gray-active-color;
   }
 }
+.line-area-box{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  .line-area{
+    flex: 1;
+  }
+}
