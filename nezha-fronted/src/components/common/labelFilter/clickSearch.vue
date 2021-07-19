@@ -4,7 +4,7 @@
       <label class="search-title">{{data.label}}:</label>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
-          <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]">
+          <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]" @change="selectValueOut.change === 0 && selectValueOut.change++">
             <template v-for="(item, j) in data.children">
               <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
             </template>
@@ -142,7 +142,9 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        this.$emit('reload', n)
+        if (n && n.change) {
+          this.$emit('reload', n)
+        }
       }
     }
   },
