@@ -1,30 +1,37 @@
 <template>
-  <div v-loading="!titleSearchListCopy.ready" :style="{'height': height + 'px'}" class="search-box__container">
-    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak v-if="data.show" :key="index" ref="searchContentBox" class="search-content-box">
+  <div :style="{'height': height + 'px'}" class="search-box__container">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" class="search-content-box">
       <label class="search-title">{{data.label}}:</label>
-      <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]">
-        <template v-for="(item, j) in data.children">
-          <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
+      <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
+        <template>
+          <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]">
+            <template v-for="(item, j) in data.children">
+              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
+            </template>
+          </el-checkbox-group>
         </template>
-      </el-checkbox-group>
-      <template v-for="(item, j) in data.children" v-else-if="data.type === 'dropdownCheckBox'">
-        <dropdown
-          v-show="j < data.index || data.showMore"
-          :key="j"
-          :ref="`${type}_${item.id}_cascader`"
-          :collapse-tags="true"
-          :item="item"
-          @blur="casFocus"
-          @change="(value) => casChange(value, type, item, data.key)"
-          @focus="casFocus"
-        ></dropdown>
-      </template>
-      <span v-show="contentWidth < data.width"
-            :style="{top: `${moreBtnTop(data.type)}px`}"
-            class="search-more"
-            @click="changShowMore(type)">
+      </el-skeleton>
+      <el-skeleton v-else-if="data.type === 'dropdownCheckBox'" :loading="!data.show" :rows="1" class="search-items">
+        <template>
+          <dropdown
+            v-for="(item, j) in data.children"
+            v-show="j < data.index || data.showMore"
+            :key="j"
+            :ref="`${type}_${item.id}_cascader`"
+            :collapse-tags="true"
+            :item="item"
+            @blur="casFocus"
+            @change="(value) => casChange(value, type, item, data.key)"
+            @focus="casFocus"
+          ></dropdown>
+        </template>
+        <span v-show="contentWidth < data.width"
+              :style="{top: `${moreBtnTop(data.type)}px`}"
+              class="search-more"
+              @click="changShowMore(type)">
         More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
       </span>
+      </el-skeleton>
     </div>
   </div>
 </template>
@@ -85,6 +92,17 @@ export default {
         return top
       }
     },
+    skeletonClass () {
+      return function (data) {
+        let className = ''
+        if (data.type === 'checkBox') {
+          className = 'search-items--checkbox'
+        } else if (data.type === 'dropdownCheckBox') {
+          className = 'search-items--dropdown'
+        }
+        return className
+      }
+    },
     height () {
       const paddingHeight = 30
       const checkBoxRowHeight = 31
@@ -106,13 +124,12 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        if (n.ready) {
-          this.titleSearchListCopy = JSON.parse(JSON.stringify(n))
-          this.$nextTick(() => {
-            this.setEachCascWidth()
-            this.needMore()
-          })
-        }
+        console.info(n)
+        this.titleSearchListCopy = JSON.parse(JSON.stringify(n))
+        this.$nextTick(() => {
+          this.setEachCascWidth()
+          this.needMore()
+        })
       }
     },
     selectValue: {
@@ -231,21 +248,19 @@ export default {
         }
       } else { // 初始
         Object.keys(this.titleSearchListCopy).forEach(type => {
-          if (type !== 'ready') {
-            this.titleSearchListCopy[type].children.forEach(c => {
-              if (this.titleSearchListCopy[type].type === 'dropdownCheckBox') {
-                const labelWidth = this.computeDistance(c.name + ':') + this.widthConstant.dropdownCheckBox.labelPadding // cascader-label总宽度
-                const width = labelWidth + this.widthConstant.dropdownCheckBox.inputOriginalWidth + this.widthConstant.dropdownCheckBox.boxMargin
-                this.$set(c, 'width', width) // 总宽
-                this.$set(c, 'originalWidth', width) // 初始总宽
-                this.$set(c, 'labelWidth', labelWidth) // label区域宽
-                this.$set(c, 'inputWidth', this.widthConstant.dropdownCheckBox.inputOriginalWidth) // 内容区域宽
-              } else if (this.titleSearchListCopy[type].type === 'checkBox') {
-                const width = this.computeDistance(c.name) + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
-                this.$set(c, 'width', width) // 总宽
-              }
-            })
-          }
+          this.titleSearchListCopy[type].children.forEach(c => {
+            if (this.titleSearchListCopy[type].type === 'dropdownCheckBox') {
+              const labelWidth = this.computeDistance(c.name + ':') + this.widthConstant.dropdownCheckBox.labelPadding // cascader-label总宽度
+              const width = labelWidth + this.widthConstant.dropdownCheckBox.inputOriginalWidth + this.widthConstant.dropdownCheckBox.boxMargin
+              this.$set(c, 'width', width) // 总宽
+              this.$set(c, 'originalWidth', width) // 初始总宽
+              this.$set(c, 'labelWidth', labelWidth) // label区域宽
+              this.$set(c, 'inputWidth', this.widthConstant.dropdownCheckBox.inputOriginalWidth) // 内容区域宽
+            } else if (this.titleSearchListCopy[type].type === 'checkBox') {
+              const width = this.computeDistance(c.name) + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
+              this.$set(c, 'width', width) // 总宽
+            }
+          })
         })
       }
     },
@@ -273,22 +288,20 @@ export default {
       } else { // 全体重排
         this.contentWidth = contentWidth
         Object.keys(this.titleSearchListCopy).forEach(type => {
-          if (type !== 'ready') {
-            this.titleSearchListCopy[type].width = 0
-            this.titleSearchListCopy[type].showMore = false
-            let showMore = false
-            this.titleSearchListCopy[type].children.forEach((item, i) => {
-              if (!showMore) {
-                this.titleSearchListCopy[type].width += item.width
-                if (this.titleSearchListCopy[type].width > this.contentWidth) {
-                  showMore = true
-                  this.titleSearchListCopy[type].index = i
-                }
-              }
-            })
+          this.titleSearchListCopy[type].width = 0
+          this.titleSearchListCopy[type].showMore = false
+          let showMore = false
+          this.titleSearchListCopy[type].children.forEach((item, i) => {
             if (!showMore) {
-              this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length
+              this.titleSearchListCopy[type].width += item.width
+              if (this.titleSearchListCopy[type].width > this.contentWidth) {
+                showMore = true
+                this.titleSearchListCopy[type].index = i
+              }
             }
+          })
+          if (!showMore) {
+            this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length
           }
         })
       }
@@ -366,6 +379,18 @@ export default {
     white-space: nowrap;
     overflow-x: hidden;
     vertical-align: text-bottom;
+  }
+}
+.search-items {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+
+  &.search-items--checkbox .el-skeleton {
+    height: 21px;
+  }
+  &.search-items--dropdown .el-skeleton {
+    height: 28px;
   }
 }
 .search-more {

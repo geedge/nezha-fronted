@@ -162,13 +162,12 @@ export default {
       },
       titleSearch: {},
       titleSearchList: {
-        ready: false,
         project: {
           label: 'Project',
           key: 'projectIds',
           type: 'checkBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -178,7 +177,7 @@ export default {
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -188,7 +187,7 @@ export default {
           key: 'states',
           type: 'checkBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -283,6 +282,29 @@ export default {
       this.getTableData()
     },
     getTitleSearch () {
+      this.$get('monitor/project', { pageSize: -1 }).then(res => {
+        if (res.code === 200) {
+          this.titleSearchList.project.children = res.data.list.map(item => {
+            return { key: item.name, value: item.id, name: item.name }
+          })
+          this.titleSearchList.project.show = true
+        }
+      })
+      this.$get('monitor/module', { pageSize: -1 }).then(res => {
+        if (res.code === 200) {
+          this.titleSearchList.module.children = res.data.list.map(item => {
+            return { key: item.name, value: item.id, name: item.name }
+          })
+          this.titleSearchList.module.show = true
+        }
+      })
+      this.titleSearchList.state.children = [
+        { key: 'Down', value: 0, name: 'Down' },
+        { key: 'Up', value: 1, name: 'Up' },
+        { key: 'Suspended', value: 2, name: 'Suspended' }
+      ]
+      this.titleSearchList.state.show = true
+/*
       const titleRequest = new Promise(resolve => {
         this.$get('monitor/project', { pageSize: -1 }).then(res => {
           if (res.code === 200) {
@@ -309,8 +331,8 @@ export default {
           { key: 'Up', value: 1, name: 'Up' },
           { key: 'Suspended', value: 2, name: 'Suspended' }
         ]
-        this.titleSearchList.ready = true
       })
+*/
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {

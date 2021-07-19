@@ -209,13 +209,12 @@ export default {
       snmpCredentialData: [],
       fieldGroupData: [],
       titleSearchList: {
-        ready: false,
         dc: {
           label: this.$t('overall.dc'),
           key: 'dcIds',
           type: 'checkBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -225,7 +224,7 @@ export default {
           key: 'typeIds',
           type: 'checkBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -248,7 +247,7 @@ export default {
           key: 'modelIds',
           type: 'dropdownCheckBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -258,7 +257,7 @@ export default {
           key: 'fields',
           type: 'dropdownCheckBox',
           children: [],
-          show: true,
+          show: false,
           showMore: false,
           width: 0,
           index: -1
@@ -446,12 +445,21 @@ export default {
   },
   mounted () {
     // 初始化数据
-    Promise.all([this.getModelData(), this.getTypeData(), this.getDcData(), this.getSearchableMetaData()]).then(res => {
-      this.titleSearchList.model.children = res[0]
-      this.titleSearchList.type.children = res[1]
-      this.titleSearchList.dc.children = res[2]
-      this.titleSearchList.assetLabel.children = res[3]
-      this.titleSearchList.ready = true
+    this.getModelData().then(res => {
+      this.titleSearchList.model.children = res
+      this.titleSearchList.model.show = true
+    })
+    this.getTypeData().then(res => {
+      this.titleSearchList.type.children = res
+      this.titleSearchList.type.show = true
+    })
+    this.getDcData().then(res => {
+      this.titleSearchList.dc.children = res
+      this.titleSearchList.dc.show = true
+    })
+    this.getSearchableMetaData().then(res => {
+      this.titleSearchList.assetLabel.children = res
+      this.titleSearchList.assetLabel.show = true
     })
     this.getStateData()
     this.getTypeTreeData()
