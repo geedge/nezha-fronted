@@ -168,22 +168,10 @@ export default {
       background-color: #101B27 !important;
       border-left: 3px #FA901C solid;
     }
-    .el-menu-item.is-active {
-      padding-left: 37px !important;
-    }
-    .el-submenu.is-active {
-      .el-submenu__title {
-        padding-left: 17px !important;
-      }
-    }
-    .is-opened.el-submenu.is-active {
-      .el-submenu__title {
-        padding-left: 20px !important;
-      }
-    }
     .el-menu-item, .el-submenu__title {
       height: 46px;
       line-height: 46px;
+      border-left: 3px #101B27 solid;
     }
   }
 
