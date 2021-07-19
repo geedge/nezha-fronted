@@ -23,6 +23,7 @@
           <top-tool-more-options
             id="asset-list"
             :params="filter"
+            :params-type="paramsType"
             :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
             class="top-tool-export margin-r-10"
             export-file-name="asset-charts"
@@ -57,6 +58,7 @@
             :params="filter"
             :permissions="{import: 'panel_chart_add', export: 'panel_view'}"
             :showCur="false"
+            :params-type="paramsType"
             :showLock="from === fromRoute.endpoint"
             class="top-tool-export margin-r-10"
             export-file-name="endpoint-charts"
@@ -122,7 +124,11 @@ export default {
   props: {
     from: String,
     obj: Object,
-    draggable: { type: Boolean, default: true }
+    draggable: { type: Boolean, default: true },
+    paramsType: {
+      type: String,
+      default: 'dashboard'
+    }
   },
   data () {
     return {

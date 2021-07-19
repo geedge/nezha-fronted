@@ -697,7 +697,7 @@
                 <div class="p10 pl0">
                   <el-select :popper-append-to-body="false" class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
                              size="mini"
-                             v-model="selection.pen.font.textOffsetX" value-key="chartType" @change="onChange">
+                             v-model="selection.pen.font.textBaseline" value-key="chartType" @change="onChange">
                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textBaselineOptions">
                       <span class="panel-dropdown-label-txt">{{item.name}}</span>
                     </el-option>

@@ -566,8 +566,13 @@ export default {
 
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (this.editAsset.id) {
-            this.$put(this.url, this.editAsset).then(res => {
+          const params = JSON.parse(JSON.stringify(this.editAsset))
+          if (params.type.vm !== 1) {
+            params.parent = {}
+            params.pid = ''
+          }
+          if (params.id) {
+            this.$put(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -577,7 +582,7 @@ export default {
               }
             })
           } else {
-            this.$post(this.url, this.editAsset).then(res => {
+            this.$post(this.url, params).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })

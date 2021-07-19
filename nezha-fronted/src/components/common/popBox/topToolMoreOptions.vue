@@ -119,6 +119,10 @@ export default {
     },
     showLock: {
       type: Boolean, default: false
+    },
+    paramsType: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -128,12 +132,11 @@ export default {
       importFileList: [],
       importResult: null,
       exportShow: false,
-      paramsType: '',
       panelLock: true
     }
   },
   mounted () {
-    this.getParamsType()
+    // this.getParamsType()
   },
   methods: {
     importChange (file, fileList) {
@@ -220,12 +223,13 @@ export default {
 
       let url = null
       const param = { language: language }
-      if (this.paramsType === 'asset') {
+      if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/asset/template'
         param.type = 'asset'
-      } else if (this.paramsType === 'dashboard') {
+      } else if (this.importUrl.indexOf('panel') > -1) {
         url = 'visual/panel/template'
-      } else if (this.paramsType === 'endpoint') {
+        param.type = this.paramsType
+      } else if (this.importUrl.indexOf('endpoint') > -1) {
         url = '/monitor/endpoint/template'
         param.type = 'endpoint'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
@@ -244,12 +248,12 @@ export default {
     },
     exportCur () {
       const params = JSON.parse(JSON.stringify(this.params))
-      if (this.params2){
-        Object.keys(this.params2).forEach(key=>{
-          if ( params[key] ) {
-            if ( params[key].prototype.toString.call(val) === '[object Object]' ){
-              Object.assign(params[key],this.params2[key])
-            } else if (params[key].prototype.toString.call(val) === '[object Array]'){
+      if (this.params2) {
+        Object.keys(this.params2).forEach(key => {
+          if (params[key]) {
+            if (params[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(params[key], this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]') {
               params[key].concat(this.params2[key])
             }
           } else {
@@ -270,12 +274,12 @@ export default {
     },
     exportAll () {
       const params = JSON.parse(JSON.stringify(this.params))
-      if (this.params2){
-        Object.keys(this.params2).forEach(key=>{
-          if ( params[key] ) {
-            if ( params[key].prototype.toString.call(val) === '[object Object]' ){
-              Object.assign(params[key],this.params2[key])
-            } else if (params[key].prototype.toString.call(val) === '[object Array]'){
+      if (this.params2) {
+        Object.keys(this.params2).forEach(key => {
+          if (params[key]) {
+            if (params[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(params[key], this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]') {
               params[key].concat(this.params2[key])
             }
           } else {
@@ -367,16 +371,16 @@ export default {
     },
     formatNum (num) {
       return num > 9 ? num : '0' + num
-    },
-    getParamsType () {
-      const path = this.$route.path
-      switch (path) {
-        case '/panel': this.paramsType = 'dashboard'; break
-        case '/asset': this.paramsType = 'asset'; break
-        case '/monitor/endpoint': this.paramsType = 'endpoint'; break
-        default: this.paramsType = ''; break
-      }
     }
+    // getParamsType () {
+    //   const path = this.$route.path
+    //   switch (path) {
+    //     case '/panel': this.paramsType = 'dashboard'; break
+    //     case '/asset': this.paramsType = 'asset'; break
+    //     case '/monitor/endpoint': this.paramsType = 'endpoint'; break
+    //     default: this.paramsType = ''; break
+    //   }
+    // }
   },
   watch: {
     panelLock: {

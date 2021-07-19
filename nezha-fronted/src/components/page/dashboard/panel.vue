@@ -44,6 +44,7 @@
                   import: 'panel_chart_add',
                   export: 'panel_view'
                 }"
+                :paramsType="'dashboard'"
                 class="top-tool-export"
                 export-file-name="chart"
                 export-url="/visual/panel/export"

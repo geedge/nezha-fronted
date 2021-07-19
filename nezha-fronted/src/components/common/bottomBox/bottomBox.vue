@@ -37,20 +37,20 @@
         <operation-log-tab v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
         <terminal-log-tab v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
         <!-- asset列表的3个 -->
-        <panel-tab-new v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new :paramsType="'asset'" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <alertMessageTabNew v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <endpointTabNew v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <assetSubTab v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessageSub" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
         <alertMessageTabNew v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
-        <panel-tab-new v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new :paramsType="'module'" v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
-        <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new :paramsType="'endpoint'" v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
-        <alertMessageTabNew v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+        <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
-        <panel-tab-new v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+        <panel-tab-new  :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
         <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <!--model 下滑-->
