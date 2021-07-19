@@ -489,11 +489,14 @@ export default {
         font-size: 12px;
         color: #666666;
         letter-spacing: 0;
-        line-height: 18px;
         font-weight: 400;
         word-break: break-word;
-        white-space: pre-wrap;
         padding-right: 5px;
+        height: calc(100% - 24px) !important;
+        margin-top: 24px;
+        white-space: normal;
+        padding-top: 10px;
+        line-height: 16px;
       }
     }
     .tooltip-box-info{
