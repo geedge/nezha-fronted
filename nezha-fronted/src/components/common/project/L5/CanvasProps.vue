@@ -437,7 +437,7 @@
               </div>
 
               <div class="props-pen-item" v-if="selection.pen">
-                <div>透明度（0 - 1）</div>
+                <div>{{$t('project.topology.transparency')}}（0 - 1）</div>
                 <div class="p10 pl0">
                   <el-input-number
                     @focus="inputFocus"
@@ -748,14 +748,14 @@
     <div v-else-if="selection.pens" class="">
       <el-collapse v-model="activeNames">
         <!--对齐方式-->
-        <el-collapse-item title="对齐" name="1" v-if="selection.pens">
+        <el-collapse-item :title="$t('project.topology.align')" name="1" v-if="selection.pens">
           <label class="hover pointer mr10 iconLabel" v-for="item in nodesAlign" :title="item.desc">
             <i :class="['iconfont','iconfontSize16',`icon-align-${item.value}`]"
                @click="onNodesAlign(item.value)"></i>
           </label>
         </el-collapse-item>
         <!--排版-->
-        <el-collapse-item title="排版" name="2" v-if="selection.pens">
+        <el-collapse-item :title="$t('project.topology.composing')" name="2" v-if="selection.pens">
           <div class="mt10">
 <!--            <div class="flex middle mb10">-->
 <!--              <label>{{$t('project.topology.maxWidth')}}：</label>-->

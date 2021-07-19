@@ -1469,7 +1469,9 @@ const en = {
       right: 'right',
       topOffsetY: 'top',
       middleOffsetY: 'middle',
-      bottomOffsetY: 'bottom'
+      bottomOffsetY: 'bottom',
+      transparency: 'Transparency',
+      composing: 'Composing'
     },
     update: 'Update'
   },

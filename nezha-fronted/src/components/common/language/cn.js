@@ -1465,7 +1465,9 @@ const cn = {
       right: '右对齐',
       topOffsetY: '顶部对齐',
       middleOffsetY: '居中',
-      bottomOffsetY: '底部对齐'
+      bottomOffsetY: '底部对齐',
+      transparency: '透明度',
+      composing: '排版'
     },
     update: '更新'
   },
