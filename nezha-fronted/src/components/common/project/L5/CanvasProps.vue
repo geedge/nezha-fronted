@@ -22,9 +22,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="!selection.pen.type&&fromDiagram" :label="$t('project.topology.name')" class="full-form-item" prop="type">
-            <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
-          </el-form-item>
           <!--iconToolState-->
 <!--          <el-form-item :label="'Icon state'" class="half-form-item" prop="type" v-if="!selection.pen.type">-->
 <!--            <el-switch-->
@@ -186,7 +183,11 @@
             <div class="tooltip-box" v-show="selection.pen.data.tooltipShow">
             <!--title-->
             <el-form-item :label="$t('project.topology.title')" class="full-form-item" prop="type">
-              <el-input v-model="selection.pen.data.chartTitle" @change="changeTitle" class="input" size="small"></el-input>
+              <el-input v-model="selection.pen.data.chartTitle" class="input" size="small"></el-input>
+            </el-form-item>
+            <!--remark-->
+            <el-form-item :label="$t('overall.remark')" class="full-form-item" prop="remark">
+              <el-input  maxlength="256" show-word-limit v-model="selection.pen.data.remark" :autosize="{ minRows: 2, maxRows: 6}" type="textarea"/>
             </el-form-item>
             <!--chart unit-->
             <el-form-item :label="$t('dashboard.panel.chartForm.unit')" class="half-form-item" prop="unit"
@@ -644,79 +645,106 @@
                   <nezhaColor :value-arr="[{name:'toArrowColor',value:selection.pen.toArrowColor}]" @colorChange="colorChange"/>
                 </div>
               </div>
-<!--              <div class="props-pen-item" v-if="selection.pen&&!selection.pen.type">-->
-<!--                <div>{{$t('project.topology.img')}}</div>-->
-<!--                <div class="p10 pl0">-->
-<!--                  <el-select :popper-append-to-body= 'false'>-->
-<!--                    <el-option-group-->
-<!--                      v-for="group in imgArr"-->
-<!--                      :key="group.label"-->
-<!--                      :label="group.label">-->
-<!--                      <el-option-->
-<!--                        v-for="item in group.options"-->
-<!--                        :key="item.value"-->
-<!--                        :label="item.label"-->
-<!--                        :value="item.value">-->
-<!--                      </el-option>-->
-<!--                    </el-option-group>-->
-<!--                  </el-select>-->
-<!--                </div>-->
-<!--              </div>-->
+
+            </div>
+          </el-collapse-item>
+          <el-collapse-item :title="'Font'" name="5" v-if="selection.pen&&!selection.pen.type">
+            <div class="flex flex-warp">
+              <div class="props-pen-item" style="width: 100%">
+                <div>{{$t('project.topology.textContent')}}</div>
+                <div class="p10 pl0">
+                  <el-input v-model="selection.pen.data.title" @change="changeTitle" class="input" size="small"></el-input>
+                </div>
+              </div>
+              <div class="props-pen-item" >
+                <div>{{$t('project.topology.fontSize')}}</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="0"
+                    controls-position="right"
+                    size="small" name="x"
+                    class="input"
+                    v-model.number="selection.pen.font.fontSize"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
+                </div>
+              </div>
+              <div class="props-pen-item">
+                <div>{{$t('project.topology.fontColor')}}</div>
+                <div class="p10 pl0">
+                  <nezhaColor :value-arr="[{name:'fontColor',value:selection.pen.fontColor}]" @colorChange="colorChange"/>
+                </div>
+              </div>
+
+              <div class="props-pen-item">
+                <div>{{$t('project.topology.textAlign')}}</div>
+                <div class="p10 pl0">
+                  <el-select :popper-append-to-body="false" class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                             size="mini"
+                             v-model="selection.pen.font.textAlign" value-key="chartType" @change="onChange">
+                    <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textAlignOptions">
+                      <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="props-pen-item">
+                <div>{{$t('project.topology.textBaseline')}}</div>
+                <div class="p10 pl0">
+                  <el-select :popper-append-to-body="false" class="right-box-row-with-btn" :placeholder="$t('el.select.placeholder')" popper-class="chart-box-dropdown-small"
+                             size="mini"
+                             v-model="selection.pen.font.textOffsetX" value-key="chartType" @change="onChange">
+                    <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textBaselineOptions">
+                      <span class="panel-dropdown-label-txt">{{item.name}}</span>
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+
+              <div class="props-pen-item">
+                <div>{{$t('project.topology.textOffsetX')}}</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="0"
+                    controls-position="right"
+                    size="small" name="x"
+                    class="input"
+                    v-model.number="selection.pen.textOffsetX"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
+                </div>
+              </div>
+
+              <div class="props-pen-item">
+                <div>{{$t('project.topology.textOffsetY')}}</div>
+                <div class="p10 pl0">
+                  <el-input-number
+                    @focus="inputFocus"
+                    @blur="inputBlur"
+                    :precision="0"
+                    controls-position="right"
+                    size="small" name="x"
+                    class="input"
+                    v-model.number="selection.pen.textOffsetY"
+                    :readonly="readonly"
+                    required
+                    @change="onChange()"></el-input-number>
+                </div>
+              </div>
 
             </div>
           </el-collapse-item>
         </el-collapse>
-        <div class="project-content node-content">
-          <div class="project-content-title">{{$t('project.topology.animation')}}
-            <span class="float-right" style="margin-right: 10px">
-<!--              <el-switch-->
-<!--                v-model="selection.pen.data.animatePlay"-->
-<!--                :active-value="true"-->
-<!--                :inactive-value="false"-->
-<!--                active-color="#ee9d3f"-->
-<!--                @change="()=>{onAnimate()}">-->
-<!--              </el-switch>-->
-            </span>
-          </div>
-          <div class="project-content-box" style="width: 100%">
-            <!--节点动画-->
-            <div class="project-content-item" v-if="!selection.pen.type">
-              <label>{{$t('project.topology.animationType')}}</label>
-              <div class="full pr10">
-                <el-select :popper-append-to-body="false"
-                  v-model="selection.pen.animateType"
-                  size="small"
-                  @change="(val)=>{changeAnimatePlay(val,'node')}"
-                >
-                  <el-option v-for="(item,index) in nodeAnimateOptions" :value="item.id" :key="index"
-                             :label="item.name"></el-option>
-                </el-select>
-              </div>
-            </div>
-            <!--连线-->
-            <div class="project-content-item half" v-if="selection.pen.type">
-              <label>{{$t('project.topology.animationType')}}</label>
-              <div class="full pr10">
-                <el-select :popper-append-to-body="false" v-model="selection.pen.animateType" size="small"
-                           @change="(val)=>{changeAnimatePlay(val,'line')}"
-                           >
-                  <el-option v-for="(item,index) in lineAnimateOptions" :value="item.id" :key="index"
-                             :label="item.name"></el-option>
-                </el-select>
-              </div>
-            </div>
-            <div class="project-content-item half" v-if="selection.pen.type">
-              <label>{{$t('project.topology.animationColor')}}</label>
-              <div class="full pr10">
-                <nezhaColor :value-arr="[{name:'animateColor',value:selection.pen.animateColor}]" @colorChange="colorChange"/>
-              </div>
-            </div>
-
-          </div>
-        </div>
       </el-tab-pane>
     </el-tabs>
-<!--    选中多个-->
+    <!--选中多个-->
     <div v-else-if="selection.pens" class="">
       <el-collapse v-model="activeNames">
         <!--对齐方式-->
@@ -1153,22 +1181,22 @@ export default {
       nodesAlign: [// 对齐方式
         {
           value: 'left',
-          desc: '左对齐'
+          desc: this.$t('project.topology.left')
         }, {
           value: 'right',
-          desc: '右对齐'
+          desc: this.$t('project.topology.right')
         }, {
           value: 'top',
-          desc: '顶部对齐'
+          desc: this.$t('project.topology.topOffsetY')
         }, {
           value: 'bottom',
-          desc: '底部对齐'
+          desc: this.$t('project.topology.bottomOffsetY')
         }, {
           value: 'center',
-          desc: '垂直居中'
+          desc: this.$t('project.topology.center')
         }, {
           value: 'middle',
-          desc: '水平居中'
+          desc: this.$t('project.topology.middleOffsetY')
         }],
       layout: { // 显示对应属性
         maxWidth: undefined,
@@ -1288,7 +1316,35 @@ export default {
         '#E55400', '#FA6400', '#FF9830',
         '#7C2EA3', '#8F3BB8', '#B877D9'
       ],
-      loading: false
+      loading: false,
+      textAlignOptions: [
+        {
+          id: 'left',
+          name: this.$t('project.topology.left')
+        },
+        {
+          id: 'center',
+          name: this.$t('project.topology.center')
+        },
+        {
+          id: 'right',
+          name: this.$t('project.topology.right')
+        }
+      ],
+      textBaselineOptions: [
+        {
+          id: 'top',
+          name: this.$t('project.topology.topOffsetY')
+        },
+        {
+          id: 'middle',
+          name: this.$t('project.topology.middleOffsetY')
+        },
+        {
+          id: 'bottom',
+          name: this.$t('project.topology.bottomOffsetY')
+        }
+      ]
     }
   },
   mixins: [rz],
@@ -1442,7 +1498,12 @@ export default {
       }
     },
     changeTitle (val) {
-      this.selection.pen.text = val
+      if (!val) {
+        this.selection.pen.text = this.selection.pen.data.moduleName || ''
+        this.selection.pen.data.title = this.selection.pen.data.moduleName || ''
+      } else {
+        this.selection.pen.text = val
+      }
       this.onChange()
     },
     onChange (value) {
@@ -1562,6 +1623,9 @@ export default {
           this.selection.pen.gradientFromColor = this.selection.pen.data.gradientColor
           this.selection.pen.gradientToColor = this.selection.pen.fillStyle ? this.selection.pen.fillStyle : '#fff'
         }
+      }
+      if (name === 'fontColor') {
+        this.selection.pen.font.color = this.colorRGBtoHex(val)
       }
       this.selection.pen.data[name] = this.colorRGBtoHex(val)
       this.onChange()

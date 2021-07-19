@@ -1884,7 +1884,7 @@ export default {
             }
             item.strokeStyle = item.data.strokeStyle
             item.animatePlay = false
-            item.fontColor = '#000000'
+            item.fontColor = item.data.fontColor || '#222222'
             item.gradientType = item.data.gradientType ? item.data.gradientType : 0
             if (!item.data.gradientColor) {
               item.data.gradientType = 0
@@ -1902,7 +1902,7 @@ export default {
             item.fromArrowColor = item.data.arrowColor
             item.toArrowColor = item.data.arrowColor
             item.animatePlay = false
-            item.fontColor = '#000000'
+            item.fontColor = item.data.fontColor || '#22222'
           }
         })
         getTopology(this.topologyIndex).caches = {

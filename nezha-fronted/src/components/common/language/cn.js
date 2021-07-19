@@ -1455,7 +1455,17 @@ const cn = {
       cut: '剪切',
       copy: '复制',
       paste: '粘贴',
-      textContent: 'Text content'
+      textContent: 'Text content',
+      textAlign: '水平对齐',
+      textBaseline: '垂直对齐',
+      textOffsetX: '水平偏移',
+      textOffsetY: '垂直偏移',
+      left: '左对齐',
+      center: '居中',
+      right: '右对齐',
+      topOffsetY: '顶部对齐',
+      middleOffsetY: '居中',
+      bottomOffsetY: '底部对齐'
     },
     update: '更新'
   },

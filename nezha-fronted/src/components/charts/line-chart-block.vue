@@ -948,8 +948,6 @@ export default {
         const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
         if (panelTime[0]) {
           const numInterval = new Date(panelTime[1]).getTime() - new Date(panelTime[0]).getTime()
-          console.log(numInterval)
-
           if (numInterval >= 60 * 60 * 1000) {
             option.xAxis.minInterval = 20 * 60 * 1000
           } else if (numInterval >= 30 * 60 * 1000 && numInterval < 60 * 60 * 1000) {
