@@ -30,6 +30,21 @@
         <button id="asset-create-asset" v-has="'dc_add'" class="top-tool-btn margin-r-10" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :permissions="{
+                  import: 'dc_edit',
+                  export: 'dc_view'
+                }"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset"
+          export-url="/dc/cabinet/export"
+          import-url="/dc/cabinet/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
       </template>
       <template v-slot:pagination>
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
@@ -48,6 +63,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import cabinetTable from '@/components/common/table/settings/cabinetTable'
+import topToolMoreOptions from "@/components/common/popBox/topToolMoreOptions";
 export default {
   name: 'cabinetTab',
   mixins: [dataListMixin, subDataListMixin],
@@ -55,7 +71,8 @@ export default {
     nzBottomDataList,
     'cabinet-box': cabinetBox,
     'delete-button': deleteButton,
-    cabinetTable
+    cabinetTable,
+    topToolMoreOptions
   },
   data () {
     return {

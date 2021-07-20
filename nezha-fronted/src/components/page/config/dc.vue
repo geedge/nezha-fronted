@@ -14,7 +14,28 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'dc_delete'" :delete-objs="batchDeleteObjs" api="dc" @after="getTableData" @before="delFlag=true"></delete-button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :permissions="{
+                  import: 'dc_add',
+                  export: 'dc_view'
+                }"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset"
+          export-url="/dc/export"
+          import-url="/dc/import"
+          @afterImport="getTableData"
+        >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'dc_delete'" :delete-objs="batchDeleteObjs" api="dc" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
+          </template>
+        </top-tool-more-options>
       </template>
       <template v-slot:default="slotProps">
         <dc-table
@@ -53,6 +74,7 @@ import deleteButton from '@/components/common/deleteButton'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import dcTable from '@/components/common/table/settings/dcTable'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 export default {
   name: 'dc',
   components: {
@@ -61,7 +83,8 @@ export default {
     deleteButton,
     nzDataList,
     dcTable,
-    cabinetBox
+    cabinetBox,
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {

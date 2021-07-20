@@ -4,7 +4,7 @@
 </style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
-    <div class="main-list" style="height: calc(100% - 30px)">
+    <div class="main-list" :style="{height: fromOverView ?'100%' : 'calc(100% - 30px)'}">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
@@ -150,7 +150,9 @@
               <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
             </div>
           </div>
-          <div :class="['page',fromOverView?'overview-page':'']" :style="`border: 1px solid ${theme.rightBoxBorderColor};`">
+          <div :class="['page',fromOverView?'overview-page':'']" :style="{
+            border: fromOverView ? 'none' :`1px solid ${theme.rightBoxBorderColor}`
+          }">
             <!--画布部分-->
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full" @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->
