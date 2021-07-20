@@ -4,7 +4,7 @@
 </style>
 <template>
   <div class="project-box list-page" v-loading="topologyLoading" v-has="'topo_list'">
-    <div class="main-list">
+    <div class="main-list" style="overflow: hidden">
       <div class="main-container" :class="fromOverView?'from-overview':'from-project'" style="background: #fff">
         <div v-if="(editTopologyFlag || isPreview)&&!fromChart" class="edit-topologyLine top-tools" style="padding-left: 20px;width: calc(100% - 20px);display: inline-block">
           <!--工具栏-->
@@ -685,6 +685,7 @@ export default {
           })
           if (this.fromTopologyDialog && !this.isPreview) {
             setTimeout(() => {
+              this.topologyLoading = false
               getTopology(this.topologyIndex).open(data)
               getTopology(this.topologyIndex).centerView()
               getTopology(this.topologyIndex).resize()
@@ -720,6 +721,7 @@ export default {
                   getTopology(this.topologyIndex).lock(2)
                 }
               }
+              this.topologyLoading = false
               this.penToolTipScale = getTopology(this.topologyIndex).data.scale
               setTimeout(() => {
                 getTopology(this.topologyIndex).data.pens.forEach(item => {
@@ -729,7 +731,7 @@ export default {
                       item.startAnimate()
                     })
                   }
-                }, 100)
+                })
               })
               // if(this.fromPrev){
               //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
@@ -782,7 +784,6 @@ export default {
         } else {
           getTopology(this.topologyIndex).open(data)
         }
-        this.topologyLoading = false
         if (!getTopology(this.topologyIndex).data.name) {
           getTopology(this.topologyIndex).data.name = ''
         }

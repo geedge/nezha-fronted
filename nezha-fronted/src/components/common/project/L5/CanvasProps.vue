@@ -708,8 +708,8 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.textAlign') }}</div>
                 <div class="p10 pl0">
-                  <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="false"
-                             class="right-box-row-with-btn" popper-class="chart-box-dropdown-small"
+                  <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
+                             class="right-box-row-with-btn no-style-class" popper-class="chart-box-dropdown-small"
                              size="mini"
                              v-model="selection.pen.font.textAlign" value-key="chartType" @change="onChange">
                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textAlignOptions">
@@ -722,8 +722,8 @@
               <div class="props-pen-item">
                 <div>{{ $t('project.topology.textBaseline') }}</div>
                 <div class="p10 pl0">
-                  <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="false"
-                             class="right-box-row-with-btn" popper-class="chart-box-dropdown-small"
+                  <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
+                             class="right-box-row-with-btn no-style-class" popper-class="chart-box-dropdown-small"
                              size="mini"
                              v-model="selection.pen.font.textBaseline" value-key="chartType" @change="onChange">
                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textBaselineOptions">

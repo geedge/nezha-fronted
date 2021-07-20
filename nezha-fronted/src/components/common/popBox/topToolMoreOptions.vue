@@ -151,7 +151,9 @@ export default {
     },
     rollbackImport () {
       let url
-      if (this.importUrl.indexOf('asset') > -1) {
+      if (this.importUrl.indexOf('/asset/model') > -1) {
+        url = '/asset/model/cancelImport'
+      } else if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/asset/cancelImport'
       } else if (this.importUrl.indexOf('endpoint') > -1) {
         url = '/monitor/endpoint/cancelImport'
@@ -161,6 +163,10 @@ export default {
         url = 'visual/panel/cancelImport'
       } else if (this.importUrl.indexOf('tmpl') > -1) {
         url = '/expression/tmpl/cancelImport'
+      } else if (this.importUrl.indexOf('dc/cabinet') > -1) {
+        url = '/dc/cabinet/cancelImport'
+      } else if (this.importUrl.indexOf('dc') > -1) {
+        url = '/dc/cancelImport'
       }
       this.$delete(url + '?seq=' + this.importResult.seq).then(response => {
         if (response.code == 200) {
@@ -183,6 +189,9 @@ export default {
           if (this.paramsType === 'asset' || this.paramsType === 'endpoint') {
             form.append('linkId', this.link ? this.link.id : '')
           }
+        }
+        if (this.importUrl.indexOf('dc/cabinet') > -1) {
+          form.append('dcIds', this.params.dcIds)
         }
         form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
         this.$post(this.importUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
@@ -223,7 +232,9 @@ export default {
 
       let url = null
       const param = { language: language }
-      if (this.importUrl.indexOf('asset') > -1) {
+      if (this.importUrl.indexOf('/asset/model') > -1) {
+        url = '/asset/model/template'
+      } else if (this.importUrl.indexOf('asset') > -1) {
         url = '/asset/asset/template'
         param.type = 'asset'
       } else if (this.importUrl.indexOf('panel') > -1) {
@@ -236,6 +247,10 @@ export default {
         url = '/expression/tmpl/template'
       } else if (this.importUrl.indexOf('alert') > -1) {
         url = '/alert/rule/template'
+      } else if (this.importUrl.indexOf('dc/cabinet') > -1) {
+        url = '/dc/cabinet/template'
+      } else if (this.importUrl.indexOf('dc') > -1) {
+        url = '/dc/template'
       }
 
       if (!url) {
@@ -262,7 +277,9 @@ export default {
         })
       }
       if (this.exportUrl.indexOf('panel') > -1) {
-        params.pageSize = -1
+        if (this.paramsType !== 'template') {
+          params.pageSize = -1
+        }
         delete params.start_time
         delete params.end_time
         delete params.id

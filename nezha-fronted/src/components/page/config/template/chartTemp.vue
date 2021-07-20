@@ -36,9 +36,33 @@
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-
-        <delete-button :delete-objs="batchDeleteObjs" @after="getTableData"
-                       id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button></template>
+        <top-tool-more-options
+          ref="export"
+          id="expression-template-list"
+          export-url="visual/panel/export"
+          import-url="visual/panel/import"
+          export-file-name="chart-temp-template"
+          :params="searchLabel"
+          :params2="{
+            panelId:0,
+            returnChildren: 0,
+            groupId: 0
+          }"
+          :paramsType="'template'"
+          :permissions="{import: 'expressionTemplate_add', export: 'expressionTemplate_view'}"
+          class="top-tool-export margin-r-10"
+          @afterImport="getTableData"
+        >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" :delete-objs="batchDeleteObjs" @after="getTableData"
+                               id="alert-msg-batch-delete" v-has="'expressionTemplate_delete'" :api="url"></delete-button>
+              </el-dropdown-item>
+            </div>
+          </template>
+        </top-tool-more-options>
+      </template>
       <template  v-slot="slotProps">
         <chartTmplTable
           ref="dataTable"
@@ -74,6 +98,7 @@ import chartBox from '@/components/page/dashboard/chartBox'
 import deleteButton from '@/components/common/deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
+import topToolMoreOptions from "@/components/common/popBox/topToolMoreOptions";
 
 export default {
   name: 'chartTemp',
@@ -81,7 +106,8 @@ export default {
     chartBox,
     deleteButton,
     chartTmplTable,
-    'export-excel': exportXLSX
+    'export-excel': exportXLSX,
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {
