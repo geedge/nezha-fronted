@@ -23,7 +23,7 @@
                   export: 'dc_view'
                 }"
           class="top-tool-export margin-r-10"
-          export-file-name="asset"
+          export-file-name="datacenter"
           export-url="/dc/export"
           import-url="/dc/import"
           @afterImport="getTableData"

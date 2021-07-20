@@ -39,7 +39,7 @@
                   export: 'dc_view'
                 }"
           class="top-tool-export margin-r-10"
-          export-file-name="asset"
+          export-file-name="cabinet"
           export-url="/dc/cabinet/export"
           import-url="/dc/cabinet/import"
           @afterImport="getTableData"
