@@ -15,9 +15,7 @@
                           :chartTitleShow="false"
                           :chart-data="chartData">
         </line-chart-block>
-      <div v-if="chartData.remark" class="chart-remark">
-        {{chartData.remark}}
-      </div>
+      <div v-if="chartData.remark" class="chart-remark">{{chartData.remark}}</div>
       <chart-table  v-show="isChart || chartData.type === 'table'"
                     :key="'inner' + 1"
                     :from="'project'"
@@ -485,6 +483,7 @@ export default {
         }
       }
       .chart-remark{
+        white-space: pre-wrap;
         width: 110px;
         font-size: 12px;
         color: #666666;
@@ -494,8 +493,7 @@ export default {
         padding-right: 5px;
         height: calc(100% - 24px) !important;
         margin-top: 24px;
-        white-space: normal;
-        padding-top: 10px;
+        padding-top: 5px;
         line-height: 16px;
       }
     }
