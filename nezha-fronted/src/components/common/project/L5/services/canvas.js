@@ -161,7 +161,7 @@ export const imageTemp = {
       width: 100,
       height: 100
     },
-    imageRatio: true,
+    imageRatio: false,
     lineWidth: 0,
     rotate: 0,
     offsetRotate: 0,

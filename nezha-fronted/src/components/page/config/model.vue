@@ -14,7 +14,28 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <delete-button id="account-list-batch-delete" v-has="'model_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :permissions="{
+                  import: 'model_add',
+                  export: 'model_view'
+                }"
+          class="top-tool-export margin-r-10"
+          export-file-name="asset-model"
+          export-url="/asset/model/export"
+          import-url="/asset/model/import"
+          @afterImport="getTableData"
+        >
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'model_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
+          </template>
+        </top-tool-more-options>
       </template>
       <template v-slot="slotProps">
         <model-table
@@ -47,6 +68,7 @@ import modelBox from '@/components/common/rightBox/administration/modelBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import modelTable from '@/components/common/table/settings/modelTable'
+import topToolMoreOptions from "@/components/common/popBox/topToolMoreOptions";
 
 export default {
   name: 'model',
@@ -54,7 +76,8 @@ export default {
     nzDataList,
     modelBox,
     deleteButton,
-    modelTable
+    modelTable,
+    topToolMoreOptions,
   },
   mixins: [dataListMixin],
   data () {
