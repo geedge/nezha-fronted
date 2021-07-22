@@ -495,6 +495,10 @@ export default {
         dot = 1
       }
       this.chartDot = dot
+      dot = bus.countDecimals(value)
+      if (dot < this.chartDot) {
+        dot = this.chartDot
+      }
       return unit.compute(value, index, -1, dot)
     },
     setRandomColors: function (num) { // 当线条过多，默认颜色数量不够时须使用此方法,num 颜色的数量，通常传递series的length即可

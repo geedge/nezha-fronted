@@ -932,12 +932,16 @@ export default {
               let chartUnit = chartInfo.unit
               chartUnit = chartUnit || 2
               const unit = chartDataFormat.getUnit(chartUnit)
-              // const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
               if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
                 dot = 2
               }
               if (dot == 0) {
                 dot = 1
+              }
+              dot = bus.countDecimals(value)
+              // console.log(dot,val)
+              if (dot < self.chartDot) {
+                dot = self.chartDot
               }
               return unit.compute(value, index, -1, dot)
             }
@@ -1055,8 +1059,6 @@ export default {
                       let paramsDot = bus.countDecimals(item.data[1])
                       if (paramsDot < self.chartDot) {
                         paramsDot = self.chartDot
-                      } else if (paramsDot > 6) {
-                        paramsDot = 6
                       }
                       if (i === 0) {
                         const value = bus.computeTimezone(item.data[0])
