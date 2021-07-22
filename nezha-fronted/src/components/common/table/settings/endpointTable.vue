@@ -143,6 +143,7 @@ export default {
           label: this.$t('project.endpoint.name'),
           prop: 'name',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('project.module.type'),
@@ -152,12 +153,14 @@ export default {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         },
         {
           label: this.$t('project.endpoint.asset'),
           prop: 'asset',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         },
         {
@@ -180,6 +183,7 @@ export default {
           label: this.$t('project.endpoint.state'),
           prop: 'state',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }
         // {

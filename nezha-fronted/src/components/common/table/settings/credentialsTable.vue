@@ -98,17 +98,18 @@ export default {
         prop: 'id',
         show: true,
         width: 80,
-        sortable:'custom'
+        sortable: 'custom'
       }, {
         label: this.$t('overall.name'),
         prop: 'name',
         show: true,
-        sortable:'custom'
+        sortable: 'custom'
       }, {
         label: this.$t('config.mib.credential.type'),
         prop: 'type',
         show: true,
-        sortable:'custom'
+        minWidth: 200,
+        sortable: 'custom'
       }, {
         label: this.$t('config.mib.credential.port'),
         prop: 'port',
@@ -116,6 +117,7 @@ export default {
       }, {
         label: this.$t('overall.remark'),
         prop: 'remark',
+        minWidth: 200,
         show: true
       }]
     }

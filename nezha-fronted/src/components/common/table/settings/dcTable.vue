@@ -119,6 +119,7 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('asset.location'),
@@ -128,11 +129,13 @@ export default {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.dc.assets'),
           prop: 'assetNum',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.dc.alert'),
@@ -158,6 +161,7 @@ export default {
           label: this.$t('config.dc.state'),
           prop: 'state',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }
       ]

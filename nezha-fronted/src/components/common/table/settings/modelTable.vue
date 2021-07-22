@@ -113,6 +113,7 @@ export default {
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
+          minWidth: 200,
           show: true
         }
       ]

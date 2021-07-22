@@ -135,6 +135,7 @@ export default {
           label: this.$t('alert.silence.matchers'),
           prop: 'matchers',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('alert.silence.startTime'),

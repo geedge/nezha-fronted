@@ -86,21 +86,25 @@ export default {
           label: this.$t('config.exprTemp.name'),
           prop: 'name',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.exprTemp.type'),
           prop: 'type',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.exprTemp.varType'),
           prop: 'varType',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
-          show: true
+          show: true,
+          minWidth: 200,
         }
       ]
     }

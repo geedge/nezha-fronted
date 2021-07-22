@@ -99,36 +99,44 @@ export default {
           label: this.$t('alert.alertName'),
           prop: 'name',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         },
         {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
+          minWidth: 200,
           show: true
         }, {
           label: this.$t('alert.config.operator'),
           prop: 'operator',
+          minWidth: 100,
           show: true
         }, {
           label: this.$t('alert.config.threshold'),
           prop: 'threshold',
+          minWidth: 100,
           show: true
         }, {
           label: this.$t('alert.config.for'),
           prop: 'last',
+          minWidth: 100,
           show: true
         }, {
           label: this.$t('alert.severity'),
           prop: 'severity',
           show: true,
+          minWidth: 100,
           sortable: 'custom'
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
+          minWidth: 200,
           show: true
         }, {
           label: this.$t('overall.remark'),
           prop: 'description',
+          minWidth: 200,
           show: true
         }, {
           label: this.$t('alert.alert'),

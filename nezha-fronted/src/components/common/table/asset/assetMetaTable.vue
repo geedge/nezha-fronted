@@ -101,6 +101,7 @@ export default {
           label: this.$t('config.assetLabel.name'),
           prop: 'name',
           show: true,
+          minWidth: 250,
           sortable: 'custom'
         }, {
           label: this.$t('config.assetLabel.key'),
@@ -132,7 +133,8 @@ export default {
         }, {
           label: this.$t('config.assetLabel.params'),
           prop: 'param',
-          show: false
+          show: false,
+          minWidth: 200
         }
       ]
     }

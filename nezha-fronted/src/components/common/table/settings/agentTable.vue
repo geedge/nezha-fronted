@@ -91,6 +91,7 @@ export default {
           label: this.$t('config.agent.dataCenter'),
           prop: 'dc',
           show: true,
+          minWidth: 200,
           sortable: 'custom'
         }, {
           label: this.$t('config.agent.host'),
@@ -109,6 +110,7 @@ export default {
           label: this.$t('asset.state'),
           prop: 'status',
           show: true,
+          minWidth: 100,
           sortable: 'custom'
         }, {
           label: this.$t('config.agent.checkTime'),

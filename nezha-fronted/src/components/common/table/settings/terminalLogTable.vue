@@ -127,15 +127,18 @@ export default {
         }, {
           label: this.$t('config.terminallog.SessionID'),
           prop: 'uuid',
+          minWidth: 200,
           show: true
         }, {
           label: this.$t('config.terminallog.username'),
           prop: 'username',
+          minWidth: 200,
           show: true
         },
         {
           label: this.$t('config.terminallog.source'),
           prop: 'remoteAddr',
+          minWidth: 200,
           show: true
         },
         {
@@ -151,6 +154,7 @@ export default {
         {
           label: this.$t('config.terminallog.startTime'),
           prop: 'startTime',
+          minWidth: 200,
           show: true
         },
         {
