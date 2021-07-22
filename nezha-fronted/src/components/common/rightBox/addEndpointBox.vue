@@ -1159,6 +1159,9 @@ export default {
   .endpoint-table-btn{
 
   }
+  /deep/ .el-form-item__content .el-input-group {
+    vertical-align: unset;
+  }
 </style>
 <style lang="scss">
   .el-table__row.hide-row{

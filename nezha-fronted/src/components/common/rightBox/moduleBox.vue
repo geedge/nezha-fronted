@@ -871,6 +871,9 @@ export default {
     color: #909399;
     padding: 2px 4px!important;;
   }
+  /deep/ .el-form-item__content .el-input-group {
+    vertical-align: unset;
+  }
 </style>
 <style>
   .sub-label {
