@@ -53,7 +53,8 @@ export default {
       legendAll: [],
       colors: chartConfig.getBgColorList(),
       noData: false,
-      dataSize: 20
+      dataSize: 20,
+      chartDot: 2
     }
   },
   created () {
@@ -436,11 +437,18 @@ export default {
         str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
         str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${item.color};}'></span>${alias || item.seriesName}:  </div>`
         str += '<div style="padding-left: 10px;">'
-        str += chartDataFormat.getUnit(this.unit).compute(val, null, 2)
+        let dot = bus.countDecimals(val)
+        // console.log(dot,val)
+        if (dot < this.chartDot) {
+          dot = this.chartDot
+        } else if (dot > 6) {
+          dot = 6
+        }
+        str += chartDataFormat.getUnit(this.unit).compute(val, null, -1, dot)
         const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
         if (previousItem) {
           str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
-          let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+          let previousval = parseFloat(Number(previousItem.data[1]).toFixed(dot))
           if (previousval === 0) {
             previousval = Number(item.data[1]).toExponential(2)
           }
@@ -453,7 +461,7 @@ export default {
             str += '-'
           }
 
-          str += chartDataFormat.getUnit(this.unit).compute(minusVal, null, 2)
+          str += chartDataFormat.getUnit(this.unit).compute(minusVal, null, -1, dot)
           str += '</span>'
         } else if (alias.indexOf('Previous ') !== -1) {
           str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
@@ -478,16 +486,15 @@ export default {
     },
     defaultYAxisFormatter: function (value, index) {
       const maxValueCopies = this.getMaxValue(this.series, { unit: this.unit })
-      const maxValue = maxValueCopies.maxValue
-      const copies = maxValueCopies.copies
       let dot = maxValueCopies.dot
       let chartUnit = this.unit
       chartUnit = chartUnit || 2
       const unit = chartDataFormat.getUnit(chartUnit)
-      const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
-      if (dot === 0 || flag) {
+      // const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
+      if (dot === 0) {
         dot = 1
       }
+      this.chartDot = dot
       return unit.compute(value, index, -1, dot)
     },
     setRandomColors: function (num) { // 当线条过多，默认颜色数量不够时须使用此方法,num 颜色的数量，通常传递series的length即可
@@ -530,7 +537,7 @@ export default {
     chartInit () {
       this.chart = echarts.init(document.getElementById(this.chartId))
     },
-    getMaxValue (dataArg, chartInfo) {
+    getMaxValue (dataArg, chartInfo) { // 获取最大值 最小值 精度 以及份数
       let maxValue = 0
       let minValue = 0
       if (chartInfo.unit && dataArg.length > 0) {

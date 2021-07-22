@@ -189,7 +189,8 @@ export default {
           extraCssText: 'z-index:1000;'
         },
         series: null,
-        stepWidth: null
+        stepWidth: null,
+        chartDot: 2
       }
     }
   },
@@ -327,7 +328,7 @@ export default {
           }
         }
         const maxValueCopies = this.getMaxValue(seriesItem, chartItem)
-        let dot = maxValueCopies.dot
+        let dot = this.chartDot = maxValueCopies.dot
         const maxValue = maxValueCopies.maxValue
         const copies = maxValueCopies.copies
         const unit = maxValueCopies.unit
@@ -349,11 +350,11 @@ export default {
                   value = Number(val).toExponential(2)
                 }
               }
-              const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
+              // const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
               if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
                 dot = 2
               }
-              if (flag || dot == 0) {
+              if (dot == 0) {
                 dot = 1
               }
               return unit.compute(value, index, -1, dot)
@@ -754,7 +755,7 @@ export default {
                         <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.dataIndex].alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, 2)}</div>
+                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot)}</div>
                         </div>
                     </div>
                 </div>

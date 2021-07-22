@@ -376,6 +376,12 @@ export default {
                   if (data) {
                     data.forEach((result, i) => {
                       const metrics = Object.assign({}, result.metric)
+                      if (!Array.isArray(result.value)) {
+                        const val = result
+                        result = {
+                          value: ['', val]
+                        }
+                      }
                       this.$set(metrics, 'value#' + index, chartDataFormat.getUnit(this.chartUnit).compute(result.value[1], null, 2))
                       for (const key in metrics) {
                         const label = {

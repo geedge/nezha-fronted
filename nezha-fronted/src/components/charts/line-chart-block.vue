@@ -314,7 +314,7 @@ export default {
       hasLegendOptions: false,
       /* legendOptions:[], */
       screenLegendOptions: [],
-
+      chartDot: 2,
       stepWidth: null
     }
   },
@@ -619,7 +619,7 @@ export default {
           dataArg[j].showAllSymbol = false
         }
       }
-      let dot = maxValueCopies.dot
+      let dot = this.chartDot = maxValueCopies.dot
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       const oldDot = maxValueCopies.oldDot
@@ -772,20 +772,26 @@ export default {
                 minusFlag = false
               }
               const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-              let val = item.data[1] ? parseFloat(Number(item.data[1]).toFixed(2)) : ''
+              let paramsDot = bus.countDecimals(item.data[1])
+              if (paramsDot < self.chartDot) {
+                paramsDot = self.chartDot
+              } else if (paramsDot > 6) {
+                paramsDot = 6
+              }
+              let val = item.data[1] ? parseFloat(Number(item.data[1]).toFixed(paramsDot)) : ''
               if (val === 0) {
-                val = Number(item.data[1]).toExponential(2)
+                val = Number(item.data[1]).toExponential(paramsDot)
               }
               sum += self.numberWithEConvent(val)
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
               str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, oldDot)
+              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
               if (previousItem) {
                 str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
+                let previousval = parseFloat(Number(previousItem.data[1]).toFixed(paramsDot))
                 if (previousval === 0) {
-                  previousval = Number(item.data[1]).toExponential(2)
+                  previousval = Number(item.data[1]).toExponential(paramsDot)
                 }
                 let minusVal = 0
                 if (previousval <= val) {
@@ -796,7 +802,7 @@ export default {
                   str += '-'
                 }
 
-                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, -1, paramsDot)
                 str += '</span>'
               } else if (tip.alias.indexOf('Previous ') !== -1) {
                 str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
@@ -816,7 +822,7 @@ export default {
               str += self.$t('dashboard.panel.chartTotal')
               str += '</div>'
               str += '<div style="padding-left: 10px;">'
-              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+              str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
               str += '</div>'
               str += '</div>'
             }
@@ -926,11 +932,11 @@ export default {
               let chartUnit = chartInfo.unit
               chartUnit = chartUnit || 2
               const unit = chartDataFormat.getUnit(chartUnit)
-              const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
+              // const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
               if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
                 dot = 2
               }
-              if (flag || dot == 0) {
+              if (dot == 0) {
                 dot = 1
               }
               return unit.compute(value, index, -1, dot)
@@ -1046,6 +1052,12 @@ export default {
                     params.forEach((item, i) => {
                       const tip = self.legendMagicType[item.seriesIndex]
                       const color = self.bgColorList[item.seriesIndex]
+                      let paramsDot = bus.countDecimals(item.data[1])
+                      if (paramsDot < self.chartDot) {
+                        paramsDot = self.chartDot
+                      } else if (paramsDot > 6) {
+                        paramsDot = 6
+                      }
                       if (i === 0) {
                         const value = bus.computeTimezone(item.data[0])
                         const tData = new Date(value)
@@ -1061,7 +1073,7 @@ export default {
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
                       str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
                       str += '</div>'
                       str += '</div>'
                     })
@@ -1241,7 +1253,7 @@ export default {
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
                       str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, 2)
+                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
                       if (previousItem) {
                         str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
                         let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
@@ -1257,7 +1269,7 @@ export default {
                           str += '-'
                         }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
                         str += '</span>'
                       } else if (tip.alias.indexOf('Previous ') !== -1) {
                         str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
@@ -1279,7 +1291,7 @@ export default {
                           str += '-'
                         }
 
-                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, 2)
+                        str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(minusVal, null, self.chartDot)
                         str += '</div>'
                       }
                       str += '</div>'
@@ -1291,7 +1303,7 @@ export default {
                       str += self.$t('dashboard.panel.chartTotal')
                       str += '</div>'
                       str += '<div style="padding-left: 10px;">'
-                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, 2)
+                      str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(sum, null, self.chartDot)
                       str += '</div>'
                       str += '</div>'
                     }

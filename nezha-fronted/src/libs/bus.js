@@ -337,6 +337,17 @@ export default new Vue({
         return configTime
       }
     },
+    countDecimals (value) {
+      if (Math.floor(value) !== value) {
+        const arr = value.toString().split('.')
+        if (Math.abs(arr[0] > 0)) {
+          return 2
+        }
+        const dot = arr[1].split('0').length + 1
+        return dot || 2
+      }
+      return 2
+    }
   },
   created () {
     this.getDefaultDate()
