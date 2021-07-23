@@ -63,11 +63,11 @@ export default {
         id: '',
         name: '',
         vm: '',
-        vmh:'',
-        authProtocol:'',
-        snmpEnable:'',
-        snmpCollect:'',
-        sshCollect:''
+        vmh: '',
+        authProtocol: '',
+        snmpEnable: '',
+        snmpCollect: '',
+        sshCollect: ''
       },
       tableId: 'typeConfTable',
       searchMsg: { // 给搜索框子组件传递的信息

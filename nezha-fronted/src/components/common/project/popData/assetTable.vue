@@ -89,34 +89,34 @@ export default {
           label: 'ID',
           prop: 'id',
           show: true,
-          width: 110,
+          width: 110
         }, {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          width: 110,
+          width: 110
         },
         {
           label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
-          width: 140,
+          width: 140
         },
         {
           label: this.$t('asset.pingInfo'),
           prop: 'pingInfo',
           show: true,
           width: 110
-        },{
+        }, {
           label: this.$t('asset.alertNum'),
           prop: 'alertNum',
           show: true,
-          width: 140,
+          width: 140
         }, {
           label: this.$t('asset.endpointNum2'),
           prop: 'endpointNum',
           show: true,
-          width: 160,
+          width: 160
         }],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
@@ -129,7 +129,7 @@ export default {
           type: 'input',
           label: 'name',
           disabled: false
-        },{
+        }, {
           name: this.$t('asset.manageIp'),
           type: 'input',
           label: 'manageIp',

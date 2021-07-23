@@ -54,10 +54,10 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import Template from "../../../page/config/template";
+import Template from '../../../page/config/template'
 export default {
   name: 'cabinet Table',
-  components: {Template},
+  components: { Template },
   mixins: [table],
   data () {
     return {

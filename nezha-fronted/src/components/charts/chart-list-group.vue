@@ -75,7 +75,7 @@
                           @sync="()=>{chartBySync(item)}"
                           :panel-id="filter.panelId"
                           :is-lock="panelLock"
-                          :chart-index="item.chartIndex"
+                          :chart-index="item.id"
                           @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
                           :chart-data="item"
         ></line-chart-block>
@@ -92,7 +92,7 @@
                      :is-lock="panelLock"
                      :panel-id="filter.panelId"
                      @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                     :chart-index="item.chartIndex"></chart-single-stat>
+                     :chart-index="item.id"></chart-single-stat>
 
         <chart-table  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'table'"
                       @on-refresh-data="refreshChart"
@@ -106,7 +106,7 @@
                       :panel-id="filter.panelId"
                       :chart-data="item"
                       @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                      :chart-index="item.chartIndex"></chart-table>
+                      :chart-index="item.id"></chart-table>
 
         <chart-url  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'url'"
                      @on-refresh-data="refreshChart"
@@ -120,11 +120,11 @@
                      :panel-id="filter.panelId"
                      :chart-data="item"
                       @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                     :chart-index="item.chartIndex"></chart-url>
+                     :chart-index="item.id"></chart-url>
 
         <chart-detail  v-if="item.type === 'assetInfo' || item.type == 'projectInfo' || item.type == 'endpointInfo' || item.type == 'alertRuleInfo'" :ref="'editChart'+item.id" :key="'inner' + item.id"
                           :from="from" :panel-id="filter.panelId"
-                          :chart-index="item.chartIndex"
+                          :chart-index="item.id"
                           @on-refresh-data="refreshChart"
                           :is-lock="panelLock"
                           :chart-data="item"
@@ -143,7 +143,7 @@
                     :is-lock="panelLock"
                     :panel-id="filter.panelId"
                     :chart-data="item"
-                    :chart-index="item.chartIndex"
+                    :chart-index="item.id"
         ></text-chart>
 
         <diagramChart :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'diagram'"
@@ -162,7 +162,7 @@
 
         <chart-alert-list  :from="from" :ref="'editChart'+item.id"
                            :panel-id="filter.panelId"
-                          :chart-index="item.chartIndex"
+                          :chart-index="item.id"
                           v-if="item.type  === 'alertList'"
                           :editChartId="'editChartId' + item.id"
                            :is-lock="panelLock"
@@ -189,7 +189,7 @@
                          :is-lock="panelLock"
                          :panel-id="filter.panelId"
                          @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                         :chart-index="item.chartIndex"></chartBarStatis>
+                         :chart-index="item.id"></chartBarStatis>
         <chart-pie  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'pie'" :temp-dom="tempDom"
                             @on-refresh-data="refreshChart"
                             @on-search-data="searchData"
@@ -202,7 +202,7 @@
                             :is-lock="panelLock"
                             :panel-id="filter.panelId"
                             @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
-                            :chart-index="item.chartIndex"></chart-pie>
+                            :chart-index="item.id"></chart-pie>
       </div>
    </draggable>
     <el-row v-if="dataList.length === 0"  class="noData"></el-row>
@@ -424,13 +424,13 @@ export default {
       this.pagePanelId = this.filter.panelId
       this.getData(this.filter)
     },
-    searchCharts (searchName) {
+    searchCharts (searchName, group) {
       // this.dataList = [];
       // this.dataTotalList = [];
       const chartListTmp = []
       if (searchName && searchName.trim() !== '') {
         this.dataTotalListBak.forEach((item) => {
-          if (item.name.indexOf(searchName) > -1) {
+          if (item.name.indexOf(searchName) > -1 || group.name.indexOf(searchName) > -1) {
             item.isLoaded = false
             item.isHide = false
             chartListTmp.push(item)
@@ -455,7 +455,7 @@ export default {
         if (this.dataList.length > 0) {
           this.dataList.forEach((item, index) => {
             this.$refs['editChart' + item.id][0].showLoad(item)// 之后要实现
-            this.setChartSize(item.span, index)// 设置该图表宽度
+            this.setChartSize(item, index)// 设置该图表宽度
             if (!item.isLoaded) {
               // 获得当前显示在浏览器的图表，从后台获取数据
               const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
@@ -1466,6 +1466,18 @@ export default {
     refresh () {
       this.dataList.forEach((item, index) => {
         this.getChartData(item, index, this.filter)
+      })
+    },
+    resize () {
+      this.dataList.forEach((item, index) => {
+        if (item.isHide) {
+          return
+        }
+        if (this.$refs['editChart' + item.id][0].chartResize) {
+          this.$refs['editChart' + item.id][0].chartResize()
+        } else if (this.$refs['editChart' + item.id][0].resize) {
+          this.$refs['editChart' + item.id][0].resize()
+        }
       })
     },
     searchData (chartId, searchTime) {

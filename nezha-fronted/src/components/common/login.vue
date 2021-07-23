@@ -112,9 +112,9 @@ export default {
       }
     },
     licenseStat () {
-      /*this.license.valid = false
+      /* this.license.valid = false
       this.license.warnInfo = 'hehehe'
-      this.license.token = 'dRqrWja/PzI8FrWVJeGqLw=='*/
+      this.license.token = 'dRqrWja/PzI8FrWVJeGqLw==' */
       this.$get('/sys/license/state').then(response => {
         if (response.code && response.code === 200) {
           this.license.warnInfo = ''

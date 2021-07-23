@@ -79,12 +79,12 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.roles.name'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',

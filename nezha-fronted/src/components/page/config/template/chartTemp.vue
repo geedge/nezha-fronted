@@ -98,7 +98,7 @@ import chartBox from '@/components/page/dashboard/chartBox'
 import deleteButton from '@/components/common/deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartTmplTable from '@/components/common/table/settings/chartTmplTable'
-import topToolMoreOptions from "@/components/common/popBox/topToolMoreOptions";
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'chartTemp',

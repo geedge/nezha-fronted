@@ -12,7 +12,7 @@
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
               <span class="chart-title-text">
-                <span @click="showList=!showList">
+                <span @click="showListChange">
                   <i class="nz-icon nz-icon-arrow-down" :class="showList?'':'is-active'"/>
                 </span>
                 {{chartData.name}}
@@ -286,6 +286,14 @@ export default {
         that.firstShow = true
         that.endLoading('screen')
       })
+    },
+    showListChange () {
+      this.showList = !this.showList
+      if (this.showList) {
+        this.$nextTick(() => {
+          this.$refs.listGroup.resize()
+        })
+      }
     }
   },
   watch: {

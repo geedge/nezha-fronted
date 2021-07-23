@@ -58,7 +58,7 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import assetTable from '@/components/common/table/asset/assetTable'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
-import { fromRoute } from "@/components/common/js/constants";
+import { fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 
 export default {

@@ -72,17 +72,17 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.exprTemp.name'),
           prop: 'name',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.exprTemp.gname'),
           prop: 'gname',
           show: true,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.exprTemp.expression'),
           prop: 'expression',

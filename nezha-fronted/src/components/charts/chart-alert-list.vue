@@ -326,7 +326,7 @@ export default {
       handler (n, o) {
         if (n.id) {
           if (!n.param.state && n.param.state != Number) {
-            n.param.state = "1"
+            n.param.state = '1'
           }
           if (n.param.severity && n.param.severity != Number) {
             n.param.severity = 1

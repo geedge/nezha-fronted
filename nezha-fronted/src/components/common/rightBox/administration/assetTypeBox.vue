@@ -98,14 +98,14 @@
 </template>
 
 <script>
-import { asset as assetConstants} from '@/components/common/js/constants'
+import { asset as assetConstants } from '@/components/common/js/constants'
 import selectWalk from '../../popBox/selectWalk'
 import editRigthBox from '../../mixin/editRigthBox'
 
 export default {
   name: 'assetTypeBox',
   components: {
-    'select-walk': selectWalk,
+    'select-walk': selectWalk
   },
   props: {
     obj: {
@@ -125,13 +125,13 @@ export default {
       assetConstants,
       editAssetType: {},
       editModule: {},
-      assetTypeList:[
+      assetTypeList: [
         {
-          id:'',
-          authProtocol:''
+          id: '',
+          authProtocol: ''
         }
       ],
-      value:'',
+      value: '',
       url: 'asset/typeConf',
       // brandUrl: 'asset/brand',
       rightBox: { model: { show: false } },
@@ -207,7 +207,7 @@ export default {
         this.editModule.walk.push(walk)
       }
     },
-    assetType(){
+    assetType () {
       this.$get('asset/typeConf').then(res => {
         this.assetTypeList = res.data.list
       })

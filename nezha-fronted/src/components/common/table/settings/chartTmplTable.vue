@@ -104,7 +104,7 @@ export default {
           label: this.$t('overall.remark'),
           prop: 'remark',
           show: true,
-          minWidth: 200,
+          minWidth: 200
         }
       ]
     }

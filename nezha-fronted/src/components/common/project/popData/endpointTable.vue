@@ -79,7 +79,7 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
-      tableId:'endpointTableProject',
+      tableId: 'endpointTableProject',
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
@@ -166,7 +166,7 @@ export default {
           //     //console.error(response.data.list[i], err);
           //   }
           // }
-          response.data.list.map( d => {
+          response.data.list.map(d => {
             d.port = JSON.parse(d.configs).port
             d.path = d.module.type
           })

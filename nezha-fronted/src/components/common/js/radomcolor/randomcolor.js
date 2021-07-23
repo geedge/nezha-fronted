@@ -1,11 +1,10 @@
 
-function randomNum(){
-  let array = window.crypto.getRandomValues(new Uint32Array(3))
+function randomNum () {
+  const array = window.crypto.getRandomValues(new Uint32Array(3))
 
-  let avg = eval(array.join('+'))/3
+  const avg = eval(array.join('+')) / 3
 
-  return array[0]>avg?avg/array[0]:array[0]/avg;
-
+  return array[0] > avg ? avg / array[0] : array[0] / avg
 }
 
 function randomcolor () {

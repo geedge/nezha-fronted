@@ -68,7 +68,7 @@ import modelBox from '@/components/common/rightBox/administration/modelBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import modelTable from '@/components/common/table/settings/modelTable'
-import topToolMoreOptions from "@/components/common/popBox/topToolMoreOptions";
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'model',
@@ -77,7 +77,7 @@ export default {
     modelBox,
     deleteButton,
     modelTable,
-    topToolMoreOptions,
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {
@@ -120,9 +120,9 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    },
+    }
   },
-  created() {
+  created () {
 
   },
   computed: {

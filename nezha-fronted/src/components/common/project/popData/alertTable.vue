@@ -123,7 +123,7 @@ export default {
           prop: 'summary',
           show: true,
           minWidth: 100
-        },{
+        }, {
           label: this.$t('alert.list.state'),
           prop: 'state',
           show: true,

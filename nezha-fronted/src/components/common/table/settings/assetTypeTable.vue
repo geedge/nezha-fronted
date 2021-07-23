@@ -99,49 +99,48 @@ export default {
           prop: 'id',
           show: true,
           width: 80,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetType.name'),
           prop: 'name',
           show: true,
           width: 120,
-          sortable:'custom'
+          sortable: 'custom'
         }, {
           label: this.$t('config.assetType.vm'),
           prop: 'vm',
-          show: true,
+          show: true
         }, {
           label: this.$t('config.assetType.vmh'),
           prop: 'vmh',
           show: true
-        },{
+        }, {
           label: this.$t('config.assetType.authProtocol'),
           prop: 'authProtocol',
-          show: true,
-        },{
+          show: true
+        }, {
           label: this.$t('config.assetType.snmpEnable'),
           prop: 'snmpEnable',
-          show: true,
-        },{
+          show: true
+        }, {
           label: this.$t('config.assetType.snmpCollect'),
           prop: 'snmpCollect',
-          show: true,
+          show: true
         },
         {
           label: this.$t('config.assetType.sshCollect'),
           prop: 'sshCollect',
-          show: true,
+          show: true
         },
         {
           label: this.$t('config.assetType.sshCollectScript'),
           prop: 'sshCollectScript',
-          show: true,
+          show: true
         }
       ]
     }
   },
   methods: {
-
 
   },
   computed: {

@@ -1109,22 +1109,22 @@
 </template>
 
 <script>
-import {alignNodes, spaceBetween, layout} from '@topology/layout'
-import {getTopology, resetZIndex} from '../../js/common'
+import { alignNodes, spaceBetween, layout } from '@topology/layout'
+import { getTopology, resetZIndex } from '../../js/common'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import promqlInput from '../../../page/dashboard/explore/promqlInput'
 import nezhaColor from '../../nezhaColor'
 
 const rz = {
   methods: {
-    rz(e) {
+    rz (e) {
       resetZIndex(e)
     }
   }
 }
 export default {
   // pen.type 0为node 1位line
-  data() {
+  data () {
     return {
       expressions: [],
       chartTypeList: [
@@ -1135,7 +1135,7 @@ export default {
         {
           id: 'stackArea',
           name: this.$t('dashboard.panel.chartForm.typeVal.stackArea.label')
-        },
+        }
         // {
         //   id: 'bar',
         //   name: this.$t('dashboard.panel.chartForm.typeVal.bar.label')
@@ -1277,19 +1277,19 @@ export default {
         }
       ],
       penDash: [
-        {d: 'M5 14 l85 0', 'stroke-dasharray': ''},
-        {d: 'M5 14 l85 0', 'stroke-dasharray': '5,5'},
-        {d: 'M5 14 l85 0', 'stroke-dasharray': '10,10'},
-        {d: 'M5 14 l85 0', 'stroke-dasharray': '10,10,2,10'}
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '5,5' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '10,10,2,10' }
       ],
       penLineType: [
-        {d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve'},
-        {d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline'},
-        {d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line'}
+        { d: 'M5 14 a100,50 0 0,1 85,0', 'stroke-dasharray': '', name: 'curve' },
+        { d: 'M5 8 l40 0 l0 12 l40 0', 'stroke-dasharray': '', name: 'polyline' },
+        { d: 'M5 14 l85 0', 'stroke-dasharray': '', name: 'line' }
         // {d:'M5 20 C0,8 50,0 85,0',"stroke-dasharray":"",name:'mind'},
       ],
       penLineFromTOArrow: [
-        {d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: ''},
+        { d: 'M5 14 l85 0', points: '', fill: '', stroke: '', 'stroke-width': '', name: '' },
         {
           d: 'M5 14 l85 0',
           points: '5 14,20 9,20 19',
@@ -1328,11 +1328,11 @@ export default {
         }
       ],
       lineAnimateOptions: [
-        {id: 1, name: this.$t('project.topology.flow')},
-        {id: 'beads', name: this.$t('project.topology.beads')},
-        {id: 'dot', name: this.$t('project.topology.dot')},
-        {id: 'comet', name: this.$t('project.topology.comet')},
-        {id: 'custom', name: this.$t('project.topology.none')}
+        { id: 1, name: this.$t('project.topology.flow') },
+        { id: 'beads', name: this.$t('project.topology.beads') },
+        { id: 'dot', name: this.$t('project.topology.dot') },
+        { id: 'comet', name: this.$t('project.topology.comet') },
+        { id: 'custom', name: this.$t('project.topology.none') }
       ],
       nodeAnimateOptions: [
         {
@@ -1440,7 +1440,7 @@ export default {
     //   immediate:false,
     // },
     selection: {
-      handler() {
+      handler () {
         // this.loading = false
         if (this.selection.pen && this.selection.pen.data && (!this.selection.pen.data.expressAllArr || this.selection.pen.data.expressAllArr.length === 0)) {
           this.selection.pen.data.expressAllArr = ['']
@@ -1451,7 +1451,7 @@ export default {
       immediate: true
     },
     fromDiagram: {
-      handler() {
+      handler () {
         if (this.selection.pen && this.selection.pen.data) {
           // eslint-disable-next-line vue/no-mutating-props
           this.selection.pen.data.iconToolState = false
@@ -1461,14 +1461,14 @@ export default {
       immediate: true
     },
     imgArr: {
-      handler() {
+      handler () {
         // this.loading = false
       },
       deep: true,
       immediate: true
     }
   },
-  created() {
+  created () {
     const dataOption = this.index == -2 ? getTopology(-1).data : getTopology(this.index).data
     if (!dataOption.data) {
       dataOption.data = {}
@@ -1481,14 +1481,14 @@ export default {
       }
     })
   },
-  mounted() {
+  mounted () {
     // this.queryMetrics()
     // this.topologyData.data.grid= !!dataOption.grid;
     // this.topologyData.data.rule= !!dataOption.rule;
     // this.topologyData.data.projectInfo= !!dataOption.projectInfo;
     // this.topologyData.data.alertInfo= !!dataOption.alertInfo;
   },
-  updated(n, o) {
+  updated (n, o) {
     if (!this.selection.pen) { // 没选中node line返回
       return
     }
@@ -1506,7 +1506,7 @@ export default {
     }
   },
   methods: {
-    queryMetrics() {
+    queryMetrics () {
       this.metricOptions = []
       this.$get('prom/api/v1/label/__name__/values').then(response => {
         if (response.status == 'success') {
@@ -1523,9 +1523,9 @@ export default {
             }
             if (metricMap.get(key)) {
               const values = metricMap.get(key)
-              values.push({label: item, value: item})
+              values.push({ label: item, value: item })
             } else {
-              const values = [{label: item, value: item}]
+              const values = [{ label: item, value: item }]
               metricMap.set(key, values)
             }
             // this.metricStore.push({label:item,value:item,insertText:item})
@@ -1543,9 +1543,9 @@ export default {
         }
       })
     },
-    tabClick(n) {
+    tabClick (n) {
     },
-    moduleIdChange(n) {
+    moduleIdChange (n) {
       this.selection.pen.data.moduleName = this.modules.find(item => item.id === n).name
       if (!this.selection.pen.data.title) {
         this.selection.pen.data.title = this.selection.pen.data.moduleName
@@ -1554,7 +1554,7 @@ export default {
         this.$emit('notModuleIDArrChange', this.selection.pen.id)
       }
     },
-    changeTitle(val) {
+    changeTitle (val) {
       if (!val) {
         this.selection.pen.text = this.selection.pen.data.moduleName || ''
         this.selection.pen.data.title = this.selection.pen.data.moduleName || ''
@@ -1563,7 +1563,7 @@ export default {
       }
       this.onChange()
     },
-    onChange(value) {
+    onChange (value) {
       if (value === 'lineWidth') {
         this.selection.pen.lineWidth = this.selection.pen.data.lineWidth
       }
@@ -1574,27 +1574,27 @@ export default {
       //   this.$emit('change');
       // }
     },
-    changeExpand() {
+    changeExpand () {
       this.selection.expand = !this.selection.expand
     },
-    isJson(obj) {
+    isJson (obj) {
       return typeof (obj) === 'object' && Object.prototype.toString.call(obj).toLowerCase() == '[object object]' && !obj.length
     },
 
     // 组件事件
-    onNodesAlign(align) { // 对齐node
+    onNodesAlign (align) { // 对齐node
       alignNodes(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect, align)
       getTopology(this.index).updateProps()
     },
-    onSpaceBetween() {
+    onSpaceBetween () {
       spaceBetween(getTopology(this.index).activeLayer.pens, getTopology(this.index).activeLayer.rect.width)
       getTopology(this.index).updateProps()
     },
-    onLayout() { // 改变布局
+    onLayout () { // 改变布局
       layout(getTopology(this.index).activeLayer.pens, this.layout)
       getTopology(this.index).updateProps()
     },
-    onClickDash(number) { // 改变线型
+    onClickDash (number) { // 改变线型
       this.pen.dash = number
       this.drowdown = 0
       if (this.selection.pen) {
@@ -1603,7 +1603,7 @@ export default {
 
       this.onChange()
     },
-    onClickName(name) {
+    onClickName (name) {
       this.pen.name = name
       // this.pen.calcControlPoints()
       this.drowdown = 0
@@ -1612,7 +1612,7 @@ export default {
       }
       this.onChange()
     },
-    bkTypeChange(val) {
+    bkTypeChange (val) {
       this.selection.pen.data.gradientType = val
       this.$forceUpdate()
       if (val === 0) {
@@ -1638,17 +1638,17 @@ export default {
       }
       this.onChange()
     },
-    colorPickerClick(ref) {
+    colorPickerClick (ref) {
       this.$refs[ref].showPicker = true
     },
-    colorPickerClickTable(ref, row) {
+    colorPickerClickTable (ref, row) {
       row.showColor = row.color.fill
       row.showType = 'fill'
       this.$nextTick(() => {
         this.$refs[ref][0].showPicker = true
       })
     },
-    colorChange(val, name) { // 改变颜色
+    colorChange (val, name) { // 改变颜色
       const bktype = this.selection.pen.data.gradientType
       if (name === 'toArrowColor') {
         this.selection.pen.fromArrowColor = this.colorRGBtoHex(val)
@@ -1687,15 +1687,15 @@ export default {
       this.selection.pen.data[name] = this.colorRGBtoHex(val)
       this.onChange()
     },
-    colorChangeTable(item, val, key) { // 改变颜色
+    colorChangeTable (item, val, key) { // 改变颜色
       item.color[key] = this.colorRGBtoHex(val)
     },
-    changeShowPicker(item, type) {
+    changeShowPicker (item, type) {
       this.$refs['colorPickerBac' + item.level][0].showPicker = true
       item.showType = type
       item.showColor = item.color[type]
     },
-    colorOut(obj, e) {
+    colorOut (obj, e) {
       let flag = false
       e.path.forEach((item) => {
         if (item.className === 'el-color-dropdown el-color-picker__panel' || item.className === 'color-tab') {
@@ -1708,7 +1708,7 @@ export default {
       obj.showType = ''
       obj.showColor = undefined
     },
-    changeTopologyOpt(val, key, isColor) {
+    changeTopologyOpt (val, key, isColor) {
       //
       // getTopology(this.index).data[key]=val;
       // getTopology(this.index).render();
@@ -1727,7 +1727,7 @@ export default {
       getTopology(this.index).render()
       this.$emit('changeProjectTitle')
     },
-    colorRGBtoHex(color) { // 获取颜色16进制数
+    colorRGBtoHex (color) { // 获取颜色16进制数
       if (!color) {
         return ''
       }
@@ -1742,17 +1742,17 @@ export default {
       const hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
       return hex
     },
-    onClickToArrow(arrow) {
+    onClickToArrow (arrow) {
       this.selection.pen.toArrow = arrow
       this.drowdown = 0
       this.onChange()
     },
-    onClickFromArrow(arrow) {
+    onClickFromArrow (arrow) {
       this.selection.pen.fromArrow = arrow
       this.drowdown = 0
       this.onChange()
     },
-    changeAnimatePlay(val, type) {
+    changeAnimatePlay (val, type) {
       if (type === 'node') {
         if (val === 'custom') {
           this.selection.pen.data.animatePlay = false
@@ -1768,27 +1768,27 @@ export default {
       }
       this.onChange()
     },
-    onAnimate(val) {
+    onAnimate (val) {
       // this.selection.pen.animateStart=this.selection.pen.animateStart?Date.now():0;
       // this.selection.pen.data.animatePlay=this.selection.pen.animatePlay;
       this.onChange()
       // this.$emit('animate');
     },
-    delTopologyPen() {
+    delTopologyPen () {
       const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
       this.$emit('del', delObj)
     },
-    getMetricOptions() {
+    getMetricOptions () {
       return this.metricOptions
     },
-    addExpression() {
+    addExpression () {
       this.selection.pen.data.expressAllArr.push('')
       this.selection.pen.data.legendsAll.push('')
     },
-    expressionChange(item) {
+    expressionChange (item) {
 
     },
-    removeExpression(index) {
+    removeExpression (index) {
       if (this.selection.pen.data.expressAllArr.length > 1) {
         this.selection.pen.data.expressAllArr.splice(index, 1)
         this.selection.pen.data.legendsAll.splice(index, 1)
@@ -1801,7 +1801,7 @@ export default {
         })
       }
     },
-    copyExpression(index) {
+    copyExpression (index) {
       this.selection.pen.data.expressAllArr.push(this.selection.pen.data.expressAllArr[index])
       this.selection.pen.data.legendsAll.push(this.selection.pen.data.legendsAll[index])
       this.$nextTick(() => {
@@ -1812,7 +1812,7 @@ export default {
         })
       })
     },
-    valueMappingAdd() {
+    valueMappingAdd () {
       if (this.selection.pen.data.valueMappingSort === 'desc') {
         this.selection.pen.data.valueMapping.push({
           color: {
@@ -1847,10 +1847,10 @@ export default {
         })
       }
     },
-    valueMappingValueChange(index, row) {
+    valueMappingValueChange (index, row) {
 
     },
-    changeValueMappingSort() {
+    changeValueMappingSort () {
       if (this.selection.pen.data.valueMappingSort === 'desc') {
         this.selection.pen.data.valueMappingSort = 'asc'
         const arr = JSON.parse(JSON.stringify(this.selection.pen.data.valueMapping))
@@ -1867,17 +1867,17 @@ export default {
         this.selection.pen.data.valueMapping = arr
       }
     },
-    valueMappingDel(index, row) {
+    valueMappingDel (index, row) {
       this.selection.pen.data.valueMapping.splice(index, 1)
       this.selection.pen.data.valueMapping.forEach((item, index) => {
         item.level = index
       })
     },
-    inputFocus(e) {
+    inputFocus (e) {
       e.path[2].children[0].setAttribute('tabindex', '0')
       e.path[2].children[1].setAttribute('tabindex', '1')
     },
-    inputBlur(e) {
+    inputBlur (e) {
     }
   }
 }

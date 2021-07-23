@@ -269,7 +269,7 @@ export default {
           link.click()
           window.URL.revokeObjectURL(link.href)
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.downloadAgentFlag = false
       })
     }

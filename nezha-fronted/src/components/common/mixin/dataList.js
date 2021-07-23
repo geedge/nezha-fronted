@@ -1,7 +1,7 @@
 import bus from '@/libs/bus'
 import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
-import {object} from "cytoscape/src/is";
+import { object } from 'cytoscape/src/is'
 export default {
   data () {
     return {
@@ -234,7 +234,7 @@ export default {
         })
       } else if (type === 'alertRule') {
         this.objectSilence.matchers = [
-          { name: 'alertName', value: row.name, regex: 0 },
+          { name: 'alertName', value: row.name, regex: 0 }
         ]
       }
       this.silenceBoxShow = true

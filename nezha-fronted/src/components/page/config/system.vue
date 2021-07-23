@@ -785,7 +785,7 @@ export default {
         const reader = new FileReader()
         reader.readAsDataURL(file)// 转化二进制流，异步方法
         let base64Str = ''
-        reader.onload = function () { // 完成后this.result为二进制流console.log(this.result);
+        reader.onload = function () { // 完成后this.result为二进制流;
           base64Str = this.result
           resolve(base64Str)
         }

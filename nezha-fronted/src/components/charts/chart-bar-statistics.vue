@@ -293,7 +293,9 @@ export default {
       this.screenModal = true
     },
     resize (chartItem) {
-      getChart(this.chartIndex).resize()
+      if (getChart(this.chartIndex)) {
+        getChart(this.chartIndex).resize()
+      }
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, legend, area, errorMsg) {

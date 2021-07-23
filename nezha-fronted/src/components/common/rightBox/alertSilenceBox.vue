@@ -103,7 +103,6 @@
         </el-form>
       </div>
 
-
     </div>
     <!-- end--表单-->
 
@@ -335,9 +334,9 @@ export default {
       this.editAlertSilence.matchers.splice(index, 1)
     },
     querySearch (queryString, cb) {
-      const labels = sameLabels.map(item=>{
+      const labels = sameLabels.map(item => {
         return {
-          name :item,
+          name: item,
           value: item
         }
       })

@@ -181,7 +181,7 @@ export default {
     },
     save: function (obj) {
       const copy = JSON.parse(JSON.stringify(obj))
-      copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt);
+      copy.expireAt = this.timezoneToUtcTimeStr(copy.expireAt)
       if (copy.role) {
         copy.roleId = copy.role.id
       }

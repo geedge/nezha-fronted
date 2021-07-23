@@ -523,7 +523,7 @@ export default {
       default: false
     }
   },
-  mixins: [rz,editRigthBox],
+  mixins: [rz, editRigthBox],
   data () {
     return {
       fromRoute,

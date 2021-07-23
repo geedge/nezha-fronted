@@ -476,14 +476,22 @@ export default {
           } else {
             item.isLoaded = true
             item.isHide = true
+            let groupShowFlag = false // 判断group内的chart是否被匹配
             if (item.type === 'group' && item.children) {
               item.children.forEach(groupItem => {
                 if (groupItem.name.indexOf(searchName) > -1) {
                   item.isLoaded = false
                   item.isHide = false
-                  chartListTmp.push(item)
+                  groupShowFlag = true
                 }
               })
+              if (groupShowFlag) {
+                item.isLoaded = false
+                item.isHide = false
+                chartListTmp.push(item)
+              } else {
+                chartListTmp.push(item)
+              }
             } else {
               chartListTmp.push(item)
             }
@@ -504,14 +512,14 @@ export default {
         if (this.dataList.length > 0) {
           this.dataList.forEach((item, index) => {
             this.$refs['editChart' + item.id][0].showLoad(item)// 之后要实现
-            this.setChartSize(item.span, index)// 设置该图表宽度
+            this.setChartSize(item, index)// 设置该图表宽度
             if (!item.isLoaded) {
               // 获得当前显示在浏览器的图表，从后台获取数据
               const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
               this.handleElementInViewport(chartBox, 0, item, index, true)
             }
             if (item.type === 'group') {
-              this.$refs['editChart' + item.id][0].$refs.listGroup.searchCharts(searchName)
+              this.$refs['editChart' + item.id][0].$refs.listGroup.searchCharts(searchName, item)
             }
           })
         }
@@ -833,7 +841,6 @@ export default {
 
       if (chartItem.type == 'diagram') {
         if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
-
           if (filterType === 'refresh') {
             this.$get('visual/panel/chart/' + chartItem.id).then(res => {
               const data = res.data.data

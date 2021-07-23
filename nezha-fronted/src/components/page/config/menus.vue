@@ -128,9 +128,9 @@ export default {
   },
   methods: {
     edit (u) {
-      this.object ={...u}
+      this.object = { ...u }
       this.rightBox.show = true
-    },
+    }
   }
 }
 </script>

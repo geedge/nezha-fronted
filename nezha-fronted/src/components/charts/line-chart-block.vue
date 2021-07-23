@@ -1982,7 +1982,9 @@ export default {
       }
     },
     chartResize () {
-      getChart(this.chartIndex).resize()
+      if (getChart(this.chartIndex)) {
+        getChart(this.chartIndex).resize()
+      }
     }
   },
   created () {

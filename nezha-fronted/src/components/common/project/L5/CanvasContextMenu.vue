@@ -132,7 +132,7 @@ export default {
     },
     canvaspaste () {
       getTopology(this.index).paste()
-    },
+    }
   }
 }
 </script>

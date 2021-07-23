@@ -113,11 +113,11 @@ export default {
       }
       // 登录后，你输入的内容从后台服务返回
       this.terminal.on('data', function (data) {
-          // let code = data.charCodeAt(0);
-          // if(code==13){
-          // }else {
-          //   that.term.write(data);
-          // }
+        // let code = data.charCodeAt(0);
+        // if(code==13){
+        // }else {
+        //   that.term.write(data);
+        // }
       })
       // 返回
       this.terminalSocket.onmessage = function (evt) {
