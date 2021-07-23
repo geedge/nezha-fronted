@@ -153,14 +153,14 @@ export default {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
-          minWidth: 200,
+          minWidth: 100,
           sortable: 'custom'
         },
         {
           label: this.$t('project.endpoint.asset'),
           prop: 'asset',
           show: true,
-          minWidth: 200,
+          minWidth: 90,
           sortable: 'custom'
         },
         {
@@ -183,7 +183,7 @@ export default {
           label: this.$t('project.endpoint.state'),
           prop: 'state',
           show: true,
-          minWidth: 200,
+          minWidth: 90,
           sortable: 'custom'
         }
         // {

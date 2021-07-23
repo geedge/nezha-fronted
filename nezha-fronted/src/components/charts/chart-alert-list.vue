@@ -233,7 +233,7 @@ export default {
           prop: 'id',
           show: true,
           width: 160
-        },{
+        }, {
           label: this.$t('alert.alertName'),
           prop: 'alertRule',
           show: true
@@ -251,7 +251,8 @@ export default {
         }, {
           label: this.$t('alert.summary'),
           prop: 'summary',
-          show: true
+          show: true,
+          minWidth: 200
         }, {
           label: this.$t('overall.remark'),
           prop: 'description',
@@ -262,7 +263,7 @@ export default {
           prop: 'state',
           show: true,
           width: 100
-        },{
+        }, {
           label: this.$t('alert.startAt'),
           prop: 'startAt',
           show: true,
@@ -272,7 +273,7 @@ export default {
           prop: 'duration',
           show: true,
           width: 150
-        },{
+        }, {
           label: this.$t('alert.endAt'),
           prop: 'endAt',
           show: true,
