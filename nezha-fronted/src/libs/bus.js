@@ -340,7 +340,7 @@ export default new Vue({
     countDecimals (value) {
       if (Math.floor(value) !== value) {
         const arr = value.toString().split('.')
-        if (Math.abs(arr[0] > 0)) {
+        if (Math.abs(arr[0] > 0) || arr.length < 2) {
           return 2
         }
         const dot = arr[1].split('0').length + 1
