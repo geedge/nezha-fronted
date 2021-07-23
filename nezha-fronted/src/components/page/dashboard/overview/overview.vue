@@ -779,7 +779,7 @@ export default {
         const requests = [axios.get('dc?pageSize=-1'), axios.get('/stat/overview/map')]
         axios.all(requests).then(result => {
           const dcInfos = result[0].data.data.list
-          const dcStats = result[1].data.data.list
+          const dcStats = result[1].data.data.list.filter(dc => dc.asset)
           dcStats.sort((a, b) => {
             return a.asset.total - b.asset.total
           })
