@@ -87,7 +87,7 @@
                 </nz-alert-tag>
               </span>
               <alertLabel
-                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint') && scope.row[item.label] && scope.row[item.label].loading"
+                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
                 :id="scope.row[item.label].id"
                 :that="scope.row[item.label]"
                 :type="item.label"
@@ -222,12 +222,8 @@ export default {
   },
   computed: {
     tagType () {
-      return (key) => {
-        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
-          return 'normal'
-        } else {
-          return 'info'
-        }
+      return () => {
+        return 'normal'
       }
     },
     tagValue () {
@@ -265,7 +261,7 @@ export default {
       })
     },
     labelsSort (obj) {
-      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
       if (typeof obj === 'string') obj = JSON.parse(obj)
       const labels = JSON.parse(JSON.stringify(obj))
       const result = []

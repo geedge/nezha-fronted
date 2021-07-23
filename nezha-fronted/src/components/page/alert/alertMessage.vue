@@ -228,7 +228,7 @@ export default {
   },
   methods: {
     labelsSort (obj) {
-      const buildIn = ['asset', 'endpoint', 'module', 'project', 'datacenter']
+      const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
       const labels = JSON.parse(JSON.stringify(obj))
       const result = []
       for (const key of buildIn) {
