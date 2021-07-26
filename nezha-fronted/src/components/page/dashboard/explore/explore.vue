@@ -4,7 +4,16 @@
       <div class="main-container" style="overflow: auto;">
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
-          <div class="top-tool-left"></div>
+          <div class="top-tool-left">
+            <el-select v-model="fromData.status" @change="screen" size="small" placeholder="请选择">
+              <el-option
+                v-for="item in searchMetrics"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
           <div class="top-tool-right">
             <pick-time :refresh-data-func="expressionChange" v-model="filterTime" @unitChange="chartUnitChange" ref="pickTime" id="explore">
               <template slot="added-text">{{$t('dashboard.metricPreview.runQuery')}}</template>
@@ -25,6 +34,7 @@
             :ref="'promql-'+(index-1)"
             :expression-list="expressions"
             :index="index-1"
+            :select-data="searchMetrics.value"
             :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
             :styleType="1"
             @addExpression="addExpression"
@@ -33,14 +43,49 @@
           ></promql-input>
         </div>
         <div ref="scrollWrap" style="height: auto; padding: 0 20px 4px;">
-          <div v-show="!showIntroduce" class="chart-view"
-               :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
-            <div class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
+          <div v-show="!showIntroduce" class="chart-view" :class="{'shrink-view':!chartVisible || !defaultChartVisible}" style="position:relative;">
+            <div v-if="showSearch" class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;graph</div>
+            <div v-else class="view-title" @click="changeChartVisible" style="position:absolute;z-index: 1000;top:10px;"><i class="nz-icon nz-icon-caret-top" ></i>&nbsp;Logs</div>
             <div class="chart-room">
               <chart ref="exploreChart" :unit="chartUnit"></chart>
             </div>
+            <div v-if="!showSearch" class="chart-view__switch">
+              <div>
+                <template>
+                  <el-switch
+                    v-model="value"
+                    active-color="#FA901C"
+                    inactive-text="Time">
+                  </el-switch>
+                </template>
+                <template>
+                  <el-switch
+                    v-model="value"
+                    active-color="#FA901C"
+                    inactive-text="Unique labels">
+                  </el-switch>
+                </template>
+                <template>
+                  <el-switch
+                    v-model="value"
+                    active-color="#FA901C"
+                    inactive-text="Wrap lines">
+                  </el-switch>
+                </template>
+                <template>
+                  <span style="margin-left: 100px;">Dedup</span>
+                  <el-radio-group size="small" v-model="tabPosition">
+                    <el-radio-button label="none">none</el-radio-button>
+                    <el-radio-button label="exact">exact</el-radio-button>
+                    <el-radio-button label="numbers">numbers</el-radio-button>
+                    <el-radio-button label="signature">signature</el-radio-button>
+                  </el-radio-group>
+                </template>
+              </div>
+              <div></div>
+            </div>
           </div>
-          <div v-show="!showIntroduce" class="table-view"
+          <div v-show="!showIntroduce" v-if="showSearch" class="table-view"
                :class="{'shrink-view':!tableVisible || !defaultTableVisible}" style="position: relative">
             <div class="view-title" style="position:absolute;z-index: 1000;top:4px;" @click="changeTableVisible"><i class="nz-icon nz-icon-caret-top"></i>&nbsp;table</div>
             <div class="table-room">
@@ -83,7 +128,7 @@
                           :append-to-body="false"></pagination>
             </div>
           </div>
-          <div v-show="showIntroduce" class="introduce-view">
+          <div v-show="showIntroduce" v-if="showSearch" class="introduce-view">
             <div class="info-room">
               <div class="col-md-9 doc-content">
                 <h1 class="page-header">Query examples<a class="header-anchor" href="https://prometheus.io/docs/prometheus/latest/querying/examples/" target="_blank" rel="noopener noreferrer"><i style="font-size: 16px;" class="nz-icon nz-icon-link1"></i></a></h1>
@@ -179,6 +224,61 @@ instance_cpu_time_ns{app="fox", proc="widget", rev="4d3a513", env="prod", job="c
               </div>
             </div>
           </div>
+          <div v-show="showIntroduce" v-else class="introduce-view">
+            <div class="info-room title-heard">
+              <div class="col-md-9 logs-content">
+                <h1>Loki Cheat Sheet</h1>
+                <div class="title-heard__divider"></div>
+                <div class="introduce-view__content">
+                  <h2>See your logs</h2>
+                  <div class="introduce-view__content-label">
+                    <p>Start by selecting a log stream from the Log labels selector</p>
+                    <p>Alternatively, you can write a stream selector into query field</p>
+                    <span>{job="default/prometheus"}</span>
+                    <p>Alternatively, you can write a stream selector into query field</p>
+                    <span>{job="systemd-journal"}</span>
+                  </div>
+                </div>
+                <div class="introduce-view__content">
+                  <h2>Combine Stream selectors</h2>
+                  <div class="introduce-view__content-label">
+                    <span>{app="cassandra",namespace="prod"}</span>
+                    <p>Returns all log lines from streams that both labels.&#937</p>
+                  </div>
+                </div>
+                <div class="introduce-view__content">
+                  <h2>Filtering for search terms</h2>
+                  <div class="introduce-view__content-label">
+                    <span>{app="cassandra"} |~ "(duration|latency)s*[d.]+"</span><br/>
+                    <span>{app="cassandra"!= "exact match"}</span><br/>
+                    <span>{app="cassandra"!= "do not match"}</span>
+                    <p><b style="color: #3C92F1">LogQL </b>supports exact and regular expression filters</p>
+                  </div>
+                </div>
+                <div class="introduce-view__content">
+                  <h2>Count over time</h2>
+                  <div class="introduce-view__content-label">
+                    <span style="color: #333333">count_over_time{job="mysql"}[5m]</span>
+                    <p>This query counts all the per-second rate of all non-timeout errors within the last ten seconds for the MySQL job.</p>
+                  </div>
+                </div>
+                <div class="introduce-view__content">
+                  <h2>Rate</h2>
+                  <div class="introduce-view__content-label">
+                    <span>rate(({job="mysql"} |= "error" != "timeout")[10s]) </span>
+                    <p>Returns all log lines from streams that both labels.&#937</p>
+                  </div>
+                </div>
+                <div class="introduce-view__content">
+                <h2>Aggregate,count,and group </h2>
+                <div class="introduce-view__content-label">
+                  <span style="color: #333333">sum(count_over_time({job="mysql"}[5m])) by (level)</span>
+                  <p>Returns all log lines from streams that both labels.&#937</p>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -202,14 +302,30 @@ export default {
   name: 'explore',
   components: {
     'promql-input': promqlInput,
-    chart: chart,
-    'chart-box': chartBox
+    'chart-box': chartBox,
+    chart: chart
   },
   data () {
     return {
       rightBox: { // 面板弹出框相关
         show: false
       },
+      value: true,
+      tabPosition: 'none',
+      searchMetrics: [
+        {
+          value: 'Metrics',
+          label: this.$t('project.metrics.metrics')
+        },
+        {
+          value: 'Logs',
+          label: this.$t('overall.logs')
+        }
+      ],
+      fromData: {
+        status: ''
+      },
+      showSearch: true,
       promqlCount: 1,
       promqlKeys: [],
       expressions: [''],
@@ -248,8 +364,16 @@ export default {
     this.getPanelData()
     this.queryMetrics()
     this.promqlKeys.push(getUUID())
+    this.fromData.status = this.searchMetrics[0].label
   },
   methods: {
+    screen (value) {
+      if (value === 'Metrics') {
+        this.showSearch = true
+      } else {
+        this.showSearch = false
+      }
+    },
     pageNo (val) {
       this.pageObj.pageNo = val
       this.tableData = this.filterShowData(this.storedTableData, this.pageObj)
@@ -734,6 +858,48 @@ export default {
     -ms-flex-positive: 1;
     flex-grow: 1;
   }
+  .introduce-view {
+    .title-heard.info-room {
+      color: #333333;
+      h1 {
+        font-family: Roboto-Medium;
+        font-size: 22px;
+        color: #333333;
+        font-weight: 500;
+      }
+      .title-heard__divider {
+        width: 100%;
+        height: 1px;
+        border-bottom: 2px solid #DEDEDE;
+        margin: 5px 0 28px 0;
+      }
+      .introduce-view__content {
+        line-height: 28px;
+        margin-top: 18px;
+        h2 {
+          font-family: Roboto-Black;
+          font-size: 22px;
+          margin-bottom: 5px;
+          color: #333333;
+          font-weight: 400;
+        }
+        .introduce-view__content-label {
+          p {
+            font-family: Roboto-Black;
+            font-size: 16px;
+            color: #333333;
+            font-weight: 400;
+          }
+          span {
+            font-family: Roboto-Black;
+            font-size: 14px;
+            color: #666666;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
 
   .info-room .cheat-sheet-item__title {
     font-size: 21px;
@@ -911,7 +1077,18 @@ export default {
   article {
     margin: 10px 0 60px 0;
   }
-
+  .explore {
+    .chart-view__switch {
+      margin-top: 20px;
+      border: 1px solid #E4E8EB;
+      border-radius: 2px;
+      height: 50px;
+      line-height: 50px;
+      .el-switch.is-checked {
+        margin-left: 35px;
+      }
+    }
+  }
   /*外部引用 样式end*/
 </style>
 <style lang="scss">

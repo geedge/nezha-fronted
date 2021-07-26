@@ -15,6 +15,7 @@ const cn = {
     week: '1 周',
     folder: '文件夹',
     key: '键名',
+    logs: '日志',
     state: '状态',
     projectName: '系统名称',
     startTime: '开始时间',

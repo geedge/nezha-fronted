@@ -21,6 +21,7 @@ const en = {
     week: '1 week',
     folder: 'Folder',
     key: 'Key',
+    logs: 'Logging',
     state: 'State',
     projectName: 'Project name',
     startTime: 'Start time',
