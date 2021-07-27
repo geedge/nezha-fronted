@@ -177,7 +177,6 @@ export default {
       type: Boolean,
       default: false
     },
-    selectData: Boolean
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
   },

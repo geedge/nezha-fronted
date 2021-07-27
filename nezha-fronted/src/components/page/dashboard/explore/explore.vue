@@ -34,7 +34,6 @@
             :ref="'promql-'+(index-1)"
             :expression-list="expressions"
             :index="index-1"
-            :select-data="searchMetrics.value"
             :plugins="['metric-selector', 'metric-input', 'add', 'remove', 'copy']"
             :styleType="1"
             @addExpression="addExpression"
