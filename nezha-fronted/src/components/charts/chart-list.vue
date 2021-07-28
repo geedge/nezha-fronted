@@ -1757,7 +1757,11 @@ export default {
     resize () {
       this.init()
       this.$nextTick(() => {
-        this.$parent.$parent.dateChange()
+        if (this.$parent.$parent.dateChange) {
+          this.$parent.$parent.dateChange()
+        } else {
+          this.$parent.dateChange()
+        }
       })
     },
     init () {

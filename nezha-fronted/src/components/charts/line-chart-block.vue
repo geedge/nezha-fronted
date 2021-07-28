@@ -939,7 +939,6 @@ export default {
                 dot = 1
               }
               dot = bus.countDecimals(value)
-              // console.log(dot,val)
               if (dot < self.chartDot) {
                 dot = self.chartDot
               }
@@ -971,6 +970,14 @@ export default {
           }
         } else {
           option.xAxis.minInterval = 20 * 60 * 1000
+        }
+      } else {
+        if (this.$refs.resizeBox.offsetWidth < 200) {
+          option.xAxis.splitNumber = 1
+        } else if (this.$refs.resizeBox.offsetWidth < 300) {
+          option.xAxis.splitNumber = 3
+        } else if (this.$refs.resizeBox.offsetWidth < 500) {
+          option.xAxis.splitNumber = 5
         }
       }
       // params.series = dataArg;
@@ -1009,6 +1016,13 @@ export default {
             } else {
               self.noData = true
               option = chartConfig.getOptionNoData('noData')
+              if (self.$refs.resizeBox.offsetWidth < 200) {
+                option.xAxis.splitNumber = 1
+              } else if (self.$refs.resizeBox.offsetWidth < 300) {
+                option.xAxis.splitNumber = 3
+              } else if (self.$refs.resizeBox.offsetWidth < 500) {
+                option.xAxis.splitNumber = 5
+              }
               getChart(self.chartIndex).clear()
               getChart(self.chartIndex).setOption(option)// 创建图表
             }
