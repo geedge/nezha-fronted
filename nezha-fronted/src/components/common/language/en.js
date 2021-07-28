@@ -589,6 +589,9 @@ const en = {
   },
   asset: {
     asset: 'Asset ',
+    talon: 'Talon',
+    userName: 'User name',
+    address: 'Address',
     assets: 'Asset', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
     createAsset: 'New asset', // '编辑资产'
@@ -613,7 +616,6 @@ const en = {
     reloginPinTip: 'Relogin tip', // 密码提示
     userPinIntroduce: 'Please specify a user name and password so that the telenet login process can automatically log in',
     reLoginPinIntroduce: 'Please specify the password prompt so that the login process can run automatically',
-    username: 'Username', // '用户名'
     port: 'Port', // '端口'
     upload: 'Upload', // '上传'
     clickToUpload: 'Upload', // '上传'

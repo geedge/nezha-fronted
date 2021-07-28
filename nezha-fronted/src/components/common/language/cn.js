@@ -582,7 +582,10 @@ const cn = {
   },
   asset: {
     asset: '资产',
+    talon: '爪子',
     alertNum: '告警',
+    userName: '用户名',
+    address: '地址',
     assetType: '资产类型', // '资产类型'
     batchEditAsset: '批量修改资产',
     selectAsset: '已选择的资产',
@@ -609,7 +612,6 @@ const cn = {
     reloginpinTip: 'RELOGIN提示',
     userPinIntroduce: '请指定用户名和密码提示以便TELNET登录过程可自动运行',
     reLoginPinIntroduce: '请指定密码提示以便RELOGIN登录过程可自动运行',
-    username: '用户名',
     port: '端口',
     upload: '上传',
     clickToUpload: '上传',

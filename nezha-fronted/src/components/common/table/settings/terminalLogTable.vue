@@ -138,7 +138,7 @@ export default {
         {
           label: this.$t('config.terminallog.source'),
           prop: 'remoteAddr',
-          minWidth: 200,
+          minWidth: 100,
           show: true
         },
         {
@@ -154,7 +154,7 @@ export default {
         {
           label: this.$t('config.terminallog.startTime'),
           prop: 'startTime',
-          minWidth: 200,
+          minWidth: 100,
           show: true
         },
         {
@@ -171,7 +171,7 @@ export default {
           label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
           prop: 'status',
           show: true,
-          width: 100
+          width: 150
         }
       ]
     }

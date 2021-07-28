@@ -51,10 +51,12 @@
           <span v-if="scope.row.cabinet && scope.row.cabinet !== '--'">{{scope.row.cabinet.name}}&nbsp;{{returnCabinet( scope.row.cabinetStart, scope.row.cabinetEnd)}}</span>
           <span v-else >-</span>
         </template>
-        <template v-else-if="item.prop == 'pingInfo'">
-          <div @mouseenter="showTableTooltip( formatPingTime(scope.row.pingInfo.lastUpdate), true, $event)" @mouseleave="hideTableTooltip" v-if="scope.row.pingInfo">
-            <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}"></div><span>{{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}</span>
-          </div>
+        <template v-else-if="item.prop === 'pingInfo'">
+          <el-popover :content="$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="scope.row.pingInfo" placement="right" trigger="hover">
+            <div slot="reference">
+              <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}"></div>{{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
+            </div>
+          </el-popover>
         </template>
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
         <template v-else-if="item.prop === 'parent'">
@@ -79,6 +81,18 @@
             {{scope.row.childrenNum}}</div>
 <!--          <span v-else-if="scope.row.pid == -1">  <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i> 0 </span>-->
           <span v-else> - </span>
+        </template>
+        <template v-else-if="item.prop === 'clientState'">
+          <div v-if="scope.row[item.prop]===1">
+            <div class="active-icon green-bg inline-block"></div> 正常
+          </div>
+          <div v-else-if="scope.row[item.prop]===0">
+            <div class="active-icon red-bg inline-block"></div> 不正常
+          </div>
+          <div v-else-if="scope.row[item.prop]===-1">
+            <div class="active-icon red-bg inline-block"></div> 认证失败
+          </div>
+          <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'brand'">{{scope.row.brand ? scope.row.brand.name : '-'}}</template>
         <template v-else-if="item.prop === 'purchaseDate'">{{scope.row.purchaseDate ? scope.row.purchaseDate : '--'}}</template>
@@ -121,7 +135,7 @@
 <script>
 import table from '@/components/common/mixin/table'
 import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools'
-import bus from '@/libs/bus'
+// import bus from '@/libs/bus'
 import alertLabel from '@/components/common/alert/alertLabel'
 export default {
   name: 'assetTable',
@@ -155,81 +169,87 @@ export default {
           label: this.$t('asset.manageIp'),
           prop: 'manageIp',
           show: true,
-          width: 140,
+          minWidth: 140,
           sortable: 'custom'
         }, {
           label: this.$t('overall.parent'),
           prop: 'parent',
           show: false,
-          width: 110
+          minWidth: 110
         }, {
           label: this.$t('overall.children'),
           prop: 'children',
           show: false,
-          width: 120
+          minWidth: 120
         }, {
           label: this.$t('overall.type'),
           prop: 'type',
           show: true,
-          width: 140,
+          minWidth: 140,
           sortable: 'custom'
         }, {
           label: this.$t('asset.state'),
           prop: 'state',
           show: true,
-          width: 100,
+          minWidth: 110,
           sortable: 'custom'
         }, {
           label: this.$t('asset.pingInfo'),
           prop: 'pingInfo',
           show: true,
-          width: 110
+          minWidth: 110
         }, {
           label: this.$t('overall.dc'),
           prop: 'dc',
           show: true,
-          width: 140,
+          minWidth: 140,
           sortable: 'custom'
         }, {
           label: this.$t('asset.cabinet'),
           prop: 'cabinet',
           show: true,
-          width: 110,
+          minWidth: 110,
           sortable: 'custom'
         }, {
           label: this.$t('asset.alertNum'),
           prop: 'alertNum',
           show: true,
-          width: 140,
+          minWidth: 140,
           sortable: 'custom'
         }, {
           label: this.$t('asset.endpointNum2'),
           prop: 'endpointNum',
           show: true,
-          width: 160,
+          minWidth: 160,
           sortable: 'custom'
         }, {
           label: this.$t('asset.brand'),
           prop: 'brand',
           show: true,
-          width: 120,
+          minWidth: 120,
           sortable: 'custom'
         }, {
           label: this.$t('asset.model'),
           prop: 'model',
           show: true,
-          width: 110,
+          minWidth: 110,
           sortable: 'custom'
         }, {
           label: 'SN',
           prop: 'sn',
           show: true,
-          width: 110
+          minWidth: 110
+        }, {
+          label: this.$t('asset.talon'),
+          prop: 'clientState',
+          show: true,
+          sortable: 'custom',
+          minWidth: 150
         }, {
           label: this.$t('asset.purchaseDate'),
           prop: 'purchaseDate',
           show: false,
-          width: 110
+          minWidth: 120
         }
       ]
     }
@@ -239,8 +259,12 @@ export default {
     hideTableTooltip,
     tableDataSort (item) {
       let orderBy = ''
-      const str = item.prop
+      let str = item.prop
       if (str === 'dc') {
+        orderBy = str
+      }
+      if (str === 'clientState') {
+        str = 'talon_status'
         orderBy = str
       }
       if (item.order === 'ascending') {
@@ -292,22 +316,22 @@ export default {
         return ''
       }
       return `[${start}-${end}]`
-    },
-    formatPingTime (str) {
-      if (!str || str == '') {
-        return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
-      }
-      const ds = '-'
-      const ts = ':'
-      const time = new Date(bus.UTCTimeToConfigTimezone(str))
-      const year = time.getFullYear()
-      const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
-      const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
-      const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
-      const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
-      const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
-      return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
     }
+    // formatPingTime (str) {
+    //   if (!str || str == '') {
+    //     return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
+    //   }
+    //   const ds = '-'
+    //   const ts = ':'
+    //   const time = new Date(bus.UTCTimeToConfigTimezone(str))
+    //   const year = time.getFullYear()
+    //   const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
+    //   const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
+    //   const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
+    //   const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
+    //   const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
+    //   return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
+    // }
   }
 }
 </script>

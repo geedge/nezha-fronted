@@ -178,7 +178,7 @@
                 <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('asset.username')" prop="authUsername">
+            <el-form-item :label="$t('asset.userName')" prop="authUsername">
               <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
             <!-- Key支持私钥 -->
@@ -197,7 +197,7 @@
           <!-- TELNET -->
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.telnet">
             <div class="form__sub-title">TELNET</div>
-            <el-form-item :label="$t('asset.username')" prop="authUsername">
+            <el-form-item :label="$t('asset.userName')" prop="authUsername">
               <el-input maxlength="64" show-word-limit v-model="editAsset.authUsername" size="small"/>
             </el-form-item>
             <el-form-item :label="$t('asset.pin')" prop="authPin">
@@ -221,6 +221,40 @@
                 <el-option v-for="snmp in options.snmpCredentialOptions" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
             </el-form-item>
+          </template>
+          <!-- TALON -->
+          <template v-if="editAsset.type && editAsset.type.clientEnable === 1">
+            <div class="el-form__sub-title">TALON
+              <el-popover
+                placement="right"
+                trigger="hover"
+                content="This is a prompt text">
+                <i slot="reference" class="nz-icon nz-icon-about"></i>
+              </el-popover>
+            </div>
+            <el-form-item :label="$t('asset.userName')" prop="clientUser">
+              <el-input maxlength="64" show-word-limit v-model="editAsset.clientUser" size="small"/>
+            </el-form-item>
+            <el-form-item :label="$t('asset.pin')" prop="clientPin">
+              <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
+            </el-form-item>
+            <el-form-item :label="$t('asset.port')" prop="clientPort">
+              <el-input v-model="editAsset.clientPort" size="small"/>
+            </el-form-item>
+            <transition name="el-zoom-in-top">
+              <div v-show="showAllTalonOption">
+                <el-form-item :label="$t('asset.address')" prop="clientAddress">
+                  <el-input v-model="editAsset.clientAddress" size="small"/>
+                </el-form-item>
+              </div>
+            </transition>
+            <template v-if="showAddressOption">
+              <div style="text-align: center;margin-bottom: 40px">
+                <span class="nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="showAddress">
+                  {{$t('overall.moreOption')}}<i class="nz-icon nz-icon-arrow-down"></i>
+                </span>
+              </div>
+            </template>
           </template>
         </el-form>
       </div>
@@ -259,6 +293,8 @@ export default {
     const vm = this
     return {
       assetConstants,
+      showAllTalonOption: false,
+      showAddressOption: true,
       editAsset: {},
       url: 'asset/asset',
       rightBox: { model: { show: false } },
@@ -451,6 +487,10 @@ export default {
   methods: {
     clickOutside () {
       this.esc(false)
+    },
+    showAddress () {
+      this.showAddressOption = false
+      this.showAllTalonOption = true
     },
     setLocationData ({ cabinet, dc, u }) {
       if (cabinet) {
@@ -677,5 +717,21 @@ export default {
 
   .placeholder-emphasize input::-webkit-input-placeholder {
     color: #606266 !important;
+  }
+  .el-form__sub-title {
+    background-color: #F6F6F6;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 10px;
+    line-height: 32px;
+    color: #555;
+    margin: 0 0 20px;
+  }
+  .nz-btn-size-normal-new.nz-btn-style-light-new {
+    font-size: 12px;
+    color: #3C92F1;
+    i {
+      font-size: 12px;
+    }
   }
 </style>
