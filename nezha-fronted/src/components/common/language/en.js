@@ -589,7 +589,6 @@ const en = {
   },
   asset: {
     asset: 'Asset ',
-    talon: 'Talon',
     userName: 'User name',
     address: 'Address',
     assets: 'Asset', // '资产'

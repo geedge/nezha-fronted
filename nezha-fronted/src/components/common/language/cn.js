@@ -582,7 +582,6 @@ const cn = {
   },
   asset: {
     asset: '资产',
-    talon: '爪子',
     alertNum: '告警',
     userName: '用户名',
     address: '地址',
