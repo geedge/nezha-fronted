@@ -8,6 +8,7 @@
       :from="fromRoute.chartTemp"
       :search-msg="searchMsg"
       @search="search"
+      @getTableData="getTableData"
     >
       <template v-slot:top-tool-left>
         <div id="module-type-1"  class="nz-tab-item-box" @click="clickTab([],'exprTemp')"><!--v-has="'snmp_browser_view'"-->

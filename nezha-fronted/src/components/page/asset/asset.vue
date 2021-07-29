@@ -8,6 +8,7 @@
       :layout="dataListLayout"
       :search-msg="searchMsg"
       @search="search"
+      @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">

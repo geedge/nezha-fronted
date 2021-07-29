@@ -556,6 +556,8 @@ export default {
       if (this.endpointTableData.length === 0) {
         this.endpointTouch = true
         this.$refs.addEndpoint.validate()
+        this.prevent_opt.save = false
+        this.showError = true
         return false
       }
       // 对endpointList进行处理，避免携带过多无用数据

@@ -17,6 +17,11 @@ export const agent = {
           label: 'Per-datacenter',
           value: 2,
           text: 'Per-datacenter'
+        },
+        {
+          label: 'Loki',
+          value: 11,
+          text: 'Loki'
         }
       ]
     },
@@ -65,6 +70,38 @@ export const agent2 = {
       label: 'Per-datacenter',
       value: 2,
       text: 'Per-datacenter'
+    },
+    {
+      label: 'Loki',
+      value: 11,
+      text: 'Loki'
+    }
+  ],
+  theDataGroup: [
+    {
+      label: 'Metrics',
+      option: [
+        {
+          label: 'Global',
+          value: 1,
+          text: 'Global'
+        },
+        {
+          label: 'Per-datacenter',
+          value: 2,
+          text: 'Per-datacenter'
+        }
+      ]
+    },
+    {
+      label: 'Logs',
+      option: [
+        {
+          label: 'Loki',
+          value: 11,
+          text: 'Loki'
+        }
+      ]
     }
   ]
 

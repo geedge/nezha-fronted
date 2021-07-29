@@ -656,6 +656,7 @@ export default {
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
       // const groupId = true ? '&groupId=0' : ''
+      if (!params.panelId) { return } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           response.data.list.forEach((item, index) => {

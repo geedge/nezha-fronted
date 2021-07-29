@@ -47,6 +47,7 @@
     </div>
     <transition name="el-zoom-in-bottom">
       <bottom-box v-if="bottomBox.showSubList"
+                  @getTableData = 'getTableData'
                   ref="bottomBox"
                   :from="from"
                   :is-full-screen="bottomBox.isFullScreen"
@@ -137,6 +138,9 @@ export default {
     },
     search (searchObj) {
       this.$emit('search', searchObj)
+    },
+    getTableData () {
+      this.$emit('getTableData')
     }
   },
   watch: {

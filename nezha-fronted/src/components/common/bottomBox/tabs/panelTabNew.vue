@@ -272,6 +272,7 @@ export default {
               this.getData(this.filter)
             }
           })
+          this.$emit('getTableData')
         }
       }
     },
