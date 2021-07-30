@@ -225,7 +225,7 @@
 <!--              </div>-->
               <el-select v-model="reset.type" multiple>
                 <template v-for="item in resetOptions" >
-                  <el-option :label="item.label" :value="item.value"></el-option>
+                  <el-option :label="item.label" :value="item.value" :key="item.label"></el-option>
                 </template>
               </el-select>
             </el-form-item>
@@ -233,7 +233,7 @@
               <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
             </el-form-item>
             <el-form-item>
-              <button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</button>
+              <el-button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -801,6 +801,34 @@ export default {
       const minute = offsetHour == 0 && offsetMinute == 0 ? '' : (offsetMinute == 0 ? ':00' : (Math.abs(offsetMinute) > 9 ? ':' + Math.abs(offsetMinute) : ':0' + Math.abs(offsetMinute)))
 
       return 'UTC' + hour + minute
+    },
+    resetSys () {
+      if (this.prevent_opt.save) { return } ;
+      this.prevent_opt.save = true
+      const resetParmas = {
+        type: this.reset.type,
+        pin: this.reset.pin
+      }
+      if (resetParmas.type && resetParmas.pin) {
+        this.$confirm(this.$t('tip.resetPrompt'), {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$put('/sys/config/reset', resetParmas).then(response => {
+            if (response.code == 200) {
+              this.$message({ duration: 2000, type: 'success', message: this.$t('tip.resetSuccess') })
+              this.reset.type = ''
+              this.reset.pin = ''
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
+        })
+      } else {
+        this.prevent_opt.save = false
+        return false
+      }
     }
   },
   mounted () {

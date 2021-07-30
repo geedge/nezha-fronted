@@ -563,6 +563,7 @@ const en = {
     confirmExpired: 'Are you sure you want to expired?',
     confirmOvertime: "Are you sure it's off?",
     killTerm: 'Are you sure you want to kill terminal?',
+    resetPrompt: 'Are you sure to reset?',
     confirmBatchDelete: 'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?', // Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     yes: 'Yes', // "是"

@@ -152,7 +152,7 @@
                   </template>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.EMAIL">
-                  <input v-model="label.value[0]" size="small"></input>
+                  <input v-model="label.value[0]" size="small" />
                 </template>
               </template>
             </el-form-item>
