@@ -19,9 +19,10 @@ const en = {
     oneDay: '1 day',
     twoDay: '2 days',
     week: '1 week',
+    time: 'Time',
     folder: 'Folder',
     key: 'Key',
-    logs: 'Logging',
+    logs: 'Logs',
     state: 'State',
     projectName: 'Project name',
     startTime: 'Start time',
@@ -70,6 +71,7 @@ const en = {
     about: 'About', // 关于
     detail: 'Detail', // 详情
     query: 'Query', // 查询
+    logLabels: 'Log labels',
     account: 'Account',
     back: 'Back', // 返回
     unavailable: 'Unavailable',
@@ -119,6 +121,7 @@ const en = {
     },
     reset: 'Reset',
     submit: 'Save',
+    limit: 'Limit',
     noData: 'No data',
     tag: 'Tag',
     placeHolder: 'Please enter',
@@ -529,6 +532,10 @@ const en = {
         down: 'down',
         prometheus: 'prometheus'
       }
+    },
+    explore: {
+      descending: 'Descending',
+      wrapLines: 'Wrap lines'
     }
   },
   validate: { // 校验规则

@@ -413,6 +413,7 @@ export default {
     defaultTooltipFormatter: function (params) {
       let minusFlag = true
       let str = '<div>'
+      params instanceof Array || (params = [params])
       params.forEach((item, i) => {
         const alias = this.queryAlias(i)
         if (i === 0 && alias.indexOf('Previous ') === -1) {

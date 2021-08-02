@@ -13,6 +13,7 @@ const cn = {
     oneDay: '1 天',
     twoDay: '2 天',
     week: '1 周',
+    time: '时间',
     folder: '文件夹',
     key: '键名',
     logs: '日志',
@@ -65,6 +66,7 @@ const cn = {
     other: '其他',
     about: '关于',
     query: '查询',
+    logLabels: '日志标签',
     account: '账号',
     back: '返回',
     unavailable: '不可用',
@@ -115,6 +117,7 @@ const cn = {
     },
     reset: '重置',
     submit: '保存',
+    limit: '限制',
     noData: '没有数据',
     tag: '标签',
     syncChart: '同步图表',
@@ -520,6 +523,10 @@ const cn = {
         down: 'down',
         prometheus: 'prometheus'
       }
+    },
+    explore: {
+      descending: '降序',
+      wrapLines: '换行'
     }
   },
   validate: {
