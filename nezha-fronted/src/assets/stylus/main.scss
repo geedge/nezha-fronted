@@ -1416,11 +1416,8 @@ li{
   height: 140px;
 }
 .param-box-row {
-  padding: 7px 10px 0 10px;
+  padding: 0;
   position: relative;
-}
-.param-box-row:last-of-type {
-  padding-bottom: 7px;
 }
 .param-box-row>div {
   display: inline-block;

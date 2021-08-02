@@ -90,25 +90,48 @@ export default {
         projectId: '',
         name: '',
         endpointNameTmpl: '{{module.name}}-{{asset.name}}',
-        type: 'http',
         port: '',
         chartIds: '',
-        configs: {
-          walk: [],
-          snmpCredentialsId: '',
-          metrics_path: '',
-          port: '',
-          host: '{{asset.manageIp}}',
-          scrape_interval: '',
-          scrape_timeout: '',
-          params: '',
-          labels: '',
-          basic_auth: {
-            username: '',
-            pin: ''
+        metricsEnable: 1,
+        configs: [
+          {
+            type: 'metrics',
+            config: {
+              protocol: 'http',
+              walk: [],
+              snmpCredentialsId: '',
+              metrics_path: '',
+              port: '',
+              host: '{{asset.manageIp}}',
+              scrape_interval: '',
+              scrape_timeout: '',
+              params: '',
+              labels: '',
+              basic_auth: {
+                username: '',
+                pin: ''
+              },
+              bearer_token: '',
+            },
+            enable: 1
           },
-          bearer_token: ''
-        },
+          {
+            type: 'logs',
+            config: [{
+              basic: {
+                type: 'file',
+                fileName: '',
+                appName: '',
+                listenAddress: '',
+                unit: ''
+              },
+              labels: '',
+              labelModule: [{ key: '', value: '' }],
+              pipeline: [],
+            }],
+            enable: 1
+          }
+        ],
         walk: [],
         labelModule: [{
           key: '',
@@ -171,6 +194,16 @@ export default {
           this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
           this.object.labelModule = []
+          this.object.logsConfig.forEach(item => {
+            item.labelModule = []
+            if (JSON.stringify(item.labels) !== '{}' && item.labels) {
+              Object.keys(this.object.configs.labels).forEach(key => {
+                item.labelModule.push({ key, value: item.labels[key] })
+              })
+            } else {
+              item.labelModule.push({ key: '', value: '' })
+            }
+          })
           if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
             Object.keys(this.object.configs.labels).forEach(key => {
               this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
