@@ -103,18 +103,6 @@ export default {
             type: 'input',
             label: 'name',
             disabled: false
-          },
-          {
-            id: 12,
-            name: this.$t('asset.uSize'),
-            label: 'uSize',
-            disabled: false
-          },
-          {
-            id: 13,
-            name: this.$t('overall.remark'),
-            label: 'description',
-            disabled: false
           }
         ]
       }
