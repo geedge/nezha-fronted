@@ -192,7 +192,8 @@ export default {
             containLabel: true
           },
           legend: {
-            bottom: 20
+            bottom: 20,
+            left: 10
           },
           series,
           xAxis: {
@@ -229,6 +230,32 @@ export default {
           useUTC: false // 使用本地时间
         }
         this.myChart.setOption(option)
+        /* 点击legend
+          * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
+          * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
+          * 3.否则只改变被点击的legend状态
+          * */
+        this.myChart.on('legendselectchanged', ({ name, selected }) => {
+          const selectedLevel = []
+          const unselectedLevel = []
+          for (const n in selected) {
+            selected[n] ? selectedLevel.push(n) : unselectedLevel.push(n)
+          }
+          // 1.
+          if (selectedLevel.length + unselectedLevel.length > 1) {
+            if (unselectedLevel.length === 1 && unselectedLevel[0] === name) {
+              selectedLevel.forEach(l => {
+                this.myChart.dispatchAction({
+                  type: 'legendInverseSelect'
+                })
+              })
+            } else if (selectedLevel.length === 0) { // 2.
+              this.myChart.dispatchAction({
+                type: 'legendAllSelect'
+              })
+            }
+          }
+        })
       }
     },
     applyFilter (allTableData, filter) {
