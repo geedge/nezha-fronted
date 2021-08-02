@@ -265,6 +265,10 @@ export const chart = {
     {
       value: 'group',
       label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
+    },
+    {
+      value: 'diagram',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.diagram.label')
     }
   ]
 }
