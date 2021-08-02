@@ -111,11 +111,13 @@ export default {
           label: this.$t('overall.name'),
           prop: 'name',
           show: true,
-          sortable: 'custom'
+          sortable: 'custom',
+          minWidth: 200
         }, {
           label: this.$t('config.mib.fileName'),
           prop: 'fileName',
-          show: true
+          show: true,
+          minWidth: 100
         }, {
           label: this.$t('config.mib.models'),
           prop: 'modelsDetail',
@@ -123,15 +125,18 @@ export default {
         }, {
           label: this.$t('overall.remark'),
           prop: 'remark',
-          show: true
+          show: true,
+          minWidth: 100
         }, {
           label: this.$t('config.mib.updateUser'),
           prop: 'updateUser',
-          show: false
+          show: false,
+          minWidth: 120
         }, {
           label: this.$t('config.mib.updateAt'),
           prop: 'updateAt',
-          show: false
+          show: false,
+          minWidth: 150
         }
       ]
     }

@@ -115,7 +115,8 @@ export default {
         }, {
           label: this.$t('config.agent.checkTime'),
           prop: 'checkTime',
-          show: false
+          show: false,
+          minWidth: 150
         }
       ]
     }
