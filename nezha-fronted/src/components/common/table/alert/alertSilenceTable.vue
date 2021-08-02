@@ -157,7 +157,7 @@ export default {
           label: this.$t('alert.silence.upTime'),
           prop: 'utime',
           show: false,
-          width: 120
+          width: 300
         }, {
           label: this.$t('alert.silence.state'),
           prop: 'state',

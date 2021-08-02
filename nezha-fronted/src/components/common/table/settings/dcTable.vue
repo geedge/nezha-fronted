@@ -129,7 +129,7 @@ export default {
           label: this.$t('config.dc.cabinetNum'),
           prop: 'cabinetNum',
           show: true,
-          minWidth: 90,
+          minWidth: 100,
           sortable: 'custom'
         }, {
           label: this.$t('config.dc.assets'),
@@ -144,24 +144,28 @@ export default {
         }, {
           label: this.$t('asset.tel'),
           prop: 'tel',
-          show: false
+          show: false,
+          minWidth: 100
         }, {
           label: this.$t('asset.principal'),
           prop: 'principal',
-          show: false
+          show: false,
+          minWidth: 120
         }, {
           label: this.$t('config.dc.longitude'),
           prop: 'longitude',
-          show: false
+          show: false,
+          minWidth: 100
         }, {
           label: this.$t('config.dc.latitude'),
           prop: 'latitude',
-          show: false
+          show: false,
+          minWidth: 100
         }, {
           label: this.$t('config.dc.state'),
           prop: 'state',
           show: true,
-          minWidth: 80,
+          minWidth: 100,
           sortable: 'custom'
         }
       ]

@@ -108,7 +108,7 @@ export default {
         label: this.$t('config.mib.credential.type'),
         prop: 'type',
         show: true,
-        minWidth: 200,
+        minWidth: 160,
         sortable: 'custom'
       }, {
         label: this.$t('config.mib.credential.port'),
@@ -117,7 +117,7 @@ export default {
       }, {
         label: this.$t('overall.remark'),
         prop: 'remark',
-        minWidth: 200,
+        minWidth: 160,
         show: true
       }]
     }

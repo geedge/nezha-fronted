@@ -147,12 +147,14 @@ export default {
         }, {
           label: this.$t('alert.config.receiver'),
           prop: 'receivers',
-          show: false
+          show: false,
+          minWidth: 100
         },
         {
           label: this.$t('alert.notify'),
           prop: 'method',
-          show: false
+          show: false,
+          minWidth: 100
         }
       ]
     }

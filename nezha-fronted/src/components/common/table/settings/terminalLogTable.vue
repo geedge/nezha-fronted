@@ -165,6 +165,7 @@ export default {
         {
           label: this.$t('config.terminallog.authtype'),
           prop: 'authType',
+          minWidth: 100,
           show: false
         },
         {
