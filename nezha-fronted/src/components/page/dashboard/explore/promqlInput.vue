@@ -6,11 +6,11 @@
         <div v-if="plugins.indexOf('metric-selector') > -1">
           <el-dropdown class="metric-selector">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
-            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{ $t("overall.metric") }}
+            <button class="top-tool-btn top-tool-btn--text" type="button" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}
               &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
                                v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
-                               :props="{emitPath:false,}" @change="metricChangeNew">
+                               v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew">
 
               <template slot-scope="{ node, data }">
                 <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
@@ -18,7 +18,15 @@
                   {{data.label}}
                 </div>
               </template>
-
+            </el-cascader-panel>
+            <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
+                               v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
+                               :loading="loading" :props="cascaderProps" @change="logLabelChange">
+              <template slot-scope="{ node, data }">
+                <div :title="data.label" class="nz-cascade">
+                  {{data.label}}
+                </div>
+              </template>
             </el-cascader-panel>
           </el-dropdown>
         </div>
@@ -146,6 +154,7 @@
 <script>
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
 import editor from './editor'
+import { get } from '@/http'
 export default {
   name: 'promqlInput',
   components: {
@@ -177,6 +186,9 @@ export default {
       type: Boolean,
       default: false
     },
+    type: {
+      type: String // metric和log两种，为空时视为metric
+    }
     // metricOptions: {type: Array},
     // metricStore: {type: Array}
   },
@@ -204,6 +216,47 @@ export default {
       filterSilence: '',
       tempBoxId: {},
       loading: false
+    }
+  },
+  computed: {
+    cascaderProps () {
+      if (this.type === 'log') {
+        return {
+          lazy: true,
+          lazyLoad (node, resolve) {
+            const { level } = node
+            if (level === 0) {
+              get('/logs/loki/api/v1/labels').then(res => {
+                if (res.data) {
+                  const nodes = res.data.sort().map(d => ({
+                    value: d,
+                    label: d,
+                    leaf: false
+                  }))
+                  resolve(nodes)
+                } else {
+                  resolve([])
+                }
+              })
+            } else if (level === 1) {
+              get(`/logs/loki/api/v1/label/${node.value}/values`).then(res => {
+                if (res.data) {
+                  const nodes = res.data.sort().map(d => ({
+                    value: d,
+                    label: d,
+                    leaf: true
+                  }))
+                  resolve(nodes)
+                } else {
+                  resolve([])
+                }
+              })
+            }
+          }
+        }
+      } else {
+        return { emitPath: false }
+      }
     }
   },
   mounted () {
@@ -304,6 +357,14 @@ export default {
       this.$forceUpdate()
       this.cascaderValue = ''
     },
+    logLabelChange (value) {
+      if (!value || value.length === 0) return
+      this.expressionList[this.index] = `{${value[0]}="${value[1]}"}`
+      this.dropDownVisible = false
+      this.$emit('change', value)
+      this.$forceUpdate()
+      this.cascaderValue = ''
+    },
     metricKeyDown (val) {
       if (this.required) {
         this.metricChange(val)
@@ -313,7 +374,6 @@ export default {
       this.$emit('change')
     },
     setError: function (errMsg) {
-      // console.log(errMsg)
       this.errorMsg = errMsg
     },
     getExprTemp () {
@@ -528,7 +588,7 @@ export default {
       } */
   },
   watch: {
-    dropDownVisible: function (n, o) {
+    dropDownVisible (n, o) {
       if (this.$refs.metricSelector) {
         this.$refs.metricSelector.dropDownVisible = n
         if (!this.expressionList[this.index] || this.expressionList[this.index] == '') {

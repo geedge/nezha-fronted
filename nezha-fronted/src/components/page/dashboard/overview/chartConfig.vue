@@ -54,7 +54,7 @@ const commonOption = {
     tooltip: { // 和 option.tooltip 的配置项相同
       show: true,
       position: 'top',
-      formatter: function (param) {
+      formatter (param) {
         return param.title // 自定义的 DOM 结构
       },
       backgroundColor: 'rgba(255,255,255,0)',
@@ -103,7 +103,7 @@ const commonOption = {
     axisLabel: {
       interval: 0,
       rotate: 0,
-      formatter: function (value, index) {
+      formatter (value, index) {
         const tData = new Date(value)
         return [tData.getFullYear(), tData.getMonth() + 1, tData.getDate()].join('-') + '\n' +
               [tData.getHours(), tData.getMinutes()].join(':')
@@ -251,7 +251,7 @@ const alertMessageBarByRule = {
     axisLabel: {
       show: true,
       fontSize: 12,
-      formatter: function (value) {
+      formatter (value) {
         if (value.length > 15) {
           return '...' + value.substring(value.length - 12, value.length)
         }
@@ -305,7 +305,7 @@ const alertMessageBarByAsset = {
     axisLabel: {
       show: true,
       fontSize: 12,
-      formatter: function (value) {
+      formatter (value) {
         let r = value
         if (r.length > 4) {
           r = value.substring(0, 3) + '...'
@@ -316,7 +316,62 @@ const alertMessageBarByAsset = {
     triggerEvent: true
   }
 }
-
+const logBar = {
+  title: {
+    show: false
+  },
+  xAxis: {
+    type: 'time',
+    axisLabel: {
+      rotate: 0,
+      fontSize: 13 * window.devicePixelRatio
+    },
+    axisPointer: { // y轴上显示指针对应的值
+      show: true
+    },
+    splitLine: {
+      show: false
+    },
+    axisLine: {
+      show: false
+    },
+    axisTick: {
+      show: false
+    }
+  },
+  tooltip: {
+    show: true
+  },
+  yAxis: {
+    type: 'value',
+    splitLine: {
+      show: true
+    },
+    axisLine: {
+      show: false
+    },
+    axisTick: {
+      show: false
+    },
+    axisLabel: {
+      fontSize: 13 * window.devicePixelRatio,
+      formatter (value, i) {
+        let y
+        if (value < 1000) {
+        } else if (value < 1000000) {
+          y = value / 1000 + ' K'
+        } else if (value >= 1000000) {
+          y = value / 1000000 + ' M'
+        } else {
+          y = value / 1000000000 + ' G'
+        }
+        return y
+      }
+    }
+  },
+  useUTC: false, // 使用本地时间
+  series: []
+}
 const overviewLine = {
   title: {
     show: false
@@ -332,7 +387,7 @@ const overviewLine = {
     trigger: 'axis',
     confine: false,
     extraCssText: 'z-index:1000;',
-    formatter: function (v, i) {
+    formatter (v, i) {
       return v
     }
   },
@@ -375,7 +430,7 @@ const overviewLine = {
     },
     axisLabel: {
       fontSize: 13 * window.devicePixelRatio,
-      formatter: function (value, i) {
+      formatter (value, i) {
         let y
         if (value < 1000) {
           y = value + ' Bs'
@@ -524,22 +579,23 @@ const chartTypes = {
   bar: { name: 'alertMessage', option: alertMessageBarByAsset },
   ruleBar: { name: 'ruleMessage', option: alertMessageBarByRule },
   assetBar: { name: 'assetMessage', option: alertMessageBarByAsset },
+  logBar: { name: 'logBar', option: logBar },
   noData: { name: 'noData', option: noDataOption },
   tooltipPie: { option: tooltipPieOption },
   topoPie: { option: topoPieOption }
 }
 export default {
-  getOption: function (type) {
+  getOption (type) {
     return JSON.parse(JSON.stringify(chartTypes[type].option))
   },
-  getOptionNoData: function (type) {
+  getOptionNoData (type) {
     chartTypes[type].option.xAxis.data = createTempTimes()
     return JSON.parse(JSON.stringify(chartTypes[type].option))
   },
-  setMap: function (map) {
+  setMap (map) {
     mapOptions.geo.map = map
   },
-  getBgColorList: function () {
+  getBgColorList () {
     return Object.assign([], bgColorList)
   }
 }

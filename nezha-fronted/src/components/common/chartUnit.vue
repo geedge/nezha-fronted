@@ -59,7 +59,6 @@ export default {
 
   .chart-unit{
     width: 100px;
-    margin: 0 20px 0 0;
   }
   .chart-unit.el-cascader .el-input.is-focus .el-input__inner {
     border-color: #FBCEA4;

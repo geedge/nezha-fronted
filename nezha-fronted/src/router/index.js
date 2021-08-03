@@ -27,7 +27,7 @@ export default new Router({
         },
         {
           path: '/explore',
-          component: resolve => require(['../components/page/dashboard/explore/explore.vue'], resolve)
+          component: resolve => require(['@/components/page/dashboard/explore/explore'], resolve)
         },
         {
           path: '/overview',
