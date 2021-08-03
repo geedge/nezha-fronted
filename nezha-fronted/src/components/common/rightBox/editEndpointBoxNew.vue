@@ -31,15 +31,18 @@
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("project.module.module")' prop="remark">
-            <el-select id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+            <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <!--asset-->
-          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="asset">
-            <el-select id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetId" v-if="!disabled">
+            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetName" v-if="disabled">
+            <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled"   placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
@@ -538,7 +541,8 @@ export default {
     optionType: {
       type: String,
       default: 'batch'
-    }
+    },
+    blankObject: {}
   },
   components: {
     'select-walk': selectWalk,
@@ -570,7 +574,10 @@ export default {
         name: [
           { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
         ],
-        asset: [
+        assetId: [
+          { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        assetName: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
         ],
         projectId: [
@@ -585,6 +592,7 @@ export default {
       },
       projectList: [],
       moduleList: [],
+      assetList: [],
       credentialList: [],
       typeList: [
         {
@@ -729,7 +737,9 @@ export default {
       })
     },
     getAsset () {
-
+      this.$get('asset/asset', { pageSize: -1 }).then(res => {
+        this.assetList = res.data.list
+      })
     },
     getWalkData () {
       this.$get('mib/tree', { pageSize: -1, pageNo: 1 }).then(response => {
@@ -1127,15 +1137,28 @@ export default {
         return assetData
       }
     },
+    renderEndpoint () {
+      console.log(123123, (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)))
+      if (this.disabled) {
+        return
+      }
+      if (this.editEndpoint.moduleId && this.editEndpoint.assetId && (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs))) {
+        this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
+          console.log(res)
+          this.editEndpoint.configs = res.data.list[0].configs
+        })
+      }
+    }
   },
   mounted () {
-    this.getWalkData()
-    this.getAsset()
-    this.ChartTemplateList()
+
   },
   created () {
     this.getProjectList()
     this.getCredential()
+    this.getWalkData()
+    this.getAsset()
+    this.ChartTemplateList()
   },
   computed: {
     mibName () {

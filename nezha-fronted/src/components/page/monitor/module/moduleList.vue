@@ -11,25 +11,30 @@
       @search="search"
     >
       <template v-slot:top-tool-right>
-        <export-excel
-          id="expression-template-list"
-          v-has="''"
+        <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createModule')" class="top-tool-btn"
+                type="button" @click="add">
+          <i class="nz-icon-create-square nz-icon"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
+          id="endpoint-template-list"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="module"
           export-url="monitor/module/export"
           import-url="monitor/module/import"
-          export-file-name="module"
-          :params="searchLabel"
-          :permissions="{import: 'asset.add', export: 'asset.add'}"
           @afterImport="getTableData"
-          class="top-tool-export margin-r-10"
         >
-          <template slot="optionZone">
-            <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createModule')" class="top-tool-btn"
-                    type="button" @click="add">
-              <i class="nz-icon-create-square nz-icon"></i>
-            </button>
+          <template v-slot:before>
+            <div>
+              <el-dropdown-item>
+                <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_module_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+              </el-dropdown-item>
+            </div>
           </template>
-        </export-excel>
-        <delete-button id="account-list-batch-delete" v-has="'monitor_module_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+        </top-tool-more-options>
       </template>
       <template v-slot="slotProps">
         <module-table
@@ -70,6 +75,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import moduleTable from '@/components/common/table/settings/moduleTable'
 import exportXLSX from '@/components/common/exportXLSX'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 
 export default {
   name: 'moduleList',
@@ -79,7 +85,8 @@ export default {
     deleteButton,
     moduleTable,
     'export-excel': exportXLSX,
-    alertSilenceBox
+    alertSilenceBox,
+    topToolMoreOptions
   },
   mixins: [dataListMixin],
   data () {

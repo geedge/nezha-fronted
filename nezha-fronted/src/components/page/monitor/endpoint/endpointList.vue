@@ -71,10 +71,10 @@
     </nz-data-list>
     <transition name="right-box">
 <!--      <addEndpointBox v-if="rightBox.show" :endpoint="object" @close="closeRightBox"></addEndpointBox>-->
-      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightEditBox" :disabled="false" :optionType="'add'"></edit-endpoint-box-new>
+      <edit-endpoint-box-new :blankObject="blankObject" v-if="rightBox.show" :module="object" @close="closeRightEditBox" :disabled="false" :optionType="'add'"></edit-endpoint-box-new>
     </transition>
     <transition name="right-box">
-      <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
+      <edit-endpoint-box-new :blankObject="blankObject" v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
     </transition>
     <transition name="right-box">
       <batchModifyEndpoint v-if="rightBox.batchModify" :module="object" @close="closeRightBatchModify" :selectEndpointList="batchDeleteObjs" :disabled="true" :type="'edit'"></batchModifyEndpoint>
@@ -115,6 +115,7 @@ export default {
       blankObject: {
         id: '',
         projectId: '',
+        assetId: '',
         name: '',
         port: '',
         chartIds: '',
@@ -128,7 +129,7 @@ export default {
               snmpCredentialsId: '',
               metrics_path: '',
               port: '',
-              host: '{{asset.manageIp}}',
+              host: '',
               scrape_interval: '',
               scrape_timeout: '',
               params: '',
