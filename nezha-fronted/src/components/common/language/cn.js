@@ -1346,7 +1346,10 @@ const cn = {
       allselect: '当前页已全部选择',
       enable: '开启',
       disable: '关闭',
-      status: 'Endpoint 状态'
+      status: 'Endpoint 状态',
+      basicTypeFile: '路径',
+      basicTypeJournal: '单位',
+      basicTypeSyslog: '监听地址'
     },
     metrics: {
       metrics: '指标',

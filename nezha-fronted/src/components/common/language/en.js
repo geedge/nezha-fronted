@@ -1350,7 +1350,10 @@ const en = {
       allselect: 'The current page has all been selected',
       enable: 'Enable',
       disable: 'Disable',
-      status: 'Endpoint status'
+      status: 'Endpoint status',
+      basicTypeFile: 'Path',
+      basicTypeJournal: 'Unit',
+      basicTypeSyslog: 'Listen address'
     },
     metrics: {
       metrics: 'Metrics', // "指标"
