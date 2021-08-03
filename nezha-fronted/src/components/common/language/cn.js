@@ -6,6 +6,7 @@ const cn = {
     endpointTemplate: 'endpoint模板',
     AddByTemplate: '使用模板创建',
     exprTemp: '表达式模板',
+    checkAssetAge: '输入框字段过长',
     oneHour: '1 小时',
     twoHour: '2 小时',
     sixHour: '6 小时',

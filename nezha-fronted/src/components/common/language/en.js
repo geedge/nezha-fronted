@@ -11,6 +11,7 @@ const en = {
     customPicture: 'Custom picture',
     endpointTemplate: 'Endpoint template',
     AddByTemplate: 'Add by template',
+    checkAssetAge: 'Input field too long',
     exprTemp: 'Expr temp',
     oneHour: '1 hour',
     twoHour: '2 hours',
