@@ -23,19 +23,11 @@
     <div ref="scrollbar" class="right-box__container">
       <div class="container__form">
         <el-form ref="moduleForm" :model="editEndpoint" :rules="rules" label-position = "top" label-width="120px">
-          <!--name-->
-          <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
-            <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
-          </el-form-item>
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' prop="projectId">
             <el-select id="module-box-input-project" v-model="editEndpoint.projectId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeProject">
               <el-option v-for="item in projectList" :id="'module-project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
-          </el-form-item>
-          <!--asset-->
-          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="asset">
-            <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("project.module.module")' prop="remark">
@@ -43,7 +35,16 @@
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
-
+          <!--asset-->
+          <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="asset">
+            <el-select id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+              <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--name-->
+          <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
+            <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+          </el-form-item>
           <!-- snmp表单 -->
           <span v-if="editEndpoint.type && editEndpoint.type == 'snmp'" class="snmp-form">
           <div class="right-box-sub-title">SNMP settings</div>
@@ -137,10 +138,10 @@
                   <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!--port-->
-                <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs[0].config.port" :rules="[
-          { validator: port, trigger: 'blur' },
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ]">
+                <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
+                { validator: port, trigger: 'blur' },
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+              ]">
                   <el-input id="module-box-input-port" v-model.number="editEndpoint.configs[0].config.port" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!--type-->
@@ -150,7 +151,7 @@
                   </el-select>
                 </el-form-item>
                 <!--host-->
-                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="host">
+                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host">
                   <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!-- snmp表单 -->
@@ -160,7 +161,7 @@
                     <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item prop="walk">
+                    <el-form-item prop="configs.0.config.walk"  :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                       <select-walk ref="selectWalk" :currentWalk="editEndpoint.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk">
                         <template v-slot:trigger>
                           <div class="el-cascader">
@@ -184,12 +185,12 @@
                   </el-col>
                 </el-row>
                   <!--credentials-->
-              <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
-                <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-                  <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
-          </span>
+                  <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
+                    <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+                      <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </span>
                 <transition name="el-zoom-in-top">
                   <div v-show="showAllBasicOption" >
                     <!--scrape_interval-->
@@ -267,17 +268,17 @@
                 </el-form-item>
 
                 <!--authtype 1-->
-                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="authtype">
+                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-uername" v-model.number="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
                 </el-form-item>
 
-                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="authtype">
+                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                   <el-input id="module-box-input-password" v-model.number="editEndpoint.configs[0].config.basic_auth.pin" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->
-                <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="authtype">
-                  <el-input id="module-box-input-bearer_token" v-model.number=editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
+                <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input id="module-box-input-bearer_token" v-model.number="editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
                 </el-form-item>
 
               </el-tab-pane>
@@ -569,6 +570,9 @@ export default {
         name: [
           { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
         ],
+        asset: [
+          { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
+        ],
         projectId: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
         ],
@@ -784,13 +788,6 @@ export default {
         params.configs.walk = params.walk
         params.configs.port = params.port
         params.configs = JSON.stringify(params.configs)
-        if (this.authType === 2 && !this.editEndpoint.configs.bearer_token) {
-          this.$message.error("'token' is required")
-        } else if (this.authType === 1 && !(this.editEndpoint.configs.basic_auth.username && this.editEndpoint.configs.basic_auth.pin)) {
-          this.$message.error("'username' and 'password' is required")
-        } else {
-          this.authType = 0
-        }
         this.$nextTick(() => {
           this.$refs.moduleForm.validate((valid, errorKey) => {
             let key = Object.keys(errorKey)
@@ -863,7 +860,7 @@ export default {
     logsLogsArrAdd () {
       this.activeNameLogs.push('Basic')
       this.logsCopyValue.push('')
-      this.editModule.configs[1].config.push({
+      this.editEndpoint.configs[1].config.push({
         basic: {
           type: 'file',
           fileName: ''
@@ -874,24 +871,24 @@ export default {
       })
     },
     removeLogsArr (index) {
-      if (this.editModule.configs[1].config.length !== 1) {
-        this.editModule.configs[1].config.splice(index, 1)
+      if (this.editEndpoint.configs[1].config.length !== 1) {
+        this.editEndpoint.configs[1].config.splice(index, 1)
       }
     },
     logsBasicTypeChange (i) {
-      const type = this.editModule.configs[1].config[i].basic.type
+      const type = this.editEndpoint.configs[1].config[i].basic.type
       if (type === 'file') {
-        this.editModule.configs[1].config[i].basic = {
+        this.editEndpoint.configs[1].config[i].basic = {
           type,
           fileName: ''
         }
       } else if (type === 'journal') {
-        this.editModule.configs[1].config[i].basic = {
+        this.editEndpoint.configs[1].config[i].basic = {
           type,
           unit: ''
         }
       } else if (type === 'syslog') {
-        this.editModule.configs[1].config[i].basic = {
+        this.editEndpoint.configs[1].config[i].basic = {
           type,
           appName: '',
           listenAddress: ''
@@ -1044,7 +1041,7 @@ export default {
     },
     tabClick (index) {
       if (this.activeNameLogs[index] === 'Preview') {
-        const params = JSON.parse(JSON.stringify(this.editModule.configs[1].config[index]))
+        const params = JSON.parse(JSON.stringify(this.editEndpoint.configs[1].config[index]))
         params.labels = this.labelsToJson(params.labelModule)
         delete params.labelModule
         Object.keys(params).forEach(key => {
@@ -1074,42 +1071,52 @@ export default {
     // 添加pipeline
     addPipeline (obj, logsIndex, pipeLineIndex, type) {
       if (type == 'splice') {
-        this.editModule.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 0, obj)
+        this.editEndpoint.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 0, obj)
       }
       if (type == 'push') {
-        this.editModule.configs[1].config[logsIndex].pipeline.push(obj)
+        this.editEndpoint.configs[1].config[logsIndex].pipeline.push(obj)
       }
+    },
+    addLogsLabel (index) {
+      this.editEndpoint.configs[1].config[index].labelModule.push({ key: '', value: '' })
+    },
+    removeLogsLabel (logsIndex, i) {
+      if (this.editEndpoint.configs[1].config[logsIndex].labelModule.length === 1) {
+        this.editEndpoint.configs[1].config[logsIndex].labelModule = [{ key: '', value: '' }]
+        return
+      }
+      this.editEndpoint.configs[1].config[logsIndex].labelModule.splice(i, 1)
     },
     // 删除pipeline
     delPipeline (logsIndex, pipeLineIndex) {
-      this.editModule.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 1)
+      this.editEndpoint.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 1)
     },
     // 添加pipelineItem
     addPipelineItem (logsIndex, pipelineIndex) {
-      const val = this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].type
+      const val = this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].type
       if (val === 'regex') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expression.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expression.push('')
       } else if (val === 'json') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
       } else if (val === 'template') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
       } else if (val === 'timestamp') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
       } else if (val === 'labels') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.push({
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.push({
           key: '',
           value: ''
         })
       } else if (val === 'output') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
       }
     },
     delPipelineItem (logsIndex, pipelineIndex, itemIndex) {
-      const val = this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].type
+      const val = this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].type
       if (val === 'json') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.splice(itemIndex, 1)
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.splice(itemIndex, 1)
       } else if (val === 'labels') {
-        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.splice(itemIndex, 1)
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.splice(itemIndex, 1)
       }
     },
     resultFormat (resp) {

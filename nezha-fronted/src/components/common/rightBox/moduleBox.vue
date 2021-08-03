@@ -63,21 +63,20 @@
           <!-- ChartTemplate  -->
           <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
             <v-selectpage
-              v-model="editModule.chartIds"
               :data="chartTempList"
-              :language="language"
-              :multiple="true"
+              :tb-columns="ChartSearchShowFields"
               :params="{
                 varType: 2, panelId: 0,
                 returnChildren:0,groupId:0,
               }"
-              :result-format="resultFormat"
-              :tb-columns="ChartSearchShowFields"
-              class="form-control"
+              :multiple="true"
+              :language="language"
+              title="ChartSearch"
               key-field="id"
               show-field="name"
-              title="ChartSearch"
-              @values="(data) => {editModule.chartIds = data.map(d => d.id).join(',')}"
+              v-model="editModule.chartIds"
+              class="form-control"
+              :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
           <div class="endpoint-title">
@@ -731,28 +730,27 @@ export default {
         this.editModule.configs[0].config.params = this.paramToJson(this.editModule.paramObj)
         this.editModule.configs[0].config.labels = this.labelsToJson(this.editModule.labelModule)
         this.editModule.configs[1].config.forEach(item => {
-          if (item.labels) {
-            item.labels = this.labelsToJson(item.labels)
+          if (item.labelModule) {
+            item.labels = this.labelsToJson(item.labelModule)
+          } else {
+            item.labels = ''
           }
         })
-        const params = { ...this.editModule }
-        // params.configs = JSON.stringify(params.configs)
-        if (this.authType === 2 && !this.editModule.configs[0].config.bearer_token) {
-          // this.$message.error("'token' is required")
-          // return
-        } else if (this.authType === 1 && !(this.editModule.configs[0].config.basic_auth.username && this.editModule.configs[0].config.basic_auth.pin)) {
-          // this.$message.error("'username' and 'password' is required")
-          // return
-        } else {
-          this.authType = 0
-        }
+        const params = JSON.parse(JSON.stringify(this.editModule))
+        params.configs[1].config.forEach(item => {
+          item.pipeline && item.pipeline.forEach((pipeline) => {
+            if (pipeline.type === 'labels') {
+              pipeline.labels = this.labelsToJson(pipeline.labels)
+            }
+          })
+        })
+        params.configs = JSON.stringify(params.configs)
         this.$refs.moduleForm.validate((valid, errorKey) => {
           let key = Object.keys(errorKey)
           if (key.length) {
             key = key[0]
             if (key.indexOf('configs.0') !== -1) {
               const keyArr = key.split('.')
-              console.log(keyArr)
               if (keyArr[3] === 'basic_auth' || keyArr[3] === 'bearer_token') {
                 this.activeName = 'Auth'
               } else if (keyArr[3] === 'basic' || keyArr[3] === 'port') {
@@ -1085,12 +1083,13 @@ export default {
     }
   },
   mounted () {
-    this.getWalkData()
-    this.ChartTemplateList()
+
   },
   created () {
     this.getProjectList()
     this.getCredential()
+    this.getWalkData()
+    this.ChartTemplateList()
   },
   computed: {
     mibName () {

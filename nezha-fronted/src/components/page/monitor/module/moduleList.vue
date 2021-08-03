@@ -187,36 +187,51 @@ export default {
         if (res.code === 200) {
           this.object = JSON.parse(JSON.stringify(res.data))
           this.object.configs = JSON.parse(this.object.configs)
-          this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+          this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
           this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
           this.object.labelModule = []
-          this.object.logsConfig.forEach(item => {
+          this.object.configs[1].config.forEach(item => {
             item.labelModule = []
             if (JSON.stringify(item.labels) !== '{}' && item.labels) {
-              Object.keys(this.object.configs.labels).forEach(key => {
+              Object.keys(item.labels).forEach(key => {
                 item.labelModule.push({ key, value: item.labels[key] })
               })
             } else {
               item.labelModule.push({ key: '', value: '' })
             }
+            item.pipeline && item.pipeline.forEach((pipeline) => {
+              if (pipeline.type === 'labels') {
+                const labelsArr = []
+                if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
+                  Object.keys(pipeline.labels).forEach(key => {
+                    labelsArr.push({ key, value: pipeline.labels[key] })
+                  })
+                } else {
+                  labelsArr.push({ key: '', value: '' })
+                }
+                pipeline.labels = labelsArr
+              }
+            })
           })
-          if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
-            Object.keys(this.object.configs.labels).forEach(key => {
-              this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+          if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
+            Object.keys(this.object.configs[0].config.labels).forEach(key => {
+              this.object.labelModule.push({ key, value: this.object.configs[0].config.labels[key] })
             })
           } else {
             this.object.labelModule.push({ key: '', value: '' })
           }
-          if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
-            Object.keys(this.object.configs.params).forEach(key => {
-              this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+          if (JSON.stringify(this.object.configs[0].config.params) !== '{}' && this.object.configs[0].config.params) {
+            Object.keys(this.object.configs[0].config.params).forEach(key => {
+              this.object.paramObj.push({ key, value: this.object.configs[0].params[key] })
             })
           } else {
             this.object.paramObj.push({ key: '', value: [] })
           }
           if (!this.object.chartIds) {
             this.object.chartIds = ''
+          } else {
+            // this.object.chartIds = this.object.chartIds.split(',')
           }
           this.rightBox.show = true
         }
