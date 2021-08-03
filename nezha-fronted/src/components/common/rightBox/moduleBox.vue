@@ -48,56 +48,68 @@
             </el-tooltip>
           </div>
           <div class="right-box-line"></div>
-
+          <!--name pattern-->
+          <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern">
+            <!--              <el-input placeholder="" v-model=""></el-input>-->
+            <el-autocomplete
+              id="module-box-input-pattern"
+              v-model="editModule.endpointNameTmpl"
+              :fetch-suggestions="querySearch"
+              :placeholder="$t('overall.placeHolder')"
+              class="inline-input"
+              size="small"
+            ></el-autocomplete>
+          </el-form-item>
+          <!-- ChartTemplate  -->
+          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
+            <v-selectpage
+              v-model="editModule.chartIds"
+              :data="chartTempList"
+              :language="language"
+              :multiple="true"
+              :params="{
+                varType: 2, panelId: 0,
+                returnChildren:0,groupId:0,
+              }"
+              :result-format="resultFormat"
+              :tb-columns="ChartSearchShowFields"
+              class="form-control"
+              key-field="id"
+              show-field="name"
+              title="ChartSearch"
+              @values="(data) => {editModule.chartIds = data.map(d => d.id).join(',')}"
+            ></v-selectpage>
+          </el-form-item>
           <div class="endpoint-title">
             <span class="endpoint-title-content">
+              <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
               Metrics
             </span>
             <el-switch v-model="editModule.configs[0].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
-
-          <el-tabs v-model="activeName">
+          <transition name="el-zoom-in-top">
+            <el-tabs v-model="activeName" v-show="metricsShow&&editModule.configs[0].enable">
             <el-tab-pane label="Basic" name="Basic">
               <!--path-->
               <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
                 <el-input id="module-box-input-path" v-model="editModule.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
               </el-form-item>
               <!--port-->
-              <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs[0].config.port" :rules="[
-          { validator: port, trigger: 'blur' },
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ]">
+              <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
+                { validator: port, trigger: 'blur' },
+                { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+              ]">
                 <el-input id="module-box-input-port" v-model.number="editModule.configs[0].config.port" placeholder="" size="small"></el-input>
               </el-form-item>
               <!--type-->
               <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
                 <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
-                  <el-option v-for="item in typetList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                  <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
               <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="host">
+              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
-              </el-form-item>
-              <!-- ChartTemplate  -->
-              <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
-                <v-selectpage
-                  v-model="editModule.chartIds"
-                  :data="chartlList"
-                  :language="language"
-                  :multiple="true"
-                  :params="{
-                varType: 2, panelId: 0,
-                returnChildren:0,groupId:0,
-              }"
-                  :result-format="resultFormat"
-                  :tb-columns="ChartSearchShowFields"
-                  class="form-control"
-                  key-field="id"
-                  show-field="name"
-                  title="ChartSearch"
-                  @values="(data) => {editModule.chartIds = data.map(d => d.id).join(',')}"
-                ></v-selectpage>
               </el-form-item>
               <!-- snmp表单 -->
               <span v-if="editModule.configs[0].config.protocol && editModule.configs[0].config.protocol == 'snmp'" class="snmp-form">
@@ -106,7 +118,7 @@
                     <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item prop="walk">
+                    <el-form-item prop="configs.0.config.walk" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                       <select-walk ref="selectWalk" :currentWalk="editModule.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk">
                         <template v-slot:trigger>
                           <div class="el-cascader">
@@ -138,26 +150,14 @@
           </span>
               <transition name="el-zoom-in-top">
                 <div v-show="showAllBasicOption" >
-                  <!--name pattern-->
-                  <el-form-item :label='$t("project.endpoint.pattern")' class="half-form-item" prop="pattern">
-                    <!--              <el-input placeholder="" v-model=""></el-input>-->
-                    <el-autocomplete
-                      id="module-box-input-pattern"
-                      v-model="editModule.endpointNameTmpl"
-                      :fetch-suggestions="querySearch"
-                      :placeholder="$t('overall.placeHolder')"
-                      class="inline-input"
-                      size="small"
-                    ></el-autocomplete>
-                  </el-form-item>
                   <!--scrape_interval-->
-                  <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
+                  <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="configs.0.config.scrape_interval">
                     <el-input id="module-box-input-scrape_interval" v-model.number="editModule.configs[0].config.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
                      <template slot="append">s</template>
                     </el-input>
                   </el-form-item>
                   <!--scrape_timeout-->
-                  <el-form-item :label='$t("project.endpoint.scrape_timeout")' class="half-form-item" prop="scrape_timeout">
+                  <el-form-item :label='$t("project.endpoint.scrape_timeout")' class="half-form-item" prop="configs.0.config.scrape_timeout">
                     <el-input id="module-box-input-scrape_timeout" v-model.number="editModule.configs[0].config.scrape_timeout" :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' size="small">
                       <template slot="append">s</template>
                     </el-input>
@@ -225,233 +225,236 @@
               </el-form-item>
 
               <!--authtype 1-->
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="authtype">
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-uername" v-model.number="editModule.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
               </el-form-item>
 
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="authtype">
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-password" v-model.number="editModule.configs[0].config.basic_auth.pin" placeholder='' size="small"></el-input>
               </el-form-item>
 
               <!--authtype 2-->
-              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="authtype">
-                <el-input id="module-box-input-bearer_token" v-model.number=editModule.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
+              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+                <el-input id="module-box-input-bearer_token" v-model.number="editModule.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
               </el-form-item>
 
             </el-tab-pane>
-            <el-tab-pane label="Preview" name="Preview">
-              <div id="module-box-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="height: 100%; overflow: auto;">
-                <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
-                <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
-              </div>
-            </el-tab-pane>
           </el-tabs>
+          </transition>
           <div class="endpoint-title" style="margin-top: 10px">
             <span class="endpoint-title-content">
+               <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
               Logs
             </span>
             <el-switch v-model="editModule.configs[1].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
-          <div v-for="(item, index) in editModule.configs[1].config" :key="index" style="position: relative">
-            <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}">
-              <el-tab-pane label="Basic" name="Basic">
-                <!--type-->
-                <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
-                  <el-select id="module-box-input-type" v-model="item.basic.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
-                    <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  v-if='item.basic.type === "file"'
-                  :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                  :prop="'configs[1].config.'+ index +'.basic.fileName'"
-                  :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                >
-                  <el-input v-if='item.basic.type === "file"' v-model="item.basic.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
-                </el-form-item>
-                <el-form-item
-                  v-if='item.basic.type === "journal"'
-                  :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                  :prop="'configs[1].config.'+ index +'.basic.unit'"
-                  :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                >
-                  <el-input v-if='item.basic.type === "journal"' v-model="item.basic.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
-                </el-form-item>
-                <el-form-item
-                  v-if='item.basic.type === "syslog"'
-                  :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                  :prop="'configs[1].config.'+ index +'.basic.listenAddress'"
-                  :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                >
-                  <el-input v-if='item.basic.type === "syslog"' v-model="item.basic.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
-                </el-form-item>
-                <el-form-item
-                  v-if="item.basic.type === 'syslog'"
-                  :label=' $t("project.endpoint.basicAppName")'
-                  class="half-form-item"
-                  :prop="'configs[1].config.'+ index +'.basic.appName'"
-                  :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                >
-                  <el-input  v-model="item.basic.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
-                </el-form-item>
-              </el-tab-pane>
-              <el-tab-pane label="Labels" name="Labels">
-                <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
-                  <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
-                    <el-form-item :prop="'configs[1].config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
-                      <el-input v-model="item1.key" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                    <span class="param-box-row-eq">=</span>
-                    <el-form-item class="param-box-row-value">
-                      <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
-                    </el-form-item>
-                    <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+          <transition name="el-zoom-in-top">
+          <div v-show="logsShow&&editModule.configs[1].enable">
+            <div v-for="(item, index) in editModule.configs[1].config" :key="index" style="position: relative">
+              <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}" :ref="'logsTabs' + index">
+                <el-tab-pane label="Basic" name="Basic">
+                  <!--type-->
+                  <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
+                    <el-select id="module-box-input-type" v-model="item.basic.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                      <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    v-if='item.basic.type === "file"'
+                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.basic.fileName'"
+                    :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                  >
+                    <el-input v-if='item.basic.type === "file"' v-model="item.basic.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    v-if='item.basic.type === "journal"'
+                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.basic.unit'"
+                    :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                  >
+                    <el-input v-if='item.basic.type === "journal"' v-model="item.basic.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    v-if='item.basic.type === "syslog"'
+                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.basic.listenAddress'"
+                    :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                  >
+                    <el-input v-if='item.basic.type === "syslog"' v-model="item.basic.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="item.basic.type === 'syslog'"
+                    :label=' $t("project.endpoint.basicAppName")'
+                    class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.basic.appName'"
+                    :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                  >
+                    <el-input  v-model="item.basic.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
+                  </el-form-item>
+                </el-tab-pane>
+                <el-tab-pane label="Labels" name="Labels">
+                  <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                    <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
+                      <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                        <el-input v-model="item1.key" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                      <span class="param-box-row-eq">=</span>
+                      <el-form-item class="param-box-row-value">
+                        <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
+                      </el-form-item>
+                      <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                    </div>
                   </div>
-                </div>
-                <div style="text-align: center">
+                  <div style="text-align: center">
                  <span id="module-add-logs-label" class="right-box-form-add module-add-label" type="button" @click="addLogsLabel(index)">
                 <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
               </span>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="Pipeline" name="Pipeline">
-                <div v-for="(item2, index2) in item.pipeline" :key="index2">
-                  <div class="pipeline-box">
-                    <span class="pipeline-title">{{item2.type}}</span>
-                    <span class="pipeline-option">
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="Pipeline" name="Pipeline">
+                  <div v-for="(item2, index2) in item.pipeline" :key="index2">
+                    <div class="pipeline-box">
+                      <span class="pipeline-title">{{item2.type}}</span>
+                      <span class="pipeline-option">
                       <pipelineSelect :index="index2" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'splice')}" :type="'splice'"/>
                       <i class="nz-icon nz-icon-shanchu1" @click="delPipeline(index,index2)"></i>
                     </span>
-                  </div>
-                  <div v-if="item2.type === 'regex'">
-                    <el-form-item
-                      :label="'Expression'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.expression'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.expression" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                  </div>
-                  <div v-if="item2.type === 'json'">
-                    <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Expressions</label>
-                    <div v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                    </div>
+                    <div v-if="item2.type === 'regex'">
                       <el-form-item
-                        :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex"
+                        :label="'Expression'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expression'"
                         :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                        style="width: 90%;margin: 0"
                       >
-                        <el-input v-model="item2.expressions[eindex]" placeholder="key" size="mini"></el-input>
+                        <el-input v-model="item2.expression" placeholder="key" size="mini"></el-input>
                       </el-form-item>
-                      <span style="display: inline-block;width: 10%">
+                      <el-form-item
+                        :label="'Source'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                    </div>
+                    <div v-if="item2.type === 'json'">
+                      <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Expressions</label>
+                      <div v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                        <el-form-item
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          style="width: 90%;margin: 0"
+                        >
+                          <el-input v-model="item2.expressions[eindex]" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                        <span style="display: inline-block;width: 10%">
                         <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
                         <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
                       </span>
-                    </div>
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                  </div>
-                  <div v-if="item2.type === 'template'">
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                    <el-form-item
-                      :label="'Template'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.template'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.template" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                  </div>
-                  <div v-if="item2.type === 'timestamp'">
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                    <el-form-item
-                      :label="'Timestamp'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.timestamp'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.timestamp" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
-                  </div>
-                  <div v-if="item2.type === 'labels'">
-                    <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
-                    <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                      </div>
                       <el-form-item
-                        :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
+                        :label="'Source'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
                         :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                        style="width: 45%;margin: 0"
                       >
-                        <el-input v-model="item2.labels[eindex].key" placeholder="key" size="mini" ></el-input>
+                        <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
                       </el-form-item>
-                      =
-                      <el-form-item
-                        :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.value'"
-                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                        style="width: 45%;margin: 0"
-                      >
-                        <el-input v-model="item2.labels[eindex].value" placeholder="key" size="mini" ></el-input>
-                      </el-form-item>
-                      <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
-                      <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
                     </div>
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
+                    <div v-if="item2.type === 'template'">
+                      <el-form-item
+                        :label="'Source'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                      <el-form-item
+                        :label="'Template'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.template'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.template" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                    </div>
+                    <div v-if="item2.type === 'timestamp'">
+                      <el-form-item
+                        :label="'Source'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                      <el-form-item
+                        :label="'Timestamp'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.timestamp'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.timestamp" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                    </div>
+                    <div v-if="item2.type === 'labels'">
+                      <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
+                      <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                        <el-form-item
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          style="width: 45%;margin: 0"
+                        >
+                          <el-input v-model="item2.labels[eindex].key" placeholder="key" size="mini" ></el-input>
+                        </el-form-item>
+                        =
+                        <el-form-item
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.value'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                          style="width: 45%;margin: 0"
+                        >
+                          <el-input v-model="item2.labels[eindex].value" placeholder="key" size="mini" ></el-input>
+                        </el-form-item>
+                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
+                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
+                      </div>
+                    </div>
+                    <div v-if="item2.type === 'output'">
+                      <el-form-item
+                        :label="'Source'"
+                        :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                        :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                      >
+                        <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                      </el-form-item>
+                    </div>
                   </div>
-                  <div v-if="item2.type === 'output'">
-                    <el-form-item
-                      :label="'Source'"
-                      :prop="'configs[1].config.'+ index +'.pipeline.' + index2 + '.source'"
-                      :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                    >
-                      <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
-                    </el-form-item>
+                  <div style="text-align: center">
+                    <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;margin-right: 44px">
+                      <pipelineSelect :index="item.pipeline.length - 1" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'push')}" :type="'push'"/>
+                    </div>
                   </div>
-                </div>
-                <div style="text-align: center">
-                  <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;margin-right: 44px">
-                    <pipelineSelect :index="item.pipeline.length - 1" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'push')}" :type="'push'"/>
-                  </div>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="Preview" name="Preview">
-                <div id="module-box-logs-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="height: 100%; overflow: auto;">
-                  <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyLogsValue(index)"></i></span>
-                  <pre style="overflow-y: auto;height:100%;width: 97%;">{{logsCopyValue[index]}}</pre>
-                </div>
-              </el-tab-pane>
-            </el-tabs>
-            <span class="nz-icon-minus-medium">
+                </el-tab-pane>
+<!--                <el-tab-pane label="Preview" name="Preview">-->
+<!--                  <div id="module-box-logs-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="height: 100%; overflow: auto;">-->
+<!--                    <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyLogsValue(index)"></i></span>-->
+<!--                    <pre style="overflow-y: auto;height:100%;width: 97%;">{{logsCopyValue[index]}}</pre>-->
+<!--                  </div>-->
+<!--                </el-tab-pane>-->
+              </el-tabs>
+              <span class="nz-icon-minus-medium">
               <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
           </span>
+            </div>
+            <div class="value-mapping-add" style="text-align: center;margin: 10px 180px 10px 144px;" @click="logsLogsArrAdd()">
+              <i class="nz-icon nz-icon-plus"></i>
+            </div>
           </div>
-          <div class="value-mapping-add" style="text-align: center;margin: 10px 180px 10px 144px;" @click="logsLogsArrAdd()">
-            <i class="nz-icon nz-icon-plus"></i>
+          </transition>
+
+          <!--Preview-->
+          <div class="right-box-sub-title" :style="`margin-top:${logsShow&&editModule.configs[1].enable?'0':'10px'}`">
+            {{$t('overall.preview')}}
+          </div>
+          <div class="right-box-line"></div>
+          <div id="module-box-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="overflow: auto;">
+            <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+            <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
           </div>
         </el-form>
       </div>
@@ -491,7 +494,7 @@ export default {
   data () {
     return {
       walkData: [],
-      chartlList: [],
+      chartTempList: [],
       activeName: 'Basic',
       activeNameLogs: ['Basic'],
       pipelineOptionValue: '',
@@ -542,7 +545,7 @@ export default {
       },
       projectList: [],
       credentialList: [],
-      typetList: [
+      typeList: [
         {
           value: 'http',
           name: 'HTTP'
@@ -612,7 +615,9 @@ export default {
               label: 'Output'
             }
           ]
-        }]
+        }],
+      metricsShow: true,
+      logsShow: true
     }
   },
   methods: {
@@ -731,17 +736,34 @@ export default {
           }
         })
         const params = { ...this.editModule }
-        params.configs = JSON.stringify(params.configs)
+        // params.configs = JSON.stringify(params.configs)
         if (this.authType === 2 && !this.editModule.configs[0].config.bearer_token) {
-          this.$message.error("'token' is required")
-          return
+          // this.$message.error("'token' is required")
+          // return
         } else if (this.authType === 1 && !(this.editModule.configs[0].config.basic_auth.username && this.editModule.configs[0].config.basic_auth.pin)) {
-          this.$message.error("'username' and 'password' is required")
-          return
+          // this.$message.error("'username' and 'password' is required")
+          // return
         } else {
           this.authType = 0
         }
-        this.$refs.moduleForm.validate((valid) => {
+        this.$refs.moduleForm.validate((valid, errorKey) => {
+          let key = Object.keys(errorKey)
+          if (key.length) {
+            key = key[0]
+            if (key.indexOf('configs.0') !== -1) {
+              const keyArr = key.split('.')
+              console.log(keyArr)
+              if (keyArr[3] === 'basic_auth' || keyArr[3] === 'bearer_token') {
+                this.activeName = 'Auth'
+              } else if (keyArr[3] === 'basic' || keyArr[3] === 'port') {
+                this.activeName = 'Basic'
+              }
+            } else if (key.indexOf('configs.1') !== -1) {
+              const keyArr = key.split('.')
+              this.activeNameLogs[keyArr[3]] = keyArr[4].trim().toLowerCase().replace(keyArr[4][0], keyArr[4][0].toUpperCase())
+              this.activeNameLogs = [...this.activeNameLogs]
+            }
+          }
           if (valid) {
             this.prevent_opt.save = true
             if (this.editModule.id) {
@@ -897,10 +919,7 @@ export default {
       this.editModule.configs[1].config.push({
         basic: {
           type: 'file',
-          fileName: '',
-          appName: '',
-          listenAddress: '',
-          unit: ''
+          fileName: ''
         },
         labels: '',
         labelModule: [{ key: '', value: '' }],
@@ -913,10 +932,24 @@ export default {
       }
     },
     logsBasicTypeChange (i) {
-      this.editModule.configs[1].config[i].basic.value = ''
-      this.editModule.configs[1].config[i].basic.appName = ''
-      this.editModule.configs[1].config[i].basic.listenAddress = ''
-      this.editModule.configs[1].config[i].basic.unit = ''
+      const type = this.editModule.configs[1].config[i].basic.type
+      if (type === 'file') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          fileName: ''
+        }
+      } else if (type === 'journal') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          unit: ''
+        }
+      } else if (type === 'syslog') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          appName: '',
+          listenAddress: ''
+        }
+      }
     },
     copyValue () {
       const domUrl = document.createElement('input')
@@ -1006,7 +1039,7 @@ export default {
     /* 获取chart列表数据 */
     ChartTemplateList () {
       this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0, returnChildren: 0, groupId: 0 }).then(res => {
-        this.chartlList = res.data.list
+        this.chartTempList = res.data.list
       })
     },
     // 添加pipeline
@@ -1096,31 +1129,35 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.configs) {
-          const params = Object.assign({}, n.configs)
-          params.params = this.paramToJson(this.editModule.paramObj)
-          params.labels = this.labelsToJson(this.editModule.labelModule)
-          params.walk = n.walk
-          params.port = n.port
-          Object.keys(params).forEach(key => {
-            if (!params[key]) {
-              delete params[key]
+          const params = JSON.parse(JSON.stringify(n.configs))
+          params[0].config.params = this.paramToJson(this.editModule.paramObj)
+          params[0].config.labels = this.labelsToJson(this.editModule.labelModule)
+          Object.keys(params[0].config).forEach(key => {
+            if (!params[0].config[key]) {
+              delete params[0].config[key]
             }
-            if (Array.isArray(params[key]) && !params[key].length) {
-              delete params[key]
+            if (Array.isArray(params[0].config[key]) && !params[0].config[key].length) {
+              delete params[0].config[key]
             }
           })
-          if (params.basic_auth && !params.basic_auth.username) {
-            delete params.basic_auth
+          if (params[0].config.basic_auth && !params[0].config.basic_auth.username) {
+            delete params[0].config.basic_auth
           }
-          if (params.basic_auth && !params.basic_auth.pin) {
-            delete params.basic_auth
+          if (params[0].config.basic_auth && !params[0].config.basic_auth.pin) {
+            delete params[0].config.basic_auth
           }
-          if (params.param && !Object.keys(params.param).length) {
-            delete params.param
+          if (params[0].config.param && !Object.keys(params[0].config.param).length) {
+            delete params[0].config.param
           }
-          if (params.labels && !Object.keys(params.labels).length) {
-            delete params.labels
+          if (params[0].config.labels && !Object.keys(params[0].config.labels).length) {
+            delete params[0].config.labels
           }
+          params[1].config.forEach(item => {
+            if (item.labelModule) {
+              item.labels = this.labelsToJson(item.labelModule)
+              delete item.labelModule
+            }
+          })
           this.configsCopyValue = JSON.stringify(params, null, 2)
         }
       }
@@ -1290,6 +1327,15 @@ export default {
     letter-spacing: 0;
     text-align: right;
     font-weight: 500;
+    .nz-icon-arrow-down{
+      display: inline-block;
+      transition: transform .3s;
+    }
+    .nz-icon-arrow-down.is-active{
+      transform: rotate(
+          -90deg
+      );
+    }
   }
   .value-mapping-add {
     background: rgba(250,144,28,0.1);

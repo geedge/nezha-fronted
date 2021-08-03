@@ -44,13 +44,6 @@
             </el-select>
           </el-form-item>
 
-          <!--type-->
-          <el-form-item :label='$t("project.endpoint.type")' prop="type">
-            <el-select id="module-box-input-type" v-model="editEndpoint.type" :disabled="!!editEndpoint.id || disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType" >
-              <el-option v-for="item in typetList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-
           <!-- snmp表单 -->
           <span v-if="editEndpoint.type && editEndpoint.type == 'snmp'" class="snmp-form">
           <div class="right-box-sub-title">SNMP settings</div>
@@ -109,138 +102,398 @@
 <!--            </el-tooltip>-->
           </div>
           <div class="right-box-line"></div>
-
-          <el-tabs v-model="activeName">
-            <el-tab-pane label="Basic" name="Basic">
-              <!--path-->
-              <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
-                <el-input id="module-box-input-path" v-model="editEndpoint.configs.metrics_path" placeholder="" size="small"></el-input>
-              </el-form-item>
-              <!--port-->
-              <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="port">
-                <el-input id="module-box-input-port" v-model.number="editEndpoint.port" placeholder="" size="small"></el-input>
-              </el-form-item>
-              <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' prop="host">
-                <el-input id="module-box-input-host" v-model="editEndpoint.configs.host" placeholder="" size="small"></el-input>
-              </el-form-item>
-              <transition name="el-zoom-in-top">
-                <div v-show="showAllBasicOption" >
-                  <!--                &lt;!&ndash;name pattern&ndash;&gt;-->
-                  <!--                <el-form-item :label='$t("project.endpoint.pattern")' prop="pattern" class="half-form-item">-->
-                  <!--                  &lt;!&ndash;              <el-input placeholder="" v-model=""></el-input>&ndash;&gt;-->
-                  <!--                  <el-autocomplete-->
-                  <!--                    class="inline-input"-->
-                  <!--                    size="small"-->
-                  <!--                    id="module-box-input-pattern"-->
-                  <!--                    v-model="editEndpoint.endpointNameTmpl"-->
-                  <!--                    :fetch-suggestions="querySearch"-->
-                  <!--                    placeholder="请输入内容"-->
-                  <!--                  ></el-autocomplete>-->
-                  <!--                </el-form-item>-->
-                  <!--scrape_interval-->
-                  <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
-                    <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
-                      <template slot="append">s</template>
-                    </el-input>
-                  </el-form-item>
-                  <!--scrape_timeout-->
-                  <el-form-item :label='$t("project.endpoint.scrape_timeout")' class="half-form-item" prop="scrape_timeout">
-                    <el-input id="module-box-input-scrape_timeout" v-model.number="editEndpoint.configs.scrape_timeout" :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' size="small">
-                      <template slot="append">s</template>
-                    </el-input>
-                  </el-form-item>
-                </div>
-              </transition>
-
-              <div style="text-align: center">
-              <span @click="showAllBasicOption=!showAllBasicOption" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none">
-                {{$t('overall.moreOption')}}
-                <i class="nz-icon nz-icon-arrow-down need-rotate" :class="showAllBasicOption?'is-active':''" ></i>
-              </span>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane :label="$t('project.endpoint.param')" name="Parameter">
-              <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
-                <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
-                  <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
-                    <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item :prop="'paramObj.' + index + '.value'" class="param-box-row-value">
-                    <!--                  <el-select-->
-                    <!--                    v-model="item.value"-->
-                    <!--                    multiple-->
-                    <!--                    filterable-->
-                    <!--                    allow-create-->
-                    <!--                    :ref="'select'+ index"-->
-                    <!--                    placeholder="value" size="mini"-->
-                    <!--                    default-first-option-->
-                    <!--                    popper-class="config-dropdown hide-element"-->
-                    <!--                    @change="(val)=>{paramObjchange(val,index)}"-->
-                    <!--                  >-->
-                    <!--                    <span slot="empty" class=""></span>-->
-                    <!--                  </el-select>-->
-                    <vue-tags-input
-                      v-model="item.tags"
-                      :maxlength="32"
-                      :placeholder="'add parameter'"
-                      :tags="item.value"
-                      @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
-                    />
-                  </el-form-item>
-                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-                </div>
-              </div>
-              <div style="text-align: center">
-               <span id="module-add-param" type="button" @click="addParam" class="right-box-form-add module-add-label">
-              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
+          <!-- ChartTemplate  -->
+          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
+            <v-selectpage
+              v-model="editEndpoint.chartIds"
+              :data="chartTempList"
+              :language="language"
+              :multiple="true"
+              :params="{
+                varType: 2, panelId: 0,
+                returnChildren:0,groupId:0,
+              }"
+              :result-format="resultFormat"
+              :tb-columns="ChartSearchShowFields"
+              class="form-control"
+              key-field="id"
+              show-field="name"
+              title="ChartSearch"
+              @values="(data) => {editEndpoint.chartIds = data.map(d => d.id).join(',')}"
+            ></v-selectpage>
+          </el-form-item>
+          <div class="endpoint-title">
+            <span class="endpoint-title-content">
+              <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
+              Metrics
             </span>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="Labels" name="Labels">
-              <div id="module-box-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
-                <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
-                  <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
-                    <el-input v-model="item.key" placeholder="key" size="mini"></el-input>
-                  </el-form-item>
-                  <span class="param-box-row-eq">=</span>
-                  <el-form-item :prop="'labelModule.' + index + '.value'" class="param-box-row-value">
-                    <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
-                  </el-form-item>
-                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
-                </div>
-              </div>
-              <div style="text-align: center">
-               <span id="module-add-label" type="button" @click="addLabel" class="right-box-form-add module-add-label">
-              <span><i style="font-size: 16px;" class="nz-icon nz-icon-create-square"></i></span>
-            </span>
-              </div>
-            </el-tab-pane>
-            <el-tab-pane v-if="editEndpoint.type !== 'snmp'" label="Auth" name="Auth">
-              <!--authtype-->
-              <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
-                <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
-                  <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+            <el-switch v-model="editEndpoint.configs[0].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
+          </div>
+          <transition name="el-zoom-in-top">
+            <el-tabs v-model="activeName" v-show="metricsShow&&editEndpoint.configs[0].enable">
+              <el-tab-pane label="Basic" name="Basic">
+                <!--path-->
+                <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
+                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
+                </el-form-item>
+                <!--port-->
+                <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs[0].config.port" :rules="[
+          { validator: port, trigger: 'blur' },
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ]">
+                  <el-input id="module-box-input-port" v-model.number="editEndpoint.configs[0].config.port" placeholder="" size="small"></el-input>
+                </el-form-item>
+                <!--type-->
+                <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
+                  <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
+                    <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+                <!--host-->
+                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="host">
+                  <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
+                </el-form-item>
+                <!-- snmp表单 -->
+                <span v-if="editEndpoint.configs[0].config.protocol && editEndpoint.configs[0].config.protocol == 'snmp'" class="snmp-form">
+                <el-row>
+                  <el-col :span="6">
+                    <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item prop="walk">
+                      <select-walk ref="selectWalk" :currentWalk="editEndpoint.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk">
+                        <template v-slot:trigger>
+                          <div class="el-cascader">
+                            <div class="el-input">
+                              <input aria-expanded="false" autocomplete="off" class="el-input__inner" readonly="readonly" type="text">
+                            </div>
+                            <div class="el-cascader__tags">
+                              <div ref="walkScrollbar" style="height: 100%; overflow: auto;">
+                                <span v-for="(item, index) in editEndpoint.configs[0].config.walk" :key="index" class="el-tag el-tag--info el-tag--small el-tag--light">
+                                  <span v-html="mibName(item)"></span>
+                                  <div class="walk-close-box" @click.stop="removeWalk(item)">
+                                    <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
+                                  </div>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </template>
+                      </select-walk>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                  <!--credentials-->
+              <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
+                <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+                  <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
+          </span>
+                <transition name="el-zoom-in-top">
+                  <div v-show="showAllBasicOption" >
+                    <!--scrape_interval-->
+                    <el-form-item :label='$t("project.endpoint.scrape_interval")' class="half-form-item" prop="scrape_interval">
+                      <el-input id="module-box-input-scrape_interval" v-model.number="editEndpoint.configs[0].config.scrape_interval" :placeholder='$t("project.endpoint.scrape_interval_placeholder")' size="small">
+                        <template slot="append">s</template>
+                      </el-input>
+                    </el-form-item>
+                    <!--scrape_timeout-->
+                    <el-form-item :label='$t("project.endpoint.scrape_timeout")' class="half-form-item" prop="scrape_timeout">
+                      <el-input id="module-box-input-scrape_timeout" v-model.number="editEndpoint.configs[0].config.scrape_timeout" :placeholder='$t("project.endpoint.scrape_timeout_placeholder")' size="small">
+                        <template slot="append">s</template>
+                      </el-input>
+                    </el-form-item>
+                  </div>
+                </transition>
 
-              <!--authtype 1-->
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="authtype">
-                <el-input id="module-box-input-uername" v-model.number="editEndpoint.configs.basic_auth.username" placeholder='' size="small"></el-input>
-              </el-form-item>
+                <div style="text-align: center">
+                <span class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="showAllBasicOption=!showAllBasicOption">
+                  {{$t('overall.moreOption')}}
+                  <i :class="showAllBasicOption?'is-active':''" class="nz-icon nz-icon-arrow-down need-rotate" ></i>
+                </span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="Parameter" name="Parameter">
+                <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                  <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
+                    <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
+                      <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-eq">=</span>
+                    <el-form-item :prop="'paramObj.' + index + '.value'" class="param-box-row-value">
+                      <vue-tags-input
+                        v-model="item.tags"
+                        :maxlength="32"
+                        :placeholder="'add parameter'"
+                        :tags="item.value"
+                        @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
+                      />
+                    </el-form-item>
+                    <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  </div>
+                </div>
+                <div style="text-align: center">
+                 <span id="module-add-param" class="right-box-form-add module-add-label" type="button" @click="addParam">
+                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+              </span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="Labels" name="Labels">
+                <div id="module-box-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                  <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
+                    <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                      <el-input v-model="item.key" placeholder="key" size="mini"></el-input>
+                    </el-form-item>
+                    <span class="param-box-row-eq">=</span>
+                    <el-form-item :prop="'labelModule.' + index + '.value'" class="param-box-row-value">
+                      <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
+                    </el-form-item>
+                    <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  </div>
+                </div>
+                <div style="text-align: center">
+                 <span id="module-add-label" class="right-box-form-add module-add-label" type="button" @click="addLabel">
+                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+              </span>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" label="Auth" name="Auth">
+                <!--authtype-->
+                <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
+                  <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
+                    <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
 
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="authtype">
-                <el-input id="module-box-input-password" v-model.number="editEndpoint.configs.basic_auth.pin" placeholder='' size="small"></el-input>
-              </el-form-item>
+                <!--authtype 1-->
+                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="authtype">
+                  <el-input id="module-box-input-uername" v-model.number="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
+                </el-form-item>
 
-              <!--authtype 2-->
-              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="authtype">
-                <el-input id="module-box-input-bearer_token" v-model.number="editEndpoint.configs.bearer_token" placeholder='' size="small"></el-input>
-              </el-form-item>
+                <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="authtype">
+                  <el-input id="module-box-input-password" v-model.number="editEndpoint.configs[0].config.basic_auth.pin" placeholder='' size="small"></el-input>
+                </el-form-item>
 
-            </el-tab-pane>
-          </el-tabs>
+                <!--authtype 2-->
+                <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="authtype">
+                  <el-input id="module-box-input-bearer_token" v-model.number=editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
+                </el-form-item>
+
+              </el-tab-pane>
+            </el-tabs>
+          </transition>
+          <div class="endpoint-title" style="margin-top: 10px">
+            <span class="endpoint-title-content">
+               <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
+              Logs
+            </span>
+            <el-switch v-model="editEndpoint.configs[1].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
+          </div>
+          <transition name="el-zoom-in-top">
+            <div v-show="logsShow&&editEndpoint.configs[1].enable">
+              <div v-for="(item, index) in editEndpoint.configs[1].config" :key="index" style="position: relative">
+                <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}">
+                  <el-tab-pane label="Basic" name="Basic">
+                    <!--type-->
+                    <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
+                      <el-select id="module-box-input-type" v-model="item.basic.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                        <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item
+                      v-if='item.basic.type === "file"'
+                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'.basic.fileName'"
+                      :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                    >
+                      <el-input v-if='item.basic.type === "file"' v-model="item.basic.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                      v-if='item.basic.type === "journal"'
+                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'.basic.unit'"
+                      :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                    >
+                      <el-input v-if='item.basic.type === "journal"' v-model="item.basic.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                      v-if='item.basic.type === "syslog"'
+                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'.basic.listenAddress'"
+                      :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                    >
+                      <el-input v-if='item.basic.type === "syslog"' v-model="item.basic.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                      v-if="item.basic.type === 'syslog'"
+                      :label=' $t("project.endpoint.basicAppName")'
+                      class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'.basic.appName'"
+                      :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                    >
+                      <el-input  v-model="item.basic.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
+                    </el-form-item>
+                  </el-tab-pane>
+                  <el-tab-pane label="Labels" name="Labels">
+                    <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
+                      <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
+                        <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                          <el-input v-model="item1.key" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                        <span class="param-box-row-eq">=</span>
+                        <el-form-item class="param-box-row-value">
+                          <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
+                        </el-form-item>
+                        <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                      </div>
+                    </div>
+                    <div style="text-align: center">
+                 <span id="module-add-logs-label" class="right-box-form-add module-add-label" type="button" @click="addLogsLabel(index)">
+                <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+              </span>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="Pipeline" name="Pipeline">
+                    <div v-for="(item2, index2) in item.pipeline" :key="index2">
+                      <div class="pipeline-box">
+                        <span class="pipeline-title">{{item2.type}}</span>
+                        <span class="pipeline-option">
+                      <pipelineSelect :index="index2" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'splice')}" :type="'splice'"/>
+                      <i class="nz-icon nz-icon-shanchu1" @click="delPipeline(index,index2)"></i>
+                    </span>
+                      </div>
+                      <div v-if="item2.type === 'regex'">
+                        <el-form-item
+                          :label="'Expression'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expression'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.expression" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                        <el-form-item
+                          :label="'Source'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                      </div>
+                      <div v-if="item2.type === 'json'">
+                        <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Expressions</label>
+                        <div v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                          <el-form-item
+                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            style="width: 90%;margin: 0"
+                          >
+                            <el-input v-model="item2.expressions[eindex]" placeholder="key" size="mini"></el-input>
+                          </el-form-item>
+                          <span style="display: inline-block;width: 10%">
+                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
+                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
+                      </span>
+                        </div>
+                        <el-form-item
+                          :label="'Source'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                      </div>
+                      <div v-if="item2.type === 'template'">
+                        <el-form-item
+                          :label="'Source'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                        <el-form-item
+                          :label="'Template'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.template'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.template" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                      </div>
+                      <div v-if="item2.type === 'timestamp'">
+                        <el-form-item
+                          :label="'Source'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                        <el-form-item
+                          :label="'Timestamp'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.timestamp'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.timestamp" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                      </div>
+                      <div v-if="item2.type === 'labels'">
+                        <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
+                        <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                          <el-form-item
+                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            style="width: 45%;margin: 0"
+                          >
+                            <el-input v-model="item2.labels[eindex].key" placeholder="key" size="mini" ></el-input>
+                          </el-form-item>
+                          =
+                          <el-form-item
+                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.value'"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            style="width: 45%;margin: 0"
+                          >
+                            <el-input v-model="item2.labels[eindex].value" placeholder="key" size="mini" ></el-input>
+                          </el-form-item>
+                          <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
+                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
+                        </div>
+                      </div>
+                      <div v-if="item2.type === 'output'">
+                        <el-form-item
+                          :label="'Source'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                        >
+                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                        </el-form-item>
+                      </div>
+                    </div>
+                    <div style="text-align: center">
+                      <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;margin-right: 44px">
+                        <pipelineSelect :index="item.pipeline.length - 1" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'push')}" :type="'push'"/>
+                      </div>
+                    </div>
+                  </el-tab-pane>
+                  <!--                <el-tab-pane label="Preview" name="Preview">-->
+                  <!--                  <div id="module-box-logs-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="height: 100%; overflow: auto;">-->
+                  <!--                    <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyLogsValue(index)"></i></span>-->
+                  <!--                    <pre style="overflow-y: auto;height:100%;width: 97%;">{{logsCopyValue[index]}}</pre>-->
+                  <!--                  </div>-->
+                  <!--                </el-tab-pane>-->
+                </el-tabs>
+                <span class="nz-icon-minus-medium">
+              <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
+          </span>
+              </div>
+              <div class="value-mapping-add" style="text-align: center;margin: 10px 180px 10px 144px;" @click="logsLogsArrAdd()">
+                <i class="nz-icon nz-icon-plus"></i>
+              </div>
+            </div>
+          </transition>
+
+          <!--Preview-->
+          <div class="right-box-sub-title" :style="`margin-top:${logsShow&&editEndpoint.configs[1].enable?'0':'10px'}`">
+            {{$t('overall.preview')}}
+          </div>
+          <div class="right-box-line"></div>
           <div class="configs-copy-value">
             <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
             <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
@@ -262,7 +515,8 @@
 </template>
 
 <script>
-import { noSpecialChar, port, nzNumber } from '../js/validate'
+import { noSpecialChar, port } from '../js/validate'
+import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
@@ -287,19 +541,28 @@ export default {
   },
   components: {
     'select-walk': selectWalk,
-    VueTagsInput
+    VueTagsInput,
+    pipelineSelect
   },
   mixins: [editRigthBox],
   data () {
     return {
       walkData: [],
+      chartTempList: [],
       activeName: 'Basic',
       expandedWalkData: [],
+      language: localStorage.getItem('nz-language'),
       radio: 'password',
       editEndpoint: {},
       restaurants: [
         { value: '{{module.name}}-{{asset.name}}' },
         { value: '{{module.name}}-{{asset.manageIp}}' }
+      ],
+      ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
+        { title: 'ID', data: 'id' },
+        { title: this.$t('config.model.titleName'), data: 'name' },
+        { title: this.$t('config.model.titleType'), data: 'type' },
+        { title: this.$t('overall.remark'), data: 'remark' }
       ],
       showAllBasicOption: false,
       rules: {
@@ -314,15 +577,12 @@ export default {
         ],
         walk: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        port: [
-          { validator: port, trigger: 'blur' }
         ]
       },
       projectList: [],
       moduleList: [],
       credentialList: [],
-      typetList: [
+      typeList: [
         {
           value: 'http',
           name: 'HTTP'
@@ -330,6 +590,20 @@ export default {
         {
           value: 'snmp',
           name: 'SNMP'
+        }
+      ],
+      logsBasicList: [
+        {
+          value: 'file',
+          name: 'File'
+        },
+        {
+          value: 'journal',
+          name: 'Journal'
+        },
+        {
+          value: 'syslog',
+          name: 'Syslog'
         }
       ],
       authType: 0,
@@ -342,10 +616,52 @@ export default {
         { name: this.$t('project.endpoint.enable'), value: 1 },
         { name: this.$t('project.endpoint.disable'), value: 0 }
       ],
-      configsCopyValue: ''
+      configsCopyValue: '',
+      pipelineOption: [
+        {
+          label: 'Parsing stages',
+          pipelineOption: [
+            {
+              value: 'regex',
+              label: 'Regex'
+            }, {
+              value: 'json',
+              label: 'Json'
+            }
+          ]
+        },
+        {
+          label: 'Transform stages',
+          pipelineOption: [
+            {
+              value: 'template',
+              label: 'Template'
+            }
+          ]
+        },
+        {
+          label: 'Action stages',
+          pipelineOption: [
+            {
+              value: 'timestamp',
+              label: 'Timestamp'
+            },
+            {
+              value: 'labels',
+              label: 'Labels'
+            },
+            {
+              value: 'output',
+              label: 'Output'
+            }
+          ]
+        }],
+      metricsShow: true,
+      logsShow: true
     }
   },
   methods: {
+    port: port,
     selectWalk (walk) {
       if (this.editEndpoint.walk.indexOf(walk) != -1) {
         this.editEndpoint.walk.splice(this.editEndpoint.walk.indexOf(walk), 1)
@@ -408,7 +724,9 @@ export default {
         }
       })
     },
+    getAsset () {
 
+    },
     getWalkData () {
       this.$get('mib/tree', { pageSize: -1, pageNo: 1 }).then(response => {
         if (response.code === 200) {
@@ -474,7 +792,24 @@ export default {
           this.authType = 0
         }
         this.$nextTick(() => {
-          this.$refs.moduleForm.validate((valid) => {
+          this.$refs.moduleForm.validate((valid, errorKey) => {
+            let key = Object.keys(errorKey)
+            if (key.length) {
+              key = key[0]
+              if (key.indexOf('configs.0') !== -1) {
+                const keyArr = key.split('.')
+                console.log(keyArr)
+                if (keyArr[3] === 'basic_auth' || keyArr[3] === 'bearer_token') {
+                  this.activeName = 'Auth'
+                } else if (keyArr[3] === 'basic' || keyArr[3] === 'port') {
+                  this.activeName = 'Basic'
+                }
+              } else if (key.indexOf('configs.1') !== -1) {
+                const keyArr = key.split('.')
+                this.activeNameLogs[keyArr[3]] = keyArr[4].trim().toLowerCase().replace(keyArr[4][0], keyArr[4][0].toUpperCase())
+                this.activeNameLogs = [...this.activeNameLogs]
+              }
+            }
             if (valid) {
               if (this.optionType === 'add' || this.optionType === 'batch') {
                 this.prevent_opt.save = true
@@ -525,7 +860,44 @@ export default {
         })
       })
     },
-
+    logsLogsArrAdd () {
+      this.activeNameLogs.push('Basic')
+      this.logsCopyValue.push('')
+      this.editModule.configs[1].config.push({
+        basic: {
+          type: 'file',
+          fileName: ''
+        },
+        labels: '',
+        labelModule: [{ key: '', value: '' }],
+        pipeline: []
+      })
+    },
+    removeLogsArr (index) {
+      if (this.editModule.configs[1].config.length !== 1) {
+        this.editModule.configs[1].config.splice(index, 1)
+      }
+    },
+    logsBasicTypeChange (i) {
+      const type = this.editModule.configs[1].config[i].basic.type
+      if (type === 'file') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          fileName: ''
+        }
+      } else if (type === 'journal') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          unit: ''
+        }
+      } else if (type === 'syslog') {
+        this.editModule.configs[1].config[i].basic = {
+          type,
+          appName: '',
+          listenAddress: ''
+        }
+      }
+    },
     /* 获取project列表 */
     getProjectList () {
       this.$get('monitor/project', { pageSize: -1, pageNo: 1 }).then(response => {
@@ -662,11 +1034,97 @@ export default {
       )
     },
     paramObjchange (val, index) {
-      this.editModule.paramObj[index].value = val.filter(item => item.trim())
-    }
+      this.editEndpoint.paramObj[index].value = val.filter(item => item.trim())
+    },
+    /* 获取chart列表数据 */
+    ChartTemplateList () {
+      this.$get('visual/panel/chart', { pageSize: -1, varType: 2, panelId: 0, returnChildren: 0, groupId: 0 }).then(res => {
+        this.chartTempList = res.data.list
+      })
+    },
+    tabClick (index) {
+      if (this.activeNameLogs[index] === 'Preview') {
+        const params = JSON.parse(JSON.stringify(this.editModule.configs[1].config[index]))
+        params.labels = this.labelsToJson(params.labelModule)
+        delete params.labelModule
+        Object.keys(params).forEach(key => {
+          if (!params[key]) {
+            delete params[key]
+          }
+          if (Array.isArray(params[key]) && !params[key].length) {
+            delete params[key]
+          }
+        })
+        if (params.labels && !Object.keys(params.labels).length) {
+          delete params.labels
+        }
+        Object.keys(params.basic).forEach(key => {
+          if (!params.basic[key]) {
+            delete params.basic[key]
+          }
+        })
+        params.pipeline && params.pipeline.forEach(item => {
+          if (item.type === 'labels') {
+            item.labels = this.labelsToJson(item.labels)
+          }
+        })
+        this.logsCopyValue[index] = JSON.stringify(params, null, 2)
+      }
+    },
+    // 添加pipeline
+    addPipeline (obj, logsIndex, pipeLineIndex, type) {
+      if (type == 'splice') {
+        this.editModule.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 0, obj)
+      }
+      if (type == 'push') {
+        this.editModule.configs[1].config[logsIndex].pipeline.push(obj)
+      }
+    },
+    // 删除pipeline
+    delPipeline (logsIndex, pipeLineIndex) {
+      this.editModule.configs[1].config[logsIndex].pipeline.splice(pipeLineIndex, 1)
+    },
+    // 添加pipelineItem
+    addPipelineItem (logsIndex, pipelineIndex) {
+      const val = this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].type
+      if (val === 'regex') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expression.push('')
+      } else if (val === 'json') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+      } else if (val === 'template') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+      } else if (val === 'timestamp') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+      } else if (val === 'labels') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.push({
+          key: '',
+          value: ''
+        })
+      } else if (val === 'output') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+      }
+    },
+    delPipelineItem (logsIndex, pipelineIndex, itemIndex) {
+      const val = this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].type
+      if (val === 'json') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.splice(itemIndex, 1)
+      } else if (val === 'labels') {
+        this.editModule.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.splice(itemIndex, 1)
+      }
+    },
+    resultFormat (resp) {
+      if (resp && resp.data) {
+        const assetData = {}
+        assetData.list = resp.data.list
+        assetData.totalRow = resp.data.total
+        return assetData
+      }
+    },
   },
   mounted () {
     this.getWalkData()
+    this.getAsset()
+    this.ChartTemplateList()
   },
   created () {
     this.getProjectList()
@@ -687,10 +1145,11 @@ export default {
         this.isEdit = true
         this.editEndpoint = JSON.parse(JSON.stringify(n))
         this.activeName = 'Basic'
-        this.changeProject()
-        if (this.editEndpoint.configs.bearer_token) {
+        this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
+        this.logsCopyValue = this.editEndpoint.configs[1].config.map(() => '')
+        if (this.editEndpoint.configs[0].config.bearer_token) {
           this.authType = 2
-        } else if (this.editEndpoint.configs.basic_auth.username) {
+        } else if (this.editEndpoint.configs[0].config.basic_auth.username) {
           this.authType = 1
         } else {
           this.authType = 0
@@ -698,18 +1157,9 @@ export default {
         if (n.type && n.type.toLowerCase() == 'snmp') {
           this.$refs.selectWalk.show()
           for (let i = 0; i < this.editEndpoint.walk.length; i++) {
-            this.expandedWalkData.push(this.editEndpoint.configs.walk[i].substring(0, this.editEndpoint.configs.walk[i].lastIndexOf('.')))
+            this.expandedWalkData.push(this.editEndpoint.configs[0].config.walk[i].substring(0, this.editEndpoint.configs[0].config.walk[i].lastIndexOf('.')))
           }
         }
-        // if (n.id) {
-        // } else {
-        //   if (n.type && n.type.toLowerCase() == 'snmp') {
-        //     this.$refs.selectWalk.show()
-        //     for (let i = 0; i < this.editEndpoint.walk.length; i++) {
-        //       this.expandedWalkData.push(this.editEndpoint.walk[i].substring(0, this.editEndpoint.walk[i].lastIndexOf('.')))
-        //     }
-        //   }
-        // }
       }
     },
     editEndpoint: {
@@ -717,31 +1167,35 @@ export default {
       immediate: true,
       handler (n) {
         if (n && n.configs) {
-          const params = Object.assign({}, n.configs)
-          params.params = this.paramToJson(this.editEndpoint.paramObj)
-          params.labels = this.labelsToJson(this.editEndpoint.labelModule)
-          params.walk = n.walk
-          params.port = n.port
-          Object.keys(params).forEach(key => {
-            if (!params[key]) {
-              delete params[key]
+          const params = JSON.parse(JSON.stringify(n.configs))
+          params[0].config.params = this.paramToJson(this.editEndpoint.paramObj)
+          params[0].config.labels = this.labelsToJson(this.editEndpoint.labelModule)
+          Object.keys(params[0].config).forEach(key => {
+            if (!params[0].config[key]) {
+              delete params[0].config[key]
             }
-            if (Array.isArray(params[key]) && !params[key].length) {
-              delete params[key]
+            if (Array.isArray(params[0].config[key]) && !params[0].config[key].length) {
+              delete params[0].config[key]
             }
           })
-          if (params.basic_auth && !params.basic_auth.username) {
-            delete params.basic_auth
+          if (params[0].config.basic_auth && !params[0].config.basic_auth.username) {
+            delete params[0].config.basic_auth
           }
-          if (params.basic_auth && !params.basic_auth.pin) {
-            delete params.basic_auth
+          if (params[0].config.basic_auth && !params[0].config.basic_auth.pin) {
+            delete params[0].config.basic_auth
           }
-          if (params.param && !Object.keys(params.param).length) {
-            delete params.param
+          if (params[0].config.param && !Object.keys(params[0].config.param).length) {
+            delete params[0].config.param
           }
-          if (params.labels && !Object.keys(params.labels).length) {
-            delete params.labels
+          if (params[0].config.labels && !Object.keys(params[0].config.labels).length) {
+            delete params[0].config.labels
           }
+          params[1].config.forEach(item => {
+            if (item.labelModule) {
+              item.labels = this.labelsToJson(item.labelModule)
+              delete item.labelModule
+            }
+          })
           this.configsCopyValue = JSON.stringify(params, null, 2)
         }
       }
@@ -749,7 +1203,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .module-walk-box {
     width: 100%;
     border: 1px solid #DCDFE6;
@@ -796,9 +1250,9 @@ export default {
     line-height: 21px;
   }
   .half-form-item {
-    width: calc(50% - 30px);
+    width: calc(50% - 21px);
     display: inline-block;
-    padding: 0 0px 0 8px;
+    padding: 0 0px 0 0px;
   }
   .half-form-item:nth-child(even){
     padding-left: 0;
@@ -824,7 +1278,7 @@ export default {
     width: 100%;
   }
   /deep/ .el-tabs__content{
-    padding-left: 18px;
+    /*padding-left: 18px;*/
   }
   .need-rotate.nz-icon-arrow-down{
     display: inline-block;
@@ -832,19 +1286,19 @@ export default {
   }
   .need-rotate.nz-icon-arrow-down.is-active{
     transform: rotate(
-      -180deg
+        -180deg
     );
   }
   .module-add-label{
     display: inline-block;
-    width: 300px;
+    width: 16px;
     height: 18px;
-    background: #FFFCF9;
+    background: rgba(250,144,28,0.1);
     border: 1px solid #FFE0BD;
     border-radius: 2px;
     text-align: center;
     line-height: 18px;
-    margin-right: 80px;
+    margin-right: 55px;
   }
   .configs-copy-value{
     opacity: 0.9;
@@ -855,8 +1309,12 @@ export default {
     position: relative;
     margin-top: 10px;
     padding: 10px 0px 10px 15px;
-    width: calc(100% - 40px);
-    margin-left: 20px;
+    width:100%;
+    margin-left: 0px;
+    pre{
+      max-height: 300px;
+      min-height: 100px;
+    }
   }
   .configs-copy-value .copy-value-content{
     position: absolute;
@@ -868,16 +1326,78 @@ export default {
     min-height: 30px;
     overflow-x: hidden;
     border-radius: 2px;
-    padding: 0;
+    padding: 0 !important;
   }
   /deep/ .ti-tag{
     background-color: #f4f4f5;
     border-color: #e9e9eb;
     color: #909399;
-    padding: 2px 4px;
+    padding: 2px 4px!important;;
   }
   /deep/ .el-form-item__content .el-input-group {
     vertical-align: unset;
+  }
+  /deep/ .special-tabs.el-tabs.el-tabs--top{
+    border: 1px dashed #D8D9DA;
+    padding: 7px 10px;
+    margin-top: 10px;
+    position: relative;
+  }
+  .nz-icon-minus-medium {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    background: rgba(236,127,102,0.1);
+    padding: 2px 6px;
+    color: #EC7F66;
+  }
+  .endpoint-title{
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    display: flex;
+    padding: 8px 10px;
+    justify-content: space-between;
+  }
+  .endpoint-title .endpoint-title-content{
+    font-family: Roboto-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    text-align: right;
+    font-weight: 500;
+    .nz-icon-arrow-down{
+      display: inline-block;
+      transition: transform .3s;
+    }
+    .nz-icon-arrow-down.is-active{
+      transform: rotate(
+          -90deg
+      );
+    }
+  }
+  .value-mapping-add {
+    background: rgba(250,144,28,0.1);
+    border: 1px solid #FFE0BD;
+    margin-bottom: 10px;
+    height: 24px;
+    line-height: 24px;
+    color: #FA901C;
+    box-sizing: border-box;
+  }
+  .pipeline-box{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #E7EAED;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+    .pipeline-title{
+      font-family: Roboto-Medium;
+      font-size: 14px;
+      color: #FA901C;
+      letter-spacing: 0;
+      font-weight: 600;
+      text-transform: Capitalize;
+    }
   }
 </style>
 <style>

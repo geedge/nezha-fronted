@@ -150,8 +150,7 @@ export default {
       } else if (val === 'labels') {
         obj = {
           type: 'labels',
-          labels: [{ key: '', value: '' }],
-          source: ''
+          labels: [{ key: '', value: '' }]
         }
       } else if (val === 'output') {
         obj = {

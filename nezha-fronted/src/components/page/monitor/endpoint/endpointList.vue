@@ -70,7 +70,8 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <addEndpointBox v-if="rightBox.show" :endpoint="object" @close="closeRightBox"></addEndpointBox>
+<!--      <addEndpointBox v-if="rightBox.show" :endpoint="object" @close="closeRightBox"></addEndpointBox>-->
+      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightEditBox" :disabled="false" :optionType="'add'"></edit-endpoint-box-new>
     </transition>
     <transition name="right-box">
       <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
@@ -111,7 +112,59 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
-      blankObject: {}, // 新增/编辑的endpoint
+      blankObject: {
+        id: '',
+        projectId: '',
+        name: '',
+        port: '',
+        chartIds: '',
+        metricsEnable: 1,
+        configs: [
+          {
+            type: 'metrics',
+            config: {
+              protocol: 'http',
+              walk: [],
+              snmpCredentialsId: '',
+              metrics_path: '',
+              port: '',
+              host: '{{asset.manageIp}}',
+              scrape_interval: '',
+              scrape_timeout: '',
+              params: '',
+              labels: '',
+              basic_auth: {
+                username: '',
+                pin: ''
+              },
+              bearer_token: ''
+            },
+            enable: 1
+          },
+          {
+            type: 'logs',
+            config: [{
+              basic: {
+                type: 'file',
+                fileName: ''
+              },
+              labels: '',
+              labelModule: [{ key: '', value: '' }],
+              pipeline: []
+            }],
+            enable: 1
+          }
+        ],
+        walk: [],
+        labelModule: [{
+          key: '',
+          value: ''
+        }],
+        paramObj: [{
+          key: '',
+          value: []
+        }]
+      }, // 新增/编辑的endpoint
       blankSilenceObject: {
         id: '',
         startAt: '',
@@ -235,6 +288,7 @@ export default {
     },
     closeRightEditBox (refresh) {
       this.rightBox.editShow = false
+      this.rightBox.show = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()

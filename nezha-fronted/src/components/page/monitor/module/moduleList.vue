@@ -111,7 +111,7 @@ export default {
                 username: '',
                 pin: ''
               },
-              bearer_token: '',
+              bearer_token: ''
             },
             enable: 1
           },
@@ -120,14 +120,11 @@ export default {
             config: [{
               basic: {
                 type: 'file',
-                fileName: '',
-                appName: '',
-                listenAddress: '',
-                unit: ''
+                fileName: ''
               },
               labels: '',
               labelModule: [{ key: '', value: '' }],
-              pipeline: [],
+              pipeline: []
             }],
             enable: 1
           }
