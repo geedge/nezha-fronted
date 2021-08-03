@@ -44,7 +44,7 @@
     </div>
     <div class="log-table">
       <el-table
-        :cell-class-name="wrapLines ? '': 'log-row-wrap--no-wrap'"
+        :cell-class-name="cellClassName"
         :data="tableData"
         :show-header="false"
         class="nz-table2"
@@ -59,10 +59,10 @@
         </el-table-column>
         <el-table-column
           v-if="time"
-          prop="timestamp"
+          prop="date"
           width="140"
         >
-          <template slot-scope="{ row }">{{row.timestamp}}</template>
+          <template slot-scope="{ row }">{{row.date}}</template>
         </el-table-column>
         <el-table-column
           prop="message"
@@ -75,7 +75,6 @@
 
 <script>
 import * as echarts from 'echarts'
-import axios from 'axios'
 export default {
   name: 'logTab',
   props: {
@@ -145,6 +144,14 @@ export default {
     exportLog () {
       this.$emit('exportLog', this.operations)
     },
+    cellClassName ({ row, column, rowIndex, columnIndex }) {
+      const className = []
+      !this.wrapLines && className.push('log-row-wrap--no-wrap')
+      if (columnIndex === 0) {
+        className.push(`log-border--${row.level}`)
+      }
+      return className.join(' ')
+    },
     timeFormat (timestamp) {
       const timeLength = `${timestamp}`.length
       // 判断时间是秒/毫秒/微秒/纳秒
@@ -164,7 +171,7 @@ export default {
           break
         default: break
       }
-      return this.utcTimeToTimezoneStr(timestamp * step)
+      return this.timezoneToUtcTimeStr(timestamp * step)
     },
     loadChart () {
       this.myChart = echarts.init(document.getElementById('logChart'))
@@ -174,6 +181,8 @@ export default {
           name: d.name,
           stack: 'total',
           barWidth: 6,
+          clip: false,
+          barMinHeight: 1,
           data: d.data.map(item => [item[0], item[1]]),
           itemStyle: { color: this.levelOptions.find(l => l.type === d.name).color }
         }))
@@ -193,7 +202,14 @@ export default {
           },
           legend: {
             bottom: 20,
-            left: 10
+            left: 10,
+            itemGap: 20,
+            itemWidth: 16,
+            itemHeight: 4,
+            borderRadius: 3,
+            textStyle: {
+              padding: [0, 0, 0, 6]
+            }
           },
           series,
           xAxis: {
@@ -244,15 +260,17 @@ export default {
           // 1.
           if (selectedLevel.length + unselectedLevel.length > 1) {
             if (unselectedLevel.length === 1 && unselectedLevel[0] === name) {
-              selectedLevel.forEach(l => {
-                this.myChart.dispatchAction({
-                  type: 'legendInverseSelect'
-                })
+              this.myChart.dispatchAction({
+                type: 'legendInverseSelect'
               })
+              this.operations.levels = [this.levelOptions.findIndex(l => l.type === unselectedLevel[0])]
             } else if (selectedLevel.length === 0) { // 2.
               this.myChart.dispatchAction({
                 type: 'legendAllSelect'
               })
+              this.operations.levels = [0, 1, 2, 3, 4, 5, 6]
+            } else {
+              this.operations.levels = selectedLevel.map(s => this.levelOptions.findIndex(l => l.type === s))
             }
           }
         })
@@ -277,7 +295,7 @@ export default {
       const tableChartData = {}
       data.forEach(d => {
         tableChartData[d.level] || (tableChartData[d.level] = {})
-        tableChartData[d.level][`${d.timestamp}`] ? tableChartData[d.level][`${d.timestamp}`]++ : tableChartData[d.level][`${d.timestamp}`] = 1
+        tableChartData[d.level][`${d.date}`] ? tableChartData[d.level][`${d.date}`]++ : tableChartData[d.level][`${d.date}`] = 1
       })
       const temp = []
       for (const d in tableChartData) {
@@ -308,7 +326,7 @@ export default {
       // 把时间调整为毫秒，并合并同毫秒的数据
       allTableData = allTableData.map(d => ({
         ...d,
-        timestamp: this.timeFormat(d.timestamp)
+        date: this.timeFormat(d.timestamp)
       }))
       return { logData: allTableData }
     }
@@ -329,7 +347,7 @@ export default {
       deep: true,
       handler (n, o) {
         const { logData } = this.filterLogType(this.logData)
-        const { tableData, tableChartData } = this.applyFilter(logData, this.operations) // 应用operation区域的过滤项
+        const { tableData, tableChartData } = this.applyFilter(logData, n) // 应用operation区域的过滤项
         this.tableData = tableData
         this.tableChartData = tableChartData
         this.loadChart()
@@ -362,11 +380,38 @@ export default {
       }
       // 左侧边框
       td:first-child {
-        border-left: 3px solid $--right-box-border-color;
+        border-left: 3px solid;
+      }
+      td.log-border--debug {
+        border-left-color: #1f78c1;
+      }
+      td.log-border--info {
+        border-left-color: #7eb26d;
+      }
+      td.log-border--warn {
+        border-left-color: #ff851b;
+      }
+      td.log-border--error {
+        border-left-color: #e24d42;
+      }
+      td.log-border--fatel {
+        border-left-color: #705da0;
+      }
+      td.log-border--trace {
+        border-left-color: #6ed0e0;
+      }
+      td.log-border--unknown {
+        border-left-color: #dde4ed;
       }
       td.el-table__expanded-cell:first-child {
         border-left: none;
       }
+      // 不换行
+      .log-row-wrap--no-wrap .cell {
+        white-space: nowrap;
+        overflow: visible;
+      }
+
     }
   }
 

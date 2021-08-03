@@ -35,7 +35,7 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <span v-if="item.prop==='varType'">{{scope.row[item.prop]===1?'Asset':'endpoint'}}</span>
+        <span v-if="item.prop==='varType'">{{scope.row[item.prop] === 1 ? 'Asset' : 'Endpoint'}}</span>
         <span v-else-if="item.prop==='type'">
           <i :class="typeIcon(scope.row)"/>
         {{findTypeLabel(scope.row)}}
