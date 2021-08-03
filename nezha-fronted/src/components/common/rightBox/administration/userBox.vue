@@ -35,7 +35,7 @@
           </el-form-item>
           <!--mobile-->
           <el-form-item :label="$t('config.user.mobile')" prop="mobile">
-            <el-input id="account-input-mobile" v-model.number="editUser.mobile" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
+            <el-input id="account-input-mobile" v-model="editUser.mobile" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
           <!--roles-->
           <el-form-item :label="$t('config.user.roles')" prop="roleIds">
