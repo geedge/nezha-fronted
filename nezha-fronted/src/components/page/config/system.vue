@@ -805,17 +805,17 @@ export default {
     resetSys () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
-      const resetParmas = {
+      const resetParams = {
         type: this.reset.type,
         pin: this.reset.pin
       }
-      if (resetParmas.type && resetParmas.pin) {
+      if (resetParams.type && resetParams.pin) {
         this.$confirm(this.$t('tip.resetPrompt'), {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: this.$t('tip.yes'),
+          cancelButtonText: this.$t('tip.no'),
           type: 'warning'
         }).then(() => {
-          this.$put('/sys/config/reset', resetParmas).then(response => {
+          this.$put('/sys/config/reset', resetParams).then(response => {
             if (response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.resetSuccess') })
               this.reset.type = ''
@@ -823,6 +823,7 @@ export default {
             } else {
               this.$message.error(response.msg)
             }
+            this.prevent_opt.save = false
           })
         })
       } else {
