@@ -97,7 +97,7 @@ export default {
       wrapLines: true,
 
       limit: 1000, // limit改动需要请求接口
-      limitOptions: [300, 1000, 3000, 10000],
+      limitOptions: [300, 1000, 3000, 5000],
       levelOptions: [
         {
           type: 'trace',
@@ -313,6 +313,7 @@ export default {
         }
         points = temp
       }
+      console.info(points.length)
       const tableChartData = {}
       points.forEach(p => {
         for (const type in p.value) {
@@ -365,6 +366,9 @@ export default {
         date: this.timeFormat(d.timestamp)
       }))
       return { logData: allTableData }
+    },
+    getLimit () {
+      return this.limit
     }
   },
   watch: {

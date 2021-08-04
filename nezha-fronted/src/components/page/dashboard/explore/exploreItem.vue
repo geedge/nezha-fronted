@@ -531,7 +531,10 @@ export default {
     limitChange (limit) {
       this.queryLogData(limit)
     },
-    queryLogData (limit = 1000) { // log的chart和table是一个请求
+    queryLogData (limit) { // log的chart和table是一个请求
+      if (!limit) {
+        limit = this.$refs.logDetail.getLimit()
+      }
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
