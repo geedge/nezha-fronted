@@ -271,7 +271,7 @@
 </template>
 
 <script>
-import { host, port } from '@/components/common/js/validate'
+import { host, port, checkAssetAge } from '@/components/common/js/validate'
 import { asset as assetConstants } from '@/components/common/js/constants'
 import selectAssetType from '@/components/common/popBox/selectAssetType'
 import locationCascader from '@/components/common/rightBox/locationCascader'
@@ -317,7 +317,8 @@ export default {
       labelCascShow: true, // 用来控制label的cascader的重新渲染
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: checkAssetAge, trigger: 'blur' }
         ],
         pid: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -430,6 +431,9 @@ export default {
       deep: true,
       immediate: true,
       handler (n) {
+        if (this.editAsset.pid === -1) {
+          this.editAsset.pid = ''
+        }
         if (n && n !== -1) {
           if (this.vmLock) {
             if (this.options.parentAssetOptions.length === 0) {
@@ -609,7 +613,7 @@ export default {
           const params = JSON.parse(JSON.stringify(this.editAsset))
           if (params.type.vm !== 1) {
             params.parent = {}
-            params.pid = ''
+            params.pid = '-1'
           }
           if (params.id) {
             this.$put(this.url, params).then(res => {

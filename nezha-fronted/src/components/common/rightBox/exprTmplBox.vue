@@ -73,6 +73,7 @@
 <script>
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import editRigthBox from '../mixin/editRigthBox'
+import { checkExpressionAge } from '@/components/common/js/validate'
 
 export default {
   name: 'exprTempBox',
@@ -107,7 +108,8 @@ export default {
       gnameList: [],
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: checkExpressionAge, trigger: true }
         ],
         gname: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }

@@ -140,6 +140,26 @@ export function uSize (rule, value, callback) {
   }, 100)
 }
 
+export function checkAssetAge (rule, value, callback) {
+  setTimeout(() => {
+    if (value.length > 128) {
+      return callback(vm.$t('overall.checkAssetAge'))
+    } else {
+      callback()
+    }
+  }, 100)
+}
+
+export function checkExpressionAge (rule, value, callback) {
+  setTimeout(() => {
+    if (value.length > 64) {
+      return callback(vm.$t('overall.checkAssetAge'))
+    } else {
+      callback()
+    }
+  }, 100)
+}
+
 export function longAndLat (rule, value, callback) { // 校验经纬度
 
 }
