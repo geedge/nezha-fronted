@@ -30,7 +30,7 @@
             </el-select>
           </el-form-item>
           <!--module-->
-          <el-form-item :label='$t("project.module.module")' prop="remark">
+          <el-form-item :label='$t("project.module.module")' prop="moduleId">
             <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -47,52 +47,6 @@
           <!--name-->
           <el-form-item v-if="optionType!=='batch'" :label='$t("project.module.name")' label-width="125px" prop="name">
             <el-input id="module-box-input-name" v-model="editEndpoint.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
-          </el-form-item>
-          <!-- snmp表单 -->
-          <span v-if="editEndpoint.type && editEndpoint.type == 'snmp'" class="snmp-form">
-          <div class="right-box-sub-title">SNMP settings</div>
-          <div class="right-box-line"></div>
-
-          <el-row>
-            <el-col :span="6">
-              <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="walk">
-                <select-walk ref="selectWalk" :walkData="walkData" :expandedWalk="expandedWalkData" :placement="'bottom-start'" @selectWalk="selectWalk" :currentWalk="editEndpoint.walk">
-                  <template v-slot:trigger>
-                    <div class="el-cascader">
-                      <div class="el-input">
-                        <input type="text" readonly="readonly" autocomplete="off" class="el-input__inner" aria-expanded="false">
-                      </div>
-                      <div class="el-cascader__tags">
-                        <div ref="walkScrollbar" style="height: 100%; overflow: auto;">
-                          <span v-for="(item, index) in editEndpoint.walk" :key="index" class="el-tag el-tag--info el-tag--small el-tag--light">
-                            <span v-html="mibName(item)"></span>
-                            <div class="walk-close-box" @click.stop="removeWalk(item)">
-                              <i class="el-tag__close nz-icon nz-icon-close walk-close"></i>
-                            </div>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </select-walk>
-              </el-form-item>
-            </el-col>
-          </el-row>
-            <!--credentials-->
-        <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
-          <el-select id="module-box-input-credentials" v-model="editEndpoint.configs.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-            <el-option :id="'module-type-'+item.id" v-for="item in credentialList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        </span>
-          <!--module-->
-          <el-form-item :label='$t("project.endpoint.state")' prop="remark">
-            <el-select id="module-box-input-state" v-model="editEndpoint.enabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
-              <el-option v-for="item in endpointStateList" :id="'module-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
-            </el-select>
           </el-form-item>
           <!--Enpoint template-->
           <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}
@@ -123,7 +77,6 @@
               key-field="id"
               show-field="name"
               title="ChartSearch"
-              @values="(data) => {editEndpoint.chartIds = data.map(d => d.id).join(',')}"
             ></v-selectpage>
           </el-form-item>
           <div class="endpoint-title">
@@ -158,10 +111,10 @@
                   <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!-- snmp表单 -->
-                <span v-if="editEndpoint.configs[0].config.protocol && editEndpoint.configs[0].config.protocol == 'snmp'" class="snmp-form">
+                <div v-if="editEndpoint.configs[0].config.protocol && editEndpoint.configs[0].config.protocol == 'snmp'">
                 <el-row>
                   <el-col :span="6">
-                    <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+                    <div class="sub-label sub-label-required" style="padding-left: 0">{{$t('project.module.walk')}}</div>
                   </el-col>
                   <el-col :span="24">
                     <el-form-item prop="configs.0.config.walk"  :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
@@ -193,7 +146,7 @@
                       <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                   </el-form-item>
-                </span>
+                </div>
                 <transition name="el-zoom-in-top">
                   <div v-show="showAllBasicOption" >
                     <!--scrape_interval-->
@@ -301,42 +254,42 @@
                   <el-tab-pane label="Basic" name="Basic">
                     <!--type-->
                     <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
-                      <el-select id="module-box-input-type" v-model="item.basic.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                      <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                         <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                       </el-select>
                     </el-form-item>
                     <el-form-item
-                      v-if='item.basic.type === "file"'
-                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'.basic.fileName'"
+                      v-if='item.type === "file"'
+                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'fileName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
-                      <el-input v-if='item.basic.type === "file"' v-model="item.basic.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                      <el-input v-if='item.type === "file"' v-model="item.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                     </el-form-item>
                     <el-form-item
-                      v-if='item.basic.type === "journal"'
-                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'.basic.unit'"
+                      v-if='item.type === "journal"'
+                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'unit'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
-                      <el-input v-if='item.basic.type === "journal"' v-model="item.basic.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                      <el-input v-if='item.type === "journal"' v-model="item.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                     </el-form-item>
                     <el-form-item
-                      v-if='item.basic.type === "syslog"'
-                      :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'.basic.listenAddress'"
+                      v-if='item.type === "syslog"'
+                      :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                      :prop="'configs.1.config.'+ index +'listenAddress'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
-                      <el-input v-if='item.basic.type === "syslog"' v-model="item.basic.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                      <el-input v-if='item.type === "syslog"' v-model="item.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                     </el-form-item>
                     <el-form-item
-                      v-if="item.basic.type === 'syslog'"
+                      v-if="item.type === 'syslog'"
                       :label=' $t("project.endpoint.basicAppName")'
                       class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'.basic.appName'"
+                      :prop="'configs.1.config.'+ index +'appName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
-                      <el-input  v-model="item.basic.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
+                      <el-input  v-model="item.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
                     </el-form-item>
                   </el-tab-pane>
                   <el-tab-pane label="Labels" name="Labels">
@@ -524,6 +477,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
+import project from "@/components/page/monitor/project/project";
 
 export default {
   name: 'editEndpointBoxNew',
@@ -555,6 +509,7 @@ export default {
       walkData: [],
       chartTempList: [],
       activeName: 'Basic',
+      activeNameLogs: ['Basic'],
       expandedWalkData: [],
       language: localStorage.getItem('nz-language'),
       radio: 'password',
@@ -572,7 +527,8 @@ export default {
       showAllBasicOption: false,
       rules: {
         name: [
-          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' }
+          { validator: this.optionType === 'batch' ? '' : noSpecialChar, trigger: 'change' },
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         assetId: [
           { required: !(this.optionType === 'batch'), message: this.$t('validate.required'), trigger: 'change' }
@@ -675,10 +631,10 @@ export default {
   methods: {
     port: port,
     selectWalk (walk) {
-      if (this.editEndpoint.walk.indexOf(walk) != -1) {
-        this.editEndpoint.walk.splice(this.editEndpoint.walk.indexOf(walk), 1)
+      if (this.editEndpoint.configs[0].config.walk.indexOf(walk) != -1) {
+        this.editEndpoint.configs[0].config.walk.splice(this.editEndpoint.configs[0].config.walk.indexOf(walk), 1)
       } else {
-        this.editEndpoint.walk.push(walk)
+        this.editEndpoint.configs[0].config.walk.push(walk)
       }
     },
     // 从mibData里取得oid对应的mib名称
@@ -725,7 +681,7 @@ export default {
     },
 
     removeWalk (walk) {
-      this.editEndpoint.walk.splice(this.editEndpoint.walk.indexOf(walk), 1)
+      this.editEndpoint.configs[0].config.walk.splice(this.editEndpoint.configs[0].config.walk.indexOf(walk), 1)
       this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false)
     },
 
@@ -886,23 +842,22 @@ export default {
       }
     },
     logsBasicTypeChange (i) {
-      const type = this.editEndpoint.configs[1].config[i].basic.type
+      const type = this.editEndpoint.configs[1].config[i].type
       if (type === 'file') {
-        this.editEndpoint.configs[1].config[i].basic = {
-          type,
-          fileName: ''
-        }
+        this.editModule.configs[1].config[i].fileName = ''
+        delete this.editModule.configs[1].config[i].unit
+        delete this.editModule.configs[1].config[i].appName
+        delete this.editModule.configs[1].config[i].listenAddress
       } else if (type === 'journal') {
-        this.editEndpoint.configs[1].config[i].basic = {
-          type,
-          unit: ''
-        }
+        delete this.editModule.configs[1].config[i].fileName
+        this.editModule.configs[1].config[i].unit = ''
+        delete this.editModule.configs[1].config[i].appName
+        delete this.editModule.configs[1].config[i].listenAddress
       } else if (type === 'syslog') {
-        this.editEndpoint.configs[1].config[i].basic = {
-          type,
-          appName: '',
-          listenAddress: ''
-        }
+        delete this.editModule.configs[1].config[i].fileName
+        delete this.editModule.configs[1].config[i].unit
+        this.editModule.configs[1].config[i].appName = ''
+        this.editModule.configs[1].config[i].listenAddress = ''
       }
     },
     /* 获取project列表 */
@@ -915,6 +870,10 @@ export default {
     },
     changeProject () {
       this.getModuleList()
+      if (this.editEndpoint.moduleId) {
+        this.editEndpoint.moduleId = ''
+        this.$refs.moduleForm.clearValidate('moduleId')
+      }
     },
     /* 获取module列表 */
     getModuleList () {
@@ -1142,10 +1101,18 @@ export default {
       if (this.disabled) {
         return
       }
-      if (this.editEndpoint.moduleId && this.editEndpoint.assetId && (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs))) {
+      if (this.editEndpoint.moduleId && this.editEndpoint.assetId) {
         this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
           console.log(res)
-          this.editEndpoint.configs = res.data.list[0].configs
+          if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
+            this.editEndpoint.configs = res.data.list[0].configs
+          }
+          if (!this.editEndpoint.name) {
+            this.editEndpoint.name = res.data.list[0].name
+          }
+          if (!this.editEndpoint.chartIds) {
+            this.editEndpoint.chartIds = res.data.list[0].chartIds
+          }
         })
       }
     }
@@ -1174,6 +1141,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editEndpoint = JSON.parse(JSON.stringify(n))
+        this.getModuleList()
         this.activeName = 'Basic'
         this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
         this.logsCopyValue = this.editEndpoint.configs[1].config.map(() => '')
@@ -1186,7 +1154,7 @@ export default {
         }
         if (n.type && n.type.toLowerCase() == 'snmp') {
           this.$refs.selectWalk.show()
-          for (let i = 0; i < this.editEndpoint.walk.length; i++) {
+          for (let i = 0; i < this.editEndpoint.configs[0].config.walk.length; i++) {
             this.expandedWalkData.push(this.editEndpoint.configs[0].config.walk[i].substring(0, this.editEndpoint.configs[0].config.walk[i].lastIndexOf('.')))
           }
         }
@@ -1398,6 +1366,8 @@ export default {
     .nz-icon-arrow-down{
       display: inline-block;
       transition: transform .3s;
+      color: #BDBDBD;
+      font-size: 12px;
     }
     .nz-icon-arrow-down.is-active{
       transform: rotate(

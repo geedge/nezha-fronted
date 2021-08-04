@@ -35,6 +35,9 @@
               <el-dropdown-item>
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
+              <el-dropdown-item>
+                <div id="batch-add" @click="batchAdd"><i class="nz-icon nz-icon-table-edit"></i>{{$t('overall.batchAdd')}}</div>
+              </el-dropdown-item>
             </div>
           </template>
         </top-tool-more-options>
@@ -79,6 +82,9 @@
     <transition name="right-box">
       <batchModifyEndpoint v-if="rightBox.batchModify" :module="object" @close="closeRightBatchModify" :selectEndpointList="batchDeleteObjs" :disabled="true" :type="'edit'"></batchModifyEndpoint>
     </transition>
+    <transition name="right-box">
+      <batchAddEndpoint v-if="rightBox.batchAdd" @close="closeRightBatchAdd"></batchAddEndpoint>
+    </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
 </transition>
   </div>
@@ -91,6 +97,7 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import batchModifyEndpoint from '@/components/common/rightBox/batchModifyEndpoint'
+import batchAddEndpoint from '@/components/common/rightBox/batchAddEndpoint'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
@@ -106,7 +113,8 @@ export default {
     clickSearch,
     batchModifyEndpoint,
     topToolMoreOptions,
-    alertSilenceBox
+    alertSilenceBox,
+    batchAddEndpoint
   },
   mixins: [dataListMixin],
   data () {
@@ -145,10 +153,8 @@ export default {
           {
             type: 'logs',
             config: [{
-              basic: {
-                type: 'file',
-                fileName: ''
-              },
+              type: 'file',
+              fileName: '',
               labels: '',
               labelModule: [{ key: '', value: '' }],
               pipeline: []
@@ -213,7 +219,8 @@ export default {
       rightBox: {
         editShow: false,
         show: false,
-        batchModify: false
+        batchModify: false,
+        batchAdd: false,
       },
       titleSearch: {},
       titleSearchList: {
@@ -302,6 +309,13 @@ export default {
         this.getTableData()
       }
     },
+    closeRightBatchAdd (refresh) {
+      this.rightBox.batchAdd = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+      }
+    },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
@@ -366,6 +380,9 @@ export default {
         return
       }
       this.rightBox.batchModify = true
+    },
+    batchAdd () {
+      this.rightBox.batchAdd = true
     }
   },
   computed: {

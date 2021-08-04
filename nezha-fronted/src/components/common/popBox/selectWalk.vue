@@ -134,6 +134,7 @@ export default {
 <style lang="scss">
 .select-walk-tree {
   height: 350px;
+  overflow-y: auto;
 }
 .select-walk-tree .el-tree-node__content {
   height: 34px;
@@ -181,4 +182,5 @@ export default {
   top: 50%;
   transform: translate(10px, -50%);
 }
+
 </style>

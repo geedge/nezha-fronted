@@ -1,11 +1,14 @@
-/deep/ .el-collapse-item  .is-active .nz-icon-caret-right{
+/deep/ .el-collapse-item__arrow.el-icon-arrow-right{
+  display: none !important;
+}
+/deep/ .el-collapse-item  .is-active .nz-icon-arrow-right{
   transform: rotate(90deg);
   color: #FA901C;
 }
 /deep/ .el-collapse-item .title-delete{
   display: none;
 }
-/deep/ .el-collapse-item .nz-icon-caret-right{
+/deep/ .el-collapse-item .nz-icon-arrow-right{
   transition: transform .3s;
   color: #BEBEBE;
   margin-right: 5px;
@@ -14,7 +17,7 @@
   .el-collapse-item__header{
     color: #FA901C;
   }
-  .nz-icon-caret-right{
+  .nz-icon-arrow-right{
     color: #FA901C;
   }
   .title-delete{

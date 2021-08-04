@@ -82,6 +82,7 @@ const en = {
     createProject: 'New project',
     createEndpoint: 'New endpoint',
     batchEndpoint: 'Batch modify endpoint',
+    batchAddEndpoint: 'Batch new endpoint',
     createAsset: 'New asset',
     createAlertRule: 'New alert rule',
     createAlertSilence: 'New alert silence',
@@ -149,7 +150,8 @@ const en = {
     tempPrev: 'Template preview',
     silenceAlert: 'silence alert',
     quickSilent: 'Quick silent',
-    configEndpoint: 'Config'
+    configEndpoint: 'Config',
+    generate: 'Generate'
   },
   pageSize: '/page',
   setup: {
@@ -1297,7 +1299,8 @@ const en = {
       asset: 'Asset',
       editEndpoint: 'Edit endpoint',
       createEndpoint: 'New endpoint',
-      batchEndpoint: 'Batch Endpoint',
+      batchEndpoint: 'Batch endpoint',
+      batchAddEndpoint: 'Batch new endpoint',
       endpointName: 'Endpoint',
       name: 'Name',
       tip: {

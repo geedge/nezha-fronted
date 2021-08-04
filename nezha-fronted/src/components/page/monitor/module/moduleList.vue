@@ -125,10 +125,8 @@ export default {
           {
             type: 'logs',
             config: [{
-              basic: {
-                type: 'file',
-                fileName: ''
-              },
+              type: 'file',
+              fileName: '',
               labels: '',
               labelModule: [{ key: '', value: '' }],
               pipeline: []
@@ -230,7 +228,7 @@ export default {
           }
           if (JSON.stringify(this.object.configs[0].config.params) !== '{}' && this.object.configs[0].config.params) {
             Object.keys(this.object.configs[0].config.params).forEach(key => {
-              this.object.paramObj.push({ key, value: this.object.configs[0].params[key] })
+              this.object.paramObj.push({ key, value: this.object.configs[0].config.params[key] })
             })
           } else {
             this.object.paramObj.push({ key: '', value: [] })

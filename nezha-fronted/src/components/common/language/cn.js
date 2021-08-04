@@ -76,6 +76,7 @@ const cn = {
     createProject: '新增系统',
     createEndpoint: '新增 Endpoint',
     batchEndpoint: '批量修改Endpoint',
+    batchAddEndpoint: '批量新增 Endpoint',
     createAsset: '新增资产',
     createAlertRule: '新增告警规则',
     createAlertSilence: '新增告警规则',
@@ -144,7 +145,8 @@ const cn = {
     tempPrev: '模板预览',
     silenceAlert: '告警静默',
     quickSilent: '快速静默',
-    configEndpoint: '配置'
+    configEndpoint: '配置',
+    generate: '生产'
   },
   setup: {
     step0: '欢迎',
@@ -1298,6 +1300,7 @@ const cn = {
       editEndpoint: '修改 Endpoint',
       createEndpoint: '新增 Endpoint',
       batchEndpoint: '批量 Endpoint',
+      batchAddEndpoint: '批量新增 Endpoint',
       endpointName: 'Endpoint name',
       name: '名称'
     },

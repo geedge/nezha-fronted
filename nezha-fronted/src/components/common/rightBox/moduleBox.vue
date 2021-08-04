@@ -111,10 +111,10 @@
                 <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
               </el-form-item>
               <!-- snmp表单 -->
-              <span v-if="editModule.configs[0].config.protocol && editModule.configs[0].config.protocol == 'snmp'" class="snmp-form">
+              <div v-if="editModule.configs[0].config.protocol && editModule.configs[0].config.protocol == 'snmp'" class="">
                 <el-row>
                   <el-col :span="6">
-                    <div class="sub-label sub-label-required">{{$t('project.module.walk')}}</div>
+                    <div class="sub-label sub-label-required" style="padding-left: 0">{{$t('project.module.walk')}}</div>
                   </el-col>
                   <el-col :span="24">
                     <el-form-item prop="configs.0.config.walk" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
@@ -146,7 +146,7 @@
                   <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-          </span>
+          </div>
               <transition name="el-zoom-in-top">
                 <div v-show="showAllBasicOption" >
                   <!--scrape_interval-->
@@ -254,42 +254,42 @@
                 <el-tab-pane label="Basic" name="Basic">
                   <!--type-->
                   <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
-                    <el-select id="module-box-input-type" v-model="item.basic.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                    <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                       <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item
-                    v-if='item.basic.type === "file"'
-                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                    :prop="'configs.1.config.'+ index +'.basic.fileName'"
+                    v-if='item.type === "file"'
+                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.fileName'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
-                    <el-input v-if='item.basic.type === "file"' v-model="item.basic.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    <el-input v-if='item.type === "file"' v-model="item.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                   </el-form-item>
                   <el-form-item
-                    v-if='item.basic.type === "journal"'
-                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                    :prop="'configs.1.config.'+ index +'.basic.unit'"
+                    v-if='item.type === "journal"'
+                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.unit'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
-                    <el-input v-if='item.basic.type === "journal"' v-model="item.basic.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    <el-input v-if='item.type === "journal"' v-model="item.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                   </el-form-item>
                   <el-form-item
-                    v-if='item.basic.type === "syslog"'
-                    :label='item.basic.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.basic.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                    :prop="'configs.1.config.'+ index +'.basic.listenAddress'"
+                    v-if='item.type === "syslog"'
+                    :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
+                    :prop="'configs.1.config.'+ index +'.listenAddress'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
-                    <el-input v-if='item.basic.type === "syslog"' v-model="item.basic.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
+                    <el-input v-if='item.type === "syslog"' v-model="item.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
                   </el-form-item>
                   <el-form-item
-                    v-if="item.basic.type === 'syslog'"
+                    v-if="item.type === 'syslog'"
                     :label=' $t("project.endpoint.basicAppName")'
                     class="half-form-item"
-                    :prop="'configs.1.config.'+ index +'.basic.appName'"
+                    :prop="'configs.1.config.'+ index +'.appName'"
                     :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                   >
-                    <el-input  v-model="item.basic.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
+                    <el-input  v-model="item.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
                   </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="Labels" name="Labels">
@@ -622,10 +622,10 @@ export default {
   methods: {
     port: port,
     selectWalk (walk) {
-      if (this.editModule.walk.indexOf(walk) != -1) {
-        this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
+      if (this.editModule.configs[0].config.walk.indexOf(walk) != -1) {
+        this.editModule.configs[0].config.walk.splice(this.editModule.configs[0].config.walk.indexOf(walk), 1)
       } else {
-        this.editModule.walk.push(walk)
+        this.editModule.configs[0].config.walk.push(walk)
       }
     },
     // 从mibData里取得oid对应的mib名称
@@ -672,7 +672,7 @@ export default {
     },
 
     removeWalk (walk) {
-      this.editModule.walk.splice(this.editModule.walk.indexOf(walk), 1)
+      this.editModule.configs[0].config.walk.splice(this.editModule.configs[0].config.walk.indexOf(walk), 1)
       this.$refs.selectWalk.$refs.walkTree.setChecked(walk, false)
     },
 
@@ -915,10 +915,8 @@ export default {
       this.activeNameLogs.push('Basic')
       this.logsCopyValue.push('')
       this.editModule.configs[1].config.push({
-        basic: {
-          type: 'file',
-          fileName: ''
-        },
+        type: 'file',
+        fileName: '',
         labels: '',
         labelModule: [{ key: '', value: '' }],
         pipeline: []
@@ -930,23 +928,22 @@ export default {
       }
     },
     logsBasicTypeChange (i) {
-      const type = this.editModule.configs[1].config[i].basic.type
+      const type = this.editModule.configs[1].config[i].type
       if (type === 'file') {
-        this.editModule.configs[1].config[i].basic = {
-          type,
-          fileName: ''
-        }
+        this.editModule.configs[1].config[i].fileName = ''
+        delete this.editModule.configs[1].config[i].unit
+        delete this.editModule.configs[1].config[i].appName
+        delete this.editModule.configs[1].config[i].listenAddress
       } else if (type === 'journal') {
-        this.editModule.configs[1].config[i].basic = {
-          type,
-          unit: ''
-        }
+        delete this.editModule.configs[1].config[i].fileName
+        this.editModule.configs[1].config[i].unit = ''
+        delete this.editModule.configs[1].config[i].appName
+        delete this.editModule.configs[1].config[i].listenAddress
       } else if (type === 'syslog') {
-        this.editModule.configs[1].config[i].basic = {
-          type,
-          appName: '',
-          listenAddress: ''
-        }
+        delete this.editModule.configs[1].config[i].fileName
+        delete this.editModule.configs[1].config[i].unit
+        this.editModule.configs[1].config[i].appName = ''
+        this.editModule.configs[1].config[i].listenAddress = ''
       }
     },
     copyValue () {
@@ -1117,7 +1114,7 @@ export default {
         }
         if (n.type && n.type.toLowerCase() == 'snmp') {
           this.$refs.selectWalk.show()
-          for (let i = 0; i < this.editModule.walk.length; i++) {
+          for (let i = 0; i < this.editModule.configs[0].config.walk.length; i++) {
             this.expandedWalkData.push(this.editModule.configs[0].config.walk[i].substring(0, this.editModule.configs[0].config.walk[i].lastIndexOf('.')))
           }
         }
@@ -1329,6 +1326,8 @@ export default {
     .nz-icon-arrow-down{
       display: inline-block;
       transition: transform .3s;
+      color: #BDBDBD;
+      font-size: 12px;
     }
     .nz-icon-arrow-down.is-active{
       transform: rotate(

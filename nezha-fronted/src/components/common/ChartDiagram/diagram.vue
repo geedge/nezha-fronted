@@ -21,7 +21,7 @@
                   <el-collapse-item :title="item.group" :name="item.group">
                     <template slot="title">
                       <div style="display: flex;width: 100%;">
-                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                        <i class="nz-icon nz-icon-arrow-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
                       </div>
                     </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons"  :title="btn.data.text">

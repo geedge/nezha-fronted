@@ -2495,4 +2495,7 @@ export default {
 /deep/ .metric-selector-title {
   background: #fff !important;
 }
+/deep/ .el-collapse-item__arrow.el-icon-arrow-right{
+  display: inline-block !important;
+}
 </style>
