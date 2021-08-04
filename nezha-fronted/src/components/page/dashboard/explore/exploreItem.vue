@@ -82,15 +82,14 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item name="2" title="Table">
-                <div class="table-room">
-                  <!-- 自定义table列 -->
+                <!-- 自定义table列 -->
+                <div class="nz-table2 explore-table">
                   <transition name="el-zoom-in-top">
                     <element-set
                       v-if="tools.showCustomTableTitle"
                       ref="customTableTitle"
                       :custom-table-title.sync="tools.customTableTitle"
                       :original-table-title="tableTitle"
-                      class="pop-custom-explore"
                       @close="tools.showCustomTableTitle = false"
                     ></element-set>
                   </transition>
@@ -98,7 +97,7 @@
                             v-loading="tools.loading"
                             :data="tableData"
                             border
-                            class="nz-table explore-table"
+                            :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
                             tooltip-effect="light">
                     <el-table-column
                       v-for="(item, index) in tools.customTableTitle"
@@ -110,28 +109,28 @@
                       min-width="110px"
                       show-overflow-tooltip
                     ></el-table-column>
-                    <el-table-column v-if="tools.customTableTitle.length>0" width="28">
+                    <el-table-column v-if="tools.customTableTitle.length>0" prop="gear" width="28">
                       <template slot="header" :resizable="false">
-                <span class="nz-table-gear" @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
-                  <i class="nz-icon nz-icon-gear"></i>
-                </span>
+                        <span class="nz-table-gear" @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
+                          <i class="nz-icon nz-icon-gear"></i>
+                        </span>
                       </template>
                     </el-table-column>
                   </el-table>
-                  <pagination ref="Pagination" :append-to-body="false" :page-obj="pageObj" @pageNo='pageNo'
-                              @pageSize='pageSize'></pagination>
                 </div>
+                <pagination ref="Pagination" :append-to-body="false" :page-obj="pageObj" @pageNo='pageNo'
+                            @pageSize='pageSize'></pagination>
               </el-collapse-item>
             </template>
             <!--log-->
             <template v-else>
-              <el-collapse-item v-if="collapseValue.indexOf('1') > -1" name="1" title="Graph">
+              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item v-if="collapseValue.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :unit="chartUnit" @exportLog="exportLog"></log-tab>
+              <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
+                <log-tab ref="logDetail" :log-data="logData" :unit="chartUnit" @exportLog="exportLog" @limitChange="limitChange"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -372,6 +371,7 @@ export default {
       chart: {},
       metricOptions: [],
       collapseValue: ['1', '2'],
+      showTab: ['1', '2'],
       logData: []
       /*logData: [JSON.parse(`{
           "result": [{
@@ -528,13 +528,15 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogData () { // log的chart和table是一个请求
+    limitChange (limit) {
+      this.queryLogData(limit)
+    },
+    queryLogData (limit = 1000) { // log的chart和table是一个请求
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '') {
-            const step = bus.getStep(this.filterTime[0], this.filterTime[1])
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
         if (requestArr.length > 0) {
@@ -543,11 +545,28 @@ export default {
         }
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
-          const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
           const hasGraph = this.logData.some(d => d.resultType === 'matrix')
-          this.collapseValue = []
-          hasGraph && this.collapseValue.push('1')
-          hasLog && this.collapseValue.push('2')
+          const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
+          const graphTabIndex = this.showTab.indexOf('1')
+          if (hasGraph) {
+            if (graphTabIndex === -1) {
+              this.showTab.push('1')
+            }
+          } else {
+            if (graphTabIndex > -1) {
+              this.showTab.splice(graphTabIndex, 1)
+            }
+          }
+          const logTabIndex = this.showTab.indexOf('2')
+          if (hasLog) {
+            if (logTabIndex === -1) {
+              this.showTab.push('1')
+            }
+          } else {
+            if (logTabIndex > -1) {
+              this.showTab.splice(logTabIndex, 1)
+            }
+          }
           this.$nextTick(() => {
             hasGraph && this.loadLogGraph()
           })
@@ -702,7 +721,6 @@ export default {
               this.$refs.exploreChart.setSeries(series)
               this.defaultChartVisible = true
             }
-            this.collapseValue = ['1', '2']
             this.$refs.exploreChart.endLoading()
           })
         }
@@ -1377,6 +1395,15 @@ export default {
   /*外部引用 样式end*/
 </style>
 <style lang="scss">
+  .explore-table {
+    .el-table {
+      position: static !important;
+    }
+    .explore-table-gear .cell {
+      display: flex;
+      justify-content: center;
+    }
+  }
   .explore-table tr td .cell {
     overflow: hidden;
     text-overflow: ellipsis;

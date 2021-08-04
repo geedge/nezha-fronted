@@ -30,7 +30,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.limit')}}:</span>
-        <el-select v-model="operations.limit" size="small" style="width: 100px;">
+        <el-select v-model="limit" size="small" style="width: 100px;">
           <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
         </el-select>
       </div>
@@ -47,6 +47,7 @@
         :cell-class-name="cellClassName"
         :data="tableData"
         :show-header="false"
+        ref="logTable"
         class="nz-table2"
         size="mini"
       >
@@ -90,12 +91,12 @@ export default {
     return {
       operations: {
         levels: [0, 1, 2, 3, 4, 5, 6],
-        limit: 1000,
         descending: true
       },
       time: true, // 换行和时间不需要处理数据
       wrapLines: true,
 
+      limit: 1000, // limit改动需要请求接口
       limitOptions: [300, 1000, 3000, 10000],
       levelOptions: [
         {
@@ -182,7 +183,7 @@ export default {
           stack: 'total',
           barWidth: 6,
           clip: false,
-          barMinHeight: 1,
+          barMinHeight: 4,
           data: d.data.map(item => [item[0], item[1]]),
           itemStyle: { color: this.levelOptions.find(l => l.type === d.name).color }
         }))
@@ -195,10 +196,9 @@ export default {
           },
           grid: {
             top: 20,
-            left: 10,
+            left: 30,
             right: 10,
-            bottom: 60,
-            containLabel: true
+            bottom: 80
           },
           legend: {
             bottom: 20,
@@ -219,7 +219,8 @@ export default {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
               formatter: '{HH}:{mm}:{ss}'
-            }
+            },
+            boundaryGap: [0, '3%']
           },
           tooltip: {
             trigger: 'axis'
@@ -285,14 +286,49 @@ export default {
         })
         return hit
       })
-      // limit
-      data = data.slice(0, filter.limit)
       // 升降序
       data = data.sort((a, b) => {
         return filter.descending ? b.timestamp - a.timestamp : a.timestamp - b.timestamp
       })
-      // logs内部上方的图表数据
+      // logs内部上方的图表数据。需要整理成时间点[{date: xxx, value: {debug: 1, error: 3}}]，时间点数量超过100时，设置step
+      // 然后再将数据转为图表需要的格式
+      let points = []
+      data.forEach(d => {
+        let point = points.find(p => d.date === p.date)
+        if (!point) {
+          point = { date: d.date, value: {} }
+          point.value[d.level] = 1
+          points.push(point)
+        } else {
+          point.value[d.level] ? point.value[d.level]++ : (point.value[d.level] = 1)
+        }
+      })
+      if (points.length > 100) {
+        const step = points.length / 100
+        const temp = []
+        let index = 0
+        while (index < points.length / step) {
+          temp.push(points[index * step])
+          index++
+        }
+        points = temp
+      }
       const tableChartData = {}
+      points.forEach(p => {
+        for (const type in p.value) {
+          tableChartData[type] || (tableChartData[type] = {})
+          tableChartData[type][p.date] ? tableChartData[type][p.date] += p.value[type] : tableChartData[type][p.date] = p.value[type]
+        }
+      })
+      const temp = []
+      for (const d in tableChartData) {
+        const level = { name: d, data: [] }
+        for (const time in tableChartData[d]) {
+          level.data.push([time, tableChartData[d][time]])
+        }
+        temp.push(level)
+      }
+      /* const tableChartData = {}
       data.forEach(d => {
         tableChartData[d.level] || (tableChartData[d.level] = {})
         tableChartData[d.level][`${d.date}`] ? tableChartData[d.level][`${d.date}`]++ : tableChartData[d.level][`${d.date}`] = 1
@@ -304,7 +340,7 @@ export default {
           level.data.push([time, tableChartData[d][time]])
         }
         temp.push(level)
-      }
+      } */
       return { tableData: data, tableChartData: temp }
     },
     filterLogType (data) {
@@ -352,7 +388,15 @@ export default {
         this.tableChartData = tableChartData
         this.loadChart()
       }
+    },
+    limit (n) {
+      this.$emit('limitChange', n)
     }
+  },
+  beforeUpdate () {
+    this.$nextTick(() => {
+      this.$refs.logTable.doLayout()
+    })
   }
 }
 </script>
