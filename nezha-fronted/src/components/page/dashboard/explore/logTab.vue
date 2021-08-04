@@ -304,7 +304,7 @@ export default {
         }
       })
       if (points.length > 100) {
-        const step = points.length / 100
+        const step = Math.floor(points.length / 100)
         const temp = []
         let index = 0
         while (index < points.length / step) {
