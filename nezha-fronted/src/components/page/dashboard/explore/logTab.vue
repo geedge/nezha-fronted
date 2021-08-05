@@ -153,7 +153,7 @@ export default {
       }
       return className.join(' ')
     },
-    timeFormat (timestamp) {
+    toMillisecondTime (timestamp) {
       const timeLength = `${timestamp}`.length
       // 判断时间是秒/毫秒/微秒/纳秒
       let step = null
@@ -172,10 +172,17 @@ export default {
           break
         default: break
       }
-      return this.timezoneToUtcTimeStr(timestamp * step)
+      return Math.floor(timestamp * step)
+    },
+    timeFormat (timestamp) {
+      return this.timezoneToUtcTimeStr(this.toMillisecondTime(timestamp))
     },
     loadChart () {
-      this.myChart = echarts.init(document.getElementById('logChart'))
+      const dom = document.getElementById('logChart')
+      if (!dom) {
+        return
+      }
+      this.myChart = echarts.init(dom)
       if (this.tableChartData.length > 0) {
         let series = this.tableChartData.map(d => ({
           type: 'bar',
@@ -183,7 +190,7 @@ export default {
           stack: 'total',
           barWidth: 6,
           clip: false,
-          barMinHeight: 4,
+          barMinHeight: 1,
           data: d.data.map(item => [item[0], item[1]]),
           itemStyle: { color: this.levelOptions.find(l => l.type === d.name).color }
         }))
@@ -220,7 +227,7 @@ export default {
               fontSize: 13 * window.devicePixelRatio,
               formatter: '{HH}:{mm}:{ss}'
             },
-            boundaryGap: [0, '3%']
+            boundaryGap: [0, '1%']
           },
           tooltip: {
             trigger: 'axis'
@@ -246,7 +253,10 @@ export default {
           },
           useUTC: false // 使用本地时间
         }
-        this.myChart.setOption(option)
+        this.myChart.clear()
+        this.$nextTick(() => {
+          this.myChart.setOption(option)
+        })
         /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
           * 2.如果点击的是唯一高亮的legend，则变为全高亮状态
@@ -277,6 +287,14 @@ export default {
         })
       }
     },
+    getCurrentStepTime (currentTime, currentStepTime, step) {
+      currentStepTime -= step
+      if (currentTime < currentStepTime - step) {
+        return this.getCurrentStepTime(currentTime, currentStepTime, step)
+      } else {
+        return currentStepTime
+      }
+    },
     applyFilter (allTableData, filter) {
       let data = [...allTableData]
       // 过滤level
@@ -286,34 +304,35 @@ export default {
         })
         return hit
       })
+      // 复制一份升序的数据用于后面处理
+      const copyData = [...data]
       // 升降序
       data = data.sort((a, b) => {
         return filter.descending ? b.timestamp - a.timestamp : a.timestamp - b.timestamp
       })
-      // logs内部上方的图表数据。需要整理成时间点[{date: xxx, value: {debug: 1, error: 3}}]，时间点数量超过100时，设置step
+      // logs内部上方的图表数据。需要整理成时间点[{date: xxx, value: {debug: 1, error: 3}}]，时间点数量控制为100个
       // 然后再将数据转为图表需要的格式
-      let points = []
-      data.forEach(d => {
-        let point = points.find(p => d.date === p.date)
+      // 1.计算出step(单位s)
+      let step = (copyData[0].secondTime - copyData[copyData.length - 1].secondTime) / 100
+      step = step < 1 ? 1 : Math.floor(step) // 最小step为1s
+      // 2.组织数据为[{date: xxx, value: {debug: x, error: x}}]
+      const points = []
+      let currentStepTime = copyData[0].secondTime
+      copyData.forEach(d => {
+        if (d.secondTime <= currentStepTime - step) {
+          currentStepTime = this.getCurrentStepTime(d.secondTime, currentStepTime, step)
+        }
+        const date = this.timeFormat(currentStepTime)
+        let point = points.find(p => date === p.date)
         if (!point) {
-          point = { date: d.date, value: {} }
+          point = { date: date, value: {} }
           point.value[d.level] = 1
           points.push(point)
         } else {
           point.value[d.level] ? point.value[d.level]++ : (point.value[d.level] = 1)
         }
       })
-      if (points.length > 100) {
-        const step = Math.floor(points.length / 100)
-        const temp = []
-        let index = 0
-        while (index < points.length / step) {
-          temp.push(points[index * step])
-          index++
-        }
-        points = temp
-      }
-      console.info(points.length)
+      // 3.组织数据为echarts格式
       const tableChartData = {}
       points.forEach(p => {
         for (const type in p.value) {
@@ -329,19 +348,6 @@ export default {
         }
         temp.push(level)
       }
-      /* const tableChartData = {}
-      data.forEach(d => {
-        tableChartData[d.level] || (tableChartData[d.level] = {})
-        tableChartData[d.level][`${d.date}`] ? tableChartData[d.level][`${d.date}`]++ : tableChartData[d.level][`${d.date}`] = 1
-      })
-      const temp = []
-      for (const d in tableChartData) {
-        const level = { name: d, data: [] }
-        for (const time in tableChartData[d]) {
-          level.data.push([time, tableChartData[d][time]])
-        }
-        temp.push(level)
-      } */
       return { tableData: data, tableChartData: temp }
     },
     filterLogType (data) {
@@ -360,10 +366,11 @@ export default {
         }
         return cur
       }, [])
-      // 把时间调整为毫秒，并合并同毫秒的数据
+      // 把时间转为秒和字符串
       allTableData = allTableData.map(d => ({
         ...d,
-        date: this.timeFormat(d.timestamp)
+        date: this.timeFormat(d.timestamp),
+        secondTime: Math.floor(this.toMillisecondTime(d.timestamp) / 1000)
       }))
       return { logData: allTableData }
     },
