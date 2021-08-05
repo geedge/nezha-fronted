@@ -492,7 +492,7 @@ export default {
     },
     exportLog ({ limit, descending }) {
       const params = {
-        logql: this.expressions.join(','),
+        logql: this.expressions,
         start: this.$stringTimeParseToUnix(this.filterTime[0]),
         end: this.$stringTimeParseToUnix(this.filterTime[1]),
         direction: descending ? 'backward' : 'forward',
