@@ -113,6 +113,10 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       label: i18n.t('config.operationlog.operations.export')
     },
     {
+      value: 'delete',
+      label: i18n.t('config.operationlog.operations.delete')
+    },
+    {
       value: 'reset',
       label: i18n.t('config.operationlog.operations.reset')
     },

@@ -492,7 +492,7 @@ export default {
     },
     exportLog ({ limit, descending }) {
       const params = {
-        logql: this.expressions.join(','),
+        logql: this.expressions,
         start: this.$stringTimeParseToUnix(this.filterTime[0]),
         end: this.$stringTimeParseToUnix(this.filterTime[1]),
         direction: descending ? 'backward' : 'forward',
@@ -531,7 +531,10 @@ export default {
     limitChange (limit) {
       this.queryLogData(limit)
     },
-    queryLogData (limit = 1000) { // log的chart和table是一个请求
+    queryLogData (limit) { // log的chart和table是一个请求
+      if (!limit) {
+        limit = this.$refs.logDetail.getLimit()
+      }
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
