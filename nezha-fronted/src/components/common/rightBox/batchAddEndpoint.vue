@@ -97,7 +97,7 @@
                     <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
                   </div>
                 </el-tooltip>
-                <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+                <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
                   <span class="configs-endpoint logs">{ Logs }</span>
                   <div class="endpointConfigsTips" slot="content">
                     <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>
@@ -430,11 +430,11 @@ export default {
       } else {
         this.object.paramObj.push({ key: '', value: [] })
       }
-      if (!this.object.chartIds && this.object.module.chartIds) {
-        this.object.chartIds = this.object.module.chartIds
-      } else {
-        this.object.chartIds = ''
-      }
+      // if (!this.object.chartIds && this.object.module.chartIds) {
+      //   this.object.chartIds = this.object.module.chartIds
+      // } else {
+      //   this.object.chartIds = ''
+      // }
       this.rightBox.show = true
       this.rightBox.show = true
     }

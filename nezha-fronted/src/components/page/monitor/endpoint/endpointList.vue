@@ -164,7 +164,7 @@ export default {
         assetId: '',
         name: '',
         port: '',
-        chartIds: '',
+        // chartIds: '',
         metricsEnable: 1,
         configs: [
           {
@@ -320,18 +320,18 @@ export default {
         // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
         // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
         const configs = []
-        // this.object.configs.forEach(item => {
-        //   item.config = JSON.parse(item.config)
-        //   if (item.type === 'logs') {
-        //     configs.push(item.config)
-        //   }
-        // })
-        // this.object.configs[0] = this.object.configs[0].config
-        // this.object.configs[1] = {
-        //   type: 'logs',
-        //   enable: this.object.configs[1].enable,
-        //   config: configs
-        // }
+        this.object.configs.forEach(item => {
+          item.config = JSON.parse(item.config)
+          if (item.type === 'logs') {
+            configs.push(item.config)
+          }
+        })
+        this.object.configs[0] = this.object.configs[0].config
+        this.object.configs[1] = {
+          type: 'logs',
+          enable: this.object.configs[1].enable,
+          config: configs
+        }
         console.log(this.object)
         this.object.paramObj = []
         this.object.labelModule = []
@@ -372,11 +372,6 @@ export default {
           })
         } else {
           this.object.paramObj.push({ key: '', value: [] })
-        }
-        if (!this.object.chartIds) {
-          this.object.chartIds = ''
-        } else {
-          // this.object.chartIds = this.object.chartIds.split(',')
         }
         this.object.assetName = this.object.asset ? this.object.asset.name : ''
         this.object.projectId = this.object.project.id

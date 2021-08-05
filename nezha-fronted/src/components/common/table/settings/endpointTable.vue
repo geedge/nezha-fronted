@@ -67,7 +67,7 @@
               <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
             </div>
           </el-tooltip>
-          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
             <span class="configs-endpoint logs">{ Logs }</span>
             <div class="endpointConfigsTips" slot="content">
               <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[1].config)"></i></span>

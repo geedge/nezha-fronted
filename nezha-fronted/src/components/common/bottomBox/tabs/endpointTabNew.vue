@@ -119,6 +119,22 @@ export default {
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+            const configs = []
+            response.data.list[i].configs.forEach(item => {
+              item.config = JSON.parse(item.config)
+              if (item.type === 'logs') {
+                configs.push(item.config)
+              }
+            })
+            response.data.list[i].configs[0] = response.data.list[i].configs[0].config
+            response.data.list[i].configs[1] = {
+              type: 'logs',
+              enable: response.data.list[i].configs[1].enable,
+              config: configs
+            }
+          }
           this.tableData = response.data.list
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.pageObj.total = response.data.total

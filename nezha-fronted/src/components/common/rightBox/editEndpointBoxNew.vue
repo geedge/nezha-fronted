@@ -64,24 +64,24 @@
           </div>
           <div class="right-box-line"></div>
           <!-- ChartTemplate  -->
-          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">
-            <v-selectpage
-              v-model="editEndpoint.chartIds"
-              :data="chartTempList"
-              :language="language"
-              :multiple="true"
-              :params="{
-                varType: 2, panelId: 0,
-                returnChildren:0,groupId:0,
-              }"
-              :result-format="resultFormat"
-              :tb-columns="ChartSearchShowFields"
-              class="form-control"
-              key-field="id"
-              show-field="name"
-              title="ChartSearch"
-            ></v-selectpage>
-          </el-form-item>
+<!--          <el-form-item :label="$t('config.model.ChartTemplate')" prop="ChartTemplate">-->
+<!--            <v-selectpage-->
+<!--              v-model="editEndpoint.chartIds"-->
+<!--              :data="chartTempList"-->
+<!--              :language="language"-->
+<!--              :multiple="true"-->
+<!--              :params="{-->
+<!--                varType: 2, panelId: 0,-->
+<!--                returnChildren:0,groupId:0,-->
+<!--              }"-->
+<!--              :result-format="resultFormat"-->
+<!--              :tb-columns="ChartSearchShowFields"-->
+<!--              class="form-control"-->
+<!--              key-field="id"-->
+<!--              show-field="name"-->
+<!--              title="ChartSearch"-->
+<!--            ></v-selectpage>-->
+<!--          </el-form-item>-->
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
@@ -798,7 +798,15 @@ export default {
                 }
               } else if (key.indexOf('configs.1') !== -1) {
                 const keyArr = key.split('.')
-                this.activeNameLogs[keyArr[3]] = keyArr[4].trim().toLowerCase().replace(keyArr[4][0], keyArr[4][0].toUpperCase())
+                const str = keyArr[4]
+                if (str === 'fileName' || str === 'unit' || str === 'listenAddress' || str === 'appName') {
+                  this.activeNameLogs[keyArr[3]] = 'Basic'
+                } else if (str === 'labels') {
+                  this.activeNameLogs[keyArr[3]] = 'Labels'
+                } else if (str === 'pipeline') {
+                  this.activeNameLogs[keyArr[3]] = 'Pipeline'
+                }
+
                 this.activeNameLogs = [...this.activeNameLogs]
               }
             }
@@ -1139,7 +1147,6 @@ export default {
       }
     },
     renderEndpoint () {
-      console.log(123123, (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)))
       if (this.disabled) {
         return
       }
@@ -1152,9 +1159,9 @@ export default {
           if (!this.editEndpoint.name) {
             this.editEndpoint.name = res.data.list[0].name
           }
-          if (!this.editEndpoint.chartIds) {
-            this.editEndpoint.chartIds = res.data.list[0].module.chartIds
-          }
+          // if (!this.editEndpoint.chartIds) {
+          //   this.editEndpoint.chartIds = res.data.list[0].module.chartIds
+          // }
         })
       }
     }
