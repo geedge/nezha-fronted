@@ -1,8 +1,6 @@
 <template>
   <div class="log-detail">
-    <div id="logChart" class="log-chart">
-<!--      <chart ref="logChart" :unit="unit" chart-type="logBar" :show-toolbox="false"></chart>-->
-    </div>
+    <div id="logChart" class="log-chart"></div>
     <div class="log-operations">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
@@ -79,7 +77,6 @@ import * as echarts from 'echarts'
 export default {
   name: 'logTab',
   props: {
-    unit: Number,
     logData: Array
   },
   computed: {
@@ -296,6 +293,9 @@ export default {
       }
     },
     applyFilter (allTableData, filter) {
+      if (allTableData || allTableData.length === 0) {
+        return { tableData: [], tableChartData: [] }
+      }
       let data = [...allTableData]
       // 过滤level
       data = data.filter(d => {

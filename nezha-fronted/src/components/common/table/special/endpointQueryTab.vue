@@ -557,9 +557,7 @@ export default {
   }
   .query-page-option{
     width: 100%;
-    position: absolute;
     background: #fff;
-    bottom: -34px;
   }
   /deep/ .pagination{
     padding-top: 0;

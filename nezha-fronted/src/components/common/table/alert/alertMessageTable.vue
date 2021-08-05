@@ -2,127 +2,125 @@
   @import '../../../charts/chart';
 </style>
 <template>
-  <div>
-    <!--表格-->
-    <el-table
-      id="alertMessageTable"
-      ref="dataTable"
-      :cell-class-name="labelsClassName"
-      :data="tableData"
-      :height="height"
-      border
-      @header-dragend="dragend"
-      @sort-change="tableDataSort"
-      @selection-change="selectionChange"
-      @row-dblclick="(row)=>{$emit('messageDetail', row)}"
+  <!--表格-->
+  <el-table
+    id="alertMessageTable"
+    ref="dataTable"
+    :cell-class-name="labelsClassName"
+    :data="tableData"
+    :height="height"
+    border
+    @header-dragend="dragend"
+    @sort-change="tableDataSort"
+    @selection-change="selectionChange"
+    @row-dblclick="(row)=>{$emit('messageDetail', row)}"
+  >
+    <el-table-column
+      :resizable="false"
+      align="center"
+      type="selection"
+      width="55">
+    </el-table-column>
+    <el-table-column
+      v-for="(item, index) in customTableTitle"
+      v-if="item.show"
+      :key="`col-${index}`"
+      :fixed="item.fixed"
+      :label="item.label"
+      :min-width="`${item.minWidth}`"
+      :prop="item.prop"
+      :resizable="true"
+      :sort-orders="['ascending', 'descending']"
+      :sortable="item.sortable"
+      :width="`${item.width}`"
     >
-      <el-table-column
-        :resizable="false"
-        align="center"
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        v-for="(item, index) in customTableTitle"
-        v-if="item.show"
-        :key="`col-${index}`"
-        :fixed="item.fixed"
-        :label="item.label"
-        :min-width="`${item.minWidth}`"
-        :prop="item.prop"
-        :resizable="true"
-        :sort-orders="['ascending', 'descending']"
-        :sortable="item.sortable"
-        :width="`${item.width}`"
-      >
-        <template slot-scope="scope" :column="item">
-          <template v-if="item.prop === 'alertRule'">
-            <div v-if="scope.row.alertRule.name" >
-              <span
-                class="data-column__span"
-                @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
-                @mouseleave="alertMessageHover(scope.row.alertRule, false)"
-              >{{scope.row.alertRule.name}}</span>
-              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule"></alertRuleInfo>
-            </div>
-            <template v-else>-</template>
-          </template>
-          <template v-else-if="item.prop === 'summary'">
-            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <template v-else>-</template>
-          </template>
-          <template v-else-if="item.prop === 'description'">
-            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <span v-else>-</span>
-          </template>
-          <template v-else-if="item.prop === 'remark'">
-            <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
-            <span v-else>-</span>
-          </template>
-          <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">
-            <i class="nz-icon nz-icon-circle" :style="{color:scope.row['severity'].color,'font-size':'12px','margin-right':'5px'}"></i> {{scope.row['severity'].name}}
-          </span>
-          <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row.startAt)}}</span>
-          <template v-else-if="item.prop === 'duration'">
-            <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
-              <div slot="content">
-                {{$t('config.terminallog.endTime')}}<br/>
-                {{utcTimeToTimezoneStr(scope.row.endAt)}}
-              </div>
-              <span>{{getDuration(scope.row)}}</span>
-            </el-tooltip>
-          </template>
-          <template v-else-if="item.prop === 'labels'" class="labels">
-            <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
-              <span
-                @mouseenter="labelHover(scope.row, item.label, true, $event)"
-                @mouseleave="labelHover(scope.row, item.label, false)">
-                <nz-alert-tag
-                   v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
-                   :label="item.label"
-                   :type="tagType(item.label)"
-                   style="margin: 5px 0 5px 5px;"
-                >
-                 {{item.value}}
-                </nz-alert-tag>
-              </span>
-              <alertLabel
-                v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
-                :id="scope.row[item.label].id"
-                :that="scope.row[item.label]"
-                :type="item.label"
-              ></alertLabel>
-            </span>
-          </template>
-          <span v-else-if="item.prop === 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
-              {{scope.row['state'] == 1 ? "Pending" : ""}}
-              {{scope.row['state'] == 2 ? "Expired" : ""}}
-          </span>
-          <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+      <template slot-scope="scope" :column="item">
+        <template v-if="item.prop === 'alertRule'">
+          <div v-if="scope.row.alertRule.name" >
+            <span
+              class="data-column__span"
+              @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
+              @mouseleave="alertMessageHover(scope.row.alertRule, false)"
+            >{{scope.row.alertRule.name}}</span>
+            <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule"></alertRuleInfo>
+          </div>
           <template v-else>-</template>
         </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showOption"
-        :resizable="false"
-        :width="operationWidth"
-        fixed="right">
-        <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
-        <div slot-scope="scope" class="table-operation-items">
-          <button class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-          <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="hover" @command="tableOperation">
-            <div class="table-operation-item table-operation-item--more">
-              <i class="nz-icon nz-icon-more3"></i>
+        <template v-else-if="item.prop === 'summary'">
+          <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+          <template v-else>-</template>
+        </template>
+        <template v-else-if="item.prop === 'description'">
+          <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+          <span v-else>-</span>
+        </template>
+        <template v-else-if="item.prop === 'remark'">
+          <template v-if="scope.row[item.prop]">{{scope.row[item.prop]}}</template>
+          <span v-else>-</span>
+        </template>
+        <span v-else-if="item.prop === 'severityId'&&scope.row['severity']" class="severity">
+          <i :style="{color:scope.row['severity'].color,'font-size':'12px','margin-right':'5px'}" class="nz-icon nz-icon-circle"></i> {{scope.row['severity'].name}}
+        </span>
+        <span v-else-if="item.prop === 'startAt'">{{utcTimeToTimezoneStr(scope.row.startAt)}}</span>
+        <template v-else-if="item.prop === 'duration'">
+          <el-tooltip :disabled="!scope.row.endAt" effect="light" placement="right">
+            <div slot="content">
+              {{$t('config.terminallog.endTime')}}<br/>
+              {{utcTimeToTimezoneStr(scope.row.endAt)}}
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-has="'alertMessage_expired'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-              <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertMessage']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-table-column>
-    </el-table>
-  </div>
+            <span>{{getDuration(scope.row)}}</span>
+          </el-tooltip>
+        </template>
+        <template v-else-if="item.prop === 'labels'" class="labels">
+          <span v-for="(item, i) in labelsSort(scope.row.labels)" :key="i">
+            <span
+              @mouseenter="labelHover(scope.row, item.label, true, $event)"
+              @mouseleave="labelHover(scope.row, item.label, false)">
+              <nz-alert-tag
+                 v-if="item.label !== 'alertname' && item.label !== 'severity'" :key="item.label" :cursor-point="tagType(item.label) !== 'info'"
+                 :label="item.label"
+                 :type="tagType(item.label)"
+                 style="margin: 5px 0 5px 5px;"
+              >
+               {{item.value}}
+              </nz-alert-tag>
+            </span>
+            <alertLabel
+              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
+              :id="scope.row[item.label].id"
+              :that="scope.row[item.label]"
+              :type="item.label"
+            ></alertLabel>
+          </span>
+        </template>
+        <span v-else-if="item.prop === 'state'" :class="{'green': scope.row['state'] == 2, 'red': scope.row['state'] == 1}">
+            {{scope.row['state'] == 1 ? "Pending" : ""}}
+            {{scope.row['state'] == 2 ? "Expired" : ""}}
+        </span>
+        <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
+        <template v-else>-</template>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showOption"
+      :resizable="false"
+      :width="operationWidth"
+      fixed="right">
+      <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
+      <div slot-scope="scope" class="table-operation-items">
+        <button class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="hover" @command="tableOperation">
+          <div class="table-operation-item table-operation-item--more">
+            <i class="nz-icon nz-icon-more3"></i>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-has="'alertMessage_expired'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertMessage']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>

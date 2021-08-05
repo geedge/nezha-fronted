@@ -130,7 +130,7 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :unit="chartUnit" @exportLog="exportLog" @limitChange="limitChange"></log-tab>
+                <log-tab ref="logDetail" :log-data="logData" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -527,9 +527,6 @@ export default {
         }
         reader.readAsText(error.response.data)
       })
-    },
-    limitChange (limit) {
-      this.queryLogData(limit)
     },
     queryLogData (limit) { // log的chart和table是一个请求
       if (!limit) {

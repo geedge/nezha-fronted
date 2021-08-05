@@ -47,7 +47,8 @@
         <panel-tab-new @getTableData="getTableData" :paramsType="'module'" v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
         <panel-tab-new @getTableData="getTableData" :paramsType="'endpoint'" v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
-        <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></endpointQuery>
+        <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></endpointQuery>
+        <log-bottom-tab v-if="from === fromRoute.endpoint && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.endpoint.endpointTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
         <panel-tab-new @getTableData="getTableData"  :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
@@ -76,10 +77,12 @@ import operationLogTab from './tabs/operationLogTab'
 import terminalLogTab from './tabs/terminalLogTab'
 import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
+import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
 
 export default {
   name: 'bottomBox',
   components: {
+    LogBottomTab,
     cabinetTab,
     alertMessageTab,
     endpointTab,
@@ -186,6 +189,7 @@ export default {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointQuery', name: 'Query' },
+            { prop: 'log', name: 'Log' },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
           ]
         },
@@ -283,11 +287,14 @@ export default {
 }
 .sub-container {
   padding: 10px;
-  height: 100%;
+  height: calc(100% - 64px);
   background-color: #f6f6f6;
   overflow-y: auto;
   &>div {
     background-color: white;
+  }
+  &>.nz-table2 {
+    padding-top: 20px !important;
   }
 }
 .sub-top-tools .top-tool-btn-txt .nz-icon{
@@ -321,7 +328,7 @@ export default {
       height: 100%;
       background-color: #f6f6f6;
 
-      .nz-table2 {
+      &>.nz-table2 {
         height: calc(100% - 92px);
         padding: 20px 20px 0;
       }
@@ -345,6 +352,14 @@ export default {
   /*height: calc(100% - 50px);*/
   padding-bottom: 10px;
   height: calc(100% - 30px);
+}
+.bottom-log {
+  padding: 15px;
+}
+.bottom-common {
+  padding: 20px;
+  height: 100%;
+  box-sizing: border-box;
 }
 .chart-temp{
   height: calc(100% - 20px);

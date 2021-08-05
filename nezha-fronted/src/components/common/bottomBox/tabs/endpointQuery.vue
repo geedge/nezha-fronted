@@ -222,9 +222,6 @@ export default {
     width: 100%;
     height: 100%;
   }
-  /deep/ .nz-table2{
-    padding: 0 !important;
-  }
   /deep/ .sub-container {
     box-sizing: border-box;
   }
