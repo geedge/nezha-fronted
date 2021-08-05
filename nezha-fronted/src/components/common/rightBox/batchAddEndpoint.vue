@@ -143,6 +143,7 @@
 
 <script>
 import editEndpointBoxNew from './editEndpointBoxNew'
+import editRigthBox from '@/components/common/mixin/editRigthBox'
 export default {
   name: 'batchAddEndpointBox',
   props: {
@@ -150,6 +151,7 @@ export default {
     currentModule: Object,
     selectEndpointList: Array
   },
+  mixins: [editRigthBox],
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
@@ -440,6 +442,7 @@ export default {
     }
   },
   created () {
+    this.isEdit = true
     this.getModuleList()
     this.getAssetList()
   },

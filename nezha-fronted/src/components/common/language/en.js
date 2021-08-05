@@ -1358,7 +1358,8 @@ const en = {
       status: 'Endpoint status',
       basicTypeFile: 'Path',
       basicTypeJournal: 'Unit',
-      basicTypeSyslog: 'Listen address'
+      basicTypeSyslog: 'Listen address',
+      basicAppName: 'App name'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

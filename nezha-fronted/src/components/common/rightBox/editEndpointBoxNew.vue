@@ -232,7 +232,7 @@
                 </el-form-item>
 
                 <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
-                  <el-input id="module-box-input-password" v-model.number="editEndpoint.configs[0].config.basic_auth.pin" placeholder='' size="small"></el-input>
+                  <el-input id="module-box-input-password" v-model.number="editEndpoint.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->

@@ -228,7 +228,7 @@ export default {
       silenceBoxShow: false,
       tableId: 'endpointTable',
       queryPermission: 'account_view',
-      endpointTableHeight: 'calc(100% - 193px)', // 主列表table高度
+      endpointTableHeight: 'calc(100% - 224px)', // 主列表table高度
       dataListLayout: ['searchInput', 'elementSet', 'clickSearch'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
