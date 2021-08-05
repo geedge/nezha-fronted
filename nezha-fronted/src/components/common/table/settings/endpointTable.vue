@@ -60,11 +60,18 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'configs'">
-          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
-            <span class="configs-endpoint">{ ... }</span>
+          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+            <span class="configs-endpoint metrics">{ Metrics }</span>
             <div class="endpointConfigsTips" slot="content">
-              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row[item.prop])"></i></span>
-              <pre >{{JSON.stringify(JSON.parse(scope.row[item.prop]),null,2)}}</pre>
+              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[0].config)"></i></span>
+              <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
+            </div>
+          </el-tooltip>
+          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+            <span class="configs-endpoint logs">{ Logs }</span>
+            <div class="endpointConfigsTips" slot="content">
+              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[1].config)"></i></span>
+              <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>
             </div>
           </el-tooltip>
         </template>
@@ -146,10 +153,6 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.type'),
-          prop: 'type',
-          show: true
-        }, {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
@@ -197,7 +200,7 @@ export default {
   methods: {
     copyValue (str) {
       const domUrl = document.createElement('input')
-      domUrl.value = str
+      domUrl.value = JSON.stringify(str)
       domUrl.id = 'creatDom'
       document.body.appendChild(domUrl)
       domUrl.select() // 选择对象
@@ -252,6 +255,12 @@ export default {
     border-radius: 4px;
     padding: 2px 7px;
     color: #3C92F1;
+  }
+  .configs-endpoint.metrics{
+    color: #3C92F1;
+  }
+  .configs-endpoint.logs{
+    color: #25BF9A;
   }
   .colorEF7458{
     color: #EF7458;

@@ -365,9 +365,9 @@ export default {
         authProtocol: 1
       },
       columns: [
-        { title: 'id', data: 'id' },
+        { title: 'ID', data: 'id' },
         {
-          title: 'name',
+          title: 'Name',
           data: function (row) {
             if (row.name.length > 15) {
               return row.name.substring(0, 12) + '...'

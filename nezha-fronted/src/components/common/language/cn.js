@@ -77,6 +77,7 @@ const cn = {
     createEndpoint: '新增 Endpoint',
     batchEndpoint: '批量修改Endpoint',
     batchAddEndpoint: '批量新增 Endpoint',
+    batchAdd: '批量新增',
     createAsset: '新增资产',
     createAlertRule: '新增告警规则',
     createAlertSilence: '新增告警规则',
@@ -1301,6 +1302,7 @@ const cn = {
       createEndpoint: '新增 Endpoint',
       batchEndpoint: '批量 Endpoint',
       batchAddEndpoint: '批量新增 Endpoint',
+      batchAdd: '批量新增',
       endpointName: 'Endpoint name',
       name: '名称'
     },

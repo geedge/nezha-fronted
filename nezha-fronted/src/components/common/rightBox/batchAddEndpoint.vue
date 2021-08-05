@@ -34,7 +34,7 @@
           <el-form-item :label="$t('asset.asset')" prop="ChartTemplate">
             <v-selectpage
               :data="assetDataList"
-              :tb-columns="ChartSearchShowFields"
+              :tb-columns="columns"
               :params="{
                 varType: 2, panelId: 0,
                 returnChildren:0,groupId:0,
@@ -50,11 +50,15 @@
             ></v-selectpage>
           </el-form-item>
         </el-form>
+
+        <div class="right-box-sub-title">{{ $t("overall.configEndpoint") }}</div>
+        <div class="right-box-line"></div>
+
         <el-table
           :data="tableData"
-          :height="400"
-          v-if="tableData.length"
-          style="width:calc(100% - 55px)"
+          :height="'calc(100% - 400px)'"
+          :class="showError?'error' : ''"
+          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px"
           border>
           <el-table-column
             v-for="(item, index) in endpointTableTitle"
@@ -88,9 +92,15 @@
               </template>
               <template v-else-if="item.prop == 'configs'">
                 <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
-                  <span class="configs-endpoint">{ ... }</span>
+                  <span class="configs-endpoint metrics">{ Metrics }</span>
                   <div class="endpointConfigsTips" slot="content">
-                    <pre >{{JSON.stringify(scope.row[item.prop],null,2)}}</pre>
+                    <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
+                  </div>
+                </el-tooltip>
+                <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
+                  <span class="configs-endpoint logs">{ Logs }</span>
+                  <div class="endpointConfigsTips" slot="content">
+                    <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>
                   </div>
                 </el-tooltip>
               </template>
@@ -99,15 +109,16 @@
           </el-table-column>
           <el-table-column
             :resizable="false"
-            :width="80"
+            :width="90"
             fixed="right">
             <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
             <div slot-scope="scope" class="table-operation-items">
-              <button class="table-operation-item" v-has="'model_edit'" @click="del(scope.row, scope.$index)"><i class="nz-icon nz-icon-minus"></i></button>
-              <button class="table-operation-item"  @click="edit(scope.row, scope.$index)"><i class="nz-icon nz-icon-edit"></i></button>
+              <span class="table-operation-item" v-has="'model_edit'" @click="del(scope.$index)"><i class="nz-icon nz-icon-minus"></i></span>
+              <span class="table-operation-item"  @click="edit(scope.row, scope.$index)"><i class="nz-icon nz-icon-edit"></i></span>
             </div>
           </el-table-column>
         </el-table>
+        <div v-if="showError" class="el-form-item__error">{{this.$t('validate.required')}}</div>
       </div>
     </div>
 
@@ -116,10 +127,10 @@
       <button v-cancel="{obj:endpoint,func:esc}" id="ep-esc" class="footer__btn footer__btn--light">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="generate" id="ep-generate" class="footer__btn footer__btn--light">
+      <button @click="generate" id="ep-generate" class="footer__btn">
         <span>{{$t('overall.generate')}}</span>
       </button>
-      <button @click="save" class="footer__btn" id="ep-add">
+      <button @click="save" class="footer__btn" id="ep-add" :class="!tableData.length?'nz-btn-disabled':''" :disabled="!tableData.length">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -144,6 +155,7 @@ export default {
   },
   data () {
     return {
+      showError: false,
       rules: {
         projectId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
@@ -159,8 +171,64 @@ export default {
       language: localStorage.getItem('nz-language'),
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('config.model.titleName'), data: 'name' },
-        { title: this.$t('overall.remark'), data: 'remark' }
+        {
+          title: this.$t('config.model.titleName'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
+        {
+          title: this.$t('project.project.projectName'),
+          data: function (row) {
+            if (row.project && row.project.name.length > 15) {
+              return row.project.name.substring(0, 12) + '...'
+            }
+            return ''
+          }
+        },
+        {
+          title: this.$t('overall.remark'),
+          data: function (row) {
+            if (row.remark && row.remark.length > 15) {
+              return row.remark.substring(0, 12) + '...'
+            }
+            return row.remark
+          }
+        }
+      ],
+      columns: [
+        { title: 'id', data: 'id' },
+        {
+          title: 'name',
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
+        { title: 'Manage Ip', data: 'manageIp' },
+        {
+          title: 'Type',
+          data: (row) => {
+            return row.type ? row.type.name : ''
+          }
+        },
+        {
+          title: 'Model',
+          data: (row) => {
+            return row.model ? row.model.name : ''
+          }
+        },
+        {
+          title: 'Datacenter',
+          data: (row) => {
+            return row.dc ? row.dc.name : ''
+          }
+        }
       ],
       object: {},
       vendorAndModelOptionData: [],
@@ -176,7 +244,7 @@ export default {
       tempEndpoint2: {},
       assetLoading: true,
       rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
-      optionType: 'add',
+      optionType: 'batchAdd',
       tableData: [],
       endpointTableTitle: [ // 原始table列
         {
@@ -213,9 +281,9 @@ export default {
     },
 
     /* 关闭弹框 */
-    esc (refresh) {
+    esc (refresh, importResult) {
       this.prevent_opt.save = false
-      this.$emit('close', refresh)
+      this.$emit('close', refresh, importResult)
     },
     // 获取endpoint弹框中module下拉框数据
     getModuleList () {
@@ -245,81 +313,41 @@ export default {
       if (!this.assetIds || !this.moduleIds) {
         this.$message.error('Please select module or asset')
       }
-      const res = {
-        code: 200,
-        msg: 'success',
-        data: {
-          list: [{
-            name: 'module+asset',
-            module: {
-              id: 2,
-              name: 'aaa'
-            },
-            project: {
-              id: 5,
-              name: 'aaa'
-            },
-            asset: {
-              id: 1,
-              name: 'aaa'
-            },
-            chartIds: '688355',
-            configs: [
-              { type: 'metrics', config: { protocol: 'HTTP', scrape_interval: 30, scrape_timeout: 10, host: '192.168.40.1', port: 9090, metrics_path: '/metric', params: { module: ['cpu', 'memory'] }, basic_auth: { username: 'zhangsan', password: 'lisi' }, bearer_token: 'yiduanwenzi', labels: { datacenter: 'bj', module: 'mysql' } }, enable: 1 },
-              {
-                type: 'logs',
-                config: [
-                  {
-                    type: 'file',
-                    fileName: '/var/logs/mysqld.log',
-                    labels: { datacenter: 'bj', module: 'mysql' },
-                    pipeline: [
-                      { type: 'regex', expression: 'ad?!*', source: '' },
-                      { type: 'json', expressions: [{ abc: 'abc', level: 'config' }], source: '' },
-                      { type: 'template', template: 'ad?!*', source: '' },
-                      { type: 'timestamp', format: 'RFC822Z', source: '' },
-                      { type: 'labels', labels: [{ abc: 'abc', level: 'config' }] },
-                      { type: 'output', source: 'content' }
-                    ]
-                  },
-                  { type: 'syslog', listenAddress: '0.0.0.0:9100', appName: 'sapp' },
-                  { type: 'journal', unit: 'nzagent.service' }
-                ],
-                enable: 1
-              }]
-          }
-          ]
-        }
-      }
-      this.tableData = res.data.list
-      // this.$post('/monitor/endpoint/render', { moduleIds: this.moduleIds, assetIds: this.assetIds }).then(res => {
-      //   console.log(res)
-      //   this.tableData = res.data.list
-      // })
+      this.$post('/monitor/endpoint/render', { moduleIds: this.moduleIds, assetIds: this.assetIds }).then(res => {
+        console.log(res)
+        res.data.list.forEach(item => {
+          item.configs = JSON.parse(item.configs)
+          item.moduleId = item.module.id
+          item.assetId = item.asset.id
+        })
+        this.tableData = res.data.list
+      })
     },
     // 保存endpoint
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
+      this.showError = false
+      if (!this.tableData.length) {
+        this.prevent_opt.save = false
+        this.showError = true
+        return
+      }
       // 对endpointList进行处理，避免携带过多无用数据
-      const endpointList = []
-      this.endpointTableData.forEach((item, index) => {
-        const endpoint = {
-          moduleId: item.moduleId,
-          assetId: item.assetId,
-          name: item.name,
-          configs: JSON.stringify(item.configs),
-          id: item.id
-        }
-        endpointList.push(endpoint)
-      })
       this.$refs.addEndpoint.validate((valid) => {
         if (valid) {
-          this.$put('monitor/endpoint', endpointList).then(response => {
+          const paramsArr = this.tableData.map(item => {
+            const obj = JSON.parse(JSON.stringify(item))
+            obj.configs = JSON.stringify(obj.configs)
+            return {
+              ...obj
+            }
+          })
+          this.$post('/monitor/endpoint/bulk', paramsArr).then(response => {
             this.prevent_opt.save = false
             if (response.code === 200) {
-              this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.esc(true)
+              // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.esc(true, response.data)
             } else {
               this.$message.error(response.msg)
             }
@@ -341,30 +369,25 @@ export default {
     closeRightBox (isEdit, endpoint, isAll) {
       this.rightBox.show = false
       if (!isEdit) { return }
-      if (isAll) {
-        Object.keys(this.blankEndpoint).forEach(key => {
-          this.blankEndpoint[key] = endpoint[key]
-        })
-      } else {
-        this.endpointTableData.forEach((item, index) => {
-          if (item.id === endpoint.id) {
-            this.endpointTableData[index] = { ...endpoint }
-          }
-        })
-        this.endpointTableData = [...this.endpointTableData]
-      }
+      this.tableData.forEach((item, index) => {
+        if (item.id === endpoint.id) {
+          this.tableData[index] = { ...endpoint }
+        }
+      })
+      this.tableData = [...this.tableData]
     },
-    del () {
-
+    del (index) {
+      this.tableData.splice(index, 1)
     },
     edit (row) {
       this.object = row
+      console.log(this.object)
       // this.object.configs = JSON.parse(this.object.configs)
       this.object.projectId = this.object.project.id
       this.object.moduleId = this.object.module.id
       this.object.assetName = this.object.asset.name
-      this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-      this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
+      // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+      // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
       this.object.paramObj = []
       this.object.labelModule = []
       this.object.configs[1].config.forEach(item => {
@@ -407,10 +430,10 @@ export default {
       } else {
         this.object.paramObj.push({ key: '', value: [] })
       }
-      if (!this.object.chartIds) {
-        this.object.chartIds = ''
+      if (!this.object.chartIds && this.object.module.chartIds) {
+        this.object.chartIds = this.object.module.chartIds
       } else {
-        // this.object.chartIds = this.object.chartIds.split(',')
+        this.object.chartIds = ''
       }
       this.rightBox.show = true
       this.rightBox.show = true
@@ -421,6 +444,46 @@ export default {
     this.getAssetList()
   },
   watch: {
+    tableData: {
+      deep: true,
+      handler (n) {
+        this.showError = false
+      }
+    }
   }
 }
 </script>
+<style scoped>
+  .error{
+    border: 1px solid #F56C6C !important;
+  }
+  .right-box-sub-title{
+    width: calc(100% - 70px);
+    margin-left: 15px;
+  }
+  /deep/ .el-table thead .cell{
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    font-weight: 400;
+    padding: 5px;
+  }
+  .table-operation-items{
+    display: flex;
+    justify-content: space-around;
+  }
+  /deep/ .el-table th{
+    padding: 7px 0;
+  }
+  .configs-endpoint{
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .configs-endpoint.metrics{
+    color: #3C92F1;
+  }
+  .configs-endpoint.logs{
+    color: #25BF9A;
+  }
+</style>

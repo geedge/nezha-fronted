@@ -192,8 +192,8 @@ export default {
         if (res.code === 200) {
           this.object = JSON.parse(JSON.stringify(res.data))
           this.object.configs = JSON.parse(this.object.configs)
-          this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-          this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
+          // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+          // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
           this.object.labelModule = []
           this.object.configs[1].config.forEach(item => {

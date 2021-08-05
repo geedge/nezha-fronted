@@ -87,6 +87,42 @@
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
 </transition>
+    <el-dialog :close-on-click-modal="false" :show-close="true" :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
+      <div class="upload-body result-body">
+        <div>
+          <span class="result-title">{{$t('overall.result.total')}}:</span>
+          <span>{{importResult&&importResult.totalNum?importResult.totalNum:0}}</span>
+        </div>
+        <div>
+          <span class="result-title">{{$t('overall.result.failed')}}:</span>
+          <span>{{importResult&&importResult.failNum?importResult.failNum:0}}</span>
+          <span class="result-title">{{$t('overall.result.success')}}:</span>
+          <span>{{importResult&&importResult.successNum?importResult.successNum:0}}</span>
+        </div>
+        <div>
+          <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
+          <div v-if="importResult&&importResult.failDetail" class="result-detail">
+            <div style="height: 100%; overflow: auto;">
+              <template v-for="(item, index) in importResult.failDetail">
+                <div :key="index" class="import-result-block">
+                  <div class="import-result-item">
+                    <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                    <div>{{item.errorMsg}}</div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="footer">
+        <div class="el-message-box__btns">
+          <button :id="'xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" @click="rollbackImport">
+            <span>{{$t('overall.rollbackImport')}}</span>
+          </button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -120,6 +156,8 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
+      importBoxShow: false,
+      importResult: {},
       blankObject: {
         id: '',
         projectId: '',
@@ -220,7 +258,7 @@ export default {
         editShow: false,
         show: false,
         batchModify: false,
-        batchAdd: false,
+        batchAdd: false
       },
       titleSearch: {},
       titleSearchList: {
@@ -253,12 +291,23 @@ export default {
           showMore: false,
           width: 0,
           index: -1
+        },
+        type: {
+          label: 'Type',
+          key: 'type',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
         }
       },
       selectValue: {
         projectIds: [],
         moduleIds: [],
-        states: []
+        states: [],
+        type: []
       },
       searchCheckBox: {}
     }
@@ -266,26 +315,68 @@ export default {
   methods: {
     edit (row) {
       this.$get('monitor/endpoint/' + row.id).then(res => {
-        const u = res.data
-        this.object = JSON.parse(JSON.stringify(u))
-        this.object.configs = JSON.parse(this.object.configs)
-        this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-        this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+        this.object = JSON.parse(JSON.stringify(res.data))
+        // this.object.configs = JSON.parse(this.object.configs)
+        // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
+        // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
+        const configs = []
+        // this.object.configs.forEach(item => {
+        //   item.config = JSON.parse(item.config)
+        //   if (item.type === 'logs') {
+        //     configs.push(item.config)
+        //   }
+        // })
+        // this.object.configs[0] = this.object.configs[0].config
+        // this.object.configs[1] = {
+        //   type: 'logs',
+        //   enable: this.object.configs[1].enable,
+        //   config: configs
+        // }
+        console.log(this.object)
         this.object.paramObj = []
         this.object.labelModule = []
-        if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
-          Object.keys(this.object.configs.labels).forEach(key => {
-            this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+        this.object.configs[1].config.forEach(item => {
+          item.labelModule = []
+          if (JSON.stringify(item.labels) !== '{}' && item.labels) {
+            Object.keys(item.labels).forEach(key => {
+              item.labelModule.push({ key, value: item.labels[key] })
+            })
+          } else {
+            item.labelModule.push({ key: '', value: '' })
+          }
+          item.pipeline && item.pipeline.forEach((pipeline) => {
+            if (pipeline.type === 'labels') {
+              const labelsArr = []
+              if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
+                Object.keys(pipeline.labels).forEach(key => {
+                  labelsArr.push({ key, value: pipeline.labels[key] })
+                })
+              } else {
+                labelsArr.push({ key: '', value: '' })
+              }
+              pipeline.labels = labelsArr
+            }
+          })
+        })
+        this.object.configs = [this.object.configs[0], this.object.configs[1]]
+        if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
+          Object.keys(this.object.configs[0].config.labels).forEach(key => {
+            this.object.labelModule.push({ key, value: this.object.configs[0].config.labels[key] })
           })
         } else {
           this.object.labelModule.push({ key: '', value: '' })
         }
-        if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
-          Object.keys(this.object.configs.params).forEach(key => {
-            this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+        if (JSON.stringify(this.object.configs[0].config.params) !== '{}' && this.object.configs[0].config.params) {
+          Object.keys(this.object.configs[0].config.params).forEach(key => {
+            this.object.paramObj.push({ key, value: this.object.configs[0].config.params[key] })
           })
         } else {
           this.object.paramObj.push({ key: '', value: [] })
+        }
+        if (!this.object.chartIds) {
+          this.object.chartIds = ''
+        } else {
+          // this.object.chartIds = this.object.chartIds.split(',')
         }
         this.object.assetName = this.object.asset ? this.object.asset.name : ''
         this.object.projectId = this.object.project.id
@@ -309,11 +400,14 @@ export default {
         this.getTableData()
       }
     },
-    closeRightBatchAdd (refresh) {
+    closeRightBatchAdd (refresh, importResult) {
+      console.log(refresh, importResult)
       this.rightBox.batchAdd = false
-      if (refresh) {
+      this.importResult = importResult
+      if (refresh && importResult) {
         this.delFlag = true
-        this.getTableData()
+        this.importBoxShow = true
+        // this.getTableData()
       }
     },
     getTableData () {
@@ -330,6 +424,19 @@ export default {
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + ''
+            const configs = []
+            response.data.list[i].configs.forEach(item => {
+              item.config = JSON.parse(item.config)
+              if (item.type === 'logs') {
+                configs.push(item.config)
+              }
+            })
+            response.data.list[i].configs[0] = response.data.list[i].configs[0].config
+            response.data.list[i].configs[1] = {
+              type: 'logs',
+              enable: response.data.list[i].configs[1].enable,
+              config: configs
+            }
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
@@ -373,6 +480,10 @@ export default {
         { key: 'Up', value: 1, name: 'Up' },
         { key: 'Suspended', value: 2, name: 'Suspended' }
       ]
+      this.titleSearchList.type.children = [
+        { key: 'Metrics', value: 'metrics', name: 'Metrics' },
+        { key: 'Logs', value: 'logs', name: 'Logs' },
+      ]
       this.titleSearchList.state.show = true
     },
     batchModify () {
@@ -383,6 +494,21 @@ export default {
     },
     batchAdd () {
       this.rightBox.batchAdd = true
+    },
+    rollbackImport () {
+      this.$delete('monitor/endpoint/cancelImport' + '?seq=' + this.importResult.seq).then(response => {
+        if (response.code == 200) {
+          this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+          this.getTableData()
+          this.importBoxShow = false
+        } else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    closeDialog () {
+      this.getTableData()
+      this.importBoxShow = false
     }
   },
   computed: {

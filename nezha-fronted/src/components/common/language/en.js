@@ -83,6 +83,7 @@ const en = {
     createEndpoint: 'New endpoint',
     batchEndpoint: 'Batch modify endpoint',
     batchAddEndpoint: 'Batch new endpoint',
+    batchAdd: 'Batch add',
     createAsset: 'New asset',
     createAlertRule: 'New alert rule',
     createAlertSilence: 'New alert silence',
@@ -1301,6 +1302,7 @@ const en = {
       createEndpoint: 'New endpoint',
       batchEndpoint: 'Batch endpoint',
       batchAddEndpoint: 'Batch new endpoint',
+      batchAdd: 'Batch add',
       endpointName: 'Endpoint',
       name: 'Name',
       tip: {

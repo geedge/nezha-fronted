@@ -87,7 +87,7 @@
             <el-switch v-model="editModule.configs[0].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
-            <el-tabs v-model="activeName" v-show="metricsShow&&editModule.configs[0].enable">
+            <el-tabs v-model="activeName" v-show="metricsShow" v-if="editModule.configs[0].enable">
             <el-tab-pane label="Basic" name="Basic">
               <!--path-->
               <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
@@ -248,7 +248,7 @@
             <el-switch v-model="editModule.configs[1].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
-          <div v-show="logsShow&&editModule.configs[1].enable">
+          <div v-show="logsShow" v-if="editModule.configs[1].enable">
             <div v-for="(item, index) in editModule.configs[1].config" :key="index" style="position: relative">
               <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}" :ref="'logsTabs' + index">
                 <el-tab-pane label="Basic" name="Basic">
@@ -506,9 +506,25 @@ export default {
       ],
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('config.model.titleName'), data: 'name' },
+        {
+          title: this.$t('config.model.titleName'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
         { title: this.$t('config.model.titleType'), data: 'type' },
-        { title: this.$t('overall.remark'), data: 'remark' }
+        {
+          title: this.$t('overall.remark'),
+          data: function (row) {
+            if (row.remark && row.remark.length > 15) {
+              return row.remark.substring(0, 12) + '...'
+            }
+            return row.remark
+          }
+        }
       ],
       language: localStorage.getItem('nz-language'),
       showAllBasicOption: false,

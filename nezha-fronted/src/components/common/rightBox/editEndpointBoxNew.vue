@@ -12,6 +12,9 @@
           <span v-if="optionType === 'add'">
          {{ $t("project.module.createEndpoint")}}
         </span>
+        <span v-if="optionType === 'batchAdd'">
+         {{ $t("project.module.createEndpoint")}}
+        </span>
       </div>
       <!-- end--标题-->
       <div class="header__operation">
@@ -87,7 +90,7 @@
             <el-switch v-model="editEndpoint.configs[0].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
-            <el-tabs v-model="activeName" v-show="metricsShow&&editEndpoint.configs[0].enable">
+            <el-tabs v-model="activeName" v-show="metricsShow" v-if="editEndpoint.configs[0].enable">
               <el-tab-pane label="Basic" name="Basic">
                 <!--path-->
                 <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
@@ -248,7 +251,7 @@
             <el-switch v-model="editEndpoint.configs[1].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
-            <div v-show="logsShow&&editEndpoint.configs[1].enable">
+            <div v-show="logsShow" v-if="editEndpoint.configs[1].enable">
               <div v-for="(item, index) in editEndpoint.configs[1].config" :key="index" style="position: relative">
                 <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}">
                   <el-tab-pane label="Basic" name="Basic">
@@ -261,7 +264,7 @@
                     <el-form-item
                       v-if='item.type === "file"'
                       :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'fileName'"
+                      :prop="'configs.1.config.'+ index +'.fileName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
                       <el-input v-if='item.type === "file"' v-model="item.fileName" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
@@ -269,7 +272,7 @@
                     <el-form-item
                       v-if='item.type === "journal"'
                       :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'unit'"
+                      :prop="'configs.1.config.'+ index +'.unit'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
                       <el-input v-if='item.type === "journal"' v-model="item.unit" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
@@ -277,7 +280,7 @@
                     <el-form-item
                       v-if='item.type === "syslog"'
                       :label='item.type === "file" ? $t("project.endpoint.basicTypeFile"):( item.type === "journal" ? $t("project.endpoint.basicTypeJournal") : $t("project.endpoint.basicTypeSyslog"))' class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'listenAddress'"
+                      :prop="'configs.1.config.'+ index +'.listenAddress'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
                       <el-input v-if='item.type === "syslog"' v-model="item.listenAddress" :id="'module-box-basic-value' +index" placeholder='' size="small"></el-input>
@@ -286,7 +289,7 @@
                       v-if="item.type === 'syslog'"
                       :label=' $t("project.endpoint.basicAppName")'
                       class="half-form-item"
-                      :prop="'configs.1.config.'+ index +'appName'"
+                      :prop="'configs.1.config.'+ index +'.appName'"
                       :rules="[ { required: true, message: $t('validate.required'), trigger: 'blur' }]"
                     >
                       <el-input  v-model="item.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
@@ -477,7 +480,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
-import project from "@/components/page/monitor/project/project";
+import project from '@/components/page/monitor/project/project'
 
 export default {
   name: 'editEndpointBoxNew',
@@ -520,9 +523,25 @@ export default {
       ],
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
-        { title: this.$t('config.model.titleName'), data: 'name' },
+        {
+          title: this.$t('config.model.titleName'),
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
         { title: this.$t('config.model.titleType'), data: 'type' },
-        { title: this.$t('overall.remark'), data: 'remark' }
+        {
+          title: this.$t('overall.remark'),
+          data: function (row) {
+            if (row.remark && row.remark.length > 15) {
+              return row.remark.substring(0, 12) + '...'
+            }
+            return row.remark
+          }
+        }
       ],
       showAllBasicOption: false,
       rules: {
@@ -746,13 +765,23 @@ export default {
     save () {
       this.prevent_opt.save = true
       setTimeout(() => {
-        this.editEndpoint.configs.params = this.paramToJson(this.editEndpoint.paramObj)
-        this.editEndpoint.configs.labels = this.labelsToJson(this.editEndpoint.labelModule)
-        this.editEndpoint.paramObj = this.editEndpoint.paramObj.filter(item => item.value && item.value.length)
-        this.editEndpoint.labelModule = this.editEndpoint.labelModule.filter(item => item.value)
-        const params = { ...this.editEndpoint }
-        params.configs.walk = params.walk
-        params.configs.port = params.port
+        this.editEndpoint.configs[0].config.params = this.paramToJson(this.editEndpoint.paramObj)
+        this.editEndpoint.configs[0].config.labels = this.labelsToJson(this.editEndpoint.labelModule)
+        this.editEndpoint.configs[1].config.forEach(item => {
+          if (item.labelModule) {
+            item.labels = this.labelsToJson(item.labelModule)
+          } else {
+            item.labels = ''
+          }
+        })
+        const params = JSON.parse(JSON.stringify(this.editEndpoint))
+        params.configs[1].config.forEach(item => {
+          item.pipeline && item.pipeline.forEach((pipeline) => {
+            if (pipeline.type === 'labels') {
+              pipeline.labels = this.labelsToJson(pipeline.labels)
+            }
+          })
+        })
         params.configs = JSON.stringify(params.configs)
         this.$nextTick(() => {
           this.$refs.moduleForm.validate((valid, errorKey) => {
@@ -774,7 +803,22 @@ export default {
               }
             }
             if (valid) {
-              if (this.optionType === 'add' || this.optionType === 'batch') {
+              if (this.optionType === 'add') {
+                this.$post('monitor/endpoint', params).then(response => {
+                  if (response.code === 200) {
+                    this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+                    this.$store.commit('setReloadFacade')
+                    this.esc(true)
+                  } else {
+                    this.$message.error(response.msg)
+                  }
+                  this.prevent_opt.save = false
+                })
+              } else if (this.optionType === 'batchAdd') {
+                this.prevent_opt.save = true
+                this.$emit('close', true, this.editEndpoint, false)
+                this.prevent_opt.save = false
+              } else if (this.optionType === 'batch') {
                 this.prevent_opt.save = true
                 if (this.editEndpoint.assetId) {
                   this.$emit('close', true, this.editEndpoint, false)
@@ -785,7 +829,7 @@ export default {
                 }
               } else if (this.optionType === 'edit') {
                 if (this.editEndpoint.id) {
-                  this.$put('monitor/endpoint', [params]).then(response => {
+                  this.$put('monitor/endpoint', params).then(response => {
                     if (response.code === 200) {
                       this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
                       this.$store.commit('setReloadFacade')
@@ -827,10 +871,8 @@ export default {
       this.activeNameLogs.push('Basic')
       this.logsCopyValue.push('')
       this.editEndpoint.configs[1].config.push({
-        basic: {
-          type: 'file',
-          fileName: ''
-        },
+        type: 'file',
+        fileName: '',
         labels: '',
         labelModule: [{ key: '', value: '' }],
         pipeline: []
@@ -844,20 +886,20 @@ export default {
     logsBasicTypeChange (i) {
       const type = this.editEndpoint.configs[1].config[i].type
       if (type === 'file') {
-        this.editModule.configs[1].config[i].fileName = ''
-        delete this.editModule.configs[1].config[i].unit
-        delete this.editModule.configs[1].config[i].appName
-        delete this.editModule.configs[1].config[i].listenAddress
+        this.editEndpoint.configs[1].config[i].fileName = ''
+        delete this.editEndpoint.configs[1].config[i].unit
+        delete this.editEndpoint.configs[1].config[i].appName
+        delete this.editEndpoint.configs[1].config[i].listenAddress
       } else if (type === 'journal') {
-        delete this.editModule.configs[1].config[i].fileName
-        this.editModule.configs[1].config[i].unit = ''
-        delete this.editModule.configs[1].config[i].appName
-        delete this.editModule.configs[1].config[i].listenAddress
+        delete this.editEndpoint.configs[1].config[i].fileName
+        this.editEndpoint.configs[1].config[i].unit = ''
+        delete this.editEndpoint.configs[1].config[i].appName
+        delete this.editEndpoint.configs[1].config[i].listenAddress
       } else if (type === 'syslog') {
-        delete this.editModule.configs[1].config[i].fileName
-        delete this.editModule.configs[1].config[i].unit
-        this.editModule.configs[1].config[i].appName = ''
-        this.editModule.configs[1].config[i].listenAddress = ''
+        delete this.editEndpoint.configs[1].config[i].fileName
+        delete this.editEndpoint.configs[1].config[i].unit
+        this.editEndpoint.configs[1].config[i].appName = ''
+        this.editEndpoint.configs[1].config[i].listenAddress = ''
       }
     },
     /* 获取project列表 */
@@ -1105,13 +1147,13 @@ export default {
         this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
           console.log(res)
           if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
-            this.editEndpoint.configs = res.data.list[0].configs
+            this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
           }
           if (!this.editEndpoint.name) {
             this.editEndpoint.name = res.data.list[0].name
           }
           if (!this.editEndpoint.chartIds) {
-            this.editEndpoint.chartIds = res.data.list[0].chartIds
+            this.editEndpoint.chartIds = res.data.list[0].module.chartIds
           }
         })
       }
