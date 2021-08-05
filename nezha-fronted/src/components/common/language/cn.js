@@ -916,7 +916,9 @@ const cn = {
         export: 'export',
         delete: 'delete',
         reset: 'reset',
-        unknown: 'unknown'
+        unknown: 'unknown',
+        login: 'login',
+        logout: 'logout'
       },
       response: '响应'
     },
