@@ -33,6 +33,7 @@ import logTab from '@/components/page/dashboard/explore/logTab'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
+import {fromRoute} from "@/components/common/js/constants";
 
 export default {
   name: 'logBottomTab',
@@ -210,7 +211,11 @@ export default {
     }
   },
   mounted () {
-    this.expressions = [`{project="${this.obj.project.name}",module="${this.obj.module.name}",endpoint="${this.obj.name}"}`]
+    if (this.from === fromRoute.endpoint) {
+      this.expressions = [`{project="${this.obj.project.name}",module="${this.obj.module.name}",endpoint="${this.obj.name}"}`]
+    } else if (this.from === fromRoute.asset) {
+      this.expressions = [`{asset="${this.obj.name}"}`]
+    }
     this.queryLogData()
   }
 }

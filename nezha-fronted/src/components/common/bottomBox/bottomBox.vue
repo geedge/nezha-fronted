@@ -40,6 +40,7 @@
         <panel-tab-new @getTableData="getTableData" :paramsType="'asset'" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <alertMessageTabNew v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <endpointTabNew v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+        <log-bottom-tab v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.log" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <assetSubTab v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessageSub" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
         <!--module列表的tab-->
         <endpointTabNew v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
@@ -159,22 +160,32 @@ export default {
           panel: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: false }
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false }
           ],
           alertMessage: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
-            { prop: 'endpointTab', name: 'Endpoint', active: false }
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false }
           ],
           endpoint: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
-            { prop: 'endpointTab', name: 'Endpoint', active: true }
+            { prop: 'endpointTab', name: 'Endpoint', active: true },
+            { prop: 'log', name: 'Log', active: false }
+          ],
+          log: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: true }
           ],
           alertMessageSub: [
             { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
             { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
             { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false },
             { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
           ]
         },
