@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-modify-endpoint" v-clickoutside="{obj:endpoint,func:clickOutside}">
+  <div class="right-box right-box-modify-endpoint" v-clickoutside="{obj:batchEndpoint,func:clickOutside}">
     <div class="right-box__header">
       <!-- begin--标题-->
       <div class="header__title">{{$t("overall.batchAddEndpoint")}}</div>
@@ -11,7 +11,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container" style="overflow: hidden;padding-left: 20px;margin-top: 0">
-      <div class="container__form">
+      <div class="container__form" style="display: flex; flex-direction: column;height: 100%">
         <el-form class="right-box-form" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
           <el-form-item :label="$t('project.module.module')" prop="ChartTemplate">
             <v-selectpage
@@ -26,7 +26,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
-              v-model="moduleIds"
+              v-model="batchEndpoint.moduleIds"
               class="form-control"
               :result-format="resultFormat"
             ></v-selectpage>
@@ -44,7 +44,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
-              v-model="assetIds"
+              v-model="batchEndpoint.assetIds"
               class="form-control"
               :result-format="resultFormat"
             ></v-selectpage>
@@ -55,10 +55,10 @@
         <div class="right-box-line"></div>
 
         <el-table
-          :data="tableData"
-          :height="'calc(100% - 400px)'"
+          :data="batchEndpoint.tableData"
           :class="showError?'error' : ''"
-          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px"
+          :height="'calc(100% - 400px)'"
+          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px;flex: 1"
           border>
           <el-table-column
             v-for="(item, index) in endpointTableTitle"
@@ -130,7 +130,7 @@
       <button @click="generate" id="ep-generate" class="footer__btn">
         <span>{{$t('overall.generate')}}</span>
       </button>
-      <button @click="save" class="footer__btn" id="ep-add" :class="!tableData.length?'nz-btn-disabled':''" :disabled="!tableData.length">
+      <button @click="save" class="footer__btn" id="ep-add" :class="!batchEndpoint.tableData.length?'nz-btn-disabled':''" :disabled="!batchEndpoint.tableData.length">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>
@@ -143,6 +143,7 @@
 
 <script>
 import editEndpointBoxNew from './editEndpointBoxNew'
+import editRigthBox from '@/components/common/mixin/editRigthBox'
 export default {
   name: 'batchAddEndpointBox',
   props: {
@@ -150,6 +151,7 @@ export default {
     currentModule: Object,
     selectEndpointList: Array
   },
+  mixins: [editRigthBox],
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
@@ -164,8 +166,11 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
-      moduleIds: '',
-      assetIds: '',
+      batchEndpoint: {
+        moduleIds: '',
+        assetIds: '',
+        tableData: []
+      },
       assetDataList: [],
       moduleList: [],
       language: localStorage.getItem('nz-language'),
@@ -245,7 +250,6 @@ export default {
       assetLoading: true,
       rightBox: { show: false, title: this.$t('project.endpoint.createEndpoint'), isEdit: false },
       optionType: 'batchAdd',
-      tableData: [],
       endpointTableTitle: [ // 原始table列
         {
           label: this.$t('project.endpoint.name'),
@@ -310,17 +314,16 @@ export default {
       })
     },
     generate () {
-      if (!this.assetIds || !this.moduleIds) {
+      if (!this.batchEndpoint.assetIds || !this.batchEndpoint.moduleIds) {
         this.$message.error('Please select module or asset')
       }
-      this.$post('/monitor/endpoint/render', { moduleIds: this.moduleIds, assetIds: this.assetIds }).then(res => {
-        console.log(res)
+      this.$post('/monitor/endpoint/render', { moduleIds: this.batchEndpoint.moduleIds, assetIds: this.batchEndpoint.assetIds }).then(res => {
         res.data.list.forEach(item => {
           item.configs = JSON.parse(item.configs)
           item.moduleId = item.module.id
           item.assetId = item.asset.id
         })
-        this.tableData = res.data.list
+        this.batchEndpoint.tableData = res.data.list
       })
     },
     // 保存endpoint
@@ -328,7 +331,7 @@ export default {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
       this.showError = false
-      if (!this.tableData.length) {
+      if (!this.batchEndpoint.tableData.length) {
         this.prevent_opt.save = false
         this.showError = true
         return
@@ -336,7 +339,7 @@ export default {
       // 对endpointList进行处理，避免携带过多无用数据
       this.$refs.addEndpoint.validate((valid) => {
         if (valid) {
-          const paramsArr = this.tableData.map(item => {
+          const paramsArr = this.batchEndpoint.tableData.map(item => {
             const obj = JSON.parse(JSON.stringify(item))
             obj.configs = JSON.stringify(obj.configs)
             return {
@@ -347,6 +350,9 @@ export default {
             this.prevent_opt.save = false
             if (response.code === 200) {
               // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              response.data.failDetail.forEach(item => {
+                item.info = 'AssetId：' + this.batchEndpoint.tableData[item.lineNo - 1].asset.id + ' ModuleId：' + this.batchEndpoint.tableData[item.lineNo - 1].module.id + ' '
+              })
               this.esc(true, response.data)
             } else {
               this.$message.error(response.msg)
@@ -369,19 +375,18 @@ export default {
     closeRightBox (isEdit, endpoint, isAll) {
       this.rightBox.show = false
       if (!isEdit) { return }
-      this.tableData.forEach((item, index) => {
+      this.batchEndpoint.tableData.forEach((item, index) => {
         if (item.id === endpoint.id) {
-          this.tableData[index] = { ...endpoint }
+          this.batchEndpoint.tableData[index] = { ...endpoint }
         }
       })
-      this.tableData = [...this.tableData]
+      this.batchEndpoint.tableData = [...this.batchEndpoint.tableData]
     },
     del (index) {
-      this.tableData.splice(index, 1)
+      this.batchEndpoint.tableData.splice(index, 1)
     },
     edit (row) {
       this.object = row
-      console.log(this.object)
       // this.object.configs = JSON.parse(this.object.configs)
       this.object.projectId = this.object.project.id
       this.object.moduleId = this.object.module.id
@@ -440,11 +445,12 @@ export default {
     }
   },
   created () {
+    this.isEdit = true
     this.getModuleList()
     this.getAssetList()
   },
   watch: {
-    tableData: {
+    'batchEndpoint.tableData': {
       deep: true,
       handler (n) {
         this.showError = false

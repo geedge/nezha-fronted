@@ -229,7 +229,7 @@
               </el-form-item>
 
               <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
-                <el-input id="module-box-input-password" v-model.number="editModule.configs[0].config.basic_auth.pin" placeholder='' size="small"></el-input>
+                <el-input id="module-box-input-password" v-model.number="editModule.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
               </el-form-item>
 
               <!--authtype 2-->
@@ -745,14 +745,17 @@ export default {
       setTimeout(() => {
         this.editModule.configs[0].config.params = this.paramToJson(this.editModule.paramObj)
         this.editModule.configs[0].config.labels = this.labelsToJson(this.editModule.labelModule)
-        this.editModule.configs[1].config.forEach(item => {
+        const params = JSON.parse(JSON.stringify(this.editModule))
+        params.configs[1].config.forEach(item => {
           if (item.labelModule) {
             item.labels = this.labelsToJson(item.labelModule)
           } else {
             item.labels = ''
           }
+          delete item.labelModule
         })
-        const params = JSON.parse(JSON.stringify(this.editModule))
+        delete params.labelModule
+        delete params.paramObj
         params.configs[1].config.forEach(item => {
           item.pipeline && item.pipeline.forEach((pipeline) => {
             if (pipeline.type === 'labels') {
@@ -774,7 +777,14 @@ export default {
               }
             } else if (key.indexOf('configs.1') !== -1) {
               const keyArr = key.split('.')
-              this.activeNameLogs[keyArr[3]] = keyArr[4].trim().toLowerCase().replace(keyArr[4][0], keyArr[4][0].toUpperCase())
+              const str = keyArr[4]
+              if (str === 'fileName' || str === 'unit' || str === 'listenAddress' || str === 'appName') {
+                this.activeNameLogs[keyArr[3]] = 'Basic'
+              } else if (str === 'labels') {
+                this.activeNameLogs[keyArr[3]] = 'Labels'
+              } else if (str === 'pipeline') {
+                this.activeNameLogs[keyArr[3]] = 'Pipeline'
+              }
               this.activeNameLogs = [...this.activeNameLogs]
             }
           }

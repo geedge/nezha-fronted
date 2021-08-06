@@ -1358,7 +1358,8 @@ const cn = {
       status: 'Endpoint 状态',
       basicTypeFile: '路径',
       basicTypeJournal: '单位',
-      basicTypeSyslog: '监听地址'
+      basicTypeSyslog: '监听地址',
+      basicAppName: '应用名称'
     },
     metrics: {
       metrics: '指标',

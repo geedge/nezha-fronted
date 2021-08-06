@@ -36,7 +36,7 @@
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="account-list-batch-delete" v-has="'monitor_endpoint_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
               </el-dropdown-item>
               <el-dropdown-item>
-                <div id="batch-add" @click="batchAdd"><i class="nz-icon nz-icon-table-edit"></i>{{$t('overall.batchAdd')}}</div>
+                <div id="batch-add" @click="batchAdd"><i class="nz-icon nz-icon-batchadd"></i>{{$t('overall.batchAdd')}}</div>
               </el-dropdown-item>
             </div>
           </template>
@@ -107,7 +107,7 @@
                 <div :key="index" class="import-result-block">
                   <div class="import-result-item">
                     <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                    <div>{{item.errorMsg}}</div>
+                    <div>{{item.info}} {{item.errorMsg}}</div>
                   </div>
                 </div>
               </template>
@@ -228,7 +228,7 @@ export default {
       silenceBoxShow: false,
       tableId: 'endpointTable',
       queryPermission: 'account_view',
-      endpointTableHeight: 'calc(100% - 193px)', // 主列表table高度
+      endpointTableHeight: 'calc(100% - 224px)', // 主列表table高度
       dataListLayout: ['searchInput', 'elementSet', 'clickSearch'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
@@ -332,7 +332,6 @@ export default {
           enable: this.object.configs[1].enable,
           config: configs
         }
-        console.log(this.object)
         this.object.paramObj = []
         this.object.labelModule = []
         this.object.configs[1].config.forEach(item => {
@@ -396,7 +395,6 @@ export default {
       }
     },
     closeRightBatchAdd (refresh, importResult) {
-      console.log(refresh, importResult)
       this.rightBox.batchAdd = false
       this.importResult = importResult
       if (refresh && importResult) {
