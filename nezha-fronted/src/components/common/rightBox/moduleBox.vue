@@ -762,6 +762,18 @@ export default {
               pipeline.labels = this.labelsToJson(pipeline.labels)
             }
           })
+          if (item.type === 'file') {
+            delete item.unit
+            delete item.appName
+            delete item.listenAddress
+          } else if (item.type === 'journal') {
+            delete item.fileName
+            delete item.appName
+            delete item.listenAddress
+          } else if (item.type === 'syslog') {
+            delete item.fileName
+            delete item.unit
+          }
         })
         params.configs = JSON.stringify(params.configs)
         this.$refs.moduleForm.validate((valid, errorKey) => {
@@ -943,6 +955,9 @@ export default {
       this.editModule.configs[1].config.push({
         type: 'file',
         fileName: '',
+        unit: '',
+        appName: '',
+        listenAddress: '',
         labels: '',
         labelModule: [{ key: '', value: '' }],
         pipeline: []
@@ -954,23 +969,10 @@ export default {
       }
     },
     logsBasicTypeChange (i) {
-      const type = this.editModule.configs[1].config[i].type
-      if (type === 'file') {
-        this.editModule.configs[1].config[i].fileName = ''
-        delete this.editModule.configs[1].config[i].unit
-        delete this.editModule.configs[1].config[i].appName
-        delete this.editModule.configs[1].config[i].listenAddress
-      } else if (type === 'journal') {
-        delete this.editModule.configs[1].config[i].fileName
-        this.editModule.configs[1].config[i].unit = ''
-        delete this.editModule.configs[1].config[i].appName
-        delete this.editModule.configs[1].config[i].listenAddress
-      } else if (type === 'syslog') {
-        delete this.editModule.configs[1].config[i].fileName
-        delete this.editModule.configs[1].config[i].unit
-        this.editModule.configs[1].config[i].appName = ''
-        this.editModule.configs[1].config[i].listenAddress = ''
-      }
+      this.editModule.configs[1].config[i].fileName = ''
+      this.editModule.configs[1].config[i].unit = ''
+      this.editModule.configs[1].config[i].appName = ''
+      this.editModule.configs[1].config[i].listenAddress = ''
     },
     copyValue () {
       const domUrl = document.createElement('input')
@@ -1178,6 +1180,18 @@ export default {
             if (item.labelModule) {
               item.labels = this.labelsToJson(item.labelModule)
               delete item.labelModule
+            }
+            if (item.type === 'file') {
+              delete item.unit
+              delete item.appName
+              delete item.listenAddress
+            } else if (item.type === 'journal') {
+              delete item.fileName
+              delete item.appName
+              delete item.listenAddress
+            } else if (item.type === 'syslog') {
+              delete item.fileName
+              delete item.unit
             }
           })
           this.configsCopyValue = JSON.stringify(params, null, 2)

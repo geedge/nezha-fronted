@@ -454,7 +454,7 @@
             {{$t('overall.preview')}}
           </div>
           <div class="right-box-line"></div>
-          <div class="configs-copy-value">
+          <div class="configs-copy-value">logsLogsArrAdd
             <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
             <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
           </div>
@@ -784,6 +784,18 @@ export default {
               pipeline.labels = this.labelsToJson(pipeline.labels)
             }
           })
+          if (item.type === 'file') {
+            delete item.unit
+            delete item.appName
+            delete item.listenAddress
+          } else if (item.type === 'journal') {
+            delete item.fileName
+            delete item.appName
+            delete item.listenAddress
+          } else if (item.type === 'syslog') {
+            delete item.fileName
+            delete item.unit
+          }
         })
         params.configs = JSON.stringify(params.configs)
         this.$nextTick(() => {
@@ -883,6 +895,9 @@ export default {
       this.editEndpoint.configs[1].config.push({
         type: 'file',
         fileName: '',
+        unit: '',
+        appName: '',
+        listenAddress: '',
         labels: '',
         labelModule: [{ key: '', value: '' }],
         pipeline: []
@@ -894,23 +909,10 @@ export default {
       }
     },
     logsBasicTypeChange (i) {
-      const type = this.editEndpoint.configs[1].config[i].type
-      if (type === 'file') {
-        this.editEndpoint.configs[1].config[i].fileName = ''
-        delete this.editEndpoint.configs[1].config[i].unit
-        delete this.editEndpoint.configs[1].config[i].appName
-        delete this.editEndpoint.configs[1].config[i].listenAddress
-      } else if (type === 'journal') {
-        delete this.editEndpoint.configs[1].config[i].fileName
-        this.editEndpoint.configs[1].config[i].unit = ''
-        delete this.editEndpoint.configs[1].config[i].appName
-        delete this.editEndpoint.configs[1].config[i].listenAddress
-      } else if (type === 'syslog') {
-        delete this.editEndpoint.configs[1].config[i].fileName
-        delete this.editEndpoint.configs[1].config[i].unit
-        this.editEndpoint.configs[1].config[i].appName = ''
-        this.editEndpoint.configs[1].config[i].listenAddress = ''
-      }
+      this.editEndpoint.configs[1].config[i].fileName = ''
+      this.editEndpoint.configs[1].config[i].unit = ''
+      this.editEndpoint.configs[1].config[i].appName = ''
+      this.editEndpoint.configs[1].config[i].listenAddress = ''
     },
     /* 获取project列表 */
     getProjectList () {
@@ -1242,6 +1244,18 @@ export default {
             if (item.labelModule) {
               item.labels = this.labelsToJson(item.labelModule)
               delete item.labelModule
+            }
+            if (item.type === 'file') {
+              delete item.unit
+              delete item.appName
+              delete item.listenAddress
+            } else if (item.type === 'journal') {
+              delete item.fileName
+              delete item.appName
+              delete item.listenAddress
+            } else if (item.type === 'syslog') {
+              delete item.fileName
+              delete item.unit
             }
           })
           this.configsCopyValue = JSON.stringify(params, null, 2)

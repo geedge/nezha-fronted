@@ -127,6 +127,9 @@ export default {
             config: [{
               type: 'file',
               fileName: '',
+              unit: '',
+              appName: '',
+              listenAddress: '',
               labels: '',
               labelModule: [{ key: '', value: '' }],
               pipeline: []
@@ -218,6 +221,18 @@ export default {
                 pipeline.labels = labelsArr
               }
             })
+            if (item.type === 'file') {
+              item.unit = ''
+              item.appName = ''
+              item.listenAddress = ''
+            } else if (item.type === 'journal') {
+              item.fileName = ''
+              item.appName = ''
+              item.listenAddress = ''
+            } else if (item.type === 'syslog') {
+              item.fileName = ''
+              item.unit = ''
+            }
           })
           if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
             Object.keys(this.object.configs[0].config.labels).forEach(key => {

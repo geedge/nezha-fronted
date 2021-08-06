@@ -193,6 +193,9 @@ export default {
             config: [{
               type: 'file',
               fileName: '',
+              unit: '',
+              appName: '',
+              listenAddress: '',
               labels: '',
               labelModule: [{ key: '', value: '' }],
               pipeline: []
@@ -356,6 +359,18 @@ export default {
               pipeline.labels = labelsArr
             }
           })
+          if (item.type === 'file') {
+            item.unit = ''
+            item.appName = ''
+            item.listenAddress = ''
+          } else if (item.type === 'journal') {
+            item.fileName = ''
+            item.appName = ''
+            item.listenAddress = ''
+          } else if (item.type === 'syslog') {
+            item.fileName = ''
+            item.unit = ''
+          }
         })
         this.object.configs = [this.object.configs[0], this.object.configs[1]]
         if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
@@ -475,7 +490,7 @@ export default {
       ]
       this.titleSearchList.type.children = [
         { key: 'Metrics', value: 'metrics', name: 'Metrics' },
-        { key: 'Logs', value: 'logs', name: 'Logs' },
+        { key: 'Logs', value: 'logs', name: 'Logs' }
       ]
       this.titleSearchList.state.show = true
     },
