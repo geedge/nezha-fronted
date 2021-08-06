@@ -577,6 +577,8 @@ const en = {
     resetPrompt: 'Are you sure to reset?',
     confirmBatchDelete: 'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?', // Related endpoints and alerts will be removed, are you sure you want to delete this asset?
+    zoomStatusPrompt: 'Your browser is currently in zoom state, the page may appear dislocation, the proposed 100% size.',
+    doNotAskAgain: 'Do not ask again',
     yes: 'Yes', // "是"
     no: 'No', // No
     deleteSuccess: 'Delete success', // "删除成功"

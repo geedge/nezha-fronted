@@ -570,6 +570,8 @@ const cn = {
     resetPrompt: '确认重置吗？',
     confirmBatchDelete: '确定删除这{0}条数据吗？',
     assetConfirmDelete: '关联的Endpoint和告警将会被删除，确认删除吗？',
+    zoomStatusPrompt: '您的浏览器目前处于缩放状态，页面可能会出现错位，建议100%大小。',
+    doNotAskAgain: '不再询问',
     yes: '是',
     no: '否',
     deleteSuccess: '删除成功',

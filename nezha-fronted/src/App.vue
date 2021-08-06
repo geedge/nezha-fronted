@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <browser-window-zoom />
     <keep-alive>
       <router-view style="height: 100%"/>
     </keep-alive>
@@ -7,8 +8,12 @@
 </template>
 
 <script>
+import browserWindowZoom from '@/components/common/browserWindowZoom'
 export default {
   name: 'App',
+  components: {
+    browserWindowZoom
+  },
   async created () {
     const Timestamp = new Date().getTime()
     const url = 'static/config.json?Timestamp=' + Timestamp
