@@ -166,9 +166,9 @@ export default {
           //     //console.error(response.data.list[i], err);
           //   }
           // }
-          response.data.list.map(d => {
-            d.port = JSON.parse(d.configs).port
-            d.path = d.module.type
+          response.data.list.forEach(d => {
+            d.port = JSON.parse(d.configs[0].config).config.port
+            d.path = JSON.parse(d.configs[0].config).config.protocol
           })
           this.tableData = response.data.list
           this.pageObj.total = response.data.total

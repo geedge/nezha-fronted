@@ -454,7 +454,7 @@
             {{$t('overall.preview')}}
           </div>
           <div class="right-box-line"></div>
-          <div class="configs-copy-value">logsLogsArrAdd
+          <div class="configs-copy-value">
             <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
             <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
           </div>
