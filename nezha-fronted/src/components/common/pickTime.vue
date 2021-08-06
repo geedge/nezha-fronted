@@ -169,7 +169,11 @@ export default {
 .interval-refresh {
   display: flex;
 }
-  .select-refresh-time-label{
-    margin-left: 5px;
-  }
+.select-refresh-time-label{
+  margin-left: 5px;
+}
+.time-picker {
+  padding-left: 8px;
+  display: flex;
+}
 </style>

@@ -34,7 +34,7 @@
       ></element-set>
     </transition>
     <div class="sub-container">
-      <div :class="[targetTab === 'panel' ? 'bottom-panel' : 'nz-table2',from === fromRoute.chartTemp ? 'chart-temp': '']">
+      <div :class="subContentClass">
         <slot></slot>
       </div>
       <div class="pagination-bottom" v-if="showPagination">
@@ -89,6 +89,24 @@ export default {
   computed: {
     bottomHeaderTitle () {
       return this.title || this.$t('overall.name')
+    },
+    subContentClass () {
+      const className = []
+      switch (this.targetTab) {
+        case 'panel':
+          className.push('bottom-panel')
+          break
+        case 'log': {
+          className.push('bottom-log')
+          break
+        }
+        default: {
+          className.push('nz-table2')
+          break
+        }
+      }
+      this.from === fromRoute.chartTemp && className.push('chart-temp')
+      return className.join(' ')
     }
   },
   data () {

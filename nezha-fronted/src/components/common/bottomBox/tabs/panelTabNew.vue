@@ -584,11 +584,9 @@ export default {
     }
   },
   beforeDestroy () {
-    document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
-    document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
-    if (this.scrollbarWrap) {
-      this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
+    document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseenter', this.tableListEnter)
+    document.querySelector('#tableList') && document.querySelector('#tableList').removeEventListener('mouseleave', this.tableListLeave)
+    this.scrollbarWrap && this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
   }
 }
 </script>
@@ -659,7 +657,9 @@ export default {
   /* begin-chart list*/
   .table-list {
     overflow-y: auto;
-    height: calc(100% - 56px);
+    height: 100%;
+    padding: 20px 0;
+    box-sizing: border-box;
   }
 
   .box-content {

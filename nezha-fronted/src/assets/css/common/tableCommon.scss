@@ -194,8 +194,7 @@
     height: calc(100% - 58px);
 
     .el-table:not(.chart-table) {
-      position: absolute;
-      width: calc(100% - 40px);
+      width: 100%;
       border: 1px solid $--right-box-border-color;
       border-bottom: none;
 
