@@ -120,7 +120,6 @@ export default {
   },
   methods: {
     addPipeline (val) {
-      console.log(val)
       let obj = ''
       this.pipelineOptionValue = ''
       if (val === 'regex') {

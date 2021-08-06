@@ -767,14 +767,17 @@ export default {
       setTimeout(() => {
         this.editEndpoint.configs[0].config.params = this.paramToJson(this.editEndpoint.paramObj)
         this.editEndpoint.configs[0].config.labels = this.labelsToJson(this.editEndpoint.labelModule)
-        this.editEndpoint.configs[1].config.forEach(item => {
+        const params = JSON.parse(JSON.stringify(this.editEndpoint))
+        params.configs[1].config.forEach(item => {
           if (item.labelModule) {
             item.labels = this.labelsToJson(item.labelModule)
           } else {
             item.labels = ''
           }
+          delete item.labelModule
         })
-        const params = JSON.parse(JSON.stringify(this.editEndpoint))
+        delete params.labelModule
+        delete params.paramObj
         params.configs[1].config.forEach(item => {
           item.pipeline && item.pipeline.forEach((pipeline) => {
             if (pipeline.type === 'labels') {
@@ -790,7 +793,6 @@ export default {
               key = key[0]
               if (key.indexOf('configs.0') !== -1) {
                 const keyArr = key.split('.')
-                console.log(keyArr)
                 if (keyArr[3] === 'basic_auth' || keyArr[3] === 'bearer_token') {
                   this.activeName = 'Auth'
                 } else if (keyArr[3] === 'basic' || keyArr[3] === 'port') {
@@ -1152,7 +1154,6 @@ export default {
       }
       if (this.editEndpoint.moduleId && this.editEndpoint.assetId) {
         this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
-          console.log(res)
           if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
             this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
           }

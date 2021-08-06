@@ -745,14 +745,17 @@ export default {
       setTimeout(() => {
         this.editModule.configs[0].config.params = this.paramToJson(this.editModule.paramObj)
         this.editModule.configs[0].config.labels = this.labelsToJson(this.editModule.labelModule)
-        this.editModule.configs[1].config.forEach(item => {
+        const params = JSON.parse(JSON.stringify(this.editModule))
+        params.configs[1].config.forEach(item => {
           if (item.labelModule) {
             item.labels = this.labelsToJson(item.labelModule)
           } else {
             item.labels = ''
           }
+          delete item.labelModule
         })
-        const params = JSON.parse(JSON.stringify(this.editModule))
+        delete params.labelModule
+        delete params.paramObj
         params.configs[1].config.forEach(item => {
           item.pipeline && item.pipeline.forEach((pipeline) => {
             if (pipeline.type === 'labels') {
