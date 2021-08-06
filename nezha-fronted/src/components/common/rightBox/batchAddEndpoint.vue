@@ -11,7 +11,7 @@
 
     <!-- begin--表单-->
     <div class="right-box-form-box right-box__container" style="overflow: hidden;padding-left: 20px;margin-top: 0">
-      <div class="container__form">
+      <div class="container__form" style="display: flex; flex-direction: column;height: 100%">
         <el-form class="right-box-form" label-position = "top" ref="addEndpoint" :model="endpoint" :rules="rules">
           <el-form-item :label="$t('project.module.module')" prop="ChartTemplate">
             <v-selectpage
@@ -56,9 +56,9 @@
 
         <el-table
           :data="batchEndpoint.tableData"
-          :height="'calc(100% - 400px)'"
           :class="showError?'error' : ''"
-          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px"
+          :height="'calc(100% - 400px)'"
+          style="width:calc(100% - 70px);margin-left: 15px;min-height:400px;flex: 1"
           border>
           <el-table-column
             v-for="(item, index) in endpointTableTitle"
@@ -166,7 +166,7 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
-      batchEndpoint:{
+      batchEndpoint: {
         moduleIds: '',
         assetIds: '',
         tableData: []
@@ -350,6 +350,9 @@ export default {
             this.prevent_opt.save = false
             if (response.code === 200) {
               // this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+              response.data.failDetail.forEach(item => {
+                item.info = 'AssetId：' + this.batchEndpoint.tableData[item.lineNo - 1].asset.id + ' ModuleId：' + this.batchEndpoint.tableData[item.lineNo - 1].module.id + ' '
+              })
               this.esc(true, response.data)
             } else {
               this.$message.error(response.msg)

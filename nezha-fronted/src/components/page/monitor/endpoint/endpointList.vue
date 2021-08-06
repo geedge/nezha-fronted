@@ -107,7 +107,7 @@
                 <div :key="index" class="import-result-block">
                   <div class="import-result-item">
                     <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                    <div>{{item.errorMsg}}</div>
+                    <div>{{item.info}} {{item.errorMsg}}</div>
                   </div>
                 </div>
               </template>
