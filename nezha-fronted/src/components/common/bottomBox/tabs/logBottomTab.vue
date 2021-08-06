@@ -33,7 +33,7 @@ import logTab from '@/components/page/dashboard/explore/logTab'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
-import {fromRoute} from "@/components/common/js/constants";
+import { fromRoute } from '@/components/common/js/constants'
 
 export default {
   name: 'logBottomTab',
@@ -106,106 +106,8 @@ export default {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + expr + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
-        if (requestArr.length > 0) {
-          this.showIntroduce = false
-          this.saveDisabled = false
-        }
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
-          const hasGraph = this.logData.some(d => d.resultType === 'matrix')
-          const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
-          const graphTabIndex = this.showTab.indexOf('1')
-          if (hasGraph) {
-            if (graphTabIndex === -1) {
-              this.showTab.push('1')
-            }
-          } else {
-            if (graphTabIndex > -1) {
-              this.showTab.splice(graphTabIndex, 1)
-            }
-          }
-          const logTabIndex = this.showTab.indexOf('2')
-          if (hasLog) {
-            if (logTabIndex === -1) {
-              this.showTab.push('1')
-            }
-          } else {
-            if (logTabIndex > -1) {
-              this.showTab.splice(logTabIndex, 1)
-            }
-          }
-          this.$nextTick(() => {
-            hasGraph && this.loadLogGraph()
-          })
-        })
-      }
-    },
-    loadLogGraph () {
-      const graphData = this.logData.filter(l => l.resultType === 'matrix')
-      if (graphData && graphData.length > 0) {
-        this.$refs.logChart.startLoading()
-        const promqlInputIndexs = []
-        const queryExpression = []
-        const series = []
-        const legend = []
-        this.expressions.forEach((item, index) => {
-          if (item !== '') {
-            promqlInputIndexs.push(index)
-            queryExpression.push(item)
-          }
-          this.logData.forEach((response, index) => {
-            if (response.resultType === 'matrix') {
-              const promqlIndex = promqlInputIndexs[index]
-              const data = response.result
-              if (!data || data.length < 1) {
-                return
-              }
-              data.forEach((result, i) => {
-                const seriesItem = {
-                  name: '',
-                  symbol: 'emptyCircle', // 去掉点
-                  symbolSize: [2, 2],
-                  showSymbol: false,
-                  smooth: 0.2, // 曲线变平滑
-                  data: [],
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  },
-                  type: 'line'
-                }
-                let legendName = ''
-                seriesItem.data = result.values.map((item) => {
-                  return [item[0] * 1000, item[1]]
-                })
-                if (result.metric && Object.keys(result.metric).length > 0) {
-                  const metric = Object.assign({}, result.metric)
-                  seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                  seriesItem.name += '{'
-                  delete metric.__name__
-                  for (const key in metric) {
-                    seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                  }
-                  legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                  legendName += '}'
-                } else {
-                  legendName = queryExpression[index]
-                }
-                seriesItem.name = legendName + '-' + index
-                series.push(seriesItem)
-                legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
-              })
-
-              this.$refs['promql-' + promqlIndex][0].setError('')
-            }
-          })
-        })
-        this.$refs.logChart.setLegend(legend)
-        this.$refs.logChart.setRandomColors(series.length)
-        this.$refs.logChart.setSeries(series)
-        this.defaultChartVisible = true
-        this.$nextTick(() => {
-          this.$refs.logChart.endLoading()
         })
       }
     }

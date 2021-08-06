@@ -293,7 +293,7 @@ export default {
       }
     },
     applyFilter (allTableData, filter) {
-      if (allTableData || allTableData.length === 0) {
+      if (!allTableData || allTableData.length === 0) {
         return { tableData: [], tableChartData: [] }
       }
       let data = [...allTableData]
