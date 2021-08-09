@@ -345,6 +345,12 @@ export default {
         authProtocolPort: [
           // { required: true, message: this.$t('validate.required'), trigger: 'change' },
           { validator: port, trigger: 'blur' }
+        ],
+        sn: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        location: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       },
       cabRules: {

@@ -58,15 +58,18 @@ export default {
         if (zoom != '100%') {
           // 缩放时显示弹框
           this.browserWindowZoom = true
+          // 定义开关防止重复触发
           let flag = true
-          // 防止重复触发
           // 定时器5秒后隐藏弹框
           if (flag === true) {
+            // 设置定时器
             this.timer = setTimeout(() => {
               this.browserWindowZoom = false
             }, 5000)
+            // 关闭
             flag = false
           }
+          // 打开
           flag = true
         }
       }
