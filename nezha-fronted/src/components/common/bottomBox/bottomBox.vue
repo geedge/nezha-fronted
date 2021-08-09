@@ -118,11 +118,13 @@ export default {
               this.tabs.asset.panel.push(assetSub)
               this.tabs.asset.alertMessage.push(assetSub)
               this.tabs.asset.endpoint.push(assetSub)
+              this.tabs.asset.logs.push(assetSub)
             }
           } else if (this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
             this.tabs.asset.panel = this.tabs.asset.panel.filter(item => item.prop !== assetSub.prop)
             this.tabs.asset.alertMessage = this.tabs.asset.alertMessage.filter(item => item.prop !== assetSub.prop)
             this.tabs.asset.endpoint = this.tabs.asset.endpoint.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.logs = this.tabs.asset.logs.filter(item => item.prop !== assetSub.prop)
           }
         }
       }
