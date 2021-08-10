@@ -84,10 +84,10 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        state: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
+        // state: [
+        //   { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        // ]
       },
       areaData: [],
       coordinateFlag: false

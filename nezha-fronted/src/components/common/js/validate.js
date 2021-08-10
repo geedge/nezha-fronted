@@ -160,6 +160,16 @@ export function checkExpressionAge (rule, value, callback) {
   }, 100)
 }
 
+export function checkExprTempAge (rule, value, callback) {
+  setTimeout(() => {
+    if (value.length > 256) {
+      return callback(vm.$t('overall.checkAssetAge'))
+    } else {
+      callback()
+    }
+  }, 100)
+}
+
 export function longAndLat (rule, value, callback) { // 校验经纬度
 
 }
