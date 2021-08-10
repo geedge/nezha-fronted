@@ -91,16 +91,22 @@
                 {{scope.row.module?scope.row.module.name : '' }}
               </template>
               <template v-else-if="item.prop == 'configs'">
-                <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">
-                  <span class="configs-endpoint metrics">{ Metrics }</span>
+<!--                <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'">-->
+<!--                  <span class="configs-endpoint metrics">{ Metrics }</span>-->
+<!--                  <div class="endpointConfigsTips" slot="content">-->
+<!--                    <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>-->
+<!--                  </div>-->
+<!--                </el-tooltip>-->
+<!--                <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">-->
+<!--                  <span class="configs-endpoint logs">{ Logs }</span>-->
+<!--                  <div class="endpointConfigsTips" slot="content">-->
+<!--                    <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>-->
+<!--                  </div>-->
+<!--                </el-tooltip>-->
+                <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable || scope.row.configs[1].enable">
+                  <span class="configs-endpoint metrics">[{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]</span>
                   <div class="endpointConfigsTips" slot="content">
-                    <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
-                  </div>
-                </el-tooltip>
-                <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'">
-                  <span class="configs-endpoint logs">{ Logs }</span>
-                  <div class="endpointConfigsTips" slot="content">
-                    <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>
+                    <pre >{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
                   </div>
                 </el-tooltip>
               </template>
@@ -274,7 +280,8 @@ export default {
         {
           label: this.$t('project.endpoint.configs'),
           prop: 'configs',
-          show: true
+          show: true,
+          width: 150
         }
       ]
     }
@@ -441,7 +448,16 @@ export default {
       //   this.object.chartIds = ''
       // }
       this.rightBox.show = true
-      this.rightBox.show = true
+    },
+    clConfigs (item) {
+      const str = []
+      if (item.configs[0].enable) {
+        str.push(item.configs[0])
+      }
+      if (item.configs[1].enable) {
+        str.push(item.configs[1])
+      }
+      return str
     }
   },
   created () {

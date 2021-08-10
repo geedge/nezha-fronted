@@ -42,11 +42,35 @@
           {{scope.row.module.type}}
         </template>
         <template v-else-if="item.prop === 'project'">
-          {{scope.row[item.prop].name}}
+          <span
+            class="pointer"
+            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false)"
+          >
+            {{scope.row[item.prop].name}}
+          </span>
+          <alertLabel
+            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
+            :id="scope.row[item.prop].id"
+            :that="scope.row[item.prop]"
+            :type="'project'"
+          ></alertLabel>
         </template>
         <template v-else-if="item.prop === 'module'">
-          <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
+          <span
+            class="pointer"
+            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false)"
+          >
+            <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>
           {{scope.row[item.prop].name}}
+          </span>
+          <alertLabel
+            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
+            :id="scope.row[item.prop].id"
+            :that="scope.row[item.prop]"
+            :type="'module'"
+          ></alertLabel>
         </template>
         <template v-else-if="item.prop === 'alerts'">
           <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
@@ -55,43 +79,74 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'asset'">
-          <span >
+          <span
+            class="pointer"
+            @mouseenter="labelHover(scope.row, item.prop, true, $event)"
+            @mouseleave="labelHover(scope.row, item.prop, false)"
+          >
+            <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>
             {{scope.row.asset.name}}
           </span>
+          <alertLabel
+            v-if="scope.row[item.prop] && scope.row[item.prop].loading"
+            :id="scope.row[item.prop].id"
+            :that="scope.row[item.prop]"
+            :type="'asset'"
+          ></alertLabel>
         </template>
         <template v-else-if="item.prop === 'configs'">
-          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable">
-            <span class="configs-endpoint metrics">{ Metrics }</span>
+<!--          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable">-->
+<!--            <span class="configs-endpoint metrics">{ Metrics }</span>-->
+<!--            <div class="endpointConfigsTips" slot="content">-->
+<!--              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[0].config)"></i></span>-->
+<!--              <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>-->
+<!--            </div>-->
+<!--          </el-tooltip>-->
+<!--          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[1].enable">-->
+<!--            <span class="configs-endpoint logs">{ Logs }</span>-->
+<!--            <div class="endpointConfigsTips" slot="content">-->
+<!--              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[1].config)"></i></span>-->
+<!--              <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>-->
+<!--            </div>-->
+<!--          </el-tooltip>-->
+
+          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable || scope.row.configs[1].enable">
+            <span class="configs-endpoint metrics">[{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]</span>
             <div class="endpointConfigsTips" slot="content">
-              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[0].config)"></i></span>
-              <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>
-            </div>
-          </el-tooltip>
-          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[1].enable">
-            <span class="configs-endpoint logs">{ Logs }</span>
-            <div class="endpointConfigsTips" slot="content">
-              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[1].config)"></i></span>
-              <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>
+              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
+              <pre >{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
             </div>
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]<2">
-            <div>
-              <div v-html="suspendedStr(scope.row[item.prop])"></div>
+<!--          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]<2">-->
+<!--            <div>-->
+<!--              <div v-html="suspendedStr(scope.row[item.prop])"></div>-->
+<!--            </div>-->
+<!--            <div slot="reference" style="width: 100px">-->
+<!--              <div v-if="scope.row[item.prop]===0">-->
+<!--                <div class="active-icon red-bg inline-block"></div> down-->
+<!--              </div>-->
+<!--              <div v-else-if="scope.row[item.prop]===1">-->
+<!--                <div class="active-icon green-bg inline-block"></div> up-->
+<!--              </div>-->
+<!--              <div v-else-if="scope.row[item.prop]">-->
+<!--                <div class="active-icon gray-bg inline-block"></div> suspended-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </el-popover>-->
+          <div>
+            <div class="state-box">
+              <div class="state-box-content" ><span class="state-content-text">Metrics  </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Logs     </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Dc       </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Endpoint </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
+              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
             </div>
-            <div slot="reference" style="width: 100px">
-              <div v-if="scope.row[item.prop]===0">
-                <div class="active-icon red-bg inline-block"></div> down
-              </div>
-              <div v-else-if="scope.row[item.prop]===1">
-                <div class="active-icon green-bg inline-block"></div> up
-              </div>
-              <div v-else-if="scope.row[item.prop]">
-                <div class="active-icon gray-bg inline-block"></div> suspended
-              </div>
-            </div>
-          </el-popover>
+          </div>
         </template>
         <template v-else-if="item.prop === 'enabled'">
           <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
@@ -127,8 +182,12 @@
 
 <script>
 import table from '@/components/common/mixin/table'
+import alertLabel from '../../alert/alertLabel'
 export default {
   name: 'endpointTable',
+  components: {
+    alertLabel
+  },
   mixins: [table],
   props: {
     showOption: {
@@ -198,7 +257,14 @@ export default {
     }
   },
   methods: {
-    copyValue (str) {
+    copyValue (item) {
+      const str = []
+      if (item.configs[0].enabled) {
+        str.push(item.configs[0])
+      }
+      if (item.configs[1].enabled) {
+        str.push(item.configs[1])
+      }
       const domUrl = document.createElement('input')
       domUrl.value = JSON.stringify(str)
       domUrl.id = 'creatDom'
@@ -231,6 +297,26 @@ export default {
         //   str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
         // }
       })
+      return str
+    },
+    // label 鼠标划入
+    labelHover (item, type, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item[type], 'position', position)
+      }
+      this.$set(item[type], 'loading', loading)
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    clConfigs (item) {
+      const str = []
+      if (item.configs[0].enable) {
+        str.push(item.configs[0])
+      }
+      if (item.configs[1].enable) {
+        str.push(item.configs[1])
+      }
       return str
     }
   },
@@ -273,6 +359,26 @@ export default {
   }
   .inline-block{
     display: inline-block;
+  }
+  .pointer{
+    cursor: pointer;
+  }
+  .state-box{
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #E7EAED;
+    border-bottom: none;
+  }
+  .state-box-content{
+    padding: 0 5px;
+    width: 50%;
+    border-bottom: 1px solid #E7EAED;
+  }
+  .state-box-content:nth-of-type(odd){
+    border-right: 1px solid #E7EAED;
+  }
+  .state-content-text{
+    width:64px;text-align:left;margin-right: 5px;display: inline-block
   }
 </style>
 <style>

@@ -596,8 +596,8 @@ export function changeImage (dataImg, callback) {
         // rgb大于250的透明度y均设置成0
         if (
           imageData.data[i] > 0 &&
-                                imageData.data[i + 1] > 0 &&
-                                imageData.data[i + 2] > 0
+          imageData.data[i + 1] > 0 &&
+          imageData.data[i + 2] > 0
         ) {
           imageData.data[i + 3] = 200
         }

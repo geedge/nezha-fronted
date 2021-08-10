@@ -13,6 +13,7 @@
       >
         <template  v-slot:default="slotProps">
           <endpoint-table
+            style="height: calc(100% - 200px)"
             ref="dataTable"
             v-loading="tools.loading"
             :api="url"
@@ -85,28 +86,26 @@ export default {
         pageSize: this.$CONSTANTS.defaultPageSize,
         total: 0
       },
-      mainTableHeight: '100%',
+      mainTableHeight: 'calc(100% - 70px)',
       tableTitle: [
         {
           label: this.$t('project.endpoint.endpointId'),
           prop: 'id',
           show: true,
-          width: 150
+          width: 100
         }, {
           label: this.$t('project.endpoint.asset'),
           prop: 'asset',
-          show: true
+          show: true,
+          width: 150
         }, {
           label: this.$t('project.endpoint.port'),
           prop: 'port',
           show: true
         }, {
-          label: this.$t('project.endpoint.path'),
-          prop: 'path',
-          show: true
-        }, {
           label: this.$t('alert.list.state'),
           prop: 'state',
+          width: 200,
           show: true
         }
       ],
