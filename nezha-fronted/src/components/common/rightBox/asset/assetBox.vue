@@ -55,7 +55,7 @@
               style="width: 100%;"
             ></el-cascader>
           </el-form-item>
-          <el-form-item :label="$t('asset.location')" prop="location">
+          <el-form-item :label="$t('asset.location')" prop="location" class="is-required">
             <location-cascader v-if="!vmLock" ref="locationCascader" :dc-option="options.dcOptions" :default-model-u-size="1" @change="setLocationData"></location-cascader>
             <el-input v-else v-model="lockLocationInputValue" disabled size="small"></el-input>
           </el-form-item>
@@ -350,7 +350,8 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
         location: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          // { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { validator: this.checkLocation, trigger: 'blur' }
         ]
       },
       cabRules: {
@@ -718,6 +719,19 @@ export default {
           resolve()
         })
       })
+    },
+    checkLocation  (rule, value, callback) {
+      setTimeout(() => {
+        if (this.editAsset.cabinetId) {
+          callback()
+        } else if (this.editAsset.dcId) {
+          callback()
+        } else if (this.editAsset.cabinetStart && this.editAsset.cabinetEnd) {
+          callback()
+        } else {
+          callback(new Error(vm.$t('validate.required')))
+        }
+      }, 100)
     }
   }
 }
