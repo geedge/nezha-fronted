@@ -51,9 +51,8 @@
             </ul>
           </el-dropdown>
         </div>
-        <div class="mt-10 table-container" v-cloak  v-show="firstShow || isPreview" :style="isPreview?'height:100%':''">
+        <div class="mt-10 table-container nz-table2" v-cloak  v-show="firstShow || isPreview" :style="isPreview?'height:100%':''">
           <alertMessageTable
-            class="nz-table2"
             :id="'tableContainer'+chartIndex"
             :tableData="storedTableData"
             :loading="loadingTable"
