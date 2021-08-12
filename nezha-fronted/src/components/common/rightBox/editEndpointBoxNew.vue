@@ -1158,6 +1158,7 @@ export default {
         this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
           if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
             this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
+            this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
           }
           if (!this.editEndpoint.name) {
             this.editEndpoint.name = res.data.list[0].name
