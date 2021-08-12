@@ -29,6 +29,21 @@
             <el-input id="account-input-pinChange" v-model="editUser.pinChange"  maxlength="64" placeholder=""
                       show-word-limit size="small" type="password"></el-input>
           </el-form-item>
+          <!--mfaLevel-->
+          <el-form-item :label="$t('config.user.mfaTitle')" label-width="200px" prop="mfaTitle">
+            <el-select id="account-input-mfaLevel"
+                       v-model="editUser.mfaLevel"
+                       class="right-box__select"
+                       clearable
+                       collapse-tags
+                       placeholder=""
+                       popper-class="right-box-select-dropdown prevent-clickoutside"
+                       size="small">
+              <template v-for="item in mfaLevelList">
+                <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
           <!--email-->
           <el-form-item label="E-mail" prop="email">
             <el-input id="account-input-email" v-model="editUser.email" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
@@ -151,7 +166,12 @@ export default {
           { type: 'email', message: this.$t('validate.email') }
         ]
       },
-      roles: []
+      roles: [],
+      mfaLevelList: [
+        { value: 0, label: this.$t('config.user.disable') },
+        { value: 1, label: this.$t('config.user.enableMfa') },
+        { value: 2, label: this.$t('config.user.forceEnable') }
+      ]
     }
   },
   watch: {

@@ -72,7 +72,8 @@ export default {
         roleIds: '',
         roles: [],
         lang: '',
-        notifications: []
+        notifications: [],
+        mfaLevel: 0
       },
       tableId: 'userTable',
       searchMsg: { // 给搜索框子组件传递的信息
@@ -113,6 +114,9 @@ export default {
             roleIds: Number(user.roles.map(item => item.id).join(',')),
             pin: '',
             pinChange: ''
+          }
+          if (!this.object.mfaLevel) {
+            this.object.mfaLevel = 0
           }
           this.rightBox.show = true
         }

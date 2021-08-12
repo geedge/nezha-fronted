@@ -730,7 +730,11 @@ const en = {
       confirmPinErr: 'The two passwords are inconsistent',
       reinputPin: 'Enter password again',
       notification: 'Notification',
-      mobile: 'Mobile'
+      mobile: 'Mobile',
+      disable: 'Disable',
+      enableMfa: 'EnableMfa',
+      forceEnable: 'ForceEnable',
+      mfaTitle: 'Two-Factor Authentication'
     },
     roles: {
       roles: 'Role',

@@ -164,10 +164,10 @@ export default {
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
             // 登录成功，记录用户名、token和lang
-            // res.data.authFlag = 1
+            // res.data.authFlag = 0
             // res.data.authBind = 1
             this.authToken = res.data.token
-            sessionStorage.setItem('nz-token', this.authToken)
+            sessionStorage.setItem('nz-token', res.data.token)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
@@ -176,8 +176,8 @@ export default {
                 this.dialogLoading = true
                 this.$post('mfa/genKey', { authToken: this.authToken }).then(res => {
                   this.$nextTick(() => {
-                    this.authToken = res.data.token
-                    sessionStorage.setItem('nz-token', this.authToken)
+                    this.authToken = res.data.authToken
+                    // sessionStorage.setItem('nz-token', this.authToken)
                     this.authKey = res.data.authKey
                     this.bindQRCode(res.data.otpauth)
                   })
@@ -208,12 +208,17 @@ export default {
         authCode: this.loginData.authCode
       }
       this.$post('mfa/verify', params).then(res => {
-        sessionStorage.setItem('nz-username', this.loginData.username)
-        localStorage.setItem('nz-username', this.loginData.username)
-        localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
-        localStorage.setItem('nz-language', this.lang)
-        this.$i18n.locale = this.lang
-        this.loginSuccess(res)
+        if (res.code === 200) {
+          res.data.token = res.data.authToken
+          sessionStorage.setItem('nz-username', this.loginData.username)
+          localStorage.setItem('nz-username', this.loginData.username)
+          localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
+          localStorage.setItem('nz-language', this.lang)
+          this.$i18n.locale = this.lang
+          this.loginSuccess(res)
+        } else {
+          this.authToken = res.data.authToken
+        }
       })
     },
     changeLang (lang) {
@@ -285,7 +290,7 @@ export default {
     bindCode () {
       this.prevent_opt.save = true
       this.$post('mfa/bind', { authToken: this.authToken, authCode: this.authCode }).then(res => {
-      this.prevent_opt.save = false
+        this.prevent_opt.save = false
         if (res.code === 200) {
           this.authBindShow = false
           this.bindAuthCode = ''

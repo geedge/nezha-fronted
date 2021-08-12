@@ -34,7 +34,13 @@
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
-        <template v-if="item.prop === 'roles'">
+        <template v-if="item.prop === 'name'">
+          <div class="flex-align-center">
+            <span>{{scope.row[item.prop]}}</span>
+            <el-tag size="mini" v-if="mfaEnable || scope.row.mfaLevel > 0" style="margin-left: 5px">Mfa</el-tag>
+          </div>
+        </template>
+        <template v-else-if="item.prop === 'roles'">
           <template v-if="scope.row[item.prop]">
             {{scope.row[item.prop].map(t=>t.name).join(',')}}
           </template>
@@ -135,7 +141,8 @@ export default {
           show: true,
           width: 100
         }
-      ]
+      ],
+      mfaEnable: localStorage.getItem('nz-mfa-enable')
     }
   },
   methods: {
@@ -162,3 +169,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .flex-align-center{
+    display: flex;
+    align-items: center;
+  }
+</style>

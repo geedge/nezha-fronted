@@ -721,7 +721,11 @@ const cn = {
       confirmPinErr: '两次密码输入不一致',
       reinputPin: '请再次输入密码',
       notification: '通知',
-      mobile: '电话'
+      mobile: '电话',
+      disable: '关闭',
+      enableMfa: '开启',
+      forceEnable: '强制开启',
+      mfaTitle: 'Two-Factor Authentication'
     },
     roles: {
       roles: '角色',
