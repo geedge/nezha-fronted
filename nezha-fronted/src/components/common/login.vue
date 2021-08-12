@@ -100,8 +100,8 @@
         </div>
         <div class="login-dialog-title2">
           <div class="login-dialog-recover">
-            <div v-for="(item, index) in this.recoveryCode" :key="index">
-              <i></i>
+            <div v-for="(item, index) in this.recoveryCode" :key="index" style="color: #999999;">
+              <span class="circle"></span>
               {{item}}
             </div>
           </div>
@@ -294,7 +294,7 @@ export default {
         if (res.code === 200) {
           this.authBindShow = false
           this.bindAuthCode = ''
-          this.recoveryCode = [1, 2, 1, 1, 2, 1, 2, 1, 2, 12, 1, 21, 21, 2, 12, 1, 21, 2, 12, 1, 2, 12, 1, 21, 2, 12, 1, 21, 33333, 1, 13]
+          this.recoveryCode = res.data.recoveryCode
           this.fileContent = this.recoveryCode.join(' \n ')
           this.fileShow = true
         } else {
@@ -650,6 +650,14 @@ export default {
   }
   .verify-link:hover{
     border-bottom: 1px solid  #3C92F1;
+  }
+  .circle{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #CECECE;
+    margin-right: 10px;
   }
 </style>
 <style>
