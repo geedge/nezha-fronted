@@ -319,22 +319,9 @@ export default {
     edit (row) {
       this.$get('monitor/endpoint/' + row.id).then(res => {
         this.object = JSON.parse(JSON.stringify(res.data))
-        // this.object.configs = JSON.parse(this.object.configs)
-        // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-        // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
-        const configs = []
         this.object.configs.forEach(item => {
           item.config = JSON.parse(item.config)
-          if (item.type === 'logs') {
-            configs.push(item.config)
-          }
         })
-        this.object.configs[0] = this.object.configs[0].config
-        this.object.configs[1] = {
-          type: 'logs',
-          enable: this.object.configs[1].enable,
-          config: configs
-        }
         this.object.paramObj = []
         this.object.labelModule = []
         this.object.configs[1].config.forEach(item => {
@@ -372,7 +359,6 @@ export default {
             item.unit = ''
           }
         })
-        this.object.configs = [this.object.configs[0], this.object.configs[1]]
         if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
           Object.keys(this.object.configs[0].config.labels).forEach(key => {
             this.object.labelModule.push({ key, value: this.object.configs[0].config.labels[key] })
@@ -431,20 +417,9 @@ export default {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
-            response.data.list[i].status = response.data.list[i].status + ''
-            const configs = []
             response.data.list[i].configs.forEach(item => {
               item.config = JSON.parse(item.config)
-              if (item.type === 'logs') {
-                configs.push(item.config)
-              }
             })
-            response.data.list[i].configs[0] = response.data.list[i].configs[0].config
-            response.data.list[i].configs[1] = {
-              type: 'logs',
-              enable: response.data.list[i].configs[1].enable,
-              config: configs
-            }
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total

@@ -147,7 +147,7 @@ const cn = {
     silenceAlert: '告警静默',
     quickSilent: '快速静默',
     configEndpoint: '配置',
-    generate: '生产'
+    generate: '生产',
   },
   setup: {
     step0: '欢迎',
@@ -229,7 +229,13 @@ const cn = {
   login: {
     username: '登录名',
     pin: '密码',
-    login: '登录'
+    login: '登录',
+    verify: '验证',
+    verifyDialogTitle: 'Two Factor Authentication Set Up',
+    verifyTitle: 'Two-Factor Authentication',
+    verifyContent: 'Enter the code from the two -factor app on your mobile device. If you\' ve lost your device, you may enter one of your recovery codes.',
+    verifyPlaceholder: '验证码',
+    bindFail: '绑定失败'
   },
   dashboard: {
     title: '仪表盘',

@@ -152,7 +152,8 @@ const en = {
     silenceAlert: 'silence alert',
     quickSilent: 'Quick silent',
     configEndpoint: 'Config',
-    generate: 'Generate'
+    generate: 'Generate',
+
   },
   pageSize: '/page',
   setup: {
@@ -236,7 +237,13 @@ const en = {
     username: 'Username',
     pin: 'Password',
     login: 'Login',
-    upload: 'Upload license'
+    upload: 'Upload license',
+    verify: 'Verify code',
+    verifyDialogTitle: 'Two Factor Authentication Set Up',
+    verifyTitle: 'Two-Factor Authentication',
+    verifyContent: 'Enter the code from the two -factor app on your mobile device. If you\' ve lost your device, you may enter one of your recovery codes.',
+    verifyPlaceholder: 'verify code',
+    bindFail: 'Binding failure'
   },
   dashboard: {
     title: 'Dashboard',

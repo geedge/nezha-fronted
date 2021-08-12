@@ -1,55 +1,125 @@
 <template>
   <div class="login" @click="langListShow = false">
     <div class="model"></div>
-    <div class="logo"><img src="../../assets/img/logo-big.png"></div>
-    <div class='login-box'>
-      <div class="login-label"></div>
-      <div class="login-input">
-        <i class="nz-icon nz-icon-user"></i>
-        <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')"></input>
-      </div>
-      <div class="login-label"></div>
-      <div class="login-input">
-        <i class="nz-icon nz-icon-password"></i>
-        <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')"></input>
-      </div>
-      <div class="login-foot">
-        <button id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
-        <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
-          <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
-          <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
-          <i class="nz-icon nz-icon-arrow-down"></i>
+    <div class="login-main">
+      <div class="logo"><img src="../../assets/img/logo-big.png"></div>
+      <div class='login-box'>
+        <div class="login-label"></div>
+        <div class="login-input" v-if="!verifyShow">
+          <i class="nz-icon nz-icon-user"></i>
+          <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')"></input>
         </div>
-        <div class="login-foot-lang-list" v-show="langListShow">
-          <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>
-          <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
+        <div class="login-label"></div>
+        <div class="login-input"  v-if="!verifyShow">
+          <i class="nz-icon nz-icon-password"></i>
+          <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')"></input>
         </div>
-      </div>
-      <div class="login-license">
-        <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
-        <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>
-        <div class="license-upload" v-if="!license.valid">
-          <el-upload
-            ref="upload"
-            accept=".xml"
-            action=""
-            :file-list="uploadFileList"
-            :auto-upload="false"
-            :on-change="handleChange"
+        <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
+        <div class="login-input"  v-if="verifyShow">
+          <i class="nz-icon nz-icon-yanzhengma"></i>
+          <input v-model="loginData.authCode" type="password" name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')"></input>
+        </div>
+        <div class="login-label-foot" v-if="verifyShow">
+          {{$t('login.verifyContent')}}
+        </div>
+        <div class="login-foot">
+          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
+          <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
+          <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
+            <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
+            <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
+            <i class="nz-icon nz-icon-arrow-down"></i>
+          </div>
+          <div class="login-foot-lang-list" v-show="langListShow">
+            <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>
+            <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
+          </div>
+        </div>
+        <div class="login-license">
+          <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
+          <div v-if="!license.valid" class="license-info">INSTALLATION ID:&nbsp;{{license.token}}</div>
+          <div class="license-upload" v-if="!license.valid">
+            <el-upload
+              ref="upload"
+              accept=".xml"
+              action=""
+              :file-list="uploadFileList"
+              :auto-upload="false"
+              :on-change="handleChange"
             >
-            <button type="button" class="login-btn" ><span style="margin-right: 5px"><i class="nz-icon nz-icon-upload"></i></span>{{$t('login.upload')}}</button>
-          </el-upload>
+              <button type="button" class="login-btn" ><span style="margin-right: 5px"><i class="nz-icon nz-icon-upload"></i></span>{{$t('login.upload')}}</button>
+            </el-upload>
+          </div>
         </div>
       </div>
     </div>
     <div class="login-foot-buildOn">
       <span><a target="_blank" rel="noopener noreferrer" href='https://prometheus.io'>Build on Prometheus</a></span>
     </div>
+    <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+               :show-close="true" width="620px" class="nz-dialog" >
+
+      <div v-loading="dialogLoading">
+        <div class="login-dialog-title">
+          1 Download your preferred authenticator app to your phone (any will work). If you don't
+          have a preferred app, we recommend using <span @click="jumpDlw" class="verify-link">Google Authenticator.</span>
+        </div>
+        <div class="login-dialog-title">
+          2 Use your app to take a photo of the QR code.
+        </div>
+        <div class="qrCode-box">
+          <div id="qrCode" ref="qrCodeDiv" class="qrCode-content"></div>
+          <div class="qrCode-text">
+            <div>Type this code down if you can't take a photo.</div>
+            <div class="qrCode-authKey">{{authKey}}</div>
+          </div>
+        </div>
+
+        <div class="login-dialog-title">
+          3. Enter the 6-digit code provided by your app and then verify.
+        </div>
+        <div class="enter-code">Enter Code</div>
+        <el-input v-model="bindAuthCode" size="small" style="width: 50%"></el-input>
+      </div>
+      <div slot="footer" class="footer">
+        <button id="asset-edit-cancel" @click="closeDialog" class="footer__btn footer__btn--light">
+          <span>{{$t('overall.cancel')}}</span>
+        </button>
+        <button id="asset-edit-save" :class="{'footer__btn--disabled': prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="bindCode">
+          <span style="text-transform:capitalize">{{$t('login.verify')}}</span>
+        </button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="fileShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
+               :show-close="true" width="620px" class="nz-dialog" >
+
+      <div>
+        <div class="login-dialog-title">
+          Should you ever lose your phone or access to your one time password secret, each of these recovery codes can be used one time each to regain access to your account.
+          Please save them in a safe place, or you will lose access to your account.
+        </div>
+        <div class="login-dialog-title2">
+          <div class="login-dialog-recover">
+            <div v-for="(item, index) in this.recoveryCode" :key="index">
+              <i></i>
+              {{item}}
+            </div>
+          </div>
+          <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
+        </div>
+      </div>
+      <div slot="footer" class="footer">
+        <button id="asset-edit-download" :class="{'footer__btn--disabled': prevent_opt.save}" :disabled="prevent_opt.save" class="footer__btn" @click="downloadTxt">
+          <span style="text-transform:capitalize">{{$t('overall.download')}}</span>
+        </button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import QRCode from 'qrcodejs2'
 export default {
   name: 'login',
   data () {
@@ -57,7 +127,8 @@ export default {
       loginData: {
         username: '',
         pin: '',
-        remember: false
+        remember: false,
+        authCode: ''
       },
       license: {
         warnInfo: '',
@@ -68,7 +139,17 @@ export default {
       uploadFile: { file: '', path: '', uuid: '' },
       loading: false,
       lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', // en/cn
-      langListShow: false
+      langListShow: false,
+      verifyShow: false,
+      authBindShow: false,
+      authToken: '',
+      QRCode: '',
+      bindAuthCode: '',
+      authKey: '123',
+      dialogLoading: false,
+      fileShow: false,
+      fileContent: '',
+      recoveryCode: []
     }
   },
   methods: {
@@ -83,12 +164,36 @@ export default {
         this.$post('sys/login', this.loginData).then(res => {
           if (res.code == 200) {
             // 登录成功，记录用户名、token和lang
-            sessionStorage.setItem('nz-username', this.loginData.username)
-            localStorage.setItem('nz-username', this.loginData.username)
-            localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
-            localStorage.setItem('nz-language', this.lang)
-            this.$i18n.locale = this.lang
-            this.loginSuccess(res)
+            // res.data.authFlag = 1
+            // res.data.authBind = 1
+            this.authToken = res.data.token
+            sessionStorage.setItem('nz-token', this.authToken)
+            if (res.data.authFlag === 1) {
+              if (res.data.authBind === 0) {
+                this.verifyShow = true
+              } else if (res.data.authBind === 1) {
+                this.authBindShow = true
+                this.dialogLoading = true
+                this.$post('mfa/genKey', { authToken: this.authToken }).then(res => {
+                  this.$nextTick(() => {
+                    this.authToken = res.data.token
+                    sessionStorage.setItem('nz-token', this.authToken)
+                    this.authKey = res.data.authKey
+                    this.bindQRCode(res.data.otpauth)
+                  })
+                })
+                // this.$nextTick(() => {
+                //   this.bindQRCode()
+                // })
+              }
+            } else {
+              sessionStorage.setItem('nz-username', this.loginData.username)
+              localStorage.setItem('nz-username', this.loginData.username)
+              localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
+              localStorage.setItem('nz-language', this.lang)
+              this.$i18n.locale = this.lang
+              this.loginSuccess(res)
+            }
           } else {
             this.$message.error(res.msg)
           }
@@ -96,6 +201,20 @@ export default {
           this.loading = false
         })
       }
+    },
+    verify () {
+      const params = {
+        authToken: this.authToken,
+        authCode: this.loginData.authCode
+      }
+      this.$post('mfa/verify', params).then(res => {
+        sessionStorage.setItem('nz-username', this.loginData.username)
+        localStorage.setItem('nz-username', this.loginData.username)
+        localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
+        localStorage.setItem('nz-language', this.lang)
+        this.$i18n.locale = this.lang
+        this.loginSuccess(res)
+      })
     },
     changeLang (lang) {
       this.lang = lang
@@ -143,6 +262,67 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    bindQRCode: function (text) {
+      text = text || 'https://www.baidu.com'
+      if (!this.QRCode) {
+        this.QRCode = new QRCode(this.$refs.qrCodeDiv, {
+          text: text,
+          width: 124,
+          height: 124,
+          colorDark: '#333333', // 二维码颜色
+          colorLight: '#ffffff', // 二维码背景色
+          correctLevel: QRCode.CorrectLevel.L// 容错率，L/M/H
+        })
+      } else {
+        this.QRCode.makeCode(text)
+      }
+    },
+    closeDialog () {
+      this.authBindShow = false
+      this.bindAuthCode = ''
+    },
+    bindCode () {
+      this.prevent_opt.save = true
+      this.$post('mfa/bind', { authToken: this.authToken, authCode: this.authCode }).then(res => {
+      this.prevent_opt.save = false
+        if (res.code === 200) {
+          this.authBindShow = false
+          this.bindAuthCode = ''
+          this.recoveryCode = [1, 2, 1, 1, 2, 1, 2, 1, 2, 12, 1, 21, 21, 2, 12, 1, 21, 2, 12, 1, 2, 12, 1, 21, 2, 12, 1, 21, 33333, 1, 13]
+          this.fileContent = this.recoveryCode.join(' \n ')
+          this.fileShow = true
+        } else {
+          this.$message.error(this.$t('login.bindFail'))
+        }
+      })
+      // this.authBindShow = false
+      // this.bindAuthCode = ''
+      // this.recoveryCode = [1, 2, 1, 1, 2, 1, 2, 1, 2, 12, 1, 21, 21, 2, 12, 1, 21, 2, 12, 1, 2, 12, 1, 21, 2, 12, 1, 21, 33333, 1, 13]
+      // this.fileContent = this.recoveryCode.join(' \n ')
+      // console.log(this.fileContent)
+      // this.fileShow = true
+    },
+    jumpDlw () {
+      window.open('https://google-authenticator.en.softonic.com/android')
+    },
+    downloadTxt () {
+      const element = document.createElement('a')
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileContent))
+      element.setAttribute('download', 'Recovery codes')
+      element.style.display = 'none'
+      element.click()
+    },
+    copyValue () {
+      const domUrl = document.createElement('input')
+      domUrl.value = this.fileContent
+      domUrl.id = 'creatDom'
+      document.body.appendChild(domUrl)
+      domUrl.select() // 选择对象
+      document.execCommand('Copy') // 执行浏览器复制命令
+      const creatDom = document.getElementById('creatDom')
+      creatDom.parentNode.removeChild(creatDom)
+      this.$message.success(this.$t('overall.copySuccess'))
     }
   },
   watch: {
@@ -195,10 +375,32 @@ export default {
     width: 100%;
   }
 }
-
+.login-main {
+  z-index: 2;
+  background: rgba(106,106,106,0.5);
+  border-radius: 8px;
+  padding: 55px 50px 0px 50px;
+}
 .login-box {
   z-index: 2;
   width: 460px;
+  .login-label{
+    font-family: Roboto-Medium;
+    font-size: 22px;
+    color: #FFFFFF;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  .login-label-foot{
+    font-family: Roboto-Medium;
+    font-size: 14px;
+    color: #DEDEDE;
+    line-height: 20px;
+    font-weight: 500;
+    color: #DEDEDE;
+    word-break: keep-all;
+    width: 90%;
+  }
 }
 
 .login-box .login-input {
@@ -227,7 +429,7 @@ export default {
 }
 
 .login-foot {
-  padding-top: 45px;
+  padding-top: 15px;
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -252,6 +454,9 @@ export default {
 .login-foot-lang {
   position: relative;
   cursor: pointer;
+  background: rgba(0,0,0,0.25);
+  border-radius: 4px;
+  padding: 0 14px;
 }
 .login-foot-lang .nz-icon:not(.nz-icon-arrow-up):not(.nz-icon-arrow-down) {
   font-size: 30px;
@@ -264,7 +469,7 @@ export default {
   height: 25px;
   padding: 12px;
   background-color: rgba(0, 0, 0, 0.55);
-  top: 107px;
+  top: 70px;
   right: 0;
   border-radius: 4px;
 }
@@ -307,7 +512,7 @@ export default {
   font-size: 18px;
   color: white;
   top: 50%;
-  right: 0;
+  right: 8px;
   transform: translateY(-50%);
 }
 .login-license{
@@ -330,6 +535,117 @@ export default {
     padding: 0 20px;
   }
 }
+.login-dialog-title{
+  background: #F9F9F9;
+  font-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 20px;
+  font-weight: 400;
+  padding: 10px;
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+.login-dialog-title2{
+  background: rgba(246,248,250, 0.9);
+  border: 1px solid #E7EAED;
+  border-radius: 2px;
+  height: 248px;
+  padding: 15px;
+  position: relative;
+  .copy-value-content{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+  }
+  .login-dialog-recover{
+  height: calc(100% - 30px);overflow-y: auto
+}
+}
+.enter-code{
+  ont-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+  .qrCode-box{
+    display: flex;
+    align-items: center;
+  }
+  .qrCode-content{
+    padding: 4px;
+    margin-left: 10px;
+  }
+  .qrCode-text{
+    width: 60%;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .qrCode-authKey{
+    background: rgba(246,248,250,09);
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    padding: 5px 12px;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-top: 12px;
+  }
+  .footer {
+    .footer__btn {
+      margin: 0 15px;
+      height: 30px;
+      min-width: 74px;
+      padding: 0 15px;
+      color: white;
+      background-color: var(--theme-color);
+      border: none;
+      border-radius: 4px;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color linear .2s, color linear .1s;
+    }
+    .footer__btn:hover:not(.footer__btn--disabled) {
+      background-color: var(--theme-color-light-20);
+    }
+    .footer__btn--light {
+      background-color: white;
+      border: 1px solid $--primary-border-color;
+      color: #333;
+    }
+    .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
+      background-color: white;
+      border-color: var(--theme-color-light-50);
+      color: var(--theme-color);
+    }
+    .footer__btn--disabled {
+      opacity: .6;
+      cursor: default;
+    }
+  }
+  /deep/ .nz-dialog .el-dialog__body{
+    padding-bottom: 0;
+  }
+  .verify-link{
+    font-family: Roboto-Black;
+    font-size: 14px;
+    color: #3C92F1;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .verify-link:hover{
+    border-bottom: 1px solid  #3C92F1;
+  }
 </style>
 <style>
   .license-upload .el-upload-list{
