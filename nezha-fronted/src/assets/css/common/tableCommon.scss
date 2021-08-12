@@ -184,6 +184,18 @@
       color: $--theme-color;
     }
   }
+  .mt-10.table-container.nz-table2 {
+    .el-table:not(.chart-table) {
+      .gutter {
+        position: fixed;
+        right: 55px;
+        height: 42px;
+        border-bottom: 1px solid $--right-box-border-color;
+        background-color: white;
+        box-sizing: border-box;
+      }
+    }
+  }
   /* 上滑resize工具条--end */
   .nz-table2 {
     position: relative;
@@ -226,7 +238,7 @@
       }
       .gutter {
         position: fixed;
-        right: 59px;
+        right: 31px;
         height: 42px;
         border-bottom: 1px solid $--right-box-border-color;
         background-color: white;

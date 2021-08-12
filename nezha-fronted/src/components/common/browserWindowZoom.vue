@@ -24,6 +24,7 @@ export default {
     // 判断是否执行缩放弹框功能
     if (data != 0) {
       window.addEventListener('resize', this.browserZoom)
+      document.addEventListener('DOMContentLoaded', this.browserZoom)
     }
   },
   beforeDestroy () {
@@ -38,6 +39,7 @@ export default {
       localStorage.setItem('browserZoom', 0)
       // 移除事件
       window.removeEventListener('resize', this.browserZoom)
+      document.removeEventListener('DOMContentLoaded', this.browserZoom)
     },
     browserZoom () {
       // 初始缩放比例
