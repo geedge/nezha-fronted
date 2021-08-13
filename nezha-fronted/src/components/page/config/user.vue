@@ -25,6 +25,7 @@
           :height="mainTableHeight"
           :table-data="tableData"
           @del="del"
+          @reset_mfa="resetMfa"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
@@ -46,7 +47,8 @@ import userBox from '@/components/common/rightBox/administration/userBox'
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import userTable from '@/components/common/table/settings/userTable'
-
+import MessageBox from 'element-ui/packages/message-box/src/main'
+import i18n from '@/components/common/i18n'
 export default {
   name: 'user',
   components: {
@@ -120,6 +122,22 @@ export default {
           }
           this.rightBox.show = true
         }
+      })
+    },
+    resetMfa (row) {
+      MessageBox.confirm(i18n.t('tip.resetMfa'), {
+        confirmButtonText: i18n.t('tip.yes'),
+        cancelButtonText: i18n.t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete('/sys/user/resetMfa', { ids: row.id }).then(res => {
+          if (res.code == 200) {
+            this.$message.success(this.$t('tip.resetSuccess'))
+            this.getTableData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       })
     }
   }

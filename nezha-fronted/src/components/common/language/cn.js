@@ -574,6 +574,7 @@ const cn = {
     confirmOvertime: '确定关闭吗？', // Are you sure you want to delete?
     killTerm: '确认关闭 terminal 吗？',
     resetPrompt: '确认重置吗？',
+    resetMfa: '确认重置2FA吗？',
     confirmBatchDelete: '确定删除这{0}条数据吗？',
     assetConfirmDelete: '关联的Endpoint和告警将会被删除，确认删除吗？',
     zoomStatusPrompt: '您的浏览器目前处于缩放状态，页面可能会出现错位，建议100%大小。',
@@ -725,7 +726,8 @@ const cn = {
       disable: '关闭',
       enableMfa: '开启',
       forceEnable: '强制开启',
-      mfaTitle: 'Two-Factor Authentication'
+      mfaTitle: 'Two-Factor Authentication',
+      resetMfa: '重置2FA'
     },
     roles: {
       roles: '角色',

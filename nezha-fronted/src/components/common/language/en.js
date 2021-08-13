@@ -582,6 +582,7 @@ const en = {
     confirmOvertime: "Are you sure it's off?",
     killTerm: 'Are you sure you want to kill terminal?',
     resetPrompt: 'Are you sure to reset?',
+    resetMfa: 'Are you sure to reset 2FA?',
     confirmBatchDelete: 'Are you sure to delete these {0} pieces of data',
     assetConfirmDelete: 'Related endpoints and alerts will be removed, are you sure you want to delete this asset?', // Related endpoints and alerts will be removed, are you sure you want to delete this asset?
     zoomStatusPrompt: 'Your browser is currently in zoom state, the page may appear dislocation, the proposed 100% size.',
@@ -734,7 +735,8 @@ const en = {
       disable: 'Disable',
       enableMfa: 'Enable',
       forceEnable: 'Force enable',
-      mfaTitle: 'Two-Factor Authentication'
+      mfaTitle: 'Two-Factor Authentication',
+      resetMfa: 'Reset 2FA'
     },
     roles: {
       roles: 'Role',

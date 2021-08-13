@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1628678895024') format('woff2'),
-       url('iconfont.woff?t=1628678895024') format('woff'),
-       url('iconfont.ttf?t=1628678895024') format('truetype');
+  src: url('iconfont.woff2?t=1628837277704') format('woff2'),
+       url('iconfont.woff?t=1628837277704') format('woff'),
+       url('iconfont.ttf?t=1628837277704') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-reset:before {
+  content: "\e618";
 }
 
 .nz-icon-yanzhengma:before {

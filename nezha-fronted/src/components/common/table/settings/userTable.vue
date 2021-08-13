@@ -83,6 +83,7 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-has="'user_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'user_delete'" :command="['delete', scope.row]" :disabled="scope.row.id === 1"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'user_edit'" :command="['reset_mfa', scope.row]"><i class="nz-icon nz-icon-reset"></i><span class="operation-dropdown-text">{{$t('config.user.resetMfa')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -184,12 +185,16 @@ export default {
   /deep/ .el-tag.el-tag--mini{
     border-radius: 10px;
     font-size: 12px;
+    line-height: 12px;
+    height: 12px;
+    vertical-align: middle;
   }
   .user-name-top{
     color: #333;
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
+    vertical-align: middle;
   }
   .user-name-bottom{
     color: #999999;
