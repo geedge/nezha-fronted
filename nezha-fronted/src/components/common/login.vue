@@ -7,17 +7,17 @@
         <div class="login-label"></div>
         <div class="login-input" v-if="!verifyShow">
           <i class="nz-icon nz-icon-user"></i>
-          <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')"></input>
+          <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')" @keydown.enter="login"></input>
         </div>
         <div class="login-label"></div>
         <div class="login-input"  v-if="!verifyShow">
           <i class="nz-icon nz-icon-password"></i>
-          <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')"></input>
+          <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')" @keydown.enter="login"></input>
         </div>
         <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
         <div class="login-input"  v-if="verifyShow">
           <i class="nz-icon nz-icon-yanzhengma"></i>
-          <input v-model="loginData.authCode"  name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')"></input>
+          <input v-model="loginData.authCode"  name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')" @keydown.enter="verify"></input>
         </div>
         <div class="login-label-foot" v-if="verifyShow">
           {{$t('login.verifyContent')}}
@@ -338,11 +338,11 @@ export default {
   mounted () {
     const _this = this
     this.$i18n.locale = this.lang
-    document.onkeydown = function (e) {
-      if (e.key === 'Enter') {
-        _this.login()
-      }
-    }
+    // document.onkeydown = function (e) {
+    //   if (e.key === 'Enter') {
+    //     _this.login()
+    //   }
+    // }
     document.getElementById('usernameInput').focus()
     this.licenseStat()
   }
