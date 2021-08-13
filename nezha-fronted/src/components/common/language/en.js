@@ -732,8 +732,8 @@ const en = {
       notification: 'Notification',
       mobile: 'Mobile',
       disable: 'Disable',
-      enableMfa: 'EnableMfa',
-      forceEnable: 'ForceEnable',
+      enableMfa: 'Enable',
+      forceEnable: 'Force enable',
       mfaTitle: 'Two-Factor Authentication'
     },
     roles: {

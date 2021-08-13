@@ -17,7 +17,7 @@
         <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
         <div class="login-input"  v-if="verifyShow">
           <i class="nz-icon nz-icon-yanzhengma"></i>
-          <input v-model="loginData.authCode" type="password" name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')"></input>
+          <input v-model="loginData.authCode"  name="newPassword" autocomplete="off" :placeholder="$t('login.verifyPlaceholder')"></input>
         </div>
         <div class="login-label-foot" v-if="verifyShow">
           {{$t('login.verifyContent')}}
@@ -145,7 +145,7 @@ export default {
       authToken: '',
       QRCode: '',
       bindAuthCode: '',
-      authKey: '123',
+      authKey: '',
       dialogLoading: false,
       fileShow: false,
       fileContent: '',
@@ -161,30 +161,31 @@ export default {
       // if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
-        this.$post('sys/login', this.loginData).then(res => {
+        this.$post('/sys/login', this.loginData).then(res => {
           if (res.code == 200) {
             // 登录成功，记录用户名、token和lang
-            // res.data.authFlag = 0
-            // res.data.authBind = 1
-            this.authToken = res.data.token
-            sessionStorage.setItem('nz-token', res.data.token)
+            this.authToken = res.data.authToken
+            sessionStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true
               } else if (res.data.authBind === 1) {
                 this.authBindShow = true
                 this.dialogLoading = true
-                this.$post('mfa/genKey', { authToken: this.authToken }).then(res => {
-                  this.$nextTick(() => {
-                    this.authToken = res.data.authToken
-                    // sessionStorage.setItem('nz-token', this.authToken)
-                    this.authKey = res.data.authKey
-                    this.bindQRCode(res.data.otpauth)
-                  })
+                this.$post('/mfa/genkey', { authToken: this.authToken }).then(res => {
+                  this.dialogLoading = false
+                  if (res.code === 200) {
+                    this.$nextTick(() => {
+                      this.authToken = res.data.authToken
+                      this.authKey = res.data.authKey
+                      this.bindQRCode(res.data.otpauth)
+                    })
+                  } else {
+                    this.authBindShow = false
+                    this.dialogLoading = false
+                    this.$message.error(res.message)
+                  }
                 })
-                // this.$nextTick(() => {
-                //   this.bindQRCode()
-                // })
               }
             } else {
               sessionStorage.setItem('nz-username', this.loginData.username)
@@ -207,9 +208,8 @@ export default {
         authToken: this.authToken,
         authCode: this.loginData.authCode
       }
-      this.$post('mfa/verify', params).then(res => {
+      this.$post('/mfa/verify', params).then(res => {
         if (res.code === 200) {
-          res.data.token = res.data.authToken
           sessionStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
@@ -289,7 +289,7 @@ export default {
     },
     bindCode () {
       this.prevent_opt.save = true
-      this.$post('mfa/bind', { authToken: this.authToken, authCode: this.authCode }).then(res => {
+      this.$post('/mfa/bind', { authToken: this.authToken, authCode: this.bindAuthCode }).then(res => {
         this.prevent_opt.save = false
         if (res.code === 200) {
           this.authBindShow = false
@@ -298,15 +298,10 @@ export default {
           this.fileContent = this.recoveryCode.join(' \n ')
           this.fileShow = true
         } else {
+          this.authToken = res.data.authToken
           this.$message.error(this.$t('login.bindFail'))
         }
       })
-      // this.authBindShow = false
-      // this.bindAuthCode = ''
-      // this.recoveryCode = [1, 2, 1, 1, 2, 1, 2, 1, 2, 12, 1, 21, 21, 2, 12, 1, 21, 2, 12, 1, 2, 12, 1, 21, 2, 12, 1, 21, 33333, 1, 13]
-      // this.fileContent = this.recoveryCode.join(' \n ')
-      // console.log(this.fileContent)
-      // this.fileShow = true
     },
     jumpDlw () {
       window.open('https://google-authenticator.en.softonic.com/android')

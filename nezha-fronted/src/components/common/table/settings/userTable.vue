@@ -35,9 +35,14 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <div class="flex-align-center">
-            <span>{{scope.row[item.prop]}}</span>
-            <el-tag size="mini" v-if="mfaEnable || scope.row.mfaLevel > 0" style="margin-left: 5px">Mfa</el-tag>
+          <div>
+            <div class="flex-align-center">
+              <span class="user-name-top">{{scope.row[item.prop]}}</span>
+              <el-tag size="mini" v-if="mfaEnable!='0' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+            </div>
+            <div class="user-name-bottom">
+              @{{scope.row.username}}
+            </div>
           </div>
         </template>
         <template v-else-if="item.prop === 'roles'">
@@ -103,14 +108,16 @@ export default {
           label: this.$t('config.user.name'),
           prop: 'name',
           show: true,
-          width: 150,
+          width: 600,
           sortable: 'custom'
-        }, {
-          label: this.$t('config.user.username'),
-          prop: 'username',
-          show: true,
-          width: 150
-        }, {
+        },
+        // {
+        //   label: this.$t('config.user.username'),
+        //   prop: 'username',
+        //   show: true,
+        //   width: 150
+        // },
+        {
           label: this.$t('config.user.roles'),
           prop: 'roles',
           show: true,
@@ -173,5 +180,20 @@ export default {
   .flex-align-center{
     display: flex;
     align-items: center;
+  }
+  /deep/ .el-tag.el-tag--mini{
+    border-radius: 10px;
+    font-size: 12px;
+  }
+  .user-name-top{
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .user-name-bottom{
+    color: #999999;
+    font-size: 14px;
+    line-height: 14px;
   }
 </style>

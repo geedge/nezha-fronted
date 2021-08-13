@@ -384,11 +384,11 @@
                         <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
                       </el-form-item>
                       <el-form-item
-                        :label="'Timestamp'"
+                        :label="'Format'"
                         :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.timestamp'"
                         :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                       >
-                        <el-input v-model="item2.timestamp" placeholder="key" size="mini"></el-input>
+                        <el-input v-model="item2.format" placeholder="key" size="mini"></el-input>
                       </el-form-item>
                     </div>
                     <div v-if="item2.type === 'labels'">
