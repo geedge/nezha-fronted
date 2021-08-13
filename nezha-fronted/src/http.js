@@ -15,6 +15,14 @@ const licenceErrorCode = [711001]
 // 若get请求的url中带问号，则将url上的参数截取，改为对象形式传参
 axios.interceptors.request.use(
   config => {
+    const url = config.url
+    const index = url.indexOf('/mock')
+    if (index > -1) {
+      let arr = url.split('/mock')
+      arr[0] = 'https://www.fastmock.site/mock/24d362bd12f55ec96f707ee6acad1901/nz-admin'
+      arr = arr.join('')
+      config.url = arr
+    }
     if (config.method === 'get') {
       const url = config.url
       const index = url.indexOf('?')
