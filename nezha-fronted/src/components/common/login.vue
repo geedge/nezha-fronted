@@ -218,6 +218,7 @@ export default {
           this.loginSuccess(res)
         } else {
           this.authToken = res.data.authToken
+          this.$message.error(res.msg)
         }
       })
     },
@@ -309,7 +310,7 @@ export default {
     downloadTxt () {
       const element = document.createElement('a')
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.fileContent))
-      element.setAttribute('download', 'Recovery codes')
+      element.setAttribute('download', 'Nezha recovery codes')
       element.style.display = 'none'
       element.click()
     },
