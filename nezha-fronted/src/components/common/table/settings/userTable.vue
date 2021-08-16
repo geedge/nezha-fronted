@@ -38,7 +38,7 @@
           <div>
             <div class="flex-align-center">
               <span class="user-name-top">{{scope.row[item.prop]}}</span>
-              <el-tag size="mini" v-if="mfaEnable!='0' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+              <el-tag size="mini" v-if="mfaEnable == '1' || scope.row.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
             </div>
             <div class="user-name-bottom">
               @{{scope.row.username}}

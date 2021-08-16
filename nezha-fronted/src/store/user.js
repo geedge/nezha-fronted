@@ -50,7 +50,7 @@ const user = {
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
       localStorage.setItem('nz-sys-asset-ping-switch', res.data.assetPingSwitch)
       localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
-      localStorage.setItem('nz-mfa-enable', res.data.mfaAuthEnable)
+      localStorage.setItem('nz-mfa-enable', res.data.mfaAuthEnable ? 1 : 0)
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
         store.commit('setMenuList', menuList)

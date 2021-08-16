@@ -468,6 +468,7 @@ export default {
         { key: 'Logs', value: 'logs', name: 'Logs' }
       ]
       this.titleSearchList.state.show = true
+      this.titleSearchList.type.show = true
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {

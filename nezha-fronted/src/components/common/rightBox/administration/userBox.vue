@@ -78,7 +78,7 @@
           </el-form-item>
 
           <el-form-item v-if="editUser.id" :label="$t('config.user.createTime')">
-            <div class="right-box-form-content-txt">{{editUser.createAt}}</div>
+            <div class="right-box-form-content-txt">{{utcTimeToTimezoneStr(editUser.createAt)}}</div>
           </el-form-item>
 
         </el-form>

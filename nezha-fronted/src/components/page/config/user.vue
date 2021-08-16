@@ -112,7 +112,6 @@ export default {
           this.object = {
             ...user,
             status: user.status + '',
-            createAt: this.utcTimeToTimezoneStr(user.createAt),
             roleIds: Number(user.roles.map(item => item.id).join(',')),
             pin: '',
             pinChange: ''
