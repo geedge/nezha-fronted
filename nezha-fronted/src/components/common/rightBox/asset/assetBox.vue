@@ -223,25 +223,39 @@
             </el-form-item>
           </template>
           <!-- TALON -->
-          <template v-if="editAsset.type && editAsset.type.clientEnable === 1">
-            <div class="el-form__sub-title">TALON
-              <el-popover
-                placement="right"
-                trigger="hover"
-                content="This is a prompt text">
-                <i slot="reference" class="nz-icon nz-icon-about"></i>
-              </el-popover>
+          <template>
+            <div class="el-form__sub-title">
+              <div>
+                <span class="endpoint-title-content">
+                  <i class="nz-icon nz-icon-arrow-down" :class="talonShowTow?'':'is-active'" @click="talonShowTow = !talonShowTow"></i>
+                  TALON
+                </span>
+                <el-popover
+                  placement="right"
+                  trigger="hover"
+                  content="This is a prompt text">
+                  <i slot="reference" class="nz-icon nz-icon-about"></i>
+                </el-popover>
+              </div>
+              <el-switch v-model="talonShow" active-color="#ee9d3f" size="small"></el-switch>
             </div>
-            <el-form-item :label="$t('asset.userName')" prop="clientUser">
-              <el-input maxlength="64" show-word-limit v-model="editAsset.clientUser" size="small"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.pin')" prop="clientPin">
-              <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
-            </el-form-item>
-            <el-form-item :label="$t('asset.port')" prop="clientPort">
-              <el-input v-model="editAsset.clientPort" size="small"/>
-            </el-form-item>
             <transition name="el-zoom-in-top">
+             <!-- <el-form-item :label="$t('asset.userName')" prop="clientUser">
+              <el-input maxlength="64" show-word-limit v-model="editAsset.clientUser" size="small"/>
+              </el-form-item>
+              <el-form-item :label="$t('asset.pin')" prop="clientPin">
+                <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
+              </el-form-item> -->
+              <div v-if="talonShow" v-show="talonShowTow">
+                <el-form-item label="Token" prop="clientToken">
+                  <el-input v-model="editAsset.clientToken" size="small"/>
+                </el-form-item>
+                <el-form-item :label="$t('asset.port')" prop="clientPort">
+                  <el-input v-model="editAsset.clientPort" size="small"/>
+                </el-form-item>
+              </div>
+            </transition>
+            <!-- <transition name="el-zoom-in-top">
               <div v-show="showAllTalonOption">
                 <el-form-item :label="$t('asset.address')" prop="clientAddress">
                   <el-input v-model="editAsset.clientAddress" size="small"/>
@@ -254,7 +268,7 @@
                   {{$t('overall.moreOption')}}<i class="nz-icon nz-icon-arrow-down"></i>
                 </span>
               </div>
-            </template>
+            </template> -->
           </template>
         </el-form>
       </div>
@@ -295,6 +309,8 @@ export default {
       assetConstants,
       showAllTalonOption: false,
       showAddressOption: true,
+      talonShow: true,
+      talonShowTow: true,
       editAsset: {},
       url: 'asset/asset',
       rightBox: { model: { show: false } },
@@ -352,6 +368,12 @@ export default {
         location: [
           // { required: true, message: this.$t('validate.required'), trigger: 'blur' }
           { validator: this.checkLocation, trigger: 'blur' }
+        ],
+        clientToken: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+        ],
+        clientPort: [
+          { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ]
       },
       cabRules: {
@@ -743,13 +765,38 @@ export default {
     color: #606266 !important;
   }
   .el-form__sub-title {
-    background-color: #F6F6F6;
+    border: 1px solid #E7EAED;
+    color: #555;
     font-size: 14px;
-    font-weight: bold;
     padding: 0 10px;
     line-height: 32px;
-    color: #555;
     margin: 0 0 20px;
+    display: flex;
+    justify-content: space-between;
+    .el-switch {
+      line-height: 32px;
+      height: 32px;
+    }
+    .nz-icon-arrow-down{
+      display: inline-block;
+      transition: transform .3s;
+      color: #BDBDBD;
+      font-size: 12px;
+    }
+    .nz-icon-arrow-down.is-active{
+      transform: rotate(
+          -90deg
+      );
+    }
+  }
+  .need-rotate.nz-icon-arrow-down{
+    display: inline-block;
+    transition: transform .3s;
+  }
+  .need-rotate.nz-icon-arrow-down.is-active{
+    transform: rotate(
+        -180deg
+    );
   }
   .nz-btn-size-normal-new.nz-btn-style-light-new {
     font-size: 12px;
