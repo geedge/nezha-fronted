@@ -329,37 +329,43 @@
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expression'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.expression" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.expression" placeholder="" size="mini"></el-input>
                         </el-form-item>
                         <el-form-item
                           :label="'Source'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.source" placeholder="" size="mini"></el-input>
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'json'">
                         <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Expressions</label>
-                        <div v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
+                        <div  v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                           <el-form-item
-                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex"
+                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.key'"
                             :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
-                            style="width: 90%;margin: 0"
+                            style="width: 45%;margin: 0"
                           >
-                            <el-input v-model="item2.expressions[eindex]" placeholder="key" size="mini"></el-input>
+                            <el-input v-model="item2.expressions[eindex].key" placeholder="key" size="mini" ></el-input>
                           </el-form-item>
-                          <span style="display: inline-block;width: 10%">
-                        <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
-                        <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
-                      </span>
+                          =
+                          <el-form-item
+                            :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.value'"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            style="width: 45%;margin: 0"
+                          >
+                            <el-input v-model="item2.expressions[eindex].value" placeholder="value" size="mini" ></el-input>
+                          </el-form-item>
+                          <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
+                          <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
                         </div>
                         <el-form-item
                           :label="'Source'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.source" placeholder="" size="mini"></el-input>
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'template'">
@@ -368,14 +374,14 @@
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.source" placeholder="" size="mini"></el-input>
                         </el-form-item>
                         <el-form-item
                           :label="'Template'"
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.template'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.template" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.template" placeholder="" size="mini"></el-input>
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'timestamp'">
@@ -388,10 +394,13 @@
                         </el-form-item>
                         <el-form-item
                           :label="'Format'"
-                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.timestamp'"
+                          :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.format'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.format" placeholder="key" size="mini"></el-input>
+<!--                          <el-input v-model="item2.format" placeholder="key" size="mini"></el-input>-->
+                          <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                            <el-option v-for="item in timestampList" :id="'module-timestamp-'+item" :key="item" :label="item" :value="item"></el-option>
+                          </el-select>
                         </el-form-item>
                       </div>
                       <div v-if="item2.type === 'labels'">
@@ -410,7 +419,7 @@
                             :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                             style="width: 45%;margin: 0"
                           >
-                            <el-input v-model="item2.labels[eindex].value" placeholder="key" size="mini" ></el-input>
+                            <el-input v-model="item2.labels[eindex].value" placeholder="value" size="mini" ></el-input>
                           </el-form-item>
                           <i class="nz-icon nz-icon-plus" @click="addPipelineItem(index, index2)"></i>
                           <i class="nz-icon nz-icon-shanchu1" @click="delPipelineItem((index, index2, eindex))"></i>
@@ -422,7 +431,7 @@
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.source'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
-                          <el-input v-model="item2.source" placeholder="key" size="mini"></el-input>
+                          <el-input v-model="item2.source" placeholder="source" size="mini"></el-input>
                         </el-form-item>
                       </div>
                     </div>
@@ -643,6 +652,7 @@ export default {
             }
           ]
         }],
+      timestampList: ['ANSIC', 'UnixDate', 'RubyDate', 'RFC822', 'RFC822Z', 'RFC850', 'RFC1123', 'RFC1123Z', 'RFC3339', 'RFC3339Nano', 'Unix', 'UnixMs', 'UnixUs', 'UnixNs'],
       metricsShow: true,
       logsShow: true
     }
@@ -782,6 +792,9 @@ export default {
           item.pipeline && item.pipeline.forEach((pipeline) => {
             if (pipeline.type === 'labels') {
               pipeline.labels = this.labelsToJson(pipeline.labels)
+            }
+            if (pipeline.type === 'json') {
+              pipeline.expressions = this.labelsToJson(pipeline.expressions)
             }
           })
           if (item.type === 'file') {
@@ -1120,18 +1133,33 @@ export default {
       if (val === 'regex') {
         this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expression.push('')
       } else if (val === 'json') {
-        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push(
+          {
+            key: '',
+            value: ''
+          }
+        )
       } else if (val === 'template') {
         this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
       } else if (val === 'timestamp') {
-        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push(
+          {
+            key: '',
+            value: ''
+          }
+        )
       } else if (val === 'labels') {
         this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].labels.push({
           key: '',
           value: ''
         })
       } else if (val === 'output') {
-        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push('')
+        this.editEndpoint.configs[1].config[logsIndex].pipeline[pipelineIndex].expressions.push(
+          {
+            key: '',
+            value: ''
+          }
+        )
       }
     },
     delPipelineItem (logsIndex, pipelineIndex, itemIndex) {
@@ -1159,6 +1187,68 @@ export default {
           if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
             this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
             this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
+            this.editEndpoint.configs[1].config.forEach(item => {
+              item.labelModule = []
+              if (JSON.stringify(item.labels) !== '{}' && item.labels) {
+                Object.keys(item.labels).forEach(key => {
+                  item.labelModule.push({ key, value: item.labels[key] })
+                })
+              } else {
+                item.labelModule.push({ key: '', value: '' })
+              }
+              item.pipeline && item.pipeline.forEach((pipeline) => {
+                if (pipeline.type === 'labels') {
+                  const labelsArr = []
+                  if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
+                    Object.keys(pipeline.labels).forEach(key => {
+                      labelsArr.push({ key, value: pipeline.labels[key] })
+                    })
+                  } else {
+                    labelsArr.push({ key: '', value: '' })
+                  }
+                  pipeline.labels = labelsArr
+                }
+                if (pipeline.type === 'json') {
+                  const expressionsArr = []
+                  if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
+                    Object.keys(pipeline.expressions).forEach(key => {
+                      expressionsArr.push({ key, value: pipeline.expressions[key] })
+                    })
+                  } else {
+                    expressionsArr.push({ key: '', value: '' })
+                  }
+                  pipeline.expressions = expressionsArr
+                }
+              })
+              if (item.type === 'file') {
+                item.unit = ''
+                item.appName = ''
+                item.listenAddress = ''
+              } else if (item.type === 'journal') {
+                item.fileName = ''
+                item.appName = ''
+                item.listenAddress = ''
+              } else if (item.type === 'syslog') {
+                item.fileName = ''
+                item.unit = ''
+              }
+            })
+            this.editEndpoint.paramObj = []
+            this.editEndpoint.labelModule = []
+            if (JSON.stringify(this.editEndpoint.configs[0].config.labels) !== '{}' && this.editEndpoint.configs[0].config.labels) {
+              Object.keys(this.editEndpoint.configs[0].config.labels).forEach(key => {
+                this.editEndpoint.labelModule.push({ key, value: this.editEndpoint.configs[0].config.labels[key] })
+              })
+            } else {
+              this.editEndpoint.labelModule.push({ key: '', value: '' })
+            }
+            if (JSON.stringify(this.editEndpoint.configs[0].config.params) !== '{}' && this.editEndpoint.configs[0].config.params) {
+              Object.keys(this.editEndpoint.configs[0].config.params).forEach(key => {
+                this.editEndpoint.paramObj.push({ key, value: this.editEndpoint.configs[0].config.params[key] })
+              })
+            } else {
+              this.editEndpoint.paramObj.push({ key: '', value: [] })
+            }
           }
           if (!this.editEndpoint.name) {
             this.editEndpoint.name = res.data.list[0].name
@@ -1246,6 +1336,14 @@ export default {
               item.labels = this.labelsToJson(item.labelModule)
               delete item.labelModule
             }
+            item.pipeline && item.pipeline.forEach((pipeline) => {
+              if (pipeline.type === 'labels') {
+                pipeline.labels = this.labelsToJson(pipeline.labels)
+              }
+              if (pipeline.type === 'json') {
+                pipeline.expressions = this.labelsToJson(pipeline.expressions)
+              }
+            })
             if (item.type === 'file') {
               delete item.unit
               delete item.appName

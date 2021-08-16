@@ -220,6 +220,17 @@ export default {
                 }
                 pipeline.labels = labelsArr
               }
+              if (pipeline.type === 'json') {
+                const expressionsArr = []
+                if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
+                  Object.keys(pipeline.expressions).forEach(key => {
+                    expressionsArr.push({ key, value: pipeline.expressions[key] })
+                  })
+                } else {
+                  expressionsArr.push({ key: '', value: '' })
+                }
+                pipeline.expressions = expressionsArr
+              }
             })
             if (item.type === 'file') {
               item.unit = ''

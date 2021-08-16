@@ -131,7 +131,12 @@ export default {
       } else if (val === 'json') {
         obj = {
           type: 'json',
-          expressions: [''],
+          expressions: [
+            {
+              key: '',
+              value: ''
+            }
+          ],
           source: ''
         }
       } else if (val === 'template') {
