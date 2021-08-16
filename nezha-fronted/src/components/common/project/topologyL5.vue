@@ -849,13 +849,24 @@ export default {
               Promise.all(promiseArr).then(res => {
                 res.forEach((response, index) => {
                   const item = data.pens[index]
-                  if (item.type === 0) {
+                  if (item.type === 0 && item.data.state) {
                     item.data.state.error = item.data.error = !res[index].data.list[0].state
                     item.data.state.asset = !!res[index].data.list[0].asset
                     item.data.state.alert = !!res[index].data.list[0].alert
                     item.data.state.endpoint = !!res[index].data.list[0].endpoint
+                  } else {
+                    item.data.state = {
+                      error: false,
+                      asset: 0,
+                      alert: 0,
+                      endpoint: 0
+                    }
                   }
                 })
+                self.saveData = { ...data }
+                resolve(data)
+                clearInterval(timer)
+              }).catch(res => {
                 self.saveData = { ...data }
                 resolve(data)
                 clearInterval(timer)
