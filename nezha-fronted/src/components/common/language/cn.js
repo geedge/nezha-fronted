@@ -1000,7 +1000,29 @@ const cn = {
         sysLogo: '系统Logo',
         scrapeTimeout: '指标抓取超时',
         snmpTrapPort: 'SNMP trap端口',
-        logoTip: 'Logo支持格式为jpg、jpeg、png且大小小于2M的图片'
+        logoTip: 'Logo支持格式为jpg、jpeg、png且大小小于2M的图片',
+        mfa: 'Mfa auth enable'
+      },
+      monitor: {
+        monitor: '监控',
+        alertApi: 'Alert api',
+        prometheusFederation: 'Prometheus federation',
+        asset_ping_from: 'Asset ping from',
+        metrics_storage_retention: '指标存储天数',
+        metrics_storage_type: '指标存储模式',
+        metrics_storage_s3_endpoint: '指标 s3 endpoint',
+        metrics_storage_s3_bucket: '指标 s3 bucket',
+        metrics_storage_s3_access_key: '指标 s3 access',
+        metrics_storage_s3_secret_access_key: '指标 s3 secret access',
+        logs_storage_retention: '日志存储天数',
+        logs_storage_type: '日志存储模式',
+        logs_storage_s3_endpoint: '日志 s3 endpoint',
+        logs_storage_s3_bucket: '日志 s3 bucket',
+        logs_storage_s3_access_key: '日志 s3 access',
+        logs_storage_s3_secret_access_key: '日志 s3 secret access',
+        logs_query_range_default_limit: '日志查询最大条数',
+        local: '本地文件存储',
+        s3: 'S3对象存储'
       },
       email: {
         email: '邮件',
