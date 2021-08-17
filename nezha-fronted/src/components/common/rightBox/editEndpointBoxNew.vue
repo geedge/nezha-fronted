@@ -851,15 +851,16 @@ export default {
                 })
               } else if (this.optionType === 'batchAdd') {
                 this.prevent_opt.save = true
-                this.$emit('close', true, this.editEndpoint, false)
+                params.configs = JSON.parse(params.configs)
+                this.$emit('close', true, params, false)
                 this.prevent_opt.save = false
               } else if (this.optionType === 'batch') {
                 this.prevent_opt.save = true
                 if (this.editEndpoint.assetId) {
-                  this.$emit('close', true, this.editEndpoint, false)
+                  this.$emit('close', true, params, false)
                   this.prevent_opt.save = false
                 } else {
-                  this.$emit('close', true, this.editEndpoint, true)
+                  this.$emit('close', true, params, true)
                   this.prevent_opt.save = false
                 }
               } else if (this.optionType === 'edit') {

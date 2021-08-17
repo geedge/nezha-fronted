@@ -283,7 +283,8 @@ export default {
           show: true,
           width: 150
         }
-      ]
+      ],
+      endpointIndex: ''
     }
   },
   methods: {
@@ -383,7 +384,7 @@ export default {
       this.rightBox.show = false
       if (!isEdit) { return }
       this.batchEndpoint.tableData.forEach((item, index) => {
-        if (item.id === endpoint.id) {
+        if (index === this.endpointIndex) {
           this.batchEndpoint.tableData[index] = { ...endpoint }
         }
       })
@@ -392,7 +393,8 @@ export default {
     del (index) {
       this.batchEndpoint.tableData.splice(index, 1)
     },
-    edit (row) {
+    edit (row, endpointIndex) {
+      this.endpointIndex = endpointIndex
       this.object = row
       // this.object.configs = JSON.parse(this.object.configs)
       this.object.projectId = this.object.project.id
@@ -422,6 +424,17 @@ export default {
               labelsArr.push({ key: '', value: '' })
             }
             pipeline.labels = labelsArr
+          }
+          if (pipeline.type === 'json') {
+            const expressionsArr = []
+            if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
+              Object.keys(pipeline.expressions).forEach(key => {
+                expressionsArr.push({ key, value: pipeline.expressions[key] })
+              })
+            } else {
+              expressionsArr.push({ key: '', value: '' })
+            }
+            pipeline.expressions = expressionsArr
           }
         })
         if (!item.pipeline) {
