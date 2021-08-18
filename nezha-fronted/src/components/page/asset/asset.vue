@@ -149,6 +149,7 @@ export default {
         brandAndModel: [],
         typeId: '',
         clientPort: '10092',
+        clientToken: '',
         authProtocolPort: '',
         authType: '',
         authUsername: '',

@@ -246,7 +246,7 @@
               <el-form-item :label="$t('asset.pin')" prop="clientPin">
                 <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
               </el-form-item> -->
-              <div v-if="talonShow" v-show="talonShowTow">
+              <div v-if="editAsset.clientEnable === 1 || talonShow" v-show="talonShowTow">
                 <el-form-item label="Token" prop="clientToken">
                   <el-input v-model="editAsset.clientToken" size="small"/>
                 </el-form-item>
@@ -309,8 +309,8 @@ export default {
       assetConstants,
       showAllTalonOption: false,
       showAddressOption: true,
-      talonShow: true,
       talonShowTow: true,
+      talonShow: true,
       editAsset: {},
       url: 'asset/asset',
       rightBox: { model: { show: false } },
