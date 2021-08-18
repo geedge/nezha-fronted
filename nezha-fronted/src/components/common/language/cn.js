@@ -148,6 +148,9 @@ const cn = {
     quickSilent: '快速静默',
     configEndpoint: '配置',
     generate: '生产',
+    personalCenter: '个人中心',
+    operationRecord: '操作记录',
+    changePassword: '修改密码'
   },
   setup: {
     step0: '欢迎',
@@ -1722,6 +1725,22 @@ const cn = {
     apikey: {
       apiKey: 'Api Key'
     }
+  },
+  profile: {
+    close: '关闭',
+    update: '更新',
+    operationRecord: '操作记录',
+    changePassword: '修改密码',
+    oldPassword: '旧密码',
+    newPassword: '新密码',
+    confirmPassword: '确认密码',
+    lastLoginIp: '最后登录IP',
+    lastLoginTime: '最后登录时间',
+    role: 'Role',
+    email: 'Email',
+    mobile: 'Mobile',
+    source: 'Source',
+    towFactorAuthentication: 'Tow-Factor Authentication'
   },
   ...zhLocale
 }

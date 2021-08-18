@@ -153,7 +153,9 @@ const en = {
     quickSilent: 'Quick silent',
     configEndpoint: 'Config',
     generate: 'Generate',
-
+    personalCenter: 'Personal center',
+    operationRecord: 'Operation record',
+    changePassword: 'Change password'
   },
   pageSize: '/page',
   setup: {
@@ -1604,6 +1606,22 @@ const en = {
     apikey: {
       apiKey: 'Api Key'
     }
+  },
+  profile: {
+    close: 'Close',
+    update: 'Update',
+    operationRecord: 'Operation record',
+    changePassword: 'Change password',
+    oldPassword: 'Old password',
+    newPassword: 'New password',
+    confirmPassword: 'Confirm password',
+    lastLoginIp: 'Last login Ip',
+    lastLoginTime: 'Last login time',
+    role: 'Role',
+    email: 'Email',
+    mobile: 'Mobile',
+    source: 'Source',
+    towFactorAuthentication: 'Tow-Factor Authentication'
   },
   ...enLocale
 }
