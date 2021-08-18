@@ -9,7 +9,7 @@ import VueResource from 'vue-resource'
 Vue.use(VueResource)
 
 const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state'] // 免登陆白名单
-const permissionWhiteList = ['/menu', ...loginWhiteList] // 权限白名单
+const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
 
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') { // 拦截登录页面，系统初始化检查

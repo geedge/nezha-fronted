@@ -1630,6 +1630,7 @@ const en = {
     }
   },
   profile: {
+    profile: 'Profile',
     close: 'Close',
     update: 'Update',
     operationRecord: 'Operation record',

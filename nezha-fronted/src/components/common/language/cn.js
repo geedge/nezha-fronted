@@ -1749,6 +1749,7 @@ const cn = {
     }
   },
   profile: {
+    profile: '个人中心',
     close: '关闭',
     update: '更新',
     operationRecord: '操作记录',

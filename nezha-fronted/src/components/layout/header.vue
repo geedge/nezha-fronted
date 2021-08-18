@@ -47,7 +47,7 @@
         <div class='login-user header-menu--item'>{{username}}&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <div id="header-to-changepin" @click="showPinDialog">{{$t('overall.changePin')}}</div>
+            <div id="header-to-changepin" @click="showPinDialog">{{$t('overall.personalCenter')}}</div>
           </el-dropdown-item>
           <el-dropdown-item>
             <div id="header-to-logout" @click="logout">{{$t('overall.signOut')}}</div>
@@ -55,7 +55,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>
+<!--    <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>-->
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
   </div>
 </template>
@@ -63,12 +63,12 @@
 <script>
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
-import changePin from '../page/config/changePin'
+// import changePin from '../page/config/changePin'
 import guide from '@/components/common/popBox/guide'
 export default {
   name: 'Header',
   components: {
-    'change-password': changePin,
+    // 'change-password': changePin,
     guide
   },
   data () {
@@ -158,7 +158,13 @@ export default {
       })
     },
     showPinDialog () {
-      this.showChangePin = true
+      // this.showChangePin = true
+      this.$router.push({
+        path: '/profile',
+        query: {
+          t: +new Date()
+        }
+      })
     },
     dialogClosed () {
       this.showChangePin = false
@@ -200,24 +206,42 @@ export default {
       return this.$route.path
     },
     breadcrumb () {
-      const vm = this
-      const menuList = this.$store.getters.menuList
-      const breadcrumb = []
-      getBreadCrumb(menuList, breadcrumb)
-      function getBreadCrumb (list, crumb) {
-        for (let i = 0; i < list.length; i++) {
-          if (list[i].route === vm.$route.path) {
-            crumb.unshift(list[i])
-            return true
-          } else {
-            if (getBreadCrumb(list[i].children, crumb)) {
+      if (this.$route.path === '/profile') {
+        return [
+          {
+            code: 'profile',
+            i18n: 'profile.profile',
+            icon: '',
+            id: 2,
+            name: 'profile',
+            orderNum: 1,
+            parentId: 1,
+            perms: '',
+            required: '',
+            route: '/profile',
+            type: 1
+          }
+        ]
+      } else {
+        const vm = this
+        const menuList = this.$store.getters.menuList
+        const breadcrumb = []
+        getBreadCrumb(menuList, breadcrumb)
+        function getBreadCrumb (list, crumb) {
+          for (let i = 0; i < list.length; i++) {
+            if (list[i].route === vm.$route.path) {
               crumb.unshift(list[i])
               return true
+            } else {
+              if (getBreadCrumb(list[i].children, crumb)) {
+                crumb.unshift(list[i])
+                return true
+              }
             }
           }
         }
+        return breadcrumb
       }
-      return breadcrumb
     },
     isShrink () {
       return this.$store.getters.getIsShrink

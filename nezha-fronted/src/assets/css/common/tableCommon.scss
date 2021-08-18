@@ -363,6 +363,11 @@
     width: calc(100% - 20px);
   }
 }
+.profile {
+  .main-list {
+    height: calc(100% - 14px);
+  }
+}
 .operation-dropdown-text {
   display: inline-block;
   font-size: 13px;

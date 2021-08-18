@@ -99,6 +99,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/about.vue'], resolve)
         },
         {
+          path: '/profile',
+          component: resolve => require(['../components/page/config/profile.vue'], resolve)
+        },
+        {
           path: '/mib/:tab',
           component: resolve => require(['../components/page/config/snmp.vue'], resolve)
         },
