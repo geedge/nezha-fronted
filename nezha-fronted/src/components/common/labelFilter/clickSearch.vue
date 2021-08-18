@@ -196,7 +196,7 @@ export default {
         if (item.inputWidth !== oldInputWidth) {
           this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = `${item.inputWidth}px`
           this.$nextTick(() => {
-            this.needMore(type, item)
+            this.needMore(type, item, true)
           })
         }
 
@@ -268,7 +268,7 @@ export default {
     casFocus (item, isFocus, e) {
       this.$set(item, 'isFocus', isFocus)
     },
-    needMore (type, item) {
+    needMore (type, item, expand) {
       const contentWidth = this.$refs.searchContentBox[0].offsetWidth - 210
       // 窗口尺寸没改变，则只重排当前type
       if (type && contentWidth === this.contentWidth) {
@@ -280,11 +280,12 @@ export default {
             if (this.titleSearchListCopy[type].width > this.contentWidth) {
               showMore = true
               this.titleSearchListCopy[type].index = i
+              expand && (this.titleSearchListCopy[type].showMore = true)
             }
           }
         })
         if (!showMore) {
-          this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length - 1
+          this.titleSearchListCopy[type].index = this.titleSearchListCopy[type].children.length
         }
       } else { // 全体重排
         this.contentWidth = contentWidth
@@ -315,9 +316,10 @@ export default {
       width = html.offsetWidth
       return width
     },
-    changShowMore (key) {
-      this.titleSearchListCopy[key].showMore = !this.titleSearchListCopy[key].showMore
-    }
+    changShowMore (type) {
+      this.titleSearchListCopy[type].showMore = !this.titleSearchListCopy[type].showMore
+    },
+
   },
   destroyed () {
     window.removeEventListener('resize', this.needMore)
