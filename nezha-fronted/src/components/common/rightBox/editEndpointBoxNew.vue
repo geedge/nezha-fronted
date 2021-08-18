@@ -40,9 +40,26 @@
           </el-form-item>
           <!--asset-->
           <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetId" v-if="!disabled">
-            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+<!--            <el-select id="module-box-input-asset"  @change="renderEndpoint" v-model="editEndpoint.assetId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">-->
+<!--              <el-option v-for="item in assetList" :id="'asset-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>-->
+<!--            </el-select>-->
+            <v-selectpage
+              :data="assetList"
+              :tb-columns="columns"
+              :params="{
+                varType: 2, panelId: 0,
+                returnChildren:0,groupId:0,
+              }"
+              @values="renderEndpoint"
+              :multiple="false"
+              :language="language"
+              title="ChartSearch"
+              key-field="id"
+              show-field="name"
+              v-model="editEndpoint.assetId"
+              class="form-control"
+              :result-format="resultFormat"
+            ></v-selectpage>
           </el-form-item>
           <el-form-item :label='$t("project.module.asset")' label-width="125px" prop="assetName" v-if="disabled">
             <el-input id="module-box-input-assetName" v-model="editEndpoint.assetName" :disabled="disabled"   placeholder="" show-word-limit size="small"></el-input>
@@ -228,16 +245,16 @@
 
                 <!--authtype 1-->
                 <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
-                  <el-input id="module-box-input-uername" v-model.number="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
+                  <el-input id="module-box-input-uername" v-model="editEndpoint.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
-                  <el-input id="module-box-input-password" v-model.number="editEndpoint.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
+                  <el-input id="module-box-input-password" v-model="editEndpoint.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
                 </el-form-item>
 
                 <!--authtype 2-->
                 <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
-                  <el-input id="module-box-input-bearer_token" v-model.number="editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
+                  <el-input id="module-box-input-bearer_token" v-model="editEndpoint.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
                 </el-form-item>
 
               </el-tab-pane>
@@ -652,6 +669,37 @@ export default {
             }
           ]
         }],
+      columns: [
+        { title: 'id', data: 'id' },
+        {
+          title: 'name',
+          data: function (row) {
+            if (row.name.length > 15) {
+              return row.name.substring(0, 12) + '...'
+            }
+            return row.name
+          }
+        },
+        { title: 'Manage Ip', data: 'manageIp' },
+        {
+          title: 'Type',
+          data: (row) => {
+            return row.type ? row.type.name : ''
+          }
+        },
+        {
+          title: 'Model',
+          data: (row) => {
+            return row.model ? row.model.name : ''
+          }
+        },
+        {
+          title: 'Datacenter',
+          data: (row) => {
+            return row.dc ? row.dc.name : ''
+          }
+        }
+      ],
       timestampList: ['ANSIC', 'UnixDate', 'RubyDate', 'RFC822', 'RFC822Z', 'RFC850', 'RFC1123', 'RFC1123Z', 'RFC3339', 'RFC3339Nano', 'Unix', 'UnixMs', 'UnixUs', 'UnixNs'],
       metricsShow: true,
       logsShow: true

@@ -21,36 +21,10 @@
             <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
               <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.curUrl')" prop="alert_api">
-              <el-input id="system-baisc-alert_api" v-model="basic.alert_api"></el-input>
-            </el-form-item>
             <el-form-item :label="$t('config.system.basic.sessionTimeout')" prop="session_timeout">
               <el-input v-model.number="basic.session_timeout" >
                 <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
               </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
-              <el-input v-model.number="basic.asset_ping_interval" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
-              <el-input v-model.number="basic.default_scrape_interval" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.scrapeTimeout')" prop="default_scrape_timeout">
-              <el-input v-model.number="basic.default_scrape_timeout" >
-                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.storageRetention')" prop="storage_local_retention" style="width:458px;">
-              <el-input v-model.number="basic.storage_local_retention" id="system-baisc-storage_local_retention">
-                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.maxSeries')" prop="storage_local_retention">
-              <el-input-number v-model="basic.query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-baisc-query_max_series"></el-input-number>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
               <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
@@ -73,7 +47,11 @@
               <el-input v-model="basic.snmp_trap_listen_port"   id="system-baisc-snmp_trap_listen_port"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
-              <el-switch v-model.number="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
+              <el-switch v-model="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
+              </el-switch>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.mfa')" prop="mfa_auth_enable">
+              <el-switch v-model="basic.mfa_auth_enable" active-color="rgb(238, 157, 63)"  :active-value='"1"' :inactive-value='"0"' id="system-baisc-mfs_change">
               </el-switch>
             </el-form-item>
             <el-form-item>
@@ -85,6 +63,111 @@
             </el-form-item>
           </el-form>
         </div >
+      </el-tab-pane>
+      <el-tab-pane :label="$t('config.system.monitor.monitor')" name="monitor">
+        <div class="system-config-form basicForm" v-if="activeTab === 'monitor'">
+          <el-form :model="monitor"  label-width="208px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
+            <el-form-item :label="$t('config.system.monitor.alertApi')" prop="asset_ping_interval">
+              <el-input v-model="monitor.alert_api" id="monitor-alert-api"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
+              <el-switch v-model="monitor.prometheus_federation_enabled " active-color="rgb(238, 157, 63)"  active-value='1' inactive-value='0' id="system-monitor-prometheus_federation_enabled">
+              </el-switch>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.scrapeInterval')" prop="default_scrape_interval">
+              <el-input v-model.number="monitor.default_scrape_interval" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.scrapeTimeout')" prop="default_scrape_timeout">
+              <el-input v-model.number="monitor.default_scrape_timeout" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.assetPingInterval')" prop="asset_ping_interval">
+              <el-input v-model.number="monitor.asset_ping_interval" >
+                <template slot="append"><span >{{$t('config.system.basic.second')}}</span></template>
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.asset_ping_from')" prop="asset_ping_from">
+              <el-select v-model="monitor.asset_ping_from">
+                <el-option label="Global" value="1"></el-option>
+                <el-option label="Per-datacenter" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <!--metrics-->
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="metrics_storage_retention">
+              <el-input v-model.number="monitor.metrics_storage_retention" id="monitor-metrics_storage_retention">
+                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_type')" prop="metrics_storage_type">
+              <el-select v-model="monitor.metrics_storage_type">
+                <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
+                <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.metrics_storage_s3_endpoint" id="monitor-metrics_storage_s3_endpoint">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="metrics_storage_s3_bucket" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.metrics_storage_s3_bucket" id="monitor-metrics_storage_s3_bucket">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="metrics_storage_s3_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.maxSeries')" prop="metrics_query_max_series">
+              <el-input-number v-model="monitor.metrics_query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-monitor-metrics_query_max_series"></el-input-number>
+            </el-form-item>
+
+            <!--logs-->
+            <el-form-item :label="$t('config.system.monitor.logs_storage_retention')" prop="logs_storage_retention">
+              <el-input v-model.number="monitor.logs_storage_retention" id="monitor-logs_storage_retention">
+                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_storage_type')" prop="logs_storage_type">
+              <el-select v-model="monitor.logs_storage_type">
+                <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
+                <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key">
+              </el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.monitor.logs_query_range_default_limit')" prop="logs_query_range_default_limit">
+              <el-input-number v-model="monitor.logs_query_range_default_limit" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-monitor-logs_query_range_default_limit"></el-input-number>
+            </el-form-item>
+
+            <el-form-item>
+              <!--              <button-->
+              <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"-->
+              <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
+              <!--              >{{$t('overall.reset')}}</button>-->
+              <button id="system-monitor-save" @click="saveSetInfo('monitor','monitorForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+            </el-form-item>
+          </el-form>
+        </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="activeTab === 'email'">
@@ -300,6 +383,42 @@ export default {
         email_test_account: '',
         email_security_type: 'NONE'
       },
+      monitor: {
+        alert_api: '',
+        asset_ping_from: '',
+        asset_ping_interval: '',
+        default_scrape_interval: '',
+        default_scrape_timeout: '',
+        logs_query_range_default_limit: '',
+        logs_storage_retention: '',
+        logs_storage_s3_access_key: '',
+        logs_storage_s3_bucket: '',
+        logs_storage_s3_endpoint: '',
+        logs_storage_s3_secret_access_key: '',
+        logs_storage_type: '',
+        metrics_query_max_series: '',
+        metrics_storage_retention: '',
+        metrics_storage_s3_access_key: '',
+        metrics_storage_s3_bucket: '',
+        metrics_storage_s3_endpoint: '',
+        metrics_storage_s3_secret_access_key: '',
+        metrics_storage_type: '',
+        prometheus_federation_enabled: ''
+      },
+      monitorRules: {
+        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        asset_ping_from: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        default_scrape_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        logs_query_range_default_limit: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        logs_storage_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        logs_storage_type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        metrics_query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        metrics_storage_retention: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        metrics_storage_type: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        prometheus_federation_enabled: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+      },
       emailCopy: null,
       emailRules: {
         email_host: [
@@ -436,6 +555,9 @@ export default {
           if (type == 'email') {
             this.email.email_auth_password = ''
             this.$refs.emailForm.clearValidate()
+          }
+          if (type == 'monitor') {
+
           }
           this[type + 'Copy'] = Object.assign({}, this[type])
         }

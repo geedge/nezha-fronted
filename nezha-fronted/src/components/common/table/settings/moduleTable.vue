@@ -104,11 +104,6 @@ export default {
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.type'),
-          prop: 'type',
-          show: false,
-          width: 200
-        }, {
           label: this.$t('project.project.projectName'),
           prop: 'project',
           show: true,
