@@ -1,6 +1,6 @@
 /*列表table通用样式*/
 .list-page {
-  height: 100%;
+  height: calc(100%);
   width: 100%;
   box-sizing: border-box;
   background-color: #f6f6f6;
@@ -365,7 +365,10 @@
 }
 .profile {
   .main-list {
-    height: calc(100% - 14px);
+    height: calc(100% + 7ncpx);
+  }
+  .top-tools {
+    padding: 0 20px 14px 20px;
   }
 }
 .operation-dropdown-text {

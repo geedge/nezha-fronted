@@ -1751,6 +1751,7 @@ const cn = {
   profile: {
     profile: '个人中心',
     close: '关闭',
+    enable: '启用',
     update: '更新',
     operationRecord: '操作记录',
     changePassword: '修改密码',

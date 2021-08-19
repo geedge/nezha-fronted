@@ -213,7 +213,7 @@ export default {
             i18n: 'profile.profile',
             icon: '',
             id: 2,
-            name: 'profile',
+            name: 'Personal center',
             orderNum: 1,
             parentId: 1,
             perms: '',

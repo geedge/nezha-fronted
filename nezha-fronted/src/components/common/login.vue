@@ -120,6 +120,7 @@
 <script>
 import { mapActions } from 'vuex'
 import QRCode from 'qrcodejs2'
+import bus from '@/libs/bus.js'
 export default {
   name: 'login',
   data () {
@@ -324,6 +325,12 @@ export default {
       const creatDom = document.getElementById('creatDom')
       creatDom.parentNode.removeChild(creatDom)
       this.$message.success(this.$t('overall.copySuccess'))
+    },
+    initEvent () {
+      bus.$on('profile-dialog', () => {
+        this.authBindShow = true
+        console.log(1)
+      })
     }
   },
   watch: {
@@ -345,6 +352,7 @@ export default {
     // }
     document.getElementById('usernameInput').focus()
     this.licenseStat()
+    this.initEvent()
   }
 }
 </script>

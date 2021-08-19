@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('./font/iconfont.woff2?t=1629166963964') format('woff2'),
-  url('./font/iconfont.woff?t=1629166963964') format('woff'),
-  url('./font/iconfont.ttf?t=1629166963964') format('truetype');
+  src: url('./font/iconfont.woff2?t=1629339873183') format('woff2'),
+  url('./font/iconfont.woff?t=1629339873183') format('woff'),
+  url('./font/iconfont.ttf?t=1629339873183') format('truetype');
 }
 
 .nz-icon {

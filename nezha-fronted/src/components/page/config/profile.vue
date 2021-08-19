@@ -7,14 +7,15 @@
         </div>
         <div class="profile-left__header-username">
           <div>{{userList.username}}<span class="profile-left__header-username__span">2FA</span></div>
-          <div>{{userList.name}}</div>
+          <div>@{{userList.name}}</div>
         </div>
       </div>
       <div v-for="item in tableProfile" :key="item.id" class="profile-left__center">
         <span style="margin:0 18px 0 0"><i :class="item.icon"></i></span>
         <div class="profile-left__center-title">
           <div>{{item.label}}</div>
-          <div>{{item.prop}}</div>
+          <div v-if="item.prop">{{item.prop}}</div>
+          <div v-if="item.prop === null || ''">-</div>
         </div>
       </div>
      <div class="profile-left__center">
@@ -24,10 +25,22 @@
        </div>
      </div>
       <div class="profile-left__button table-operation-items">
-        <el-button @click="profileDisable" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item--disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" :disabled="this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable == 1" class="profile-left__button-footer__btn footer__btns table-operation-item">
+<!--        <el-button v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? true : false" size="small" class="profile-left__button-footer__btn footer__btns">-->
+<!--          <span>{{$t('profile.enable')}}</span>-->
+<!--        </el-button>-->
+<!--        <el-button @click="profileDisable" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item&#45;&#45;disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" :disabled="this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable == 1" class="profile-left__button-footer__btn footer__btns table-operation-item">-->
+<!--          <span>{{$t('profile.close')}}</span>-->
+<!--        </el-button>-->
+<!--        <el-button @click="profileMfaLevel" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item&#45;&#45;disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" class="profile-left__button-footer__btn footer__btn table-operation-item">-->
+<!--          <span>{{$t('profile.update')}}</span>-->
+<!--        </el-button>-->
+        <el-button @click="profileEnable" size="small" class="profile-left__button-footer__btn footer__btns">
+          <span>{{$t('profile.enable')}}</span>
+        </el-button>
+        <el-button @click="profileDisable" size="small" class="profile-left__button-footer__btn footer__btns table-operation-item">
           <span>{{$t('profile.close')}}</span>
         </el-button>
-        <el-button @click="profileMfaLevel" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item--disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" class="profile-left__button-footer__btn footer__btn table-operation-item">
+        <el-button @click="profileMfaLevel" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item">
           <span>{{$t('profile.update')}}</span>
         </el-button>
       </div>
@@ -49,6 +62,7 @@
 
 <script>
 import operationRecord from './operationRecord'
+import bus from '@/libs/bus.js'
 
 export default {
   name: 'profile',
@@ -64,25 +78,25 @@ export default {
           id: 1,
           label: this.$t('profile.role'),
           prop: '',
-          icon: 'nz-icon nz-icon-overview-alert'
+          icon: 'nz-icon nz-icon-role profile-role'
         },
         {
           id: 2,
           label: this.$t('profile.email'),
           prop: '',
-          icon: 'nz-icon nz-icon-overview-alert'
+          icon: 'nz-icon nz-icon-email profile-email'
         },
         {
           id: 3,
           label: this.$t('profile.mobile'),
           prop: '',
-          icon: 'nz-icon nz-icon-overview-alert'
+          icon: 'nz-icon nz-icon-mobile profile-mobile'
         },
         {
           id: 4,
           label: this.$t('profile.source'),
           prop: '',
-          icon: 'nz-icon nz-icon-overview-alert'
+          icon: 'nz-icon nz-icon-laiyuan profile-laiyuan'
         }
       ],
       // 后台数据
@@ -113,8 +127,8 @@ export default {
             this.tableProfile[0].prop = this.userList.roles[0].i18n
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
+            console.log(this.tableProfile[2].prop)
             this.tableProfile[3].prop = this.userList.source
-            console.log(this.userList)
           }
           resolve()
         })
@@ -122,12 +136,23 @@ export default {
     },
     profileMfaLevel () {
       return new Promise(resolve => {
+        this.$post('/mfa/genkey').then(response => {
+          if (response.code === 200) {
+            console.log(bus.$emit('profile-dialog'))
+          }
+          resolve()
+        })
+      })
+    },
+    profileEnable () {
+      return new Promise(resolve => {
         const mfaLevelList = {
           mfaLevel: 1
         }
-        this.$post('/mfa/genKey', mfaLevelList).then(response => {
+        this.$post('/mfa/genkey', mfaLevelList).then(response => {
           if (response.code === 200) {
-            console.log(response)
+            bus.$emit('profile-dialog')
+            console.log(bus.$emit('profile-dialog'))
           }
           resolve()
         })
@@ -165,12 +190,13 @@ export default {
       margin: 10px 0;
       text-align: center;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       .profile-left__header-img {
         height: 80px;
         width: 80px;
         line-height: 80px;
+        margin-left: 20px;
         span {
           display: inline-block;
           background: rgba(60,146,241,0.10);
@@ -196,11 +222,11 @@ export default {
           letter-spacing: 0;
           line-height: 22px;
           font-weight: 500;
-          padding: 15px 0 13px 0;
+          padding: 12px 0 10px 0;
         }
         div:nth-of-type(2) {
           font-family: Roboto-Regular;
-          font-size: 14px;
+          font-size: 18px;
           color: #666666;
           letter-spacing: 0;
           line-height: 22px;
@@ -212,12 +238,12 @@ export default {
           width: 42px;
           height: 24px;
           margin-left: 10px;
-          background: #ECF5FE;
-          border: 1px solid rgba(135,192,255,0.56);
-          border-radius: 2px;
+          background-color: #ecf5ff;
+          border-color: #d9ecff;
+          border-radius: 10px;
           font-family: Roboto-Regular;
           font-size: 14px;
-          color: #3C92F1;
+          color: #409EFF;
           letter-spacing: 0;
           font-weight: 400;
         }
@@ -231,8 +257,21 @@ export default {
       /*border: 1px solid red;*/
       display: flex;
       justify-content: flex-start;
+      .profile-role {
+        color: #00C398;
+      }
+      .profile-email {
+        color: #0093F8;
+      }
+      .profile-mobile {
+        color: #EC7F66;
+      }
+      .profile-laiyuan {
+        color: #8871DB;
+      }
       .profile-left__center-title {
         margin-left: 8px;
+        margin-top: 1px;
         div:nth-of-type(1) {
           padding-bottom: 5px;
           ont-family: Roboto-Regular;

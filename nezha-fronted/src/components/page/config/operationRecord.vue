@@ -126,10 +126,10 @@ export default {
     position: relative;
     .profile-right__tabs-active {
       margin-right: 40px;
-      margin-top: 26px;
       margin-left: -2px;
-      height: 35px;
+      padding-top: 25px;
       font-size: 14px;
+      height: 30px;
       color: #666666;
       letter-spacing: 0;
       font-weight: 400;
@@ -148,10 +148,10 @@ export default {
   }
   .profile-hr {
     position: absolute;
-    top: 75px;
+    top: 55px;
     width: calc(100% - 40px);
     height: 2px;
-    background-color: #E7EAED;
+    background-color: #eceef0;
   }
 }
 </style>
