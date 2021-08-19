@@ -6,7 +6,14 @@
           <span>{{username.substr(0, 1)}}</span>
         </div>
         <div class="profile-left__header-username">
-          <div>{{userList.username}}<span class="profile-left__header-username__span">2FA</span></div>
+          <el-popover
+            placement="right-start"
+            width="200"
+            trigger="hover"
+            :content="userList.username">
+            <div slot="reference">{{userList.username}}<span class="profile-left__header-username__span">2FA</span></div>
+          </el-popover>
+
           <div>@{{userList.name}}</div>
         </div>
       </div>
@@ -215,18 +222,18 @@ export default {
         height: 80px;
         padding-left: 15px;
         text-align: left;
-        width: 200px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
         div:nth-of-type(1) {
           font-family: Roboto-Medium;
+          width: 200px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
           font-size: 18px;
           color: #333333;
           letter-spacing: 0;
           line-height: 22px;
           font-weight: 500;
-          padding: 12px 0 10px 0;
+          padding: 10px 0 8px 0;
         }
         div:nth-of-type(2) {
           font-family: Roboto-Regular;
