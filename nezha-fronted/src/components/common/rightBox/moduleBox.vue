@@ -1529,6 +1529,9 @@ export default {
   #module-box-relabel /deep/ .vue-tags-input{
     max-width: unset;
   }
+  /deep/ .is-error .vue-tags-input{
+    border: 1px solid #F56C6C;
+  }
   .pipeline-box{
     display: flex;
     justify-content: space-between;
