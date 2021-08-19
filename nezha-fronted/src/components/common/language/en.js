@@ -153,7 +153,7 @@ const en = {
     quickSilent: 'Quick silent',
     configEndpoint: 'Config',
     generate: 'Generate',
-    personalCenter: 'Personal center',
+    personalCenter: 'Profile',
     operationRecord: 'Operation record',
     changePassword: 'Change password'
   },
@@ -1634,7 +1634,7 @@ const en = {
     close: 'Close',
     enable: 'Enable',
     update: 'Update',
-    operationRecord: 'Operation record',
+    operationRecord: 'Operation log',
     changePassword: 'Change password',
     oldPassword: 'Old password',
     newPassword: 'New password',
@@ -1645,7 +1645,7 @@ const en = {
     email: 'Email',
     mobile: 'Mobile',
     source: 'Source',
-    towFactorAuthentication: 'Tow-Factor Authentication'
+    twoFactorAuthentication: 'Two-Factor Authentication'
   },
   ...enLocale
 }

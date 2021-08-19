@@ -21,7 +21,7 @@
      <div class="profile-left__center">
        <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-zhongzhi2FA" style="color: orange"></i></span>
        <div class="profile-left__center-title">
-         <div>{{$t('profile.towFactorAuthentication')}}</div>
+         <div>{{$t('profile.twoFactorAuthentication')}}</div>
        </div>
      </div>
       <div class="profile-left__button table-operation-items">
@@ -127,8 +127,8 @@ export default {
             this.tableProfile[0].prop = this.userList.roles[0].i18n
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
-            console.log(this.tableProfile[2].prop)
             this.tableProfile[3].prop = this.userList.source
+            localStorage.setItem('nz-user-id', this.userList.id)
           }
           resolve()
         })
@@ -215,6 +215,10 @@ export default {
         height: 80px;
         padding-left: 15px;
         text-align: left;
+        width: 200px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         div:nth-of-type(1) {
           font-family: Roboto-Medium;
           font-size: 18px;
@@ -237,6 +241,7 @@ export default {
           text-align: center;
           width: 42px;
           height: 24px;
+          line-height: 25px;
           margin-left: 10px;
           background-color: #ecf5ff;
           border-color: #d9ecff;
