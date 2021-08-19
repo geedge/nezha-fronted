@@ -170,6 +170,14 @@ export function checkExprTempAge (rule, value, callback) {
   }, 100)
 }
 
+export function arrLength (rule, value, callback) { // 校验经纬度
+  if (value.length > 0) {
+    callback()
+  } else {
+    callback(new Error(vm.$t('validate.required')))
+  }
+}
+
 export function longAndLat (rule, value, callback) { // 校验经纬度
 
 }

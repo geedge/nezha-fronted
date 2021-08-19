@@ -114,6 +114,16 @@ export default {
               scrape_timeout: '',
               params: '',
               labels: '',
+              relabel_config: [
+                // {
+                //   source_labels: [],
+                //   target_label: '',
+                //   action: 'replace',
+                //   regex: '',
+                //   replacement: '',
+                //   showAllRelabelOption: false
+                // }
+              ],
               basic_auth: {
                 username: '',
                 pin: ''
@@ -199,6 +209,13 @@ export default {
           // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
           this.object.labelModule = []
+          if (!this.object.configs[0].config.relabel_config) {
+            this.object.configs[0].config.relabel_config = []
+          }
+          this.object.configs[0].config.relabel_config && this.object.configs[0].config.relabel_config.forEach(item => {
+            item.showAllRelabelOption = false
+            item.tags = ''
+          })
           this.object.configs[1].config.forEach(item => {
             item.labelModule = []
             if (JSON.stringify(item.labels) !== '{}' && item.labels) {

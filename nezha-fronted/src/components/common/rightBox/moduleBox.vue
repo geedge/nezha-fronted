@@ -96,7 +96,7 @@
               <!--port-->
               <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
                 { validator: port, trigger: 'blur' },
-                { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+                { required: true, message: $t('validate.required'), trigger: 'blur' }
               ]">
                 <el-input id="module-box-input-port" v-model.number="editModule.configs[0].config.port" placeholder="" size="small"></el-input>
               </el-form-item>
@@ -107,7 +107,7 @@
                 </el-select>
               </el-form-item>
               <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
               </el-form-item>
               <!-- snmp表单 -->
@@ -117,7 +117,7 @@
                     <div class="sub-label sub-label-required" style="padding-left: 0">{{$t('project.module.walk')}}</div>
                   </el-col>
                   <el-col :span="24">
-                    <el-form-item prop="configs.0.config.walk" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+                    <el-form-item prop="configs.0.config.walk" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                       <select-walk ref="selectWalk" :currentWalk="editModule.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk">
                         <template v-slot:trigger>
                           <div class="el-cascader">
@@ -147,6 +147,7 @@
                 </el-select>
               </el-form-item>
           </div>
+<!--              more option-->
               <transition name="el-zoom-in-top">
                 <div v-show="showAllBasicOption" >
                   <!--scrape_interval-->
@@ -215,6 +216,61 @@
               </span>
               </div>
             </el-tab-pane>
+             <el-tab-pane label="Relabel" name="Relabel">
+                <div id="module-box-relabel" ref="labelBoxScrollbar" style="height: 100%; overflow: hidden;">
+                  <div v-for="(item, index) in  this.editModule.configs[0].config.relabel_config" :key="index" class="">
+                    <div class="pipeline-box">
+                      <span class="pipeline-title">{{'item' + index}}</span>
+                      <span class="pipeline-option">
+                      <i class="nz-icon nz-icon-shanchu1" @click="removeRelabel(index)"></i>
+                    </span>
+                    </div>
+                   <div>
+                     <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.source_labels'" class="" :label="'Source labels'"  :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },{ validator:  arrLength, trigger: 'change' }]">
+                       <vue-tags-input
+                         v-model="item.tags"
+                         :maxlength="32"
+                         :placeholder="'add parameter'"
+                         :tags="item.source_labels"
+                         @tags-changed="(newTags)=>{tagsChangeRelabel(newTags, index)}"
+                       />
+                     </el-form-item>
+                     <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="half-form-item" :label="'Action'">
+                       <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                         <el-option v-for="item2 in actionList" :id="'module-action-'+item2.label" :key="item2.label" :label="item2.label" :value="item2.value"></el-option>
+                       </el-select>
+                     </el-form-item>
+                     <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.target_label'" class="half-form-item" :label="'Target label'" :rules="[{ required: item.action === 'replace', message: $t('validate.required'), trigger: 'blur' },{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]">
+                       <el-input id="module-box-input-target_label" v-model="item.target_label" placeholder='' size="small"></el-input>
+                     </el-form-item>
+                   </div>
+<!--                    <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeRelabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>-->
+                    <transition name="el-zoom-in-top">
+                      <div v-show="item.showAllRelabelOption" >
+                        <!--Regex-->
+                        <el-form-item :label='"Regex"' class="half-form-item" :prop="'configs.0.config.relabel_config.' + index + '.regex'">
+                          <el-input id="module-box-input-regex" v-model="item.regex" :placeholder="$t('overall.relabelConfigRegex')" size="small"></el-input>
+                        </el-form-item>
+                        <!--replacement-->
+                        <el-form-item :label='"Replacement"' class="half-form-item" :prop="'configs.0.config.relabel_config.' + index + '.replacement'">
+                          <el-input id="module-box-input-replacement" v-model="item.replacement" :placeholder="$t('overall.relabelConfigReplacement')" size="small"></el-input>
+                        </el-form-item>
+                      </div>
+                    </transition>
+                    <div style="text-align: center">
+                  <span class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="item.showAllRelabelOption=!item.showAllRelabelOption">
+                    {{$t('overall.moreOption')}}
+                    <i :class="item.showAllRelabelOption?'is-active':''" class="nz-icon nz-icon-arrow-down need-rotate" ></i>
+                  </span>
+                    </div>
+                  </div>
+                </div>
+                <div style="text-align: center">
+                 <span id="module-add-relabel" class="right-box-form-add module-add-label margin-t-10" type="button" @click="addRelabel">
+                   <span><i class="nz-icon nz-icon-plus" style="font-size: 16px;"></i></span>
+                 </span>
+                </div>
+              </el-tab-pane>
             <el-tab-pane v-if="editModule.configs[0].config.protocol !== 'snmp'" label="Auth" name="Auth">
               <!--authtype-->
               <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
@@ -224,16 +280,16 @@
               </el-form-item>
 
               <!--authtype 1-->
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.username")' class="half-form-item" prop="configs.0.config.basic_auth.username" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-uername" v-model="editModule.configs[0].config.basic_auth.username" placeholder='' size="small"></el-input>
               </el-form-item>
 
-              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 1" :label='$t("project.endpoint.pin")' class="half-form-item" prop="configs.0.config.basic_auth.pin" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-password" v-model="editModule.configs[0].config.basic_auth.pin" type="password" autocomplete="new-password" placeholder='' size="small"></el-input>
               </el-form-item>
 
               <!--authtype 2-->
-              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]">
+              <el-form-item v-if="authType === 2" :label='$t("project.endpoint.bearer_token")' prop="configs.0.config.bearer_token" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
                 <el-input id="module-box-input-bearer_token" v-model="editModule.configs[0].config.bearer_token" placeholder='' size="small"></el-input>
               </el-form-item>
 
@@ -480,7 +536,7 @@
 </template>
 
 <script>
-import { noSpecialChar, port, nzNumber } from '../js/validate'
+import { noSpecialChar, port, nzNumber , arrLength} from '../js/validate'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import pipelineSelect from './pipelineSelect'
@@ -640,12 +696,32 @@ export default {
           ]
         }],
       timestampList: ['ANSIC', 'UnixDate', 'RubyDate', 'RFC822', 'RFC822Z', 'RFC850', 'RFC1123', 'RFC1123Z', 'RFC3339', 'RFC3339Nano', 'Unix', 'UnixMs', 'UnixUs', 'UnixNs'],
+      actionList: [{
+        value: 'replace',
+        label: 'Replace'
+      }, {
+        value: 'keep',
+        label: 'Keep'
+      }, {
+        value: 'drop',
+        label: 'Drop'
+      }, {
+        value: 'labelmap',
+        label: 'Labelmap'
+      }, {
+        value: 'labeldrop',
+        label: 'Labeldrop'
+      }, {
+        value: 'labelkeep',
+        label: 'Labelkeep'
+      }],
       metricsShow: true,
       logsShow: true
     }
   },
   methods: {
     port: port,
+    arrLength: arrLength,
     selectWalk (walk) {
       if (this.editModule.configs[0].config.walk.indexOf(walk) != -1) {
         this.editModule.configs[0].config.walk.splice(this.editModule.configs[0].config.walk.indexOf(walk), 1)
@@ -787,6 +863,10 @@ export default {
             delete item.unit
           }
         })
+        params.configs[0].config.relabel_config.relabel_config && params.configs[0].config.relabel_config.forEach(item => {
+          delete item.tags
+          delete item.showAllRelabelOption
+        })
         params.configs = JSON.stringify(params.configs)
         this.$refs.moduleForm.validate((valid, errorKey) => {
           let key = Object.keys(errorKey)
@@ -796,8 +876,10 @@ export default {
               const keyArr = key.split('.')
               if (keyArr[3] === 'basic_auth' || keyArr[3] === 'bearer_token') {
                 this.activeName = 'Auth'
-              } else if (keyArr[3] === 'basic' || keyArr[3] === 'port') {
+              } else if (keyArr[3] === 'basic' || keyArr[3] === 'port' || keyArr[3] === 'host') {
                 this.activeName = 'Basic'
+              } else {
+                this.activeName = 'Relabel'
               }
             } else if (key.indexOf('configs.1') !== -1) {
               const keyArr = key.split('.')
@@ -917,8 +999,39 @@ export default {
       }
       this.editModule.configs[1].config[logsIndex].labelModule.splice(i, 1)
     },
+    actionChange () {
+      this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.target_label')
+    },
+    addRelabel () {
+      this.editModule.configs[0].config.relabel_config.push({
+        source_labels: [],
+        target_label: '',
+        action: 'replace',
+        regex: '(.*)',
+        replacement: '$1',
+        showAllRelabelOption: false
+      })
+    },
+    removeRelabel (index) {
+      // if (this.editModule.configs[0].config.relabel_config.length === 1) {
+      //   this.editModule.configs[0].config.relabel_config = [{
+      //     source_labels: [],
+      //     target_label: '',
+      //     action: '',
+      //     regex: '',
+      //     replacement: '',
+      //     showAllRelabelOption: false
+      //   }]
+      //   return
+      // }
+      this.editModule.configs[0].config.relabel_config.splice(index, 1)
+    },
     tagsChange (newTags, index) {
       this.editModule.paramObj[index].value = newTags.map(item => item.text)
+    },
+    tagsChangeRelabel (newTags, index) {
+      this.editModule.configs[0].config.relabel_config[index].source_labels = newTags.map(item => item.text)
+      this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.source_labels')
     },
     // 将param转为json字符串格式
     paramToJson (param) {
@@ -1193,6 +1306,10 @@ export default {
           if (params[0].config.labels && !Object.keys(params[0].config.labels).length) {
             delete params[0].config.labels
           }
+          params[0].config.relabel_config && params[0].config.relabel_config.forEach(item => {
+            delete item.tags
+            delete item.showAllRelabelOption
+          })
           params[1].config.forEach(item => {
             if (item.labelModule) {
               item.labels = this.labelsToJson(item.labelModule)
@@ -1408,6 +1525,12 @@ export default {
     line-height: 24px;
     color: #FA901C;
     box-sizing: border-box;
+  }
+  #module-box-relabel /deep/ .vue-tags-input{
+    max-width: unset;
+  }
+  /deep/ .is-error .vue-tags-input{
+    border: 1px solid #F56C6C;
   }
   .pipeline-box{
     display: flex;

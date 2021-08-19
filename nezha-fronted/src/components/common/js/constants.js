@@ -18,11 +18,11 @@ export const agent = {
           value: 2,
           text: 'Per-datacenter'
         },
-        {
-          label: 'Loki',
-          value: 11,
-          text: 'Loki'
-        }
+        // {
+        //   label: 'Loki',
+        //   value: 11,
+        //   text: 'Loki'
+        // }
       ]
     },
     {
@@ -70,12 +70,12 @@ export const agent2 = {
       label: 'Per-datacenter',
       value: 2,
       text: 'Per-datacenter'
-    },
-    {
-      label: 'Loki',
-      value: 11,
-      text: 'Loki'
     }
+    // {
+    //   label: 'Loki',
+    //   value: 11,
+    //   text: 'Loki'
+    // }
   ],
   theDataGroup: [
     {

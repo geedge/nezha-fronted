@@ -184,6 +184,7 @@ export default {
                 username: '',
                 pin: ''
               },
+              relabel_config: [],
               bearer_token: ''
             },
             enable: 1
@@ -324,6 +325,13 @@ export default {
         })
         this.object.paramObj = []
         this.object.labelModule = []
+        if (!this.object.configs[0].config.relabel_config) {
+          this.object.configs[0].config.relabel_config = []
+        }
+        this.object.configs[0].config.relabel_config && this.object.configs[0].config.relabel_config.forEach(item => {
+          item.showAllRelabelOption = false
+          item.tags = ''
+        })
         this.object.configs[1].config.forEach(item => {
           item.labelModule = []
           if (JSON.stringify(item.labels) !== '{}' && item.labels) {
