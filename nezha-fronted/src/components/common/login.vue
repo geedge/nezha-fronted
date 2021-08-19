@@ -79,7 +79,7 @@
           3. Enter the 6-digit code provided by your app and then verify.
         </div>
         <div class="enter-code">Enter Code</div>
-        <el-input v-model="bindAuthCode" size="small" style="width: 50%"></el-input>
+        <el-input v-model="bindAuthCode" size="small" style="width: 50%" @keydown.enter="bindCode"></el-input>
       </div>
       <div slot="footer" class="footer">
         <button id="asset-edit-cancel" @click="closeDialog" class="footer__btn footer__btn--light">
@@ -100,7 +100,7 @@
         </div>
         <div class="login-dialog-title2">
           <div class="login-dialog-recover">
-            <div v-for="(item, index) in this.recoveryCode" :key="index" style="color: #999999;">
+            <div v-for="(item, index) in recoveryCode" :key="index" style="color: #999999;">
               <span class="circle"></span>
               {{item}}
             </div>
@@ -183,7 +183,6 @@ export default {
                     })
                   } else {
                     this.authBindShow = false
-                    this.dialogLoading = false
                     this.$message.error(res.message)
                   }
                 })
