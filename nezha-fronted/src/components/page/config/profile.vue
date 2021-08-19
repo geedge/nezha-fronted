@@ -11,9 +11,8 @@
             width="200"
             trigger="hover"
             :content="userList.username">
-            <div slot="reference">{{userList.username}}<span class="profile-left__header-username__span">2FA</span></div>
+            <div slot="reference">{{userList.username}}<span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
           </el-popover>
-          <div>{{userList.username}}<span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
           <div>@{{userList.name}}</div>
         </div>
       </div>
