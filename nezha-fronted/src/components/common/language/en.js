@@ -155,7 +155,9 @@ const en = {
     generate: 'Generate',
     personalCenter: 'Personal center',
     operationRecord: 'Operation record',
-    changePassword: 'Change password'
+    changePassword: 'Change password',
+    relabelConfigRegex: 'Default is (.*) ',
+    relabelConfigReplacement: 'Default is $1'
   },
   pageSize: '/page',
   setup: {

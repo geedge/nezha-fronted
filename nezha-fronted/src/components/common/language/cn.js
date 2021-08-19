@@ -150,7 +150,9 @@ const cn = {
     generate: '生产',
     personalCenter: '个人中心',
     operationRecord: '操作记录',
-    changePassword: '修改密码'
+    changePassword: '修改密码',
+    relabelConfigRegex: '默认是 (.*) ',
+    relabelConfigReplacement: '默认是 $1'
   },
   setup: {
     step0: '欢迎',
