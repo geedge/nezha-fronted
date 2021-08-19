@@ -8,10 +8,13 @@
         <div class="profile-left__header-username">
           <el-popover
             placement="right-start"
-            width="200"
             trigger="hover"
             :content="userList.username">
-            <div slot="reference">{{userList.username}}<span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
+            <div slot="reference">
+              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'mfaName':'name'">
+                {{userList.username}}
+              </span>
+              <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
           </el-popover>
           <div>@{{userList.name}}</div>
         </div>
@@ -370,12 +373,25 @@ export default {
         height: 80px;
         padding-left: 15px;
         text-align: left;
-        div:nth-of-type(1) {
-          font-family: Roboto-Medium;
-          width: 200px;
+        .name{
+          display: inline-block;
+          max-width: 200px;
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          vertical-align: middle;
+        }
+        .MfaName{
+          display: inline-block;
+          max-width: 158px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          vertical-align: middle;
+        }
+        div:nth-of-type(1) {
+          font-family: Roboto-Medium;
+          max-width: 200px;
           font-size: 18px;
           color: #333333;
           letter-spacing: 0;
