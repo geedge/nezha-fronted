@@ -37,7 +37,7 @@
         <el-button @click="profileEnable" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item"  v-if="mfaEnable != '1' && mfaLevel == 0">
           <span>{{$t('profile.enable')}}</span>
         </el-button>
-        <el-button @click="profileDisable" size="small" class="profile-left__button-footer__btn footer__btns table-operation-item" v-if="mfaEnable == '1' || mfaLevel > 0" :disabled="mfaEnable == 1 ||  mfaLevel == 2 ">
+        <el-button @click="profileDisable" size="small" class="profile-left__button-footer__btn footer__btns table-operation-item"  :class="{'footer__btn--disabled': mfaEnable == 1 ||  mfaLevel == 2}" v-if="mfaEnable == '1' || mfaLevel > 0" :disabled="mfaEnable == 1 ||  mfaLevel == 2 ">
           <span>{{$t('profile.close')}}</span>
         </el-button>
         <el-button @click="profileMfaLevel" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item" v-if="mfaEnable == '1' || mfaLevel > 0" >
@@ -469,6 +469,13 @@ export default {
       }
       .footer__btn:hover {
         opacity: .6;
+      }
+      .is-disabled,.is-disabled:hover{
+        color: #C0C4CC;
+        cursor: not-allowed;
+        background-image: none;
+        background-color: #FFF;
+        border-color: #EBEEF5;
       }
     }
     .profile-left__bottom {
