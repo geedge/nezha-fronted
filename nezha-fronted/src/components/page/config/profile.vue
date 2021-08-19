@@ -6,7 +6,6 @@
           <span>{{username.substr(0, 1)}}</span>
         </div>
         <div class="profile-left__header-username">
-<<<<<<< HEAD
           <el-popover
             placement="right-start"
             width="200"
@@ -14,10 +13,7 @@
             :content="userList.username">
             <div slot="reference">{{userList.username}}<span class="profile-left__header-username__span">2FA</span></div>
           </el-popover>
-
-=======
           <div>{{userList.username}}<span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
->>>>>>> 2bac1c8f40b21f17cd768b58eab5398a425b6e34
           <div>@{{userList.name}}</div>
         </div>
       </div>
