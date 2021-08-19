@@ -69,9 +69,9 @@ export default {
             disabled: false
           }, {
             id: 12,
-            name: this.$t('config.operationlog.username'),
+            name: this.$t('config.operationlog.userId'),
             type: 'input',
-            label: 'username',
+            label: 'userId',
             disabled: false
           }, {
             id: 13,
@@ -133,6 +133,7 @@ export default {
       color: #666666;
       letter-spacing: 0;
       font-weight: 400;
+      cursor: pointer;
       opacity: .6;
       transform: translateX(20%);
     }

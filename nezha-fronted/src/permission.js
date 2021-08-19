@@ -26,36 +26,34 @@ router.beforeEach((to, from, next) => {
       })
     })
   } else if (sessionStorage.getItem('nz-token')) {
-    if (permissionWhiteList.indexOf(to.path) !== -1) {
-      next()
-    } else {
-      new Promise(resolve => {
-        if (store.getters.menuList.length === 0) {
-          const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
-          Vue.http.get(configUrl).then(config => {
-            post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
-              store.commit('setMenuList', sortByOrderNum(res.data.menus))
-              store.commit('setButtonList', res.data.buttons)
-              store.commit('setRoleList', res.data.roles)
-              resolve()
-            })
+    new Promise(resolve => {
+      if (store.getters.menuList.length === 0) {
+        const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
+        Vue.http.get(configUrl).then(config => {
+          post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
+            store.commit('setMenuList', sortByOrderNum(res.data.menus))
+            store.commit('setButtonList', res.data.buttons)
+            store.commit('setRoleList', res.data.roles)
+            resolve()
           })
+        })
+      } else {
+        resolve()
+      }
+    }).then(res => {
+      if (to.path) {
+        if (permissionWhiteList.indexOf(to.path) !== -1) {
+          next()
+        } else if (hasMenu(store.getters.menuList, to.path)) {
+          next()
         } else {
-          resolve()
-        }
-      }).then(res => {
-        if (to.path) {
-          if (hasMenu(store.getters.menuList, to.path)) {
-            next()
-          } else {
-            if (to.path === '/monitor/monitor/project' || to.path === '/monitor/monitor/module' || to.path === '/monitor/monitor/endpoint') {
-              return
-            }
-            ElementUI.Message.error(i18n.t('tip.noAccess'))
+          if (to.path === '/monitor/monitor/project' || to.path === '/monitor/monitor/module' || to.path === '/monitor/monitor/endpoint') {
+            return
           }
+          ElementUI.Message.error(i18n.t('tip.noAccess'))
         }
-      })
-    }
+      }
+    })
   } else {
     if (loginWhiteList.indexOf(to.path) !== -1) {
       next()
