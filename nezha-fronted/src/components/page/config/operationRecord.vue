@@ -58,6 +58,7 @@ export default {
       url: 'sys/log',
       tableId: 'operationLogTable', // 需要分页的table的id，用于记录每页数量,
       mainTableHeight: this.$tableHeight.profileNormal,
+      username: sessionStorage.getItem('nz-username'),
       layout: [],
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [
@@ -66,12 +67,6 @@ export default {
             name: this.$t('config.operationlog.type'),
             type: 'input',
             label: 'type',
-            disabled: false
-          }, {
-            id: 12,
-            name: this.$t('config.operationlog.userId'),
-            type: 'input',
-            label: 'userId',
             disabled: false
           }, {
             id: 13,
@@ -114,7 +109,29 @@ export default {
     tabsActiveTow () {
       this.profileShow = false
       this.layout = []
-    }
+    },
+    getTableData (params) {
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'userId', localStorage.getItem('nz-user-id'))
+      this.tools.loading = true
+      this.$get(this.url, { ...this.searchLabel }).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.pageObj.total = response.data.total
+          if (!this.scrollbarWrap) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+        }
+      })
+    },
   }
 }
 </script>

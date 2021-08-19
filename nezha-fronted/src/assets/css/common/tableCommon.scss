@@ -365,10 +365,19 @@
 }
 .profile {
   .main-list {
-    height: calc(100% + 7ncpx);
+    height: calc(100% + 7px);
   }
   .top-tools {
     padding: 0 20px 14px 20px;
+  }
+  .list-page .nz-table2 .el-table:not(.chart-table) .gutter {
+    position: fixed;
+    right: 21px;
+    height: 42px;
+    border-bottom: 1px solid #E7EAED;
+    background-color: white;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
   }
 }
 .operation-dropdown-text {

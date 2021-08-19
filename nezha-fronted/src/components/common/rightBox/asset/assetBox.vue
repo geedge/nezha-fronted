@@ -237,7 +237,9 @@
                   <i slot="reference" class="nz-icon nz-icon-about"></i>
                 </el-popover>
               </div>
-              <el-switch v-model="talonShow" active-color="#ee9d3f" size="small"></el-switch>
+              <div>
+                <el-switch v-model="editAsset.clientEnable" :active-value="1" :inactive-value="0" active-color="#ee9d3f" size="small"></el-switch>
+              </div>
             </div>
             <transition name="el-zoom-in-top">
              <!-- <el-form-item :label="$t('asset.userName')" prop="clientUser">
@@ -246,7 +248,7 @@
               <el-form-item :label="$t('asset.pin')" prop="clientPin">
                 <el-input type="password" show-word-limit v-model="editAsset.clientPin" size="small"/>
               </el-form-item> -->
-              <div v-if="editAsset.clientEnable === 1 || talonShow" v-show="talonShowTow">
+              <div v-if="editAsset.clientEnable === 1" v-show="talonShowTow">
                 <el-form-item label="Token" prop="clientToken">
                   <el-input v-model="editAsset.clientToken" size="small"/>
                 </el-form-item>
@@ -310,7 +312,6 @@ export default {
       showAllTalonOption: false,
       showAddressOption: true,
       talonShowTow: true,
-      talonShow: true,
       editAsset: {},
       url: 'asset/asset',
       rightBox: { model: { show: false } },
