@@ -210,10 +210,10 @@ export default {
         return [
           {
             code: 'profile',
-            i18n: 'profile.profile',
+            i18n: 'overall.personalCenter',
             icon: '',
             id: 2,
-            name: 'Personal center',
+            name: 'profile',
             orderNum: 1,
             parentId: 1,
             perms: '',
