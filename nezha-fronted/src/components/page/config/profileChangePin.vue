@@ -2,18 +2,6 @@
   <div class="profile-change__Pin">
     <div class="profile-change__Pin-from">
       <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm">
-        <!--      <el-form-item :label="$t('config.user.account')" prop="username" v-show="curUser != sysUser">-->
-        <!--        <el-input type="text" autocomplete="false" v-model="user.username" disabled id="change-pin-username"></el-input>-->
-        <!--      </el-form-item>-->
-        <!--      <el-form-item :label="$t('config.user.oldPin')" prop="pin">-->
-        <!--        <el-input type="password" autocomplete="false" :show-password="true" v-model="user.pin" maxlength="20" :placeholder="$t('config.user.inputOldPin')" id="change-pin-pin"></el-input>-->
-        <!--      </el-form-item>-->
-        <!--      <el-form-item :label="$t('config.user.newPin')" prop="newPin">-->
-        <!--        <el-input type="password" autocomplete="false" :show-password="true" v-model="user.newPin" maxlength="20" :placeholder="$t('config.user.inputNewPin')" id="change-pin-newPin"></el-input>-->
-        <!--      </el-form-item>-->
-        <!--      <el-form-item :label="$t('config.user.confirmPin')" prop="confirmPin">-->
-        <!--        <el-input type="password" autocomplete="false"  :show-password="true" v-model="user.confirmPin" maxlength="20" :placeholder="$t('config.user.inputConfirmPin')" id="change-pin-confirmPin"></el-input>-->
-        <!--      </el-form-item>-->
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.oldPassword')" prop="pin">
             <el-input v-model="user.pin" type="password" size="small"/>
           </el-form-item>
@@ -103,6 +91,9 @@ export default {
           this.$get('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
             if (response && response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
+              this.user.pin = ''
+              this.user.newPin = ''
+              this.user.confirmPin = ''
               this.close()
             } else {
               this.$message.error(response.msg)

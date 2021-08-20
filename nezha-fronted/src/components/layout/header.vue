@@ -44,13 +44,17 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown>
-        <div class='login-user header-menu--item'>{{username}}&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
-        <el-dropdown-menu slot="dropdown">
+        <div class="personal-avatar"><span>{{username.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
+        <el-dropdown-menu  style="width: 142px" slot="dropdown">
+          <div class="personal-dropdown">
+            <div class="personal-dropdown__username">{{username}}</div>
+            <div class="personal-dropdown__name">@{{name}}</div>
+          </div>
           <el-dropdown-item>
-            <div id="header-to-changepin" @click="showPinDialog">{{$t('overall.personalCenter')}}</div>
+            <div id="header-to-profile" @click="showPinDialog"><i class="nz-icon nz-icon-user"></i>{{$t('overall.personalCenter')}}</div>
           </el-dropdown-item>
           <el-dropdown-item>
-            <div id="header-to-logout" @click="logout">{{$t('overall.signOut')}}</div>
+            <div id="header-to-logout" @click="logout"><i class="nz-icon nz-icon-exit"></i>{{$t('overall.signOut')}}</div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -74,8 +78,8 @@ export default {
   data () {
     return {
       username: sessionStorage.getItem('nz-username'),
+      name: localStorage.getItem('nz-user-name'),
       language: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en',
-
       // 顶部菜单相关
       createMenu: [ // 新增按钮内容
         {
@@ -260,7 +264,22 @@ export default {
 .header {
   display: flex;
   height: 50px;
-
+  .personal-avatar {
+    span {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+      line-height: 32px;
+      background: rgba(60,146,241,0.10);
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #3C92F1;
+      letter-spacing: 0;
+      font-weight: 500;
+      text-transform: capitalize;
+      border-radius: 100%;
+    }
+  }
   .header-menu {
     display: flex;
     justify-content: flex-end;

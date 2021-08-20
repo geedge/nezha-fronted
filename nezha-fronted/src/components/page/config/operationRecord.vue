@@ -8,7 +8,7 @@
       @search="search"
       :search-msg="searchMsg">
       <template v-slot:top-tool-left>
-        <div class="profile-right__tabs-title" style="margin-left: -20px">
+        <div class="profile-right__tabs-title">
           <div class="profile-right__tabs-active" :class="{'is-active': profileShow}" @click="tabsActive">{{$t('profile.operationRecord')}}</div>
           <div class="profile-right__tabs-active" :class="{'is-active': !profileShow}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
         </div>
@@ -111,9 +111,10 @@ export default {
       this.profileShow = false
       this.layout = []
     },
-    getTableData (params) {
+    getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      // 获取 userId 作为过滤条件传给后台
       this.$set(this.searchLabel, 'userId', localStorage.getItem('nz-user-id'))
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel }).then(response => {
@@ -132,7 +133,7 @@ export default {
           }
         }
       })
-    },
+    }
   }
 }
 </script>
@@ -140,12 +141,11 @@ export default {
 .top-tool-left {
   .profile-right__tabs-title {
     display: flex;
-    justify-content: flex-start;
-    position: relative;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding-top: 19px;
     .profile-right__tabs-active {
-      margin-right: 30px;
-      margin-left: -2px;
-      padding-top: 25px;
+      padding:0 10px;
       font-size: 14px;
       height: 30px;
       color: #666666;
@@ -153,7 +153,6 @@ export default {
       font-weight: 400;
       cursor: pointer;
       opacity: .6;
-      transform: translateX(20%);
     }
     .is-active {
       border-bottom: 2px solid  #FA901C;
@@ -167,9 +166,9 @@ export default {
   }
   .profile-hr {
     position: absolute;
-    top: 55px;
+    top: 50px;
     width: calc(100% - 40px);
-    height: 2px;
+    height: 1px;
     background-color: #eceef0;
   }
 }
