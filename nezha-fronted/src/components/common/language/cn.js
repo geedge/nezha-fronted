@@ -604,7 +604,8 @@ const cn = {
     confirmDuplicate: '确认复制吗？',
     confirmCancel: '您所做的修改将不会被保存？',
     copySuccess: '复制成功',
-    lnglatError: '经纬度格式错误'
+    lnglatError: '经纬度格式错误',
+    tagError: '不符合正则 /^[a-zA-Z_][a-zA-Z0-9_]*/!'
   },
   asset: {
     asset: '资产',

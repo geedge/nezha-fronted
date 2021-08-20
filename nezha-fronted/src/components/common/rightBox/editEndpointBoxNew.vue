@@ -245,33 +245,57 @@
                     </span>
                     </div>
                     <div>
-                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.source_labels'" class="" :label="'Source labels'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' },{ validator:  arrLength, trigger: 'change' }]">
-                        <vue-tags-input
-                          v-model="item.tags"
-                          :maxlength="32"
-                          :placeholder="'add parameter'"
-                          :tags="item.source_labels"
-                          @tags-changed="(newTags)=>{tagsChangeRelabel(newTags, index)}"
-                        />
-                      </el-form-item>
-                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="half-form-item" :label="'Action'">
-                        <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="" :label="'Action'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
+                        <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
                           <el-option v-for="item2 in actionList" :id="'module-action-'+item2.label" :key="item2.label" :label="item2.label" :value="item2.value"></el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.target_label'" class="half-form-item" :label="'Target label'" :rules="[{ required: item.action === 'replace', message: $t('validate.required'), trigger: 'blur' },{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]">
+                      <el-form-item
+                        :prop="'configs.0.config.relabel_config.' + index + '.source_labels'"
+                        class="half-form-item" :label="'Source labels'"
+                        :rules="[
+                                       { required: item.action === 'replace' || item.action === 'keep' || item.action === 'drop', message: $t('validate.required'), trigger: 'change' },
+                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : '', trigger: 'change' }
+                                     ]">
+                        <vue-tags-input
+                          v-model="item.tags"
+                          :maxlength="32"
+                          ref="relabelTag"
+                          tabindex="9999"
+                          :placeholder="'add parameter'"
+                          :tags="item.source_labels"
+                          @before-adding-tag="beforeAddingTag"
+                          @blur="relabelTabBlur"
+                          @tags-changed="(newTags)=>{tagsChangeRelabel(newTags, index)}"
+                        />
+                      </el-form-item>
+                      <el-form-item
+                        :prop="'configs.0.config.relabel_config.' + index + '.target_label'"
+                        class="half-form-item" :label="'Target label'"
+                        :rules="[
+                                     { required: item.action === 'replace', message: $t('validate.required'), trigger: 'blur' },
+                                     { pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]"
+                      >
                         <el-input id="module-box-input-target_label" v-model="item.target_label" placeholder='' size="small"></el-input>
                       </el-form-item>
                     </div>
                     <!--                    <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeRelabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>-->
                     <transition name="el-zoom-in-top">
                       <div v-show="item.showAllRelabelOption" >
-                        <!--scrape_interval-->
-                        <el-form-item :label='"Regex"' class="half-form-item" :prop="'configs.0.config.relabel_config.' + index + '.regex'">
+                        <!--Regex-->
+                        <el-form-item
+                          :label='"Regex"'
+                          class="half-form-item"
+                          :prop="'configs.0.config.relabel_config.' + index + '.regex'"
+                          :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
                           <el-input id="module-box-input-regex" v-model="item.regex" :placeholder="$t('overall.relabelConfigRegex')" size="small"></el-input>
                         </el-form-item>
-                        <!--scrape_timeout-->
-                        <el-form-item :label='"Replacement"' class="half-form-item" :prop="'configs.0.config.relabel_config.' + index + '.replacement'">
+                        <!--replacement-->
+                        <el-form-item
+                          :label='"Replacement"'
+                          class="half-form-item"
+                          :prop="'configs.0.config.relabel_config.' + index + '.replacement'"
+                          :rules="[{ required: item.action === 'replace' || item.action === 'labelmap', message: $t('validate.required'), trigger: 'change' }]">
                           <el-input id="module-box-input-replacement" v-model="item.replacement" :placeholder="$t('overall.relabelConfigReplacement')" size="small"></el-input>
                         </el-form-item>
                       </div>
@@ -932,7 +956,7 @@ export default {
             delete item.unit
           }
         })
-        params.configs[0].config.relabel_config.relabel_config && params.configs[0].config.relabel_config.forEach(item => {
+        params.configs[0].config.relabel_config && params.configs[0].config.relabel_config.forEach(item => {
           delete item.tags
           delete item.showAllRelabelOption
         })
@@ -1119,6 +1143,19 @@ export default {
     },
     tagsChange (newTags, index) {
       this.editEndpoint.paramObj[index].value = newTags.map(item => item.text)
+    },
+    beforeAddingTag (tag) {
+      const regx = /[a-zA-Z_:][a-zA-Z0-9_:]*/
+      if (regx.test(tag.tag.text)) {
+        tag.addTag()
+      } else {
+        this.$message.error(this.$t('tip.tagError'))
+      }
+    },
+    relabelTabBlur (tag) {
+      this.$nextTick(() => {
+        this.$refs.relabelTag[0].newTag = ''
+      })
     },
     // 将param转为json字符串格式
     paramToJson (param) {
@@ -1412,6 +1449,9 @@ export default {
     },
     actionChange (index) {
       this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.target_label')
+      this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.source_labels')
+      this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.regex')
+      this.$refs.moduleForm.clearValidate('configs.0.config.relabel_config.' + index + '.replacement')
     },
     addRelabel () {
       this.editEndpoint.configs[0].config.relabel_config.push({
