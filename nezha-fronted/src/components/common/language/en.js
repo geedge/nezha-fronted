@@ -611,7 +611,8 @@ const en = {
     confirmDuplicate: 'Are you sure to duplicate this chart?',
     confirmCancel: 'Changes you made are not saved?',
     copySuccess: 'Copy success',
-    lnglatError: 'Wrong format of latitude and longitude'
+    lnglatError: 'Wrong format of latitude and longitude',
+    tagError: 'Does not conform to regular expressions /^[a-zA-Z_][a-zA-Z0-9_]*/!'
   },
   asset: {
     asset: 'Asset ',
