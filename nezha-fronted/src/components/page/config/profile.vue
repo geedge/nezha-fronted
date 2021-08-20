@@ -24,7 +24,7 @@
         <div class="profile-left__center-title">
           <div>{{item.label}}</div>
           <div v-if="item.prop">{{item.prop}}</div>
-          <div v-if="item.prop === null || ''">-</div>
+          <div v-if="!item.prop">-</div>
         </div>
       </div>
      <div class="profile-left__center">
@@ -129,7 +129,6 @@
 
 <script>
 import operationRecord from './operationRecord'
-import bus from '@/libs/bus.js'
 import QRCode from "qrcodejs2";
 import MessageBox from "element-ui/packages/message-box/src/main";
 import i18n from "@/components/common/i18n";
@@ -397,7 +396,7 @@ export default {
           letter-spacing: 0;
           line-height: 22px;
           font-weight: 500;
-          padding: 10px 0 8px 0;
+          padding: 8px 0 8px 0;
         }
         div:nth-of-type(2) {
           font-family: Roboto-Regular;

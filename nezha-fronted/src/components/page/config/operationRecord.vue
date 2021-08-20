@@ -100,6 +100,7 @@ export default {
   },
   mounted () {
     this.tabsActive()
+    this.getTableData()
   },
   methods: {
     tabsActive () {
@@ -142,7 +143,7 @@ export default {
     justify-content: flex-start;
     position: relative;
     .profile-right__tabs-active {
-      margin-right: 40px;
+      margin-right: 30px;
       margin-left: -2px;
       padding-top: 25px;
       font-size: 14px;

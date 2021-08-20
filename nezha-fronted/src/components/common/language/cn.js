@@ -1762,11 +1762,11 @@ const cn = {
     confirmPassword: '确认密码',
     lastLoginIp: '最后登录IP',
     lastLoginTime: '最后登录时间',
-    role: 'Role',
+    role: '角色',
     email: 'Email',
-    mobile: 'Mobile',
-    source: 'Source',
-    towFactorAuthentication: 'Tow-Factor Authentication'
+    mobile: '手机',
+    source: '来源',
+    twoFactorAuthentication: '双重身份验证'
   },
   ...zhLocale
 }
