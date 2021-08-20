@@ -135,3 +135,30 @@
 .data-column__span:first-letter,.el-tabs__item:first-letter,.header__title:first-letter,.operation-dropdown-text:first-letter{
   text-transform: capitalize;
 }
+.personal-dropdown {
+  border-bottom: 1px solid #E7EAED;
+  padding: 0 20px;
+  .personal-dropdown__username {
+    max-width: 109px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-family: Roboto-Regular;
+    font-size: 15px;
+    color: #333333;
+    font-weight: 400;
+  }
+  .personal-dropdown__name {
+    max-width: 109px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: #999999;
+    font-weight: 400;
+    padding-bottom: 10px;
+  }
+}

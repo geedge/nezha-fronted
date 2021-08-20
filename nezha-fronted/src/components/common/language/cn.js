@@ -1770,7 +1770,7 @@ const cn = {
     email: 'Email',
     mobile: '手机',
     source: '来源',
-    twoFactorAuthentication: '双重身份验证'
+    twoFactorAuthentication: '双因子认证'
   },
   ...zhLocale
 }

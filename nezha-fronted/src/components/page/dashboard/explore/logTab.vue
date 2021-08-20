@@ -189,7 +189,7 @@ export default {
           clip: false,
           barMinHeight: 1,
           data: d.data.map(item => [item[0], item[1]]),
-          itemStyle: { color: this.levelOptions.find(l => l.type === d.name).color }
+          itemStyle: { color: this.levelOptions.find(l => l.type === d.name) ? this.levelOptions.find(l => l.type === d.name).color : '#dde4ed' }
         }))
         series = series.sort((a, b) => {
           return this.levelOptions.findIndex(l => a.name === l.type) - this.levelOptions.findIndex(l => b.name === l.type)
@@ -260,25 +260,33 @@ export default {
           * 3.否则只改变被点击的legend状态
           * */
         this.myChart.on('legendselectchanged', ({ name, selected }) => {
-          const selectedLevel = []
-          const unselectedLevel = []
-          for (const n in selected) {
-            selected[n] ? selectedLevel.push(n) : unselectedLevel.push(n)
-          }
-          // 1.
-          if (selectedLevel.length + unselectedLevel.length > 1) {
-            if (unselectedLevel.length === 1 && unselectedLevel[0] === name) {
-              this.myChart.dispatchAction({
-                type: 'legendInverseSelect'
+          if (!this.prevent_opt.refresh) {
+            this.prevent_opt.refresh = true
+            const selectedLevel = []
+            const unselectedLevel = []
+            for (const n in selected) {
+              selected[n] ? selectedLevel.push(n) : unselectedLevel.push(n)
+            }
+            try {
+              if (selectedLevel.length + unselectedLevel.length > 1) {
+                if (unselectedLevel.length === 1 && unselectedLevel[0] === name) { // 1.
+                  this.myChart.dispatchAction({
+                    type: 'legendInverseSelect'
+                  })
+                  this.operations.levels = [this.levelOptions.findIndex(l => l.type === unselectedLevel[0])]
+                } else if (selectedLevel.length === 0) { // 2.
+                  this.myChart.dispatchAction({
+                    type: 'legendAllSelect'
+                  })
+                  this.operations.levels = [0, 1, 2, 3, 4, 5, 6]
+                } else { // 3.
+                  this.operations.levels = selectedLevel.map(s => this.levelOptions.findIndex(l => l.type === s))
+                }
+              }
+            } finally {
+              this.$nextTick(() => {
+                this.prevent_opt.refresh = false
               })
-              this.operations.levels = [this.levelOptions.findIndex(l => l.type === unselectedLevel[0])]
-            } else if (selectedLevel.length === 0) { // 2.
-              this.myChart.dispatchAction({
-                type: 'legendAllSelect'
-              })
-              this.operations.levels = [0, 1, 2, 3, 4, 5, 6]
-            } else {
-              this.operations.levels = selectedLevel.map(s => this.levelOptions.findIndex(l => l.type === s))
             }
           }
         })
@@ -296,18 +304,22 @@ export default {
       if (!allTableData || allTableData.length === 0) {
         return { tableData: [], tableChartData: [] }
       }
-      let data = [...allTableData]
+      const data = [...allTableData]
       // 过滤level
-      data = data.filter(d => {
+      let filterLevelData = data.filter(d => {
         const hit = filter.levels.some(l => {
-          return this.levelOptions[l].type === d.level.toLowerCase()
+          if (this.levelOptions[l]) {
+            return this.levelOptions[l].type === d.level.toLowerCase()
+          } else {
+            return false
+          }
         })
         return hit
       })
       // 复制一份升序的数据用于后面处理
       const copyData = [...data]
       // 升降序
-      data = data.sort((a, b) => {
+      filterLevelData = filterLevelData.sort((a, b) => {
         return filter.descending ? b.timestamp - a.timestamp : a.timestamp - b.timestamp
       })
       // logs内部上方的图表数据。需要整理成时间点[{date: xxx, value: {debug: 1, error: 3}}]，时间点数量控制为100个
@@ -348,7 +360,7 @@ export default {
         }
         temp.push(level)
       }
-      return { tableData: data, tableChartData: temp }
+      return { tableData: filterLevelData, tableChartData: temp }
     },
     filterLogType (data) {
       const logData = data.filter(l => l.resultType === 'streamsFormat')
@@ -397,7 +409,6 @@ export default {
         const { tableData, tableChartData } = this.applyFilter(logData, n) // 应用operation区域的过滤项
         this.tableData = tableData
         this.tableChartData = tableChartData
-        this.loadChart()
       }
     },
     limit (n) {

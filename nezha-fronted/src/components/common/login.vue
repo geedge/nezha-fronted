@@ -167,6 +167,15 @@ export default {
             // 登录成功，记录用户名、token和lang
             this.authToken = res.data.authToken
             sessionStorage.setItem('nz-token', res.data.authToken)
+            this.$get('/sys/user/profile').then(response => {
+              if (response.code === 200) {
+                const userList = response.user
+                console.log(userList)
+                // 保存当前用户的 userId
+                localStorage.setItem('nz-user-id', userList.id)
+                localStorage.setItem('nz-user-name', userList.name)
+              }
+            })
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
                 this.verifyShow = true

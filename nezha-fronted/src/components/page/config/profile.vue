@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="profile-left">
       <div class="profile-left__header">
-        <div class="profile-left__header-img">
+        <div class="profile-left__header-avatar">
           <span>{{username.substr(0, 1)}}</span>
         </div>
         <div class="profile-left__header-username">
@@ -16,7 +16,17 @@
               </span>
               <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
           </el-popover>
-          <div>@{{userList.name}}</div>
+          <el-popover
+            placement="right-start"
+            style="line-height: .1;"
+            trigger="hover"
+            :content="'@'+userList.name">
+            <div slot="reference">
+              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
+                @{{userList.name}}
+              </span>
+            </div>
+          </el-popover>
         </div>
       </div>
       <div v-for="item in tableProfile" :key="item.id" class="profile-left__center">
@@ -34,15 +44,6 @@
        </div>
      </div>
       <div class="profile-left__button table-operation-items">
-<!--        <el-button v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? true : false" size="small" class="profile-left__button-footer__btn footer__btns">-->
-<!--          <span>{{$t('profile.enable')}}</span>-->
-<!--        </el-button>-->
-<!--        <el-button @click="profileDisable" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item&#45;&#45;disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" :disabled="this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable == 1" class="profile-left__button-footer__btn footer__btns table-operation-item">-->
-<!--          <span>{{$t('profile.close')}}</span>-->
-<!--        </el-button>-->
-<!--        <el-button @click="profileMfaLevel" size="small" v-show="this.userList.mfaLevel == 0 && this.userList.mfaAuthEnable == 0 ? false : true" :class="{'table-operation-item&#45;&#45;disable': this.userList.mfaLevel == 2 || this.userList.mfaAuthEnable ==1}" class="profile-left__button-footer__btn footer__btn table-operation-item">-->
-<!--          <span>{{$t('profile.update')}}</span>-->
-<!--        </el-button>-->
         <el-button @click="profileEnable" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item"  v-if="mfaEnable != '1' && mfaLevel == 0">
           <span>{{$t('profile.enable')}}</span>
         </el-button>
@@ -65,7 +66,9 @@
         </div>
       </div>
     </div>
-    <operation-record />
+    <div style="width: calc(100% - 370px);">
+      <operation-record />
+    </div>
     <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 
@@ -207,7 +210,6 @@ export default {
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
             this.tableProfile[3].prop = this.userList.source
-            localStorage.setItem('nz-user-id', this.userList.id)
           }
           resolve()
         })
@@ -349,7 +351,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      .profile-left__header-img {
+      .profile-left__header-avatar {
         height: 80px;
         width: 80px;
         line-height: 80px;
@@ -379,6 +381,7 @@ export default {
           overflow: hidden;
           white-space: nowrap;
           vertical-align: middle;
+          padding-top: 4px;
         }
         .MfaName{
           display: inline-block;
@@ -387,6 +390,7 @@ export default {
           overflow: hidden;
           white-space: nowrap;
           vertical-align: middle;
+          padding-top: 4px;
         }
         div:nth-of-type(1) {
           font-family: Roboto-Medium;
@@ -396,7 +400,7 @@ export default {
           letter-spacing: 0;
           line-height: 22px;
           font-weight: 500;
-          padding: 8px 0 8px 0;
+          padding: 9px 0 0 0;
         }
         div:nth-of-type(2) {
           font-family: Roboto-Regular;
