@@ -11,7 +11,7 @@
             trigger="hover"
             :content="userList.username">
             <div slot="reference">
-              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'mfaName':'name'">
+              <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
                 {{userList.username}}
               </span>
               <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
