@@ -956,7 +956,7 @@ export default {
             delete item.unit
           }
         })
-        params.configs[0].config.relabel_config.relabel_config && params.configs[0].config.relabel_config.forEach(item => {
+        params.configs[0].config.relabel_config && params.configs[0].config.relabel_config.forEach(item => {
           delete item.tags
           delete item.showAllRelabelOption
         })
