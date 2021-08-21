@@ -612,7 +612,9 @@ const en = {
     confirmCancel: 'Changes you made are not saved?',
     copySuccess: 'Copy success',
     lnglatError: 'Wrong format of latitude and longitude',
-    tagError: 'Does not conform to regular expressions /^[a-zA-Z_][a-zA-Z0-9_]*/!'
+    tagError: 'Does not conform to regular expressions /^[a-zA-Z_][a-zA-Z0-9_]*/!',
+    syntaxError: 'Syntax error',
+    errorInRow: 'There are some syntax errors in rows'
   },
   asset: {
     asset: 'Asset ',

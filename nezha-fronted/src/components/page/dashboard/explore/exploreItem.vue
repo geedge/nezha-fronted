@@ -530,7 +530,7 @@ export default {
     },
     queryLogData (limit) { // log的chart和table是一个请求
       if (!limit) {
-        limit = this.$refs.logDetail.getLimit()
+        limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 1000
       }
       if (this.expressions.length > 0) {
         const requestArr = []
@@ -544,32 +544,46 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
-          this.logData = res.map(r => r.data)
-          const hasGraph = this.logData.some(d => d.resultType === 'matrix')
-          const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
-          const graphTabIndex = this.showTab.indexOf('1')
-          if (hasGraph) {
-            if (graphTabIndex === -1) {
-              this.showTab.push('1')
+          const errorRowIndex = []
+          res.forEach((r, i) => {
+            if (typeof r === 'string') {
+              errorRowIndex.push(i)
             }
-          } else {
-            if (graphTabIndex > -1) {
-              this.showTab.splice(graphTabIndex, 1)
-            }
-          }
-          const logTabIndex = this.showTab.indexOf('2')
-          if (hasLog) {
-            if (logTabIndex === -1) {
-              this.showTab.push('1')
-            }
-          } else {
-            if (logTabIndex > -1) {
-              this.showTab.splice(logTabIndex, 1)
-            }
-          }
-          this.$nextTick(() => {
-            hasGraph && this.loadLogGraph()
           })
+          if (errorRowIndex.length > 0) {
+            this.$message.error(this.$t('tip.errorInRow') + ': ' + errorRowIndex.map(e => e + 1).join(' ,'))
+            res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
+          }
+          if (res.length > 0) {
+            this.logData = res.map(r => r.data)
+            const hasGraph = this.logData.some(d => d.resultType === 'matrix')
+            const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
+            const graphTabIndex = this.showTab.indexOf('1')
+            if (hasGraph) {
+              if (graphTabIndex === -1) {
+                this.showTab.push('1')
+              }
+            } else {
+              if (graphTabIndex > -1) {
+                this.showTab.splice(graphTabIndex, 1)
+              }
+            }
+            const logTabIndex = this.showTab.indexOf('2')
+            if (hasLog) {
+              if (logTabIndex === -1) {
+                this.showTab.push('1')
+              }
+            } else {
+              if (logTabIndex > -1) {
+                this.showTab.splice(logTabIndex, 1)
+              }
+            }
+            this.$nextTick(() => {
+              hasGraph && this.loadLogGraph()
+            })
+          }
+        }).catch(e => {
+          this.$message.error(this.$t('terminallog.statusItem.unknownError'))
         })
       }
     },

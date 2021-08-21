@@ -222,7 +222,7 @@ export default {
             axisLabel: {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
-              formatter: '{HH}:{mm}:{ss}'
+              formatter: '{HH}:{mm}'
             },
             boundaryGap: [0, '1%']
           },
