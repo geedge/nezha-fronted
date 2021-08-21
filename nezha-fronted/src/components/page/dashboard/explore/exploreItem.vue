@@ -130,7 +130,7 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+                <log-tab ref="logDetail" :log-data="logData" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>

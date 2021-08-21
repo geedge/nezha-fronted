@@ -2,6 +2,7 @@
   <div class="explores">
     <explore-item
       v-for="item in exploreItems"
+      ref="exploreItem"
       :key="item"
       :closable="closable"
       :tab-index="item"
@@ -38,6 +39,12 @@ export default {
         } else {
           this.exploreItems.push(index === 0 ? 1 : 0)
         }
+        this.$nextTick(() => {
+          this.$refs.exploreItem.forEach(e => {
+            const component = e.$refs.logDetail
+            component && component.resizeChart()
+          })
+        })
       }
     }
   }

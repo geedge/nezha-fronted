@@ -1,6 +1,6 @@
 <template>
   <div class="log-detail">
-    <div id="logChart" class="log-chart"></div>
+    <div :id="`logChart${tabIndex}`" class="log-chart"></div>
     <div class="log-operations">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
@@ -77,7 +77,8 @@ import * as echarts from 'echarts'
 export default {
   name: 'logTab',
   props: {
-    logData: Array
+    logData: Array,
+    tabIndex: Number
   },
   computed: {
     tableTimeFormat () {
@@ -175,7 +176,8 @@ export default {
       return this.timezoneToUtcTimeStr(this.toMillisecondTime(timestamp))
     },
     loadChart () {
-      const dom = document.getElementById('logChart')
+      const vm = this
+      const dom = document.getElementById(`logChart${this.tabIndex}`)
       if (!dom) {
         return
       }
@@ -222,7 +224,9 @@ export default {
             axisLabel: {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
-              formatter: '{HH}:{mm}'
+              formatter (value) {
+                return vm.$unixTimeParseToString(vm.toMillisecondTime(value) / 1000, 'hh:mm')
+              }
             },
             boundaryGap: [0, '1%']
           },
@@ -388,6 +392,9 @@ export default {
     },
     getLimit () {
       return this.limit
+    },
+    resizeChart () {
+      this.myChart.resize()
     }
   },
   watch: {
