@@ -3,27 +3,28 @@
     <div class="profile-left">
       <div class="profile-left__header">
         <div class="profile-left__header-avatar">
-          <span>{{username.substr(0, 1)}}</span>
+          <span>{{userList.name.substr(0, 1)}}</span>
         </div>
         <div class="profile-left__header-username">
           <el-popover
             placement="right-start"
+            style="line-height: .1;"
             trigger="hover"
-            :content="userList.username">
+            :content="userList.name">
             <div slot="reference">
               <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
-                {{userList.username}}
+                {{userList.name}}
               </span>
-              <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span></div>
+              <span class="profile-left__header-username__span" v-show="mfaEnable == '1' || mfaLevel > 0">2FA</span>
+            </div>
           </el-popover>
           <el-popover
             placement="right-start"
-            style="line-height: .1;"
             trigger="hover"
-            :content="'@'+userList.name">
+            :content="'@' + userList.username">
             <div slot="reference">
               <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
-                @{{userList.name}}
+                @{{userList.username}}
               </span>
             </div>
           </el-popover>
@@ -38,7 +39,7 @@
         </div>
       </div>
      <div class="profile-left__center">
-       <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-zhongzhi2FA" style="color: orange"></i></span>
+       <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-yanzhengma" style="color: orange"></i></span>
        <div class="profile-left__center-title">
          <div>{{$t('profile.twoFactorAuthentication')}}</div>
        </div>

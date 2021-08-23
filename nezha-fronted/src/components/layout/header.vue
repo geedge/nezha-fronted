@@ -44,11 +44,11 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown>
-        <div class="personal-avatar"><span>{{username.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
+        <div class="personal-avatar"><span>{{name.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu  style="width: 142px" slot="dropdown">
           <div class="personal-dropdown">
-            <div class="personal-dropdown__username">{{username}}</div>
-            <div class="personal-dropdown__name">@{{name}}</div>
+            <div class="personal-dropdown__username">{{name}}</div>
+            <div class="personal-dropdown__name">@{{username}}</div>
           </div>
           <el-dropdown-item>
             <div id="header-to-profile" @click="showPinDialog"><i class="nz-icon nz-icon-user"></i>{{$t('overall.personalCenter')}}</div>
