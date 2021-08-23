@@ -38,7 +38,7 @@
         </div>
       </div>
      <div class="profile-left__center">
-       <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-zhongzhi2FA" style="color: orange"></i></span>
+       <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-yanzhengma" style="color: orange"></i></span>
        <div class="profile-left__center-title">
          <div>{{$t('profile.twoFactorAuthentication')}}</div>
        </div>

@@ -1,4 +1,4 @@
-import { post } from '../http'
+import { post, get } from '../http'
 import router from '../router'
 import bus from '../libs/bus'
 import { sortByOrderNum } from '../permission'
@@ -64,6 +64,15 @@ const user = {
             t: +new Date()
           }
         })
+      })
+      get('/sys/user/profile').then(response => {
+        if (response.code === 200) {
+          const userList = response.user
+          console.log(userList)
+          // 保存当前用户的 userId
+          localStorage.setItem('nz-user-id', userList.id)
+          localStorage.setItem('nz-user-name', userList.name)
+        }
       })
     },
     logoutSuccess (store, res) {
