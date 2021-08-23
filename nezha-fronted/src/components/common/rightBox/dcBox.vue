@@ -34,7 +34,7 @@
               <!--</select-area>-->
             <!--</el-form-item>-->
             <el-form-item :label="$t('config.dc.lnglat')" prop="state">
-              <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false"></latlng-picker>
+              <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false" :init-data= ' editDc.latitude? {latitude:editDc.latitude,longitude:editDc.longitude} : "" '></latlng-picker>
             </el-form-item>
             <el-form-item :label='$t("config.dc.state")' prop="state">
               <el-switch

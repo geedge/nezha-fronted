@@ -42,23 +42,19 @@ export default {
       mapConfigVisible: false
     }
   },
-  created () {
-    if (this.initData) {
-      this.mapParam = JSON.parse(JSON.stringify(this.initData))
-    } else {
-      this.queryDefaultMapConfig()
-    }
-    this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
-  },
   watch: {
     initData: {
+      immediate: true,
       handler () {
+        console.log(this.initData)
         if (this.initData) {
           this.mapParam = JSON.parse(JSON.stringify(this.initData))
+          this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
         } else {
-          this.queryDefaultMapConfig()
+          this.queryDefaultMapConfig().then(() => {
+            this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
+          })
         }
-        this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
       }
     }
   },
@@ -152,10 +148,14 @@ export default {
       }
     },
     queryDefaultMapConfig: function () {
-      this.$get('/sysConfig?paramKey=map_center_config').then(response => {
-        if (response.code == 200) {
-          this.mapParam = JSON.parse(response.data.paramKey.map_center_config)
-        }
+      return new Promise(resolve => {
+        this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+          if (response.code == 200) {
+            console.log(response)
+            this.mapParam = JSON.parse(response.data.paramKey.map_center_config)
+            resolve()
+          }
+        })
       })
     }
   }
