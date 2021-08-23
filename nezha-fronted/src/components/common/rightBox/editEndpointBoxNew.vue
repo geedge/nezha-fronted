@@ -532,7 +532,7 @@
                       </div>
                     </div>
                     <div style="text-align: center">
-                      <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;margin-right: 44px">
+                      <div class="value-mapping-add" style="text-align: center;width: 25px;display: inline-block;">
                         <pipelineSelect :index="item.pipeline.length - 1" :father-pipeline="item.pipeline" @addPipeline="(pipelineIndex,obj)=>{addPipeline(obj,index,pipelineIndex,'push')}" :type="'push'"/>
                       </div>
                     </div>
@@ -548,7 +548,7 @@
               <i class="nz-icon nz-icon-minus" @click="removeLogsArr(index)"></i>
           </span>
               </div>
-              <div class="value-mapping-add" style="text-align: center;margin: 10px 180px 10px 144px;" @click="logsLogsArrAdd()">
+              <div class="value-mapping-add" style="text-align: center;margin: 10px 144px 10px 144px;" @click="logsLogsArrAdd()">
                 <i class="nz-icon nz-icon-plus"></i>
               </div>
             </div>
@@ -1619,7 +1619,7 @@ export default {
     line-height: 21px;
   }
   .half-form-item {
-    width: calc(50% - 21px);
+    width: calc(50% - 5px);
     display: inline-block;
     padding: 0 0px 0 0px;
   }
@@ -1667,7 +1667,6 @@ export default {
     border-radius: 2px;
     text-align: center;
     line-height: 18px;
-    margin-right: 55px;
   }
   .configs-copy-value{
     opacity: 0.9;

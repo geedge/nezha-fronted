@@ -4,6 +4,7 @@
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
+            <div class="system-title">{{$t('config.system.basic.title')}}</div>
 <!--            <el-form-item :label="$t('config.system.basic.sysLogo')" prop="system_logo">-->
 <!--              <el-upload-->
 <!--                class="avatar-uploader"-->
@@ -66,6 +67,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.monitor.monitor')" name="monitor">
         <div class="system-config-form basicForm" v-if="activeTab === 'monitor'">
+          <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="monitor"  label-width="208px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.monitor.alertApi')" prop="asset_ping_interval">
               <el-input v-model="monitor.alert_api" id="monitor-alert-api"></el-input>
@@ -96,6 +98,7 @@
               </el-select>
             </el-form-item>
             <!--metrics-->
+            <div class="system-title system-title-border">{{$t('config.system.monitor.metricsTitle')}}</div>
             <el-form-item :label="$t('config.system.monitor.metrics_storage_retention')" prop="metrics_storage_retention">
               <el-input v-model.number="monitor.metrics_storage_retention" id="monitor-metrics_storage_retention">
                 <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
@@ -128,6 +131,7 @@
             </el-form-item>
 
             <!--logs-->
+            <div class="system-title system-title-border">{{$t('config.system.monitor.logsTitle')}}</div>
             <el-form-item :label="$t('config.system.monitor.logs_storage_retention')" prop="logs_storage_retention">
               <el-input v-model.number="monitor.logs_storage_retention" id="monitor-logs_storage_retention">
                 <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
@@ -171,6 +175,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.email.email')" name="email" >
         <div class="system-config-form" v-if="activeTab === 'email'">
+          <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="email"  label-width="180px" size="small" ref="emailForm" :rules="email.email_enable=='on'?emailRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.email.enable')" prop="email_enable">
               <el-checkbox v-model="email.email_enable" true-label="on" false-label="off"  @change="switchChange('emailForm')" id="system-email-email_enable"></el-checkbox>
@@ -218,6 +223,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.terminal.terminal')" name="terminal">
         <div class="system-config-form terminal" v-if="activeTab === 'terminal'">
+          <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="terminal"  label-width="180px" size="small" ref="terminalForm" :rules="terminalRules">
 <!--            <el-form-item :label="$t('config.system.terminal.timeout')" prop="terminal_timeout">-->
 <!--              <el-input v-model="terminal.terminal_timeout" controls-position="right" :min="1"  id="system-terminal-max_terminal_num">-->
@@ -243,6 +249,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.ldap.ldap')" name="ldap">
         <div class="system-config-form" v-if="activeTab === 'ldap'">
+          <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="ldap"  label-width="180px" size="small" ref="ldapForm" :rules="ldap.ldap_enable == 'on'?ldapRules:{}" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.ldap.active')" prop="ldap_enable">
               <el-checkbox v-model="ldap.ldap_enable" true-label='on' false-label='off' @change="switchChange('ldapForm')" id="system-ldap-ldap_enable"></el-checkbox>
@@ -293,6 +300,7 @@
       </el-tab-pane>
       <el-tab-pane :label="$t('config.system.reset.reset')" name="reset">
         <div class="system-config-form" v-if="activeTab === 'reset'">
+          <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('config.system.reset.type')">
 <!--              <div class="el-checkbox-group">-->
@@ -1081,6 +1089,21 @@ export default {
   .utc-item{
     color: #999999;
     font-size: 12px;
+  }
+  .system-title{
+    ont-family: Roboto-Medium;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    text-align: left;
+    padding-left: 20px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  .system-title-border{
+    border-top: 1px dashed #E7EAED;
+    padding-top: 30px;
+    width: 699px;
   }
 </style>
 <style lang="scss">
