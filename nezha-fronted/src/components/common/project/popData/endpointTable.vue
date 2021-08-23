@@ -7,7 +7,7 @@
         :api="url"
         :custom-table-title.sync="tableTitle"
         :from="fromRoute.endpoint"
-        :layout="['searchInput']"
+        :layout="['searchInput', 'pagination']"
         :search-msg="searchMsg"
         @search="search"
       >

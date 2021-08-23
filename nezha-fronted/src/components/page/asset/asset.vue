@@ -129,7 +129,7 @@ export default {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       assetTableHeight: `calc(100% - ${48 + 201 + 20}px)`,
       blankObject: {
         id: '',

@@ -5,7 +5,7 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertSilence"
-      :layout="['searchInput', 'elementSet']"
+      :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
       @search="search"
     >

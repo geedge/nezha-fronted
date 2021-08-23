@@ -105,7 +105,7 @@ export default {
   methods: {
     tabsActive () {
       this.profileShow = true
-      this.layout = ['searchInput', 'elementSet']
+      this.layout = ['searchInput', 'elementSet', 'pagination']
     },
     tabsActiveTow () {
       this.profileShow = false

@@ -5,7 +5,7 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.apiKey"
-      :layout="['searchInput', 'elementSet']"
+      :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
       @search="search">
       <template v-slot:top-tool-left>

@@ -68,9 +68,9 @@ const user = {
       get('/sys/user/profile').then(response => {
         if (response.code === 200) {
           const userList = response.user
-          console.log(userList)
           // 保存当前用户的 userId
           localStorage.setItem('nz-user-id', userList.id)
+          // 保存当前用户 name
           localStorage.setItem('nz-user-name', userList.name)
         }
       })

@@ -3,7 +3,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
-      :layout="['searchInput', 'elementSet']"
+      :layout="['searchInput', 'elementSet', 'pagination']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.role"
       :search-msg="searchMsg"

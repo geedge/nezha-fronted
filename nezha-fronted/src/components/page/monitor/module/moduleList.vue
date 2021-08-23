@@ -6,7 +6,7 @@
       :tableId="tableId"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
-      :layout="['searchInput', 'elementSet']"
+      :layout="['searchInput', 'elementSet', 'pagination']"
       :search-msg="searchMsg"
       @search="search"
     >

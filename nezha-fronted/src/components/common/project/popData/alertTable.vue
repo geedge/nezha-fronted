@@ -7,7 +7,7 @@
         :api="url"
         :custom-table-title.sync="tableTitle"
         :from="fromRoute.alertMessage"
-        :layout="['searchInput']"
+        :layout="['searchInput', 'pagination']"
         :search-msg="searchMsg"
         @search="search"
         v-loading="tools.loading"

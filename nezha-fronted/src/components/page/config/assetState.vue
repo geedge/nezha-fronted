@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <nz-data-list
       ref="dataList"
-      :components="['searchInput', 'elementSet']"
+      :components="['searchInput', 'elementSet', 'pagination']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.assetState"
       :search-msg="searchMsg"

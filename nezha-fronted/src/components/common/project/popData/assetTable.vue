@@ -77,7 +77,7 @@ export default {
     return {
       url: 'asset/asset',
       tableId: 'projectAsset',
-      dataListLayout: ['searchInput'],
+      dataListLayout: ['searchInput', 'pagination'],
       pageObj: {
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,

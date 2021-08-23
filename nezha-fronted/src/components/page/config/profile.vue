@@ -38,7 +38,7 @@
           <div v-if="!item.prop">-</div>
         </div>
       </div>
-     <div class="profile-left__center">
+      <div class="profile-left__center">
        <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-yanzhengma" style="color: orange"></i></span>
        <div class="profile-left__center-title">
          <div>{{$t('profile.twoFactorAuthentication')}}</div>
@@ -335,7 +335,6 @@ export default {
 <style lang="scss" scoped>
 .profile {
   display: flex;
-  height: 100%;
   height: calc(100% - 20px);
   .profile-left {
     margin: 10px 0 10px 10px;
@@ -344,6 +343,7 @@ export default {
     border-radius: 2px;
     height: 100%;
     width: 360px;
+    overflow: auto;
     .profile-left__header {
       height: 200px;
       width: 100%;

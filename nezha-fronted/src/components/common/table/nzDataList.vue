@@ -28,7 +28,7 @@
         <div v-show="bottomBox.mainResizeShow" :style="from === fromRoute.project ? 'padding-right: 5px' : ''" class="nz-table2">
           <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
         </div>
-        <div v-show="bottomBox.mainResizeShow" :style="from === fromRoute.project ? 'width: calc(100% - 15px);bottom: 18px' : ''" class="pagination-bottom">
+        <div v-show="bottomBox.mainResizeShow" v-if="showLayout.indexOf('pagination') > -1" :style="from === fromRoute.project ? 'width: calc(100% - 15px);bottom: 18px' : ''" class="pagination-bottom">
           <slot name="pagination"></slot>
         </div>
       </div>

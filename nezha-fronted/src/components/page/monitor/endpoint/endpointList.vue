@@ -233,7 +233,7 @@ export default {
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 224px)', // 主列表table高度
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
