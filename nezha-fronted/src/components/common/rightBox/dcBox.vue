@@ -84,10 +84,10 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        state: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
+        // state: [
+        //   { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        // ]
       },
       areaData: [],
       coordinateFlag: false
@@ -118,6 +118,7 @@ export default {
           if (this.editDc.id) {
             const param = { ...this.editDc }
             const attr = this.$refs.latlngPicker.getAttribute()
+            console.log(attr)
             param.latitude = attr.latitude
             param.longitude = attr.longitude
             this.$put('/dc', param).then(response => {
@@ -134,6 +135,9 @@ export default {
             if (param.area) {
               param.areaId = param.area.id
             }
+            const attr = this.$refs.latlngPicker.getAttribute()
+            param.latitude = attr.latitude
+            param.longitude = attr.longitude
             if (!regNum.test(param.longitude)) {
               param.longitude = null
             }
