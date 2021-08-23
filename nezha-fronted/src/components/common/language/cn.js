@@ -1758,6 +1758,7 @@ const cn = {
   profile: {
     profile: '个人中心',
     close: '关闭',
+    clear: '清空',
     enable: '启用',
     update: '更新',
     operationRecord: '操作记录',
