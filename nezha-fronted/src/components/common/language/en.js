@@ -1635,6 +1635,7 @@ const en = {
   profile: {
     profile: 'Profile',
     close: 'Close',
+    clear: 'Clear',
     enable: 'Enable',
     update: 'Update',
     operationRecord: 'Operation log',

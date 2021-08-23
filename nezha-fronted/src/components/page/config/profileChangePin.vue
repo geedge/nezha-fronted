@@ -16,8 +16,8 @@
     <!-- 底部按钮 -->
     <template>
       <div class="profile-change__Pin-button">
-        <button @click="close" id="profile-close" class="footer__btn footer__btn--light">
-          <span>{{$t('profile.close')}}</span>
+        <button @click="clear" id="profile-close" class="footer__btn footer__btn--light">
+          <span>{{$t('profile.clear')}}</span>
         </button>
         <button @click="changePin" id="profile-update" class="footer__btn">
           <span>{{$t('profile.update')}}</span>
@@ -78,8 +78,8 @@ export default {
     dialogClosed: function () {
       this.$emit('dialogClosed')
     },
-    close: function () {
-      this.visible = false
+    clear: function () {
+      this.user = {}
     },
     changePin: function () {
       this.$refs.changePinForm.validate((valid) => {
