@@ -68,7 +68,7 @@
       <el-tab-pane :label="$t('config.system.monitor.monitor')" name="monitor">
         <div class="system-config-form basicForm" v-if="activeTab === 'monitor'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
-          <el-form :model="monitor"  label-width="208px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
+          <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
             <el-form-item :label="$t('config.system.monitor.alertApi')" prop="asset_ping_interval">
               <el-input v-model="monitor.alert_api" id="monitor-alert-api"></el-input>
             </el-form-item>
@@ -110,22 +110,26 @@
                 <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.metrics_storage_s3_endpoint" id="monitor-metrics_storage_s3_endpoint">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="metrics_storage_s3_bucket" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.metrics_storage_s3_bucket" id="monitor-metrics_storage_s3_bucket">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="metrics_storage_s3_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key">
-              </el-input>
-            </el-form-item>
+            <transition name="el-zoom-in-top">
+              <div v-show="monitor.metrics_storage_type == 2">
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_endpoint')" prop="metrics_storage_s3_endpoint" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.metrics_storage_s3_endpoint" id="monitor-metrics_storage_s3_endpoint">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_bucket')" prop="metrics_storage_s3_bucket" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.metrics_storage_s3_bucket" id="monitor-metrics_storage_s3_bucket">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_access_key')" prop="metrics_storage_s3_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.metrics_storage_s3_access_key" id="monitor-metrics_storage_s3_access_key">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.metrics_storage_s3_secret_access_key')" prop="metrics_storage_s3_secret_access_key" :rules=" [ { required: monitor.metrics_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                  <el-input v-model="monitor.metrics_storage_s3_secret_access_key" id="monitor-metrics_storage_s3_secret_access_key">
+                  </el-input>
+                </el-form-item>
+              </div>
+            </transition>
             <el-form-item :label="$t('config.system.basic.maxSeries')" prop="metrics_query_max_series">
               <el-input-number v-model="monitor.metrics_query_max_series" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-monitor-metrics_query_max_series"></el-input-number>
             </el-form-item>
@@ -143,22 +147,26 @@
                 <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.monitor.logs_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
-              <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key">
-              </el-input>
-            </el-form-item>
+            <transition name="el-zoom-in-top">
+              <div v-show="monitor.logs_storage_type == 2">
+                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_endpoint')" prop="logs_storage_s3_endpoint" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.logs_storage_s3_endpoint" id="monitor-logs_storage_s3_endpoint">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_bucket')" prop="logs_storage_s3_bucket" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.logs_storage_s3_bucket" id="monitor-logs_storage_s3_bucket">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_access_key')" prop="logs_storage_s3_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]">
+                  <el-input v-model="monitor.logs_storage_s3_access_key" id="monitor-logs_storage_s3_access_key">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label="$t('config.system.monitor.logs_storage_s3_secret_access_key')" prop="logs_storage_s3_secret_access_key" :rules=" [ { required: monitor.logs_storage_type == 2, message: this.$t('validate.required'), trigger: 'blur' }]" class="monitorLastEle">
+                  <el-input v-model="monitor.logs_storage_s3_secret_access_key" id="monitor-logs_storage_s3_secret_access_key">
+                  </el-input>
+                </el-form-item>
+              </div>
+            </transition>
             <el-form-item :label="$t('config.system.monitor.logs_query_range_default_limit')" prop="logs_query_range_default_limit">
               <el-input-number v-model="monitor.logs_query_range_default_limit" controls-position="right" :min="-1" :max="1000" :precision="0" id="system-monitor-logs_query_range_default_limit"></el-input-number>
             </el-form-item>
@@ -1104,6 +1112,14 @@ export default {
     border-top: 1px dashed #E7EAED;
     padding-top: 30px;
     width: 699px;
+  }
+  .system {
+    .el-form-item:last-of-type.monitorLastEle {
+      /deep/ .el-form-item__content{
+        margin-left: 180px !important;
+        margin-bottom: 20px;
+      }
+    }
   }
 </style>
 <style lang="scss">
