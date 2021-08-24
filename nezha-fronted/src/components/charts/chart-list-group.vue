@@ -1414,11 +1414,12 @@ export default {
 
     // 设置图表的尺寸
     setChartSize (item, index) {
+      console.log(item)
       this.$nextTick(() => {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {
           chartBox.style.width = `${(item.span / 12) * 100}%`
-          chartBox.style.height = `${document.getElementById('listContainer').offsetWidth / 12 * item.height}px`
+          chartBox.style.height = `${document.getElementById('listContainer' + item.groupId).offsetWidth / 12 * item.height}px`
         }
       })
     },

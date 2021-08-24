@@ -399,8 +399,9 @@ export const chartResizeTool = {
     const chartBlankWidth = this.chartBlankWidth
     const chartBlankHeight = this.chartBlankHeight
     const titleHeight = this.titleHeight
-    const containerWidth = data.groupId ? document.getElementById('listContainer' + data.groupId).offsetWidth - 20 : document.getElementById('listContainer').offsetWidth
+    const containerWidth = data.groupId ? document.getElementById('listContainer' + data.groupId).offsetWidth + 40 : document.getElementById('listContainer').offsetWidth
     const step = this.stepWidth(containerWidth)
+    console.log(originalData,containerWidth)
     const mouseOriginalX = event.clientX // 鼠标初始坐标
     const mouseOriginalY = event.clientY
     const originalWidth = step * data.span // 图表、阴影初始宽高

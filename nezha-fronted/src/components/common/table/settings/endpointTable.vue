@@ -388,6 +388,7 @@ export default {
   .endpoint-cell-left{
     /*display: inline-block;*/
     /*width: 70px;*/
+    margin-right: 5px;
   }
 </style>
 <style>
