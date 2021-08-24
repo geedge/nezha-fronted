@@ -258,13 +258,8 @@ export default {
   },
   methods: {
     copyValue (item) {
-      const str = []
-      if (item.configs[0].enabled) {
-        str.push(item.configs[0])
-      }
-      if (item.configs[1].enabled) {
-        str.push(item.configs[1])
-      }
+      const str = item
+      console.log(str)
       const domUrl = document.createElement('input')
       domUrl.value = JSON.stringify(str)
       domUrl.id = 'creatDom'
