@@ -30,7 +30,7 @@
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></operation-log-table>
         <template v-else>
-         <profileChangePin style="width: 640px; padding: 20px 0 0 20px"/>
+         <profileChangePin/>
         </template>
       </template>
       <!-- 分页组件 -->

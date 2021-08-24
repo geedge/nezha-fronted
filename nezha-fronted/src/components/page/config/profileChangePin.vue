@@ -1,7 +1,8 @@
 <template>
-  <div class="profile-change__Pin">
-    <div class="profile-change__Pin-from">
-      <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm">
+  <div class="profile-change">
+    <div class="profile-change__Pin">
+      <div class="profile-change__Pin-from">
+        <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm">
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.oldPassword')" prop="pin">
             <el-input v-model="user.pin" type="password" size="small"/>
           </el-form-item>
@@ -11,19 +12,20 @@
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.confirmPassword')" prop="confirmPin">
             <el-input v-model="user.confirmPin" type="password" size="small"/>
           </el-form-item>
-      </el-form>
-    </div>
-    <!-- 底部按钮 -->
-    <template>
-      <div class="profile-change__Pin-button">
-        <button @click="clear" id="profile-close" class="footer__btn footer__btn--light">
-          <span>{{$t('profile.clear')}}</span>
-        </button>
-        <button @click="changePin" id="profile-update" class="footer__btn">
-          <span>{{$t('profile.update')}}</span>
-        </button>
+        </el-form>
       </div>
-    </template>
+      <!-- 底部按钮 -->
+      <template>
+        <div class="profile-change__Pin-button">
+          <button @click="clear" id="profile-close" class="footer__btn footer__btn--light">
+            <span>{{$t('profile.clear')}}</span>
+          </button>
+          <button @click="changePin" id="profile-update" class="footer__btn">
+            <span>{{$t('profile.update')}}</span>
+          </button>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -121,56 +123,66 @@ export default {
   }
 </style>
 <style lang="scss" scoped>
-.profile-change__Pin {
-  .profile-change__Pin-from {
-    .profile-change__Pin-input >>> .el-form-item__label{
-      padding: 0 !important;
-      line-height: 32px;
-      height: 32px;
+.profile-change {
+  height: 100%;
+  margin: 0 0 0 50px;
+  width: calc(100% - 50px);
+  overflow: hidden auto;
+  .profile-change__Pin {
+    min-width: 300px;
+    max-width: 600px;
+    width: calc(100% - 100px);
+    .profile-change__Pin-from {
+      .profile-change__Pin-input >>> .el-form-item__label{
+        padding: 0 !important;
+        line-height: 32px;
+        height: 32px;
+      }
+      .el-form-item {
+        margin-bottom: 15px;
+      }
     }
-    .el-form-item {
-      margin-bottom: 15px;
-    }
-  }
-  .profile-change__Pin-button {
-    text-align: center;
-    margin-top: 40px;
-    padding:  0 30px 0 15px;
-    .footer__btn {
-      margin: 0 10px;
-      height: 30px;
-      min-width: 74px;
-      padding: 0 10px;
-      color: white;
-      background-color: var(--theme-color);
-      border: none;
-      border-radius: 4px;
-      outline: none;
-      box-sizing: border-box;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background-color linear .2s, color linear .1s;
-    }
+    .profile-change__Pin-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+      .footer__btn {
+        margin: 0 10px;
+        height: 30px;
+        min-width: 74px;
+        padding: 0 10px;
+        color: white;
+        background-color: var(--theme-color);
+        border: none;
+        border-radius: 4px;
+        outline: none;
+        box-sizing: border-box;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color linear .2s, color linear .1s;
+      }
 
-    .footer__btn:hover:not(.footer__btn--disabled) {
-      background-color: var(--theme-color-light-20);
-    }
+      .footer__btn:hover:not(.footer__btn--disabled) {
+        background-color: var(--theme-color-light-20);
+      }
 
-    .footer__btn--light {
-      background-color: white;
-      border: 1px solid $--primary-border-color;
-      color: #333;
-    }
+      .footer__btn--light {
+        background-color: white;
+        border: 1px solid $--primary-border-color;
+        color: #333;
+      }
 
-    .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
-      background-color: white;
-      border-color: var(--theme-color-light-50);
-      color: var(--theme-color);
-    }
+      .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
+        background-color: white;
+        border-color: var(--theme-color-light-50);
+        color: var(--theme-color);
+      }
 
-    .footer__btn--disabled {
-      opacity: .6;
-      cursor: default;
+      .footer__btn--disabled {
+        opacity: .6;
+        cursor: default;
+      }
     }
   }
 }

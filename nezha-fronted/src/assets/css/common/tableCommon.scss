@@ -364,11 +364,11 @@
   }
 }
 .profile {
-  .main-list {
-    height: calc(100% + 13px);
-  }
   .top-tools {
     padding: 0 20px 14px 20px;
+  }
+  .main-container {
+   padding: 0;
   }
   .list-page .nz-table2 .el-table:not(.chart-table) .gutter {
     position: fixed;

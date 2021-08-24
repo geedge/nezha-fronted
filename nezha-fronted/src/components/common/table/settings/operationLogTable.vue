@@ -63,27 +63,32 @@ export default {
         }, {
           label: this.$t('config.operationlog.username'),
           prop: 'username',
-          show: true
+          show: true,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.ip'),
           prop: 'ip',
-          show: true
+          show: true,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.operation'),
           prop: 'operation',
-          show: true
+          show: true,
+          minWidth: 140
         },
         {
           label: this.$t('config.operationlog.type'),
           prop: 'type',
-          show: true
+          show: true,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.state'),
           prop: 'state',
-          show: true
+          show: true,
+          minWidth: 80
         },
         // {
         //   label: this.$t('config.operationlog.userId'),
@@ -93,29 +98,34 @@ export default {
         {
           label: this.$t('config.operationlog.operaId'),
           prop: 'operaId',
-          show: false
+          show: false,
+          minWidth: 140
         },
         {
           label: this.$t('config.operationlog.createDate'),
           prop: 'createDate',
-          show: true
+          show: true,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.time'),
           prop: 'time',
-          show: false
+          show: false,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.params'),
           prop: 'params',
           show: false,
-          ShowOverflowTooltip: true
+          ShowOverflowTooltip: true,
+          minWidth: 80
         },
         {
           label: this.$t('config.operationlog.response'),
           prop: 'response',
           show: false,
-          ShowOverflowTooltip: true
+          ShowOverflowTooltip: true,
+          minWidth: 140
         }
       ]
     }

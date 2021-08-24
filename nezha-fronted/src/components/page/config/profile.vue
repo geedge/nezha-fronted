@@ -67,9 +67,7 @@
         </div>
       </div>
     </div>
-    <div style="width: calc(100% - 370px);">
-      <operation-record />
-    </div>
+    <operation-record style="width: calc(100% - 370px);padding: 11px 10px 8px 10px;pxbox-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);border-radius: 2px;" />
     <el-dialog :visible.sync="authBindShow" :title="$t('login.verifyDialogTitle')" :modal-append-to-body='false'
                :show-close="true" width="620px" class="nz-dialog" @closed="closeDialog">
 
@@ -335,13 +333,13 @@ export default {
 <style lang="scss" scoped>
 .profile {
   display: flex;
-  height: calc(100% - 20px);
+  height: calc(100% - 10px);
   .profile-left {
     margin: 10px 0 10px 10px;
     background: #FFFFFF;
     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);
     border-radius: 2px;
-    height: 100%;
+    height: calc(100% - 10px);
     width: 360px;
     overflow: auto;
     .profile-left__header {

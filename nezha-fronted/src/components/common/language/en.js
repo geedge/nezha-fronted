@@ -1648,7 +1648,7 @@ const en = {
     oldPassword: 'Old password',
     newPassword: 'New password',
     confirmPassword: 'Confirm password',
-    lastLoginIp: 'Last login Ip',
+    lastLoginIp: 'Last login IP',
     lastLoginTime: 'Last login time',
     role: 'Role',
     email: 'Email',
