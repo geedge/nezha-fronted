@@ -11,7 +11,7 @@
           <template slot="prepend">{{$t('config.system.basic.zoom')}}</template>
         </el-input>
       </div>
-      <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-shuidi" style="color:rgb(238, 157, 63)"></i></div>
+      <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-weizhi" style="color:rgb(238, 157, 63)"></i></div>
     </div>
     <el-dialog :visible.sync="mapConfigVisible" :title="$t('config.system.basic.mapTitle')" width="calc(50% - 10px)"  @close="mapClose" @opened="initMap" class=" nz-dialog map-config-dialog" :modal-append-to-body="appendToBody">
       <div id="map" style="height: 100%; width: 100%"></div>
@@ -28,7 +28,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 export default {
   name: 'latlngPicker',
   props: {
-    initData: { type: Object },
+    initData: { },
     appendToBody: { type: Boolean, default: true },
     showZoom: { type: Boolean, default: true }
   },
