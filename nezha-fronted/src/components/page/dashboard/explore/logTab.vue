@@ -61,7 +61,7 @@
           prop="date"
           width="140"
         >
-          <template slot-scope="{ row }">{{row.date}}</template>
+          <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
         <el-table-column
           prop="message"
@@ -225,7 +225,7 @@ export default {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
               formatter (value) {
-                return vm.$unixTimeParseToString(vm.toMillisecondTime(value) / 1000, 'hh:mm')
+                return vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(value) / 1000), 'hh:mm')
               }
             },
             boundaryGap: [0, '1%']
