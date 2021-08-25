@@ -22,10 +22,25 @@
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
-              <span class="tree--operation" v-if="!panelLock">
-                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span>
-                <span class="panel-dropdown-btn" @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i></span>
-              </span>
+<!--              <span class="tree&#45;&#45;operation" v-if="!panelLock">-->
+<!--                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span>-->
+<!--                <span class="panel-dropdown-btn" @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i></span>-->
+<!--              </span>-->
+              <el-row class="block-col-2" style="width: 35px;">
+                <el-col>
+                  <el-dropdown trigger="click" popper-class="testt">
+                    <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
+                    <el-dropdown-menu slot="dropdown" v-has="['panel_edit', 'panel_delete']">
+                      <el-dropdown-item>
+                        <span @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>Edit</span>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <span @click.stop="deletePanel(data)" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i>Delete</span>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-col>
+              </el-row>
             </div>
           </el-tree>
         </div>
@@ -33,6 +48,9 @@
     </div>
     <div slot="reference">
       <slot name="trigger"></slot>
+    </div>
+    <div slot="default">
+      <slot name="tail"></slot>
     </div>
   </el-popover>
 </template>
@@ -210,5 +228,10 @@ export default {
 
 .panel-dropdown-btn-delete:hover {
   color: #D96D7A;
+}
+</style>
+<style scoped lang="scss">
+.nz-pop-select-panel {
+  z-index: 1999 !important;
 }
 </style>
