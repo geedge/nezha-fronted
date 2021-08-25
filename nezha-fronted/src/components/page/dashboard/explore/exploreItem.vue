@@ -355,9 +355,9 @@ export default {
       ],
       selectValue: this.$t('project.metrics.metrics'),
       selectIcon: 'nz-icon nz-icon-Metrics',
-      fromData: {
-        status: ''
-      },
+      // fromData: {
+      //   status: ''
+      // },
       showMetrics: true,
       promqlCount: 1,
       promqlKeys: [],
@@ -400,7 +400,7 @@ export default {
     this.getPanelData()
     this.queryMetrics()
     this.promqlKeys.push(getUUID())
-    this.fromData.status = this.searchMetrics[0].label
+    // this.fromData.status = this.searchMetrics[0].label
     this.selectMetricsLogs()
   },
   methods: {

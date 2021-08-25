@@ -46,7 +46,7 @@ export default {
     initData: {
       immediate: true,
       handler () {
-        console.log(this.initData)
+        // console.log(this.initData)
         if (this.initData) {
           this.mapParam = JSON.parse(JSON.stringify(this.initData))
           this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
@@ -151,7 +151,7 @@ export default {
       return new Promise(resolve => {
         this.$get('/sysConfig?paramKey=map_center_config').then(response => {
           if (response.code == 200) {
-            console.log(response)
+            // console.log(response)
             this.mapParam = JSON.parse(response.data.paramKey.map_center_config)
             resolve()
           }

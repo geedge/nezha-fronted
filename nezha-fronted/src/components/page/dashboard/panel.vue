@@ -9,17 +9,17 @@
           <template v-else>
             <div class="top-tool-left">
               <select-panel ref="selectPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'"
-                            :show-panel="showPanel" style="width: 300px;display: inline-block" @deletePanel="del" @editPanel="edit" @selectPanel="panelChange">
+                            :show-panel="showPanel" style="display: inline-block;padding: 0" @deletePanel="del" @editPanel="edit" @selectPanel="panelChange">
                 <template v-slot:header>
                   <div class="panel-select-header">
-                    <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px;"></el-input>
+                    <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 286px;"></el-input>
 <!--                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>-->
                   </div>
                 </template>
                 <template v-slot:trigger>
-                  <el-input v-model="showPanel.name" class="panel-name" placeholder="" readonly="readonly" size="small">
-                    <i slot="prefix" class="el-icon-menu"></i>
-                  </el-input>
+                  <i style="color: #BEBEBE" class="el-icon-menu"></i>
+                  <span style="display: inline-block;padding: 0 7px">{{showPanel.name}}</span>
+                  <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
@@ -902,7 +902,21 @@ export default {
   .panel-name {
     .el-input__prefix {
       line-height: 32px;
+      font-size: 16px;
       left: 10px;
+    }
+    .el-input__suffix {
+      line-height: 32px;
+      font-size: 12px;
+      top: 3px;
+      color: #BEBEBE;
+    }
+    .el-input__inner {
+      border: none !important;
+      font-size: 16px;
+      font-family: Roboto-Medium;
+      color: #333333;
+      font-weight: bold;
     }
   }
   .panel-select-header {
@@ -911,6 +925,7 @@ export default {
     margin-bottom: 15px;
   }
   .panel-select-tail {
+    border-top: 1px solid  #DEDEDE;
     .panel-select-add {
       line-height: 32px;
       height: 32px;

@@ -118,7 +118,7 @@ export default {
           if (this.editDc.id) {
             const param = { ...this.editDc }
             const attr = this.$refs.latlngPicker.getAttribute()
-            console.log(attr)
+            // console.log(attr)
             param.latitude = attr.latitude
             param.longitude = attr.longitude
             this.$put('/dc', param).then(response => {

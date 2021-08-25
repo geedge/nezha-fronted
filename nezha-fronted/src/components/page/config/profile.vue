@@ -3,7 +3,7 @@
     <div class="profile-left">
       <div class="profile-left__header">
         <div class="profile-left__header-avatar">
-          <span>{{userList.name.substr(0, 1)}}</span>
+          <span>{{profileName}}</span>
         </div>
         <div class="profile-left__header-username">
           <el-popover
@@ -181,6 +181,8 @@ export default {
       ],
       // 后台数据
       userList: {},
+      // 头像 name
+      profileName: '',
       rules: {
         oldPassword: [
           { required: true, message: this.$t('validate.required') }
@@ -209,6 +211,8 @@ export default {
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
             this.tableProfile[3].prop = this.userList.source
+            const name = this.userList.name.substr(0, 1)
+            this.profileName = name
           }
           resolve()
         })
