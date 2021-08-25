@@ -63,7 +63,7 @@
         </div>
         <div class="profile-left__bottom-title">
           <div>{{$t('profile.lastLoginTime')}}</div>
-          <div>{{userList.lastLoginTime}}</div>
+          <div>{{utcTimeToTimezoneStr(userList.lastLoginTime)}}</div>
         </div>
       </div>
     </div>

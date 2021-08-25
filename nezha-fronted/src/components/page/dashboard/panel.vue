@@ -13,13 +13,18 @@
                 <template v-slot:header>
                   <div class="panel-select-header">
                     <el-input id="panel-list-search" v-model="filterPanel" :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px;"></el-input>
-                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>
+<!--                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-plus"></i></span>-->
                   </div>
                 </template>
                 <template v-slot:trigger>
                   <el-input v-model="showPanel.name" class="panel-name" placeholder="" readonly="readonly" size="small">
                     <i slot="prefix" class="el-icon-menu"></i>
                   </el-input>
+                </template>
+                <template v-slot:tail>
+                  <div class="panel-select-tail">
+                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;Add</span>
+                  </div>
                 </template>
               </select-panel>
             </div>
@@ -904,9 +909,19 @@ export default {
     display: flex;
     justify-content: space-evenly;
     margin-bottom: 15px;
+  }
+  .panel-select-tail {
     .panel-select-add {
-      line-height: 26px;
+      line-height: 32px;
+      height: 32px;
+      display: inline-block;
       cursor: pointer;
+      i {
+        color: #FA901C;
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 20px;
+      }
     }
   }
   /* end-chart list*/

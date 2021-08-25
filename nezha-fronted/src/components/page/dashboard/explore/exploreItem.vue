@@ -8,16 +8,33 @@
         </div>
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
-          <div class="top-tool-left">
-            <el-select v-model="fromData.status" size="small" style="width: 120px;" @change="changeType">
-              <el-option
-                v-for="item in searchMetrics"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
+<!--          <div class="top-tool-left">-->
+<!--            <el-select v-model="fromData.status" size="small" style="width: 120px;" @change="changeType">-->
+<!--              <el-option-->
+<!--                v-for="item in searchMetrics"-->
+<!--                :key="item.value"-->
+<!--                :label="item.label"-->
+<!--                :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </div>-->
+          <el-row class="block-col-2" style="width: 300px;">
+            <el-col>
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                <span><i :class="selectIcon"></i></span>
+                <span>{{selectValue}}</span>
+                <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+              </span>
+                <el-dropdown-menu style="width: 118px" class="el-dropdown__width" placement="bottom-end" slot="dropdown">
+                  <el-dropdown-item
+                    @click.native="selectMetricsLogs(item.label,item.icon)"
+                    v-for="item in searchMetrics"
+                    :key="item.value">{{item.label}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-row>
           <div class="top-tool-right">
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">Split</button>
             <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
@@ -327,13 +344,17 @@ export default {
       searchMetrics: [
         {
           value: 'Metrics',
-          label: this.$t('project.metrics.metrics')
+          label: this.$t('project.metrics.metrics'),
+          icon: 'nz-icon nz-icon-Metrics'
         },
         {
           value: 'Logs',
-          label: this.$t('overall.logs')
+          label: this.$t('overall.logs'),
+          icon: 'nz-icon nz-icon-logs'
         }
       ],
+      selectValue: '',
+      selectIcon: '',
       fromData: {
         status: ''
       },
@@ -373,89 +394,6 @@ export default {
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
       logData: []
-      /*logData: [JSON.parse(`{
-          "result": [{
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-23 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627545412000000000,
-            "uuid": "1jqsjdjdf"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-23 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627545412000000000,
-            "uuid": "1jqsjdjdf"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-22 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627543512000000000,
-            "uuid": "1jqsjdjdg"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-21 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627542512000000000,
-            "uuid": "1jqsjdjdh"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-20 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627502512000000000,
-            "uuid": "1jqsjdjdi"
-          }
-          ],
-          "resultType": "streamsFormat",
-          "series": [
-            {
-              "name": "debug",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "info",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "warn",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "error",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "unknown",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }
-          ]
-        }`)]*/ // 日志数据
     }
   },
   created () {
@@ -463,8 +401,30 @@ export default {
     this.queryMetrics()
     this.promqlKeys.push(getUUID())
     this.fromData.status = this.searchMetrics[0].label
+    this.selectMetricsLogs()
   },
   methods: {
+    selectMetricsLogs (val, icon) {
+      if (this.selectValue === 'Metrics') {
+        this.selectValue = val
+        this.selectIcon = icon
+        this.showMetrics = val === 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      } else if (this.selectValue === 'Logs') {
+        this.selectValue = val
+        this.selectIcon = icon
+        this.showMetrics = val === 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      } else {
+        this.selectValue = 'Metrics'
+        this.selectIcon = 'nz-icon nz-icon-Metrics'
+        this.showMetrics = 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      }
+    },
     changeType (value) {
       this.showMetrics = value === 'Metrics'
       this.showIntroduce = true
@@ -555,9 +515,9 @@ export default {
             res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
           }
           if (res.length > 0) {
-            this.logData = res.map(r => r.data)
-            const hasGraph = this.logData.some(d => d.resultType === 'matrix')
-            const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
+            const logData = res.map(r => r.data)
+            const hasGraph = logData.some(d => d.resultType === 'matrix')
+            const hasLog = logData.some(d => d.resultType === 'streamsFormat')
             const graphTabIndex = this.showTab.indexOf('1')
             if (hasGraph) {
               if (graphTabIndex === -1) {
@@ -571,7 +531,7 @@ export default {
             const logTabIndex = this.showTab.indexOf('2')
             if (hasLog) {
               if (logTabIndex === -1) {
-                this.showTab.push('1')
+                this.showTab.push('2')
               }
             } else {
               if (logTabIndex > -1) {
@@ -580,6 +540,7 @@ export default {
             }
             this.$nextTick(() => {
               hasGraph && this.loadLogGraph()
+              this.logData = logData
             })
           }
         }).catch(e => {
@@ -1108,6 +1069,22 @@ export default {
 
 </style>
 <style lang="scss" scoped>
+  .el-dropdown-link {
+    span:nth-of-type(1) {
+      color:  #FA901C;
+      padding-right: 10px;
+    }
+    span:nth-of-type(2) {
+      font-family: Roboto-Medium;
+      font-size: 16px;
+      color: #333333;
+      font-weight: 500;
+      padding-right: 20px;
+    }
+    span:nth-of-type(3) {
+      color: #BEBEBE;
+    }
+  }
   .explore {
     height: 100%;
     .explore-close {
