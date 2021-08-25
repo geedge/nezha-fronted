@@ -28,7 +28,7 @@
               </span>
                 <el-dropdown-menu style="width: 118px" class="el-dropdown__width" placement="bottom-end" slot="dropdown">
                   <el-dropdown-item
-                    @click.native="selectMetricsLogs(item.label,item.icon)"
+                    @click.native="selectMetricsLogs(item.label,item.icon, item.value)"
                     v-for="item in searchMetrics"
                     :key="item.value">{{item.label}}</el-dropdown-item>
                 </el-dropdown-menu>
@@ -353,8 +353,8 @@ export default {
           icon: 'nz-icon nz-icon-logs'
         }
       ],
-      selectValue: '',
-      selectIcon: '',
+      selectValue: this.$t('project.metrics.metrics'),
+      selectIcon: 'nz-icon nz-icon-Metrics',
       fromData: {
         status: ''
       },
@@ -404,26 +404,14 @@ export default {
     this.selectMetricsLogs()
   },
   methods: {
-    selectMetricsLogs (val, icon) {
-      if (this.selectValue === 'Metrics') {
-        this.selectValue = val
+    selectMetricsLogs (val, icon, label) {
+      if (val) {
         this.selectIcon = icon
-        this.showMetrics = val === 'Metrics'
-        this.showIntroduce = true
-        this.resetExpression()
-      } else if (this.selectValue === 'Logs') {
         this.selectValue = val
-        this.selectIcon = icon
-        this.showMetrics = val === 'Metrics'
-        this.showIntroduce = true
-        this.resetExpression()
       } else {
-        this.selectValue = 'Metrics'
-        this.selectIcon = 'nz-icon nz-icon-Metrics'
-        this.showMetrics = 'Metrics'
-        this.showIntroduce = true
-        this.resetExpression()
+        label = 'Metrics'
       }
+      this.changeType(label)
     },
     changeType (value) {
       this.showMetrics = value === 'Metrics'
