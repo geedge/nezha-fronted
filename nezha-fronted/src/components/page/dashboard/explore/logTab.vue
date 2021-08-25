@@ -221,6 +221,7 @@ export default {
           xAxis: {
             type: 'time',
             axisTick: { show: false },
+            axisLine: { show: false },
             axisLabel: {
               rotate: 0,
               fontSize: 13 * window.devicePixelRatio,
@@ -235,6 +236,15 @@ export default {
           },
           yAxis: {
             type: 'value',
+            splitLine: {
+              show: true
+            },
+            axisLine: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
             axisLabel: {
               fontSize: 13 * window.devicePixelRatio,
               formatter (value, i) {
