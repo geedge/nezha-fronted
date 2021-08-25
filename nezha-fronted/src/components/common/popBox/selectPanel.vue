@@ -32,10 +32,10 @@
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
                     <el-dropdown-menu slot="dropdown"  v-has="['panel_edit', 'panel_delete']">
                       <el-dropdown-item>
-                        <span @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>Edit</span>
+                        <span @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</span>
                       </el-dropdown-item>
                       <el-dropdown-item>
-                        <span @click.stop="deletePanel(data)" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i>Delete</span>
+                        <span @click.stop="deletePanel(data)" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</span>
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
