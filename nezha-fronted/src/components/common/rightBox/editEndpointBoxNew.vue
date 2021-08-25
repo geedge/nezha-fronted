@@ -102,13 +102,13 @@
           <div class="endpoint-title">
             <span class="endpoint-title-content">
               <i class="nz-icon nz-icon-arrow-down" :class="metricsShow?'':'is-active'" @click="metricsShow = !metricsShow"></i>
-              Metrics
+             {{$t('project.endpoint.metrics')}}
             </span>
             <el-switch v-model="editEndpoint.configs[0].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
           <transition name="el-zoom-in-top">
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editEndpoint.configs[0].enable">
-              <el-tab-pane label="Basic" name="Basic">
+              <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                 <!--path-->
                 <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
                   <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
@@ -191,7 +191,7 @@
                 </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="Parameter" name="Parameter">
+              <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter">
                 <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
                     <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
@@ -216,7 +216,7 @@
               </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="Labels" name="Labels">
+              <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
                 <div id="module-box-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
                     <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
@@ -235,7 +235,7 @@
               </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="Relabel" name="Relabel">
+              <el-tab-pane :label="$t('project.endpoint.relabel')" name="Relabel">
                 <div id="module-box-relabel" ref="labelBoxScrollbar" style="height: 100%; overflow: hidden;">
                   <div v-for="(item, index) in  this.editEndpoint.configs[0].config.relabel_config" :key="index" class="">
                     <div class="pipeline-box">
@@ -314,7 +314,7 @@
                  </span>
                 </div>
               </el-tab-pane>
-              <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" label="Auth" name="Auth">
+              <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" :label="$t('project.endpoint.auth')" name="Auth">
                 <!--authtype-->
                 <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
                   <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
@@ -342,7 +342,7 @@
           <div class="endpoint-title" style="margin-top: 10px">
             <span class="endpoint-title-content">
                <i class="nz-icon nz-icon-arrow-down" :class="logsShow?'':'is-active'" @click="logsShow = !logsShow"></i>
-              Logs
+             {{$t('project.endpoint.logs')}}
             </span>
             <el-switch v-model="editEndpoint.configs[1].enable"  active-color="#ee9d3f" size="small" :active-value="1" :inactive-value="0"></el-switch>
           </div>
@@ -350,7 +350,7 @@
             <div v-show="logsShow" v-if="editEndpoint.configs[1].enable">
               <div v-for="(item, index) in editEndpoint.configs[1].config" :key="index" style="position: relative">
                 <el-tabs v-model="activeNameLogs[index]" class="special-tabs" @tab-click="()=>{tabClick(index)}">
-                  <el-tab-pane label="Basic" name="Basic">
+                  <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                     <!--type-->
                     <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
                       <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
@@ -391,7 +391,7 @@
                       <el-input  v-model="item.appName" :id="'module-box-basic-appName' +index" placeholder='' size="small"></el-input>
                     </el-form-item>
                   </el-tab-pane>
-                  <el-tab-pane label="Labels" name="Labels">
+                  <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
                     <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                       <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
                         <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
@@ -410,7 +410,7 @@
               </span>
                     </div>
                   </el-tab-pane>
-                  <el-tab-pane label="Pipeline" name="Pipeline">
+                  <el-tab-pane :label="$t('project.endpoint.pipeline')" name="Pipeline">
                     <div v-for="(item2, index2) in item.pipeline" :key="index2">
                       <div class="pipeline-box">
                         <span class="pipeline-title">{{item2.type}}</span>

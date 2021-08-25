@@ -1406,7 +1406,15 @@ const en = {
       basicTypeFile: 'Path',
       basicTypeJournal: 'Unit',
       basicTypeSyslog: 'Listen address',
-      basicAppName: 'App name'
+      basicAppName: 'App name',
+      metrics: 'Metrics',
+      logs: 'Logs',
+      parameter: 'Parameter',
+      labels2: 'Labels',
+      relabel: 'Relabel',
+      auth: 'Auth',
+      basic: 'Basic',
+      pipeline: 'Pipeline'
     },
     metrics: {
       metrics: 'Metrics', // "指标"

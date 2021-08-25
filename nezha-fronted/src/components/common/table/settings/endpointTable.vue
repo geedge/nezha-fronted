@@ -119,34 +119,40 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-<!--          <el-popover placement="right" trigger="hover" width="200" :popper-class="''" :disabled="scope.row[item.prop]<2">-->
-<!--            <div>-->
-<!--              <div v-html="suspendedStr(scope.row[item.prop])"></div>-->
-<!--            </div>-->
-<!--            <div slot="reference" style="width: 100px">-->
-<!--              <div v-if="scope.row[item.prop]===0">-->
-<!--                <div class="active-icon red-bg inline-block"></div> down-->
-<!--              </div>-->
-<!--              <div v-else-if="scope.row[item.prop]===1">-->
-<!--                <div class="active-icon green-bg inline-block"></div> up-->
-<!--              </div>-->
-<!--              <div v-else-if="scope.row[item.prop]">-->
-<!--                <div class="active-icon gray-bg inline-block"></div> suspended-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </el-popover>-->
-          <div>
-            <div class="state-box">
-              <div class="state-box-content" ><span class="state-content-text">Metrics  </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Logs     </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Dc       </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Endpoint </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 5px"></div></div>
-              <div class="state-box-content" ><span class="state-content-text">Asset    </span><div class="active-icon red-bg inline-block" style="margin-right: 0px"></div></div>
+          <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
+            <div>
+              <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
             </div>
-          </div>
+            <span slot="reference" style="width: auto">
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+              <span v-if="scope.row.configs[0].state===0">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[0].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[0].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
+            </span>
+          </el-popover>
+          <el-popover placement="right" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
+            <div>
+              <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
+            </div>
+            <span slot="reference" style="width: auto">
+              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+              <span v-if="scope.row.configs[1].state===0">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[1].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="scope.row.configs[1].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
+            </span>
+          </el-popover>
         </template>
         <template v-else-if="item.prop === 'enabled'">
           <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
@@ -245,7 +251,8 @@ export default {
           label: this.$t('project.endpoint.state'),
           prop: 'state',
           show: true,
-          minWidth: 90,
+          minWidth: 200,
+          width: 200,
           sortable: 'custom'
         }
         // {
@@ -374,6 +381,14 @@ export default {
   }
   .state-content-text{
     width:64px;text-align:left;margin-right: 5px;display: inline-block
+  }
+  .colorFA901C{
+    color: #fa901c;
+  }
+  .endpoint-cell-left{
+    /*display: inline-block;*/
+    /*width: 70px;*/
+    margin-right: 5px;
   }
 </style>
 <style>

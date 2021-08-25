@@ -394,89 +394,6 @@ export default {
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
       logData: []
-      /*logData: [JSON.parse(`{
-          "result": [{
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-23 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627545412000000000,
-            "uuid": "1jqsjdjdf"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-23 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627545412000000000,
-            "uuid": "1jqsjdjdf"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-22 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggersDEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627543512000000000,
-            "uuid": "1jqsjdjdg"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-21 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627542512000000000,
-            "uuid": "1jqsjdjdh"
-          }, {
-            "labels": {
-              "asset": "44.53",
-              "endpoint": "192.168.44.53",
-              "filename": "/opt/cn/cn-web/logs/cn-web.log",
-              "job": "cn-log",
-              "project": "cn"
-            },
-            "level": "debug",
-            "message": "2021-07-20 03:39:01.842 [quartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 0 triggers",
-            "timestamp": 1627502512000000000,
-            "uuid": "1jqsjdjdi"
-          }
-          ],
-          "resultType": "streamsFormat",
-          "series": [
-            {
-              "name": "debug",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "info",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "warn",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "error",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }, {
-              "name": "unknown",
-              "data": [[1588889221, 123], [1588889222, 10]]
-            }
-          ]
-        }`)]*/ // 日志数据
     }
   },
   created () {
@@ -598,9 +515,9 @@ export default {
             res = res.filter((r, i) => errorRowIndex.indexOf(i) === -1)
           }
           if (res.length > 0) {
-            this.logData = res.map(r => r.data)
-            const hasGraph = this.logData.some(d => d.resultType === 'matrix')
-            const hasLog = this.logData.some(d => d.resultType === 'streamsFormat')
+            const logData = res.map(r => r.data)
+            const hasGraph = logData.some(d => d.resultType === 'matrix')
+            const hasLog = logData.some(d => d.resultType === 'streamsFormat')
             const graphTabIndex = this.showTab.indexOf('1')
             if (hasGraph) {
               if (graphTabIndex === -1) {
@@ -614,7 +531,7 @@ export default {
             const logTabIndex = this.showTab.indexOf('2')
             if (hasLog) {
               if (logTabIndex === -1) {
-                this.showTab.push('1')
+                this.showTab.push('2')
               }
             } else {
               if (logTabIndex > -1) {
@@ -623,6 +540,7 @@ export default {
             }
             this.$nextTick(() => {
               hasGraph && this.loadLogGraph()
+              this.logData = logData
             })
           }
         }).catch(e => {

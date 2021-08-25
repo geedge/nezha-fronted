@@ -1403,7 +1403,15 @@ const cn = {
       basicTypeFile: '路径',
       basicTypeJournal: '单位',
       basicTypeSyslog: '监听地址',
-      basicAppName: '应用名称'
+      basicAppName: '应用名称',
+      metrics: '指标',
+      logs: '日志',
+      parameter: '参数',
+      labels2: '标签',
+      relabel: 'Relabel',
+      auth: '作者',
+      basic: '基础',
+      pipeline: '管道'
     },
     metrics: {
       metrics: '指标',
