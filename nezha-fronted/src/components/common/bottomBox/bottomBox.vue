@@ -201,9 +201,9 @@ export default {
         endpoint: {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
+            { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
             { prop: 'endpointQuery', name: 'Query' },
             { prop: 'log', name: 'Log' },
-            { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
           ]
         },
         chartTemp: {
@@ -250,8 +250,8 @@ export default {
       const hasLog = config && config.enable === 1
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.detail') },
-        { prop: 'endpointQuery', name: 'Query' },
-        { prop: 'endpointAlertMessage', name: this.$t('overall.alert') }
+        { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
+        { prop: 'endpointQuery', name: 'Metrics' }
       ]
       if (hasLog) {
         tabs.push({ prop: 'log', name: 'Log' })

@@ -296,16 +296,16 @@ export default {
           width: 0,
           index: -1
         },
-        type: {
-          label: 'Type',
-          key: 'type',
-          type: 'checkBox',
-          children: [],
-          show: false,
-          showMore: false,
-          width: 0,
-          index: -1
-        }
+        // type: {
+        //   label: 'Type',
+        //   key: 'type',
+        //   type: 'checkBox',
+        //   children: [],
+        //   show: false,
+        //   showMore: false,
+        //   width: 0,
+        //   index: -1
+        // }
       },
       selectValue: {
         projectIds: [],
@@ -482,12 +482,12 @@ export default {
         { key: 'Up', value: 1, name: 'Up' },
         { key: 'Suspended', value: 2, name: 'Suspended' }
       ]
-      this.titleSearchList.type.children = [
-        { key: 'Metrics', value: 'metrics', name: 'Metrics' },
-        { key: 'Logs', value: 'logs', name: 'Logs' }
-      ]
+      // this.titleSearchList.type.children = [
+      //   { key: 'Metrics', value: 'metrics', name: 'Metrics' },
+      //   { key: 'Logs', value: 'logs', name: 'Logs' }
+      // ]
       this.titleSearchList.state.show = true
-      this.titleSearchList.type.show = true
+      // this.titleSearchList.type.show = true
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {
