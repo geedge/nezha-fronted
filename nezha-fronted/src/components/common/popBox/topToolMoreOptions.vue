@@ -4,7 +4,7 @@
       <i class="nz-icon nz-icon-more2" style="font-size: 12px;"></i>
     </button>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-if="showLock">
+      <el-dropdown-item  v-if="showLock">
         <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
       </el-dropdown-item>
       <!-- import、export之前的内容 -->
@@ -102,7 +102,7 @@ export default {
   props: {
     size: {
       type: String,
-      default: 'small'
+      default: 'medium'
     },
     exportUrl: { type: String, default: '' },
     params: { type: Object },

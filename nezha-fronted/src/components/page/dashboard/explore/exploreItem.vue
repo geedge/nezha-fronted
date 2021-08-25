@@ -8,16 +8,33 @@
         </div>
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
-          <div class="top-tool-left">
-            <el-select v-model="fromData.status" size="small" style="width: 120px;" @change="changeType">
-              <el-option
-                v-for="item in searchMetrics"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
+<!--          <div class="top-tool-left">-->
+<!--            <el-select v-model="fromData.status" size="small" style="width: 120px;" @change="changeType">-->
+<!--              <el-option-->
+<!--                v-for="item in searchMetrics"-->
+<!--                :key="item.value"-->
+<!--                :label="item.label"-->
+<!--                :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </div>-->
+          <el-row class="block-col-2" style="width: 300px;">
+            <el-col>
+              <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                <span><i :class="selectIcon"></i></span>
+                <span>{{selectValue}}</span>
+                <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+              </span>
+                <el-dropdown-menu style="width: 118px" class="el-dropdown__width" placement="bottom-end" slot="dropdown">
+                  <el-dropdown-item
+                    @click.native="selectMetricsLogs(item.label,item.icon)"
+                    v-for="item in searchMetrics"
+                    :key="item.value">{{item.label}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-row>
           <div class="top-tool-right">
             <button v-if="!closable" class="top-tool-btn top-tool-btn--text margin-r-10" style="cursor: pointer;" type="button" @click="split">Split</button>
             <pick-time id="explore" ref="pickTime" v-model="filterTime" :class="{'margin-r-10': showMetrics}" :refresh-data-func="expressionChange" @unitChange="chartUnitChange">
@@ -327,13 +344,17 @@ export default {
       searchMetrics: [
         {
           value: 'Metrics',
-          label: this.$t('project.metrics.metrics')
+          label: this.$t('project.metrics.metrics'),
+          icon: 'nz-icon nz-icon-Metrics'
         },
         {
           value: 'Logs',
-          label: this.$t('overall.logs')
+          label: this.$t('overall.logs'),
+          icon: 'nz-icon nz-icon-logs'
         }
       ],
+      selectValue: '',
+      selectIcon: '',
       fromData: {
         status: ''
       },
@@ -463,8 +484,30 @@ export default {
     this.queryMetrics()
     this.promqlKeys.push(getUUID())
     this.fromData.status = this.searchMetrics[0].label
+    this.selectMetricsLogs()
   },
   methods: {
+    selectMetricsLogs (val, icon) {
+      if (this.selectValue === 'Metrics') {
+        this.selectValue = val
+        this.selectIcon = icon
+        this.showMetrics = val === 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      } else if (this.selectValue === 'Logs') {
+        this.selectValue = val
+        this.selectIcon = icon
+        this.showMetrics = val === 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      } else {
+        this.selectValue = 'Metrics'
+        this.selectIcon = 'nz-icon nz-icon-Metrics'
+        this.showMetrics = 'Metrics'
+        this.showIntroduce = true
+        this.resetExpression()
+      }
+    },
     changeType (value) {
       this.showMetrics = value === 'Metrics'
       this.showIntroduce = true
@@ -1108,6 +1151,22 @@ export default {
 
 </style>
 <style lang="scss" scoped>
+  .el-dropdown-link {
+    span:nth-of-type(1) {
+      color:  #FA901C;
+      padding-right: 10px;
+    }
+    span:nth-of-type(2) {
+      font-family: Roboto-Medium;
+      font-size: 16px;
+      color: #333333;
+      font-weight: 500;
+      padding-right: 20px;
+    }
+    span:nth-of-type(3) {
+      color: #BEBEBE;
+    }
+  }
   .explore {
     height: 100%;
     .explore-close {
