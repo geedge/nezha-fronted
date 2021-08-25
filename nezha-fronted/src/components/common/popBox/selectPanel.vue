@@ -26,11 +26,11 @@
 <!--                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span>-->
 <!--                <span class="panel-dropdown-btn" @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i></span>-->
 <!--              </span>-->
-              <el-row class="block-col-2" style="width: 35px;">
+              <el-row class="block-col-2" v-if="!panelLock"  style="width: 35px;">
                 <el-col>
-                  <el-dropdown trigger="click" popper-class="testt">
+                  <el-dropdown placement="bottom" trigger="click">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
-                    <el-dropdown-menu slot="dropdown" v-has="['panel_edit', 'panel_delete']">
+                    <el-dropdown-menu slot="dropdown"  v-has="['panel_edit', 'panel_delete']">
                       <el-dropdown-item>
                         <span @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>Edit</span>
                       </el-dropdown-item>
