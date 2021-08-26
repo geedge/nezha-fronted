@@ -37,7 +37,7 @@
       </template>
       <template v-slot:pagination>
         <div class="project-page">
-          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" style="width: calc(100% - 15px);padding-bottom: 6px;" @pageNo='pageNo'
+          <Pagination ref="Pagination" :page-obj="pageObj" :table-id="tableId" @pageNo='pageNo'
                       @pageSize='pageSize'></Pagination>
         </div>
       </template>
@@ -160,15 +160,19 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .project-list{
     .project-page{
       margin: 0 0 0 20px;
       border: 1px solid $--right-box-border-color;
       border-top: none;
       /deep/ .pagination{
-        padding-top: 0;
+        padding: 5px 0;
       }
+    }
+    /deep/ .pagination-bottom{
+      width: calc(100% - 30px);
+      bottom: 18px;
     }
   }
 </style>

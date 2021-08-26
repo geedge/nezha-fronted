@@ -5,7 +5,7 @@
       ref="dataTable"
       :data="currentTableData"
       v-loading="loading"
-      :height="'100%'"
+      :height="'calc(100% - 48px)'"
       border
       @header-dragend="dragend"
       @selection-change="selectChange"
@@ -558,6 +558,7 @@ export default {
   .query-page-option{
     width: 100%;
     background: #fff;
+    margin-top: 10px;
   }
   /deep/ .pagination{
     padding-top: 0;

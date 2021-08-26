@@ -53,6 +53,7 @@ export default {
   background: #f6f6f6;
   .projectList{
     flex: 1;
+    margin-right: 10px;
   }
   .projectTopo{
     flex: 1;

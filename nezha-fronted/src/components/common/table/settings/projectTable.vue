@@ -4,7 +4,6 @@
     ref="dataTable"
     :data="tableData"
     :height="height"
-    style="width: calc(100% - 25px)"
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"

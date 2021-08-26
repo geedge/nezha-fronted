@@ -1,5 +1,5 @@
 <template>
-  <div class="sub-box">
+  <div class="sub-box bottom-box">
     <div class="resize-modal">
       <div class="sub-list-resize-copy">一</div>
     </div>
@@ -410,6 +410,11 @@ export default {
   vertical-align: bottom;
   bottom: 0;
 }
-
+.bottom-box .sub-container{
+  height: calc(100% - 64px);
+}
+.bottom-box .sub-container .nz-table2{
+  height: calc(100% - 20px);
+}
 /* end--二级顶部工具栏*/
 </style>

@@ -222,7 +222,4 @@ export default {
     width: 100%;
     height: 100%;
   }
-  /deep/ .sub-container {
-    box-sizing: border-box;
-  }
 </style>
