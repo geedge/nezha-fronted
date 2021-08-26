@@ -266,7 +266,6 @@ export default {
   methods: {
     copyValue (item) {
       const str = item
-      // console.log(str)
       const domUrl = document.createElement('input')
       domUrl.value = JSON.stringify(str)
       domUrl.id = 'creatDom'

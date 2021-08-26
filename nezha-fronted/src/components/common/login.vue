@@ -328,7 +328,6 @@ export default {
     initEvent () {
       bus.$on('profile-dialog', () => {
         this.authBindShow = true
-        console.log(1)
       })
     }
   },

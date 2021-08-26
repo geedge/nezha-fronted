@@ -429,7 +429,6 @@ export default {
     searchMsg: {
       immediate: true,
       handler (n) {
-        // console.log(n);
         if (n) {
           n.searchLabelList.forEach(item => {
             if (item.id === 27 && item.type === 'idc' && item.label === 'idcId') {
@@ -897,7 +896,6 @@ export default {
             objectInfo[val.label] = val.val
           }
         }
-        // console.log('search obj', objectInfo)
       })
       this.getHeight()
       // 搜索完成后存储在本地历史记录中
@@ -1036,7 +1034,6 @@ export default {
     },
     // input框监听是按删除还是回车
     enter (val, e) {
-      // console.log(val);
       const keyCode = window.event ? e.keyCode : e.which
       if (val == 'ID' && keyCode == 13) {
         const id = /^[0-9]*$/

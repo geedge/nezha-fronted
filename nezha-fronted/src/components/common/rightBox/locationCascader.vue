@@ -137,7 +137,6 @@ export default {
       if (!cabinet) {
         return
       }
-      // console.log('load u',cabinet,isInit)
       this.selectedData.cabinet = cabinet
       this.selectedData.u = null
       const cabinetUKey = 'cabinet-' + this.selectedData.dc.id + '-' + cabinet.id

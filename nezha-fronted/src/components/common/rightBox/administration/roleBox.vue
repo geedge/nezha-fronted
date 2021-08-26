@@ -170,7 +170,6 @@ export default {
           if (this.editRole.id) {
             this.editRole.i18n = this.editRole.name
             this.$put(this.url, this.editRole).then(res => {
-              // console.log(this.editRole)
               this.prevent_opt.save = false
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
