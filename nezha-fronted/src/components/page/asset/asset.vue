@@ -54,7 +54,7 @@
           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="dataListLayout.indexOf('clickSearch') > -1? 'calc(100% - 40px)' : mainTableHeight"
           :table-data="tableData"
           @cli="cli"
           @del="del"

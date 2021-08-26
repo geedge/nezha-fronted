@@ -24,6 +24,7 @@
           :endpointTab="true"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @addSilence="addSilence"
           @reload="getTableData"
@@ -36,6 +37,9 @@
     </nz-bottom-data-list>
     <transition name="right-box">
       <edit-endpoint-box-new v-if="rightBox.editShow" :module="object" @close="closeRightEditBox" :disabled="true" :optionType="'edit'"></edit-endpoint-box-new>
+    </transition>
+    <transition name="right-box">
+      <edit-endpoint-box-new v-if="rightBox.show" :module="object" @close="closeRightEditBox" :disabled="false" :optionType="'add'"></edit-endpoint-box-new>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
@@ -120,20 +124,9 @@ export default {
         this.tools.loading = false
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
-            response.data.list[i].status = response.data.list[i].status + ''
-            const configs = []
             response.data.list[i].configs.forEach(item => {
               item.config = JSON.parse(item.config)
-              if (item.type === 'logs') {
-                configs.push(item.config)
-              }
             })
-            response.data.list[i].configs[0] = response.data.list[i].configs[0].config
-            response.data.list[i].configs[1] = {
-              type: 'logs',
-              enable: response.data.list[i].configs[1].enable,
-              config: configs
-            }
           }
           this.tableData = response.data.list
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
@@ -147,38 +140,108 @@ export default {
         }
       })
     },
-    edit (row) {
+    edit (row, copyFlag) {
       this.$get('monitor/endpoint/' + row.id).then(res => {
-        const u = res.data
-        this.object = JSON.parse(JSON.stringify(u))
-        this.object.configs = JSON.parse(this.object.configs)
-        this.object.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
-        this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : 9100
+        this.object = JSON.parse(JSON.stringify(res.data))
+        if (copyFlag) {
+          this.object.id = ''
+          this.object.name = this.object.name + '-copy'
+          if (this.object.name.length > 64) {
+            const length = this.object.name.length - 64
+            console.log(length, this.object.name.length, row.name.length)
+            this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
+          }
+        }
+        this.object.configs.forEach(item => {
+          item.config = JSON.parse(item.config)
+        })
         this.object.paramObj = []
         this.object.labelModule = []
-        if (JSON.stringify(this.object.configs.labels) !== '{}' && this.object.configs.labels) {
-          Object.keys(this.object.configs.labels).forEach(key => {
-            this.object.labelModule.push({ key, value: this.object.configs.labels[key] })
+        if (!this.object.configs[0].config.relabel_config) {
+          this.object.configs[0].config.relabel_config = []
+        }
+        this.object.configs[0].config.relabel_config && this.object.configs[0].config.relabel_config.forEach(item => {
+          item.showAllRelabelOption = false
+          item.tags = ''
+        })
+        this.object.configs[1].config.forEach(item => {
+          item.labelModule = []
+          if (JSON.stringify(item.labels) !== '{}' && item.labels) {
+            Object.keys(item.labels).forEach(key => {
+              item.labelModule.push({ key, value: item.labels[key] })
+            })
+          } else {
+            item.labelModule.push({ key: '', value: '' })
+          }
+          item.pipeline && item.pipeline.forEach((pipeline) => {
+            if (pipeline.type === 'labels') {
+              const labelsArr = []
+              if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
+                Object.keys(pipeline.labels).forEach(key => {
+                  labelsArr.push({ key, value: pipeline.labels[key] })
+                })
+              } else {
+                labelsArr.push({ key: '', value: '' })
+              }
+              pipeline.labels = labelsArr
+            }
+            if (pipeline.type === 'json') {
+              const expressionsArr = []
+              if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
+                Object.keys(pipeline.expressions).forEach(key => {
+                  expressionsArr.push({ key, value: pipeline.expressions[key] })
+                })
+              } else {
+                expressionsArr.push({ key: '', value: '' })
+              }
+              pipeline.expressions = expressionsArr
+            }
+          })
+          if (item.type === 'file') {
+            item.unit = ''
+            item.appName = ''
+            item.listenAddress = ''
+          } else if (item.type === 'journal') {
+            item.fileName = ''
+            item.appName = ''
+            item.listenAddress = ''
+          } else if (item.type === 'syslog') {
+            item.fileName = ''
+            item.unit = ''
+          }
+        })
+        if (JSON.stringify(this.object.configs[0].config.labels) !== '{}' && this.object.configs[0].config.labels) {
+          Object.keys(this.object.configs[0].config.labels).forEach(key => {
+            this.object.labelModule.push({ key, value: this.object.configs[0].config.labels[key] })
           })
         } else {
           this.object.labelModule.push({ key: '', value: '' })
         }
-        if (JSON.stringify(this.object.configs.params) !== '{}' && this.object.configs.params) {
-          Object.keys(this.object.configs.params).forEach(key => {
-            this.object.paramObj.push({ key, value: this.object.configs.params[key] })
+        if (JSON.stringify(this.object.configs[0].config.params) !== '{}' && this.object.configs[0].config.params) {
+          Object.keys(this.object.configs[0].config.params).forEach(key => {
+            this.object.paramObj.push({ key, value: this.object.configs[0].config.params[key] })
           })
         } else {
           this.object.paramObj.push({ key: '', value: [] })
         }
         this.object.assetName = this.object.asset ? this.object.asset.name : ''
+        this.object.assetId = this.object.asset ? this.object.asset.id + '' : ''
         this.object.projectId = this.object.project.id
         this.object.moduleId = this.object.module.id
         this.object.type = this.object.module.type
-        this.rightBox.editShow = true
+        if (copyFlag) {
+          this.rightBox.show = true
+        } else {
+          this.rightBox.editShow = true
+        }
       })
+    },
+    copy (row) {
+      this.edit(row, true)
     },
     closeRightEditBox (refresh) {
       this.rightBox.editShow = false
+      this.rightBox.show = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
