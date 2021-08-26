@@ -471,3 +471,12 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.fade-enter,
+.fade-leave-active {
+  opacity: .7;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}

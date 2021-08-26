@@ -1,6 +1,11 @@
 <template>
   <div class="panel list-page">
     <div class="main-list">
+      <div>
+        <transition name="el-zoom-in-center">
+          <div class="loading" v-if="isLoading"></div>
+        </transition>
+      </div>
       <div class="main-container" style="padding-right: 0">
         <div class="top-tools">
           <div v-if="panelData.length == 0" class="top-tool-left" style="margin-left: 10px;">
@@ -108,12 +113,14 @@ import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import Template from '@/components/page/config/template'
 import { fromRoute } from '@/components/common/js/constants'
+
 export default {
   name: 'panel',
   data () {
     return {
       fromRoute,
       overScroll10: false,
+      isLoading: true,
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
@@ -546,9 +553,11 @@ export default {
                 this.$refs.selectPanel.$refs.panelTree.setCurrentKey(this.showPanel)
               } catch (e) {}
             })
+            this.isLoading = false
           } else {
             this.showPanel.id = ''
             this.filter.panelId = ''
+            this.isLoading = true
           }
           this.pageObj.total = response.data.total
           if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
@@ -922,4 +931,15 @@ export default {
 </style>
 <style lang="scss">
   @import '@/assets/css/common/tableCommon.scss';
+</style>
+<style scoped>
+  .loading {
+    position: fixed;
+    left: 250px;
+    top: 59px;
+    height: 100%;
+    width: 100%;
+    background: center center no-repeat #fff;
+    z-index: 10;
+  }
 </style>
