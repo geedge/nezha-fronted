@@ -144,6 +144,7 @@ const en = {
     labels: 'Label',
     moreOption: 'More option',
     copy: 'Copy',
+    duplicate: 'Duplicate',
     silence: 'Silence',
     editType: 'Type',
     searchCondition: 'Search condition',

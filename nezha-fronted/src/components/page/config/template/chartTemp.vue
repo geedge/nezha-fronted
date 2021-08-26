@@ -74,7 +74,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
-          @copy="(row) => {copyRow(row, 'exprTmpl')}"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @sync="chartBySync"

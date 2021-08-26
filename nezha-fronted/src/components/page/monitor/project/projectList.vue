@@ -29,6 +29,7 @@
           style="padding-right: 0"
           @del="del"
           @edit="edit"
+          @copy = 'copy'
           @orderBy="tableDataSort"
           @reload="getTableData"
           @addSilence="addSilence"

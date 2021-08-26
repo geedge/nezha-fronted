@@ -26,6 +26,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -181,7 +182,7 @@ export default {
       this.object = JSON.parse(JSON.stringify(this.blankObject))
       this.rightBox.show = true
     },
-    edit (u) {
+    edit (u, copyFlag) {
       this.$get(`${this.url}/${u.id}`).then(response => {
         if (response.code === 200) {
           this.object = {
@@ -190,9 +191,21 @@ export default {
             startAt: bus.UTCTimeToConfigTimezone(response.data.startAt),
             endAt: bus.UTCTimeToConfigTimezone(response.data.endAt)
           }
+          if (copyFlag) {
+            this.object.id = ''
+            this.object.name = this.object.name + '-copy'
+            if (this.object.name.length > 64) {
+              const length = this.object.name.length - 64
+              console.log(length, this.object.name.length, u.name.length)
+              this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
+            }
+          }
           this.rightBox.show = true
         }
       })
+    },
+    copy (u) {
+      this.edit(u, true)
     },
     del (row) {
       this.$confirm(this.$t('tip.confirmExpired'), {

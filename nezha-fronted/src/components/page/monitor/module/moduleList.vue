@@ -47,6 +47,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @sync="chartBySync"
@@ -200,11 +201,20 @@ export default {
     }
   },
   methods: {
-    edit (row) {
+    edit (row, copyFlag) {
       this.$get('monitor/module/' + row.id).then(res => {
         if (res.code === 200) {
           this.object = JSON.parse(JSON.stringify(res.data))
           this.object.configs = JSON.parse(this.object.configs)
+          if (copyFlag) {
+            this.object.id = ''
+            this.object.name = this.object.name + '-copy'
+            if (this.object.name.length > 64) {
+              const length = this.object.name.length - 64
+              console.log(length, this.object.name.length, row.name.length)
+              this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
+            }
+          }
           // this.object.configs.walk = this.object.configs.walk ? JSON.parse(JSON.stringify(this.object.configs.walk)) : []
           // this.object.port = this.object.configs.port ? JSON.parse(JSON.stringify(this.object.configs.port)) : ''
           this.object.paramObj = []
@@ -284,6 +294,9 @@ export default {
           this.rightBox.show = true
         }
       })
+    },
+    copy (u) {
+      this.edit(u, true)
     },
     getTableData () {
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)

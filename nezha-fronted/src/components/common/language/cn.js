@@ -138,6 +138,7 @@ const cn = {
     assetSubTab: '子级 asset',
     moreOption: '更多选项',
     copy: '复制',
+    duplicate: '复制',
     silence: '静默',
     labels: '标签',
     editType: '类型',

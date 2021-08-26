@@ -322,7 +322,7 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editAlertRule = JSON.parse(JSON.stringify(n))
-        if (this.editAlertRule.id) {
+        if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {

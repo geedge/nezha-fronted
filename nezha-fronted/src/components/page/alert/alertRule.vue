@@ -44,6 +44,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @queryMessage="queryMessage"
           @reload="getTableData"
@@ -178,7 +179,7 @@ export default {
         }
       })
     },
-    edit (u) {
+    edit (u, copyFlag) {
       this.$get(`${this.url}/${u.id}`).then(response => {
         if (response.code === 200) {
           this.object = {
@@ -186,9 +187,21 @@ export default {
             method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : [],
             receiverShow: response.data.receiver ? response.data.receiver.split(',').map(item => Number(item)) : []
           }
+          if (copyFlag) {
+            this.object.id = ''
+            this.object.name = this.object.name + '-copy'
+            if (this.object.name.length > 64) {
+              const length = this.object.name.length - 64
+              console.log(length, this.object.name.length, u.name.length)
+              this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
+            }
+          }
           this.rightBox.show = true
         }
       })
+    },
+    copy (u) {
+      this.edit(u, true)
     }
   },
   mounted () {

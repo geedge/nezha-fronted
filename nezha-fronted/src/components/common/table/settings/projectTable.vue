@@ -74,6 +74,7 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command="['edit', scope.row]" v-has="'project_edit'"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item :command="['delete', scope.row, `sys/user?ids=${scope.row.id}`]" v-has="'project_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item v-has="'project_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'project']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

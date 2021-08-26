@@ -60,6 +60,7 @@
           :tableId="tableId"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @addSilence="addSilence"
@@ -317,9 +318,18 @@ export default {
     }
   },
   methods: {
-    edit (row) {
+    edit (row, copyFlag) {
       this.$get('monitor/endpoint/' + row.id).then(res => {
         this.object = JSON.parse(JSON.stringify(res.data))
+        if (copyFlag) {
+          this.object.id = ''
+          this.object.name = this.object.name + '-copy'
+          if (this.object.name.length > 64) {
+            const length = this.object.name.length - 64
+            console.log(length, this.object.name.length, row.name.length)
+            this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
+          }
+        }
         this.object.configs.forEach(item => {
           item.config = JSON.parse(item.config)
         })
@@ -393,11 +403,19 @@ export default {
           this.object.paramObj.push({ key: '', value: [] })
         }
         this.object.assetName = this.object.asset ? this.object.asset.name : ''
+        this.object.assetId = this.object.asset ? this.object.asset.id + '' : ''
         this.object.projectId = this.object.project.id
         this.object.moduleId = this.object.module.id
         this.object.type = this.object.module.type
-        this.rightBox.editShow = true
+        if (copyFlag) {
+          this.rightBox.show = true
+        } else {
+          this.rightBox.editShow = true
+        }
       })
+    },
+    copy (u) {
+      this.edit(u, true)
     },
     closeRightEditBox (refresh) {
       this.rightBox.editShow = false
