@@ -20,6 +20,7 @@
           :height="mainTableHeight"
           :table-data="tableData"
           @del="del"
+          @copy="copy"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"

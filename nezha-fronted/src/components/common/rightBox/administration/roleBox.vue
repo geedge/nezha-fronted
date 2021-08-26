@@ -57,7 +57,8 @@ export default {
     obj: {
       type: Object
     },
-    detail: Boolean
+    detail: Boolean,
+    copyFlag: Boolean
   },
   mixins: [editRigthBox],
   data () {
@@ -94,6 +95,10 @@ export default {
   },
   mounted () {
     this.getMenus().then(() => {
+      console.log(this.copyFlag)
+      if (this.copyFlag) {
+        this.editRole.id = ''
+      }
       if (this.$refs.menuTree && this.selectedIds && this.selectedIds.length > 0) {
         this.$refs.menuTree.setCheckedKeys(this.selectedIds, true)
       }

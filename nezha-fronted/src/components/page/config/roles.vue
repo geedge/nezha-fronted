@@ -25,6 +25,7 @@
           :height="mainTableHeight"
           :table-data="tableData"
           @del="del"
+          @copy="copy"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
@@ -37,7 +38,7 @@
       </template>
     </nz-data-list>
     <transition name="right-box">
-      <role-box v-if="rightBox.show" :obj="object" @close="closeRightBox"></role-box>
+      <role-box v-if="rightBox.show" :copyFlag="copyFlag" :obj="object" @close="closeRightBox"></role-box>
     </transition>
   </div>
 </template>
@@ -64,6 +65,7 @@ export default {
       blankObject: { // 空白对象
         name: ''
       },
+      copyFlag: false,
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [{
@@ -77,9 +79,22 @@ export default {
     }
   },
   methods: {
-    edit (row) {
+    edit (row, copyFlag) {
       this.object = { ...row }
+      if (copyFlag) {
+        this.object.name = this.object.name + '-copy'
+        if (this.object.name.length > 64) {
+          const length = this.object.name.length - 64
+          console.log(length, this.object.name.length, row.name.length)
+          this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
+        }
+      }
       this.rightBox.show = true
+    },
+    copy (u) {
+      this.edit(u, true)
+      this.copyFlag = true
+      console.log(this.copyFlag)
     }
   }
 }

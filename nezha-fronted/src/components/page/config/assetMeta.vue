@@ -41,6 +41,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @copy="copy"
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
@@ -245,6 +246,15 @@ export default {
           this.rightBox.metaShow = true
         }
       })
+    },
+    copy (u) {
+      this.object = { ...u, name: u.name + '-copy', id: '' }
+      if (this.object.name.length > 64) {
+        const length = this.object.name.length - 64
+        console.log(length, this.object.name.length, u.name.length)
+        this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
+      }
+      this.rightBox.metaShow = true
     },
     closeRightBox (refresh) {
       this.rightBox.metaShow = false
