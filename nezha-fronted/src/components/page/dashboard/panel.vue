@@ -18,7 +18,7 @@
                 </template>
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span style="display: inline-block;padding: 0 7px">{{showPanel.name}}</span>
+                  <span style="display: inline-block;padding: 0 7px;font-weight: bold">{{showPanel.name}}</span>
                   <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
@@ -897,27 +897,6 @@ export default {
   .box-content {
     position: relative;
     height: 100%;
-  }
-
-  .panel-name {
-    .el-input__prefix {
-      line-height: 32px;
-      font-size: 16px;
-      left: 10px;
-    }
-    .el-input__suffix {
-      line-height: 32px;
-      font-size: 12px;
-      top: 3px;
-      color: #BEBEBE;
-    }
-    .el-input__inner {
-      border: none !important;
-      font-size: 16px;
-      font-family: Roboto-Medium;
-      color: #333333;
-      font-weight: bold;
-    }
   }
   .panel-select-header {
     display: flex;
