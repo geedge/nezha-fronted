@@ -7,6 +7,7 @@
       :from="fromRoute.asset"
       :layout="dataListLayout"
       :search-msg="searchMsg"
+      :table-box-height="assetTableHeight"
       @search="search"
       @getTableData="getTableData"
     >
@@ -53,7 +54,7 @@
           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="dataListLayout.indexOf('clickSearch') > -1 ? assetTableHeight : mainTableHeight"
+          :height="mainTableHeight"
           :table-data="tableData"
           @cli="cli"
           @del="del"
@@ -130,7 +131,7 @@ export default {
       },
       silenceBoxShow: false,
       dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
-      assetTableHeight: `calc(100% - ${48 + 201 + 20}px)`,
+      assetTableHeight: `calc(100% - ${48 + 201 + 40}px)`,
       blankObject: {
         id: '',
         name: '',

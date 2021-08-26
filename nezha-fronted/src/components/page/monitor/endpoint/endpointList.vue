@@ -7,6 +7,7 @@
       :from="fromRoute.endpoint"
       :layout="dataListLayout"
       :search-msg="searchMsg"
+      :table-box-height="endpointTableHeight"
       @search="search"
       @getTableData="getTableData"
     >
@@ -55,7 +56,7 @@
            v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="dataListLayout.indexOf('clickSearch') > -1 ? endpointTableHeight : mainTableHeight"
+          :height="mainTableHeight"
           :table-data="tableData"
           :tableId="tableId"
           @del="del"
@@ -233,7 +234,7 @@ export default {
       silenceBoxShow: false,
       tableId: 'endpointTable',
       queryPermission: 'account_view',
-      endpointTableHeight: 'calc(100% - 224px)', // 主列表table高度
+      endpointTableHeight: 'calc(100% - 244px)', // 主列表table高度
       dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,

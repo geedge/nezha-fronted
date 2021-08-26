@@ -25,7 +25,7 @@
         <div v-if="showLayout.indexOf('clickSearch') > -1" class="search-box">
           <slot name="search"></slot>
         </div>
-        <div v-show="bottomBox.mainResizeShow" class="nz-table2">
+        <div v-show="bottomBox.mainResizeShow" class="nz-table2" :style="showLayout.indexOf('clickSearch') > -1 ? `height:${tableBoxHeight}` : ''">
           <slot v-bind:mainResizeShow="bottomBox.mainResizeShow"></slot>
         </div>
         <div v-show="bottomBox.mainResizeShow" v-if="showLayout.indexOf('pagination') > -1" class="pagination-bottom">
@@ -90,7 +90,8 @@ export default {
     },
     searchMsg: {
       type: Object
-    }
+    },
+    tableBoxHeight: {}
   },
   data () {
     return {
