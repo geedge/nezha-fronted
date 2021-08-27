@@ -611,6 +611,7 @@ const cn = {
   },
   asset: {
     asset: '资产',
+    talonPrompt: 'Talon 是一个负责日志收集的客户端程序',
     alertNum: '告警',
     userName: '用户名',
     address: '地址',

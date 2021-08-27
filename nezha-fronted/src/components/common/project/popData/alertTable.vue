@@ -93,6 +93,7 @@ export default {
   data () {
     return {
       url: 'alert/message',
+      mainTableHeight: 'calc(100% - 64px)',
       state: '1',
       tableId: '',
       stateOptions: alertMessageConstant.states,

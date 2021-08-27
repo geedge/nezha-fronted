@@ -83,7 +83,7 @@ export default {
         pageSize: this.$CONSTANTS.defaultPageSize,
         total: 0
       },
-      mainTableHeight: '100%',
+      mainTableHeight: 'calc(100% - 64px)',
       tableTitle: [
         {
           label: 'ID',

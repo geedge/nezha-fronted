@@ -117,7 +117,7 @@ const en = {
     active: 'Active',
     result: {
       total: 'Total',
-      failed: 'Failed',
+      failed: 'Fail',
       success: 'Success',
       failedDetail: 'Failed Detail',
       line: 'Line {0}:'
@@ -619,6 +619,7 @@ const en = {
   },
   asset: {
     asset: 'Asset ',
+    talonPrompt: 'Talon is a client program responsible for log collection.',
     userName: 'User name',
     address: 'Address',
     assets: 'Asset', // '资产'
