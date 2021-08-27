@@ -50,7 +50,7 @@
             </el-form-item>
             <div class="right-box-sub-title" style="margin-bottom: 20px" v-if="showParam">
               <span>{{$t('config.assetLabel.params')}}</span>
-              <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
+              <span v-if="editAssetMeta.type.toUpperCase()!=='DATETIME'&&editAssetMeta.type.toUpperCase()!=='DOUBLE'" class="float-right" style="height: 19px;display: inline-block;line-height: 1;" @click="addParam">
               <span class="create-square-box">
                 <i style="font-size: 17px; cursor: pointer;" class="nz-icon nz-icon-create-square"></i>
               </span>
@@ -313,7 +313,7 @@ export default {
               }
             }
           }
-          if (param.type !== 'RADIO' && param.type !== 'CHECKBOX' && param.type !== 'SELECT' && param.type !== 'DATETIME') {
+          if (param.type !== 'RADIO' && param.type !== 'CHECKBOX' && param.type !== 'SELECT' && param.type !== 'DATETIME' && param.type !== 'DOUBLE') {
             delete param.param
           } else {
             param.param = JSON.stringify(param.param)

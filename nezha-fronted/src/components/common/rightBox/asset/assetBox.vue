@@ -115,11 +115,11 @@
                   <el-input v-model="label.value[0]" oninput="value=value.replace(/[^\d]/g,'')" size="small"></el-input>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DOUBLE">
-                  <el-input v-model="label.value[0]" oninput="value=value.replace(/[^0-9.]/g,'')" size="small"></el-input>
+                  <el-input-number v-model="label.value[0]" :controls="false" size="small" :precision="JSON.parse(label.param).decimals" style="width: 100%;text-align: left" :max="10000000000000000000" :min="-10000000000000000000"></el-input-number>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.DATETIME">
                   <template v-if="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.time">
-                    <div v-if="label.interval" style="display: flex; justify-content: space-between">
+                    <div v-if="JSON.parse(label.param).interval" style="display: flex; justify-content: space-between">
                       <el-time-select v-model="label.value[0]" size="small"></el-time-select>
                       <el-time-select v-model="label.value[1]" size="small"></el-time-select>
                     </div>
@@ -128,7 +128,7 @@
                     </template>
                   </template>
                   <template v-else>
-                    <template v-if="label.interval">
+                    <template v-if="JSON.parse(label.param).interval">
                       <my-date-picker
                         id="asset-box-input-purchase-date"
                         v-model="label.value[0]"
@@ -152,7 +152,7 @@
                   </template>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.EMAIL">
-                  <input v-model="label.value[0]" size="small" />
+                  <el-input v-model="label.value[0]" size="small"/>
                 </template>
               </template>
             </el-form-item>
@@ -644,6 +644,21 @@ export default {
           if (params.type.vm !== 1) {
             params.parent = {}
             params.pid = '-1'
+          }
+          if (params.fields) {
+            params.fields.forEach(field => {
+              if (field.type.toUpperCase() === assetConstants.labelTypeData.CHECKBOX) { // 控制 check 选择中的顺序 跟 创建的一致
+                const arr = []
+                const items = JSON.parse(field.param).items
+                items.forEach(item => {
+                  const findItem = field.value.find(fieldValue => fieldValue == item.name)
+                  if (findItem) {
+                    arr.push(item.name)
+                  }
+                })
+                field.value = arr
+              }
+            })
           }
           if (params.id) {
             this.$put(this.url, params).then(res => {

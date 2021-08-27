@@ -25,6 +25,7 @@
           :height="mainTableHeight"
           :table-data="tableData"
           @del="del"
+          @copy="copy"
           @reset_mfa="resetMfa"
           @edit="edit"
           @orderBy="tableDataSort"
@@ -105,7 +106,7 @@ export default {
         this.getTableData()
       })
     },
-    edit (u) {
+    edit (u, copyFlag) {
       this.$get(`${this.url}/${u.id}`).then(response => {
         const user = response.user
         if (response.code === 200) {
@@ -119,9 +120,21 @@ export default {
           if (!this.object.mfaLevel) {
             this.object.mfaLevel = 0
           }
+          if (copyFlag) {
+            this.object.id = ''
+            this.object.name = this.object.name + '-copy'
+            if (this.object.name.length > 64) {
+              const length = this.object.name.length - 64
+              console.log(length, this.object.name.length, u.name.length)
+              this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
+            }
+          }
           this.rightBox.show = true
         }
       })
+    },
+    copy (u) {
+      this.edit(u, true)
     },
     resetMfa (row) {
       MessageBox.confirm(i18n.t('tip.resetMfa'), {

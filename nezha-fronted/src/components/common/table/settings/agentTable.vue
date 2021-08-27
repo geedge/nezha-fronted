@@ -63,6 +63,7 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-has="'agent_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'agent_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
