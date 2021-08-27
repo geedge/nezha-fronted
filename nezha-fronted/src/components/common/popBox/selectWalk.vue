@@ -1,5 +1,5 @@
 <template>
-  <el-popover @show="tempWalk.detailShow = false" v-if="popBox.show" :placement="placement" width="367" ref="selectWalkPopBox" popper-class="nz-pop nz-pop-select-walk" transition="slide">
+  <el-popover :disabled="disabled" @show="tempWalk.detailShow = false" v-if="popBox.show" :placement="placement" width="367" ref="selectWalkPopBox" popper-class="nz-pop nz-pop-select-walk" transition="slide">
     <div class="pop-item-wider" @click="tempWalk.detailShow = false">
       <div v-if="tempWalk.detailShow" class="el-popover walk-pop" :style="{left: detailPopPosition.left, top: detailPopPosition.top}">
         <p><span class="metirc-tip-list">Name&nbsp;:&nbsp;</span><span>{{tempWalk.name}}</span></p>
@@ -54,7 +54,8 @@ export default {
     placement: { type: String },
     walkData: { type: Array },
     currentWalk: { type: Array },
-    expandedWalk: { type: Array }
+    expandedWalk: { type: Array },
+    disabled: {type: Boolean, default: false }
   },
   data () {
     return {

@@ -89,9 +89,19 @@
           <transition name="el-zoom-in-top">
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editModule.configs[0].enable">
             <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
+              <!--type-->
+              <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
+                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
+                  <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+              <!--host-->
+              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
+                <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
+              </el-form-item>
               <!--path-->
-              <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
-                <el-input id="module-box-input-path" v-model="editModule.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
+              <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path" :disabled="editModule.configs[0].config.protocol === 'snmp'">
+                <el-input id="module-box-input-path" v-model="editModule.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editModule.configs[0].config.protocol === 'snmp'"></el-input>
               </el-form-item>
               <!--port-->
               <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
@@ -99,16 +109,6 @@
                 { required: true, message: $t('validate.required'), trigger: 'blur' }
               ]">
                 <el-input id="module-box-input-port" v-model.number="editModule.configs[0].config.port" placeholder="" size="small"></el-input>
-              </el-form-item>
-              <!--type-->
-              <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
-                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
-                  <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-              <!--host-->
-              <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host" :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
-                <el-input id="module-box-input-host" v-model="editModule.configs[0].config.host" placeholder="" size="small"></el-input>
               </el-form-item>
               <!-- snmp表单 -->
               <div v-if="editModule.configs[0].config.protocol && editModule.configs[0].config.protocol == 'snmp'" class="">
@@ -1112,6 +1112,11 @@ export default {
       this.editModule.configs[0].config.basic_auth = {
         username: '',
         pin: ''
+      }
+    },
+    changeBasicType () {
+      if (this.editModule.configs[0].config.protocol === 'snmp') {
+        this.editModule.configs[0].config.metrics_path = ''
       }
     },
     logsLogsArrAdd () {

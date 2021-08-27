@@ -109,9 +109,19 @@
           <transition name="el-zoom-in-top">
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editEndpoint.configs[0].enable">
               <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
+                <!--type-->
+                <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
+                  <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id || true" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+                    <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+                <!--host-->
+                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host">
+                  <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
+                </el-form-item>
                 <!--path-->
                 <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
-                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small"></el-input>
+                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" disabled></el-input>
                 </el-form-item>
                 <!--port-->
                 <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
@@ -119,16 +129,6 @@
                 { required: true, message: $t('validate.required'), trigger: 'blur' }
               ]">
                   <el-input id="module-box-input-port" v-model.number="editEndpoint.configs[0].config.port" placeholder="" size="small"></el-input>
-                </el-form-item>
-                <!--type-->
-                <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
-                  <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
-                    <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                  </el-select>
-                </el-form-item>
-                <!--host-->
-                <el-form-item :label='$t("project.endpoint.host")' class="half-form-item" prop="configs.0.config.host">
-                  <el-input id="module-box-input-host" v-model="editEndpoint.configs[0].config.host" placeholder="" size="small"></el-input>
                 </el-form-item>
                 <!-- snmp表单 -->
                 <div v-if="editEndpoint.configs[0].config.protocol && editEndpoint.configs[0].config.protocol == 'snmp'">
@@ -138,9 +138,9 @@
                   </el-col>
                   <el-col :span="24">
                     <el-form-item prop="configs.0.config.walk"  :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]">
-                      <select-walk ref="selectWalk" :currentWalk="editEndpoint.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk">
+                      <select-walk ref="selectWalk" :currentWalk="editEndpoint.configs[0].config.walk" :expandedWalk="expandedWalkData" :placement="'bottom-start'" :walkData="walkData" @selectWalk="selectWalk" :disabled="true">
                         <template v-slot:trigger>
-                          <div class="el-cascader">
+                          <div class="el-cascader" style="position: relative;">
                             <div class="el-input">
                               <input aria-expanded="false" autocomplete="off" class="el-input__inner" readonly="readonly" type="text">
                             </div>
@@ -154,6 +154,7 @@
                                 </span>
                               </div>
                             </div>
+                            <div style="position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: rgba(245,247,250,0.5)"></div>
                           </div>
                         </template>
                       </select-walk>
@@ -162,7 +163,7 @@
                 </el-row>
                   <!--credentials-->
                   <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
-                    <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+                    <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" disabled>
                       <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                   </el-form-item>
@@ -1759,6 +1760,9 @@ export default {
   }
   /deep/ .is-error .vue-tags-input{
     border: 1px solid #F56C6C;
+  }
+  .right-box-module .el-cascader .el-input__inner {
+    height: 150px;
   }
   .pipeline-box{
     display: flex;
