@@ -10,7 +10,7 @@
       <template v-slot:top-tool-left>
         <div class="profile-right__tabs-title">
           <div class="profile-right__tabs-active" :class="{'is-active': profileShow}" @click="tabsActive">{{$t('profile.operationRecord')}}</div>
-          <div class="profile-right__tabs-active" :class="{'is-active': !profileShow}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
+          <div class="profile-right__tabs-active" style="margin-left: 10px" :class="{'is-active': !profileShow}" @click="tabsActiveTow">{{$t('profile.changePassword')}}</div>
         </div>
         <div class="profile-hr"></div>
       </template>

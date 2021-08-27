@@ -233,7 +233,7 @@
                 <el-popover
                   placement="right"
                   trigger="hover"
-                  content="This is a prompt text">
+                  :content="$t('asset.talonPrompt')">
                   <i slot="reference" class="nz-icon nz-icon-about"></i>
                 </el-popover>
               </div>

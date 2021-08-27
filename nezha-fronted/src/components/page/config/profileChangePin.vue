@@ -125,7 +125,7 @@ export default {
 <style lang="scss" scoped>
 .profile-change {
   height: 100%;
-  margin: 0 0 0 50px;
+  padding: 10px 0 0 25px;
   width: calc(100% - 50px);
   overflow: hidden auto;
   .profile-change__Pin {
