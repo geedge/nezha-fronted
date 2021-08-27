@@ -95,7 +95,6 @@ export default {
   },
   mounted () {
     this.getMenus().then(() => {
-      console.log(this.copyFlag)
       if (this.copyFlag) {
         this.editRole.id = ''
       }

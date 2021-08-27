@@ -85,7 +85,6 @@ export default {
         this.object.name = this.object.name + '-copy'
         if (this.object.name.length > 64) {
           const length = this.object.name.length - 64
-          console.log(length, this.object.name.length, row.name.length)
           this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
         }
       }
@@ -94,7 +93,6 @@ export default {
     copy (u) {
       this.edit(u, true)
       this.copyFlag = true
-      console.log(this.copyFlag)
     }
   }
 }

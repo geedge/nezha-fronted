@@ -196,7 +196,6 @@ export default {
             this.object.name = this.object.name + '-copy'
             if (this.object.name.length > 64) {
               const length = this.object.name.length - 64
-              console.log(length, this.object.name.length, u.name.length)
               this.object.name = u.name.substring(0, u.name.length - length) + '-copy'
             }
           }
