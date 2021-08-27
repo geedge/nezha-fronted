@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" width="310" :disabled="disabled">
+  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel nz-pop-select-panel__dropdown" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" width="310" :disabled="disabled">
     <div>
       <div class="pop-item-wider">
 
@@ -228,10 +228,5 @@ export default {
 
 .panel-dropdown-btn-delete:hover {
   color: #D96D7A;
-}
-</style>
-<style scoped lang="scss">
-.nz-pop-select-panel {
-  z-index: 1999 !important;
 }
 </style>

@@ -8,16 +8,6 @@
         </div>
         <!-- 顶部工具栏 -->
         <div class="top-tools" style="z-index: 1">
-<!--          <div class="top-tool-left">-->
-<!--            <el-select v-model="fromData.status" size="small" style="width: 120px;" @change="changeType">-->
-<!--              <el-option-->
-<!--                v-for="item in searchMetrics"-->
-<!--                :key="item.value"-->
-<!--                :label="item.label"-->
-<!--                :value="item.value">-->
-<!--              </el-option>-->
-<!--            </el-select>-->
-<!--          </div>-->
           <el-row class="block-col-2" style="width: 300px;">
             <el-col>
               <el-dropdown trigger="click">

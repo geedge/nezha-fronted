@@ -23,7 +23,7 @@
                                v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
                                :loading="loading" :props="cascaderProps" @change="logLabelChange">
               <template slot-scope="{ node, data }">
-                <div :title="data.label" class="nz-cascade">
+<div :title="data.label" class="nz-cascade">
                   {{data.label}}
                 </div>
               </template>
@@ -118,10 +118,10 @@
                 <!--</el-option>-->
               <!--</el-select>-->
               <select-alert-silence :filter-silence="filterSilence" :silence-data="format(item).arr" :panel-lock="false" :placement="'bottom-start'" :typeContentLoading="typeContentLoading"
-                                    @selectSilence="(val)=>{silenceChange(val,item)}" ref="selectPanel" style="width: 300px;">
+                                    @selectSilence="(val)=>{silenceChange(val,item)}" ref="selectPanel" style="width: 240px;">
                 <template v-slot:header>
-                  <div class="panel-select-header">
-                    <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 340px; margin-right: 5px;" v-model="filterSilence" id="panel-list-search"></el-input>
+                  <div class="explore-select-header">
+                    <el-input :placeholder="$t('overall.search')" clearable size="mini" style="width: 300px;padding: 0 10px;" v-model="filterSilence" id="panel-list-search"></el-input>
                   </div>
                 </template>
 
@@ -741,6 +741,10 @@ export default {
   }
   .temp-form-box .temp-form-box-col{
     margin-right: 10px;
+  }
+  .explore-select-header {
+    text-align: center;
+    margin-bottom: 14px;
   }
 </style>
 <style>
