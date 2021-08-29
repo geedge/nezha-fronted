@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bottom-data-list">
     <div class="top-tools top-tools--sub">
       <div class="top-tool-left">
         <div class="sub-list-title">{{bottomHeaderTitle}}：<slot name="title"></slot></div>

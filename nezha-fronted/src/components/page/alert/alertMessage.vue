@@ -128,7 +128,6 @@ export default {
     return {
       stateOptions: alertMessageConstant.states,
       state: '1',
-      mainTableHeight: 'calc(100%- 64px)',
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },

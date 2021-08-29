@@ -24,7 +24,7 @@
           ref="dataTable"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="subTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
           :alertMessageTabNew="true"

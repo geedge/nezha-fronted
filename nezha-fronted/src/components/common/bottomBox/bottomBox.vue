@@ -317,7 +317,7 @@ export default {
     background-color: white;
   }
 }
-.sub-container {
+.bottom-data-list .sub-container {
   padding: 10px;
   height: calc(100% - 64px);
   background-color: #f6f6f6;
@@ -326,6 +326,7 @@ export default {
     background-color: white;
   }
   &>.nz-table2 {
+    height: 100%;
     padding-top: 20px !important;
   }
 }

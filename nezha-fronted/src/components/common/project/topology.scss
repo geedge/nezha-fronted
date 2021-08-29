@@ -321,6 +321,7 @@
 
 .project-box {
   width: 100%;
+  height: calc(100% - 8px) !important;
   position: relative;
   border-radius: 2px;
   overflow: visible;

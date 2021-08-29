@@ -69,10 +69,12 @@ Vue.prototype.$chartResizeTool = chartResizeTool
 Vue.prototype.$tableSet = tableSet
 Vue.prototype.$tableHeight = { // 列表页表格的高度
   normal: 'calc(100% - 48px)', // 常规高度，特例在下方定义
-  profileNormal: 'calc(100% - 78px)', // 常规高度，特例在下方定义
+  assetList: 'calc(100% - 57px)',
+  profile: 'calc(100% - 78px)',
   openSubList: { // 打开二级列表后的高度
     mainList: 'calc(100% - 60px)',
-    subList: 'calc(100% - 38px)',
+    subList: 'calc(100% - 25px)',
+    subListFromAsset: 'calc(100% - 45px)',
     toTopBtnTop: 'calc(50% - 11px)'
   },
   toTopBtnTop: 'calc(100% - 73px)',

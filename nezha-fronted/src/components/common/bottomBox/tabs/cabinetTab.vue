@@ -17,7 +17,7 @@
           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="mainTableHeight"
+          :height="subTableHeight"
           :table-data="tableData"
           @del="del"
           @copy="copy"

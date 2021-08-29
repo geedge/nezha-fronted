@@ -7,7 +7,7 @@
       :from="fromRoute.endpoint"
       :layout="dataListLayout"
       :search-msg="searchMsg"
-      :table-box-height="endpointTableHeight"
+      :nz-table-height-offset="endpointNzTableHeightOffset"
       @search="search"
       @getTableData="getTableData"
     >
@@ -56,7 +56,7 @@
            v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="dataListLayout.indexOf('clickSearch') > -1? 'calc(100% - 8px)' : mainTableHeight"
+          :height="mainTableHeight"
           :table-data="tableData"
           :tableId="tableId"
           @del="del"
@@ -297,7 +297,7 @@ export default {
           showMore: false,
           width: 0,
           index: -1
-        },
+        }
         // type: {
         //   label: 'Type',
         //   key: 'type',
@@ -315,7 +315,8 @@ export default {
         state: [],
         type: []
       },
-      searchCheckBox: {}
+      searchCheckBox: {},
+      endpointNzTableHeightOffset: 204
     }
   },
   methods: {

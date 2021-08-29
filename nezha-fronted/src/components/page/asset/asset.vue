@@ -7,7 +7,7 @@
       :from="fromRoute.asset"
       :layout="dataListLayout"
       :search-msg="searchMsg"
-      :table-box-height="assetTableHeight"
+      :nz-table-height-offset="assetNzTableHeightOffset"
       @search="search"
       @getTableData="getTableData"
     >
@@ -54,7 +54,7 @@
           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
-          :height="dataListLayout.indexOf('clickSearch') > -1? 'calc(100% - 40px)' : mainTableHeight"
+          :height="mainTableHeight"
           :table-data="tableData"
           @cli="cli"
           @del="del"
@@ -131,7 +131,7 @@ export default {
       },
       silenceBoxShow: false,
       dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
-      assetTableHeight: `calc(100% - ${48 + 201 + 40}px)`,
+      assetNzTableHeightOffset: 281, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',
         name: '',
