@@ -121,7 +121,7 @@
          </span>
         </div>
         <div v-if="(!editTopologyFlag&&!fromOverView) && !isPreview" class="top-tools" style="padding-left: 10px">
-          <div>{{topologyInfo.name}}</div>
+          <div>{{obj.name}}</div>
           <div v-if="!editTopologyFlag&&!fromPrev&&!fromOverView" class="top-tool-right">
             <pick-time
               v-show="!editTopologyFlag"
