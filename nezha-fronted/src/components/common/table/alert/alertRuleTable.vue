@@ -54,6 +54,16 @@
         <template v-else-if="item.prop === 'receivers'">
           <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.username" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.username}}&nbsp;</el-tag>
         </template>
+        <template v-else-if="item.prop === 'state'">
+          <el-switch
+            v-model="scope.row.state"
+            :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"
+            active-color="#ee9d3f"
+            :active-value="1"
+            :inactive-value="0"
+            @change="(val)=>{$emit('statusChange', scope.row)}"
+          />
+        </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
       </template>
@@ -70,9 +80,9 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-has="'alertRule_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'alertRule_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
-            <el-dropdown-item v-has="'alertRule_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
+            <el-dropdown-item v-if="!scope.row.buildIn" v-has="'alertRule_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
+            <el-dropdown-item v-if="!scope.row.buildIn" v-has="'alertRule_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
+            <el-dropdown-item  v-if="!scope.row.buildIn"v-has="'alertRule_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertRule']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -156,6 +166,12 @@ export default {
           prop: 'method',
           show: false,
           minWidth: 100
+        }, {
+          label: this.$t('config.dc.state'),
+          prop: 'state',
+          show: true,
+          minWidth: 100,
+          sortable: 'custom'
         }
       ]
     }

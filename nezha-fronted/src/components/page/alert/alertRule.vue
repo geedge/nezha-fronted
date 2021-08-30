@@ -49,6 +49,7 @@
           @queryMessage="queryMessage"
           @reload="getTableData"
           @addSilence="addSilence"
+          @statusChange='statusChange'
           @selectionChange="selectionChange"
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></alert-rule-table>
       </template>
@@ -177,6 +178,18 @@ export default {
             })
           }
         }
+      })
+    },
+    statusChange (alertRule) {
+      const params = { ...alertRule, severity: null }
+      this.$put(this.url, params).then(response => {
+        if (response.code === 200) {
+          this.rightBox.show = false
+          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
+        } else {
+          this.$message.error(response.msg)
+        }
+        this.getTableData()
       })
     },
     edit (u, copyFlag) {
