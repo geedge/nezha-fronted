@@ -1,4 +1,4 @@
-import selectPage from './SelectPage'
+import selectPage from '@/components/common/v-selectpagenew/Selectpage.js'
 
 const Plugin = {
   install (Vue, option = {}) {
