@@ -288,13 +288,11 @@
 import Console from './console'
 import uuidv1 from 'uuid/v1'
 import axios from 'axios'
-import { SelectPage } from 'v-selectpage'
 import { host, port } from '@/components/common/js/validate'
 export default {
   name: 'webSSH',
   components: {
-    'my-console': Console,
-    'v-selectpage': SelectPage
+    'my-console': Console
   },
 
   data () {
