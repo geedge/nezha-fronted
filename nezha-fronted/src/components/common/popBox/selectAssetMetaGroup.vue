@@ -1,5 +1,5 @@
 <template>
-  <el-popover ref="selectAssetMetaGroupPopBox" v-model="popBox.show" :placement="placement" popper-class="nz-pop nz-pop-select-panel" transition="slide" width="300">
+  <el-popover ref="selectAssetMetaGroupPopBox" v-model="popBox.show" :placement="placement" popper-class="nz-pop nz-pop-select-panel nz-pop-select-panel__dropdown" transition="slide" width="300">
     <div>
       <div class="pop-item-wider">
 
@@ -19,11 +19,34 @@
             node-key="id"
             @node-click="selectObject">
             <div slot-scope="{ node, data }" class="tree--node">
-              <span>{{ node.label }}</span>
-              <span class="tree--operation">
-                <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(data)"><i class="nz-icon nz-icon-delete"></i></span>
-                <span class="panel-dropdown-btn" @click.stop="edit(data)"><i class="nz-icon nz-icon-edit"></i></span>
+<!--              -->
+              <span>
+                <el-popover
+                  placement="right"
+                  trigger="hover"
+                  :content="node.label">
+                  <span slot="reference">{{ node.label }}</span>
+                </el-popover>
               </span>
+<!--              <span class="tree&#45;&#45;operation">-->
+<!--                <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(data)"><i class="nz-icon nz-icon-delete"></i></span>-->
+<!--                <span class="panel-dropdown-btn" @click.stop="edit(data)"><i class="nz-icon nz-icon-edit"></i></span>-->
+<!--              </span>-->
+              <el-row class="block-col-2" style="width: 35px;">
+                <el-col>
+                  <el-dropdown placement="bottom" trigger="click">
+                    <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
+                    <el-dropdown-menu slot="dropdown"  v-has="['asset_label_delete', 'asset_label_edit']">
+                      <el-dropdown-item>
+                        <span @click.stop="edit(data)"><i v-has="'asset_label_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</span>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <span @click.stop="del(data)" v-has="'asset_label_delete'"><i class="nz-icon nz-icon-delete"></i>{{$t('overall.delete')}}</span>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </el-col>
+              </el-row>
             </div>
           </el-tree>
         </div>
@@ -31,6 +54,9 @@
     </div>
     <div slot="reference">
       <slot name="trigger"></slot>
+    </div>
+    <div slot="default">
+      <slot name="tail"></slot>
     </div>
   </el-popover>
 </template>

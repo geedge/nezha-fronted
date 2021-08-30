@@ -28,7 +28,7 @@
                 </template>
                 <template v-slot:tail>
                   <div class="panel-select-tail">
-                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;Add</span>
+                    <span id="panel-list-toadd" v-has="'panel_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
                   </div>
                 </template>
               </select-panel>

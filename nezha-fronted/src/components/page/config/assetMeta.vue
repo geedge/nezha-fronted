@@ -11,15 +11,21 @@
     >
       <template v-slot:top-tool-left>
         <select-group ref="selectGroup" :filter-object="filterGroup" :object-data="groupData" :placement="'bottom-start'"
-                      :show-object="showGroup" style="width: 300px;" @del="delGroup" @edit="editGroup" @selectObject="groupChange">
+                      :show-object="showGroup" @del="delGroup" @edit="editGroup" @selectObject="groupChange">
           <template v-slot:header>
             <div class="panel-select-header">
-              <el-input id="panel-list-search" v-model="filterGroup" :placeholder="$t('overall.search')" clearable size="mini" style="width: 240px; margin-right: 5px;"></el-input>
-              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-plus"></i></span>
+              <el-input id="panel-list-search" v-model="filterGroup" :placeholder="$t('overall.search')" clearable size="mini" style="width: 280px;"></el-input>
             </div>
           </template>
           <template v-slot:trigger>
-            <el-input v-model="showGroup.name" class="panel-name" placeholder="" readonly="readonly" size="small"></el-input>
+<!--            <el-input v-model="showGroup.name" class="panel-name" placeholder="" readonly="readonly" size="small"></el-input>-->
+            <span style="display: inline-block;padding: 0 7px;font-weight: bold">{{showGroup.name}}</span>
+            <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
+          </template>
+          <template v-slot:tail>
+            <div class="panel-select-tail">
+              <span id="panel-list-toadd" v-has="'asset_label_add'" :title='$t("dashboard.panel.createPanelTitleSec")' class="panel-select-add" @click="addGroup"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{ $t('overall.addProject') }}</span>
+            </div>
           </template>
         </select-group>
       </template>
@@ -268,7 +274,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .content{
     display: flex;
     height: calc(100% - 40px);
@@ -322,6 +328,21 @@ export default {
   }
 
   .panel-select-header {
-    padding: 0 0 10px 16px;
+    text-align: center;
+  }
+  .panel-select-tail {
+    border-top: 1px solid  #DEDEDE;
+    .panel-select-add {
+      line-height: 32px;
+      height: 32px;
+      display: inline-block;
+      cursor: pointer;
+      i {
+        color: #FA901C;
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 20px;
+      }
+    }
   }
 </style>
