@@ -22,7 +22,12 @@
       </pick-time>
     </template>
     <template v-slot>
-      <log-tab ref="logDetail" :log-data="logData" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      <template v-if="logData && logData.length > 0">
+        <log-tab ref="logDetail" v-loading="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      </template>
+      <template v-else>
+        <div v-loading="loading" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>
+      </template>
     </template>
   </nz-bottom-data-list>
 </template>
@@ -51,7 +56,8 @@ export default {
       ],
       expressions: [''],
       matchSymbol: '|=',
-      matchContent: ''
+      matchContent: '',
+      loading: true
     }
   },
   methods: {
@@ -93,10 +99,8 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogData (limit) { // log的chart和table是一个请求
-      if (!limit) {
-        limit = this.$refs.logDetail.getLimit()
-      }
+    queryLogData (limit = 1000) { // log的chart和table是一个请求
+      this.loading = true
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
@@ -108,7 +112,11 @@ export default {
         })
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
+        }).finally(() => {
+          this.loading = false
         })
+      } else {
+        this.loading = false
       }
     }
   },

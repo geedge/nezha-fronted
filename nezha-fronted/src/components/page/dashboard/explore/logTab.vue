@@ -265,8 +265,9 @@ export default {
           useUTC: false // 使用本地时间
         }
         this.myChart.clear()
+        this.myChart.setOption(option)
         this.$nextTick(() => {
-          this.myChart.setOption(option)
+          this.myChart.resize()
         })
         /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮
@@ -416,7 +417,9 @@ export default {
         const { tableData, tableChartData } = this.applyFilter(logData, this.operations) // 应用operation区域的过滤项
         this.tableData = tableData
         this.tableChartData = tableChartData
-        this.loadChart()
+        this.$nextTick(() => {
+          this.loadChart()
+        })
       }
     },
     operations: {
