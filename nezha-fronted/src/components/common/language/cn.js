@@ -1011,7 +1011,8 @@ const cn = {
         scrapeTimeout: '指标抓取超时',
         snmpTrapPort: 'SNMP trap端口',
         logoTip: 'Logo支持格式为jpg、jpeg、png且大小小于2M的图片',
-        mfa: 'Mfa auth enable'
+        mfa: '双因素身份认证',
+        TwoFactorAuthentication: '要求所有用户设置双因素身份验证'
       },
       monitor: {
         monitor: '监控',

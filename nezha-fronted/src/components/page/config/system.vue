@@ -3,7 +3,7 @@
     <el-tabs style="overflow: auto" type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
-          <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
+          <el-form :model="basic"  label-width="260px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
             <div class="system-title">{{$t('config.system.basic.title')}}</div>
 <!--            <el-form-item :label="$t('config.system.basic.sysLogo')" prop="system_logo">-->
 <!--              <el-upload-->
@@ -54,13 +54,14 @@
             <el-form-item :label="$t('config.system.basic.mfa')" prop="mfa_auth_enable">
               <el-switch v-model="basic.mfa_auth_enable" active-color="rgb(238, 157, 63)"  :active-value='"1"' :inactive-value='"0"' id="system-baisc-mfs_change">
               </el-switch>
+              <div class="el-form-item__tip">{{$t('config.system.basic.TwoFactorAuthentication')}}</div>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="el-form-item__btn">
 <!--              <button-->
 <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"-->
 <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
 <!--              >{{$t('overall.reset')}}</button>-->
-              <button id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button style="margin-top: 8px;" id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div >
@@ -1131,6 +1132,11 @@ export default {
     }
     .el-tabs__nav-scroll,.el-tabs__header,。el-tabs__nav-wrap{
       border-bottom: 0;
+    }
+    .el-form-item.el-form-item__btn.el-form-item--small {
+      .el-form-item__content {
+        margin-left: 41px !important;
+      }
     }
     .el-form-item:last-of-type {
 

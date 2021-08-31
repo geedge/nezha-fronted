@@ -1004,7 +1004,8 @@ const en = {
         scrapeTimeout: 'Scrape timeout',
         snmpTrapPort: 'SNMP trap port',
         logoTip: 'Logo format only can be jpg、jpeg、png,and less than 2M',
-        mfa: 'Mfa auth enable'
+        mfa: 'Two-Factor Authentication',
+        TwoFactorAuthentication: 'Require all users to set up Two-factor authentication'
       },
       monitor: {
         monitor: 'Monitor',
