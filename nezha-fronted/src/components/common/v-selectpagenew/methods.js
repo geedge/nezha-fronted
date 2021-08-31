@@ -267,7 +267,6 @@ export default {
             arr.forEach(item => {
               matchRows.push(matchRows2.find(val => val[this.keyField] == item))
             })
-            console.log(matchRows)
             if (matchRows.length) this.picked = this.multiple ? matchRows : [matchRows[0]]
           }
           this.findSelectionPage()

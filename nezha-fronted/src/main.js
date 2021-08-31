@@ -32,10 +32,8 @@ import pickTime from '@/components/common/pickTime'
 import bus from '@/libs/bus'
 import theme from '@/assets/css/theme.scss'
 import myDatePicker from '@/components/common/myDatePicker'
-/*import vSelectPage from '@/components/common/v-selectpagenew'
-import vSelectPage1 from 'v-selectpage'*/
+import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
-/*Vue.use(vSelectPage1)
 Vue.use(vSelectPage, {
   dataLoad: function (vue, url, params) {
     if (params.pageNumber) {
@@ -47,7 +45,7 @@ Vue.use(vSelectPage, {
       }, e => reject(e))
     })
   }
-})*/
+})
 Vue.use(myDatePicker)
 Vue.component('Pagination', Pagination)
 Vue.component('searchInput', searchInput)

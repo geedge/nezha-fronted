@@ -1,4 +1,4 @@
-// import 'v-selectpage/src/styles/selectpage.styl'
+import './css/selectPage.css'
 import dropdown from 'v-dropdown'
 
 import data from 'v-selectpage/src/mixins/data'
@@ -39,7 +39,6 @@ export default {
 
     // sort data list
     this.sortList()
-    console.log(1)
     this.initSelection()
   }
 }
