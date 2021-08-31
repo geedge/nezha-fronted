@@ -754,7 +754,7 @@ export default {
       return `
                 <div>
                     <div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;  min-width: 150px; max-width: 600px; line-height: 18px; font-size: 14px;">
-                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.dataIndex].alias}</div>
+                        <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.seriesIndex].alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
                             <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot)}</div>
