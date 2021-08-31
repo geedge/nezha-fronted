@@ -330,7 +330,7 @@ export default {
           }
         }
         const maxValueCopies = this.getMaxValue(seriesItem, chartItem)
-        let dot = this.chartDot = maxValueCopies.dot
+        let dot = this.chartDot = maxValueCopies.dot || 2
         const maxValue = maxValueCopies.maxValue
         const copies = maxValueCopies.copies
         const unit = maxValueCopies.unit
@@ -757,7 +757,7 @@ export default {
                         <div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.seriesIndex].alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot)}</div>
+                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot ? this.chartDot : 2 )}</div>
                         </div>
                     </div>
                 </div>
