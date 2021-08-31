@@ -203,7 +203,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
-import { getMetricTypeValue, chartResizeTool } from '../common/js/tools'
+import { getMetricTypeValue, chartResizeTool, formatScientificNotation } from '../common/js/tools'
 import moment from 'moment-timezone'
 
 export default {
@@ -778,10 +778,7 @@ export default {
               } else if (paramsDot > 6) {
                 paramsDot = 6
               }
-              let val = item.data[1] ? parseFloat(Number(item.data[1]).toFixed(paramsDot)) : ''
-              if (val === 0) {
-                val = Number(item.data[1]).toExponential(paramsDot)
-              }
+              const val = formatScientificNotation(item.data[1], paramsDot)
               sum += self.numberWithEConvent(val)
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
@@ -789,10 +786,7 @@ export default {
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
               if (previousItem) {
                 str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                let previousval = parseFloat(Number(previousItem.data[1]).toFixed(paramsDot))
-                if (previousval === 0) {
-                  previousval = Number(item.data[1]).toExponential(paramsDot)
-                }
+                const previousval = formatScientificNotation(item.data[1], paramsDot)
                 let minusVal = 0
                 if (previousval <= val) {
                   minusVal = val - previousval
@@ -922,13 +916,7 @@ export default {
             show: true,
             fontSize: 10,
             formatter: function (val, index) {
-              let value = val
-              if (val !== 0) {
-                value = parseFloat(Number(val).toFixed(2))
-                if (value === 0) {
-                  value = Number(val).toExponential(2)
-                }
-              }
+              const value = formatScientificNotation(val, 2)
               let chartUnit = chartInfo.unit
               chartUnit = chartUnit || 2
               const unit = chartDataFormat.getUnit(chartUnit)
@@ -1081,10 +1069,7 @@ export default {
                         str += bus.timeFormate(tData)
                         str += '</div>'
                       }
-                      let val = parseFloat(Number(item.data[1]).toFixed(2))
-                      if (val === 0) {
-                        val = Number(item.data[1]).toExponential(2)
-                      }
+                      const val = formatScientificNotation(item.data[1], 2)
                       sum += self.numberWithEConvent(val)
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
@@ -1261,10 +1246,7 @@ export default {
                         minusFlag = false
                       }
                       const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
-                      let val = parseFloat(Number(item.data[1]).toFixed(2))
-                      if (val === 0) {
-                        val = Number(item.data[1]).toExponential(2)
-                      }
+                      const val = formatScientificNotation(item.data[1], 2)
                       sum += self.numberWithEConvent(val)
                       str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                       str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
@@ -1272,10 +1254,7 @@ export default {
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
                       if (previousItem) {
                         str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                        let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
-                        if (previousval === 0) {
-                          previousval = Number(item.data[1]).toExponential(2)
-                        }
+                        const previousval = formatScientificNotation(previousItem.data[1], 2)
                         let minusVal = 0
                         if (previousval <= val) {
                           minusVal = val - previousval
@@ -1294,10 +1273,7 @@ export default {
                       str += '</div>'
                       if (previousItem) {
                         str += '<div style="padding-left: 10px;">'
-                        let previousval = parseFloat(Number(previousItem.data[1]).toFixed(2))
-                        if (previousval === 0) {
-                          previousval = Number(item.data[1]).toExponential(2)
-                        }
+                        const previousval = formatScientificNotation(previousItem.data[1], 2)
                         let minusVal = 0
                         if (previousval <= val) {
                           minusVal = val - previousval

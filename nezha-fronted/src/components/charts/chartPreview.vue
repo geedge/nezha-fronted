@@ -200,6 +200,7 @@ import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import moment from 'moment-timezone'
+import {formatScientificNotation} from "@/components/common/js/tools";
 export default {
   name: 'chartPreview',
   components: {
@@ -906,10 +907,7 @@ export default {
                     [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
                 str += '<br/>'
               }
-              let val = parseFloat(Number(item.data[1]).toFixed(2))
-              if (val === 0) {
-                val = Number(item.data[1]).toExponential(2)
-              }
+              const val = formatScientificNotation(item.data[1], 2)
               sum += self.numberWithEConvent(val)
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
@@ -1084,10 +1082,7 @@ export default {
                         [tData.getHours(), tData.getMinutes(), tData.getSeconds()].join(':')
                     str += '<br/>'
                   }
-                  let val = parseFloat(Number(item.data[1]).toFixed(2))
-                  if (val === 0) {
-                    val = Number(item.data[1]).toExponential(2)
-                  }
+                  const val = formatScientificNotation(item.data[1], 2)
                   sum += self.numberWithEConvent(val)
                   str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
                   str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`

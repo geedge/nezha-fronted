@@ -817,6 +817,14 @@ export function hideTableTooltip () {
   dom.innerHTML = ''
 }
 
+/* 数字转换保留小数，数字很小时转为科学计数法, dot为保留几位小数 */
+export function formatScientificNotation (value, dot = 2) {
+  let val = value ? parseFloat(Number(value).toFixed(dot)) : 0
+  if (val === 0) {
+    val = Number(value).toPrecision(dot + 1)
+  }
+  return val
+}
 /* function getTdDom(dom) {
   let tagName = dom.tagName;
   if (tagName.toLowerCase() === 'td') {

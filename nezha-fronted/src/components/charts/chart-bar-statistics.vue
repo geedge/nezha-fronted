@@ -94,6 +94,7 @@ import * as echarts from 'echarts'
 import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
+import {formatScientificNotation} from "@/components/common/js/tools";
 export default {
   name: 'pieChart', // 饼图 或者 柱状图的统计
   components: {
@@ -345,13 +346,7 @@ export default {
             show: true,
             fontSize: 10,
             formatter (val, index) {
-              let value = val
-              if (val !== 0) {
-                value = parseFloat(Number(val).toFixed(2))
-                if (value === 0) {
-                  value = Number(val).toExponential(2)
-                }
-              }
+              const value = formatScientificNotation(val, 2)
               // const flag = JSON.stringify(value).length > JSON.stringify(chartDataFormat.Interval(maxValue, copies, unit.type)).length
               if (chartDataFormat.Interval(maxValue, copies, unit.type, 'min') < 1 && dot < 2) {
                 dot = 2

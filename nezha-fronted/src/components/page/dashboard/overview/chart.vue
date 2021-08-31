@@ -24,6 +24,7 @@ import chartConfig from './chartConfig'
 import bus from '../../../../libs/bus'
 import EleResize from '../../../common/js/divResize'
 import { randomcolor } from '../../../common/js/radomcolor/randomcolor'
+import { formatScientificNotation } from '@/components/common/js/tools'
 // import * as mapGeoJson from "../../../common/js/world";
 
 export default {
@@ -449,10 +450,7 @@ export default {
         const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
         if (previousItem) {
           str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
-          let previousval = parseFloat(Number(previousItem.data[1]).toFixed(dot))
-          if (previousval === 0) {
-            previousval = Number(item.data[1]).toExponential(2)
-          }
+          const previousval = formatScientificNotation(previousItem.data[1], dot)
           let minusVal = 0
           if (previousval <= val) {
             minusVal = val - previousval
