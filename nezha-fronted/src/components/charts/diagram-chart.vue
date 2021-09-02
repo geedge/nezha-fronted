@@ -210,6 +210,9 @@ export default {
       this.data = chartItem
       this.text = chartItem.param.text
       this.screenText = chartItem.param.text
+      setTimeout(()=>{
+        this.$refs.diagram.winResize()
+      },100)
       this.endLoading()
     }
   },
