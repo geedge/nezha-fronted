@@ -527,15 +527,14 @@ export default {
       this.showAllTalonOption = true
     },
     setLocationData ({ cabinet, dc, u }) {
-      if (cabinet) {
-        this.editAsset.cabinetId = cabinet.id
-      }
-      if (dc) {
-        this.editAsset.dcId = dc.id
-      }
+      this.editAsset.cabinetId = cabinet ? cabinet.id : ''
+      this.editAsset.dcId = dc ? dc.id : ''
       if (u) {
         this.editAsset.cabinetStart = u[0]
         this.editAsset.cabinetEnd = u[1]
+      } else {
+        this.editAsset.cabinetStart = ''
+        this.editAsset.cabinetEnd = ''
       }
     },
     removeLabel (label) {
