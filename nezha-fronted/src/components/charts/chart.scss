@@ -756,3 +756,16 @@
     flex: 1;
   }
 }
+.chart-title-pit {
+  position: absolute;
+  top: 40px;
+  min-width: 200px;
+  height: 20px;
+  line-height: 20px;
+  padding: 10px;
+  text-align: left;
+  z-index: 1000;
+  border-radius: 5px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+}
