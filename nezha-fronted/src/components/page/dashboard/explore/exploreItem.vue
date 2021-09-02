@@ -390,7 +390,6 @@ export default {
     this.getPanelData()
     this.queryMetrics()
     this.promqlKeys.push(getUUID())
-    // this.fromData.status = this.searchMetrics[0].label
     this.selectMetricsLogs()
   },
   methods: {

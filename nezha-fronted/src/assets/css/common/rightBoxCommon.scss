@@ -74,6 +74,13 @@
       height: 32px;
     }
     .input-box {
+      .logsLabel.el-textarea {
+        .el-textarea__inner {
+          width: 509px;
+          height: 32px;
+          padding: 5px 70px 4px 10px;
+        }
+      }
       .el-textarea {
         .el-textarea__inner {
           width: 517px;
