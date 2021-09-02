@@ -54,12 +54,12 @@
               :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']">
               <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
-                <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{$t("overall.metric")}}&nbsp;<i
+                <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}&nbsp;<i
                   class="nz-icon nz-icon-arrow-down"
                   style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
-                <el-cascader-panel v-loading="tempBoxShowLoading" v-if="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
+                <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
                                    style="text-align: left;" slot="dropdown" ref="metricSelector"
-                                   :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
+                                   v-if="type !== 'log'"  :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
                   <template slot-scope="{ node, data }">
                     <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
@@ -68,6 +68,15 @@
                     </div>
                   </template>
 
+                </el-cascader-panel>
+                <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
+                                   v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
+                                   :loading="loading" :props="cascaderProps" @change="logLabelChange">
+                  <template slot-scope="{ node, data }">
+                    <div :title="data.label" class="nz-cascade">
+                      {{data.label}}
+                    </div>
+                  </template>
                 </el-cascader-panel>
               </el-dropdown>
             </el-col>
