@@ -23,7 +23,11 @@
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
-              <span class="chart-title-text">{{chartData.name}}</span>
+<!--              <span class="chart-title-text">{{chartData.name}}</span>-->
+              <span class="chart-title-text" v-on:mouseover="changeActive()" v-on:mouseout="removeActive()">{{chartData.name}}</span>
+              <transition  name="el-fade-in-linear">
+                <span v-show="chartDataList" class="chart-title-pit" >{{chartData.name}}</span>
+              </transition>
               <span class="chart-title-icon"  :class="{'visible':caretShow,'hidden':!caretShow}">
                 <span v-if="chartData.remark">
                   <el-tooltip :content="chartData.remark" placement="top" effect="light">
@@ -94,6 +98,7 @@ import * as echarts from 'echarts'
 import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
+import chartDataList from '@/components/common/mixin/chartDataList'
 export default {
   name: 'pieChart',
   components: {
@@ -120,6 +125,7 @@ export default {
     from: { type: String },
     isLock: { type: Boolean, default: false }
   },
+  mixins: [chartDataList],
   data () {
     return {
       data: {}, // 该图表信息,chartItem
