@@ -66,14 +66,19 @@
           </el-dropdown>
         </div>
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
-          <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content"  >
-            <div v-if="showTab.indexOf('1') > -1" name="1" title="Graph" style="height: 100%">
+          <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content" >
+            <div v-if="showTab.length==2" class="show-tab-icon">
+              <i class="nz-icon nz-icon-Metrics" :class="showTabActive == '1'?'is-active-icon':''" @click="showTabActive = '1'"/>
+              <i class="nz-icon nz-icon-logs" :class="showTabActive == '2'?'is-active-icon':''" @click="showTabActive = '2'"/>
+            </div>
+            <div v-show="showTab.indexOf('1') > -1 && showTabActive == '1'" name="1" title="Graph" style="height: 100%">
               <div class="chart-room" style="height: 100%">
                 <chart ref="logChart" :unit="chartUnit"></chart>
               </div>
             </div>
-            <div v-show="showTab.indexOf('2') > -1" name="2" title="Logs">
-              <log-tab ref="logDetail" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+            <div v-show="showTab.indexOf('2') > -1 && showTabActive == '2'" name="2" title="Logs" class="logs-box">
+              <log-tab ref="logDetail" v-show="!noData" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+              <div class="chart-no-data" v-show="noData">No Data</div>
             </div>
           </div>
         </div>
@@ -110,13 +115,18 @@
             <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content"  >
-            <div v-if="showTab.indexOf('1') > -1" name="1" title="Graph" style="height: 100%">
+            <div v-if="showTabScreen.length==2" class="show-tab-icon">
+              <i class="nz-icon nz-icon-Metrics" :class="showTabScreenActive == '1'?'is-active-icon':''" @click="showTabScreenActive = '1'"/>
+              <i class="nz-icon nz-icon-logs" :class="showTabScreenActive == '2'?'is-active-icon':''" @click="showTabScreenActive = '2'"/>
+            </div>
+            <div v-show="showTabScreen.indexOf('1') > -1 && showTabScreenActive == '1'" name="1" title="Graph" style="height: 100%">
               <div class="chart-room" style="height: 100%">
                 <chart ref="logChartScreen" :unit="chartUnit"></chart>
               </div>
             </div>
-            <div v-show="showTab.indexOf('2') > -1" name="2" title="Logs">
-              <log-tab ref="logDetailScreen" :log-data="logDataScreen" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+            <div v-show="showTabScreen.indexOf('2') > -1 && showTabScreenActive == '2'" name="2" title="Logs" class="logs-box">
+              <log-tab ref="logDetailScreen" v-show="!noDataScreen" :log-data="logDataScreen" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+              <div class="chart-no-data" v-show="noDataScreen">No Data</div>
             </div>
           </div>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -167,6 +177,7 @@ export default {
     return {
       data: {}, // 该图表信息,chartItem
       noData: false,
+      noDataScreen: false,
       unit: {},
       text: '', // 保存信息
       screenText: '', // 全屏数据
@@ -180,6 +191,9 @@ export default {
       dropdownMenuShow: false,
       divFirstShow: false,
       showTab: ['1', '2'],
+      showTabActive: '1',
+      showTabScreen: ['1', '2'],
+      showTabScreenActive: '1',
       chartUnit: 2,
       logData: [],
       logDataScreen: [],
@@ -190,7 +204,7 @@ export default {
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       oldSearchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       filter: {},
-      stableFilter: {},
+      stableFilter: {}
     }
   },
   created () {
@@ -277,6 +291,7 @@ export default {
       this.isGreyScreen = []
       this.$refs.pickTime.$refs.timePicker.setCustomTime(this.stableFilter)
       this.seriesItemScreen = this.seriesItem
+      this.showTabScreenActive = '1'
       this.screenModal = true
     },
     resize (chartItem) {
@@ -291,7 +306,6 @@ export default {
         this.oldSearchTime[0] = this.searchTime[0]
         this.oldSearchTime[1] = this.searchTime[1]
       }
-      console.log(chartItem, this.$refs.logDetail)
       this.$nextTick(() => {
         this.resize(chartItem)
       })
@@ -353,11 +367,18 @@ export default {
               if (logTabIndex === -1) {
                 this.showTab.push('2')
               }
+              this.noData = true
+              logData.forEach(item => {
+                if (item.resultType === 'streamsFormat' && item.result.length > 0) {
+                  this.noData = false
+                }
+              })
             } else {
               if (logTabIndex > -1) {
                 this.showTab.splice(logTabIndex, 1)
               }
             }
+            this.showTabActive = this.showTab[0]
             this.$nextTick(() => {
               if (this.$refs.logDetail) {
                 this.$refs.logDetail.time = this.chartData.param.time
@@ -412,26 +433,33 @@ export default {
             const logData = res.map(r => r.data)
             const hasGraph = logData.some(d => d.resultType === 'matrix')
             const hasLog = logData.some(d => d.resultType === 'streamsFormat')
-            const graphTabIndex = this.showTab.indexOf('1')
+            const graphTabIndex = this.showTabScreen.indexOf('1')
             if (hasGraph) {
               if (graphTabIndex === -1) {
-                this.showTab.push('1')
+                this.showTabScreen.push('1')
               }
             } else {
               if (graphTabIndex > -1) {
-                this.showTab.splice(graphTabIndex, 1)
+                this.showTabScreen.splice(graphTabIndex, 1)
               }
             }
-            const logTabIndex = this.showTab.indexOf('2')
+            const logTabIndex = this.showTabScreen.indexOf('2')
             if (hasLog) {
               if (logTabIndex === -1) {
-                this.showTab.push('2')
+                this.showTabScreen.push('2')
               }
+              this.noDataScreen = true
+              logData.forEach(item => {
+                if (item.resultType === 'streamsFormat' && item.result.length > 0) {
+                  this.noDataScreen = false
+                }
+              })
             } else {
               if (logTabIndex > -1) {
-                this.showTab.splice(logTabIndex, 1)
+                this.showTabScreen.splice(logTabIndex, 1)
               }
             }
+            this.showTabScreenActive = JSON.stringify(this.showTabScreen[0])
             this.$nextTick(() => {
               if (this.$refs.logDetail) {
                 this.$refs.logDetail.time = this.chartData.param.time
@@ -448,9 +476,10 @@ export default {
             })
           }
         }).catch(e => {
+          console.log(e)
           this.isError = true
           this.errorContent = this.$t('terminallog.statusItem.unknownError')
-          this.$message.error(this.$t('terminallog.statusItem.unknownError'))
+          // this.$message.error(this.$t('terminallog.statusItem.unknownError'))
         })
       }
     },
@@ -459,7 +488,7 @@ export default {
       if (graphData && graphData.length > 0) {
         this.$refs.logChart.startLoading()
         const queryExpression = []
-        const series = []
+        let series = []
         const legend = []
         this.expressions.forEach((item, index) => {
           if (item !== '') {
@@ -468,7 +497,6 @@ export default {
         })
         this.logData.forEach((response, index) => {
           if (response.resultType === 'matrix') {
-            console.log(12312313123)
             const data = response.result
             if (!data || data.length < 1) {
               return
@@ -516,17 +544,17 @@ export default {
               } else {
                 alias = queryExpression[index]
               }
-              console.log(this.chartData, this.chartData.elements[index].legend)
               seriesItem.name = alias + '-' + index
               series.push(seriesItem)
               legend.push({ name: seriesItem.name, alias: alias, isGray: false })
-              console.log()
             })
           }
         })
         this.$refs.logChart.setLegend(legend)
         this.$refs.logChart.setRandomColors(series.length)
-        console.log(series)
+        if (!series.length) {
+          series = ''
+        }
         this.$refs.logChart.setSeries(series)
         this.defaultChartVisible = true
         this.$nextTick(() => {
@@ -539,7 +567,7 @@ export default {
       if (graphData && graphData.length > 0) {
         this.$refs.logChartScreen.startLoading()
         const queryExpression = []
-        const series = []
+        let series = []
         const legend = []
         this.expressions.forEach((item, index) => {
           if (item !== '') {
@@ -548,7 +576,6 @@ export default {
         })
         this.logDataScreen.forEach((response, index) => {
           if (response.resultType === 'matrix') {
-            console.log(12312313123)
             const data = response.result
             if (!data || data.length < 1) {
               return
@@ -596,17 +623,17 @@ export default {
               } else {
                 alias = queryExpression[index]
               }
-              console.log(this.chartData, this.chartData.elements[index].legend)
               seriesItem.name = alias + '-' + index
               series.push(seriesItem)
               legend.push({ name: seriesItem.name, alias: alias, isGray: false })
-              console.log()
             })
           }
         })
         this.$refs.logChartScreen.setLegend(legend)
         this.$refs.logChartScreen.setRandomColors(series.length)
-        console.log(series)
+        if (!series.length) {
+          series = ''
+        }
         this.$refs.logChartScreen.setSeries(series)
         this.defaultChartVisible = true
         this.$nextTick(() => {
@@ -702,9 +729,36 @@ export default {
     z-index: 1;
   }
   .logs-content{
-    overflow-y: auto;
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     padding: 10px;
+    position: relative;
+  }
+  .show-tab-icon{
+    position: absolute;
+    top: 0;
+    left: 10px;
+    display: none;
+    z-index: 10;
+  }
+  .show-tab-icon .nz-icon{
+    cursor: pointer;
+  }
+  .show-tab-icon .nz-icon.is-active-icon{
+    /*color: #FA901C;*/
+    color: #BDE3FD;
+  }
+  .logs-content:hover .show-tab-icon{
+    display: block;
+    z-index: 10;
+  }
+  /deep/ .chart-no-data{
+    width: calc(100% - 30px);
+  }
+  /deep/ .log-detail .log-table .nz-table2 {
+    padding: 0;
+  }
+  .logs-box{
+    overflow-y: auto;height: calc(100% - 15px);margin-top: 10px
   }
 </style>

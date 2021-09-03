@@ -80,6 +80,21 @@
                           :chart-data="item"
         ></line-chart-block>
 
+        <logs v-if="item.type === 'logs'" :key="'inner' + item.id"
+              :from="from" :ref="'editChart'+item.id" :temp-dom="tempDom"
+              :startTime="filter.start_time" :endTime="filter.end_time"
+              @on-refresh-data="refreshChart"
+              @on-remove-chart-block="removeChart"
+              @on-duplicate-chart-block="duplicateChart"
+              @on-drag-chart="editChartForDrag"
+              @on-edit-chart-block="editData"
+              @sync="()=>{chartBySync(item)}"
+              :panel-id="filter.panelId"
+              :is-lock="panelLock"
+              :chart-index="item.id"
+              @dropmenu-change="(show) => {dropmenuChange(item.id, show)}"
+              :chart-data="item"></logs>
+
         <chart-single-stat  :from="from" :key="'inner' + item.id" :ref="'editChart'+item.id" v-if="item.type === 'singleStat'"
                      @on-refresh-data="refreshChart"
                      @on-search-data="searchData"
@@ -225,6 +240,7 @@ import textChart from './text-chart'
 import diagramChart from './diagram-chart'
 import chartPie from './chart-pie'
 import chartBarStatis from './chart-bar-statistics'
+import logs from './logs'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
 // import visNetwork from './visNetwork'
@@ -254,7 +270,8 @@ export default {
     textChart,
     chartPie,
     chartBarStatis,
-    diagramChart
+    diagramChart,
+    logs
     // visNetwork,
   },
   watch: {
@@ -605,6 +622,14 @@ export default {
               this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
                 panelId, filter, null, '')
             }
+          } else if (chartItem.type == 'logs') {
+            if (filterType === 'showFullScreen') { // 全屏查询
+              this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+                panelId, filter, null, filterType)
+            } else {
+              this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+                panelId, filter, null, '')
+            }
           }
         }
       } else {
@@ -642,6 +667,18 @@ export default {
       }
 
       if (chartItem.type == 'text') {
+        if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
+          if (filterType === 'showFullScreen') { // 全屏查询
+            this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+              this.filter.panelId, null, filterType)
+          } else {
+            this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
+              this.filter.panelId, null, '')
+          }
+        }
+        return
+      }
+      if (chartItem.type == 'logs') {
         if (this.$refs['editChart' + chartItem.id] && this.$refs['editChart' + chartItem.id].length > 0) {
           if (filterType === 'showFullScreen') { // 全屏查询
             this.$refs['editChart' + chartItem.id][0].setData(chartItem, null,
@@ -703,6 +740,9 @@ export default {
 
               if (this.from === fromRoute.chartTemp) {
                 return new Promise(resolve => resolve(chartTempData))
+              }
+              if (chartInfo.type == 'logs') {
+                return chartTempData
               }
               return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
@@ -971,6 +1011,14 @@ export default {
                       this.$refs['editChart' + chartItem.id][0].setData(chartItem, singleStatRlt,
                         this.filter.panelId, this.filter, '', errorMsg)
                     }
+                  } else if (chartItem.type === 'logs') {
+                    if (filterType === 'showFullScreen') { // 全屏查询
+                      this.$refs['editChart' + chartItem.id][0].setData(chartItem, singleStatRlt,
+                        this.filter.panelId, this.filter, filterType, errorMsg)
+                    } else {
+                      this.$refs['editChart' + chartItem.id][0].setData(chartItem, singleStatRlt,
+                        this.filter.panelId, this.filter, '', errorMsg)
+                    }
                   }
                 }
               } else {
@@ -993,6 +1041,14 @@ export default {
                         this.filter)
                     }
                   } else if (chartItem.type === 'singleStat') {
+                    if (filterType === 'showFullScreen') { // 全屏查询
+                      this.$refs['editChart' + chartItem.id][0].setData(chartItem, '',
+                        this.filter.panelId, this.filter, filterType)
+                    } else {
+                      this.$refs['editChart' + chartItem.id][0].setData(chartItem, '',
+                        this.filter.panelId, this.filter)
+                    }
+                  } else if (chartItem.type === 'logs') {
                     if (filterType === 'showFullScreen') { // 全屏查询
                       this.$refs['editChart' + chartItem.id][0].setData(chartItem, '',
                         this.filter.panelId, this.filter, filterType)
@@ -1136,6 +1192,14 @@ export default {
               this.filter.panelId, this.filter, legend, '', errorMsg)
           }
         } else if (chartInfo.type === 'singleStat') {
+          if (filterType === 'showFullScreen') { // 全屏查询
+            this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, singleStatRlt,
+              this.filter.panelId, this.filter, filterType, errorMsg)
+          } else {
+            this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, singleStatRlt,
+              this.filter.panelId, this.filter, '', errorMsg)
+          }
+        } else if (chartInfo.type === 'logs') {
           if (filterType === 'showFullScreen') { // 全屏查询
             this.$refs['editChart' + chartInfo.id][0].setData(chartInfo, singleStatRlt,
               this.filter.panelId, this.filter, filterType, errorMsg)
