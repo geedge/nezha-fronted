@@ -97,6 +97,7 @@ export default {
         alertName: '',
         linkObject: { id: '', name: '' },
         expr: '',
+        type: 1,
         unit: 2,
         operator: '>',
         last: 60,

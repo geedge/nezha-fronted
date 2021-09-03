@@ -51,7 +51,7 @@
           <el-row v-if="plugins.indexOf('metric-input') > -1 || plugins.indexOf('metric-selector') > -1"
                   style="width: 100%;">
             <el-col
-              :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']" :style="type === 'log'? 'width: 108px;' : 'width: 100px;'">
+              :class="[plugins.indexOf('metric-selector') > -1 ?'metric-selector-title':'metric-null-title']">
               <el-dropdown class="metric-selector" v-if="plugins.indexOf('metric-selector') > -1">
                 <el-dropdown-menu style="display: none"></el-dropdown-menu>
                 <span :class="{'expr-title':projectRightBox}" style="cursor: pointer;" @click="toggleDropdown">{{type === 'log' ? $t("overall.logLabels") : $t("overall.metric") }}&nbsp;<i
@@ -86,7 +86,7 @@
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                 <el-input v-model="expressionList[index]" @input="metricKeyDown" type="textarea" :maxlength="styleType === 3 ? 512 : 4096" show-word-limit
-                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" :class="{ 'logs-label' : type === 'log'}" ref="elInput"></el-input>
+                          :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
                 <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
                 <div class="append-msg error" v-if="appendMsg"><span>{{appendMsg}}</span></div>
               </div>
@@ -697,7 +697,7 @@ export default {
   /*'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ',*/
   /*'text-align':'left', 'color': '#666',*/
   /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
-    width:100px;
+    width:108px;
     margin-right: 10px;
     height: 32px;
     text-align: left;
