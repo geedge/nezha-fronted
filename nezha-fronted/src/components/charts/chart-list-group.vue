@@ -1414,7 +1414,6 @@ export default {
 
     // 设置图表的尺寸
     setChartSize (item, index) {
-      // console.log(item)
       this.$nextTick(() => {
         const chartBox = document.getElementById('chart-' + item.id)
         if (chartBox) {

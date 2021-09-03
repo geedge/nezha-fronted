@@ -516,8 +516,8 @@ export default {
               }
             }
             this.$nextTick(() => {
-              hasGraph && this.loadLogGraph()
               this.logData = logData
+              hasGraph && this.loadLogGraph()
             })
           }
         }).catch(e => {
@@ -538,58 +538,58 @@ export default {
             promqlInputIndexs.push(index)
             queryExpression.push(item)
           }
-          this.logData.forEach((response, index) => {
-            if (response.resultType === 'matrix') {
-              const promqlIndex = promqlInputIndexs[index]
-              const data = response.result
-              if (!data || data.length < 1) {
-                return
-              }
-              data.forEach((result, i) => {
-                const seriesItem = {
-                  name: '',
-                  symbol: 'emptyCircle', // 去掉点
-                  symbolSize: [2, 2],
-                  showSymbol: false,
-                  smooth: 0.2, // 曲线变平滑
-                  data: [],
-                  lineStyle: {
-                    width: 1,
-                    opacity: 0.9
-                  },
-                  type: 'line'
-                }
-                let legendName = ''
-                seriesItem.data = result.values.map((item) => {
-                  return [item[0] * 1000, item[1]]
-                })
-                if (result.metric && Object.keys(result.metric).length > 0) {
-                  const metric = Object.assign({}, result.metric)
-                  seriesItem.name += metric.__name__ ? metric.__name__ : ''
-                  seriesItem.name += '{'
-                  delete metric.__name__
-                  for (const key in metric) {
-                    seriesItem.name += key + '=' + '"' + metric[key] + '",'
-                  }
-                  legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
-                  legendName += '}'
-                } else {
-                  legendName = queryExpression[index]
-                }
-                seriesItem.name = legendName + '-' + index
-                series.push(seriesItem)
-                legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
-              })
-
-              this.$refs['promql-' + promqlIndex][0].setError('')
-            }
-          })
         })
-        this.$refs.logChart.setLegend(legend)
-        this.$refs.logChart.setRandomColors(series.length)
-        this.$refs.logChart.setSeries(series)
+        this.logData.forEach((response, index) => {
+          if (response.resultType === 'matrix') {
+            const promqlIndex = promqlInputIndexs[index]
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            data.forEach((result, i) => {
+              const seriesItem = {
+                name: '',
+                symbol: 'emptyCircle', // 去掉点
+                symbolSize: [2, 2],
+                showSymbol: false,
+                smooth: 0.2, // 曲线变平滑
+                data: [],
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
+                type: 'line'
+              }
+              let legendName = ''
+              seriesItem.data = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              if (result.metric && Object.keys(result.metric).length > 0) {
+                const metric = Object.assign({}, result.metric)
+                seriesItem.name += metric.__name__ ? metric.__name__ : ''
+                seriesItem.name += '{'
+                delete metric.__name__
+                for (const key in metric) {
+                  seriesItem.name += key + '=' + '"' + metric[key] + '",'
+                }
+                legendName = seriesItem.name.substr(0, seriesItem.name.length - 1)
+                legendName += '}'
+              } else {
+                legendName = queryExpression[index]
+              }
+              seriesItem.name = legendName + '-' + index
+              series.push(seriesItem)
+              legend.push({ name: seriesItem.name, alias: legendName, isGray: false })
+            })
+
+            this.$refs['promql-' + promqlIndex][0].setError('')
+          }
+        })
         this.defaultChartVisible = true
         this.$nextTick(() => {
+          this.$refs.logChart.setLegend(legend)
+          this.$refs.logChart.setRandomColors(series.length)
+          this.$refs.logChart.setSeries(series)
           this.$refs.logChart.endLoading()
         })
       }

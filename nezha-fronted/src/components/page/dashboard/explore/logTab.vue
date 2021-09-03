@@ -1,7 +1,7 @@
 <template>
   <div class="log-detail">
-    <div :id="`logChart${tabIndex}`" class="log-chart"></div>
-    <div class="log-operations">
+    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div>
+    <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
         <el-switch
@@ -64,6 +64,13 @@
           <template slot-scope="{ row }">{{utcTimeToTimezoneStr(row.date)}}</template>
         </el-table-column>
         <el-table-column
+          v-if="!showSwitch"
+          prop="legend"
+          width="140"
+        >
+          <template slot-scope="{ row }">{{aliasLegend(row)}}</template>
+        </el-table-column>
+        <el-table-column
           prop="message"
         >
         </el-table-column>
@@ -78,7 +85,11 @@ export default {
   name: 'logTab',
   props: {
     logData: Array,
-    tabIndex: Number
+    tabIndex: Number,
+    showSwitch: {
+      type: Boolean,
+      default: true
+    }
   },
   computed: {
     tableTimeFormat () {
@@ -406,6 +417,52 @@ export default {
     },
     resizeChart () {
       this.myChart.resize()
+    },
+    aliasLegend (row) {
+      let host = ''// up,
+      let alias = ''
+      if (row.labels && Object.keys(row.labels).length > 0) {
+        const metric = Object.keys(row.labels)
+        if (metric.__name__) {
+          host = `${metric.__name__}{`// up,
+        }
+        metric.forEach((tag, i) => {
+          if (tag !== '__name__') {
+            host += `${tag}="${row.labels[tag]}",`
+          }
+        })
+        if (host.endsWith(',')) {
+          host = host.substr(0, host.length - 1)
+        }
+        if (metric.__name__) {
+          host += '}'
+        }
+        // 处理legend别名
+        alias = this.dealLegendAlias(host, row.elements.legend)
+        if (!alias || alias === '') {
+          alias = host
+        }
+      } else {
+        alias = row.elements.legend
+      }
+      return alias
+    },
+    dealLegendAlias: function (legend, expression) {
+      if (/\{\{.+\}\}/.test(expression)) {
+        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
+          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
+          const reg = new RegExp(label + '=".+?"')
+          let value = null
+          if (reg.test(legend)) {
+            const find = legend.match(reg)[0]
+            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+          }
+          return value || label
+        })
+        return labelValue
+      } else {
+        return expression
+      }
     }
   },
   watch: {
