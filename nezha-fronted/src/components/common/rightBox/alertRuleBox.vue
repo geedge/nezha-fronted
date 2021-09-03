@@ -17,19 +17,51 @@
           <el-form-item :label='$t("alert.config.name")' prop="name">
             <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
-          <el-form-item :label='$t("alert.config.expr")' prop="expr" >
-            <el-row style="line-height: 32px;">
-              <promql-input
-                id="alert-box-input-promql"
-                ref="promql"
-                :expression-list.sync="expressions"
-                :index="0"
-                :plugins="['metric-selector','metric-input']"
-                :required="true"
-                :styleType="3"
-                @change="metricChange"
-              ></promql-input>
-            </el-row>
+          <el-form-item :label="$t('overall.type')" prop="type">
+            <el-select
+              v-model="fromData.status"
+              class="right-box__select"
+              popper-class="right-box-select-dropdown prevent-clickoutside"
+              size="small"
+              @change="selectAlertRuleMetric">
+              <el-option
+                v-for="item in searchMetrics"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label='$t("alert.config.expr")' prop="expr">
+            <template v-if="showMetrics">
+              <el-row style="line-height: 32px;">
+                <promql-input
+                  id="alert-box-input-promql"
+                  ref="promql"
+                  :expression-list.sync="expressions"
+                  :index="0"
+                  :plugins="['metric-selector','metric-input']"
+                  :required="true"
+                  type="metric"
+                  :styleType="3"
+                  @change="metricChange"
+                ></promql-input>
+              </el-row>
+            </template>
+            <template v-else>
+              <el-row style="line-height: 32px;">
+                <promql-input
+                  id="alert-box-input-promql"
+                  ref="promql"
+                  :expression-list.sync="expressions"
+                  :index="0"
+                  :plugins="['metric-selector','metric-input']"
+                  :required="true"
+                  type="log"
+                  :styleType="3"
+                  @change="metricChange"
+                ></promql-input>
+              </el-row>
+            </template>
           </el-form-item>
           <!--threshold-->
           <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
@@ -151,7 +183,20 @@ export default {
       promqlKeys: [0],
       expressions: [''],
       legends: [''],
-
+      fromData: {
+        status: 'Metrics'
+      },
+      searchMetrics: [
+        {
+          value: 'Metrics',
+          label: this.$t('project.metrics.metrics')
+        },
+        {
+          value: 'Logs',
+          label: this.$t('overall.logs')
+        }
+      ],
+      showMetrics: true,
       editAlertRule: {},
       rules: {
         name: [
@@ -211,7 +256,8 @@ export default {
 
       userData: [],
       severityData: [],
-      notifyData: []
+      notifyData: [],
+      MetricsType: 1
     }
   },
   methods: {
@@ -228,7 +274,8 @@ export default {
       this.editAlertRule.expr = this.expressions[0]
       const params = {
         ...this.editAlertRule,
-        method: this.editAlertRule.method.join(',')
+        method: this.editAlertRule.method.join(','),
+        type: this.MetricsType
       }
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
@@ -319,6 +366,16 @@ export default {
       } else {
         callback()
       }
+    },
+    selectAlertRuleMetric (val) {
+      if (val === 'Metrics') {
+        this.showMetrics = true
+        this.MetricsType = 1
+      } else if (val === 'Logs') {
+        this.showMetrics = false
+        this.MetricsType = 2
+      }
+      this.$refs.promql.expressionList[0] = ''
     }
   },
   mounted () {
@@ -332,8 +389,16 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
+        console.log(n.type)
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id || this.editAlertRule.name) {
+          if (n.type === 1) {
+            this.fromData.status = 'Metrics'
+            this.showMetrics = true
+          } else if (n.type === 2) {
+            this.fromData.status = 'Logs'
+            this.showMetrics = false
+          }
           this.expressions = [this.editAlertRule.expr]
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {

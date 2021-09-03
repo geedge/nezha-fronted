@@ -46,6 +46,12 @@
             {{scope.row.alertNum}}
           </span>
         </template>
+        <template v-else-if="item.prop === 'type'">
+          <span v-if="scope.row[item.prop] === 1">{{ $t('project.metrics.metrics') }}</span>
+          <span v-else-if="scope.row[item.prop] === 2">{{ $t('overall.logs') }}</span>
+          <span v-else-if="scope.row[item.prop] === 3">SNMP TRAP</span>
+          <span v-else>-</span>
+        </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>
         <template v-else-if="item.prop === 'method'">
           <span v-if="scope.row.methods">{{scope.row.methods.map(label=>label.name).join(',')}}</span>
@@ -112,8 +118,13 @@ export default {
           show: true,
           minWidth: 200,
           sortable: 'custom'
-        },
-        {
+        }, {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          show: true,
+          minWidth: 200,
+          sortable: 'custom'
+        }, {
           label: this.$t('alert.config.expr'),
           prop: 'expr',
           minWidth: 200,
