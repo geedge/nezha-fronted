@@ -10,6 +10,12 @@
             </template>
           </el-checkbox-group>
         </template>
+        <span v-show="contentWidth < data.width"
+              :style="{top: `${moreBtnTop(data.type)}px`}"
+              class="search-more"
+              @click="changShowMore(type)">
+          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+        </span>
       </el-skeleton>
       <el-skeleton v-else-if="data.type === 'dropdownCheckBox'" :loading="!data.show" :rows="1" class="search-items">
         <template>
@@ -29,8 +35,8 @@
               :style="{top: `${moreBtnTop(data.type)}px`}"
               class="search-more"
               @click="changShowMore(type)">
-        More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
-      </span>
+          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+        </span>
       </el-skeleton>
     </div>
   </div>
@@ -318,8 +324,7 @@ export default {
     },
     changShowMore (type) {
       this.titleSearchListCopy[type].showMore = !this.titleSearchListCopy[type].showMore
-    },
-
+    }
   },
   destroyed () {
     window.removeEventListener('resize', this.needMore)
