@@ -312,7 +312,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.time")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.time">
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.time")' prop="param.time">
               <el-switch id="chart-box-time"
                          v-model="editChart.param.time"
                          :active-value="true"
@@ -320,7 +320,7 @@
                          active-color="#ee9d3f"
                          size="small"></el-switch>
             </el-form-item>
-            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.descending")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.descending">
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.descending")' prop="param.descending">
               <el-switch id="chart-box-descending"
                          v-model="editChart.param.descending"
                          :active-value="true"
@@ -328,7 +328,7 @@
                          active-color="#ee9d3f"
                          size="small"></el-switch>
             </el-form-item>
-            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.wrapLines")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.wrapLines">
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.wrapLines")' prop="param.wrapLines">
               <el-switch id="chart-box-wrapLines"
                          v-model="editChart.param.wrapLines"
                          :active-value="true"
@@ -336,7 +336,7 @@
                          active-color="#ee9d3f"
                          size="small"></el-switch>
             </el-form-item>
-            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.limit">
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' prop="param.limit">
               <el-input id="chart-box-limit" v-model="editChart.param.limit" maxlength="1024" show-word-limit size="small"></el-input>
             </el-form-item>
           </div>
@@ -1526,6 +1526,12 @@ export default {
           this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
         } else if (chartType == 'logs') {
           this.promqlType = 'log'
+          this.editChart.param = {
+            time: true,
+            descending: true,
+            wrapLines: true,
+            limit: 1000
+          }
         }
         /* if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {
@@ -1860,6 +1866,9 @@ export default {
         } else {
           this.setIsOtherChart()
           n.param && !n.param.legendValue && this.$set(this.editChart.param, 'legendValue', { min: 'off', max: 'off', avg: 'off', last: 'off', total: 'off' })
+        }
+        if (n.type === 'logs') {
+          this.promqlType = 'log'
         }
         this.$set(this.editChart, 'panelName', this.showPanel.name)
         if (this.showPanel.id || this.from === 'chartTemp') {

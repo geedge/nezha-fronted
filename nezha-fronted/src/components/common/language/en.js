@@ -383,7 +383,11 @@ const en = {
         varType: 'Variable type',
         pid: 'Chart template',
         selectAsset: 'Please select the Asset',
-        selectEndpoint: 'Please select the Endpoint'
+        selectEndpoint: 'Please select the Endpoint',
+        time: 'Time',
+        descending: 'Descending',
+        wrapLines: 'Wrap lines',
+        limit: 'Limit'
       },
       chartTableColumn: {
         metric: 'Metric', // '指标'

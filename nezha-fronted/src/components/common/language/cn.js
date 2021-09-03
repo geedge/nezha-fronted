@@ -373,7 +373,11 @@ const cn = {
         varType: '变量类型',
         pid: 'Chart 模板',
         selectAsset: '请选择Asset',
-        selectEndpoint: '请选择Endpoint'
+        selectEndpoint: '请选择Endpoint',
+        time: 'Time',
+        descending: 'Descending',
+        wrapLines: 'Wrap lines',
+        limit: 'Limit'
       },
       chartTableColumn: {
         metric: '指标',
