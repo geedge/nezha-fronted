@@ -531,7 +531,7 @@ export default {
         this.$refs.logChart.startLoading()
         const promqlInputIndexs = []
         const queryExpression = []
-        const series = []
+        let series = []
         const legend = []
         this.expressions.forEach((item, index) => {
           if (item !== '') {
@@ -589,6 +589,9 @@ export default {
         this.$nextTick(() => {
           this.$refs.logChart.setLegend(legend)
           this.$refs.logChart.setRandomColors(series.length)
+          if (!series.length) {
+            series = ''
+          }
           this.$refs.logChart.setSeries(series)
           this.$refs.logChart.endLoading()
         })
@@ -614,7 +617,7 @@ export default {
             this.saveDisabled = false
           }
           axios.all(requestArr).then(res => {
-            const series = []
+            let series = []
             const legend = []
             if (res.length > 0) {
               res.forEach((response, index) => {
@@ -670,6 +673,9 @@ export default {
 
               this.$refs.exploreChart.setLegend(legend)
               this.$refs.exploreChart.setRandomColors(series.length)
+              if (!series.length) {
+                series = ''
+              }
               this.$refs.exploreChart.setSeries(series)
               this.defaultChartVisible = true
             }

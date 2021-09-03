@@ -1731,7 +1731,6 @@ export default {
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
-            // console.log(res2)
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data

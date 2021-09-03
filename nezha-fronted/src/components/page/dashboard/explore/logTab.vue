@@ -48,6 +48,7 @@
         ref="logTable"
         class="nz-table2"
         size="mini"
+        v-if="tableData.length"
       >
         <el-table-column
           type="expand"
@@ -68,13 +69,16 @@
           prop="legend"
           width="140"
         >
-          <template slot-scope="{ row }">{{aliasLegend(row)}}</template>
+          <template slot-scope="{ row }">
+            <div style="width: 100%;" class="text-ellipsis" :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="message"
         >
         </el-table-column>
       </el-table>
+      <div v-else class="chart-no-data">No Data</div>
     </div>
   </div>
 </template>
@@ -587,6 +591,11 @@ export default {
         color: #666666;
       }
     }
+  }
+  .text-ellipsis{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
 }
 </style>
