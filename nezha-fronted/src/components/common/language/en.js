@@ -330,6 +330,9 @@ const en = {
           },
           group: {
             label: 'Group'
+          },
+          logs: {
+            label: 'Logs'
           }
         },
         statisticsVal: {

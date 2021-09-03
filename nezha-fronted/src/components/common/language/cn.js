@@ -314,6 +314,9 @@ const cn = {
           },
           group: {
             label: '组'
+          },
+          logs: {
+            label: '日志'
           }
         },
         statisticsVal: {

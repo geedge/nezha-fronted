@@ -287,7 +287,7 @@
               </el-select>
             </el-form-item>-->
             <!--lock-->
-            <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="unit">
+            <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
                 <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
@@ -311,6 +311,33 @@
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.time")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.time">
+              <el-switch id="chart-box-time"
+                         v-model="editChart.param.time"
+                         :active-value="true"
+                         :inactive-value="false"
+                         active-color="#ee9d3f"
+                         size="small"></el-switch>
+            </el-form-item>
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.descending")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.descending">
+              <el-switch id="chart-box-descending"
+                         v-model="editChart.param.descending"
+                         :active-value="true"
+                         :inactive-value="false"
+                         active-color="#ee9d3f"
+                         size="small"></el-switch>
+            </el-form-item>
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.wrapLines")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.wrapLines">
+              <el-switch id="chart-box-wrapLines"
+                         v-model="editChart.param.wrapLines"
+                         :active-value="true"
+                         :inactive-value="false"
+                         active-color="#ee9d3f"
+                         size="small"></el-switch>
+            </el-form-item>
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.limit">
+              <el-input id="chart-box-limit" v-model="editChart.param.limit" maxlength="1024" show-word-limit size="small"></el-input>
             </el-form-item>
           </div>
 
@@ -350,6 +377,7 @@
                 :expression-list="expressions"
                 :id="promqlKeys[index-1]"
                 :index="index-1"
+                :type="promqlType"
                 :key="promqlKeys[index-1]"
                 :plugins="['metric-selector', 'metric-input', 'remove']"
                 :ref="'promql-'+(index-1)"
@@ -597,6 +625,10 @@ export default {
           name: this.$t('dashboard.panel.chartForm.typeVal.alertList.label')
         },
         {
+          id: 'logs',
+          name: this.$t('dashboard.panel.chartForm.typeVal.logs.label')
+        },
+        {
           id: 'text',
           name: this.$t('dashboard.panel.chartForm.typeVal.text.label')
         },
@@ -651,7 +683,8 @@ export default {
         { name: 'Asset', id: 1 },
         { name: 'Endpoint', id: 2 }
       ],
-      topologyDialog: false
+      topologyDialog: false,
+      promqlType: 'metric'
       // metricStore: []
     }
   },
@@ -1436,6 +1469,7 @@ export default {
       const chartType = this.editChart.type
       this.editChart.param.url = ''
       this.editChart.height = 4
+      this.promqlType = 'metric'
       if (chartType === 'url') {
         this.setIsUrl()
         /* if(this.$refs.chartTag){
@@ -1490,6 +1524,8 @@ export default {
           this.showPicker = [{ bac: false, text: false }]
           this.statisticsList = JSON.parse(JSON.stringify(this.$CONSTANTS.statisticsList))
           this.statisticsList.push({ value: 'null', label: i18n.t('dashboard.panel.chartForm.statisticsVal.null') })
+        } else if (chartType == 'logs') {
+          this.promqlType = 'log'
         }
         /* if(this.$refs.chartTag){
             this.$refs.chartTag.forEach((item, index) => {

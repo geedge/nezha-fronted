@@ -176,7 +176,6 @@ export default {
     saveChart () { // 新增chart
       this.$refs.addChartModal.setTitle(this.$t('dashboard.panel.createChartTitle'))
       this.$refs.addChartModal.show(true)
-      // console.log('1_+_+_+_+_+_+',JSON.stringify(this.metricInfo));
       this.$refs.addChartModal.createData(-1, this.metricInfo)
     },
     // 删除指标,第一步, 新方法
