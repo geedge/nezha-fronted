@@ -153,7 +153,11 @@ const cn = {
     operationRecord: '操作记录',
     changePassword: '修改密码',
     relabelConfigRegex: '默认是 (.*) ',
-    relabelConfigReplacement: '默认是 $1'
+    relabelConfigReplacement: '默认是 $1',
+    oid: 'OID格式校验错误',
+    normal: '正常',
+    unusual: '不正常',
+    AuthenticationFailed: '认证失败'
   },
   setup: {
     step0: '欢迎',
@@ -1257,7 +1261,8 @@ const cn = {
     config: {
       name: '名称',
       receiver: '用户组',
-      expr: '表达式',
+      expr: '表达式/OID',
+      exprBox: '表达式',
       for: '持续(秒)',
       second: '秒',
       link: '关联',

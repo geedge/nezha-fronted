@@ -158,7 +158,11 @@ const en = {
     operationRecord: 'Operation record',
     changePassword: 'Change password',
     relabelConfigRegex: 'Default is (.*) ',
-    relabelConfigReplacement: 'Default is $1'
+    relabelConfigReplacement: 'Default is $1',
+    oid: 'OID format check error',
+    normal: 'Normal',
+    unusual: 'Unusual',
+    AuthenticationFailed: 'Authentication failed'
   },
   pageSize: '/page',
   setup: {
@@ -1260,7 +1264,8 @@ const en = {
     config: {
       name: 'Name', // "名称"
       receiver: 'Receiver', // "用户组"
-      expr: 'Expression', // "表达式"
+      expr: 'Expression/OID', // "表达式"
+      exprBox: 'Expression',
       for: 'Duration (s)', // For (s)
       second: 'second',
       link: 'Link', // '关联'
