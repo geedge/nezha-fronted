@@ -68,7 +68,7 @@
         <div class="mt-10 rich-text-container" v-cloak  v-show="firstShow" >
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content" >
             <div v-if="showTab.length==2" class="show-tab-icon">
-              <i class="nz-icon nz-icon-Metrics" :class="showTabActive == '1'?'is-active-icon':''" @click="showTabActive = '1'"/>
+              <i class="nz-icon nz-icon-link-chart" :class="showTabActive == '1'?'is-active-icon':''" @click="showTabActive = '1'"/>
               <i class="nz-icon nz-icon-logs" :class="showTabActive == '2'?'is-active-icon':''" @click="showTabActive = '2'"/>
             </div>
             <div v-show="showTab.indexOf('1') > -1 && showTabActive == '1'" name="1" title="Graph" style="height: 100%">
@@ -116,7 +116,7 @@
           </div>
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content"  >
             <div v-if="showTabScreen.length==2" class="show-tab-icon">
-              <i class="nz-icon nz-icon-Metrics" :class="showTabScreenActive == '1'?'is-active-icon':''" @click="showTabScreenActive = '1'"/>
+              <i class="nz-icon nz-icon-link-chart" :class="showTabScreenActive == '1'?'is-active-icon':''" @click="showTabScreenActive = '1'"/>
               <i class="nz-icon nz-icon-logs" :class="showTabScreenActive == '2'?'is-active-icon':''" @click="showTabScreenActive = '2'"/>
             </div>
             <div v-show="showTabScreen.indexOf('1') > -1 && showTabScreenActive == '1'" name="1" title="Graph" style="height: 100%">
@@ -144,6 +144,8 @@ import axios from 'axios'
 import chart from '@/components/page/dashboard/overview/chart'
 import logTab from '@/components/page/dashboard/explore/logTab'
 import bus from '@/libs/bus'
+import logsTempData from '@/components/charts/logsTempData'
+import { fromRoute } from '@/components/common/js/constants'
 export default {
   name: 'logs',
   components: {
@@ -329,8 +331,10 @@ export default {
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
-          if (item != '') {
+          if (item != '' && this.from.trim() != fromRoute.chartTemp) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.startTime) + '&end=' + this.$stringTimeParseToUnix(this.endTime) + '&limit=' + limit))
+          } else if (item != '' && this.from.trim() == fromRoute.chartTemp) {
+            requestArr.push(logsTempData[index % 2])
           }
         })
         if (requestArr.length > 0) {
@@ -410,8 +414,10 @@ export default {
       if (this.expressions.length > 0) {
         const requestArr = []
         this.expressions.forEach((item, index) => {
-          if (item != '') {
+          if (item != '' && this.from.trim() != fromRoute.chartTemp) {
             requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.searchTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.searchTime[1]) + '&limit=' + limit))
+          } else if (item != '' && this.from.trim() == fromRoute.chartTemp) {
+            requestArr.push(logsTempData[index % 2])
           }
         })
         if (requestArr.length > 0) {
@@ -740,19 +746,19 @@ export default {
     position: absolute;
     top: 0;
     left: 10px;
-    display: none;
+    display: block;
     z-index: 10;
   }
   .show-tab-icon .nz-icon{
     cursor: pointer;
+    padding: 0 5px;
   }
   .show-tab-icon .nz-icon.is-active-icon{
     /*color: #FA901C;*/
     color: #BDE3FD;
   }
   .logs-content:hover .show-tab-icon{
-    display: block;
-    z-index: 10;
+
   }
   /deep/ .chart-no-data{
     width: calc(100% - 30px);

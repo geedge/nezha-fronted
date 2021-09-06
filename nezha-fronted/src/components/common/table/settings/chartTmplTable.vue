@@ -144,6 +144,9 @@ export default {
         case 'group':
           str += 'nz-icon-group'
           break
+        case 'logs':
+          str += 'nz-icon-logs'
+          break
         default :
           str += 'nz-icon-table1'
           break

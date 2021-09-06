@@ -20,7 +20,7 @@
                   <el-dropdown-item
                     @click.native="selectMetricsLogs(item.label,item.icon, item.value)"
                     v-for="item in searchMetrics"
-                    :key="item.value">{{item.label}}</el-dropdown-item>
+                    :key="item.value"><i class="nz-icon" :class="item.icon" style="margin-right: 5px"/>{{item.label}}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>

@@ -501,7 +501,9 @@ export default {
   },
   beforeUpdate () {
     this.$nextTick(() => {
-      this.$refs.logTable.doLayout()
+      if (this.$refs.logTable) {
+        this.$refs.logTable.doLayout()
+      }
     })
   }
 }

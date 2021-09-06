@@ -267,6 +267,10 @@ export const chart = {
       label: i18n.t('dashboard.panel.chartForm.typeVal.group.label')
     },
     {
+      value: 'logs',
+      label: i18n.t('dashboard.panel.chartForm.typeVal.logs.label')
+    },
+    {
       value: 'diagram',
       label: i18n.t('dashboard.panel.chartForm.typeVal.diagram.label')
     }
