@@ -106,7 +106,7 @@
             </span>
           </el-popover>
           <div slot="title" >
-            <span class="nz-dialog-title">{{data.title}}</span>
+            <span class="nz-dialog-title">{{chartData.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
 
               <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
@@ -419,6 +419,7 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
+          this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
           const errorRowIndex = []
           res.forEach((r, i) => {
             if (typeof r === 'string') {
@@ -459,7 +460,7 @@ export default {
                 this.showTabScreen.splice(logTabIndex, 1)
               }
             }
-            this.showTabScreenActive = JSON.stringify(this.showTabScreen[0])
+            this.showTabScreenActive = this.showTabScreen[0]
             this.$nextTick(() => {
               if (this.$refs.logDetail) {
                 this.$refs.logDetail.time = this.chartData.param.time
@@ -638,6 +639,7 @@ export default {
         this.defaultChartVisible = true
         this.$nextTick(() => {
           this.$refs.logChartScreen.endLoading()
+          this.$refs.logChartScreen.resize()
         })
       }
     },

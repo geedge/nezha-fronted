@@ -76,6 +76,9 @@
         <el-table-column
           prop="message"
         >
+          <template slot-scope="{ row }">
+            <div style="width: 100%;" class="text-ellipsis" :title="row.message">{{row.message}}</div>
+          </template>
         </el-table-column>
       </el-table>
       <div v-else class="chart-no-data">No Data</div>
