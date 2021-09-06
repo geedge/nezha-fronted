@@ -49,7 +49,7 @@
         <template v-else-if="item.prop === 'type'">
           <span v-if="scope.row[item.prop] === 1">{{ $t('project.metrics.metrics') }}</span>
           <span v-else-if="scope.row[item.prop] === 2">{{ $t('overall.logs') }}</span>
-          <span v-else-if="scope.row[item.prop] === 3">SNMP TRAP</span>
+          <span v-else-if="scope.row[item.prop] === 3">SNMP trap</span>
           <span v-else>-</span>
         </template>
         <template v-else-if="item.prop === 'threshold'">{{formatThreshold(scope.row[item.prop], scope.row.unit)}}</template>

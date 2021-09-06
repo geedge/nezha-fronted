@@ -84,13 +84,14 @@
         </template>
         <template v-else-if="item.prop === 'clientState'">
           <div v-if="scope.row[item.prop]===1">
-            <div class="active-icon green-bg inline-block"></div> 正常
+            <div class="active-icon green-bg inline-block"></div>
+            {{ $t('overall.normal') }}
           </div>
           <div v-else-if="scope.row[item.prop]===0">
-            <div class="active-icon red-bg inline-block"></div> 不正常
+            <div class="active-icon red-bg inline-block"></div> {{ $t('overall.unusual') }}
           </div>
           <div v-else-if="scope.row[item.prop]===-1">
-            <div class="active-icon red-bg inline-block"></div> 认证失败
+            <div class="active-icon red-bg inline-block"></div> {{ $t('overall.AuthenticationFailed') }}
           </div>
           <template v-else>-</template>
         </template>

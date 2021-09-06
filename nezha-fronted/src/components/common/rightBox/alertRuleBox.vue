@@ -23,6 +23,7 @@
               class="right-box__select"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
+              :disabled="showTypeSelect"
               @change="selectAlertRuleMetric">
               <el-option
                 v-for="item in searchMetrics"
@@ -31,40 +32,43 @@
                 :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label='$t("alert.config.expr")' prop="expr">
-            <template v-if="showMetrics">
-              <el-row style="line-height: 32px;">
-                <promql-input
-                  id="alert-box-input-promql"
-                  ref="promql"
-                  :expression-list.sync="expressions"
-                  :index="0"
-                  :plugins="['metric-selector','metric-input']"
-                  :required="true"
-                  type="metric"
-                  :styleType="3"
-                  @change="metricChange"
-                ></promql-input>
-              </el-row>
-            </template>
-            <template v-else>
-              <el-row style="line-height: 32px;">
-                <promql-input
-                  id="alert-box-input-promql"
-                  ref="promql"
-                  :expression-list.sync="expressions"
-                  :index="0"
-                  :plugins="['metric-selector','metric-input']"
-                  :required="true"
-                  type="log"
-                  :styleType="3"
-                  @change="metricChange"
-                ></promql-input>
-              </el-row>
-            </template>
+          <el-form-item  v-if="showSnmpTrap" :label='$t("alert.config.exprBox")' prop="expr">
+              <template v-if="showMetrics">
+                <el-row style="line-height: 32px;">
+                  <promql-input
+                    id="alert-box-input-promql"
+                    ref="promql"
+                    :expression-list.sync="expressions"
+                    :index="0"
+                    :plugins="['metric-selector','metric-input']"
+                    :required="true"
+                    type="metric"
+                    :styleType="3"
+                    @change="metricChange"
+                  ></promql-input>
+                </el-row>
+              </template>
+              <template v-else>
+                <el-row style="line-height: 32px;">
+                  <promql-input
+                    id="alert-box-input-promql"
+                    ref="promql"
+                    :expression-list.sync="expressions"
+                    :index="0"
+                    :plugins="['metric-selector','metric-input']"
+                    :required="true"
+                    type="log"
+                    :styleType="3"
+                    @change="metricChange"
+                  ></promql-input>
+                </el-row>
+              </template>
+            </el-form-item>
+          <el-form-item label="OID" prop="expr" v-if="!showSnmpTrap">
+            <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
+          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
             <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text">
               <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
                 <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -72,7 +76,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item :label="$t('alert.config.unit')" prop="unit">
+          <el-form-item v-if="showSnmpTrap"  :label="$t('alert.config.unit')" prop="unit">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class unit-popper-class"
@@ -178,6 +182,16 @@ export default {
   },
   mixins: [editRigthBox],
   data () {
+    const nzOid = (rule, value, callback) => {
+      if (this.MetricsType === 3) {
+        const Oid = /^(\d{1,9}\.){0,}[\d]+$/
+        if (Oid.test(value)) {
+          callback()
+        } else {
+          callback(new Error(this.$t('overall.oid')))
+        }
+      }
+    }
     return {
       promqlCount: 1,
       promqlKeys: [0],
@@ -194,16 +208,23 @@ export default {
         {
           value: 'Logs',
           label: this.$t('overall.logs')
+        },
+        {
+          value: 'SNMP trap',
+          label: 'SNMP trap'
         }
       ],
       showMetrics: true,
+      showSnmpTrap: true,
+      showTypeSelect: false,
       editAlertRule: {},
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
         expr: [
-          { required: true, message: this.$t('validate.required'), trigger: 'change' }
+          { required: true, message: this.$t('validate.required'), trigger: 'change' },
+          { validator: nzOid, trigger: 'blur' }
         ],
         last: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
@@ -271,7 +292,9 @@ export default {
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
-      this.editAlertRule.expr = this.expressions[0]
+      if (this.MetricsType !== 3) {
+        this.editAlertRule.expr = this.expressions[0]
+      }
       const params = {
         ...this.editAlertRule,
         method: this.editAlertRule.method.join(','),
@@ -369,13 +392,29 @@ export default {
     },
     selectAlertRuleMetric (val) {
       if (val === 'Metrics') {
+        // showMetrics 为 true 时,展示 Metrics
         this.showMetrics = true
+        // showSnmpTrap 为 true 时,展示 Expression,Threshold,Unit
+        this.showSnmpTrap = true
+        // type = 1
         this.MetricsType = 1
+        // 移除from表单的 expr 验证
+        this.$refs.alertRuleForm.clearValidate('expr')
       } else if (val === 'Logs') {
+        // showMetrics 为 false 时,展示 Logs label
         this.showMetrics = false
+        // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
+        this.showSnmpTrap = true
+        // type = 2
         this.MetricsType = 2
+        // 移除from表单的 expr 验证
+        this.$refs.alertRuleForm.clearValidate('expr')
+      } else if (val === 'SNMP trap') {
+        // showSnmpTrap 为 false 时,展示 OID
+        this.showSnmpTrap = false
+        // type = 3
+        this.MetricsType = 3
       }
-      this.$refs.promql.expressionList[0] = ''
     }
   },
   mounted () {
@@ -389,17 +428,32 @@ export default {
       immediate: true,
       handler (n, o) {
         this.isEdit = true
-        console.log(n.type)
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id || this.editAlertRule.name) {
+          this.expressions = [this.editAlertRule.expr]
+          // 当 edit 时禁用 type下拉框
+          this.showTypeSelect = true
           if (n.type === 1) {
             this.fromData.status = 'Metrics'
+            // showMetrics 为 true 时,展示 Metrics
             this.showMetrics = true
+            // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
+            this.showSnmpTrap = true
+            this.MetricsType = 1
           } else if (n.type === 2) {
             this.fromData.status = 'Logs'
+            // showMetrics 为 false 时,展示 Logs label
             this.showMetrics = false
+            // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
+            this.showSnmpTrap = true
+            this.MetricsType = 2
+          } else if (n.type === 3) {
+            this.fromData.status = 'SNMP trap'
+            // showSnmpTrap 为 false 时,展示 OID
+            this.showSnmpTrap = false
+            this.MetricsType = 3
+            return
           }
-          this.expressions = [this.editAlertRule.expr]
           this.$nextTick(() => {
             this.expressions.forEach((ex, index) => {
               if (ex) {
