@@ -190,6 +190,8 @@ export default {
         } else {
           callback(new Error(this.$t('overall.oid')))
         }
+      } else {
+        callback()
       }
     }
     return {
