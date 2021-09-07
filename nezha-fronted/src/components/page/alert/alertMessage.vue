@@ -287,7 +287,7 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true
         this.$nextTick(() => {
-          this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
+          this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryChartDate()
         })
       })
@@ -300,7 +300,7 @@ export default {
     },
     queryChartDate () {
       const $temp = this
-      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000)
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
       const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.searchTimeDialog = [start, end]
       const timeDiff = (new Date(end).getTime() - new Date(start).getTime()) / 1000 / (24 * 60 * 60)

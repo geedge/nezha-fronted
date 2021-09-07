@@ -429,7 +429,7 @@ export default {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true
         this.$nextTick(() => {
-          this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 30 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
+          this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryChartDate()
         })
       })
