@@ -396,8 +396,6 @@ export default {
       if (val === 'Metrics') {
         // showMetrics 为 true 时,展示 Metrics
         this.showMetrics = true
-        // showSnmpTrap 为 true 时,展示 Expression,Threshold,Unit
-        this.showSnmpTrap = true
         // type = 1
         this.MetricsType = 1
         // 移除from表单的 expr 验证
@@ -405,8 +403,6 @@ export default {
       } else if (val === 'Logs') {
         // showMetrics 为 false 时,展示 Logs label
         this.showMetrics = false
-        // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
-        this.showSnmpTrap = true
         // type = 2
         this.MetricsType = 2
         // 移除from表单的 expr 验证
@@ -437,17 +433,9 @@ export default {
           this.showTypeSelect = true
           if (n.type === 1) {
             this.fromData.status = 'Metrics'
-            // showMetrics 为 true 时,展示 Metrics
-            this.showMetrics = true
-            // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
-            this.showSnmpTrap = true
             this.MetricsType = 1
           } else if (n.type === 2) {
             this.fromData.status = 'Logs'
-            // showMetrics 为 false 时,展示 Logs label
-            this.showMetrics = false
-            // showSnmpTrap 为 true 时,展示Expression,Threshold,Unit
-            this.showSnmpTrap = true
             this.MetricsType = 2
           } else if (n.type === 3) {
             this.fromData.status = 'SNMP trap'
