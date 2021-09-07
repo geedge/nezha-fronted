@@ -394,24 +394,17 @@ export default {
     },
     selectAlertRuleMetric (val) {
       if (val === 'Metrics') {
-        // showMetrics 为 true 时,展示 Metrics
-        this.showMetrics = true
-        // type = 1
-        this.MetricsType = 1
-        // 移除from表单的 expr 验证
-        this.$refs.alertRuleForm.clearValidate('expr')
+        this.MetricsType = 1 // type = 1
+        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,thershold,unit
+        this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'Logs') {
-        // showMetrics 为 false 时,展示 Logs label
-        this.showMetrics = false
-        // type = 2
-        this.MetricsType = 2
-        // 移除from表单的 expr 验证
-        this.$refs.alertRuleForm.clearValidate('expr')
+        this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
+        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,thershold,unit
+        this.MetricsType = 2 // type = 2
+        this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'SNMP trap') {
-        // showSnmpTrap 为 false 时,展示 OID
-        this.showSnmpTrap = false
-        // type = 3
-        this.MetricsType = 3
+        this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
+        this.MetricsType = 3 // type = 3
       }
     }
   },
@@ -429,19 +422,18 @@ export default {
         this.editAlertRule = JSON.parse(JSON.stringify(n))
         if (this.editAlertRule.id || this.editAlertRule.name) {
           this.expressions = [this.editAlertRule.expr]
-          // 当 edit 时禁用 type下拉框
-          this.showTypeSelect = true
+          this.showTypeSelect = true // 当 edit 时禁用 type下拉框
           if (n.type === 1) {
             this.fromData.status = 'Metrics'
-            this.MetricsType = 1
+            this.MetricsType = 1 // 默认保存 type
           } else if (n.type === 2) {
             this.fromData.status = 'Logs'
-            this.MetricsType = 2
+            this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
+            this.MetricsType = 2 // 默认保存 type
           } else if (n.type === 3) {
             this.fromData.status = 'SNMP trap'
-            // showSnmpTrap 为 false 时,展示 OID
-            this.showSnmpTrap = false
-            this.MetricsType = 3
+            this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
+            this.MetricsType = 3 // 默认保存 type
             return
           }
           this.$nextTick(() => {
