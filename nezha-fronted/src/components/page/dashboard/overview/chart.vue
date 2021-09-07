@@ -212,7 +212,7 @@ export default {
       tooltipDom.style.left = event.pageX - 15 + 'px'
     },
     resize () {
-      this.$nextTick(() => {
+      setTimeout(() => {
         if (this.chart) {
           let height
           let width
@@ -220,7 +220,8 @@ export default {
             height = 700
             width = 1200
           } else {
-            height = this.$el.clientHeight - document.querySelector('#legendArea').offsetHeight
+            const legendHeight = document.querySelector('#legendArea').offsetHeight || 30
+            height = this.$el.clientHeight - legendHeight
             width = this.$el.clientWidth
           }
           this.chart.resize({ width: width, height: height })
