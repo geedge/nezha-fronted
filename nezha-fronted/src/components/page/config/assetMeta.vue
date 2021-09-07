@@ -223,7 +223,11 @@ export default {
             this.getGroup()
 
             if (selectKey === group.id) {
-              this.showGroup = -1
+              this.showGroup = {
+                name: this.$t('config.assetLabel.all'),
+                id: -1,
+                children: []
+              }
               this.searchLabel.groupIds = ''
               this.getTableData()
               this.$refs.selectGroup.$refs.tree.setCurrentKey(this.showGroup)

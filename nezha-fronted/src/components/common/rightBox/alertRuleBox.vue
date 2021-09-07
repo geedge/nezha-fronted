@@ -395,11 +395,11 @@ export default {
     selectAlertRuleMetric (val) {
       if (val === 'Metrics') {
         this.MetricsType = 1 // type = 1
-        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,thershold,unit
+        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,threshold,unit
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'Logs') {
         this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
-        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,thershold,unit
+        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,threshold,unit
         this.MetricsType = 2 // type = 2
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'SNMP trap') {
