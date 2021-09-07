@@ -1,6 +1,7 @@
 <template>
   <div class="log-detail">
-    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div>
+    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch&&!noData"></div>
+    <div class="log-chart chart-no-data" v-if="showSwitch&&noData">No data</div>
     <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
@@ -154,7 +155,8 @@ export default {
       tableData: [],
       timeFormatData: [],
       tableChartData: [],
-      myChart: null
+      myChart: null,
+      noData: false
     }
   },
   methods: {
@@ -214,6 +216,11 @@ export default {
         series = series.sort((a, b) => {
           return this.levelOptions.findIndex(l => a.name === l.type) - this.levelOptions.findIndex(l => b.name === l.type)
         })
+        if (!series.length) {
+          this.noData = true
+        } else {
+          this.noData = false
+        }
         const option = {
           title: {
             show: false
@@ -511,12 +518,13 @@ export default {
 
 <style lang="scss">
 .log-detail {
+  position: relative;
   * {
     box-sizing: border-box;
   }
   .log-table .nz-table2 {
     padding: 10px 0 0 0;
-
+    position: relative;
     .el-table__body {
       border-collapse: separate;
       border-spacing: 0 6px;
