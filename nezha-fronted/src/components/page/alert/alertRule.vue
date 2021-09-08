@@ -97,6 +97,7 @@ export default {
         alertName: '',
         linkObject: { id: '', name: '' },
         expr: '',
+        state: 1,
         type: 1,
         unit: 2,
         operator: '>',
@@ -104,7 +105,18 @@ export default {
         severityId: '',
         summary: '',
         description: '',
-        method: []
+        method: [],
+        name: '',
+        threshold: '',
+        receiver: [],
+        autoExpired: 1,
+        schedEnable: 0,
+        schedDays: '',
+        schedStime: '00:00',
+        schedEtime: '23:59',
+        notifyActive: 1,
+        notifyExpired: 1,
+        trbShot: ''
       },
       blankSilenceObject: {
         id: '',
@@ -199,6 +211,7 @@ export default {
           this.object = {
             ...response.data,
             method: response.data.method ? response.data.method.split(',').map(item => Number(item)) : [],
+            schedDays: response.data.schedDays ? response.data.schedDays.split(',').map(item => Number(item)) : [],
             receiverShow: response.data.receiver ? response.data.receiver.split(',').map(item => Number(item)) : []
           }
           if (copyFlag) {

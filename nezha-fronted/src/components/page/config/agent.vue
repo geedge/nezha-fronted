@@ -126,7 +126,7 @@ export default {
       blankObject: {
         id: '',
         host: '',
-        port: 9090,
+        port: 10090,
         dc: { id: '', name: '', location: '' }
       },
       agent: agent,

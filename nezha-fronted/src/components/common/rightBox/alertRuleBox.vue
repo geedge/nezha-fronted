@@ -15,9 +15,10 @@
         <el-form ref="alertRuleForm" :model="editAlertRule" :rules="rules" label-position = "top" label-width="120px">
           <!--name-->
           <el-form-item :label='$t("alert.config.name")' prop="name">
-            <el-input id="alert-box-input-name" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
+            <el-input id="alert-box-input-name" ref="alertName" v-model="editAlertRule.name" maxlength="64" placeholder="" show-word-limit size="small"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('overall.type')" prop="type">
+          <!--type-->
+          <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
             <el-select
               v-model="fromData.status"
               class="right-box__select"
@@ -32,6 +33,18 @@
                 :value="item.value"></el-option>
             </el-select>
           </el-form-item>
+          <!--severity-->
+          <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
+            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="prevent-clickoutside" size="small">
+              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
+                <span>
+                   <i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}
+                </span>
+              </el-option>
+            </el-select>
+            <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
+          </el-form-item>
+          <!--expr-->
           <el-form-item  v-if="showSnmpTrap" :label='$t("alert.config.exprBox")' prop="expr">
               <template v-if="showMetrics">
                 <el-row style="line-height: 32px;">
@@ -68,42 +81,198 @@
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.threshold')" prop="threshold" style="display: inline-block;">
-            <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text">
-              <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" class="half-form-item" style="display: inline-block;">
+            <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text" :disabled="!showSnmpTrap">
+              <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="prevent-clickoutside" size="small" :disabled="!showSnmpTrap">
                 <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item v-if="showSnmpTrap"  :label="$t('alert.config.unit')" prop="unit">
+          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class unit-popper-class"
                          size="small"
+                         :disabled="!showSnmpTrap"
                          style="width: 100%"
             >
             </el-cascader>
           </el-form-item>
+          <!--inr-->
+          <el-form-item :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
+            <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" placeholder="" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
+          </el-form-item>
           <!--last-->
-          <el-form-item :label="$t('alert.config.for')" prop="last">
+          <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item">
             <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
             </el-input>
           </el-form-item>
-          <!--severity-->
-          <el-form-item :label="$t('alert.severity')" class="severity-box" prop="severityId">
-            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
-              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-                <span>
-                   <i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}
-                </span>
+          <!--autoExpired-->
+          <el-form-item :label="$t('alert.config.autoExpired')" prop="autoExpired" class="half-form-item">
+            <el-select
+              id="alert-box-input-autoExpired"
+              v-model="editAlertRule.autoExpired"
+              class="right-box__select half-form-item"
+              placeholder=""
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :value="0">
               </el-option>
             </el-select>
-            <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
+          </el-form-item>
+          <!--timeout-->
+          <el-form-item :label="$t('alert.config.timeout')" prop="timeout"  class="half-form-item">
+            <el-input id="alert-box-input-timeout" v-model.number="editAlertRule.timeout" placeholder="" size="small" type="text"></el-input>
+          </el-form-item>
+          <!--summary-->
+          <el-form-item :label="$t('alert.summary')" prop="summary">
+            <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+          <!--description-->
+          <el-form-item :label="$t('overall.remark')" prop="description">
+            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
+          </el-form-item>
+          <div class="alert-rule-split-title">Effective configuration</div>
+          <!--state-->
+          <el-form-item :label="$t('alert.config.state')" prop="state" class="half-form-item">
+            <el-select
+              id="alert-box-input-state"
+              v-model="editAlertRule.state"
+              class="right-box__select half-form-item"
+              placeholder=""
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :value="0">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--schedEnable-->
+          <el-form-item :label="$t('alert.config.schedEnable')" prop="schedEnable" class="half-form-item">
+            <el-select
+              id="alert-box-input-schedEnable"
+              v-model="editAlertRule.schedEnable"
+              class="right-box__select half-form-item"
+              placeholder=""
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :value="0">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--schedDays-->
+          <el-form-item :label="$t('alert.config.schedDays')" prop="schedDays" :rules="[{ required: editAlertRule.schedEnable, message: this.$t('validate.required'), trigger: 'blur' }]">
+            <el-select
+              id="alert-box-input-schedDays"
+              style="width: 100%"
+              v-model="editAlertRule.schedDays"
+              class="right-box__select half-form-item"
+              placeholder=""
+              multiple
+              @change="$refs.alertRuleForm.validateField('schedDays')"
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                v-for="item in weekList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="margin-top: -15px;">
+            <el-time-picker
+              style="width: calc(50% - 5px);display: inline-block"
+              :value-format="'HH:mm'"
+              :format="'HH:mm'"
+              v-model="editAlertRule.schedStime"
+              size="small"
+              :clearable = 'false'
+              :picker-options="{
+              }">
+            </el-time-picker>
+            <el-time-picker
+              style="width: calc(50% - 5px);display: inline-block"
+              :value-format="'HH:mm'"
+              :format="'HH:mm'"
+              size="small"
+              :clearable = 'false'
+              v-model="editAlertRule.schedEtime"
+              :picker-options="{
+                minTime: editAlertRule.schedStime
+              }">
+            </el-time-picker>
+          </el-form-item>
+          <div class="alert-rule-split-title">Notification configuration</div>
+          <!--notifyActive-->
+          <el-form-item :label="$t('alert.config.notifyActive')" prop="notifyActive" class="half-form-item">
+            <el-select
+              id="alert-box-input-notifyActive"
+              v-model="editAlertRule.notifyActive"
+              class="right-box__select half-form-item"
+              placeholder=""
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :value="0">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--notifyExpired-->
+          <el-form-item :label="$t('alert.config.notifyExpired')" prop="notifyExpired" class="half-form-item">
+            <el-select
+              id="alert-box-input-notifyExpired"
+              v-model="editAlertRule.notifyExpired"
+              class="right-box__select half-form-item"
+              placeholder=""
+              :popper-append-to-body="false"
+              popper-class="prevent-clickoutside"
+              size="small"
+            >
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :value="1">
+              </el-option>
+              <el-option
+                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :value="0">
+              </el-option>
+            </el-select>
           </el-form-item>
           <!--receiver-->
-          <el-form-item :label="$t('config.user.receiver')" prop="receiver">
+          <el-form-item :label="$t('config.user.receiver')" prop="receiver" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-select
               id="alert-box-input-receiver"
               v-model.trim="editAlertRule.receiverShow"
@@ -111,7 +280,7 @@
               filterable
               multiple
               placeholder=""
-              popper-class="right-box-select-dropdown prevent-clickoutside"
+              popper-class="prevent-clickoutside"
               size="small"
               value-key="userId"
               @change="receiverShowChange"
@@ -125,30 +294,15 @@
             </el-select>
           </el-form-item>
           <!--notify-->
-          <el-form-item :label="$t('alert.notify')" :rules="[{ validator: validateNotify, trigger: 'change'},]" class="notify-box" prop="method">
-            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+          <el-form-item :label="$t('alert.notify')" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'change' }]" class="notify-box" prop="method" >
+            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
               <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <!--summary-->
-          <el-form-item :label="$t('alert.summary')" prop="summary">
-            <el-input id="alert-box-input-summary" v-model="editAlertRule.summary" maxlength="512" placeholder="" rows="3" show-word-limit size="small" type="textarea"></el-input>
-          </el-form-item>
-          <!--description-->
-          <el-form-item :label="$t('overall.remark')" prop="description">
-            <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
-          </el-form-item>
-          <!--state-->
-          <el-form-item :label='$t("config.dc.state")' prop="state">
-            <el-switch
-              id="dc-box-input-name"
-              v-model="editAlertRule.state"
-              :active-value="1"
-              :inactive-value="0"
-              active-color="#ee9d3f"
-            >
-            </el-switch>
+          <div class="alert-rule-split-title">More</div>
+          <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
+            <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
         </el-form>
       </div>
@@ -172,13 +326,15 @@ import chartDataFormat from '../../charts/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
+import richTextEditor from '@/components/charts/richTextEditor'
 export default {
   name: 'alertRuleBox',
   props: {
     alertRule: Object
   },
   components: {
-    'promql-input': promqlInput
+    'promql-input': promqlInput,
+    richTextEditor
   },
   mixins: [editRigthBox],
   data () {
@@ -280,7 +436,31 @@ export default {
       userData: [],
       severityData: [],
       notifyData: [],
-      MetricsType: 1
+      MetricsType: 1,
+      weekList: [
+        {
+          value: 1,
+          label: this.$t('week.Sun')
+        }, {
+          value: 2,
+          label: this.$t('week.Mon')
+        }, {
+          value: 3,
+          label: this.$t('week.Tue')
+        }, {
+          value: 4,
+          label: this.$t('week.Wed')
+        }, {
+          value: 5,
+          label: this.$t('week.Thu')
+        }, {
+          value: 6,
+          label: this.$t('week.Fri')
+        }, {
+          value: 7,
+          label: this.$t('week.Sat')
+        }
+      ]
     }
   },
   methods: {
@@ -305,6 +485,8 @@ export default {
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
           params.receiver = this.editAlertRule.receiverShow.join(',')
+          params.schedDays = this.editAlertRule.schedDays.join(',')
+          params.trbShot = this.$refs.richTextEditor.getContent()
           if (this.editAlertRule.id) {
             this.$put('alert/rule', params).then(response => {
               this.prevent_opt.save = false
@@ -381,9 +563,8 @@ export default {
       })
     },
     receiverShowChange (val) {
-      if (!val.length) {
-        this.$refs.alertRuleForm.validateField('method')
-      }
+      this.editAlertRule.receiver = [...this.editAlertRule.receiverShow].join(',')
+      this.$refs.alertRuleForm.validateField('receiver')
     },
     validateNotify (rule, value, callback) {
       if (this.editAlertRule.receiverShow.length && value.length === 0) {
@@ -395,6 +576,7 @@ export default {
     selectAlertRuleMetric (val) {
       if (val === 'Metrics') {
         this.MetricsType = 1 // type = 1
+        this.showMetrics = true
         this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,threshold,unit
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'Logs') {
@@ -406,6 +588,9 @@ export default {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.MetricsType = 3 // type = 3
       }
+    },
+    afterInitRich () {
+      this.$refs.alertName.focus()
     }
   },
   mounted () {
@@ -454,7 +639,7 @@ export default {
   display: none;
 }
 </style>
-<style scoped>
+<style scoped lang="scss">
   .severity-circle{
     position: absolute;
     left: 10px;
@@ -465,5 +650,43 @@ export default {
   }
   .severity-box /deep/ .el-select .el-input__inner{
     padding-left: 25px;
+  }
+  .half-form-item {
+    width: calc(50% - 5px);
+    display: inline-block;
+    .el-form-item__content,.el-select{
+      width: 100%;
+    }
+  }
+  .right-box-alert-rule /deep/ .right-box__container .el-form-item__content .el-input-group--prepend{
+    width: 100%;
+    margin-top: 5px;
+  }
+  /deep/ .rich-text-editor{
+    line-height: 24px;
+  }
+   /deep/ .el-input-group__prepend{
+     position: relative;
+     .hide-icon{
+       width: 38px;
+       .el-input__inner{
+         border: none;
+         text-align: center;
+       }
+     }
+  }
+  .alert-rule-split-title{
+    background: #F6F6F6;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+    line-height: 24px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    height: 24px;
+  }
+  /deep/ .el-form-item__content .el-input-group{
+    vertical-align: middle;
   }
 </style>

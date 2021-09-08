@@ -61,14 +61,27 @@
           <el-tag v-for="(user, index) in scope.row[item.prop]" v-if="user&&user.username" :key="index" class="alert-rule-tag" effect="dark" size="mini">{{user.username}}&nbsp;</el-tag>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-switch
-            v-model="scope.row.state"
-            :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"
-            active-color="#ee9d3f"
-            :active-value="1"
-            :inactive-value="0"
-            @change="(val)=>{$emit('statusChange', scope.row)}"
-          />
+          <el-popover
+            placement="right"
+            trigger="hover"
+            :open-delay="300"
+          >
+            <div>
+              <div>Schedule : {{scope.row.schedEnable ? $t('dashboard.panel.chartForm.lockList.on') : $t('dashboard.panel.chartForm.lockList.off')}}</div>
+              <div>Effective configuration：</div>
+              <div>{{weekStr(scope.row.schedDays)}}</div>
+              <div>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+            </div>
+            <el-switch
+              slot="reference"
+              v-model="scope.row.state"
+              :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"
+              active-color="#ee9d3f"
+              :active-value="1"
+              :inactive-value="0"
+              @change="(val)=>{$emit('statusChange', scope.row)}"
+            />
+          </el-popover>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
@@ -184,6 +197,30 @@ export default {
           minWidth: 100,
           sortable: 'custom'
         }
+      ],
+      weekList: [
+        {
+          value: 1,
+          label: this.$t('week.Sun')
+        }, {
+          value: 2,
+          label: this.$t('week.Mon')
+        }, {
+          value: 3,
+          label: this.$t('week.Tue')
+        }, {
+          value: 4,
+          label: this.$t('week.Wed')
+        }, {
+          value: 5,
+          label: this.$t('week.Thu')
+        }, {
+          value: 6,
+          label: this.$t('week.Fri')
+        }, {
+          value: 7,
+          label: this.$t('week.Sat')
+        }
       ]
     }
   },
@@ -198,6 +235,18 @@ export default {
       } else {
         return value
       }
+    },
+    weekStr (weekstr) {
+      const arr = weekstr.split(',')
+      let str = ''
+      arr.forEach((item, index) => {
+        if (index === arr.length - 1) {
+          str += this.weekList[item - 1].label
+        } else {
+          str += this.weekList[item - 1].label + ', '
+        }
+      })
+      return str
     }
   }
 }

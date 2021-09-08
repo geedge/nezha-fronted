@@ -103,7 +103,7 @@ const cn = {
     exportExcelLower: '导出',
     rollbackImport: '回滚',
     exportCur: '当前页',
-    exportAll: '总计',
+    exportAll: '全部',
     importFile: '请上传文件',
     importTip: '只允许xlsx/xls格式文件',
     importTipImg: '只允许jpg/png格式文件',
@@ -1286,7 +1286,16 @@ const cn = {
         alertRuleInfo: '告警规则',
         alertNumTrend: '告警数量趋势',
         affectEntity: '影响'
-      }
+      },
+      timeout: 'Timeout',
+      inr: 'Evaluation interval',
+      autoExpired: 'Automatic expired',
+      state: '状态',
+      schedEnable: 'Schedule',
+      schedDays: 'Effective time',
+      notifyActive: 'Active Notification',
+      notifyExpired: 'Expired notification',
+      trbShot: 'Trouble shooting'
     },
     silence: {
       name: '名称',
@@ -1796,6 +1805,15 @@ const cn = {
     mobile: '手机',
     source: '来源',
     twoFactorAuthentication: '双因子认证'
+  },
+  week:{
+    Mon: '周一',
+    Tue: '周二',
+    Wed: '周三',
+    Thu: '周四',
+    Fri: '周五',
+    Sat: '周六',
+    Sun: '周日'
   },
   ...zhLocale
 }

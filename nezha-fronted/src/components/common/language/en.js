@@ -1289,7 +1289,16 @@ const en = {
         alertRuleInfo: 'Alert rule information',
         alertNumTrend: 'Alert num trend',
         affectEntity: 'Affect entity'
-      }
+      },
+      timeout: 'Timeout',
+      inr: 'Evaluation interval ',
+      autoExpired: 'Automatic expired',
+      state: 'State',
+      schedEnable: 'Schedule',
+      schedDays: 'Effective time',
+      notifyActive: 'Active Notification',
+      notifyExpired: 'Expired notification',
+      trbShot: 'Trouble shooting'
     },
     silence: {
       name: 'Name',
@@ -1678,6 +1687,15 @@ const en = {
     mobile: 'Mobile',
     source: 'Source',
     twoFactorAuthentication: 'Two-Factor Authentication'
+  },
+  week: {
+    Mon: 'Monday',
+    Tue: 'Tuesday',
+    Wed: 'Wednesday',
+    Thu: 'Thursday',
+    Fri: 'Friday',
+    Sat: 'Saturday',
+    Sun: 'Sunday'
   },
   ...enLocale
 }

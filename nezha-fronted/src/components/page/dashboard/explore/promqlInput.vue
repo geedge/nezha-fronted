@@ -610,6 +610,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .no-resize{
+    background: rgba(255,255,255,0);
+  }
   .promqlInput {
     position: relative;
     width: 100%;
