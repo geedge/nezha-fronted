@@ -13,7 +13,7 @@
 
       </template>
       <template v-slot:top-tool-right>
-        <button id="notify-add" v-has="'snmp_mibFile_add'" :title="$t('config.system.notification.create')" class="top-tool-btn margin-r-10" type="button" @click="addNotify">
+        <button id="notify-add" v-has="'snmp_mibFile_add'" :title="$t('config.system.notification.create')" class="top-tool-btn" type="button" @click="addNotify">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
       </template>

@@ -9,6 +9,7 @@
         :from="fromRoute.endpoint"
         :layout="['searchInput', 'pagination']"
         :search-msg="searchMsg"
+        :search-right="true"
         @search="search"
       >
         <template  v-slot:default="slotProps">

@@ -10,6 +10,7 @@
         :layout="dataListLayout"
         :search-msg="searchMsg"
         @search="search"
+        :search-right="true"
       >
         <template v-slot:default="slotProps">
           <asset-table
