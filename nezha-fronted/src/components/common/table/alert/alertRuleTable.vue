@@ -67,10 +67,12 @@
             :open-delay="300"
           >
             <div>
-              <div>Schedule : {{scope.row.schedEnable ? $t('dashboard.panel.chartForm.lockList.on') : $t('dashboard.panel.chartForm.lockList.off')}}</div>
-              <div>Effective configuration：</div>
-              <div>{{weekStr(scope.row.schedDays)}}</div>
-              <div>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+              <div>Schedule : <span class="active-icon inline-block" :class="scope.row.schedEnable ? 'green-bg' : 'red-bg'"></span>{{scope.row.schedEnable ? $t('dashboard.panel.chartForm.lockList.on') : $t('dashboard.panel.chartForm.lockList.off')}}</div>
+              <div>
+                <div>Effective configuration：</div>
+                <div>{{weekStr(scope.row.schedDays)}}</div>
+                <div>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+              </div>
             </div>
             <el-switch
               slot="reference"
@@ -257,6 +259,9 @@ export default {
   }
   .color23BF9A{
     color: #23BF9A;
+  }
+  /deep/ .active-icon {
+    margin-left: 5px;
   }
 </style>
 <style>

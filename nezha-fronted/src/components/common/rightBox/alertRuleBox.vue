@@ -660,7 +660,6 @@ export default {
   }
   .right-box-alert-rule /deep/ .right-box__container .el-form-item__content .el-input-group--prepend{
     width: 100%;
-    margin-top: 5px;
   }
   /deep/ .rich-text-editor{
     line-height: 24px;
