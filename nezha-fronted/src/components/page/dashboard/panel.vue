@@ -12,7 +12,7 @@
             <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
           </div>
           <template v-else>
-            <div class="top-tool-left">
+            <div class="top-tool-left" style="cursor: pointer;">
               <select-panel ref="selectPanel" :filter-panel="filterPanel" :panel-data="panelData" :panel-lock="panelLock" :placement="'bottom-start'"
                             :show-panel="showPanel" style="display: inline-block;padding: 0" @deletePanel="del" @editPanel="edit" @selectPanel="panelChange">
                 <template v-slot:header>

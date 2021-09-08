@@ -166,8 +166,8 @@ export default {
           //   }
           // }
           response.data.list.forEach(d => {
-            d.port = JSON.parse(d.configs[0].config).config.port
-            d.path = JSON.parse(d.configs[0].config).config.protocol
+            d.port = JSON.parse(d.configs[0].config).port
+            d.path = JSON.parse(d.configs[0].config).protocol
           })
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
