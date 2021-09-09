@@ -30,16 +30,18 @@
                 v-for="item in searchMetrics"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value"></el-option>
+                :value="item.value"
+                style="width: 312px"></el-option>
             </el-select>
           </el-form-item>
           <!--severity-->
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
             <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="prevent-clickoutside" size="small">
-              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
-                <span>
-                   <i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}
-                </span>
+              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id" style="width: 312px">
+                <div style="display: flex;justify-content: space-between;padding: 5px;">
+                  <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
+                  <div class="severity-item">{{item.remark}}</div>
+                </div>
               </el-option>
             </el-select>
             <i v-if="editAlertRule.severityId" :style="{color:severityData.length > 0 && severityData.find(severity => severity.id ===  editAlertRule.severityId).color,'font-size':'12px'}" class="nz-icon nz-icon-circle severity-circle"></i>
@@ -127,10 +129,12 @@
               size="small"
             >
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -161,10 +165,12 @@
               size="small"
             >
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -182,10 +188,12 @@
               size="small"
             >
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -249,10 +257,12 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -271,10 +281,12 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
+                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -688,5 +700,9 @@ export default {
   }
   /deep/ .el-form-item__content .el-input-group{
     vertical-align: middle;
+  }
+  .severity-item{
+    color: #999999;
+    font-size: 12px;
   }
 </style>

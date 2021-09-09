@@ -245,6 +245,10 @@ export default {
     },
     closeDialog () {
       this.silenceBoxShow = false
+    },
+    showText (row) {
+      this.dialogShowText = true
+      this.dialogText = row.alertRule.trbShot
     }
   },
   watch: {

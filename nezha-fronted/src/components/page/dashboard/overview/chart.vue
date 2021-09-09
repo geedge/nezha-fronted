@@ -173,7 +173,7 @@ export default {
           this.option.yAxis.axisLabel.formatter = this.defaultYAxisFormatter
         }
       }
-      if (this.series) {
+      if (this.series && this.series.length) {
         this.$set(this.option, 'series', this.series)
         this.noData = false
         this.chart.clear()

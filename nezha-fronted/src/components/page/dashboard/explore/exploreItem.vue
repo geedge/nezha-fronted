@@ -130,7 +130,7 @@
               </el-collapse-item>
             </template>
             <!--log-->
-            <template v-else>
+            <template v-else v-loading="chartLoading">
               <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit"></chart>
@@ -326,6 +326,7 @@ export default {
   },
   data () {
     return {
+      chartLoading: false,
       rightBox: { // 面板弹出框相关
         show: false
       },
@@ -466,6 +467,7 @@ export default {
       })
     },
     queryLogData (limit) { // log的chart和table是一个请求
+      this.chartLoading = true
       if (!limit) {
         limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 1000
       }
@@ -481,6 +483,7 @@ export default {
           this.saveDisabled = false
         }
         axios.all(requestArr).then(res => {
+          this.chartLoading = false
           const errorRowIndex = []
           res.forEach((r, i) => {
             if (typeof r === 'string') {
@@ -521,6 +524,7 @@ export default {
             })
           }
         }).catch(e => {
+          this.chartLoading = false
           this.$message.error(this.$t('terminallog.statusItem.unknownError'))
         })
       }

@@ -34,6 +34,7 @@
           :table-data="tableData"
           @del="del"
           @edit="edit"
+          @showText="showText"
           @orderBy="tableDataSort"
           @queryMessage='queryMessage'
           @reload="getTableData"
@@ -96,6 +97,21 @@
       </div>
       <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
     </el-dialog>
+    <!--全屏-->
+    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
+               :visible.sync="dialogShowText"
+               width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
+      <div slot="title">
+        <span class="nz-dialog-title">{{$t('alert.config.trbShot')}}</span>
+      </div>
+      <div class="rich-text-screen-container"  >
+        <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
+          <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+            <div style="height: 100%;" v-html="dialogText" ></div>
+          </el-scrollbar>
+        </div>
+      </div>
+    </el-dialog>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
 </transition>
   </div>
@@ -111,8 +127,9 @@ import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
-import { alertMessage as alertMessageConstant } from '@/components/common/js/constants'
+import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import logsTempData from '@/components/charts/logsTempData'
 export default {
   name: 'alertMessage',
   components: {
@@ -126,8 +143,11 @@ export default {
   mixins: [dataListMixin],
   data () {
     return {
+      chartLoading: false,
       stateOptions: alertMessageConstant.states,
       state: '1',
+      dialogShowText: false,
+      dialogText: '',
       url: 'alert/message',
       // 导出相关
       importBox: { show: false, title: this.$t('overall.exportExcel') },
@@ -198,7 +218,9 @@ export default {
       },
       requestIndex: 0,
       viewAssetState: false,
-      nowTime: ''
+      nowTime: '',
+      logData: [],
+      resultType: ''
     }
   },
   computed: {
@@ -288,7 +310,7 @@ export default {
         this.graphShow = true
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
-          this.queryChartDate()
+          this.queryDate()
         })
       })
     },
@@ -297,6 +319,17 @@ export default {
         return
       }
       this.$refs.dataList.showBottomBox(alertMessage, alertRule)
+    },
+    queryDate () {
+      this.chartLoading = true
+      if (this.currentMsg.alertRule.type === 1) {
+        this.resultType = 'matrix'
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
+      } else if (this.currentMsg.alertRule.type === 2) {
+        this.queryLogData(1000)
+      }
     },
     queryChartDate () {
       const $temp = this
@@ -322,6 +355,7 @@ export default {
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
+          this.chartLoading = false
           try {
             res.forEach((response, promIndex) => {
               if (response.status === 200) {
@@ -397,11 +431,161 @@ export default {
               this.$refs.messageChart.setLegend(this.legend)
               this.$refs.messageChart.setSeries(this.chartDatas)
               this.$refs.messageChart.endLoading()
+              this.$refs.messageChart.resize()
             })
           } catch (err) {
             // this.$message.error(err)
             this.$refs.messageChart.endLoading()
+            this.chartLoading = false
           }
+        })
+      }
+    },
+    exportLog ({ limit, descending }) {
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
+      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      const params = {
+        logql: this.expressions,
+        start: start,
+        end: end,
+        direction: descending ? 'backward' : 'forward',
+        limit
+      }
+      axios.get('/logs/loki/export', { responseType: 'blob', params: params }).then(res => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, 'log')
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = 'log'
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+      })
+    },
+    queryLogData (limit) { // log的chart和table是一个请求
+      if (!limit) {
+        limit = 1000
+      }
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
+      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      this.expressions = [this.currentMsg.alertRule.expr]
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+        console.log(res)
+        this.chartLoading = false
+        const logData = [res.data]
+        this.resultType = res.data.resultType
+        this.$nextTick(() => {
+          if (this.$refs.logDetail) {
+            this.$refs.logDetail.time = this.chartData.param.time
+            this.$refs.logDetail.wrapLines = this.chartData.param.wrapLines
+            this.$refs.logDetail.operations.descending = this.chartData.param.descending
+          }
+          // logData.forEach((item, index) => {
+          //   item.result.forEach(result => {
+          //     result.elements = this.expressions[index]
+          //   })
+          // })
+          this.logData = logData
+          this.resultType === 'matrix' && this.loadLogGraph()
+        })
+      })
+    },
+    loadLogGraph () {
+      const graphData = this.logData.filter(l => l.resultType === 'matrix')
+      if (graphData && graphData.length > 0) {
+        this.$refs.messageChart.startLoading()
+        const queryExpression = []
+        let series = []
+        const legend = []
+        this.expressions.forEach((item, index) => {
+          if (item !== '') {
+            queryExpression.push(item)
+          }
+        })
+        this.logData.forEach((response, index) => {
+          if (response.resultType === 'matrix') {
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            data.forEach((result, i) => {
+              const seriesItem = {
+                name: '',
+                symbol: 'emptyCircle', // 去掉点
+                symbolSize: [2, 2],
+                showSymbol: false,
+                smooth: 0.2, // 曲线变平滑
+                data: [],
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
+                type: 'line'
+              }
+              seriesItem.data = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              let host = ''// up,
+              let alias = ''
+              if (result.metric && Object.keys(result.metric).length > 0) {
+                const metric = Object.keys(result.metric)
+                if (metric.__name__) {
+                  host = `${metric.__name__}{`// up,
+                }
+                metric.forEach((tag, i) => {
+                  if (tag !== '__name__') {
+                    host += `${tag}="${result.metric[tag]}",`
+                  }
+                })
+                if (host.endsWith(',')) {
+                  host = host.substr(0, host.length - 1)
+                }
+                if (metric.__name__) {
+                  host += '}'
+                }
+                // 处理legend别名
+                // alias = this.dealLegendAlias(host, this.chartData.elements[index].legend)
+                if (!alias || alias === '') {
+                  alias = host
+                }
+              } else {
+                alias = queryExpression[index]
+              }
+              seriesItem.name = alias + '-' + index
+              series.push(seriesItem)
+              legend.push({ name: seriesItem.name, alias: alias, isGray: false })
+            })
+          }
+        })
+        this.$refs.messageChart.setLegend(legend)
+        this.$refs.messageChart.setRandomColors(series.length)
+        if (!series.length) {
+          series = ''
+        }
+        this.$refs.messageChart.setSeries(series)
+        this.defaultChartVisible = true
+        this.$nextTick(() => {
+          this.$refs.messageChart.endLoading()
+          this.$refs.messageChart.resize()
         })
       }
     },
