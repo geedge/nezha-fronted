@@ -92,10 +92,13 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryChartDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
         </div>
       </div>
-      <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
+      <div style="width: 100%;height: 100%" v-loading="chartLoading">
+        <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
+        <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      </div>
     </el-dialog>
     <!--全屏-->
     <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
@@ -113,7 +116,7 @@
       </div>
     </el-dialog>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-</transition>
+    </transition>
   </div>
 </template>
 <script>
@@ -614,36 +617,36 @@ export default {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
           /* const axiosAll = []
-          this.$nextTick(() => {
-            this.tableData.forEach((item) => {
-              item.labels = JSON.parse(item.labels)
-              if (!this.isBuildIn(item.alertRule)) {
-                const paramStr = JSON.stringify(this.promQueryParamConvert(item))
-                axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
-              } else {
-                axiosAll.push('')
-              }
-            })
-            axios.all(axiosAll).then(res => {
-              res.forEach((item, index) => {
-                let current = []
-                const response2 = item.data
-                if (response2.data && response2.data.result && response2.data.result.length > 0) {
-                  current = response2.data.result[0].value.map((item, i) => {
-                    if (i == 0) {
-                      return bus.computeTimezone(item)
-                    } else {
-                      return parseFloat(item).toFixed(2)
-                    }
-                  })
+            this.$nextTick(() => {
+              this.tableData.forEach((item) => {
+                item.labels = JSON.parse(item.labels)
+                if (!this.isBuildIn(item.alertRule)) {
+                  const paramStr = JSON.stringify(this.promQueryParamConvert(item))
+                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
                 } else {
-                  current = [null, null]
+                  axiosAll.push('')
                 }
-                this.tableData[index].current = current
               })
-              this.$set(this.tableData, [...this.tableData])
-            })
-          }) */
+              axios.all(axiosAll).then(res => {
+                res.forEach((item, index) => {
+                  let current = []
+                  const response2 = item.data
+                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                    current = response2.data.result[0].value.map((item, i) => {
+                      if (i == 0) {
+                        return bus.computeTimezone(item)
+                      } else {
+                        return parseFloat(item).toFixed(2)
+                      }
+                    })
+                  } else {
+                    current = [null, null]
+                  }
+                  this.tableData[index].current = current
+                })
+                this.$set(this.tableData, [...this.tableData])
+              })
+            }) */
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
         }
