@@ -20,7 +20,7 @@
           <!--type-->
           <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
             <el-select
-              v-model="fromData.status"
+              v-model="editAlertRule.type"
               class="right-box__select"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
@@ -81,7 +81,14 @@
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" class="half-form-item" style="display: inline-block;">
+          <el-form-item
+            :label="$t('alert.config.threshold')"
+            prop="threshold" class="half-form-item"
+            style="display: inline-block;"
+            :rules="[
+              { required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' },
+              { validator: nzNumber, trigger: 'blur' }
+             ]">
             <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text" :disabled="!showSnmpTrap">
               <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="prevent-clickoutside" size="small" :disabled="!showSnmpTrap">
                 <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -89,7 +96,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit">
+          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class unit-popper-class"
@@ -396,13 +403,6 @@ export default {
         ],
         operator: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        unit: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        threshold: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: nzNumber, trigger: 'blur' }
         ]
       },
       operators: [
@@ -464,6 +464,7 @@ export default {
     }
   },
   methods: {
+    nzNumber: nzNumber,
     clickOutside () {
       this.esc(false)
     },
@@ -610,6 +611,7 @@ export default {
           this.showTypeSelect = true // 当 edit 时禁用 type下拉框
           if (n.type === 1) {
             this.fromData.status = 'Metrics'
+            this.showMetrics = true
             this.MetricsType = 1 // 默认保存 type
           } else if (n.type === 2) {
             this.fromData.status = 'Logs'

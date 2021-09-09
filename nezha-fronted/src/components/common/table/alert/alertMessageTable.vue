@@ -108,7 +108,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-if="scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
@@ -160,6 +160,7 @@ export default {
       graphShow: false,
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
+      exclusiveLabels: ['_id', 'severity'],
       legend: [],
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
@@ -263,15 +264,23 @@ export default {
       if (typeof obj === 'string') obj = JSON.parse(obj)
       const labels = JSON.parse(JSON.stringify(obj))
       const result = []
+      for (const key of this.exclusiveLabels) {
+        Object.keys(labels).forEach(labelsKey => {
+          if (labelsKey.indexOf(key) !== -1) {
+            delete labels[labelsKey]
+          }
+        })
+      }
       for (const key of buildIn) {
         if (key in labels) {
           result.push({ label: key, value: labels[key] })
           delete labels[key]
         }
       }
-      /* Object.keys(labels).sort().forEach(key => {
+      Object.keys(labels).sort().forEach(key => {
         result.push({ label: key, value: labels[key] })
-      }) */
+        delete labels[key]
+      })
       return result
     },
     chartUnitChange: function (unit) {
