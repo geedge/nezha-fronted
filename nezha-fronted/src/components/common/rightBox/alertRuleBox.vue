@@ -348,7 +348,7 @@ export default {
   mixins: [editRigthBox],
   data () {
     const nzOid = (rule, value, callback) => {
-      if (this.MetricsType === 3) {
+      if (this.editAlertRule.type === 3) {
         const Oid = /^(\d{1,9}\.){0,}[\d]+$/
         if (Oid.test(value)) {
           callback()
@@ -474,7 +474,7 @@ export default {
     save () {
       if (this.prevent_opt.save) { return } ;
       this.prevent_opt.save = true
-      if (this.MetricsType !== 3) {
+      if (this.editAlertRule.type !== 3) {
         this.editAlertRule.expr = this.expressions[0]
       }
       const params = {
@@ -581,18 +581,15 @@ export default {
     },
     selectAlertRuleMetric (val) {
       if (val === 1) {
-        this.showMetrics = true
         this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 2) {
         this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
         this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
-        // this.editAlertRule.type = 2
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.editAlertRule.inr = ''
-        this.MetricsType = 3 // type = 3
       }
     },
     afterInitRich () {
@@ -621,7 +618,6 @@ export default {
             this.editAlertRule.type = 2
           } else if (n.type === 3) {
             this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
-            this.MetricsType = 3 // 默认保存 type
             this.editAlertRule.inr = ''
             this.editAlertRule.type = 3
             return
