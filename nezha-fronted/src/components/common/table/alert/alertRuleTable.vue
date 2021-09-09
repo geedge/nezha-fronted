@@ -242,6 +242,7 @@ export default {
       const arr = weekstr.split(',')
       let str = ''
       arr.forEach((item, index) => {
+        if (!item) return
         if (index === arr.length - 1) {
           str += this.weekList[item - 1].label
         } else {

@@ -380,7 +380,7 @@ export default {
           let by = ' by ('
 
           for (const k in obj.labels) {
-            if (k != 'alertname' && k != 'severity' && k != 'severity_id') {
+            if (k != 'alertname' && k != 'severity' && k != 'severity_id' && k != 'rule_type') {
               intoLabels = true
               group += k
               group += '='

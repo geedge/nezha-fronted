@@ -81,7 +81,14 @@
             <el-input id="alert-box-input-oid" v-model="editAlertRule.expr" size="small" type="text"></el-input>
           </el-form-item>
           <!--threshold-->
-          <el-form-item :label="$t('alert.config.threshold')" prop="threshold" class="half-form-item" style="display: inline-block;">
+          <el-form-item
+            :label="$t('alert.config.threshold')"
+            prop="threshold" class="half-form-item"
+            style="display: inline-block;"
+            :rules="[
+              { required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' },
+              { validator: nzNumber, trigger: 'blur' }
+             ]">
             <el-input id="alert-box-input-threshold" v-model="editAlertRule.threshold" placeholder="" size="small" type="text" :disabled="!showSnmpTrap">
               <el-select id="alert-box-input-operator" slot="prepend" v-model="editAlertRule.operator" class="hide-icon" popper-class="prevent-clickoutside" size="small" :disabled="!showSnmpTrap">
                 <el-option v-for="item in operators" :id="'operator-'+item.key" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -89,7 +96,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit">
+          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class unit-popper-class"
@@ -393,13 +400,6 @@ export default {
         ],
         operator: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        unit: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        threshold: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: nzNumber, trigger: 'blur' }
         ]
       },
       operators: [
@@ -461,6 +461,7 @@ export default {
     }
   },
   methods: {
+    nzNumber: nzNumber,
     clickOutside () {
       this.esc(false)
     },
