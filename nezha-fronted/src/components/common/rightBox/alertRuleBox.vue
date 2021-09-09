@@ -20,7 +20,7 @@
           <!--type-->
           <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
             <el-select
-              v-model="fromData.status"
+              v-model="editAlertRule.type"
               class="right-box__select"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
@@ -364,20 +364,17 @@ export default {
       promqlKeys: [0],
       expressions: [''],
       legends: [''],
-      fromData: {
-        status: 'Metrics'
-      },
       searchMetrics: [
         {
-          value: 'Metrics',
+          value: 1,
           label: this.$t('project.metrics.metrics')
         },
         {
-          value: 'Logs',
+          value: 2,
           label: this.$t('overall.logs')
         },
         {
-          value: 'SNMP trap',
+          value: 3,
           label: 'SNMP trap'
         }
       ],
@@ -483,7 +480,7 @@ export default {
       const params = {
         ...this.editAlertRule,
         method: this.editAlertRule.method.join(','),
-        type: this.MetricsType
+        type: this.editAlertRule.type
       }
       this.$refs.alertRuleForm.validate((valid) => {
         if (valid) {
@@ -583,17 +580,16 @@ export default {
       }
     },
     selectAlertRuleMetric (val) {
-      if (val === 'Metrics') {
-        this.MetricsType = 1 // type = 1
+      if (val === 1) {
         this.showMetrics = true
-        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,threshold,unit
+        this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
-      } else if (val === 'Logs') {
+      } else if (val === 2) {
         this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
-        this.showSnmpTrap = true // showSnmptrap 为 true 时显示 expr,threshold,unit
-        this.MetricsType = 2 // type = 2
+        this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
+        // this.editAlertRule.type = 2
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
-      } else if (val === 'SNMP trap') {
+      } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.editAlertRule.inr = ''
         this.MetricsType = 3 // type = 3
@@ -619,18 +615,15 @@ export default {
           this.expressions = [this.editAlertRule.expr]
           this.showTypeSelect = true // 当 edit 时禁用 type下拉框
           if (n.type === 1) {
-            this.fromData.status = 'Metrics'
-            this.showMetrics = true
-            this.MetricsType = 1 // 默认保存 type
+            this.editAlertRule.type = 1
           } else if (n.type === 2) {
-            this.fromData.status = 'Logs'
             this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
-            this.MetricsType = 2 // 默认保存 type
+            this.editAlertRule.type = 2
           } else if (n.type === 3) {
-            this.fromData.status = 'SNMP trap'
             this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
             this.MetricsType = 3 // 默认保存 type
             this.editAlertRule.inr = ''
+            this.editAlertRule.type = 3
             return
           }
           this.$nextTick(() => {
