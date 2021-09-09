@@ -20,7 +20,7 @@
           <!--type-->
           <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
             <el-select
-              v-model="editAlertRule.type"
+              v-model="fromData.status"
               class="right-box__select"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
@@ -246,6 +246,7 @@
               :popper-append-to-body="false"
               popper-class="prevent-clickoutside"
               size="small"
+              @change="receiverAndNotifyValidate"
             >
               <el-option
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
@@ -267,6 +268,7 @@
               :popper-append-to-body="false"
               popper-class="prevent-clickoutside"
               size="small"
+              @change="receiverAndNotifyValidate"
             >
               <el-option
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
@@ -574,6 +576,12 @@ export default {
         callback()
       }
     },
+    receiverAndNotifyValidate () {
+      if (!this.editAlertRule.notifyExpired && !this.editAlertRule.notifyActive) {
+        this.$refs.alertRuleForm.clearValidate('receiver')
+        this.$refs.alertRuleForm.clearValidate('method')
+      }
+    },
     selectAlertRuleMetric (val) {
       if (val === 'Metrics') {
         this.MetricsType = 1 // type = 1
@@ -587,6 +595,7 @@ export default {
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 'SNMP trap') {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
+        this.editAlertRule.inr = ''
         this.MetricsType = 3 // type = 3
       }
     },
@@ -621,6 +630,7 @@ export default {
             this.fromData.status = 'SNMP trap'
             this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
             this.MetricsType = 3 // 默认保存 type
+            this.editAlertRule.inr = ''
             return
           }
           this.$nextTick(() => {
