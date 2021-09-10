@@ -115,11 +115,10 @@
           <!--last-->
           <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
           { required: !showSnmpTrap, message: this.$t('validate.required'), trigger: 'blur' },
-          { type: 'number', message: this.$t('validate.number') }
         ]">
-            <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
+            <el-input-number id="alert-box-input-last" :controls="false" v-model="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
-            </el-input>
+            </el-input-number>
           </el-form-item>
           <!--autoExpired-->
           <el-form-item :label="$t('alert.config.autoExpired')" prop="autoExpired" class="half-form-item">
