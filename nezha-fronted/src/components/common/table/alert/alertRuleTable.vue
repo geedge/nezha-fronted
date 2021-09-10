@@ -65,13 +65,29 @@
             placement="right"
             trigger="hover"
             :open-delay="300"
+            :width="225"
+            popper-class="schedEnableTitle"
           >
             <div>
-              <div>Schedule : <span class="active-icon inline-block" :class="scope.row.schedEnable ? 'green-bg' : 'red-bg'"></span>{{scope.row.schedEnable ? $t('dashboard.panel.chartForm.lockList.on') : $t('dashboard.panel.chartForm.lockList.off')}}</div>
+              <div class="margin-b-10">
+                Schedule :
+                <el-switch
+                  style="margin-left: 14px"
+                  slot="reference"
+                  v-model="scope.row.schedEnable"
+                  active-color="#ee9d3f"
+                  :active-value="1"
+                  :inactive-value="0"
+                  @change="(val)=>{$emit('statusChange', scope.row)}"
+                />
+              </div>
               <div>
-                <div>Effective configuration：</div>
-                <div>{{weekStr(scope.row.schedDays)}}</div>
-                <div>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+                <div class="margin-b-10">Effective configuration：</div>
+                <div class="margin-b-5" style="display: flex">
+                  <i class="nz-icon nz-icon-a-rilizhou"/>
+                  <span v-html="weekStr(scope.row.schedDays)"></span>
+                </div>
+                <div ><i class="nz-icon nz-icon-dingshishijian"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
               </div>
             </div>
             <el-switch
@@ -203,25 +219,25 @@ export default {
       weekList: [
         {
           value: 1,
-          label: this.$t('week.Sun')
+          label: this.$t('week.SunAbbreviation')
         }, {
           value: 2,
-          label: this.$t('week.Mon')
+          label: this.$t('week.MonAbbreviation')
         }, {
           value: 3,
-          label: this.$t('week.Tue')
+          label: this.$t('week.TueAbbreviation')
         }, {
           value: 4,
-          label: this.$t('week.Wed')
+          label: this.$t('week.WedAbbreviation')
         }, {
           value: 5,
-          label: this.$t('week.Thu')
+          label: this.$t('week.ThuAbbreviation')
         }, {
           value: 6,
-          label: this.$t('week.Fri')
+          label: this.$t('week.FriAbbreviation')
         }, {
           value: 7,
-          label: this.$t('week.Sat')
+          label: this.$t('week.SatAbbreviation')
         }
       ]
     }
@@ -243,11 +259,7 @@ export default {
       let str = ''
       arr.forEach((item, index) => {
         if (!item) return
-        if (index === arr.length - 1) {
-          str += this.weekList[item - 1].label
-        } else {
-          str += this.weekList[item - 1].label + ', '
-        }
+        str += `<span class="week-item">${this.weekList[item - 1].label}</span>`
       })
       return str
     }
@@ -287,4 +299,28 @@ export default {
   color: #FFFFFF;
   padding: 2px 6px;
 }
+.schedEnableTitle{
+  padding: 15px 20px;
+}
+.schedEnableTitle .nz-icon-a-rilizhou, .schedEnableTitle .nz-icon-dingshishijian{
+  font-size: 14px;
+  color: #FA901C;
+  margin-right: 12px;
+}
+.schedEnableTitle .week-item{
+  width: 32px;
+  height: 22px;
+  line-height: 22px;
+  opacity: 0.9;
+  background: #F7F7FA;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  color: #666666;
+  letter-spacing: 0;
+  font-weight: 400;
+  padding-left: 3px;
+  margin-right: 12px;
+  margin-bottom: 6px;
+  }
 </style>

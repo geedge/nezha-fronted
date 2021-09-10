@@ -1695,7 +1695,14 @@ const en = {
     Thu: 'Thursday',
     Fri: 'Friday',
     Sat: 'Saturday',
-    Sun: 'Sunday'
+    Sun: 'Sunday',
+    MonAbbreviation: 'Mon',
+    TueAbbreviation: 'Tue',
+    WedAbbreviation: 'Wed',
+    ThuAbbreviation: 'Thu',
+    FriAbbreviation: 'Fri',
+    SatAbbreviation: 'Sat',
+    SunAbbreviation: 'Sun'
   },
   ...enLocale
 }

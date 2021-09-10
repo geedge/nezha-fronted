@@ -1806,14 +1806,21 @@ const cn = {
     source: '来源',
     twoFactorAuthentication: '双因子认证'
   },
-  week:{
+  week: {
     Mon: '周一',
     Tue: '周二',
     Wed: '周三',
     Thu: '周四',
     Fri: '周五',
     Sat: '周六',
-    Sun: '周日'
+    Sun: '周日',
+    MonAbbreviation: '周一',
+    TueAbbreviation: '周二',
+    WedAbbreviation: '周三',
+    ThuAbbreviation: '周四',
+    FriAbbreviation: '周五',
+    SatAbbreviation: '周六',
+    SunAbbreviation: '周日'
   },
   ...zhLocale
 }
