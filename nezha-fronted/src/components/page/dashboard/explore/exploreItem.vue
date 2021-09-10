@@ -1038,6 +1038,9 @@ export default {
     margin-bottom: 10px;
     border: 1px solid $--right-box-border-color;
     border-bottom: none;
+    .el-collapse-item__wrap {
+      min-height: 463px;
+    }
   }
   .el-collapse-item__header {
     height: 38px;

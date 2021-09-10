@@ -49,6 +49,9 @@
       padding: 0 4px;
     }
   }
+  .element-item__padding.element-item {
+    padding: 0;
+  }
   .nz-icon-minus-position {
     padding: 24px 0 24px 0;
   }
@@ -368,7 +371,7 @@
           </div>
           <div v-if="isAlert" class="form__sub-title">{{$t('dashboard.panel.chartForm.alertParam.param')}}</div>
 
-          <el-row class="element-item" v-if="isAlert">
+          <el-row class="element-item element-item__padding" v-if="isAlert">
             <alert-chart-param @on-enter-complate="getAlertParam" ref="alertParamBox"></alert-chart-param>
           </el-row>
           <div style="margin-bottom: 20px">

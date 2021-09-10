@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="parameters" ref="alertChartParam" size="small" label-position="top" label-width="200px" class="alert-chart-param-form">
+    <el-form :model="parameters" ref="alertChartParam" size="small" label-position="top" label-width="200px" class="alert-chart-param-form alert-chart__padding-top">
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.select')" >
         <el-cascader
           id="alert-param-select"
@@ -183,6 +183,9 @@ export default {
 <style scoped>
 .alert-chart-param-form .form-item{
   width: 100%;
+}
+.alert-chart__padding-top.alert-chart-param-form {
+  padding-top: 0;
 }
 .severity-circle{
   position: absolute;
