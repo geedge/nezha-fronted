@@ -88,7 +88,7 @@
                   <chart ref="exploreChart" :unit="chartUnit"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item name="2" title="Table">
+              <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
                 <!-- 自定义table列 -->
                 <div class="nz-table2 explore-table">
                   <transition name="el-zoom-in-top">
@@ -1038,8 +1038,10 @@ export default {
     margin-bottom: 10px;
     border: 1px solid $--right-box-border-color;
     border-bottom: none;
-    .el-collapse-item__wrap {
-      min-height: 463px;
+    .el-collapse-item.el-collapse-item__height {
+      .el-collapse-item__wrap{
+        min-height: 463px;
+      }
     }
   }
   .el-collapse-item__header {
