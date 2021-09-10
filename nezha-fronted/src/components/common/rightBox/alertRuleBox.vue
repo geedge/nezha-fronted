@@ -602,6 +602,9 @@ export default {
       }
     },
     selectAlertRuleMetric (val) {
+      if (!this.editAlertRule.operator) {
+        this.editAlertRule.operator = '>'
+      }
       if (val === 1) {
         this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
@@ -612,6 +615,10 @@ export default {
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.editAlertRule.inr = ''
+        this.editAlertRule.last = ''
+        this.editAlertRule.unit = 0
+        this.editAlertRule.operator = ''
+        this.editAlertRule.threshold = ''
       }
     },
     afterInitRich () {

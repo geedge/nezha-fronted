@@ -54,10 +54,13 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time v-model="searchTime" :refresh-data-func="queryChartDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+          <pick-time v-model="searchTime" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;"></pick-time>
         </div>
       </div>
-      <chart ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
+      <div style="width: 100%;height: 100%" v-loading="chartLoading">
+        <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
+        <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      </div>
     </el-dialog>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>
   </div>
@@ -177,7 +180,12 @@ export default {
       chartUnit: 5,
       requestIndex: 0,
       viewAssetState: false,
-      nowTime: ''
+      nowTime: '',
+      resultType: '',
+      logData: [],
+      chartLoading: false,
+      dialogShowText: false,
+      dialogText: ''
     }
   },
   methods: {
@@ -199,7 +207,7 @@ export default {
     chartUnitChange (unit) {
       this.chartUnit = unit
       this.$nextTick(() => {
-        this.queryChartDate()
+        this.queryDate()
       })
     },
     queryChartDate () {
@@ -228,6 +236,7 @@ export default {
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
+          this.chartLoading = false
           try {
             res.forEach((response, promIndex) => {
               if (response.status === 200) {
@@ -430,7 +439,7 @@ export default {
         this.graphShow = true
         this.$nextTick(() => {
           this.searchTime = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
-          this.queryChartDate()
+          this.queryDate()
         })
       })
     },
@@ -613,6 +622,168 @@ export default {
           return [{}, { yAxis: this.currentMsg.alertRule.threshold }]
         }
       }
+    },
+    queryDate () {
+      this.chartLoading = true
+      if (this.currentMsg.alertRule.type === 1) {
+        this.resultType = 'matrix'
+        this.$nextTick(() => {
+          this.queryChartDate()
+        })
+      } else if (this.currentMsg.alertRule.type === 2) {
+        this.queryLogData(1000)
+      }
+    },
+    exportLog ({ limit, descending }) {
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
+      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      const params = {
+        logql: this.expressions,
+        start: start,
+        end: end,
+        direction: descending ? 'backward' : 'forward',
+        limit
+      }
+      axios.get('/logs/loki/export', { responseType: 'blob', params: params }).then(res => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          // 兼容ie11
+          const blobObject = new Blob([res.data])
+          window.navigator.msSaveOrOpenBlob(blobObject, 'log')
+        } else {
+          const url = URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          document.body.appendChild(a) // 此处增加了将创建的添加到body当中
+          a.href = url
+          a.download = 'log'
+          a.target = '_blank'
+          a.click()
+          a.remove() // 将a标签移除
+        }
+      }, error => {
+        const $self = this
+        const reader = new FileReader()
+        reader.onload = function (event) {
+          const responseText = reader.result
+          const exception = JSON.parse(responseText)
+          if (exception.message) {
+            $self.$message.error(exception.message)
+          } else {
+            console.error(error)
+          }
+        }
+        reader.readAsText(error.response.data)
+      })
+    },
+    queryLogData (limit) { // log的chart和table是一个请求
+      if (!limit) {
+        limit = 1000
+      }
+      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
+      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      this.expressions = [this.currentMsg.alertRule.expr]
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+        this.chartLoading = false
+        const logData = [res.data]
+        this.resultType = res.data.resultType
+        this.$nextTick(() => {
+          if (this.$refs.logDetail) {
+            this.$refs.logDetail.time = this.chartData.param.time
+            this.$refs.logDetail.wrapLines = this.chartData.param.wrapLines
+            this.$refs.logDetail.operations.descending = this.chartData.param.descending
+          }
+          // logData.forEach((item, index) => {
+          //   item.result.forEach(result => {
+          //     result.elements = this.expressions[index]
+          //   })
+          // })
+          this.logData = logData
+          this.resultType === 'matrix' && this.loadLogGraph()
+        })
+      })
+    },
+    loadLogGraph () {
+      const graphData = this.logData.filter(l => l.resultType === 'matrix')
+      if (graphData && graphData.length > 0) {
+        this.$refs.messageChart.startLoading()
+        const queryExpression = []
+        let series = []
+        const legend = []
+        this.expressions.forEach((item, index) => {
+          if (item !== '') {
+            queryExpression.push(item)
+          }
+        })
+        this.logData.forEach((response, index) => {
+          if (response.resultType === 'matrix') {
+            const data = response.result
+            if (!data || data.length < 1) {
+              return
+            }
+            data.forEach((result, i) => {
+              const seriesItem = {
+                name: '',
+                symbol: 'emptyCircle', // 去掉点
+                symbolSize: [2, 2],
+                showSymbol: false,
+                smooth: 0.2, // 曲线变平滑
+                data: [],
+                lineStyle: {
+                  width: 1,
+                  opacity: 0.9
+                },
+                type: 'line'
+              }
+              seriesItem.data = result.values.map((item) => {
+                return [item[0] * 1000, item[1]]
+              })
+              let host = ''// up,
+              let alias = ''
+              if (result.metric && Object.keys(result.metric).length > 0) {
+                const metric = Object.keys(result.metric)
+                if (metric.__name__) {
+                  host = `${metric.__name__}{`// up,
+                }
+                metric.forEach((tag, i) => {
+                  if (tag !== '__name__') {
+                    host += `${tag}="${result.metric[tag]}",`
+                  }
+                })
+                if (host.endsWith(',')) {
+                  host = host.substr(0, host.length - 1)
+                }
+                if (metric.__name__) {
+                  host += '}'
+                }
+                // 处理legend别名
+                // alias = this.dealLegendAlias(host, this.chartData.elements[index].legend)
+                if (!alias || alias === '') {
+                  alias = host
+                }
+              } else {
+                alias = queryExpression[index]
+              }
+              seriesItem.name = alias + '-' + index
+              series.push(seriesItem)
+              legend.push({ name: seriesItem.name, alias: alias, isGray: false })
+            })
+          }
+        })
+        this.$refs.messageChart.setLegend(legend)
+        this.$refs.messageChart.setRandomColors(series.length)
+        if (!series.length) {
+          series = ''
+        }
+        this.$refs.messageChart.setSeries(series)
+        this.defaultChartVisible = true
+        this.$nextTick(() => {
+          this.$refs.messageChart.endLoading()
+          this.$refs.messageChart.resize()
+        })
+      }
+    },
+    showText (row) {
+      this.dialogShowText = true
+      this.dialogText = row.alertRule.trbShot
     }
   }
 }
