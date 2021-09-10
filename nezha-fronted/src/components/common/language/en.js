@@ -1290,8 +1290,10 @@ const en = {
         alertNumTrend: 'Alert num trend',
         affectEntity: 'Affect entity'
       },
-      timeout: 'Timeout',
+      timeout: 'Timeout(s)',
       inr: 'Evaluation interval ',
+      inrPlaceholder: 'Default global scrape interval',
+      inrError: 'Evaluation Interval cannot be less than 15',
       autoExpired: 'Automatic expired',
       state: 'State',
       schedEnable: 'Schedule',

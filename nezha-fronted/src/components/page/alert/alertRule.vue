@@ -114,8 +114,9 @@ export default {
         schedDays: '',
         schedStime: '00:00',
         schedEtime: '23:59',
-        notifyActive: 1,
-        notifyExpired: 1,
+        notifyActive: 0,
+        notifyExpired: 0,
+        timeout: 300,
         trbShot: ''
       },
       blankSilenceObject: {

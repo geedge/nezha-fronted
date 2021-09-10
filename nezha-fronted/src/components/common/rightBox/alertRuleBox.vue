@@ -40,7 +40,7 @@
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id" style="width: 312px">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
-                  <div class="severity-item">{{item.remark}}</div>
+                  <div class="severity-item text-ellipsis" :title="item.remark">{{item.remark}}</div>
                 </div>
               </el-option>
             </el-select>
@@ -110,11 +110,14 @@
           </el-form-item>
           <!--inr-->
           <el-form-item :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
-            <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" placeholder="" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
+            <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
           </el-form-item>
           <!--last-->
-          <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item">
-            <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" type="text">
+          <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
+          { required: !showSnmpTrap, message: this.$t('validate.required'), trigger: 'blur' },
+          { type: 'number', message: this.$t('validate.number') }
+        ]">
+            <el-input id="alert-box-input-last" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
             </el-input>
           </el-form-item>
@@ -143,6 +146,7 @@
           <!--timeout-->
           <el-form-item :label="$t('alert.config.timeout')" prop="timeout"  class="half-form-item">
             <el-input id="alert-box-input-timeout" v-model.number="editAlertRule.timeout" placeholder="" size="small" type="text"></el-input>
+            <template slot="append">{{$t('alert.config.second')}}</template>
           </el-form-item>
           <!--summary-->
           <el-form-item :label="$t('alert.summary')" prop="summary">
@@ -371,6 +375,13 @@ export default {
         callback()
       }
     }
+    const nzInr = (rule, value, callback) => {
+      if (value < 15) {
+        callback(new Error(this.$t('alert.config.inrError')))
+      } else {
+        callback()
+      }
+    }
     return {
       promqlCount: 1,
       promqlKeys: [0],
@@ -402,10 +413,6 @@ export default {
           { required: true, message: this.$t('validate.required'), trigger: 'change' },
           { validator: nzOid, trigger: 'blur' }
         ],
-        last: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { type: 'number', message: this.$t('validate.number') }
-        ],
         severityId: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
         ],
@@ -414,6 +421,9 @@ export default {
         ],
         operator: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+        ],
+        inr: [
+          { validator: nzInr, trigger: 'blur' }
         ]
       },
       operators: [
@@ -704,5 +714,12 @@ export default {
   .severity-item{
     color: #999999;
     font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+  }
+  .text-ellipsis{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
 </style>

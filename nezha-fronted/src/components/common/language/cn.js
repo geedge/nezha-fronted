@@ -1287,8 +1287,10 @@ const cn = {
         alertNumTrend: '告警数量趋势',
         affectEntity: '影响'
       },
-      timeout: 'Timeout',
+      timeout: 'Timeout(s)',
       inr: 'Evaluation interval',
+      inrPlaceholder: 'Default global scrape interval',
+      inrError: 'Evaluation Interval cannot be less than 15',
       autoExpired: 'Automatic expired',
       state: '状态',
       schedEnable: 'Schedule',

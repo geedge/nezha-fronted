@@ -92,7 +92,7 @@
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
-          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;" @unitChange="chartUnitChange"></pick-time>
+          <pick-time v-model="searchTimeDialog" :refresh-data-func="queryDate" :use-chart-unit="false" :use-refresh="false" style="height: 28px;"></pick-time>
         </div>
       </div>
       <div style="width: 100%;height: 100%" v-loading="chartLoading">
@@ -492,7 +492,6 @@ export default {
       const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.expressions = [this.currentMsg.alertRule.expr]
       this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
-        console.log(res)
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType
