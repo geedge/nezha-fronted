@@ -70,7 +70,7 @@
           >
             <div>
               <div class="margin-b-10">
-                Schedule :
+                {{$t('alert.config.schedEnable')}} :
                 <el-switch
                   style="margin-left: 14px"
                   slot="reference"
@@ -82,7 +82,7 @@
                 />
               </div>
               <div>
-                <div class="margin-b-10">Effective configuration：</div>
+                <div class="margin-b-10">{{$t('alert.config.schedDays')}} :</div>
                 <div class="margin-b-5" style="display: flex">
                   <i class="nz-icon nz-icon-a-rilizhou"/>
                   <span v-html="weekStr(scope.row.schedDays)"></span>
