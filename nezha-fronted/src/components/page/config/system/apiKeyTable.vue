@@ -137,7 +137,7 @@ export default {
         }, {
           label: this.$t('config.system.apiKey.creatAt'),
           prop: 'createAt',
-          minWidth: 80,
+          minWidth: 100,
           show: true
         }
       ],

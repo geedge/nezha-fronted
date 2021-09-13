@@ -240,12 +240,14 @@ export default {
         {
           label: this.$t('project.endpoint.configs'),
           prop: 'configs',
+          minWidth: 150,
           show: false
         },
         {
           label: this.$t('project.endpoint.alerts'),
           prop: 'alerts',
           show: true,
+          minWidth: 150,
           sortable: 'custom'
         },
         {
@@ -253,7 +255,6 @@ export default {
           prop: 'state',
           show: true,
           minWidth: 200,
-          width: 200,
           sortable: 'custom'
         }
         // {

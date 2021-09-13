@@ -103,6 +103,7 @@ export default {
         label: this.$t('overall.name'),
         prop: 'name',
         show: true,
+        minWidth: 100,
         sortable: 'custom'
       }, {
         label: this.$t('config.mib.credential.type'),
