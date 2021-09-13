@@ -286,10 +286,16 @@ export default {
     })
     if (localStorageTableTitle && (localStorageTableTitle.length > this.$refs.dataTable.tableTitle.length)) {
       const arr = localStorageTableTitle.splice(this.$refs.dataTable.tableTitle.length, localStorageTableTitle.length)
+      arr.forEach(item => {
+        item.minWidth = item.label.length * 16 + 20
+      })
       this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
     }
     if (!this.fromBottom) {
       this.getTableData()
+      this.$nextTick(() => {
+        this.$refs.dataTable.$refs.dataTable.doLayout()
+      })
     }
   },
   beforeDestroy () {
