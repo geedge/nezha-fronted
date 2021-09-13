@@ -635,8 +635,8 @@ export default {
       }
     },
     exportLog ({ limit, descending }) {
-      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
-      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
+      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
       const params = {
         logql: this.expressions,
         start: start,
@@ -678,8 +678,8 @@ export default {
       if (!limit) {
         limit = 1000
       }
-      const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
-      const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
+      const start = this.searchTime[0] ? this.searchTime[0] : getTime(-1, 'h')
+      const end = this.searchTime[1] ? this.searchTime[1] : getTime(0, 'h')
       this.expressions = [this.currentMsg.alertRule.expr]
       this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
         this.chartLoading = false
