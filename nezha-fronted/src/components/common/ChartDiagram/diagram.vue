@@ -732,13 +732,13 @@ export default {
                     })
                   }
                 })
-              })
+                this.winResize()
+              },200)
               // if(this.fromPrev){
               //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
               // }
               // getTopology(this.topologyIndex).fitView();
               this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-              this.winResize()
               this.getNodesArr()
             })
           }

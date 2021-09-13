@@ -661,7 +661,7 @@ export default {
         value: 'zero'
       }],
       // 是否为编辑已有信息
-      isedit: false,
+      iseditChart: false,
       // productId: 0,//不需要这个参数，可以删除
       isInputPanel: false,
       panelId: 0,
@@ -1082,12 +1082,12 @@ export default {
           params.elements = elements
           if (valid) {
             if (optType === 'preview') {
-              if (this.isedit) {
+              if (this.iseditChart) {
                 params.id = this.editChart.id
               }
               this.$refs.chartsPreview.show(params)
             } else {
-              if (this.isedit) {
+              if (this.iseditChart) {
                 params.id = this.editChart.id
                 this.updateCharts(params)
               } else {
@@ -1114,12 +1114,12 @@ export default {
         }
         if (valid) {
           if (opType === 'preview') {
-            if (this.isedit) {
+            if (this.iseditChart) {
               params.id = this.editChart.id
             }
             this.$refs.chartsPreview.show(params)
           } else {
-            if (this.isedit) {
+            if (this.iseditChart) {
               params.id = this.editChart.id
               this.updateCharts(params)
             } else {
@@ -1189,7 +1189,7 @@ export default {
 
                 if (valid) {
                   params.elements = []
-                  if (this.isedit) {
+                  if (this.iseditChart) {
                     params.id = this.editChart.id
                     this.updateCharts(params)
                   } else {
@@ -1219,7 +1219,7 @@ export default {
 
                 if (valid) {
                   params.elements = []
-                  if (this.isedit) {
+                  if (this.iseditChart) {
                     params.id = this.editChart.id
                     this.updateCharts(params)
                   } else {
@@ -1313,7 +1313,7 @@ export default {
           })
         }
       }
-      this.isedit = false
+      this.iseditChart = false
       this.initInfo(unit) // 初始化图表信息
       // this.editChartModal = true;//????控制弹出框显示和隐藏的，不需要了
       this.initOpen() // 获取metric, productId数据
@@ -1350,7 +1350,9 @@ export default {
       } else {
         this.panelId = panelId
       }
-      this.isedit = true
+      if (data.id) {
+        this.iseditChart = true
+      }
       this.editInfo = data
       // 图表信息获取
       this.editChart.id = data.id
@@ -1634,7 +1636,7 @@ export default {
           }
 
           if (valid) {
-            if (this.isedit) {
+            if (this.iseditChart) {
               params.id = this.editChart.id
             }
             this.$refs.chartsPreview.show(params)
@@ -1661,7 +1663,7 @@ export default {
           }
 
           if (valid) {
-            if (this.isedit) {
+            if (this.iseditChart) {
               params.id = this.editChart.id
             }
             this.$refs.chartsPreview.show(params)
