@@ -742,6 +742,9 @@ export default {
             const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];
             this.handleElementInViewport(chartBox, scrollTop, item, index)
           }
+          if (item.type === 'diagram') {
+            this.$refs['editChart' + item.id][0].resize()
+          }
           if (item.type === 'group') {
             this.$refs['editChart' + item.id][0].$refs.listGroup.loadChartData(scrollTop)
           }

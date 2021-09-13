@@ -732,16 +732,16 @@ export default {
                     })
                   }
                 })
-                this.winResize()
-              },200)
+              })
               // if(this.fromPrev){
               //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
               // }
               // getTopology(this.topologyIndex).fitView();
               this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-              this.getNodesArr()
+              this.winResize()
             })
           }
+          this.winResize()
         })
       })
     },
@@ -2052,7 +2052,7 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        const domRect = getTopology(this.topologyIndex).divLayer.canvas.getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
