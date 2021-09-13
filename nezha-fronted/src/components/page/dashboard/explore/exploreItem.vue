@@ -80,7 +80,7 @@
           </template>
         </div>
         <div ref="scrollWrap" style="height: auto; padding: 0 20px 4px;">
-          <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse">
+          <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
               <el-collapse-item name="1" title="Graph">
@@ -998,6 +998,20 @@ export default {
     },
     getMetricOptions () {
       return this.metricOptions
+    },
+    logsCollapseChange (activeNames, a, b) {
+      console.log(activeNames, a, b)
+      this.$nextTick(() => {
+        if (this.$refs.exploreChart) {
+          this.$refs.exploreChart.resize()
+        }
+        if (this.$refs.logChart) {
+          this.$refs.logChart.resize()
+        }
+        if (this.$refs.logDetail) {
+          this.$refs.logDetail.myChart.resize()
+        }
+      })
     }
   },
   watch: {
