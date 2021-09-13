@@ -298,7 +298,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item v-if="editChart.type =='url' && isUrl" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
+            <el-form-item class="form-item--half-width" v-if="editChart.type =='url' && isUrl" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
               <el-input id="chart-box-url" v-model="editChart.param.url" maxlength="1024" show-word-limit size="small" type="textarea"></el-input>
             </el-form-item>
 

@@ -125,7 +125,7 @@ export default {
   .notificationMessage{
     margin-left: 20px;
     display: flex;
-    width: calc(100% - 60px);
+    width: calc(100% - 39px);
     background: #F6F6F6;
     color: #999999;
     margin-bottom: 10px;
