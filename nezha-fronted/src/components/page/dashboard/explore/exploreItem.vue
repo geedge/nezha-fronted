@@ -1038,9 +1038,14 @@ export default {
     margin-bottom: 10px;
     border: 1px solid $--right-box-border-color;
     border-bottom: none;
-    .el-collapse-item.el-collapse-item__height {
-      .el-collapse-item__wrap{
-        min-height: 463px;
+  }
+  .el-collapse-item.el-collapse-item__height {
+    .el-collapse-item__wrap{
+      min-height: 463px;
+      .el-collapse-item__content {
+        .el-table__body-wrapper.is-scrolling-none {
+          min-height: 340px;
+        }
       }
     }
   }
