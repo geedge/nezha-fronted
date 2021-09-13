@@ -126,15 +126,18 @@ export default {
     margin-left: 20px;
     display: flex;
     width: calc(100% - 60px);
-    height: 100px;
     background: #F6F6F6;
     color: #999999;
     margin-bottom: 10px;
-    padding: 10px 10px 5px 10px;
     font-size: 14px;
     justify-content: left;
     justify-items: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .notificationMessage .nz-icon {
+    font-size: 20px;
   }
   .notificationMessage .more{
     font-size: 14px;
