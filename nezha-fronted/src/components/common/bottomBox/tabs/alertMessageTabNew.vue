@@ -29,6 +29,7 @@
           :table-data="tableData"
           :alertMessageTabNew="true"
           @del="del"
+          @showText="showText"
           @edit="edit"
           @orderBy="tableDataSort"
           @reload="getTableData"
@@ -60,6 +61,20 @@
       <div style="width: 100%;height: 100%" v-loading="chartLoading">
         <chart v-if="resultType === 'matrix'" ref="messageChart" :unit="chartUnit" name="alertMessageChart"></chart>
         <log-tab v-if="resultType === 'streamsFormat'" ref="logDetailScreen" :log-data="logData" :showSwitch="false" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      </div>
+    </el-dialog>
+    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
+               :visible.sync="dialogShowText"
+               width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
+      <div slot="title">
+        <span class="nz-dialog-title">{{$t('alert.config.trbShot')}}</span>
+      </div>
+      <div class="rich-text-screen-container"  >
+        <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
+          <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+            <div style="height: 100%;" v-html="dialogText" ></div>
+          </el-scrollbar>
+        </div>
       </div>
     </el-dialog>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box></transition>

@@ -738,6 +738,7 @@ export default {
               // }
               // getTopology(this.topologyIndex).fitView();
               this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
+              this.winResize()
               this.getNodesArr()
             })
           }
