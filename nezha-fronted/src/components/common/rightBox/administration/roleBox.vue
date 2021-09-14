@@ -176,7 +176,6 @@ export default {
       this.$refs.roleForm.validate((valid) => {
         if (valid) {
           if (this.editRole.id) {
-            this.editRole.i18n = this.editRole.name
             this.$put(this.url, this.editRole).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {

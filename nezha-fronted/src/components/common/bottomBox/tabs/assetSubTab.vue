@@ -209,6 +209,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      this.$set(this.searchLabel, 'pids', this.obj.id)
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
