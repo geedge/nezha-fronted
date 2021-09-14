@@ -161,7 +161,7 @@
                 :options="fieldGroupData"
                 :props="labelCascProp"
                 class="hide-input"
-                popper-class="prevent-clickoutside"
+                popper-class="prevent-clickoutside limit-height"
                 size="small"
                 @change="addLabel"
               ></el-cascader>
@@ -471,7 +471,7 @@ export default {
       handler (n) {
         this.isEdit = true
         if (n !== assetConstants.editTypeData.account) {
-          this.editData.authProtocol = 0
+          this.editData.authProtocol = 1
         } else {
           this.getTableData()
         }

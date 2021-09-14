@@ -632,6 +632,7 @@ const en = {
     asset: 'Asset ',
     talonPrompt: 'Talon is a client program responsible for log collection.',
     userName: 'User name',
+    username: 'Username',
     address: 'Address',
     assets: 'Asset', // '资产'
     editAsset: 'Edit asset', // '编辑资产'
