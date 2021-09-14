@@ -570,8 +570,19 @@ export default {
       .log-row-wrap--no-wrap .cell {
         white-space: nowrap;
         overflow: visible;
+        .text-ellipsis{
+          overflow:hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap
+        }
       }
-
+      .cell {
+        .text-ellipsis{
+          overflow:visible;
+          text-overflow:unset;
+          white-space: unset;
+        }
+      }
     }
   }
 
@@ -604,11 +615,6 @@ export default {
         color: #666666;
       }
     }
-  }
-  .text-ellipsis{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap
   }
 }
 </style>
