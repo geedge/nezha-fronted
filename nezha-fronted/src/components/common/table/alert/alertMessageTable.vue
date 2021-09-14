@@ -90,7 +90,7 @@
               </nz-alert-tag>
             </span>
             <alertLabel
-              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project' || item.label === 'datacenter' ||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
+              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project' || item.label === 'dc' ||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
               :id="scope.row[item.label].id"
               :that="scope.row[item.label]"
               :type="item.label"
@@ -164,7 +164,7 @@ export default {
       // 详情相关
       graphShow: false,
       chartDatas: [],
-      sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
+      sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'dc'],
       exclusiveLabels: ['_id', 'severity', '__name__'],
       legend: [],
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
@@ -227,7 +227,7 @@ export default {
   computed: {
     tagType () {
       return (key) => {
-        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'dc' || key == 'endpoint') {
           return 'normal'
         } else {
           return 'info'
@@ -269,7 +269,7 @@ export default {
       })
     },
     labelsSort (obj) {
-      const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
+      const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'datacenter', 'project', 'parent_asset', 'user']
       if (typeof obj === 'string') obj = JSON.parse(obj)
       const labels = JSON.parse(JSON.stringify(obj))
       const result = []
@@ -282,7 +282,12 @@ export default {
       }
       for (const key of buildIn) {
         if (key in labels) {
-          result.push({ label: key, value: labels[key] })
+          if (key === 'datacenter') {
+            result.push({ label: 'dc', value: labels.datacenter })
+            delete labels.datacenter
+          } else {
+            result.push({ label: key, value: labels[key] })
+          }
           delete labels[key]
         }
       }
@@ -542,7 +547,7 @@ export default {
         case 'module':
         case 'endpoint':
         case 'project':
-        case 'datacenter':
+        case 'dc':
           return false
         default: return true
       }
@@ -566,9 +571,6 @@ export default {
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
-        if (type === 'datacenter') {
-          item[type] = item.dc
-        }
         this.$set(item[type], 'position', position)
       }
       this.$set(item[type], 'loading', loading)

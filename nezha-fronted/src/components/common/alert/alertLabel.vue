@@ -117,7 +117,7 @@
       </div>
     </div>
 
-    <div class="alert-label-info" v-if="type==='datacenter'" v-loading="loading">
+    <div class="alert-label-info" v-if="type==='dc'" v-loading="loading">
       <div class="alert-label-box">
         <div class="alert-label-title">ID</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
@@ -302,7 +302,7 @@ export default {
           }
         })
       }
-      if (this.type === 'datacenter') {
+      if (this.type === 'dc') {
         this.$get('dc/' + this.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false

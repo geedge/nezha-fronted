@@ -1157,6 +1157,7 @@ export default {
     },
     // 删除要搜索的条件
     close_selcet_list (ind, e) {
+      console.log(this.searchMsg.searchLabelList,this.searchLabelList)
       if (e) {
         this.stop_click(e)
       }
@@ -1176,7 +1177,7 @@ export default {
                   }
                 } */
       this.searchMsg.searchLabelList.forEach((val, key) => {
-        if (this.select_list[ind].id == val.id) {
+        if (this.select_list[ind].label == val.label) {
           this.searchLabelList.splice(key + 1, 0, val)
           this.Iskeywords(ind)
         }
