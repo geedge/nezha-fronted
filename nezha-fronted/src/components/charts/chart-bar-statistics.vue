@@ -617,6 +617,7 @@ export default {
         self.$refs.pieChartScreen.style.height = `${sumHeight - divHeight - 58}px`
         self.echartScreen.resize({ height: (sumHeight - divHeight - 58) })// 图表的高度
         setTimeout(function () {
+          self.$set(self.option.tooltip, 'formatter', self.formatterFunc)
           if (self.pieData[0].data.length > 0) {
             self.echartScreen.setOption(self.option)// 显示全屏界面
             self.noData = false
