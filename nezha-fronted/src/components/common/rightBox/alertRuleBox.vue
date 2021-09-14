@@ -606,6 +606,7 @@ export default {
       }
       if (val === 1) {
         this.showSnmpTrap = true // showSnmpTrap 为 true 时显示 expr,threshold,unit
+        this.showMetrics = true
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 2) {
         this.showMetrics = false // showMetrics 为 false 时,展示 Logs label
@@ -613,6 +614,7 @@ export default {
         this.$refs.alertRuleForm.clearValidate('expr') // 移除from表单的 expr 验证
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
+        this.showMetrics = false
         this.editAlertRule.inr = ''
         this.editAlertRule.last = ''
         this.editAlertRule.unit = 0
