@@ -126,6 +126,7 @@ export default {
     },
     closeRightBox (refresh) {
       this.rightBox.show = false
+      this.copyFlag = false
       if (refresh) {
         this.delFlag = true
         this.getTableData()
