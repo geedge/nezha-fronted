@@ -116,6 +116,37 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData.state ? alertLabelData.state : '--'}}</div>
       </div>
     </div>
+
+    <div class="alert-label-info" v-if="type==='datacenter'" v-loading="loading">
+      <div class="alert-label-box">
+        <div class="alert-label-title">ID</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.id ? alertLabelData.id : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">name</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.name ? alertLabelData.name : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Location</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.location && alertLabelData.location ? alertLabelData.location : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Asset num</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.assetNum && alertLabelData.assetNum ? alertLabelData.assetNum: '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Alert</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : '--'}}</div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">State</div>
+        <div class="alert-label-value">
+          <div v-if="alertLabelData" :class="{'green-bg': alertLabelData && alertLabelData.state === 'ON','red-bg': alertLabelData && alertLabelData.state === 'oFF'}" class="active-icon"></div>
+          {{alertLabelData && alertLabelData.state ? alertLabelData.state : '--'}}
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -263,6 +294,16 @@ export default {
       }
       if (this.type === 'endpoint') {
         this.$get('monitor/endpoint/' + this.id).then((res) => {
+          if (res.msg === 'success') {
+            this.loading = false
+            this.alertLabelData = res.data
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+      if (this.type === 'datacenter') {
+        this.$get('dc/' + this.id).then((res) => {
           if (res.msg === 'success') {
             this.loading = false
             this.alertLabelData = res.data

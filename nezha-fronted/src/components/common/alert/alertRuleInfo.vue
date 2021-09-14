@@ -32,6 +32,10 @@
           </span>
         </div>-->
       </div>
+      <div class="alert-rule-box">
+        <div class="alert-rule-title">{{$t('alert.config.trbShot')}}</div>
+        <div class="alert-rule-value" @click="trbShotShow"><i class="nz-icon nz-icon-guzhangshuju" style="color: #fa901c"></i></div>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +62,12 @@ export default {
   computed: {
     calcPosition () {
       return function (position) {
+        if (!position) {
+          return {
+            left: '0px',
+            top: '0px'
+          }
+        }
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
         const elHeight = 50
         if (position.top + elHeight > clientHeight) {
@@ -77,6 +87,13 @@ export default {
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
         const elHeight = 50
+        if (!position) {
+          if (elHeight > clientHeight) {
+            return 'alert-rule-abs-Up'
+          } else {
+            return 'alert-rule-abs'
+          }
+        }
         if (position.top + elHeight > clientHeight) {
           return 'alert-rule-tip-Up'
         } else {
@@ -93,6 +110,9 @@ export default {
       } else {
         return value
       }
+    },
+    trbShotShow () {
+      this.$emit('showText')
     }
   },
   mounted () {
@@ -134,6 +154,13 @@ export default {
     left: 0;
     transform: translate(-100%, -50%);
   }
+  .alert-rule-abs {
+    background-color: white;
+    z-index: 3000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+  }
   .alert-rule-tip-Up {
     position: fixed;
     background-color: white;
@@ -157,6 +184,13 @@ export default {
     bottom: 95px;
     left: 0;
     transform: translate(-100%, -50%);
+  }
+  .alert-rule-abs-Up {
+    background-color: white;
+    z-index: 3000;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
   .alert-rule-info{
     border: 1px solid #ebeef5;

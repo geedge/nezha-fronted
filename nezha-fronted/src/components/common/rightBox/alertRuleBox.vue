@@ -21,7 +21,7 @@
           <el-form-item :label="$t('overall.type')" prop="type" class="half-form-item">
             <el-select
               v-model="editAlertRule.type"
-              class="right-box__select"
+              class="right-box__select half-form-item"
               popper-class="right-box-select-dropdown prevent-clickoutside"
               size="small"
               :disabled="showTypeSelect"
@@ -116,9 +116,9 @@
           <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
           { required: !showSnmpTrap, message: this.$t('validate.required'), trigger: 'blur' },
         ]">
-            <el-input-number id="alert-box-input-last" :controls="false" v-model="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
+            <el-input id="alert-box-input-last" :controls="false" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
-            </el-input-number>
+            </el-input>
           </el-form-item>
           <!--autoExpired-->
           <el-form-item :label="$t('alert.config.autoExpired')" prop="autoExpired" class="half-form-item">
@@ -216,6 +216,7 @@
               size="small"
             >
               <el-option
+                style="width: 628px"
                 v-for="item in weekList"
                 :key="item.value"
                 :label="item.label"

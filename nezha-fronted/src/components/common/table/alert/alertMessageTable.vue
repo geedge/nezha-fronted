@@ -37,12 +37,16 @@
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'alertRule'">
           <div v-if="scope.row.alertRule.name" >
-            <span
-              class="data-column__span"
-              @mouseenter="alertMessageHover(scope.row.alertRule, true, $event)"
-              @mouseleave="alertMessageHover(scope.row.alertRule, false)"
-            >{{scope.row.alertRule.name}}</span>
-            <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule"></alertRuleInfo>
+            <el-popover
+              placement="right"
+              popper-class="alert-message-tooltip"
+              style="position: relative"
+              @show="alertMessageHover(scope.row.alertRule, true)"
+              @hide="alertMessageHover(scope.row.alertRule, false)"
+              trigger="hover">
+              <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule" @showText="$emit('showText',scope.row)"></alertRuleInfo>
+              <span slot="reference" class="data-column__span">{{scope.row.alertRule.name}}</span>
+            </el-popover>
           </div>
           <template v-else>-</template>
         </template>
@@ -86,7 +90,7 @@
               </nz-alert-tag>
             </span>
             <alertLabel
-              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project'||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
+              v-if="(item.label === 'asset' ||item.label === 'module' || item.label === 'project' || item.label === 'datacenter' ||item.label === 'endpoint' ||item.label === 'cpu' ||item.label === 'user' ||item.label === 'parent_asset') && scope.row[item.label] && scope.row[item.label].loading"
               :id="scope.row[item.label].id"
               :that="scope.row[item.label]"
               :type="item.label"
@@ -114,7 +118,7 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="['showText', scope.row]"><i class="nz-icon nz-icon-guzhangshuju"></i><span class="operation-dropdown-text">{{$t('alert.config.trbShot')}}</span></el-dropdown-item>
+<!--            <el-dropdown-item :command="['showText', scope.row]"><i class="nz-icon nz-icon-guzhangshuju"></i><span class="operation-dropdown-text">{{$t('alert.config.trbShot')}}</span></el-dropdown-item>-->
             <el-dropdown-item v-has="'alertMessage_expired'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_add'" :command="['fastSilence', scope.row, 'alertMessage']"><i class="nz-icon nz-icon-fast-silence"></i><span class="operation-dropdown-text">{{$t('overall.silenceAlert')}}</span></el-dropdown-item>
           </el-dropdown-menu>
@@ -161,7 +165,7 @@ export default {
       graphShow: false,
       chartDatas: [],
       sameLabels: ['instance', 'module', 'project', 'asset', 'endpoint', 'datacenter'],
-      exclusiveLabels: ['_id', 'severity'],
+      exclusiveLabels: ['_id', 'severity', '__name__'],
       legend: [],
       searchTime: [new Date().setHours(new Date().getHours() - 1), new Date()],
       currentMsg: {},
@@ -222,8 +226,12 @@ export default {
   },
   computed: {
     tagType () {
-      return () => {
-        return 'normal'
+      return (key) => {
+        if (key == 'asset' || key == 'module' || key == 'project' || key == 'datacenter' || key == 'endpoint') {
+          return 'normal'
+        } else {
+          return 'info'
+        }
       }
     },
     tagValue () {
@@ -534,6 +542,7 @@ export default {
         case 'module':
         case 'endpoint':
         case 'project':
+        case 'datacenter':
           return false
         default: return true
       }
@@ -557,6 +566,9 @@ export default {
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
+        if (type === 'datacenter') {
+          item[type] = item.dc
+        }
         this.$set(item[type], 'position', position)
       }
       this.$set(item[type], 'loading', loading)
@@ -579,7 +591,11 @@ export default {
 }
 
 </script>
-
+<style>
+  .alert-message-tooltip.el-popover{
+    padding: 0 !important;
+  }
+</style>
 <style scoped lang=scss>
   .pointer{
     background: #FA901c;
