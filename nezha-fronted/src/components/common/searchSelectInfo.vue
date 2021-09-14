@@ -236,6 +236,23 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       value: 4,
       label: i18n.t('config.terminallog.statusItem.unknownError')
     }
+  ],
+  searchMetrics: [
+    {
+      id: 1,
+      name: i18n.t('project.metrics.metrics'),
+      searchType: 'alertTypes'
+    },
+    {
+      id: 2,
+      name: i18n.t('overall.logs'),
+      searchType: 'alertTypes'
+    },
+    {
+      id: 3,
+      name: 'SNMP trap',
+      searchType: 'alertTypes'
+    }
   ]
 }
 export default searchSelectInfo

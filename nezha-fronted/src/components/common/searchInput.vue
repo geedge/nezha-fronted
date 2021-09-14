@@ -139,6 +139,16 @@
                                 <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
                               </ul>
                             </div>
+                            <div v-if="val.type === 'alertTypes'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
+                            <el-scrollbar v-if="alertTypesSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
+                              <ul>
+                                <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                              </ul>
+                            </el-scrollbar>
+                            <ul v-else>
+                              <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                            </ul>
+                          </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'module'">
                               <el-scrollbar v-if="moduleSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -267,6 +277,7 @@ export default {
       groupSelect: [],
       projectSelect: [],
       severitySelect: [],
+      alertTypesSelect: searchSelectInfo.searchMetrics,
       moduleSelect: [],
       modelSelect: [],
       gnameList: [],
@@ -503,6 +514,10 @@ export default {
           val.val = selectItem.name
           val.valnum = selectItem.id
           val.valString = ''
+        } else if (val.type === 'alertTypes' && selectItem.searchType === 'alertTypes') {
+          val.val = selectItem.name
+          val.valnum = selectItem.id
+          val.valString = ''
         }
       }
       // this.select_list.push({type: 'dc', val: selectItem.name, valnum: selectItem.id});
@@ -636,6 +651,7 @@ export default {
           this.severitySelect.forEach((item, index) => {
             this.$set(item, 'searchType', 'severity')
           })
+          console.log(this.severitySelect)
         }
       })
     },
@@ -861,6 +877,8 @@ export default {
           } else if (val.type === 'selectSelf') {
             objectInfo[val.label] = val.valnum
           } else if (val.type === 'severity') {
+            objectInfo[val.label] = val.valnum
+          } else if (val.type === 'alertTypes') {
             objectInfo[val.label] = val.valnum
           } else if (val.type === 'selectAction') { // 新增日志判断
             objectInfo[val.label] = val.valnum

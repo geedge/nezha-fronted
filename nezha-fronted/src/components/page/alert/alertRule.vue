@@ -155,6 +155,12 @@ export default {
           type: 'severity',
           label: 'severityIds',
           disabled: false
+        }, {
+          id: 5,
+          name: this.$t('overall.type'),
+          type: 'alertTypes',
+          label: 'type',
+          disabled: false
         }]
       },
       searchTime: bus.getTimezontDateRange()
