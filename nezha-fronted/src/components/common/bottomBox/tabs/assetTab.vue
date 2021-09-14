@@ -209,6 +209,11 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.from === fromRoute.model) {
+        this.$set(this.searchLabel, 'modelIds', this.obj.id)
+      } else if (this.from === fromRoute.dc) {
+        this.$set(this.searchLabel, 'dcIds', this.obj.id)
+      }
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
