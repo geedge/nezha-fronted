@@ -651,7 +651,7 @@ export default {
           this.severitySelect.forEach((item, index) => {
             this.$set(item, 'searchType', 'severity')
           })
-          console.log(this.severitySelect)
+          // console.log(this.severitySelect)
         }
       })
     },
