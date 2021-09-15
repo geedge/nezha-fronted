@@ -68,7 +68,7 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
       value: 1,
       label: 'UP'
     }, {
-      value: 0,
+      value: '0,-1',
       label: 'DOWN'
     }
   ],
