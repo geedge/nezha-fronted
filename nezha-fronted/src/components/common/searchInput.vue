@@ -651,7 +651,6 @@ export default {
           this.severitySelect.forEach((item, index) => {
             this.$set(item, 'searchType', 'severity')
           })
-          // console.log(this.severitySelect)
         }
       })
     },
@@ -859,6 +858,8 @@ export default {
               objectInfo.state = val.valnum
             } else if (val.label === 'credentialType') {
               objectInfo.types = val.valnum
+            } else if (val.label === 'promState') {
+              objectInfo.statuses = val.valnum
             } else if (typeof (val.valnum) === 'undefined' || val.valnum == '') {
               this.selectInfoList[val.label].forEach(item => {
                 if (item.label === val.val) {
@@ -869,9 +870,7 @@ export default {
               if (labelBool) {
                 objectInfo[val.label] = val.val
               }
-            } else if (val.label === 'promState') {
-              objectInfo.statuses = val.valnum
-            } else {
+            }else {
               objectInfo[val.label] = val.valnum
             }
           } else if (val.type === 'selectSelf') {
