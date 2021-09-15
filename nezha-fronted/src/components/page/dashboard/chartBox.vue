@@ -361,7 +361,7 @@
           </el-form-item>
 
           <div v-if="!isUrl&&!isAlert&& editChart.type != 'text'&& editChart.type != 'group' && editChart.type != 'diagram'" class="form__sub-title">
-            <span>{{$t('alert.config.expr')}}</span>
+            <span>{{$t('alert.config.exprBox')}}</span>
             <span v-if="!isSingleStat" @click="addExpression">
               <i class="nz-icon nz-icon-create-square" style="font-weight: normal; font-size: 17px; cursor: pointer;"></i>
             </span>

@@ -70,9 +70,9 @@
         <div class="system-config-form basicForm" v-if="activeTab === 'monitor'">
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="monitor"  label-width="180px" size="small" ref="monitorForm" :rules="monitorRules" :validate-on-rule-change="false">
-            <el-form-item :label="$t('config.system.monitor.alertApi')" prop="asset_ping_interval">
-              <el-input v-model="monitor.alert_api" id="monitor-alert-api"></el-input>
-            </el-form-item>
+<!--            <el-form-item :label="$t('config.system.monitor.alertApi')" prop="asset_ping_interval">-->
+<!--              <el-input v-model="monitor.alert_api" id="monitor-alert-api"></el-input>-->
+<!--            </el-form-item>-->
             <el-form-item :label="$t('config.system.monitor.prometheusFederation')" prop="prometheus_federation_enabled">
               <el-switch v-model="monitor.prometheus_federation_enabled " active-color="rgb(238, 157, 63)"  active-value='1' inactive-value='0' id="system-monitor-prometheus_federation_enabled">
               </el-switch>
