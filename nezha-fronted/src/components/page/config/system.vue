@@ -358,7 +358,7 @@ export default {
     return {
       imageFormatErr: false,
       basic: {
-        alert_api: '',
+        // alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
         session_timeout: '30',
         storage_local_retention: 15 * 24,
@@ -377,7 +377,7 @@ export default {
       basicCopy: null,
       basicRules: {
         system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
+        // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
         asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         session_timeout: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
@@ -401,7 +401,7 @@ export default {
         email_security_type: 'NONE'
       },
       monitor: {
-        alert_api: '',
+        // alert_api: '',
         asset_ping_from: '',
         asset_ping_interval: '',
         default_scrape_interval: '',
@@ -423,7 +423,7 @@ export default {
         prometheus_federation_enabled: ''
       },
       monitorRules: {
-        alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         asset_ping_from: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
