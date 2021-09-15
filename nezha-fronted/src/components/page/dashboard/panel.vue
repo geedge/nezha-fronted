@@ -822,8 +822,19 @@ export default {
     },
     tableListLeave () {
       this.tableHover = false
+    },
+    toTop (wrap) {
+      let currentTop = wrap.scrollTop
+      const interval = currentTop / 10
+      const intervalFunc = setInterval(function () { // 花200ms分10次回到顶部，模拟动画效果
+        if (currentTop === 0) {
+          clearInterval(intervalFunc)
+        } else {
+          currentTop = (currentTop - interval) < interval * 0.5 ? 0 : currentTop - interval
+          wrap.scrollTop = currentTop
+        }
+      }, 20)
     }
-
   },
   created () {
     this.getTableData()
