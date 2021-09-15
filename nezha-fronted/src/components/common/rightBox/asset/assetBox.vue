@@ -425,7 +425,9 @@ export default {
           if (n.id) {
             this.lockModelInputValue = `${n.brand.name} / ${n.model.name}`
           }
-          this.$refs.locationCascader.initComponet({ cabinet: n.cabinet, dc: n.dc, u: [n.cabinetStart, n.cabinetEnd] })
+          if (this.$refs.locationCascader) {
+            this.$refs.locationCascader.initComponet({ cabinet: n.cabinet, dc: n.dc, u: [n.cabinetStart, n.cabinetEnd] })
+          }
         })
       }
     },
