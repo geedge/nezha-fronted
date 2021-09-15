@@ -125,7 +125,7 @@
             </div>
             <span slot="reference" style="width: auto">
               <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
-              <span v-if="scope.row.configs[0].state===0">
+              <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
               <span v-else-if="scope.row.configs[0].state===1">
@@ -142,7 +142,7 @@
             </div>
             <span slot="reference" style="width: auto">
               <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
-              <span v-if="scope.row.configs[1].state===0">
+              <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
               <span v-else-if="scope.row.configs[1].state===1">
