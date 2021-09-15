@@ -120,8 +120,16 @@ export default {
   },
   methods: {
     duplicate (row) {
-      this.object = { ...row, id: '', name: `${row.name}-copy` }
-      this.rightBox.show = true
+      this.$get(`${this.url}/${row.id}`).then(response => {
+        if (response.code === 200) {
+          this.object = { ...response.data, id: '', name: `${row.name}-copy` }
+          if (this.object.name.length > 64) {
+            const length = this.object.name.length - 64
+            this.object.name = row.name.substring(0, row.name.length - length) + '-copy'
+          }
+          this.rightBox.show = true
+        }
+      })
     },
     getStateData () {
       return new Promise(resolve => {
