@@ -747,7 +747,7 @@ const cn = {
       disable: '关闭',
       enableMfa: '开启',
       forceEnable: '强制开启',
-      mfaTitle: 'Two-Factor Authentication',
+      mfaTitle: '双因子认证',
       resetMfa: '重置2FA'
     },
     roles: {
