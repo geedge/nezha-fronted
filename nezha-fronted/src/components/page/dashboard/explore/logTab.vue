@@ -257,7 +257,8 @@ export default {
             boundaryGap: [0, '1%']
           },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            formatter: vm.tooltipFormatter
           },
           yAxis: {
             type: 'value',
@@ -477,6 +478,29 @@ export default {
       } else {
         return expression
       }
+    },
+    tooltipFormatter (params, a, b) {
+      const vm = this
+      console.log(params, a, b)
+      let str = `
+           <div style="margin: 0px 0 0;line-height:1;">
+            <div style="margin: 0px 0 0;line-height:1;">
+                <div style="font-size:14px;color:#666;font-weight:400;line-height:1;">${vm.utcTimeToTimezoneStr(vm.$unixTimeParseToString(vm.toMillisecondTime(params[0].axisValue) / 1000))}</div>
+                <div style="margin: 10px 0 0;line-height:1;">
+                    <div style="margin: 0px 0 0;line-height:1;">`
+      params.forEach(item => {
+        str += `<div style="margin: 0 0 5px 0;line-height:1;">
+                    ${item.marker}
+                    <span style="font-size:14px;color:#666;font-weight:400;margin-left:2px"> ${item.seriesName}</span>
+                    <span style="float:right;margin-left:20px;font-size:14px;color:#666;font-weight:900">${item.value[1]}</span>
+                    <div style="clear:both"></div>
+                </div>`
+      })
+      str += '</div>'
+      str += '</div>'
+      str += '</div>'
+      str += '</div>'
+      return str
     }
   },
   watch: {
