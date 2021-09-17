@@ -538,6 +538,7 @@ export default {
   created () {
     if (localStorage.getItem('endpointProjectId')) {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
+      this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
     }
   },
   mounted () {
