@@ -160,8 +160,8 @@ const en = {
     relabelConfigRegex: 'Default is (.*) ',
     relabelConfigReplacement: 'Default is $1',
     oid: 'OID format check error',
-    normal: 'Normal',
-    unusual: 'Unusual',
+    normal: 'Up',
+    unusual: 'Down',
     AuthenticationFailed: 'Authentication failed'
   },
   pageSize: '/page',
