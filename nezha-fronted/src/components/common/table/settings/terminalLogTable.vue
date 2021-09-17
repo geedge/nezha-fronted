@@ -141,7 +141,7 @@ export default {
         {
           label: this.$t('config.terminallog.source'),
           prop: 'sourceIp',
-          minWidth: 100,
+          minWidth: 115,
           show: true,
           sortable: 'custom'
         },
