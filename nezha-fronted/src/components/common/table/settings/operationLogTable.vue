@@ -25,6 +25,7 @@
       :min-width="`${item.minWidth}`"
       :prop="item.prop"
       :resizable="true"
+      :sortable="item.sortable"
       :sort-orders="['ascending', 'descending']"
       :width="`${item.width}`"
       class="data-column"
@@ -59,12 +60,14 @@ export default {
           label: this.$t('config.operationlog.id'),
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable: 'custom'
         }, {
           label: this.$t('config.operationlog.username'),
           prop: 'username',
           show: true,
-          minWidth: 80
+          minWidth: 80,
+          sortable: 'custom'
         },
         {
           label: this.$t('config.operationlog.ip'),
@@ -76,13 +79,15 @@ export default {
           label: this.$t('config.operationlog.operation'),
           prop: 'operation',
           show: true,
-          minWidth: 140
+          minWidth: 140,
+          sortable: 'custom'
         },
         {
           label: this.$t('config.operationlog.type'),
           prop: 'type',
           show: true,
-          minWidth: 80
+          minWidth: 80,
+          sortable: 'custom'
         },
         {
           label: this.$t('config.operationlog.state'),

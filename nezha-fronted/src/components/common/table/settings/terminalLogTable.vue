@@ -25,6 +25,7 @@
       :min-width="`${item.minWidth}`"
       :prop="item.prop"
       :resizable="true"
+      :sortable="item.sortable"
       :sort-orders="['ascending', 'descending']"
       :width="`${item.width}`"
       class="data-column"
@@ -35,7 +36,7 @@
       </template>
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
-        <template v-else-if="item.prop === 'status'">
+        <template v-else-if="item.prop === 'state'">
           <span>{{getStatusText(scope.row.status)}}</span>
         </template>
         <template  v-else-if="item.prop === 'uuid'">
@@ -47,6 +48,7 @@
             <span slot="reference">{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
           </el-popover>
         </template>
+        <span v-else-if="item.prop === 'sourceIp'">{{scope.row.remoteAddr}}</span>
         <template v-else-if="item.prop === 'remote'">
           <span>{{getRemoteText(scope.row)}}</span>
         </template>
@@ -123,7 +125,8 @@ export default {
           label: this.$t('config.terminallog.id'),
           prop: 'id',
           show: true,
-          width: 80
+          width: 80,
+          sortable: 'custom'
         }, {
           label: this.$t('config.terminallog.SessionID'),
           prop: 'uuid',
@@ -137,9 +140,10 @@ export default {
         },
         {
           label: this.$t('config.terminallog.source'),
-          prop: 'remoteAddr',
+          prop: 'sourceIp',
           minWidth: 100,
-          show: true
+          show: true,
+          sortable: 'custom'
         },
         {
           label: this.$t('config.terminallog.remote'),
@@ -170,9 +174,10 @@ export default {
         },
         {
           label: this.$t('config.terminallog.status'), // killusername鼠标悬停形式
-          prop: 'status',
+          prop: 'state',
           show: true,
-          width: 150
+          width: 150,
+          sortable: 'custom'
         }
       ]
     }
