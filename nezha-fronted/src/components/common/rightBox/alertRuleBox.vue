@@ -114,7 +114,7 @@
           </el-form-item>
           <!--last-->
           <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
-          { required: !showSnmpTrap, message: this.$t('validate.required'), trigger: 'blur' },
+          { required: showSnmpTrap, message: this.$t('validate.required'), trigger: 'change' },
         ]">
             <el-input id="alert-box-input-last" :controls="false" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
               <template slot="append">{{$t('alert.config.second')}}</template>
@@ -376,6 +376,9 @@ export default {
       }
     }
     const nzInr = (rule, value, callback) => {
+      if (!this.showSnmpTrap) {
+        callback()
+      }
       if (value < 15) {
         callback(new Error(this.$t('alert.config.inrError')))
       } else {
@@ -617,7 +620,7 @@ export default {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
         this.editAlertRule.inr = ''
-        this.editAlertRule.last = ''
+        this.editAlertRule.last = '15'
         this.editAlertRule.unit = 0
         this.editAlertRule.operator = ''
         this.editAlertRule.threshold = ''
