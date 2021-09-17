@@ -102,6 +102,7 @@
                   </transition>
                   <el-table ref="exploreTable"
                             v-loading="tools.loading"
+                            class="metric-table"
                             :data="tableData"
                             border
                             :header-cell-class-name="({ column }) => column.property === 'gear' ? 'explore-table-gear' : ''"
@@ -130,14 +131,14 @@
               </el-collapse-item>
             </template>
             <!--log-->
-            <template v-else v-loading="chartLoading">
+            <template v-else>
               <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph">
                 <div class="chart-room">
-                  <chart ref="logChart" :unit="chartUnit"></chart>
+                  <chart ref="logChart" :unit="chartUnit" v-loading="chartLoading"></chart>
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+                <log-tab ref="logDetail" :log-data="logData" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-loading="chartLoading"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -1393,6 +1394,9 @@ export default {
         margin-left: 35px;
       }
     }
+  }
+  .metric-table{
+    border-bottom: 1px solid #e7eaed !important;
   }
   /*外部引用 样式end*/
 </style>
