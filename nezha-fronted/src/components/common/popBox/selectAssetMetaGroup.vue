@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div slot="reference">
+    <div slot="reference" style="cursor: pointer">
       <slot name="trigger"></slot>
     </div>
     <div slot="default">

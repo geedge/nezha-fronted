@@ -3,9 +3,9 @@
         <div class="search-input-all input-position" @click="stop_click">
 <!--            历史记录-->
             <div class="search-history" v-if="showHistory">
-                <i class="nz-icon nz-icon-time" @click="look_history" id="search-view-history"></i>
+                <i class="nz-icon nz-icon-time" style="cursor: pointer" @click="look_history" id="search-view-history"></i>
                 <div :class="localStorage_display?'localStorage_list_box none':'localStorage_list_box'">
-                    <div class="list_box_title">
+                    <div class="list_box_title" style="cursor: pointer">
                         <span>{{$t('search.recentSearch')}}</span>
                         <i class="nz-icon nz-icon-close" @click="localStorage_display=!localStorage_display" id="search-close-history"></i>
                     </div>
@@ -35,7 +35,7 @@
                         </div>
                         <div class="select_content" v-if="typeof val.val !='undefined' && val.val != null && ind!=sreach_num">
                             <span>{{val.valString ? val.valString : val.val}}</span>
-                            <i class="nz-icon nz-icon-close" @click="close_selcet_list(ind,$event)"></i>
+                            <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
                             <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keyup="enter(val, $event)" @click="stop_click">
@@ -1517,6 +1517,7 @@ export default {
   width: 32px;
   border: none;
   outline: none;
+  cursor: pointer;
   border-left: 1px solid $--primary-border-color;
   background-color: #F9F9F9;
 

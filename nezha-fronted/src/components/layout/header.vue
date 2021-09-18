@@ -265,6 +265,7 @@ export default {
   display: flex;
   height: 50px;
   .personal-avatar {
+    cursor: pointer;
     span {
       width: 32px;
       height: 32px;
@@ -322,6 +323,7 @@ export default {
   .header-menu__item {
     i {
       font-size: 20px;
+      cursor: pointer;
     }
   }
   .personal {
@@ -365,6 +367,7 @@ export default {
     i {
       transform: rotateY(0);
       transition: transform .4s;
+      cursor: pointer;
     }
     i.icon-reverse {
       transform: rotateY(180deg);

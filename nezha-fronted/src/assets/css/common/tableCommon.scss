@@ -72,6 +72,7 @@
   .top-tool-btn {
     height: 32px;
     width: 36px;
+    cursor: pointer;
     border: 1px solid $--primary-border-color;
     outline: none;
     border-radius: $--button-border-radius;
@@ -262,6 +263,7 @@
         .table-operation-item {
           display: flex;
           height: 22px;
+          cursor: pointer;
           border-radius: $--button-border-radius;
           outline: none;
           transition: background-color linear .1s;
