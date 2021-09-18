@@ -91,15 +91,6 @@
               <el-collapse-item class="el-collapse-item__height" name="2" title="Table">
                 <!-- 自定义table列 -->
                 <div class="nz-table2 explore-table">
-                  <transition name="el-zoom-in-top">
-                    <element-set
-                      v-if="tools.showCustomTableTitle"
-                      ref="customTableTitle"
-                      :custom-table-title.sync="tools.customTableTitle"
-                      :original-table-title="tableTitle"
-                      @close="tools.showCustomTableTitle = false"
-                    ></element-set>
-                  </transition>
                   <el-table ref="exploreTable"
                             v-loading="tools.loading"
                             class="metric-table"
@@ -117,13 +108,6 @@
                       min-width="110px"
                       show-overflow-tooltip
                     ></el-table-column>
-                    <el-table-column v-if="tools.customTableTitle.length>0" prop="gear" width="28">
-                      <template slot="header" :resizable="false">
-                        <span class="nz-table-gear" @mousedown.stop="!tools.showCustomTableTitle && (tools.showCustomTableTitle = true)">
-                          <i class="nz-icon nz-icon-gear"></i>
-                        </span>
-                      </template>
-                    </el-table-column>
                   </el-table>
                 </div>
                 <pagination ref="Pagination" :append-to-body="false" :page-obj="pageObj" @pageNo='pageNo'
