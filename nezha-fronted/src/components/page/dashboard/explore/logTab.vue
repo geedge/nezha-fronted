@@ -202,6 +202,7 @@ export default {
         return
       }
       this.myChart = echarts.init(dom)
+      window.addEventListener('resize', this.resizeChart)
       if (this.tableChartData.length > 0) {
         let series = this.tableChartData.map(d => ({
           type: 'bar',
@@ -431,7 +432,9 @@ export default {
       return this.limit
     },
     resizeChart () {
-      this.myChart.resize()
+      setTimeout(()=>{
+        this.myChart.resize()
+      })
     },
     aliasLegend (row) {
       let host = ''// up,
@@ -481,7 +484,6 @@ export default {
     },
     tooltipFormatter (params, a, b) {
       const vm = this
-      console.log(params, a, b)
       let str = `
            <div style="margin: 0px 0 0;line-height:1;">
             <div style="margin: 0px 0 0;line-height:1;">
@@ -529,6 +531,9 @@ export default {
     limit (n) {
       this.$emit('limitChange', n)
     }
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.resizeChart)
   },
   beforeUpdate () {
     this.$nextTick(() => {
