@@ -1055,7 +1055,7 @@ export default {
         if (keyCode == 8) {
           if (this.input_sreach == '') {
             this.searchMsg.searchLabelList.forEach((val, k) => {
-              if (this.select_list[this.sreach_num].id == val.id) {
+              if (this.select_list[this.sreach_num].label == val.label) {
                 this.searchLabelList.splice(k + 1, 0, val)
                 this.Iskeywords(this.sreach_num)
               }
@@ -1071,7 +1071,7 @@ export default {
         if (keyCode == 8) {
           if (this.delcriteriaBool) {
             this.searchMsg.searchLabelList.forEach((val, k) => {
-              if (this.select_list[this.sreach_num].id == val.id) {
+              if (this.select_list[this.sreach_num].label == val.label) {
                 this.searchLabelList.splice(k + 1, 0, val)
                 this.Iskeywords(this.sreach_num)
               }
