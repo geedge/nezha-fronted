@@ -8,12 +8,15 @@
       <el-dropdown>
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index">
+          <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
               <a :href='item.url' rel="noopener noreferrer" :title="item.name"  class="nz-a" target="_blank">{{item.name}}</a>
             </span>
           </el-dropdown-item>
+          <div v-if="!linkData.length" class="header-link-nodata">
+            {{$t('overall.noData')}}
+          </div>
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown>
@@ -389,5 +392,9 @@ export default {
   .el-breadcrumb__item .el-breadcrumb__inner {
     color: #999;
   }
+}
+.header-link-nodata{
+  color: #999999;
+  padding: 20px 20px;
 }
 </style>
