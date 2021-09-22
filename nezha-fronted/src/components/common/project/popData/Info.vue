@@ -4,31 +4,27 @@
       <div class="info-box-title">Module info</div>
       <div class="info-box-content">
         <div class="content-box">
-          <span class="content-title">Project</span>
-          <span class="content-text">{{moduleInfo.project.name}}</span>
+          <span class="content-title">ID</span>
+          <span class="content-text">{{moduleInfo.id}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">Module name</span>
+          <span class="content-title">{{ $t('overall.name') }}</span>
           <span class="content-text">{{moduleInfo.name}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">Tag</span>
-          <!--{{moduleInfo.type}}-->
-          <span class="content-text">
-            <span :class="{'module-type':true,'module-type-select':moduleInfo.type==='http'}">HTTP</span>
-            <span :class="{'module-type':true,'module-type-select':moduleInfo.type==='snmp'}">SNMP</span>
-          </span>
+          <span class="content-title">{{ $t('overall.project') }}</span>
+          <span class="content-text">{{moduleInfo.project.name}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">Asset</span>
-          <span class="content-text">{{moduleInfo.assetNum?moduleInfo.assetNum:'--'}}</span>
-        </div>
-        <div class="content-box">
-          <span class="content-title">Endpoint</span>
+          <span class="content-title">{{ $t('project.endpoint.endpoints') }}</span>
           <span class="content-text">{{moduleInfo.endpointNum?moduleInfo.endpointNum:'--'}}</span>
         </div>
         <div class="content-box">
-          <span class="content-title">Descripsion</span>
+          <span class="content-title">{{ $t('overall.alert') }}</span>
+          <span class="content-text">{{moduleInfo.alertNum?moduleInfo.alertNum:'--'}}</span>
+        </div>
+        <div class="content-box">
+          <span class="content-title">{{ $t('overall.remark') }}</span>
           <span class="content-text">{{moduleInfo.remark?moduleInfo.remark:'--'}}</span>
         </div>
       </div>
@@ -65,6 +61,7 @@ export default {
     this.$get('/monitor/module/' + this.moduleId).then(res => {
       this.loading = false
       this.moduleInfo = res.data
+      console.log(this.moduleInfo)
     })
   },
   methods: {},
