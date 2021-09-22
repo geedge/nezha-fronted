@@ -84,6 +84,7 @@
           </el-form-item>
           <!--threshold-->
           <el-form-item
+            v-if="showSnmpTrap"
             :label="$t('alert.config.threshold')"
             prop="threshold" class="half-form-item"
             style="display: inline-block;"
@@ -98,7 +99,7 @@
             </el-input>
           </el-form-item>
           <!--unit-->
-          <el-form-item :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
+          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
                          popper-class="no-style-class unit-popper-class"
@@ -109,11 +110,11 @@
             </el-cascader>
           </el-form-item>
           <!--inr-->
-          <el-form-item :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
+          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
             <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
           </el-form-item>
           <!--last-->
-          <el-form-item :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
+          <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
           { required: showSnmpTrap, message: this.$t('validate.required'), trigger: 'change' },
         ]">
             <el-input id="alert-box-input-last" :controls="false" v-model.number="editAlertRule.last" placeholder="" size="small" :disabled="!showSnmpTrap" type="text">
@@ -619,11 +620,14 @@ export default {
       } else if (val === 3) {
         this.showSnmpTrap = false // showSnmpTrap 为 false 时,展示 OID
         this.showMetrics = false
-        this.editAlertRule.inr = ''
-        this.editAlertRule.last = '15'
-        this.editAlertRule.unit = 0
-        this.editAlertRule.operator = ''
-        this.editAlertRule.threshold = ''
+        // this.editAlertRule.inr = ''
+        // this.editAlertRule.last = '15'
+        // this.editAlertRule.unit = 2
+        // this.editAlertRule.operator = '>'
+        // this.editAlertRule.threshold = ''
+        if (!this.editAlertRule.last) {
+          this.editAlertRule.last = 60
+        }
       }
     },
     afterInitRich () {
