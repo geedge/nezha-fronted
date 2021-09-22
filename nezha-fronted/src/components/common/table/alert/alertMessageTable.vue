@@ -36,7 +36,7 @@
     >
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'alertRule'">
-          <div v-if="scope.row.alertRule.name" >
+          <div v-if="scope.row.alertRule&&scope.row.alertRule.name" >
             <el-popover
               placement="right"
               popper-class="alert-message-tooltip"
@@ -45,7 +45,7 @@
               @hide="alertMessageHover(scope.row.alertRule, false)"
               trigger="hover">
               <alertRuleInfo v-if="scope.row.alertRule.loading" :id="scope.row.alertRule.id" :severity-data="severityData" :that="scope.row.alertRule" @showText="$emit('showText',scope.row)"></alertRuleInfo>
-              <span slot="reference" class="data-column__span">{{scope.row.alertRule.name}}</span>
+              <span slot="reference" class="data-column__span">{{scope.row.alertRule?scope.row.alertRule.name : '--'}}</span>
             </el-popover>
           </div>
           <template v-else>-</template>
@@ -112,7 +112,7 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button v-if="scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
+        <button v-if="scope.row.alertRule&&scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
         <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="hover" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
