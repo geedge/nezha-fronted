@@ -1179,7 +1179,7 @@ export default {
                   }
                 } */
       this.searchMsg.searchLabelList.forEach((val, key) => {
-        if (this.select_list[ind].id == val.id) {
+        if (this.select_list[ind].label == val.label) {
           this.searchLabelList.splice(key + 1, 0, val)
           this.Iskeywords(ind)
         }
