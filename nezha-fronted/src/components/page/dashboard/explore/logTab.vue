@@ -113,8 +113,8 @@ export default {
       time: true, // 换行和时间不需要处理数据
       wrapLines: true,
 
-      limit: 1000, // limit改动需要请求接口
-      limitOptions: [300, 1000, 3000, 5000],
+      limit: 100, // limit改动需要请求接口
+      limitOptions: [100, 200, 500, 1000, 2000],
       levelOptions: [
         {
           type: 'trace',

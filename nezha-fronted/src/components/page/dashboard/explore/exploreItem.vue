@@ -454,7 +454,7 @@ export default {
     queryLogData (limit) { // log的chart和table是一个请求
       this.chartLoading = true
       if (!limit) {
-        limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 1000
+        limit = this.$refs.logDetail ? this.$refs.logDetail.getLimit() : 100
       }
       if (this.expressions.length > 0) {
         const requestArr = []

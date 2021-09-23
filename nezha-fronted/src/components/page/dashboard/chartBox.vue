@@ -292,7 +292,7 @@
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value" class="width310">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
@@ -303,16 +303,21 @@
             </el-form-item>
 
             <el-form-item  v-if="editChart.type === 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'" :label='"Null value"' class="form-item--half-width"  prop="nullType">
-              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="chart-box-dropdown-small prevent-clickoutside" size="small" @change="$forceUpdate()">
+              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="chart-box-dropdown-small prevent-clickoutside" size="small" @change="$forceUpdate()" class="width310">
                 <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
               <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="chart-box-dropdown-mini prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value" class="width310">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' prop="param.limit">
+              <el-select v-model="editChart.param.limit" size="small">
+                <el-option v-for="option in limitOptions" :key="option" :value="option" class="width310"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.time")' prop="param.time">
@@ -338,9 +343,6 @@
                          :inactive-value="false"
                          active-color="#ee9d3f"
                          size="small"></el-switch>
-            </el-form-item>
-            <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' prop="param.limit">
-              <el-input id="chart-box-limit" v-model="editChart.param.limit" maxlength="1024" show-word-limit size="small"></el-input>
             </el-form-item>
           </div>
 
@@ -653,6 +655,7 @@ export default {
       elementTarget: [], // 本地保存数据
       alertParams: {},
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      limitOptions: [100, 200, 500, 1000, 2000],
       nullTypeList: [{
         label: 'null',
         value: 'null'
@@ -1535,7 +1538,7 @@ export default {
             time: true,
             descending: true,
             wrapLines: true,
-            limit: 1000
+            limit: 100
           }
         }
         /* if(this.$refs.chartTag){
@@ -1932,5 +1935,8 @@ export default {
   .chart-box-unit .el-scrollbar{
     height: 195px;
     overflow-y: auto;
+  }
+  .width310{
+    width: 310px;
   }
 </style>
