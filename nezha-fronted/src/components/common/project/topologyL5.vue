@@ -1322,7 +1322,7 @@ export default {
                 this.penId = data.id
               }
             })
-            this.$refs.CanvasProps.loading = true
+            this.$refs.CanvasProps && (this.$refs.CanvasProps.loading = true)
             break
           case 'line':
           case 'addLine':
@@ -1343,7 +1343,7 @@ export default {
                 this.penId = data.id
               }
             })
-            this.$refs.CanvasProps.loading = true
+            this.$refs.CanvasProps && (this.$refs.CanvasProps.loading = true)
             break
           case 'multi':
             this.props = {
