@@ -215,13 +215,13 @@ export default {
           name: this.$t('config.assetLabel.double')
         },
         {
-          icon: 'el-icon-time',
+          icon: 'nz-icon nz-icon-dingshishijian',
           disabled: true,
           value: 'DATETIME',
           name: this.$t('config.assetLabel.datetime')
         },
         {
-          icon: 'el-icon-message',
+          icon: 'nz-icon nz-icon-email',
           disabled: true,
           value: 'EMAIL',
           name: this.$t('config.assetLabel.email')
