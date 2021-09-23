@@ -61,7 +61,6 @@ export default {
     this.$get('/monitor/module/' + this.moduleId).then(res => {
       this.loading = false
       this.moduleInfo = res.data
-      console.log(this.moduleInfo)
     })
   },
   methods: {},
