@@ -185,7 +185,7 @@
                 :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.state&&item.data.state.error&&!item.data.show,'model-error-active':item.data.state&&item.data.state.error&&item.data.show}"
                 @click="showNodeTools(index,item)"
               >
-                <i class="nz-icon nz-icon-model"></i>
+                <i style="cursor: pointer" class="nz-icon nz-icon-model"></i>
               </i>
               <!--'selpop':selpopIs(item),'no-selPop':!selpopIs(item),'error-model-stat':modelPopError(item)  @click="popClick(item.id)" -->
               <div v-for="(item1, index) in popData" :key="index">
