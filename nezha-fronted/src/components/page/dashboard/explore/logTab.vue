@@ -71,7 +71,7 @@
           width="140"
         >
           <template slot-scope="{ row }">
-            <div style="width: 100%;" class="text-ellipsis" :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
+            <div style="width: 100%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap" :title="aliasLegend(row)">{{aliasLegend(row)}}</div>
           </template>
         </el-table-column>
         <el-table-column
