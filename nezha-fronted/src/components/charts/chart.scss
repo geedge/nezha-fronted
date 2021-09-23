@@ -144,8 +144,8 @@
   bottom: 0;
 }
 .chart-error-popper[x-placement^=top] .popper__arrow::after {
-  border-top-color: #e02f44;
-  bottom:0px;
+  border-top-color: #e02f44 !important;
+  bottom:0px !important;
 }
 .chart-error-popper[x-placement^=bottom] .popper__arrow::after {
   border-bottom-color: #e02f44;
