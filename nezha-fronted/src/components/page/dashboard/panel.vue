@@ -23,7 +23,7 @@
                 </template>
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +'charts ）' " class="show-panel-name">{{showPanel.name}}</span>
+                  <span :title="showPanel.name  + ' ( ' + showPanel.chartNum +' charts ）' " class="show-panel-name">{{showPanel.name}}</span>
                   <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
