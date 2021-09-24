@@ -278,6 +278,9 @@
   .el-picker-panel__content {
     width: calc(100% - 28px);
   }
+  .el-cascader-menu{
+    flex: 1;
+  }
 }
 .limit-height .el-cascader-menu {
   max-height: 200px;
