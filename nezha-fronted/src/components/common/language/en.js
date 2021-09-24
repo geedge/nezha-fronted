@@ -861,7 +861,7 @@ const en = {
     terminallog: {
       terminallog: 'Terminal log',
       status: 'State', // "状态"
-      username: 'Username',
+      username: 'User',
       SessionID: 'Session ID',
       authtype: 'AuthType',
       statusItem: {
