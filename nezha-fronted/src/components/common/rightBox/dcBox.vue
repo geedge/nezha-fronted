@@ -21,7 +21,7 @@
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editDc.tel" size="small" id="dc-box-input-tel"></el-input>
             </el-form-item>
             <el-form-item :label='$t("asset.principal")' prop="principal">
-              <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
+              <el-select value-key="id" class="right-box__select" popper-class="right-public-box-dropdown right-box-dropdown-top prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
                 <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
                 </el-option>
               </el-select>

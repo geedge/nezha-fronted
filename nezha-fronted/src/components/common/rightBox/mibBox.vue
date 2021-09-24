@@ -21,7 +21,7 @@
               ref="modelSelector"
               size="small"
               class="right-box__select"
-              popper-class="prevent-clickoutside limit-height"
+              popper-class="prevent-clickoutside limit-height right-public-box-dropdown right-box-dropdown-top"
               clearable></el-cascader>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')" prop="remark">

@@ -18,7 +18,7 @@
               <el-input placeholder="" maxlength="256" show-word-limit v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.type")' prop="type">
-              <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" @change="typeChange">
+              <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-public-box-dropdown right-box-dropdown-top prevent-clickoutside" @change="typeChange">
                 <el-option v-for="item in $CONSTANTS.snmpProtocolTypes" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>

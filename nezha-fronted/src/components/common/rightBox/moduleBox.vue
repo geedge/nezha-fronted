@@ -19,7 +19,7 @@
           </el-form-item>
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' prop="projectId">
-            <el-select id="module-box-input-project" v-model="editModule.projectId" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+            <el-select id="module-box-input-project" v-model="editModule.projectId" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown module-project-box-dropdown prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in projectList" :id="'module-project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -91,7 +91,7 @@
             <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
               <!--type-->
               <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
-                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
+                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown right-box-public-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
                   <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
@@ -298,7 +298,7 @@
             <el-tab-pane v-if="editModule.configs[0].config.protocol !== 'snmp'" :label="$t('project.endpoint.auth')" name="Auth">
               <!--authtype-->
               <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
-                <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
+                <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown module-project-box-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
                   <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
@@ -334,7 +334,7 @@
                 <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                   <!--type-->
                   <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
-                    <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                    <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-public-box-dropdown-width prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                       <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>

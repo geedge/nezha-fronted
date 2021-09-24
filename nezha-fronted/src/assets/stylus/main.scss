@@ -1137,6 +1137,11 @@ li{
 }
 .dc-dropdown {
   z-index: 2952 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  .popper__arrow {
+    opacity: 0;
+  }
 }
 .asset-state .cell {
   height: 38px;
@@ -1184,6 +1189,14 @@ li{
 }
 .chart-box-dropdown-small{
   width: 200px;
+}
+.chart-box-dropdown-width{
+  width: 303px;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  .popper__arrow {
+    opacity: 0;
+  }
 }
 .config-dropdown-btn i {
   font-size: 12px;

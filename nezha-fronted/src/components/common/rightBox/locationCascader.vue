@@ -412,27 +412,13 @@ export default {
   }
   .dropdown{
     position: absolute;
-    min-width: 200px;
+    width: 616px;
     padding:5px;
     background-color: #fff;
     display: none;
     z-index: 2020;
     border-radius: 4px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    margin: 10px 0;
-  }
-  .dropdown:before{
-    content: "";
-    width: 0;
-    height: 0;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid #fff;
-    border-left: 5px solid transparent;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    position: absolute;
-    left: 10%;
-    top:0%;
-    margin-top:-5px
   }
   .dropdown:after{
 
@@ -440,7 +426,6 @@ export default {
   .dropdown-active{
     display: block !important;
     height: 200px;
-    width: 100%;
   }
   .location-container{
     height: 100%;

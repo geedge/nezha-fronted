@@ -15,7 +15,7 @@
           <!--DC-->
           <el-form-item :label="$t('config.dc.dc')" prop="dc.name">
             <div class="right-box-form-content">
-              <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id">
+              <el-select id="prom-box-input-dc" v-model="editPromServer.dc" placeholder="" class="right-box__select" popper-class="right-public-box-dropdown right-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="item in dcData" :id="'prom-edit-dc-op-'+item.id" :key="item.id" :label="item.name" :value="item">
                   <span class="config-dropdown-label-txt">{{item.name}}</span>
                 </el-option>
@@ -42,7 +42,7 @@
   <!--            :options="$CONSTANTS.agent.theData"-->
   <!--            :props="{ multiple: false, checkStrictly: false ,emitPath:false}"-->
   <!--            clearable></el-cascader>-->
-            <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="value">
+            <el-select  v-model="editPromServer.type" :disabled="editPromServer.id != null&& editPromServer.id != ''" placeholder="" class="right-box__select" popper-class="right-public-box-dropdown prevent-clickoutside" size="small" value-key="value">
 <!--              <el-option-group-->
 <!--                v-for="group in agent2.theData"-->
 <!--                :key="group.label"-->

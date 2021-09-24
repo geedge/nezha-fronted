@@ -50,7 +50,7 @@
               :placeholder="lockModelInputValue"
               :options="options.brandAndModelOptions"
               :props="{ label: 'name', value: 'id' }"
-              popper-class="prevent-clickoutside limit-height"
+              popper-class="prevent-clickoutside right-box-dropdown-top right-box-select-dropdown limit-height"
               size="small"
               style="width: 100%;"
             ></el-cascader>
@@ -65,6 +65,7 @@
               v-model="editAsset.purchaseDate"
               placeholder=""
               size="small"
+              popper-class="right-box-select-dropdown"
               style="width: 100%"
               type="date"
               value-format="yyyy-MM-dd">
@@ -165,7 +166,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside limit-height"
+              popper-class="prevent-clickoutside right-box-dropdown-top right-public-box-dropdown-width limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>
