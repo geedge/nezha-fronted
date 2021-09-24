@@ -35,7 +35,9 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'principal'">
-          <template v-if="scope.row.adminUser">{{ scope.row.adminUser.username }}</template>
+          <template v-if="scope.row.adminUser">
+            {{scope.row.adminUser.name}}
+          </template>
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'state'">

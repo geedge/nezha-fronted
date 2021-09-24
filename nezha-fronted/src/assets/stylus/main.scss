@@ -884,6 +884,7 @@ li{
 }
 .alert-rule-tag {
   cursor: default;
+  max-width: 100px;
 }
 /* end--内容*/
 
@@ -2191,4 +2192,22 @@ li{
 }
 .nz-dialog.silence-box .el-dialog__body{
   padding-bottom: 0;
+}
+.user-name {
+  font-weight: bold;
+  margin-right: 5px;
+  max-width: 50%;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  vertical-align: bottom;
+}
+.user-username{
+  color: #999;
+  max-width: calc(50% - 10px);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  vertical-align: bottom;
+}
+.hover .user-username{
+  color: #fa901c;
 }

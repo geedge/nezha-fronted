@@ -2499,4 +2499,7 @@ export default {
 /deep/ .el-collapse-item__arrow.el-icon-arrow-right{
   display: inline-block !important;
 }
+/deep/ .el-select--mini {
+  width: 100%;
+}
 </style>

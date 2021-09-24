@@ -23,7 +23,7 @@
                 </template>
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span style="display: inline-block;padding: 0 7px;font-weight: bold">{{showPanel.name}}</span>
+                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +'charts ）' " class="show-panel-name">{{showPanel.name}}</span>
                   <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
@@ -517,7 +517,7 @@ export default {
           this.panelData = response.data.list
           for (let i = 0; i < this.panelData.length; i++) {
             if (this.panelData[i].id == this.showPanel.id) {
-              this.showPanel.name = this.panelData[i].name
+              this.showPanel = this.panelData[i]
               break
             }
           }
@@ -952,5 +952,15 @@ export default {
     width: 100%;
     background: center center no-repeat #fff;
     z-index: 10;
+  }
+  .show-panel-name{
+    display: inline-block;
+    padding: 0 7px;
+    font-weight: bold;
+    max-width: 310px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    vertical-align: bottom;
   }
 </style>

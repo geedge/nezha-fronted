@@ -314,10 +314,12 @@
               @change="receiverShowChange"
             >
               <el-option
+                style="width: 620px"
                 v-for="item in userData"
                 :key="item.id"
-                :label="item.username"
+                :label="item.name"
                 :value="item.id">
+                <span class="user-name" :title="item.name">{{item.name}}</span><span class="user-username" :title="item.username">@{{item.username}}</span>
               </el-option>
             </el-select>
           </el-form-item>
