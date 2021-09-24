@@ -316,6 +316,7 @@
                 :key="item.id"
                 :label="item.username"
                 :value="item.id">
+                <span class="user-name">{{item.name}}</span><span class="user-username">@{{item.username}}</span>
               </el-option>
             </el-select>
           </el-form-item>

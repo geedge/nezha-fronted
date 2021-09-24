@@ -23,6 +23,7 @@
             <el-form-item :label='$t("asset.principal")' prop="principal">
               <el-select value-key="id" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" v-model="editDc.principal" placeholder="" size="small" id="dc-box-input-principal">
                 <el-option v-for="item in userData" :key="item.id" :label="item.name" :value="item.id">
+                  <span class="user-name">{{item.name}}</span><span class="user-username">@{{item.username}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
