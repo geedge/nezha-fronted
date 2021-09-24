@@ -23,7 +23,7 @@
                 </template>
                 <template v-slot:trigger>
                   <i style="color: #BEBEBE" class="el-icon-menu"></i>
-                  <span :title="showPanel.name" class="show-panel-name">{{showPanel.name}}</span>
+                  <span :title="showPanel.name  + ' (' + showPanel.chartNum +'charts ）' " class="show-panel-name">{{showPanel.name}}</span>
                   <i style="font-size: 12px;color: #BEBEBE;" class="nz-icon nz-icon-arrow-down"></i>
                 </template>
                 <template v-slot:tail>
@@ -517,7 +517,7 @@ export default {
           this.panelData = response.data.list
           for (let i = 0; i < this.panelData.length; i++) {
             if (this.panelData[i].id == this.showPanel.id) {
-              this.showPanel.name = this.panelData[i].name
+              this.showPanel = this.panelData[i]
               break
             }
           }
