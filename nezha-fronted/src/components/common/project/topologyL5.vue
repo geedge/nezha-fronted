@@ -21,7 +21,7 @@
                   <el-collapse-item :title="item.group" :name="item.group">
                     <template slot="title">
                       <div style="display: flex;width: 100%;">
-                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                        <i class="nz-icon nz-icon-arrow-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
                       </div>
                     </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons">
@@ -121,7 +121,7 @@
          </span>
         </div>
         <div v-if="(!editTopologyFlag&&!fromOverView) && !isPreview" class="top-tools" style="padding-left: 10px">
-          <div>{{topologyInfo.name}}</div>
+          <div>{{obj.name}}</div>
           <div v-if="!editTopologyFlag&&!fromPrev&&!fromOverView" class="top-tool-right">
             <pick-time
               v-show="!editTopologyFlag"
@@ -185,7 +185,7 @@
                 :class="{'nz-icon':true, 'nz-icon-shuidi':true,'model-error':item.data.state&&item.data.state.error&&!item.data.show,'model-error-active':item.data.state&&item.data.state.error&&item.data.show}"
                 @click="showNodeTools(index,item)"
               >
-                <i class="nz-icon nz-icon-model"></i>
+                <i style="cursor: pointer" class="nz-icon nz-icon-model"></i>
               </i>
               <!--'selpop':selpopIs(item),'no-selPop':!selpopIs(item),'error-model-stat':modelPopError(item)  @click="popClick(item.id)" -->
               <div v-for="(item1, index) in popData" :key="index">
@@ -816,6 +816,7 @@ export default {
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
                   const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
+                  console.log(img)
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
@@ -849,13 +850,24 @@ export default {
               Promise.all(promiseArr).then(res => {
                 res.forEach((response, index) => {
                   const item = data.pens[index]
-                  if (item.type === 0) {
+                  if (item.type === 0 && item.data.state) {
                     item.data.state.error = item.data.error = !res[index].data.list[0].state
                     item.data.state.asset = !!res[index].data.list[0].asset
                     item.data.state.alert = !!res[index].data.list[0].alert
                     item.data.state.endpoint = !!res[index].data.list[0].endpoint
+                  } else {
+                    item.data.state = {
+                      error: false,
+                      asset: 0,
+                      alert: 0,
+                      endpoint: 0
+                    }
                   }
                 })
+                self.saveData = { ...data }
+                resolve(data)
+                clearInterval(timer)
+              }).catch(res => {
                 self.saveData = { ...data }
                 resolve(data)
                 clearInterval(timer)
@@ -1127,7 +1139,7 @@ export default {
     onMessage (event, data, e) {
       // console.log('onMessage', event, data)
       // console.log(getTopology(this.topologyIndex))
-      // this.notModuleIDArr=[];
+      this.notModuleIDArr = []
       // this.toolShow.attr = false
       // this.toolShow.topTool = false
       // this.$nextTick(() => {
@@ -1311,7 +1323,7 @@ export default {
                 this.penId = data.id
               }
             })
-            this.$refs.CanvasProps.loading = true
+            this.$refs.CanvasProps && (this.$refs.CanvasProps.loading = true)
             break
           case 'line':
           case 'addLine':
@@ -1332,7 +1344,7 @@ export default {
                 this.penId = data.id
               }
             })
-            this.$refs.CanvasProps.loading = true
+            this.$refs.CanvasProps && (this.$refs.CanvasProps.loading = true)
             break
           case 'multi':
             this.props = {
@@ -1572,23 +1584,16 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
-            const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
-            if (group) {
-              group.children.push({
-                ...imageTemp,
-                data: {
-                  ...imageTemp.data,
-                  text: res.data.imageName,
-                  image: data,
-                  imageId: res.data.id,
-                  unit: this.uploadPic.unit
-                }
+          this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
+            console.log(iconInfo)
+            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+              const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
+              this.iconArray.push({
+                ...iconInfo.data.list[0],
+                image: data
               })
-            } else {
-              this.tools.push({
-                group: this.uploadPic.unit,
-                children: [{
+              if (group) {
+                group.children.push({
                   ...imageTemp,
                   data: {
                     ...imageTemp.data,
@@ -1597,10 +1602,25 @@ export default {
                     imageId: res.data.id,
                     unit: this.uploadPic.unit
                   }
-                }]
-              })
-            }
+                })
+              } else {
+                this.tools.push({
+                  group: this.uploadPic.unit,
+                  children: [{
+                    ...imageTemp,
+                    data: {
+                      ...imageTemp.data,
+                      text: res.data.imageName,
+                      image: data,
+                      imageId: res.data.id,
+                      unit: this.uploadPic.unit
+                    }
+                  }]
+                })
+              }
+            })
           })
+
         } else {
           this.$message.error(res.msg)
         }
