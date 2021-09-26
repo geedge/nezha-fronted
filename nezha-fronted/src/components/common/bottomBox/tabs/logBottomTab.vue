@@ -22,12 +22,8 @@
       </pick-time>
     </template>
     <template v-slot>
-      <template v-if="logData && logData.length > 0">
-        <log-tab ref="logDetail" v-loading="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
-      </template>
-      <template v-else>
-        <div v-loading="loading" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>
-      </template>
+      <log-tab ref="logDetail" v-loading="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      <div v-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>
     </template>
   </nz-bottom-data-list>
 </template>
@@ -49,7 +45,7 @@ export default {
   },
   data () {
     return {
-      logData: [],
+      logData: null,
       filterTime: [
         bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
         bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
@@ -126,7 +122,9 @@ export default {
     } else if (this.from === fromRoute.asset) {
       this.expressions = [`{asset="${this.obj.name}"}`]
     }
-    this.queryLogData()
+    this.$nextTick(()=>{
+      this.queryLogData()
+    })
   }
 }
 </script>
