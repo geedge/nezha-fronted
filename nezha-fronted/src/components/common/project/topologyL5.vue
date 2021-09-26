@@ -1686,7 +1686,7 @@ export default {
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index]
+              item.image = res2[index].data
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1749,7 +1749,7 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index]
+                item.image = res2[index].data
               }
             })
             this.imgInit = true
