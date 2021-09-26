@@ -1588,7 +1588,7 @@ export default {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
-                image: data
+                image: data.data
               })
               if (group) {
                 group.children.push({
@@ -1598,7 +1598,11 @@ export default {
                     text: res.data.imageName,
                     image: data,
                     imageId: res.data.id,
-                    unit: this.uploadPic.unit
+                    unit: this.uploadPic.unit,
+                    rect: {
+                      width: data.width,
+                      height: data.height
+                    }
                   }
                 })
               } else {
@@ -1611,7 +1615,11 @@ export default {
                       text: res.data.imageName,
                       image: data,
                       imageId: res.data.id,
-                      unit: this.uploadPic.unit
+                      unit: this.uploadPic.unit,
+                      rect: {
+                        width: data.width,
+                        height: data.height
+                      }
                     }
                   }]
                 })
@@ -1678,7 +1686,7 @@ export default {
           Promise.all(promiseArr).then((res2, header) => {
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
-              item.image = res2[index]
+              item.image = res2[index].data
               const group = this.tools.find(tool => tool.group === item.unit)
               if (group) {
                 group.children.push({
@@ -1686,9 +1694,13 @@ export default {
                   data: {
                     ...imageTemp.data,
                     text: item.imageName,
-                    image: res2[index],
+                    image: res2[index].data,
                     imageId: item.id,
-                    unit: item.unit
+                    unit: item.unit,
+                    rect: {
+                      width: res2[index].width,
+                      height: res2[index].height
+                    }
                   }
                 })
               } else {
@@ -1701,7 +1713,11 @@ export default {
                       text: item.imageName,
                       image: res2[index],
                       imageId: item.id,
-                      unit: item.unit
+                      unit: item.unit,
+                      rect: {
+                        width: res2[index].width,
+                        height: res2[index].height
+                      }
                     }
                   }]
                 })
@@ -1733,7 +1749,7 @@ export default {
             })
             this.iconArray.forEach((item, index) => {
               if (item.id) {
-                item.image = res2[index]
+                item.image = res2[index].data
               }
             })
             this.imgInit = true
@@ -1750,12 +1766,29 @@ export default {
           this.$axios
             .get(url)
             .then((res) => {
-              return {
-                data: ('data:image/jpeg;base64,' + res.data)
+              const imageInfo = {
+                data: ('data:image/jpeg;base64,' + res.data),
+                // width: res.headers.width === -1 ? 100 : (res.headers.width > 900 ? 900 : res.headers.width),
+                // height: res.headers.height === -1 ? 100 : (res.headers.height > 900 ? 900 : res.headers.height)
+                width: res.headers.width === -1 ? 100 : Number(res.headers.width),
+                height: res.headers.height === -1 ? 100 : Number(res.headers.height)
               }
+              if (imageInfo.width > 900 || imageInfo.height > 900) {
+                if (imageInfo.height > imageInfo.width) {
+                  imageInfo.width = imageInfo.width * 900 / imageInfo.height
+                  imageInfo.height = 900
+                } else if (imageInfo.height < imageInfo.width) {
+                  imageInfo.height = imageInfo.height * 900 / imageInfo.width
+                  imageInfo.width = 900
+                } else {
+                  imageInfo.height = 900
+                  imageInfo.width = 900
+                }
+              }
+              return imageInfo
             })
             .then(data => {
-              resolve(data.data, data.header)
+              resolve(data)
               // changeImage(data,(img)=>{
               //   resolve(img)
               // })

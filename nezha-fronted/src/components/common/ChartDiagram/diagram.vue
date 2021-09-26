@@ -825,8 +825,9 @@ export default {
             opacity: data.data.opacity,
             name: data.name
           }
-          if (this.fromOverView) { // 优化从首页来的加载速度
+          if (this.fromOverView || this.fromChartBox) { // 优化从首页来的加载速度
             const arr = data.pens.filter(item => !item.type)
+            this.imgInit = false
             this.addNodeInit(arr)
           }
           const timer = setInterval(() => {
@@ -1577,7 +1578,7 @@ export default {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
                 ...iconInfo.data.list[0],
-                image: data
+                image: data.data
               })
               if (group) {
                 group.children.push({
@@ -1585,9 +1586,13 @@ export default {
                   data: {
                     ...imageTemp2.data,
                     text: res.data.imageName,
-                    image: data,
+                    image: data.data,
                     imageId: res.data.id,
-                    unit: this.uploadPic.unit
+                    unit: this.uploadPic.unit,
+                    rect: {
+                      width: data.width,
+                      height: data.height
+                    }
                   }
                 })
               } else {
@@ -1598,9 +1603,13 @@ export default {
                     data: {
                       ...imageTemp2.data,
                       text: res.data.imageName,
-                      image: data,
+                      image: data.data,
                       imageId: res.data.id,
-                      unit: this.uploadPic.unit
+                      unit: this.uploadPic.unit,
+                      rect: {
+                        width: data.width,
+                        height: data.height
+                      }
                     }
                   }]
                 })
