@@ -1596,7 +1596,7 @@ export default {
                   data: {
                     ...imageTemp.data,
                     text: res.data.imageName,
-                    image: data,
+                    image: data.data,
                     imageId: res.data.id,
                     unit: this.uploadPic.unit,
                     rect: {
@@ -1613,7 +1613,7 @@ export default {
                     data: {
                       ...imageTemp.data,
                       text: res.data.imageName,
-                      image: data,
+                      image: data.data,
                       imageId: res.data.id,
                       unit: this.uploadPic.unit,
                       rect: {
@@ -1711,7 +1711,7 @@ export default {
                     data: {
                       ...imageTemp.data,
                       text: item.imageName,
-                      image: res2[index],
+                      image: res2[index].data,
                       imageId: item.id,
                       unit: item.unit,
                       rect: {
