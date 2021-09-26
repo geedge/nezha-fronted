@@ -21,7 +21,7 @@
             node-key="id"
             ref="panelTree">
             <div class="tree--node" slot-scope="{ node, data }">
-              <span :title="node.label + ' (' + data.chartNum +'charts ）' ">{{ node.label }}</span>
+              <span :title="node.label + ' (' + data.chartNum +' charts）' ">{{ node.label }}</span>
 <!--              <span class="tree&#45;&#45;operation" v-if="!panelLock">-->
 <!--                <span @click.stop="deletePanel(data)" class="panel-dropdown-btn panel-dropdown-btn-delete" v-has="'panel_delete'"><i class="nz-icon nz-icon-delete"></i></span>-->
 <!--                <span class="panel-dropdown-btn" @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i></span>-->
