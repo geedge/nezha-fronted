@@ -107,7 +107,7 @@
         :visible-arrow="false"
         :disabled="isPopoverDisabled"
         trigger="hover"
-        popper-class="popper-z-index right-box-select-top right-box-dropdown-top"
+        popper-class="popper-z-index right-public-box-select-top right-public-box-dropdown-top"
         id="panel-calender-popover">
         <template v-if="this.searchTime&&this.searchTime.length>1">
           <el-row  :gutter="10" class="calendar-popover">

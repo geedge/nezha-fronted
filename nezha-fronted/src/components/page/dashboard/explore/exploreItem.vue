@@ -16,7 +16,7 @@
                 <span>{{selectValue}}</span>
                 <span><i class="el-icon-arrow-down el-icon--right"></i></span>
               </span>
-                <el-dropdown-menu style="width: 118px" class="el-dropdown__width right-box-select-top right-box-dropdown-top" placement="bottom-end" slot="dropdown">
+                <el-dropdown-menu style="width: 118px" class="el-dropdown__width right-public-box-select-top right-public-box-dropdown-top" placement="bottom-end" slot="dropdown">
                   <el-dropdown-item
                     @click.native="selectMetricsLogs(item.label,item.icon, item.value)"
                     v-for="item in searchMetrics"

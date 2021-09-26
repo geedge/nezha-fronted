@@ -18,7 +18,7 @@
               <el-input placeholder="" maxlength="256" show-word-limit v-model="editCredential.remark" size="small" id="credential-box-input-remark"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.mib.credential.type")' prop="type">
-              <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-public-box-dropdown right-box-dropdown-top prevent-clickoutside" @change="typeChange">
+              <el-select v-model="editCredential.type" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside" @change="typeChange">
                 <el-option v-for="item in $CONSTANTS.snmpProtocolTypes" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
@@ -44,7 +44,7 @@
             <div style="margin-bottom: 20px;width: 100%"></div>
 
             <el-form-item :label='$t("config.mib.credential.method")' prop="authProtocol"  v-if="editCredential.type === 3">
-              <el-select v-model="editCredential.config.authProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside">
+              <el-select v-model="editCredential.config.authProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside">
                 <el-option v-for="item in $CONSTANTS.snmpAuthMethod" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
@@ -58,7 +58,7 @@
             <div style="margin-bottom: 20px;width: 100%"></div>
 
             <el-form-item :label='$t("config.mib.credential.method")' prop="privProtocol"  v-if="editCredential.type === 3">
-              <el-select v-model="editCredential.config.privProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''">
+              <el-select v-model="editCredential.config.privProtocol" placeholder="" id="credential-box-input-type" class="right-box__select" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside" :disabled="!editCredential.config.authProtocol || editCredential.config.authProtocol === ''">
                 <el-option v-for="item in $CONSTANTS.snmpEncryptionMethod" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>

@@ -10,7 +10,7 @@
               &nbsp;<i class="nz-icon nz-icon-arrow-down" style="font-size: 12px"></i></button>
             <el-cascader-panel v-show="dropDownVisible" ref="metricSelector" slot="dropdown" v-model="cascaderValue"
                                v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading" :loading="loading" :options="metricOptions"
-                               v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew">
+                               v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew" style="margin-top: 5px">
 
               <template slot-scope="{ node, data }">
                 <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
@@ -58,7 +58,7 @@
                   class="nz-icon nz-icon-arrow-down"
                   style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i></span>
                 <el-cascader-panel v-loading="tempBoxShowLoading" v-show="dropDownVisible" v-clickoutside="closeDropdown" v-model="cascaderValue"
-                                   style="text-align: left;" slot="dropdown" ref="metricSelector"
+                                   style="text-align: left;margin-top: 5px" slot="dropdown" ref="metricSelector"
                                    v-if="type !== 'log'"  :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
                   <template slot-scope="{ node, data }">

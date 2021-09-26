@@ -23,7 +23,7 @@
           class="margin-r-20"
           placeholder="IP"
           size="small"
-          popper-class="mib-browser-right-box-dropdown right-box-dropdown-top"
+          popper-class="mib-browser-right-box-dropdown right-public-box-select-top right-public-box-dropdown-top"
           style="width: 100%;"
           value-key="manageIp"
           @input="assetChange"
@@ -34,7 +34,7 @@
         </el-autocomplete>
         <el-input id="mib-browser-oid" v-model="searchParam.oid" class="margin-r-20" placeholder="OID" size="small"></el-input>
         <div class="margin-r-10" style="width: 50%">
-          <el-select id="mib-browser-host" v-model="searchParam.operation" size="small" popper-class="right-box-select-top">
+          <el-select id="mib-browser-host" v-model="searchParam.operation" size="small" popper-class="right-public-box-select-top right-public-box-dropdown-top">
             <el-option v-for="item in operationData" :key="item" :value="item"></el-option>
           </el-select>
         </div>

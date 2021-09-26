@@ -85,7 +85,7 @@
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
-            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-box-dropdown-top">
+            <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
               <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">Kill</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -96,7 +96,7 @@
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
-            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-box-dropdown-top">
+            <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
               <el-dropdown-item :command="['recordTab', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('config.terminallog.record.record')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

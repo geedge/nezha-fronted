@@ -213,7 +213,7 @@
 
             <!--group-->
             <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
-              <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="chart-box-dropdown-width prevent-clickoutside" size="small" value-key="chartType">
+              <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="chartType">
                 <el-option v-for="item in groupArr" :key="item.id" :label="item.name" :value="item.id">
                   <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                 </el-option>
@@ -223,7 +223,7 @@
 
           <!--   varType   -->
           <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'chartTemp'">
-            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-dropdown chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
+            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -274,7 +274,7 @@
             <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'&& editChart.type !=='diagram'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
               <el-cascader id="chart-box-unit" v-model="editChart.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
-                           popper-class="chart-box-dropdown-option-top dc-dropdown right-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           popper-class="chart-box-dropdown-option-top dc-dropdown right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
                            size="small"
                            style="width: 100%"
                            @change="unitSelected"

@@ -22,7 +22,7 @@
             <el-select
               v-model="editAlertRule.type"
               class="right-box__select half-form-item"
-              popper-class="right-box-public-dropdown prevent-clickoutside"
+              popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
               size="small"
               :disabled="showTypeSelect"
               @change="selectAlertRuleMetric">
@@ -36,7 +36,7 @@
           </el-form-item>
           <!--severity-->
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
-            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-public-dropdown prevent-clickoutside" size="small">
+            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id" style="width: 312px">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
@@ -102,7 +102,7 @@
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
-                         popper-class="no-style-class dc-dropdown right-box-dropdown-top unit-popper-class"
+                         popper-class="no-style-class dc-dropdown right-public-box-dropdown-top unit-popper-class"
                          size="small"
                          :disabled="!showSnmpTrap"
                          style="width: 100%"
@@ -128,7 +128,7 @@
               v-model="editAlertRule.autoExpired"
               class="right-box__select half-form-item"
               placeholder=""
-              popper-class="prevent-clickoutside right-box-public-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
             >
               <el-option
@@ -165,7 +165,7 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-public-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
             >
               <el-option
@@ -188,7 +188,7 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-public-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
             >
               <el-option
@@ -213,7 +213,7 @@
               placeholder=""
               multiple
               @change="$refs.alertRuleForm.validateField('schedDays')"
-              popper-class="prevent-clickoutside right-box-select-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
             >
               <el-option
@@ -232,7 +232,7 @@
               :format="'HH:mm'"
               v-model="editAlertRule.schedStime"
               size="small"
-              popper-class="right-box-public-dropdown"
+              popper-class="right-box-select-top right-public-box-dropdown-top"
               :clearable = 'false'
               :picker-options="{
               }">
@@ -242,7 +242,7 @@
               :value-format="'HH:mm'"
               :format="'HH:mm'"
               size="small"
-              popper-class="right-box-public-dropdown"
+              popper-class="right-box-select-top right-public-box-dropdown-top"
               :clearable = 'false'
               v-model="editAlertRule.schedEtime"
               :picker-options="{
@@ -259,7 +259,7 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-public-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
               @change="receiverAndNotifyValidate"
             >
@@ -283,7 +283,7 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-public-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
               @change="receiverAndNotifyValidate"
             >
@@ -308,7 +308,7 @@
               filterable
               multiple
               placeholder=""
-              popper-class="prevent-clickoutside right-box-select-dropdown"
+              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
               size="small"
               value-key="userId"
               @change="receiverShowChange"
@@ -325,7 +325,7 @@
           </el-form-item>
           <!--notify-->
           <el-form-item :label="$t('alert.notify')" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'change' }]" class="notify-box" prop="method" >
-            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
               <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>

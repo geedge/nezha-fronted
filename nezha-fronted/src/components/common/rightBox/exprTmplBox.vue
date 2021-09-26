@@ -23,7 +23,7 @@
               :fetch-suggestions="querySearch"
               :placeholder="$t('overall.placeHolder')"
               class="inline-input"
-              popper-class="right-public-box-dropdown right-box-dropdown-top"
+              popper-class="right-public-box-select-top right-public-box-dropdown-top"
               size="small"
               style="width: 100%;"
             ></el-autocomplete>

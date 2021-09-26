@@ -15,13 +15,13 @@
         <el-form ref="addEndpoint" :model="endpoint" :rules="rules" label-position = "top">
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' class="select-warp" prop="projectId">
-            <el-select id="add-endpoint-project" v-model="currentProject" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeProject(val)})">
+            <el-select id="add-endpoint-project" v-model="currentProject" class="right-box__select" placeholder="" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeProject(val)})">
               <el-option v-for="item in projectList" :id="'project-'+item.id" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("project.module.module")' class="select-warp" prop="moduleId">
-            <el-select id="add-endpoint-module" v-model="currentModule" :disabled="!currentProject.id" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeModule(val)})">
+            <el-select id="add-endpoint-module" v-model="currentModule" :disabled="!currentProject.id" class="right-box__select" placeholder="" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id" @change="((val) => {changeModule(val)})">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item"></el-option>
             </el-select>
           </el-form-item>
