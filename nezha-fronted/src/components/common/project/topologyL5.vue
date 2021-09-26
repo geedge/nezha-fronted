@@ -1138,7 +1138,7 @@ export default {
     onMessage (event, data, e) {
       // console.log('onMessage', event, data)
       // console.log(getTopology(this.topologyIndex))
-      // this.notModuleIDArr=[];
+      this.notModuleIDArr = []
       // this.toolShow.attr = false
       // this.toolShow.topTool = false
       // this.$nextTick(() => {
@@ -1583,23 +1583,15 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
-            const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
-            if (group) {
-              group.children.push({
-                ...imageTemp,
-                data: {
-                  ...imageTemp.data,
-                  text: res.data.imageName,
-                  image: data,
-                  imageId: res.data.id,
-                  unit: this.uploadPic.unit
-                }
+          this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
+            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+              const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
+              this.iconArray.push({
+                ...iconInfo.data.list[0],
+                image: data
               })
-            } else {
-              this.tools.push({
-                group: this.uploadPic.unit,
-                children: [{
+              if (group) {
+                group.children.push({
                   ...imageTemp,
                   data: {
                     ...imageTemp.data,
@@ -1608,9 +1600,23 @@ export default {
                     imageId: res.data.id,
                     unit: this.uploadPic.unit
                   }
-                }]
-              })
-            }
+                })
+              } else {
+                this.tools.push({
+                  group: this.uploadPic.unit,
+                  children: [{
+                    ...imageTemp,
+                    data: {
+                      ...imageTemp.data,
+                      text: res.data.imageName,
+                      image: data,
+                      imageId: res.data.id,
+                      unit: this.uploadPic.unit
+                    }
+                  }]
+                })
+              }
+            })
           })
         } else {
           this.$message.error(res.msg)

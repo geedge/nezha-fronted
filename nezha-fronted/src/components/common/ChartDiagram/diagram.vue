@@ -21,7 +21,7 @@
                   <el-collapse-item :title="item.group" :name="item.group">
                     <template slot="title">
                       <div style="display: flex;width: 100%;">
-                        <i class="nz-icon nz-icon-arrow-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
+                        <i class="nz-icon nz-icon-caret-right"></i> <div style="flex: 1">{{item.group}}</div> <i class="nz-icon nz-icon-delete title-delete" @click="tooltipDeleteTitle(item)"></i>
                       </div>
                     </template>
                     <div v-for="(btn, i) in item.children" :key="'info2'+'-'+index+'-'+i" class="buttons"  :title="btn.data.text">
@@ -738,10 +738,9 @@ export default {
               // }
               // getTopology(this.topologyIndex).fitView();
               this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-              this.winResize()
+              this.getNodesArr()
             })
           }
-          this.winResize()
         })
       })
     },
@@ -1573,42 +1572,40 @@ export default {
         if (res.code == 200) {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
-          this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
-            const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
-            if (group) {
-              group.children.push({
-                ...imageTemp2,
-                data: {
-                  ...imageTemp2.data,
-                  text: res.data.imageName,
-                  image: data.data,
-                  imageId: res.data.id,
-                  unit: this.uploadPic.unit,
-                  rect: {
-                    width: data.width,
-                    height: data.height
-                  }
-                }
+          this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
+            this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
+              const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
+              this.iconArray.push({
+                ...iconInfo.data.list[0],
+                image: data
               })
-            } else {
-              this.tools.push({
-                group: this.uploadPic.unit,
-                children: [{
+              if (group) {
+                group.children.push({
                   ...imageTemp2,
                   data: {
                     ...imageTemp2.data,
                     text: res.data.imageName,
-                    image: data.data,
+                    image: data,
                     imageId: res.data.id,
-                    unit: this.uploadPic.unit,
-                    rect: {
-                      width: data.width,
-                      height: data.height
-                    }
+                    unit: this.uploadPic.unit
                   }
-                }]
-              })
-            }
+                })
+              } else {
+                this.tools.push({
+                  group: this.uploadPic.unit,
+                  children: [{
+                    ...imageTemp2,
+                    data: {
+                      ...imageTemp2.data,
+                      text: res.data.imageName,
+                      image: data,
+                      imageId: res.data.id,
+                      unit: this.uploadPic.unit
+                    }
+                  }]
+                })
+              }
+            })
           })
         } else {
           this.$message.error(res.msg)
@@ -1732,6 +1729,7 @@ export default {
             imgArr.push({ ...item })
           })
           Promise.all(promiseArr).then((res2, header) => {
+            // console.log(res2)
             this.iconArray = [...res.data.list]
             this.iconArray.forEach((item, index) => {
               item.image = res2[index].data
@@ -2052,7 +2050,7 @@ export default {
 
     winResize () {
       setTimeout(() => {
-        const domRect = getTopology(this.topologyIndex).divLayer.canvas.getBoundingClientRect()
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         if (this.fromOverView) {
           getTopology(this.topologyIndex).open(this.oldTopologyData)
