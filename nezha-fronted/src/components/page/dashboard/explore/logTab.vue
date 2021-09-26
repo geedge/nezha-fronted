@@ -1,7 +1,7 @@
 <template>
   <div class="log-detail">
-    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch&&!noData"></div>
-    <div class="log-chart chart-no-data" v-if="showSwitch&&noData">No data</div>
+    <div :id="`logChart${tabIndex}`" class="log-chart" v-if="showSwitch"></div>
+    <div class="log-chart chart-no-data" v-if="showSwitch&&noData" style="top: 150px">No data</div>
     <div class="log-operations" v-if="showSwitch">
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.time')}}</span>
@@ -89,6 +89,7 @@
 
 <script>
 import * as echarts from 'echarts'
+import chartConfig from '@/components/page/dashboard/overview/chartConfig'
 export default {
   name: 'logTab',
   props: {
@@ -204,6 +205,7 @@ export default {
       this.myChart = echarts.init(dom)
       window.addEventListener('resize', this.resizeChart)
       if (this.tableChartData.length > 0) {
+        this.noData = false
         let series = this.tableChartData.map(d => ({
           type: 'bar',
           name: d.name,
@@ -217,11 +219,6 @@ export default {
         series = series.sort((a, b) => {
           return this.levelOptions.findIndex(l => a.name === l.type) - this.levelOptions.findIndex(l => b.name === l.type)
         })
-        if (!series.length) {
-          this.noData = true
-        } else {
-          this.noData = false
-        }
         const option = {
           title: {
             show: false
@@ -332,6 +329,14 @@ export default {
             }
           }
         })
+      } else {
+        this.noData = true
+        const option = chartConfig.getOption('noData')
+        this.myChart.clear()
+        this.myChart.setOption(option)
+        this.$nextTick(() => {
+          this.myChart.resize()
+        })
       }
     },
     getCurrentStepTime (currentTime, currentStepTime, step) {
@@ -432,7 +437,7 @@ export default {
       return this.limit
     },
     resizeChart () {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.myChart.resize()
       })
     },
@@ -508,7 +513,7 @@ export default {
   watch: {
     logData: {
       deep: true,
-      immediate: true,
+      immediate: false,
       handler (n, o) {
         const { logData } = this.filterLogType(n) // 过滤出不同resultType，合并去重
         const { tableData, tableChartData } = this.applyFilter(logData, this.operations) // 应用operation区域的过滤项
@@ -550,6 +555,10 @@ export default {
   position: relative;
   * {
     box-sizing: border-box;
+  }
+  .log-table{
+    position: relative;
+    min-height: 200px;
   }
   .log-table .nz-table2 {
     padding: 10px 0 0 0;
