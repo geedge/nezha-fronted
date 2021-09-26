@@ -816,7 +816,6 @@ export default {
               data.pens.forEach(item => {
                 if (item.type === 0 && item.data.imageId) {
                   const img = this.iconArray.find(item1 => item1.id == item.data.imageId)
-                  console.log(img)
                   item.image = img ? img.image : imgDefault
                 }
                 if (item.type === 0) {
@@ -1585,7 +1584,6 @@ export default {
           this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
           this.uploadPicShow = false
           this.$get('monitor/project/topo/icon', { id: res.data.id }).then(iconInfo => {
-            console.log(iconInfo)
             this.dealImg(`monitor/project/topo/icon/${res.data.id}/1`).then((data, header) => {
               const group = this.tools.find(tool => tool.group === this.uploadPic.unit)
               this.iconArray.push({
