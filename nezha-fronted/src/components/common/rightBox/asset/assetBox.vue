@@ -108,7 +108,7 @@
                   </el-checkbox-group>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                  <el-select v-model="label.value[0]" class="right-box__select" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                  <el-select v-model="label.value[0]" class="right-box__select" popper-class="right-box-select-format-dropdown prevent-clickoutside" size="small">
                     <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                   </el-select>
                 </template>
@@ -135,6 +135,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
+                        popper-class="right-box-select-format-dropdown"
                         size="small"
                         style="width: 100%">
                       </my-date-picker>
@@ -145,6 +146,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType"
                         placeholder=""
+                        popper-class="right-box-select-format-dropdown"
                         size="small"
                         style="width: 100%"
                         value-format="yyyy-MM-dd">

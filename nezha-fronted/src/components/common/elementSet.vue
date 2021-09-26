@@ -135,7 +135,7 @@ export default {
   border: 1px solid #EBEEF5;
   box-shadow: $pop-box-shadow;
   position: absolute;
-  top: 55px;
+  top: 60px;
   right: 20px;
   width: 200px;
   color: #606266;

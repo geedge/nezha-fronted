@@ -56,6 +56,7 @@
               v-model="editModule.endpointNameTmpl"
               :fetch-suggestions="querySearch"
               :placeholder="$t('overall.placeHolder')"
+              popper-class="right-box-select-top right-box-dropdown-top"
               class="inline-input"
               size="small"
             ></el-autocomplete>
@@ -74,6 +75,7 @@
               title="ChartSearch"
               key-field="id"
               show-field="name"
+              :width="626"
               v-model="editModule.chartIds"
               class="form-control"
               :result-format="resultFormat"
@@ -474,7 +476,7 @@
                         :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.format'"
                         :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                       >
-                        <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                        <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-format-dropdown  prevent-clickoutside" size="small">
                           <el-option v-for="item in timestampList" :id="'module-timestamp-'+item" :key="item" :label="item" :value="item"></el-option>
                         </el-select>
                       </el-form-item>

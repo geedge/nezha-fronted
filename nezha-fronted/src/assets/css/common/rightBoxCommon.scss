@@ -332,6 +332,12 @@
 .mib-browser-right-box-dropdown {
   width: 236px;
 }
+.right-box-select-format-dropdown {
+  width: 604px;
+  .el-picker-panel__content {
+    width: calc(100% - 28px);
+  }
+}
 .right-public-box-dropdown,
 .right-box-public-dropdown,
 .right-public-box-dropdown-width,
@@ -339,6 +345,7 @@
 .right-box-public-alert-dropdown,
 .asset-right-box-dropdown-width,
 .mib-browser-right-box-dropdown,
+.right-box-select-format-dropdown,
 .right-box-select-top {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -352,4 +359,7 @@
 .mib-browser-right-box-dropdown.right-box-dropdown-top,
 .right-box-select-top.right-box-dropdown-top {
   margin: 5px 0 !important;
+}
+.popper__arrow {
+  opacity: 0;
 }

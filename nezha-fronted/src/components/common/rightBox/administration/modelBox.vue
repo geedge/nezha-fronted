@@ -32,6 +32,7 @@
            :language="language"
             title="ChartSearch"
             key-field="id"
+            :width="640"
             v-model="editModel.chartIds"
             show-field="name"
             class="form-control"

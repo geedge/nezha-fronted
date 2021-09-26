@@ -495,7 +495,7 @@
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
 <!--                          <el-input v-model="item2.format" placeholder="key" size="mini"></el-input>-->
-                          <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-dropdown prevent-clickoutside" size="small">
+                          <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-format-dropdown prevent-clickoutside" size="small">
                             <el-option v-for="item in timestampList" :id="'module-timestamp-'+item" :key="item" :label="item" :value="item"></el-option>
                           </el-select>
                         </el-form-item>

@@ -20,7 +20,7 @@
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
-              <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" popper-class="right-box-select-dropdown right-public-box-dropdown prevent-clickoutside" :popper-append-to-body="false">
+              <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" popper-class="right-public-box-dropdown prevent-clickoutside" :popper-append-to-body="false">
                 <el-option v-for="(item, index) in groupData" :key="index" :value="item.id" :label="item.name"></el-option>
               </el-select>
             </el-form-item>
@@ -42,7 +42,7 @@
               </el-switch>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.type")' prop="type">
-              <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-box-select-dropdown right-public-box-dropdown prevent-clickoutside" size="small" @change="selectType">
+              <el-select v-model="editAssetMeta.type" :popper-append-to-body="false" class="right-box__select" popper-class="right-public-box-dropdown prevent-clickoutside" size="small" @change="selectType">
                 <el-option v-for="(item, index) in typeData" :key="index" :value="item.value" :disabled="item.disabled">
                   <div><i :class="item.icon"></i>&nbsp;&nbsp;<span>{{item.name}}</span></div>
                 </el-option>

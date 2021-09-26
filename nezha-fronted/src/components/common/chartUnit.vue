@@ -12,7 +12,7 @@
                  :show-all-levels="false"
                  class="chart-unit"
                  placeholder=""
-                 popper-class="prevent-clickoutside unit-pop-class"
+                 popper-class="prevent-clickoutside unit-pop-class right-box-select-top right-box-dropdown-top"
                  size="small"
                  style="border-radius: 0 2px 2px 0;"
                  @change="unitSelected"

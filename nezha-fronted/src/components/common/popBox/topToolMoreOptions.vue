@@ -3,7 +3,7 @@
     <button id="more" :class="triggerButtonClass" title="more...">
       <i class="nz-icon nz-icon-more2" style="font-size: 12px;"></i>
     </button>
-    <el-dropdown-menu slot="dropdown">
+    <el-dropdown-menu slot="dropdown" class="right-box-select-top right-box-dropdown-top">
       <el-dropdown-item  v-if="showLock">
         <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
       </el-dropdown-item>

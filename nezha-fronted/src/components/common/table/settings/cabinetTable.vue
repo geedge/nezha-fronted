@@ -43,7 +43,7 @@
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-box-dropdown-top">
             <el-dropdown-item v-has="'dc_add'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item :command="['delete', scope.row]" v-has="'dc_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
