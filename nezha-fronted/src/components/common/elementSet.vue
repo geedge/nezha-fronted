@@ -1,5 +1,5 @@
 <template>
-  <div class="pop-custom" v-clickoutside="esc">
+  <div class="pop-custom" :class="{'pop-custom-top' : tableClass}" v-clickoutside="esc">
     <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box custom-labels">
       <div style="height: 100%; overflow: auto;">
@@ -44,7 +44,8 @@ export default {
     customTableTitle: Array, // 自定义的title
     originalTableTitle: Array, // 原始title
     tableId: String,
-    allowedAll: { default: false }
+    allowedAll: { default: false },
+    tableClass: Boolean
   },
   data () {
     return {
@@ -136,6 +137,19 @@ export default {
   box-shadow: $pop-box-shadow;
   position: absolute;
   top: 60px;
+  right: 20px;
+  width: 200px;
+  color: #606266;
+  background: #fff;
+  border-radius: 4px;
+  z-index: 999999;
+}
+.pop-custom-top {
+  padding: 0 12px 12px 12px;
+  border: 1px solid #EBEEF5;
+  box-shadow: $pop-box-shadow;
+  position: absolute;
+  top: 45px;
   right: 20px;
   width: 200px;
   color: #606266;

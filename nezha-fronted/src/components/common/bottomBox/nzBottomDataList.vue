@@ -31,6 +31,7 @@
         :tableId="tableId"
         @close="tools.showCustomTableTitle = false"
         @update="updateCustomTableTitle"
+        :table-class="true"
       ></element-set>
     </transition>
     <div class="sub-container">
