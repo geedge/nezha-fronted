@@ -339,7 +339,6 @@ import topoTooltip from '../project/L5/topoTooltip'
 import { getMetricTypeValue } from '../js/tools'
 import bus from '../../../libs/bus'
 import CanvasContextMenu from '@/components/common/project/L5/CanvasContextMenu'
-import {imageTemp} from "../project/L5/services/canvas";
 // 注册到画布
 registerNode('rectangleImg2', myShape, myAnchors, myIconRect2, myTextRect2)
 registerNode('myCube', myCubec, myCubeAnchors, null, null)
@@ -1582,9 +1581,9 @@ export default {
               })
               if (group) {
                 group.children.push({
-                  ...imageTemp,
+                  ...imageTemp2,
                   data: {
-                    ...imageTemp.data,
+                    ...imageTemp2.data,
                     text: res.data.imageName,
                     image: data,
                     imageId: res.data.id,
@@ -1595,9 +1594,9 @@ export default {
                 this.tools.push({
                   group: this.uploadPic.unit,
                   children: [{
-                    ...imageTemp,
+                    ...imageTemp2,
                     data: {
-                      ...imageTemp.data,
+                      ...imageTemp2.data,
                       text: res.data.imageName,
                       image: data,
                       imageId: res.data.id,
