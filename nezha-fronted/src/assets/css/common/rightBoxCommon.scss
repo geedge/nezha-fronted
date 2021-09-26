@@ -319,6 +319,9 @@
 }
 .right-public-box-dropdown {
   width: 640px;
+  .el-cascader-menu{
+    flex: 1;
+  }
 }
 .right-box-public-dropdown {
   width: 308px;
