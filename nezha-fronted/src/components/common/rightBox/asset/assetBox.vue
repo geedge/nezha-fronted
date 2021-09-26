@@ -166,7 +166,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside right-box-dropdown-top right-public-box-dropdown-width limit-height"
+              popper-class="prevent-clickoutside right-box-dropdown-top asset-right-box-dropdown-width limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>
