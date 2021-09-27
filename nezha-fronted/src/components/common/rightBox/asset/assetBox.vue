@@ -50,7 +50,7 @@
               :placeholder="lockModelInputValue"
               :options="options.brandAndModelOptions"
               :props="{ label: 'name', value: 'id' }"
-              popper-class="prevent-clickoutside right-public-box-dropdown-top right-box-select-top limit-height"
+              popper-class="prevent-clickoutside right-public-box-dropdown-top right-public-box-select-top limit-height"
               size="small"
               style="width: 100%;"
             ></el-cascader>
@@ -135,7 +135,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
-                        popper-class="right-box-select-format-dropdown"
+                        popper-class="right-box-select-top right-public-box-dropdown-top"
                         size="small"
                         style="width: 100%">
                       </my-date-picker>
@@ -146,7 +146,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType"
                         placeholder=""
-                        popper-class="right-box-select-format-dropdown"
+                        popper-class="right-box-select-top right-public-box-dropdown-top"
                         size="small"
                         style="width: 100%"
                         value-format="yyyy-MM-dd">
@@ -168,7 +168,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside right-public-box-dropdown-top asset-right-box-dropdown-width limit-height"
+              popper-class="prevent-clickoutside right-box-dropdown-top asset-right-box-dropdown-width limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>

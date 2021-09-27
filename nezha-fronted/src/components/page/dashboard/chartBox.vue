@@ -204,7 +204,7 @@
           <div class="form-items--half-width-group">
             <!-- type -->
             <el-form-item :label="$t('dashboard.panel.chartForm.type')" class="form-item--half-width" prop="type">
-              <el-select id="chart-box-type" v-model="editChart.type" :disabled="editChart.type==='group'&&editChart.children&&editChart.children.length" placeholder="" popper-class="chart-box-dropdown-width prevent-clickoutside" size="small" value-key="chartType" @change="chartTypeChange">
+              <el-select id="chart-box-type" v-model="editChart.type" :disabled="editChart.type==='group'&&editChart.children&&editChart.children.length" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType" @change="chartTypeChange">
                 <el-option v-for="item in chartTypeList" :key="item.id" :disabled=" item.id==='group' && editChart.isGroup" :label="item.name" :value="item.id">
                   <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                 </el-option>
@@ -223,7 +223,7 @@
 
           <!--   varType   -->
           <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'chartTemp'">
-            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
+            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -238,7 +238,7 @@
           <div class="form-items--half-width-group">
             <!--width-->
             <el-form-item :label="$t('dashboard.panel.chartForm.width')" class="form-item--half-width" prop="span">
-              <el-select id="chart-box-span"  v-model="editChart.span" :disabled="editChart.type === 'group'" placeholder="" popper-class="chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" size="small" value-key="chartSpan">
+              <el-select id="chart-box-span"  v-model="editChart.span" :disabled="editChart.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan">
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                   <span class="panel-dropdown-label-txt" > span-{{item}}</span>
                 </el-option>
@@ -263,7 +263,7 @@
               </el-autocomplete>-->
 
               <!-- 由px改为span -->
-              <el-select id="chart-box-height"  v-model="editChart.height" :disabled="editChart.type === 'group'" placeholder="" popper-class="chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" size="small" value-key="chartSpan">
+              <el-select id="chart-box-height"  v-model="editChart.height" :disabled="editChart.type === 'group'" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartSpan">
                 <el-option v-for="item in spanList" :key="item" :label="'span-' + item" :value="item">
                   <span class="panel-dropdown-label-txt" > span-{{item}}</span>
                 </el-option>
@@ -274,7 +274,7 @@
             <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'&& editChart.type !=='diagram'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
               <el-cascader id="chart-box-unit" v-model="editChart.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
-                           popper-class="chart-box-dropdown-option-top dc-dropdown right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           popper-class="dc-dropdown right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
                            size="small"
                            style="width: 100%"
                            @change="unitSelected"
@@ -291,7 +291,7 @@
             </el-form-item>-->
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
-              <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" size="small" @change="$forceUpdate">
+              <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
                 <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value" class="width310">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
@@ -303,20 +303,20 @@
             </el-form-item>
 
             <el-form-item  v-if="editChart.type === 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'" :label='"Null value"' class="form-item--half-width"  prop="nullType">
-              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" size="small" @change="$forceUpdate()" class="width310">
+              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate()" class="width310">
                 <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
-              <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="chart-box-dropdown-option-top chart-box-dropdown-width prevent-clickoutside" size="small" @change="$forceUpdate">
+              <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
                 <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value" class="width310">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' prop="param.limit">
-              <el-select v-model="editChart.param.limit" popper-class="chart-box-dropdown-width" size="small">
+              <el-select v-model="editChart.param.limit" popper-class="right-box-select-top" size="small">
                 <el-option v-for="option in limitOptions" :key="option" :value="option" class="width310"></el-option>
               </el-select>
             </el-form-item>
