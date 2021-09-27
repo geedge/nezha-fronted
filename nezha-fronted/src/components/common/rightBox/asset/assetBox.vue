@@ -168,7 +168,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside right-box-dropdown-top asset-right-box-dropdown-width limit-height"
+              popper-class="prevent-clickoutside right-public-box-select-top right-public-box-dropdown-top limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>
@@ -316,6 +316,7 @@ export default {
       showAddressOption: true,
       talonShowTow: true,
       editAsset: {},
+      minWidth: '',
       url: 'asset/asset',
       rightBox: { model: { show: false } },
       vmLock: false, // 当自己是虚拟机时，锁定品牌型号位置为parent的，无法修改

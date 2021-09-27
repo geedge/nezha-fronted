@@ -26,6 +26,7 @@ import * as constants from './components/common/js/constants.js'
 import Pagination from './components/common/pagination' // 引入全局分页组件
 import searchInput from './components/common/searchInput' // 搜索框组件
 import elementSet from './components/common/elementSet' // 自定义表头组件
+import MyElSelect from './components/common/elSelect/MyElSelect'
 
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
@@ -198,6 +199,7 @@ Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(plTable)
+Vue.component('el-select', MyElSelect)
 Vue.use(hasPermission)
 
 /* 指令 */

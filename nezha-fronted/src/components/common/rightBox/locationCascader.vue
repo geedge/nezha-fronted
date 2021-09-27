@@ -1,11 +1,11 @@
 <template>
   <div class="location" >
     <div @click="toggleDropdown">
-      <el-input :placeholder="$t('overall.select')" size="small" style="position: relative" :value="inputShowInfo"  :readonly="true" :disabled="disabled">
+      <el-input ref="location" :placeholder="$t('overall.select')" size="small" style="position: relative" :value="inputShowInfo"  :readonly="true" :disabled="disabled">
         <i slot="suffix" class="el-select__caret el-input__icon nz-icon nz-icon-arrow-down" style="font-size: 14px" :class="{'reverse':dropDownVisible == true}"></i>
       </el-input>
     </div>
-    <div class="dropdown" :class="{'dropdown-active':dropDownVisible == true}" >
+    <div class="dropdown" :style="{minWidth: locationWidth}" :class="{'dropdown-active':dropDownVisible == true}" >
       <div class="location-container">
         <div class="container-item">
           <div style="height: 100%; overflow: auto;">
@@ -84,10 +84,21 @@ export default {
       uCheckedInfos: new Map(),
       uChecked: [],
       refresh: true,
-      oldUChecked: []
+      oldUChecked: [],
+      locationWidth: 0
     }
   },
   mounted () {
+    const location = this.$refs.location
+    setTimeout(() => {
+      if (location && location.$el) {
+        const rect = location.$el.getBoundingClientRect()
+        const inputWidth = rect.width
+        if (inputWidth) {
+          this.locationWidth = inputWidth
+        }
+      }
+    }, 1500)
   },
   methods: {
     toggleDropdown () {

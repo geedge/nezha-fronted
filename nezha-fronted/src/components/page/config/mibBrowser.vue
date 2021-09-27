@@ -41,7 +41,7 @@
         <div class="top-tool-btn-group">
           <el-popover :offset="-143" placement="bottom" trigger="click" width="300">
             <div class="mib-browser-ad-search">
-              <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" size="mini" style="width: 300px" value-key="id">
+              <el-select v-model="searchParam.snmpCredentialId" placeholder="Select credential" popper-class="right-public-box-select-top right-public-box-dropdown-top" size="mini" style="width: 300px" value-key="id">
                 <el-option v-for="(item, index) in credentialData" :key="index" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </div>
