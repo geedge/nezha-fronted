@@ -315,6 +315,12 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+.api-select.right-public-box-select-top.right-public-box-dropdown-top {
+  width: 210px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 .dc-dropdown.right-public-box-dropdown-top,.right-public-box-select-top.right-public-box-dropdown-top {
   margin: 5px 0 !important;
 }

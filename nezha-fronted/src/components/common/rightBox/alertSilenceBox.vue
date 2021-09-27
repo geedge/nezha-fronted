@@ -39,7 +39,7 @@
                 <span class="datepicker-title">{{ $t("overall.startTime") }}</span>
                 <my-date-picker ref="calendar" v-model="editAlertSilence.startAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
                                 align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
-                                popper-class="panel-time-picker-popper right-box-public-alert-dropdown"
+                                popper-class="panel-time-picker-popper right-box-select-top"
                                 prefix-icon=" "
                                 size="mini"
                                 type="datetime"
@@ -51,7 +51,7 @@
                 <span class="datepicker-title">{{ $t("overall.endTime") }}</span>
                 <my-date-picker ref="calendar" v-model="editAlertSilence.endAt" :clearable="false" :placeholder="$t('dashboard.panel.startTime')"
                                 align="right" class=" " format="yyyy/MM/dd HH:mm:ss"
-                                popper-class="panel-time-picker-popper right-box-public-alert-dropdown"
+                                popper-class="panel-time-picker-popper right-box-select-top"
                                 prefix-icon=" "
                                 size="mini"
                                 type="datetime"

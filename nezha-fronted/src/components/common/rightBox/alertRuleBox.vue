@@ -30,14 +30,13 @@
                 v-for="item in searchMetrics"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value"
-                style="width: 312px"></el-option>
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
           <!--severity-->
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
             <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
-              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id" style="width: 312px">
+              <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
                   <div class="severity-item text-ellipsis" :title="item.remark">{{item.remark}}</div>
@@ -132,12 +131,10 @@
               size="small"
             >
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -169,12 +166,10 @@
               size="small"
             >
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -192,12 +187,10 @@
               size="small"
             >
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -217,7 +210,6 @@
               size="small"
             >
               <el-option
-                style="width: 628px"
                 v-for="item in weekList"
                 :key="item.value"
                 :label="item.label"
@@ -264,12 +256,10 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>
@@ -288,12 +278,10 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.on')"
                 :value="1">
               </el-option>
               <el-option
-                style="width: 312px"
                 :label="$t('dashboard.panel.chartForm.lockList.off')"
                 :value="0">
               </el-option>

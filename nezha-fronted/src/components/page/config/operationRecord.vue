@@ -5,6 +5,7 @@
       :layout="layout"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.operationLog"
+      :operation-record="true"
       @search="search"
       :search-msg="searchMsg">
       <template v-slot:top-tool-left>

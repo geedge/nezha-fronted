@@ -1,5 +1,5 @@
 <template>
-  <div class="pop-custom" :class="{'pop-custom-top' : tableClass}" v-clickoutside="esc">
+  <div class="pop-custom" :class="{'pop-custom-top' : tableClass || operationTrue}" v-clickoutside="esc">
     <div class="pop-title">{{$t('overall.select')}}</div>
     <div class="pop-box custom-labels">
       <div style="height: 100%; overflow: auto;">
@@ -45,7 +45,8 @@ export default {
     originalTableTitle: Array, // 原始title
     tableId: String,
     allowedAll: { default: false },
-    tableClass: Boolean
+    tableClass: Boolean,
+    operationTrue: Boolean
   },
   data () {
     return {

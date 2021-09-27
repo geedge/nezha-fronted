@@ -40,6 +40,7 @@
           ref="customTableTitle"
           :custom-table-title="customTableTitle"
           :original-table-title="tableTitle"
+          :operation-true="operationRecord"
           @close="tools.showCustomTableTitle = false"
           @update="updateCustomTableTitle"
         ></element-set>
@@ -92,7 +93,8 @@ export default {
       type: Object
     },
     nzTableHeightOffset: Number,
-    searchRight: Boolean
+    searchRight: Boolean,
+    operationRecord: Boolean
   },
   computed: {
     nzTableHeight () {
