@@ -108,7 +108,7 @@
                   </el-checkbox-group>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                  <el-select v-model="label.value[0]" class="right-box__select" popper-class="right-box-select-format-dropdown prevent-clickoutside" size="small">
+                  <el-select v-model="label.value[0]" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
                     <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                   </el-select>
                 </template>

@@ -43,8 +43,8 @@
               <el-form-item :label="$t('asset.pin')" prop="authPin">
                 <el-input v-model="editData.authPin" size="small"  type="password" autocomplete="new-password"/>
               </el-form-item>
-              <el-form-item :label="$t('asset.port')" prop="authProtocolPort">
-                <el-input v-model="editData.authProtocolPort" size="small"/>
+              <el-form-item :label="$t('asset.port')" prop="port">
+                <el-input v-model="editData.port" size="small"/>
               </el-form-item>
             </template>
 
@@ -130,6 +130,7 @@
                           v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                           placeholder=""
+                          popper-class="right-box-select-top right-public-box-dropdown-top"
                           size="small"
                           style="width: 100%">
                         </my-date-picker>
@@ -140,6 +141,7 @@
                           v-model="label.value[0]"
                           :type="JSON.parse(label.param).subType"
                           placeholder=""
+                          popper-class="right-box-select-top right-public-box-dropdown-top"
                           size="small"
                           style="width: 100%"
                           value-format="yyyy-MM-dd">
@@ -161,7 +163,7 @@
                 :options="fieldGroupData"
                 :props="labelCascProp"
                 class="hide-input"
-                popper-class="prevent-clickoutside right-public-box-dropdown-top limit-height"
+                popper-class="prevent-clickoutside right-public-box-select-top.right-public-box-dropdown-top limit-height"
                 size="small"
                 @change="addLabel"
               ></el-cascader>
