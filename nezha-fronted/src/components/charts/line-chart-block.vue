@@ -836,10 +836,10 @@ export default {
         },
         grid: {
           top: 30,
-          left: 0,
+          left: 30,
           right: 30,
           containLabel: true,
-          bottom: 20// 156
+          bottom: 30// 156
         },
         xAxis: {
           type: 'time',
