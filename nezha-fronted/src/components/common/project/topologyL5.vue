@@ -1711,7 +1711,7 @@ export default {
                     data: {
                       ...imageTemp.data,
                       text: item.imageName,
-                      image: res2[index],
+                      image: res2[index].data,
                       imageId: item.id,
                       unit: item.unit,
                       rect: {
