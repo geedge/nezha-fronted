@@ -77,6 +77,7 @@ export default {
             name: this.$t('config.operationlog.state'),
             type: 'selectString',
             label: 'state',
+            readonly: true,
             disabled: false
           }, {
             id: 17,

@@ -95,12 +95,14 @@ export default {
             name: this.$t('config.terminallog.protocol'),
             type: 'selectString',
             label: 'protocol',
+            readonly: true,
             disabled: false
           }, {
             id: 17,
             name: this.$t('config.terminallog.status'),
             type: 'terminalStatus',
             label: 'state',
+            readonly: true,
             disabled: false
           }
         ]

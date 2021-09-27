@@ -133,6 +133,7 @@ export default {
             name: this.$t('config.assetLabel.group'),
             type: 'group',
             label: 'group',
+            readonly: true,
             disabled: false
           }
         ]

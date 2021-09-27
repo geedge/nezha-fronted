@@ -74,6 +74,7 @@ export default {
             name: this.$t('config.operationlog.operation'),
             type: 'selectString',
             label: 'operation',
+            readonly: true,
             disabled: false
           }, {
             id: 14,
@@ -85,6 +86,7 @@ export default {
             id: 16,
             name: this.$t('config.operationlog.state'),
             type: 'selectString',
+            readonly: true,
             label: 'state',
             disabled: false
           }, {

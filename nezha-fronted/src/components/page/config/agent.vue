@@ -148,11 +148,13 @@ export default {
           name: this.$t('config.agent.type'),
           type: 'select',
           label: 'promType',
+          readonly: true,
           disabled: false
         }, {
           name: this.$t('overall.state'),
           type: 'select',
           label: 'promState',
+          readonly: true,
           disabled: false
         }]
       },

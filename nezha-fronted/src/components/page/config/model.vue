@@ -106,6 +106,7 @@ export default {
           name: this.$t('asset.brand'),
           type: 'brand',
           label: 'brandIds',
+          readonly: true,
           disabled: false
         }]
       }

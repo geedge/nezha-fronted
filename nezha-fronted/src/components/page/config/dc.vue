@@ -135,6 +135,7 @@ export default {
             name: this.$t('asset.state'),
             type: 'selectString',
             label: 'dcState',
+            readonly: true,
             disabled: false
           }
         ]

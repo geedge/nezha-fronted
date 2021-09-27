@@ -194,6 +194,7 @@ export default {
             name: this.$t('overall.projectName'),
             type: 'project',
             label: 'projectIds',
+            readonly: true,
             disabled: false
           }
         ]

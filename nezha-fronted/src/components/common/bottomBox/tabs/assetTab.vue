@@ -100,6 +100,7 @@ export default {
           name: this.$t('asset.state'),
           type: 'assetState',
           label: 'stateIds',
+          readonly: true,
           disabled: false
         }]
       },

@@ -101,6 +101,7 @@ export default {
           name: this.$t('overall.type'),
           type: 'select',
           label: 'credentialType',
+          readonly: true,
           disabled: false
         }]
       }

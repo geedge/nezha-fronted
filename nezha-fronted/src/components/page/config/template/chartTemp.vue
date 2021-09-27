@@ -134,12 +134,14 @@ export default {
             name: this.$t('overall.type'),
             type: 'selectString',
             label: 'chartType',
+            readonly: true,
             disabled: false
           },
           {
             name: this.$t('dashboard.panel.chartForm.varType'),
             type: 'select',
             label: 'varType',
+            readonly: true,
             disabled: false
           }
         ]

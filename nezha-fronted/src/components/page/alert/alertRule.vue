@@ -154,12 +154,14 @@ export default {
           name: this.$t('alert.severity'),
           type: 'severity',
           label: 'severityIds',
+          readonly: true,
           disabled: false
         }, {
           id: 5,
           name: this.$t('overall.type'),
           type: 'alertTypes',
           label: 'type',
+          readonly: true,
           disabled: false
         }]
       },
