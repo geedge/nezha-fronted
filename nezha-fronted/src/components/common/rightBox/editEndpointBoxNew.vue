@@ -58,6 +58,7 @@
               show-field="name"
               v-model="editEndpoint.assetId"
               class="form-control"
+              ref="sp"
               :result-format="resultFormat"
             ></v-selectpage>
           </el-form-item>
@@ -121,7 +122,7 @@
                 </el-form-item>
                 <!--path-->
                 <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
-                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" disabled></el-input>
+                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editEndpoint.configs[0].config.protocol != 'http'"></el-input>
                 </el-form-item>
                 <!--port-->
                 <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
@@ -619,6 +620,7 @@ export default {
       activeName: 'Basic',
       activeNameLogs: ['Basic'],
       expandedWalkData: [],
+      editEndpointReset: {},
       language: localStorage.getItem('nz-language'),
       radio: 'password',
       editEndpoint: {},
@@ -1093,6 +1095,10 @@ export default {
       this.getModuleList()
       if (this.editEndpoint.moduleId) {
         this.editEndpoint.moduleId = ''
+        this.editEndpoint.name = ''
+        this.editEndpoint.assetName = ''
+        this.editEndpoint.assetId = ''
+        this.$refs.sp.remove()
         this.$refs.moduleForm.clearValidate('moduleId')
       }
     },
@@ -1351,79 +1357,75 @@ export default {
       }
       if (this.editEndpoint.moduleId && this.editEndpoint.assetId) {
         this.$post('/monitor/endpoint/render', { moduleIds: this.editEndpoint.moduleId, assetIds: this.editEndpoint.assetId }).then(res => {
-          if (JSON.stringify(this.editEndpoint.configs) === JSON.stringify(this.blankObject.configs)) {
-            this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
-            this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
-            this.editEndpoint.configs[1].config.forEach(item => {
-              item.labelModule = []
-              if (JSON.stringify(item.labels) !== '{}' && item.labels) {
-                Object.keys(item.labels).forEach(key => {
-                  item.labelModule.push({ key, value: item.labels[key] })
-                })
-              } else {
-                item.labelModule.push({ key: '', value: '' })
-              }
-              item.pipeline && item.pipeline.forEach((pipeline) => {
-                if (pipeline.type === 'labels') {
-                  const labelsArr = []
-                  if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
-                    Object.keys(pipeline.labels).forEach(key => {
-                      labelsArr.push({ key, value: pipeline.labels[key] })
-                    })
-                  } else {
-                    labelsArr.push({ key: '', value: '' })
-                  }
-                  pipeline.labels = labelsArr
-                }
-                if (pipeline.type === 'json') {
-                  const expressionsArr = []
-                  if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
-                    Object.keys(pipeline.expressions).forEach(key => {
-                      expressionsArr.push({ key, value: pipeline.expressions[key] })
-                    })
-                  } else {
-                    expressionsArr.push({ key: '', value: '' })
-                  }
-                  pipeline.expressions = expressionsArr
-                }
-              })
-              if (item.type === 'file') {
-                item.unit = ''
-                item.appName = ''
-                item.listenAddress = ''
-              } else if (item.type === 'journal') {
-                item.fileName = ''
-                item.appName = ''
-                item.listenAddress = ''
-              } else if (item.type === 'syslog') {
-                item.fileName = ''
-                item.unit = ''
-              }
-            })
-            this.editEndpoint.paramObj = []
-            this.editEndpoint.labelModule = []
-            this.editEndpoint.configs[0].config.relabel_config && this.editEndpoint.configs[0].config.relabel_config.forEach(item => {
-              item.showAllRelabelOption = false
-              item.tags = ''
-            })
-            if (JSON.stringify(this.editEndpoint.configs[0].config.labels) !== '{}' && this.editEndpoint.configs[0].config.labels) {
-              Object.keys(this.editEndpoint.configs[0].config.labels).forEach(key => {
-                this.editEndpoint.labelModule.push({ key, value: this.editEndpoint.configs[0].config.labels[key] })
+          this.editEndpoint.configs = JSON.parse(res.data.list[0].configs)
+          this.activeNameLogs = this.editEndpoint.configs[1].config.map(() => 'Basic')
+          this.editEndpoint.configs[1].config.forEach(item => {
+            item.labelModule = []
+            if (JSON.stringify(item.labels) !== '{}' && item.labels) {
+              Object.keys(item.labels).forEach(key => {
+                item.labelModule.push({ key, value: item.labels[key] })
               })
             } else {
-              this.editEndpoint.labelModule.push({ key: '', value: '' })
+              item.labelModule.push({ key: '', value: '' })
             }
-            if (JSON.stringify(this.editEndpoint.configs[0].config.params) !== '{}' && this.editEndpoint.configs[0].config.params) {
-              Object.keys(this.editEndpoint.configs[0].config.params).forEach(key => {
-                this.editEndpoint.paramObj.push({ key, value: this.editEndpoint.configs[0].config.params[key] })
-              })
-            } else {
-              this.editEndpoint.paramObj.push({ key: '', value: [] })
+            item.pipeline && item.pipeline.forEach((pipeline) => {
+              if (pipeline.type === 'labels') {
+                const labelsArr = []
+                if (JSON.stringify(pipeline.labels) !== '{}' && pipeline.labels) {
+                  Object.keys(pipeline.labels).forEach(key => {
+                    labelsArr.push({ key, value: pipeline.labels[key] })
+                  })
+                } else {
+                  labelsArr.push({ key: '', value: '' })
+                }
+                pipeline.labels = labelsArr
+              }
+              if (pipeline.type === 'json') {
+                const expressionsArr = []
+                if (JSON.stringify(pipeline.expressions) !== '{}' && pipeline.expressions) {
+                  Object.keys(pipeline.expressions).forEach(key => {
+                    expressionsArr.push({ key, value: pipeline.expressions[key] })
+                  })
+                } else {
+                  expressionsArr.push({ key: '', value: '' })
+                }
+                pipeline.expressions = expressionsArr
+              }
+            })
+            if (item.type === 'file') {
+              item.unit = ''
+              item.appName = ''
+              item.listenAddress = ''
+            } else if (item.type === 'journal') {
+              item.fileName = ''
+              item.appName = ''
+              item.listenAddress = ''
+            } else if (item.type === 'syslog') {
+              item.fileName = ''
+              item.unit = ''
             }
+          })
+          this.editEndpoint.paramObj = []
+          this.editEndpoint.labelModule = []
+          this.editEndpoint.configs[0].config.relabel_config && this.editEndpoint.configs[0].config.relabel_config.forEach(item => {
+            item.showAllRelabelOption = false
+            item.tags = ''
+          })
+          if (JSON.stringify(this.editEndpoint.configs[0].config.labels) !== '{}' && this.editEndpoint.configs[0].config.labels) {
+            Object.keys(this.editEndpoint.configs[0].config.labels).forEach(key => {
+              this.editEndpoint.labelModule.push({ key, value: this.editEndpoint.configs[0].config.labels[key] })
+            })
+          } else {
+            this.editEndpoint.labelModule.push({ key: '', value: '' })
           }
-          if (!this.editEndpoint.name) {
-            this.editEndpoint.name = res.data.list[0].name
+          if (JSON.stringify(this.editEndpoint.configs[0].config.params) !== '{}' && this.editEndpoint.configs[0].config.params) {
+            Object.keys(this.editEndpoint.configs[0].config.params).forEach(key => {
+              this.editEndpoint.paramObj.push({ key, value: this.editEndpoint.configs[0].config.params[key] })
+            })
+          } else {
+            this.editEndpoint.paramObj.push({ key: '', value: [] })
           }
+          this.editEndpoint.name = res.data.list[0].name
           // if (!this.editEndpoint.chartIds) {
           //   this.editEndpoint.chartIds = res.data.list[0].module.chartIds
           // }
