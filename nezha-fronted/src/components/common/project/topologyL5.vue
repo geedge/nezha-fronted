@@ -12,7 +12,7 @@
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
-            <el-dropdown-menu slot="dropdown" @click="dropdownClick">
+            <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-public-box-select-top right-public-box-dropdown-top">
               <div style="height: 450px"  v-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
@@ -57,6 +57,7 @@
             <div class="full pr10">
               <el-select v-model="lineName" size="small"
                          :popper-append-to-body="false"
+                         popper-class="right-public-box-select-top right-public-box-dropdown-top"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
                 <div class="icon-item" style="width: 100%;padding: 0">
@@ -279,6 +280,7 @@
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
+            popper-class="right-public-box-select-top right-public-box-dropdown-top"
             :maxlength="64" show-word-limit
             class="inline-input"
             v-model="uploadPic.unit"

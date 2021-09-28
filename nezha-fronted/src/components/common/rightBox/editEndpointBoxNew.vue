@@ -55,7 +55,6 @@
               :language="language"
               title="ChartSearch"
               key-field="id"
-              :width="626"
               show-field="name"
               v-model="editEndpoint.assetId"
               class="form-control"

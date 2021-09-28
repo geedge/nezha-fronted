@@ -29,7 +29,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.limit')}}:</span>
-        <el-select v-model="limit" size="small" style="width: 100px;">
+        <el-select v-model="limit" size="small" style="width: 100px;" popper-class="right-public-box-select-top right-public-box-dropdown-top">
           <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
         </el-select>
       </div>
