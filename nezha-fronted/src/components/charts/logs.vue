@@ -483,7 +483,6 @@ export default {
             })
           }
         }).catch(e => {
-          console.log(e)
           this.isError = true
           this.errorContent = this.$t('terminallog.statusItem.unknownError')
           // this.$message.error(this.$t('terminallog.statusItem.unknownError'))

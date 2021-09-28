@@ -46,6 +46,8 @@
         <div id="explore-promql-box" class="top-tools" style="padding-top: 0; flex-wrap: wrap">
           <template v-if="showMetrics">
             <promql-input
+              :from-father-data="true"
+              :metricOptionsParent="metricOptions"
               v-for="index of promqlKeys.length"
               :id="promqlKeys[index-1]"
               :key="promqlKeys[index-1]"
@@ -296,6 +298,7 @@ import chartBox from '../../../page/dashboard/chartBox'
 import { getUUID } from '../../../common/js/common'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import logTab from './logTab'
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 
 export default {
   name: 'exploreItem',
@@ -309,6 +312,7 @@ export default {
     tabIndex: Number,
     closable: Boolean
   },
+  mixins: [promqlInputMixin],
   data () {
     return {
       chartLoading: false,
@@ -366,7 +370,6 @@ export default {
       chartUnit: 0,
       historyParam: { useHistory: true, key: 'expore-history' },
       chart: {},
-      metricOptions: [],
       collapseValue: ['1', '2'],
       showTab: ['1', '2'],
       logData: []
@@ -374,7 +377,6 @@ export default {
   },
   created () {
     this.getPanelData()
-    this.queryMetrics()
     this.promqlKeys.push(getUUID())
     this.selectMetricsLogs()
   },
@@ -944,48 +946,7 @@ export default {
         }
       })
     },
-    queryMetrics () {
-      this.metricOptions = []
-      this.$get('prom/api/v1/label/__name__/values').then(response => {
-        if (response.status == 'success') {
-          const metrics = response.data.sort()
-          const metricMap = new Map()
-          metrics.forEach((item) => {
-            let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
-            } else {
-              key = item
-            }
-            if (metricMap.get(key)) {
-              const values = metricMap.get(key)
-              values.push({ label: item, value: item })
-            } else {
-              const values = [{ label: item, value: item }]
-              metricMap.set(key, values)
-            }
-            // this.metricStore.push({label:item,value:item,insertText:item})
-          })
-          for (const key of metricMap.keys()) {
-            const option = {
-              label: key,
-              value: key
-            }
-            if (metricMap.get(key) && metricMap.get(key).length > 1) {
-              option.children = metricMap.get(key)
-            }
-            this.metricOptions.push(option)
-          }
-        }
-      })
-    },
-    getMetricOptions () {
-      return this.metricOptions
-    },
     logsCollapseChange (activeNames, a, b) {
-      console.log(activeNames, a, b)
       this.$nextTick(() => {
         if (this.$refs.exploreChart) {
           this.$refs.exploreChart.resize()

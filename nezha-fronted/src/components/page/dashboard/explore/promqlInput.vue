@@ -13,9 +13,10 @@
                                v-if="type !== 'log'" :props="cascaderProps" @change="metricChangeNew" style="margin-top: 5px">
 
               <template slot-scope="{ node, data }">
-                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
+                <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'',data.more?'cascader-panel-more':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
                   <i class="nz-icon nz-icon-template2"></i>
                   {{data.label}}
+                  <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
                 </div>
               </template>
             </el-cascader-panel>
@@ -23,7 +24,7 @@
                                v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
                                :loading="loading" :props="cascaderProps" @change="logLabelChange">
               <template slot-scope="{ node, data }">
-<div :title="data.label" class="nz-cascade">
+                <div :title="data.label" class="nz-cascade">
                   {{data.label}}
                 </div>
               </template>
@@ -62,9 +63,10 @@
                                    v-if="type !== 'log'"  :props="{emitPath:false}" :options="metricOptions" @change="metricChangeNew">
 
                   <template slot-scope="{ node, data }">
-                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
+                    <div :class="['nz-cascade',data.temp&&!data.child?'nz-cascade-temp':'',data.more?'cascader-panel-more':'']" @click="()=>{lazyLoad(node,data)}" :title="data.label">
                       <i class="nz-icon nz-icon-template2"></i>
                       {{data.label}}
+                      <i v-if="data.more" class="nz-icon nz-icon-arrow-down"></i>
                     </div>
                   </template>
 
@@ -269,7 +271,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.fromFatherData) {
+    if (!this.fromFatherData && this.type !== 'logs') {
       this.queryMetrics()
     }
   },
@@ -442,6 +444,42 @@ export default {
             }
           })
         }
+      } else if (data.children && !data.children.length && this.type !== 'log') {
+        this.metricOptions.forEach(item => {
+          if (!item.temp && item.children && item.value != data.value) {
+            item.children = []
+          }
+        })
+        setTimeout(() => {
+          new Promise(resolve => {
+            const children = this.$store.state.metricsList.find(item => item.value === data.value).children
+            resolve(children)
+          }).then((children) => {
+            const childrenCopy = JSON.parse(JSON.stringify(children))
+            this.metricOptions.find(item => item.label === data.label).children = childrenCopy
+            // if (childrenCopy.length > 100) {
+            //   childrenCopy.splice(100, children.length)
+            //   childrenCopy.push({
+            //     label: 'More',
+            //     value: false,
+            //     parent: data.label,
+            //     more: true
+            //   })
+            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
+            // } else {
+            //   this.metricOptions.find(item => item.label === data.label).children = childrenCopy
+            // }
+          })
+        })
+      } else if (data.more) {
+        setTimeout(() => {
+          new Promise(resolve => {
+            const children = this.$store.state.metricsList.find(item => item.label === data.parent).children
+            resolve(children)
+          }).then((children) => {
+            this.metricOptions.find(item => item.label === data.parent).children = children
+          })
+        })
       }
     },
     tempBoxShowChange (flag) {
@@ -604,6 +642,15 @@ export default {
           this.cascaderValue = ''
         }
       }
+    },
+    metricOptionsParent: {
+      deep: true,
+      immediate: true,
+      handler (n, o) {
+        if (n) {
+          this.metricOptions = JSON.parse(JSON.stringify(n))
+        }
+      }
     }
   }
 }
@@ -739,6 +786,9 @@ export default {
     left: 5px;
 
     /*background: #F8F9FB;*/
+  }
+  .cascader-panel-more {
+    text-align: center;
   }
   .temp-form-box{
     width: 480px;

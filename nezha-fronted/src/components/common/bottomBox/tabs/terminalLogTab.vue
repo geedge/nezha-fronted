@@ -99,7 +99,7 @@ export default {
             disabled: false
           }, {
             id: 17,
-            name: this.$t('config.terminallog.status'),
+            name: this.$t('config.terminallog.stat us'),
             type: 'terminalStatus',
             label: 'state',
             readonly: true,

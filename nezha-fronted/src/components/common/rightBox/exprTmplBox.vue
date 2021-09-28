@@ -31,6 +31,8 @@
           <el-form-item :label="$t('config.exprTemp.expression')" prop="expression">
             <el-row style="line-height: 32px;">
               <promql-input
+                :from-father-data="true"
+                :metricOptionsParent="metricOptions"
                 :id="'promqlKeys0'"
                 :key="'promqlKeys0'"
                 :expression-list="editExprTemp.expression"
@@ -75,6 +77,7 @@
 import promqlInput from '../../page/dashboard/explore/promqlInput'
 import editRigthBox from '../mixin/editRigthBox'
 import { checkExpressionAge } from '@/components/common/js/validate'
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 
 export default {
   name: 'exprTempBox',
@@ -84,7 +87,7 @@ export default {
   props: {
     exprTemp: Object
   },
-  mixins: [editRigthBox],
+  mixins: [editRigthBox, promqlInputMixin],
   watch: {
     exprTemp: {
       deep: true,
@@ -107,6 +110,7 @@ export default {
         remark: ''
       },
       gnameList: [],
+      showTemp: false,
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },

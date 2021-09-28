@@ -379,6 +379,8 @@
           <div style="margin-bottom: 20px">
             <el-row :key="'ele' + index" class="element-item form-row-item" style="" v-for="index of promqlKeys.length" v-if="!isUrl &&!isAlert && editChart.type != 'text'&& editChart.type != 'group' && editChart.type != 'diagram'">
               <promql-input
+                :from-father-data="true"
+                :metricOptionsParent="metricOptions"
                 :expression-list="expressions"
                 :id="promqlKeys[index-1]"
                 :index="index-1"
@@ -536,6 +538,7 @@ import i18n from '../../common/i18n'
 import { fromRoute } from '@/components/common/js/constants'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import editRigthBox from '../../common/mixin/editRigthBox'
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 const rz = {
   methods: {
     rz (e) {
@@ -556,7 +559,7 @@ export default {
       default: false
     }
   },
-  mixins: [rz, editRigthBox],
+  mixins: [rz, editRigthBox, promqlInputMixin],
   data () {
     return {
       fromRoute,
@@ -683,7 +686,6 @@ export default {
       unitOptions: chartDataFormat.unitOptions(),
       sortedOptionKeys: [{ key: 'min', label: 'Min' }, { key: 'max', label: 'Max' }, { key: 'avg', label: 'Avg' }, { key: 'last', label: 'Last' }, { key: 'total', label: 'Total' }],
       textShow: false,
-      metricOptions: [],
       showPicker: [],
       varTypeArr: [
         { name: 'Asset', id: 1 },
@@ -1759,46 +1761,6 @@ export default {
     delMapping: function (index) {
       this.editChart.param.valueMapping.mapping.splice(index, 1)
     },
-    queryMetrics () {
-      this.metricOptions = []
-      this.$get('prom/api/v1/label/__name__/values').then(response => {
-        if (response.status == 'success') {
-          const metrics = response.data.sort()
-          const metricMap = new Map()
-          metrics.forEach((item) => {
-            let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
-            } else {
-              key = item
-            }
-            if (metricMap.get(key)) {
-              const values = metricMap.get(key)
-              values.push({ label: item, value: item })
-            } else {
-              const values = [{ label: item, value: item }]
-              metricMap.set(key, values)
-            }
-            // this.metricStore.push({label:item,value:item,insertText:item})
-          })
-          for (const key of metricMap.keys()) {
-            const option = {
-              label: key,
-              value: key
-            }
-            if (metricMap.get(key) && metricMap.get(key).length > 1) {
-              option.children = metricMap.get(key)
-            }
-            this.metricOptions.push(option)
-          }
-        }
-      })
-    },
-    getMetricOptions () {
-      return this.metricOptions
-    },
     topologyDialogChange (flag, data) {
       this.topologyDialog = flag
       if (data) {
@@ -1808,7 +1770,6 @@ export default {
   },
   created () {
     this.getSuggestMetric()
-    this.queryMetrics()
   },
   watch: {
     chart: {

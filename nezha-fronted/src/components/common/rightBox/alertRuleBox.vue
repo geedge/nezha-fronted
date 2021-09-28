@@ -50,6 +50,8 @@
               <template v-if="showMetrics">
                 <el-row style="line-height: 32px;">
                   <promql-input
+                    :from-father-data="true"
+                    :metricOptionsParent="metricOptions"
                     id="alert-box-input-promql"
                     ref="promql"
                     :expression-list.sync="expressions"
@@ -345,6 +347,7 @@ import promqlInput from '../../page/dashboard/explore/promqlInput'
 import { nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/charts/richTextEditor'
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 export default {
   name: 'alertRuleBox',
   props: {
@@ -354,7 +357,7 @@ export default {
     'promql-input': promqlInput,
     richTextEditor
   },
-  mixins: [editRigthBox],
+  mixins: [editRigthBox, promqlInputMixin],
   data () {
     const nzOid = (rule, value, callback) => {
       if (this.editAlertRule.type === 3) {

@@ -1174,7 +1174,6 @@ export default {
     },
     // 删除要搜索的条件
     close_selcet_list (ind, e) {
-      console.log(this.searchMsg.searchLabelList,this.searchLabelList)
       if (e) {
         this.stop_click(e)
       }

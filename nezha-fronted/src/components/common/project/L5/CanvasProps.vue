@@ -60,13 +60,13 @@
               <el-row v-for="(item,index) in selection.pen.data.expressArr" :key="index" class="element-item form-row-item"
                       style="">
                 <promql-input
+                  :from-father-data="true"
+                  :metricOptionsParent="metricOptions"
                   :id="index"
                   :key="index"
                   :ref="'promql-'+'-1'"
                   :expression-list="selection.pen.data.expressArr"
-                  :from-father-data="true"
                   :index="index"
-                  :metricOptionsParent="metricOptions"
                   :plugins="['metric-selector', 'metric-input', 'remove']"
                   :showRemove="false"
                   :styleType="2"
@@ -234,13 +234,13 @@
                       class="element-item form-row-item"
                       style="width: 100%; border: 1px dashed rgba(0,0,0,0.15); border-radius: 2px; padding-right: 60px;">
                 <promql-input
+                  :from-father-data="true"
+                  :metricOptionsParent="metricOptions"
                   :id="index"
                   :key="index"
                   :ref="'promql-'+index"
                   :expression-list="selection.pen.data.expressAllArr"
-                  :from-father-data="true"
                   :index="index"
-                  :metricOptionsParent="metricOptions"
                   :plugins="['metric-selector', 'metric-input', 'remove']"
                   :showRemove="false"
                   :styleType="2"
@@ -1114,6 +1114,7 @@ import { getTopology, resetZIndex } from '../../js/common'
 import chartDataFormat from '../../../charts/chartDataFormat'
 import promqlInput from '../../../page/dashboard/explore/promqlInput'
 import nezhaColor from '../../nezhaColor'
+import promqlInputMixin from '@/components/common/mixin/promqlInput'
 
 const rz = {
   methods: {
@@ -1403,7 +1404,7 @@ export default {
       ]
     }
   },
-  mixins: [rz],
+  mixins: [rz, promqlInputMixin],
   components: {
     promqlInput,
     nezhaColor
@@ -1506,43 +1507,6 @@ export default {
     }
   },
   methods: {
-    queryMetrics () {
-      this.metricOptions = []
-      this.$get('prom/api/v1/label/__name__/values').then(response => {
-        if (response.status == 'success') {
-          const metrics = response.data.sort()
-          const metricMap = new Map()
-          metrics.forEach((item) => {
-            let key = ''
-            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
-              key = item.split('_')[0]
-            } else if (/^_\w*/.test(item)) {
-              key = '      '
-            } else {
-              key = item
-            }
-            if (metricMap.get(key)) {
-              const values = metricMap.get(key)
-              values.push({ label: item, value: item })
-            } else {
-              const values = [{ label: item, value: item }]
-              metricMap.set(key, values)
-            }
-            // this.metricStore.push({label:item,value:item,insertText:item})
-          })
-          for (const key of metricMap.keys()) {
-            const option = {
-              label: key,
-              value: key
-            }
-            if (metricMap.get(key) && metricMap.get(key).length > 1) {
-              option.children = metricMap.get(key)
-            }
-            this.metricOptions.push(option)
-          }
-        }
-      })
-    },
     tabClick (n) {
     },
     moduleIdChange (n) {
@@ -1777,9 +1741,6 @@ export default {
     delTopologyPen () {
       const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
       this.$emit('del', delObj)
-    },
-    getMetricOptions () {
-      return this.metricOptions
     },
     addExpression () {
       this.selection.pen.data.expressAllArr.push('')

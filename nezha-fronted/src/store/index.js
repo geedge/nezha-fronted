@@ -34,7 +34,8 @@ const store = new Vuex.Store({
     dcDataRefresh: false,
     showTopoScreen: false,
     logo: '',
-    isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true'
+    isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
+    metricsList: []
   },
   getters: {
     getLinkData (state) {
@@ -66,7 +67,10 @@ const store = new Vuex.Store({
     },
     getIsShrink (state) {
       return state.isShrink
-    }
+    },
+    getMetricsList (state) {
+      return state.metricsList
+    },
   },
   mutations: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
@@ -146,6 +150,9 @@ const store = new Vuex.Store({
     isShrink (state) {
       state.isShrink = !state.isShrink
       localStorage.setItem('nz-left-menu-shrink', state.isShrink)
+    },
+    setMetricsList (state, metricsList) {
+      state.metricsList = [...metricsList]
     }
   },
   actions: {
