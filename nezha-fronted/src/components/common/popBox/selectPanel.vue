@@ -28,9 +28,9 @@
 <!--              </span>-->
               <el-row class="block-col-2" v-if="!panelLock"  style="width: 35px;">
                 <el-col>
-                  <el-dropdown placement="bottom" trigger="click">
+                  <el-dropdown placement="bottom-end" trigger="click">
                     <span class="el-dropdown-link tree--operation" @click.stop><i class="nz-icon nz-icon-more1"></i></span>
-                    <el-dropdown-menu slot="dropdown"  v-has="['panel_edit', 'panel_delete']">
+                    <el-dropdown-menu class="right-box-select-top" slot="dropdown"  v-has="['panel_edit', 'panel_delete']">
                       <el-dropdown-item>
                         <span @click.stop="editPanel(data)"><i v-has="'panel_edit'" class="nz-icon nz-icon-edit"></i>{{$t('overall.edit')}}</span>
                       </el-dropdown-item>
