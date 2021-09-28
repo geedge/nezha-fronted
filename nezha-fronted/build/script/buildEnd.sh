@@ -20,7 +20,7 @@ echo 'start create zip...'
 
 #find ./ * -exec touch -t $(date +%Y%m%d0000.00) {} \;
 
-find ./ * -exec touch -t 202104301200.00 {} \;
+#find ./ * -exec touch -t 202104301200.00 {} \;
 
 zip -rX nz-gui.zip ./* >/dev/null
 
