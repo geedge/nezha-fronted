@@ -579,6 +579,7 @@ const en = {
     usize: 'Must be number(1 - 47)',
     fileSize: 'File exceed max size', // File exceed max size.
     port: 'Invalid port',
+    special: 'Cannot contain special characters',
     url: 'Invalid URL',
     uSize: 'Must be number(1 - 47)',
     requiredIdc: 'dc is required',

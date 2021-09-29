@@ -569,17 +569,18 @@ export default {
               return [x, y]
             }
           })
-          if (self.pieData[0].data.length > 0) {
-            getChart(self.chartIndex).clear()
-            getChart(self.chartIndex).setOption(self.option)// 创建图表
-            self.noData = false
-          } else {
-            self.noData = true
-            self.option = chartConfig.getOption('noData')
-            getChart(self.chartIndex).clear()
-            getChart(self.chartIndex).setOption(self.option)// 创建图表
+          if (self.pieData[0]) {
+            if (self.pieData[0].data.length > 0) {
+              getChart(self.chartIndex).clear()
+              getChart(self.chartIndex).setOption(self.option)// 创建图表
+              self.noData = false
+            } else {
+              self.noData = true
+              self.option = chartConfig.getOption('noData')
+              getChart(self.chartIndex).clear()
+              getChart(self.chartIndex).setOption(self.option)// 创建图表
+            }
           }
-
           self.$refs['localLoading' + self.chartIndex].endLoading()
           self.firstShow = true // 展示操作按键
         }, 100)
