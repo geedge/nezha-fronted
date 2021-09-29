@@ -147,9 +147,6 @@
                 <el-form-item :label="$t('setup.pin')" prop="pin" key="syspassword" >
                   <el-input v-model="system.pin" type="password" show-password ></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('setup.alertPath')" prop="alertPath" key="sysalertPath" >
-                  <el-input v-model="system.alertPath"></el-input>
-                </el-form-item>
                 <el-form-item :label="$t('setup.system.federation')" prop="prometheusFederationEnabled" key="sysprometheusFederationEnabled" >
                   <el-select v-model="system.prometheusFederationEnabled"  style="width: 100%" >
                     <el-option :label="$t('setup.system.federationEnable')" :value="1"></el-option>
@@ -247,7 +244,6 @@ export default {
       system: {
         username: '',
         pin: '',
-        alertPath: '',
         alertPrefix: '',
         haMode: 1,
         haVip: '',
@@ -256,7 +252,6 @@ export default {
       sysRules: {
         username: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
-        alertPath: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         haVip: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
       },
       reloadTime: 5000,

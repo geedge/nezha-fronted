@@ -829,7 +829,6 @@ export default {
     },
     defaultCollapse (val) {
       this.chartSwitch = val
-      console.log(this.chartSwitch)
     },
     save () {
       this.$refs.chartForm.validate((valid) => {
