@@ -292,7 +292,7 @@
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value" class="width310">
+                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
@@ -301,23 +301,33 @@
             <el-form-item class="form-item--half-width" v-if="editChart.type =='url' && isUrl" :label='$t("dashboard.panel.chartForm.url")' :rules="{ required: true,  message: $t('validate.required'), trigger: 'blur' }" prop="param.url">
               <el-input id="chart-box-url" v-model="editChart.param.url" maxlength="1024" show-word-limit size="small" type="textarea"></el-input>
             </el-form-item>
+            <!--Default collapse-->
+            <el-form-item class="form-item--half-width" v-if="editChart.type == 'group'" :label='$t("dashboard.panel.chartForm.collapse")' prop="param.collapse">
+              <el-switch id="chart-box-collapse"
+                         v-model="editChart.param.collapse"
+                         :active-value="true"
+                         :inactive-value="false"
+                         active-color="#ee9d3f"
+                         @change="defaultCollapse"
+                         size="small"/>
+            </el-form-item>
 
             <el-form-item  v-if="editChart.type === 'line' || editChart.type == 'bar' || editChart.type == 'stackArea' || editChart.type == 'table'" :label='"Null value"' class="form-item--half-width"  prop="nullType">
-              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate()" class="width310">
+              <el-select id="chart-box-nullType" v-model="editChart.param.nullType" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate()">
                 <el-option v-for="item in nullTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
               <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value" class="width310">
+                <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
                   <span class="panel-dropdown-label-txt" >{{item.label}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.limit")' prop="param.limit">
               <el-select v-model="editChart.param.limit" popper-class="right-box-select-top" size="small">
-                <el-option v-for="option in limitOptions" :key="option" :value="option" class="width310"></el-option>
+                <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="form-item--half-width" v-if="editChart.type == 'logs'" :label='$t("dashboard.panel.chartForm.time")' prop="param.time">
@@ -692,7 +702,8 @@ export default {
         { name: 'Endpoint', id: 2 }
       ],
       topologyDialog: false,
-      promqlType: 'metric'
+      promqlType: 'metric',
+      chartSwitch: false
       // metricStore: []
     }
   },
@@ -816,10 +827,15 @@ export default {
         })
       })
     },
+    defaultCollapse (val) {
+      this.chartSwitch = val
+      console.log(this.chartSwitch)
+    },
     save () {
       this.$refs.chartForm.validate((valid) => {
         if (valid) {
           if (this.editChart.id) { // 修改
+            this.editChart.param.collapse = this.chartSwitch
             this.$put('visual/panel/chart', this.editChart).then(response => {
               if (response.code === 200) {
                 this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
@@ -1896,8 +1912,5 @@ export default {
   .chart-box-unit .el-scrollbar{
     height: 195px;
     overflow-y: auto;
-  }
-  .width310{
-    width: 310px;
   }
 </style>

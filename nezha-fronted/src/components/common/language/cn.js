@@ -284,6 +284,7 @@ const cn = {
         remark: '描述',
         lock: '锁',
         align: '对齐方式',
+        collapse: '默认折叠',
         typeVal: {
           line: {
             label: '曲线图'

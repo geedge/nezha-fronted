@@ -300,6 +300,7 @@ const en = {
         remark: 'Description',
         lock: 'Lock',
         align: 'Align',
+        collapse: 'Default collapse',
         typeVal: {
           line: {
             label: 'Line Chart' // "曲线图"

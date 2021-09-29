@@ -300,9 +300,19 @@ export default {
     dropdownMenuShow (n) {
       this.$emit('dropmenu-change', n)
     }
+    // chartData: {
+    //   deep: true,
+    //   immediate: true,
+    //   handler (n) {
+    //     setTimeout(() => {
+    //       this.showList = n.param.collapse
+    //     },1500)
+    //   }
+    // }
   },
   mounted () {
     this.firstLoad = false
+    this.showList = this.chartData.param.collapse
   },
   beforeDestroy () {
     this.clearChart()

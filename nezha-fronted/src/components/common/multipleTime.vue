@@ -140,7 +140,7 @@
             :visible-arrow="false"
             :disabled="isPopoverDisabled"
             trigger="hover"
-            popper-class="popper-z-index"
+            popper-class="popper-z-index right-public-box-select-top right-public-box-dropdown-top"
             id="panel-calender-popover">
             <template v-if="this.searchTime&&this.searchTime.length>1">
               <el-row  :gutter="10" class="calendar-popover">
@@ -164,7 +164,7 @@
           </span>
             </div>
           </el-popover>
-          <el-dropdown-menu class="nz-dashboard-dropdown popper-z-index" slot="dropdown">
+          <el-dropdown-menu class="nz-dashboard-dropdown right-public-box-select-top right-public-box-dropdown-top popper-z-index" slot="dropdown">
             <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
             <template v-for="(item, index) in timeData" >
               <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
