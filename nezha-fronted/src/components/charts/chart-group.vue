@@ -312,7 +312,7 @@ export default {
   },
   mounted () {
     this.firstLoad = false
-    this.showList = this.chartData.param.collapse
+    this.showList = !this.chartData.param.collapse
   },
   beforeDestroy () {
     this.clearChart()
