@@ -20,7 +20,7 @@
               <el-input placeholder="" maxlength="128" show-word-limit v-model="editAssetMeta.metaKey" size="small" id="editAssetMeta-box-input-key"></el-input>
             </el-form-item>
             <el-form-item :label='$t("config.assetLabel.group")' prop="groupId">
-              <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" :popper-append-to-body="false">
+              <el-select v-model="editAssetMeta.groupId" size="small" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" :popper-append-to-body="false">
                 <el-option v-for="(item, index) in groupData" :key="index" :value="item.id" :label="item.name"></el-option>
               </el-select>
             </el-form-item>

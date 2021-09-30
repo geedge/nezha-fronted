@@ -31,7 +31,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.state')" prop="stateId">
-            <el-select v-model="editAsset.stateId" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+            <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id"></el-option>
             </el-select>
           </el-form-item>

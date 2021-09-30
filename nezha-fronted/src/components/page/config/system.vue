@@ -323,7 +323,7 @@
 <!--                  </label>-->
 <!--                </div>-->
 <!--              </div>-->
-              <el-select v-model="reset.type" multiple popper-class="right-box-select-top">
+              <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top">
                 <template v-for="item in resetOptions" >
                   <el-option :label="item.label" :value="item.value" :key="item.label"></el-option>
                 </template>
