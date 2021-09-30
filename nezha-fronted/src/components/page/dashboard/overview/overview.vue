@@ -790,7 +790,7 @@ export default {
           const bigScatter = 10
           const mediumScatter = 8
           const smallScatter = 6
-          const maxAssetTotal = dcInfos[dcInfos.length - 1].assetNum // 获取asset数量最大值
+          const maxAssetTotal = dcInfos[dcInfos.length - 1] ? dcInfos[dcInfos.length - 1].assetNum : '' // 获取asset数量最大值
 
           const bigBoundary = Number.parseInt(maxAssetTotal / 3 * 2) // 根据最大值定下大图标、中图标的阈值
           const mediumBoundary = Number.parseInt(maxAssetTotal / 3)
