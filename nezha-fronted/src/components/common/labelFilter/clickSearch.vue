@@ -379,6 +379,7 @@ export default {
   position: relative;
   padding: 5px 80px 5px 130px;
   width: calc(100vw - 333px);
+  min-height: 31px;
   box-sizing: border-box;
 
   /deep/ .el-checkbox__label {
