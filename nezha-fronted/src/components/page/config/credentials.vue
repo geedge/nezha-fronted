@@ -11,14 +11,14 @@
       @search="search"
     >
       <template v-slot:top-tool-left>
-        <div id="module-type-6" class="nz-tab-item-box" @click="toFileTab">
-          <div class="nz-tab-item ">{{$t("config.mib.mibFiles")}}</div>
-        </div>
         <div id="module-type-7"  class="nz-tab-item-box" @click="toBrowserTab"><!--v-has="'snmp_browser_view'"-->
           <div class="nz-tab-item">{{$t("config.mib.mibBrowser")}}</div>
         </div>
         <div id="module-type-8"  class="nz-tab-item-box" >
           <div class="nz-tab-item nz-tab-item-active">{{$t("config.mib.credentials")}}</div>
+        </div>
+        <div id="module-type-6" class="nz-tab-item-box" @click="toFileTab">
+          <div class="nz-tab-item ">{{$t("config.mib.mibFiles")}}</div>
         </div>
       </template>
       <template v-slot:top-tool-right>
