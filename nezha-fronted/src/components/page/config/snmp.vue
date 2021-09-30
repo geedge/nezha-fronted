@@ -19,7 +19,7 @@ export default {
   },
   data () {
     return {
-      showTab: 'file'
+      showTab: 'browser'
     }
   },
   methods: {
