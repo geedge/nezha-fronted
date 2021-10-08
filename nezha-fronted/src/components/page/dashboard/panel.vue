@@ -557,7 +557,7 @@ export default {
           } else {
             this.showPanel.id = ''
             this.filter.panelId = ''
-            this.isLoading = true
+            this.isLoading = false
           }
           this.pageObj.total = response.data.total
           if (!isInitData && (this.panel.id === '' || this.panel.id === this.showPanel.id)) {
