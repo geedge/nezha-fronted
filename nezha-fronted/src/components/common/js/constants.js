@@ -103,6 +103,16 @@ export const agent2 = {
         }
       ]
     }
+  ],
+  protocol: [
+    {
+      label: 'http',
+      value: 1
+    },
+    {
+      label: 'https',
+      value: 2
+    }
   ]
 
 }

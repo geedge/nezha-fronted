@@ -805,6 +805,7 @@ const en = {
       down: 'Down',
       host: 'Host',
       port: 'Port',
+      protocol: 'Protocol',
       agent: {
         agent: 'Agent',
         title: 'Download agent',

@@ -127,7 +127,8 @@ export default {
         id: '',
         host: '',
         port: 10090,
-        dc: { id: '', name: '', location: '' }
+        dc: { id: '', name: '', location: '' },
+        protocol: 'http'
       },
       agent: agent,
       agent2: agent2,

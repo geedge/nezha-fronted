@@ -810,6 +810,7 @@ const cn = {
       dataCenter: '数据中心',
       up: 'UP',
       down: 'Down',
+      protocol: '协议',
       agent: {
         agent: '客户端',
         title: '下载客户端',
