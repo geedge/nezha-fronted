@@ -7,7 +7,7 @@
         </transition>
       </div>
       <div class="main-container" style="padding-right: 0">
-        <div class="top-tools">
+        <div class="top-tools" style="z-index: 10">
           <div v-if="panelData.length == 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
           </div>
