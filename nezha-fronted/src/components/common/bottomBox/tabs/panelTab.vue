@@ -86,7 +86,7 @@
 
     <!--图表-->
     <div class="table-list" id="tableList">
-      <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
+      <div ref="dashboardScrollbar" id="dashboardScrollbar" style="height: 100%; overflow: auto;">
         <div class="box-content">
           <chart-list :additional-info="obj" :detail="detail" :draggable="draggable" :from="from" :is-model="from == $CONSTANTS.fromRoute.model" @on-edit-chart="editChart"
                       @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock"></chart-list>

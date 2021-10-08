@@ -79,7 +79,7 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div ref="dashboardScrollbar" :class="overScroll10?'border-t-1-de':'border-t-1-tr'" style="height: calc(100% - 20px); overflow: auto;">
+          <div ref="dashboardScrollbar" :class="overScroll10?'border-t-1-de':'border-t-1-tr'" id="dashboardScrollbar" style="height: calc(100% - 20px); overflow: auto;">
             <div class="box-content">
               <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>

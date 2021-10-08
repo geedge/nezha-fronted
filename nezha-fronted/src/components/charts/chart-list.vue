@@ -233,6 +233,7 @@
                       @on-duplicate-group-chart="duplicateChartGroup"
                       @on-add-group-item-chart="addGroupItem"
                       @moveGroupItem="moveGroupItem"
+                      @loadChartData="loadChartData"
                       :panel-id="filter.panelId"
                       :chart-data="item"
                       :dataList='dataList'

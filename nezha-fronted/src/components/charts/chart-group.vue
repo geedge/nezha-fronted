@@ -294,6 +294,8 @@ export default {
           this.$refs.listGroup.resize()
         })
       }
+      const scrollbarWrap = document.getElementById('dashboardScrollbar')
+      this.$emit('loadChartData', scrollbarWrap.scrollTop)
     }
   },
   watch: {

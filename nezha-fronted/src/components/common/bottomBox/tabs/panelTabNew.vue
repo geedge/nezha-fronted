@@ -88,7 +88,7 @@
         <div class="panel">
           <!--图表-->
           <div class="table-list" id="tableList">
-            <div ref="dashboardScrollbar" style="height: 100%; overflow: auto;">
+            <div ref="dashboardScrollbar" id="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
                 <chart-list :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
                             @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
