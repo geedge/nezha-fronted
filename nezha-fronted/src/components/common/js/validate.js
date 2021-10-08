@@ -76,7 +76,7 @@ export function nzNumber (rule, value, callback) {
 }
 
 export function noSpecialChar (rule, value, callback) {
-  const charReg = /[u4e00-u9fa5a-z0-9A-Z-_.]+$/
+  const charReg = /^[\u4e00-\u9fa5a-z0-9A-Z-_.]+$/
   setTimeout(() => {
     if (charReg.test(value)) {
       callback()
