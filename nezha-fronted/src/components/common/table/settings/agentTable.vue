@@ -47,10 +47,6 @@
             </div>
           </el-popover>
         </span>
-        <span v-else-if="item.prop === 'protocol'">
-          <span v-if="scope.row[item.prop] === 1">http</span>
-          <span v-if="scope.row[item.prop] === 2">https</span>
-        </span>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <template v-else>-</template>
       </template>

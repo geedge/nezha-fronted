@@ -107,11 +107,11 @@ export const agent2 = {
   protocol: [
     {
       label: 'http',
-      value: 1
+      value: 'http'
     },
     {
       label: 'https',
-      value: 2
+      value: 'https'
     }
   ]
 
