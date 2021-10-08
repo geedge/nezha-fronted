@@ -1569,8 +1569,9 @@ export default {
       const that = this
       setTimeout(function () {
         const itemHeight = item.height
-        // 1.元素距离页面顶部的距离
-        const mainOffsetTop = ele.offsetTop// offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
+        // 1.元素距离页面顶部的距离 + group的高度
+        const groupHeight = item.groupId ? document.getElementById('chart-' + item.groupId).offsetTop : 0
+        const mainOffsetTop = ele.offsetTop + groupHeight// offsetTop: 当前元素顶部距离最近父元素顶部的距离,和有没有滚动条没有关系。单位px，只读元素。
         // 2.元素的高度
         const mainHeight = itemHeight// ele.offsetHeight;//itemHeight;
         // 3.页面滚动的距离

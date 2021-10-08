@@ -1983,7 +1983,8 @@ export default {
     },
     chartResize () {
       if (getChart(this.chartIndex)) {
-        getChart(this.chartIndex).resize()
+        const divHeight = this.$refs.legendArea.offsetHeight
+        getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
       }
     }
   },

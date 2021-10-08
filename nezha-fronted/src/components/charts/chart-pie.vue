@@ -99,6 +99,7 @@ import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
 import chartDataList from '@/components/common/mixin/chartDataList'
+import {chartResizeTool} from "@/components/common/js/tools";
 export default {
   name: 'pieChart',
   components: {
@@ -296,7 +297,8 @@ export default {
     },
     resize (chartItem) {
       if (getChart(this.chartIndex)) {
-        getChart(this.chartIndex).resize()
+        const divHeight = this.$refs.legendArea.offsetHeight
+        getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
       }
     },
     // 设置数据, filter区分

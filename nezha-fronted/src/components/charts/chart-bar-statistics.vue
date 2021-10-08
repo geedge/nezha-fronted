@@ -98,7 +98,7 @@ import * as echarts from 'echarts'
 import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
-import {formatScientificNotation} from "@/components/common/js/tools";
+import {chartResizeTool, formatScientificNotation} from "@/components/common/js/tools";
 import chartDataList from '@/components/common/mixin/chartDataList'
 export default {
   name: 'pieChart', // 饼图 或者 柱状图的统计
@@ -301,7 +301,8 @@ export default {
     },
     resize (chartItem) {
       if (getChart(this.chartIndex)) {
-        getChart(this.chartIndex).resize()
+        const divHeight = this.$refs.legendArea.offsetHeight
+        getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
       }
     },
     // 设置数据, filter区分
