@@ -1419,6 +1419,7 @@ const en = {
       scrape_interval_placeholder: 'default global scrape interval',
       scrape_timeout: 'Scrape timeout',
       scrape_timeout_placeholder: 'default global scrape timeout',
+      protocol: 'Protocol',
       type: 'Type',
       bearer_token: 'bearer token',
       username: 'Username',

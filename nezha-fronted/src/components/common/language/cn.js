@@ -1415,6 +1415,7 @@ const cn = {
       scrape_interval_placeholder: '默认全局时间间隔',
       scrape_timeout: '超时时间',
       scrape_timeout_placeholder: '默认全局超时时间',
+      protocol: '协议',
       type: '类型',
       bearer_token: 'bearer token',
       username: '用户名',

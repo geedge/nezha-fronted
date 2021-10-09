@@ -122,7 +122,7 @@
                 </el-form-item>
                 <!--path-->
                 <el-form-item :label='$t("project.endpoint.path")' class="half-form-item" prop="configs.metrics_path">
-                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editEndpoint.configs[0].config.protocol != 'http'"></el-input>
+                  <el-input id="module-box-input-path" v-model="editEndpoint.configs[0].config.metrics_path" placeholder="" size="small" :disabled="editEndpoint.configs[0].config.protocol != 'http' && editEndpoint.configs[0].config.protocol != 'https'"></el-input>
                 </el-form-item>
                 <!--port-->
                 <el-form-item :label='$t("project.endpoint.port")' class="half-form-item" prop="configs.0.config.port" :rules="[
@@ -685,6 +685,10 @@ export default {
         {
           value: 'snmp',
           name: 'SNMP'
+        },
+        {
+          value: 'https',
+          name: 'HTTPS'
         }
       ],
       logsBasicList: [
@@ -912,7 +916,7 @@ export default {
         return
       }
       this.editEndpoint.type = type
-      if (type == 'http') {
+      if (type == 'http' || type == 'https') {
         this.editEndpoint.port = 9100
       } else {
         this.$nextTick(() => {
