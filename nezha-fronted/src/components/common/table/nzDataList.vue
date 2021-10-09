@@ -18,6 +18,17 @@
                     type="button" @click="tools.showCustomTableTitle = true">
               <i class="nz-icon-gear nz-icon"></i>
             </button>
+            <el-dropdown
+              type="primary"
+              v-if="showLayout.indexOf('detailViewSet') > -1"
+              class="margin-l-10"
+              @command="changeDetailType">
+              <i class="nz-icon nz-icon-alert-list" />
+              <el-dropdown-menu slot="dropdown" >
+                <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>
+                <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">详细</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
@@ -76,6 +87,10 @@ export default {
   },
   props: {
     from: {
+      type: String,
+      default: ''
+    },
+    detailType: {
       type: String,
       default: ''
     },
@@ -156,6 +171,9 @@ export default {
     },
     getTableData () {
       this.$emit('getTableData')
+    },
+    changeDetailType (item) {
+      this.$emit('changeDetailType', item)
     }
   },
   watch: {

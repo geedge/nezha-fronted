@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="detailType === 'list'">
     <nz-data-list
       ref="dataList"
       :api="url"
@@ -9,7 +9,10 @@
       :search-msg="searchMsg"
       :nz-table-height-offset="assetNzTableHeightOffset"
       @search="search"
+      @detailType="detailType"
+      @changeDetailType="changeDetailType"
       @getTableData="getTableData"
+      @getDetail="getDetail"
     >
       <template v-slot:top-tool-right>
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
@@ -93,7 +96,90 @@
                             @refresh="getTableData"></asset-batch-edit-box>
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-</transition>
+    </transition>
+  </div>
+  <div v-else>
+    <nzDetailView
+      :api="url"
+      :layout="dataListLayout"
+      :from="fromRoute.asset"
+      @detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      @search="searchDetail"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-right>
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          :permissions="{
+                  import: 'asset_add',
+                  export: 'asset_view'
+                }"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="asset"
+          export-url="/asset/asset/export"
+          import-url="/asset/asset/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <asset-detail
+          class="data-detail"
+          ref="dataDetail"
+          v-loading="tools.loading"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+        >
+        </asset-detail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getDetail" @keyup.enter.native="getDetail" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
+    <transition name="right-box">
+      <asset-box v-if="rightBox.show"
+                 ref="assetBox"
+                 :dc-data="dcData"
+                 :field-group-data="fieldGroupData"
+                 :from="fromRoute.asset"
+                 :obj="object"
+                 :snmp-credential-data="snmpCredentialData"
+                 :state-data="stateData"
+                 :type-data="typeData"
+                 @close="closeRightBox"
+                 @refresh="getTableData"></asset-box>
+    </transition>
+    <transition name="right-box">
+      <asset-batch-edit-box v-if="rightBox.batchShow"
+                            :field-group-data="fieldGroupData"
+                            :snmp-credential-data="snmpCredentialData"
+                            :state-data="stateData"
+                            @close="closeRightBox"
+                            @refresh="getTableData"></asset-batch-edit-box>
+    </transition>
+    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
+    </transition>
   </div>
 </template>
 
@@ -102,8 +188,11 @@ import deleteButton from '@/components/common/deleteButton'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
 import assetBatchEditBox from '@/components/common/rightBox/asset/assetBatchEditBox'
 import nzDataList from '@/components/common/table/nzDataList'
+import nzDetailView from '@/components/common/detailView/nzDetailView'
 import dataListMixin from '@/components/common/mixin/dataList'
+import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import assetTable from '@/components/common/table/asset/assetTable'
+import assetDetail from '@/components/common/detailView/list/asset/assetDetail'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
@@ -118,9 +207,11 @@ export default {
     assetTable,
     clickSearch,
     topToolMoreOptions,
-    alertSilenceBox
+    alertSilenceBox,
+    nzDetailView,
+    assetDetail
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'asset/asset',
@@ -130,7 +221,7 @@ export default {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       assetNzTableHeightOffset: 281, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',

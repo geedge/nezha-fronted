@@ -13,6 +13,7 @@ export default {
       pageObj: { // 分页对象
         pageNo: 1,
         pageSize: this.$CONSTANTS.defaultPageSize,
+        pages: 1,
         total: 0
       },
       /* 工具参数 */
@@ -81,6 +82,7 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
+          this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
@@ -113,12 +115,20 @@ export default {
     },
     pageNo (val) {
       this.pageObj.pageNo = val
-      this.getTableData()
+      if (this.detailType !== 'view') {
+        this.getTableData()
+      } else {
+        this.getDetail()
+      }
     },
     pageSize (val) {
       this.pageObj.pageSize = val
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      this.getTableData()
+      if (this.detailType !== 'view') {
+        this.getTableData()
+      } else {
+        this.getDetail()
+      }
     },
     add () {
       this.object = this.newObject()
