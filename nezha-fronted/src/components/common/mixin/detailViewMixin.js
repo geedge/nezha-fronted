@@ -28,6 +28,7 @@ export default {
       }
       setTimeout(() => {
         this.detailViewLoading = false
+        this.$refs.clickSearch && this.$refs.clickSearch.needMore()
       }, 100)
     },
     searchDetail (params) {

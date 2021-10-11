@@ -52,11 +52,12 @@
           <span v-else >-</span>
         </template>
         <template v-else-if="item.prop === 'pingInfo'">
-          <el-popover :content="$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="scope.row.pingInfo" placement="right" trigger="hover">
-            <div slot="reference">
-              <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}"></div>{{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
+          <div class="ping-info">
+            <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}" style="position: relative">
             </div>
-          </el-popover>
+            <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))}}</div>
+            {{scope.row.pingInfo.rtt?scope.row.pingInfo.rtt+'ms':''}}
+          </div>
         </template>
         <template v-else-if="item.prop === 'model'">{{scope.row.model ? scope.row.model.name : '-'}}</template>
         <template v-else-if="item.prop === 'parent'">
@@ -336,3 +337,35 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+  /deep/ .el-table__row{
+    td{
+      position: relative;
+    }
+  }
+.active-icon-content {
+  display: none;
+  position: absolute;
+  background: #FFF;
+  min-width: 150px;
+  border: 1px solid #EBEEF5;
+  padding: 12px;
+  z-index: 2000;
+  color: #606266;
+  line-height: 1.4;
+  text-align: justify;
+  font-size: 14px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+  left: 100%;
+  top: -60%;
+  width: auto;
+  white-space: nowrap;
+  transform: translateY(50%);
+}
+
+.ping-info:hover {
+  .active-icon-content{
+    display: block;
+  }
+}
+</style>

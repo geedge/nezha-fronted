@@ -51,7 +51,7 @@
         </top-tool-more-options>
       </template>
       <template v-slot:search >
-        <click-search ref="clickSearch" v-if="detailType === 'list'" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
+        <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
       </template>
       <template v-slot:default="slotProps">
         <asset-table
