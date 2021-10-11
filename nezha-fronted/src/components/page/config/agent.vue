@@ -49,7 +49,7 @@
           <div class="right-box-sub-title">{{$t('config.agent.agent.download')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
           <el-form-item :label="$t('config.agent.agent.osType')" class="half-form-item" prop="osType">
-            <el-select v-model="agentParam.osType" style="z-index: 9999 !important;" class="right-box-row-with-btn" popper-class="right-public-box-select-top right-public-box-dropdown-top" placeholder="">
+            <el-select v-model="agentParam.osType" class="right-box-row-with-btn" popper-class="right-public-box-select-top agent-select right-public-box-dropdown-top" placeholder="">
               <el-option v-for="item in osTypes" :key="item.name" :label="item.label" :value="item.name">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
@@ -62,14 +62,14 @@
           <div style="margin-bottom: 20px;width: 100%"></div>
 
           <el-form-item :label="$t('config.dc.dc')" class="half-form-item" prop="dc">
-            <el-select v-model="agentParam.dc" style="z-index: 9999 !important;" class="right-box-row-with-btn" popper-class="right-public-box-select-top right-public-box-dropdown-top" placeholder="">
+            <el-select v-model="agentParam.dc" class="right-box-row-with-btn" popper-class="right-public-box-select-top agent-select right-public-box-dropdown-top" placeholder="">
               <el-option v-for="item in allDc" :key="item.id" :label="item.name" :value="item.id">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('config.agent.agent.type')" class="half-form-item" prop="type">
-            <el-select v-model="agentParam.type" style="z-index: 9999 !important;" class="right-box-row-with-btn" popper-class="right-public-box-select-top right-public-box-dropdown-top" placeholder="">
+            <el-select v-model="agentParam.type" class="right-box-row-with-btn" popper-class="right-public-box-select-top agent-select right-public-box-dropdown-top" placeholder="">
               <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
