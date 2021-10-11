@@ -1,7 +1,7 @@
 <template>
   <div class="sub-box">
-      <div style="height: 60px;background: #FFFFFF;border: 1px solid #E7EAED;margin-bottom: 10px">
-
+      <div class="detail-view-right-top">
+        <detail-right-top :obj="obj" :from="from"></detail-right-top>
       </div>
       <div class="sub-list__tabs">
       <!--机柜-->
@@ -64,6 +64,7 @@ import terminalLogTab from '@/components/common/bottomBox/tabs/terminalLogTab'
 import assetTab from '@/components/common/bottomBox/tabs/assetTab'
 import { fromRoute } from '@/components/common/js/constants'
 import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
+import detailRightTop from './detailRightTop/detailRightTop'
 
 export default {
   name: 'detailViewRight',
@@ -82,7 +83,8 @@ export default {
     endpointQuery,
     panelTabNew,
     assetTab,
-    assetSubTab
+    assetSubTab,
+    'detail-right-top': detailRightTop
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -283,6 +285,12 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+  .detail-view-right-top{
+    height: 60px;
+    background: #FFFFFF;
+    border: 1px solid #E7EAED;
+    margin-bottom: 10px
+  }
   .sub-box{
     height: 100%;
     flex-direction: column;

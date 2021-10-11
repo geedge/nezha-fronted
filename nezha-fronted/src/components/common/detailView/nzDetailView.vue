@@ -14,11 +14,10 @@
             <el-dropdown
               type="primary"
               v-if="showLayout.indexOf('detailViewSet') > -1"
-              class="margin-l-5"
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
                       type="button">
-                <i class="nz-icon nz-icon-alert-list" />
+                <i class="nz-icon nz-icon-guzhangshuju" />
               </button>
               <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>
