@@ -14,12 +14,15 @@
             <el-dropdown
               type="primary"
               v-if="showLayout.indexOf('detailViewSet') > -1"
-              class="margin-l-10"
+              class="margin-l-5"
               @command="changeDetailType">
-              <i class="nz-icon nz-icon-alert-list" />
+              <button class="top-tool-btn table-column-setting"
+                      type="button">
+                <i class="nz-icon nz-icon-alert-list" />
+              </button>
               <el-dropdown-menu slot="dropdown" >
-                <el-dropdown-item :command="'list'">列表</el-dropdown-item>
-                <el-dropdown-item :command="'view'">详细</el-dropdown-item>
+                <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>
+                <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">详细</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -33,6 +36,16 @@
               <slot name="pagination"></slot>
             </div>
           </div>
+          <div class="nz-detail-view-right">
+            <detailViewRight
+              @getTableData = 'getDetail'
+              ref="detailViewRight"
+              v-if="detailViewRightObj"
+              :from="from"
+              :obj="detailViewRightObj"
+              :target-tab="'panelTab'"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -42,11 +55,12 @@
 <script>
 import { fromRoute } from '@/components/common/js/constants'
 import { bottomBoxWindow } from '@/components/common/js/tools'
+import detailViewRight from '@/components/common/detailView/view/detailViewRight'
 
 export default {
   name: 'nzDataList',
   components: {
-
+    detailViewRight
   },
   props: {
     from: {
@@ -72,7 +86,8 @@ export default {
     },
     nzTableHeightOffset: Number,
     searchRight: Boolean,
-    operationRecord: Boolean
+    operationRecord: Boolean,
+    detailViewRightObj: {}
   },
   computed: {
     nzTableHeight () {
@@ -158,4 +173,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   @import './detailView.scss';
+  .active{
+    color: #fa901c;
+  }
 </style>

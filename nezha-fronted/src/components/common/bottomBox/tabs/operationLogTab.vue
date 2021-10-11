@@ -1,5 +1,6 @@
 <template>
-  <nz-bottom-data-list
+ <nz-bottom-data-list
+      :showTitle='showTitle'
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"
     :layout="['searchInput', 'elementSet']"
@@ -34,9 +35,10 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import operationLogTable from '@/components/common/table/settings/operationLogTable'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 export default {
   name: 'operationLogTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     operationLogTable

@@ -1,5 +1,6 @@
 <template>
-  <nz-bottom-data-list
+ <nz-bottom-data-list
+      :showTitle='showTitle'
     :custom-tool="true"
     :layout="[]"
     :show-pagination="false"
@@ -35,10 +36,11 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import axios from 'axios'
 import bus from '@/libs/bus'
 import { fromRoute } from '@/components/common/js/constants'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'logBottomTab',
-  mixins: [subDataListMixin],
+  mixins: [subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     logTab
@@ -122,7 +124,7 @@ export default {
     } else if (this.from === fromRoute.asset) {
       this.expressions = [`{asset="${this.obj.name}"}`]
     }
-    this.$nextTick(()=>{
+    this.$nextTick(() => {
       this.queryLogData()
     })
   }

@@ -303,11 +303,16 @@ export default {
       this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
     }
     if (!this.fromBottom) {
-      this.getTableData()
+      if (this.detailType !== 'view') {
+        this.getTableData()
+      } else {
+        this.getDetail()
+      }
       this.$nextTick(() => {
         this.$refs.dataTable.$refs.dataTable.doLayout()
       })
     }
+
   },
   beforeDestroy () {
     if (this.scrollbarWrap) {

@@ -19,6 +19,11 @@
       margin-top: 10px;
     }
   }
+  .nz-detail-view-right{
+    flex: 1;
+    overflow: hidden;
+    padding-right: 10px;
+  }
   /deep/ .el-pagination .btn-next,  /deep/ .el-pagination .btn-prev {
     border: none;
     background: none;
@@ -55,3 +60,4 @@
 
   width: calc(100% - 20px);
 }
+

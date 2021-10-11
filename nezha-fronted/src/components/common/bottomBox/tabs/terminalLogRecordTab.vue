@@ -1,5 +1,6 @@
 <template>
-  <nz-bottom-data-list
+ <nz-bottom-data-list
+    :showTitle='showTitle'
     :layout="[]"
     :tabs="tabs"
     @changeTab="changeTab"
@@ -36,10 +37,11 @@ import bus from '../../../../libs/bus'
 import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'terminalLogReplayTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList
   },

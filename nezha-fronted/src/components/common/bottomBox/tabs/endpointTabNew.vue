@@ -1,6 +1,7 @@
 <template>
   <div class="full-width-height">
-    <nz-bottom-data-list
+   <nz-bottom-data-list
+      :showTitle='showTitle'
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
@@ -53,10 +54,11 @@ import endpointTable from '@/components/common/table/settings/endpointTable'
 import EditEndpointBoxNew from '@/components/common/rightBox/editEndpointBoxNew'
 import { fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'terminalLogTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     endpointTable,

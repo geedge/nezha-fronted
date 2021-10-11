@@ -1,6 +1,9 @@
 export default {
   props: {
-    fromListObj:{}
+    showTitle: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {

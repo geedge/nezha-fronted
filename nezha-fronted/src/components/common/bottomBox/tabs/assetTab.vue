@@ -1,6 +1,7 @@
 <template>
   <div>
     <nz-bottom-data-list
+      :showTitle='showTitle'
       :api="url"
       style="height: 100%"
       :custom-table-title.sync="tools.customTableTitle"
@@ -60,10 +61,11 @@ import assetTable from '@/components/common/table/asset/assetTable'
 import assetBox from '@/components/common/rightBox/asset/assetBox'
 import { fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'assetTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     assetTable,

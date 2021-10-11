@@ -1,6 +1,6 @@
 <template>
   <div class="full-width-height">
-    <nz-bottom-data-list
+   <nz-bottom-data-lis
       :layout="[]"
       :tabs="tabs"
       :targetTab="targetTab"
@@ -25,7 +25,7 @@
           </transition>
         </div>
       </template>
-    </nz-bottom-data-list>
+    </nz-bottom-data-lis>
   </div>
 </template>
 

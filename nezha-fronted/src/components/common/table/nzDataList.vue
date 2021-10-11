@@ -21,9 +21,12 @@
             <el-dropdown
               type="primary"
               v-if="showLayout.indexOf('detailViewSet') > -1"
-              class="margin-l-10"
+              class="margin-l-5"
               @command="changeDetailType">
-              <i class="nz-icon nz-icon-alert-list" />
+              <button class="top-tool-btn table-column-setting"
+                      type="button">
+                <i class="nz-icon nz-icon-alert-list" />
+              </button>
               <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>
                 <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">详细</el-dropdown-item>
@@ -191,3 +194,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .active{
+    color: #fa901c;
+  }
+</style>

@@ -97,12 +97,15 @@ import bus from '../../../../libs/bus'
 import alertMessageTable from '@/components/common/table/alert/alertMessageTable.vue'
 import deleteButton from '../../deleteButton'
 import { fromRoute } from '@/components/common/js/constants'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
+
 export default {
   name: 'alertMessageTab',
   components: {
     alertMessageTable,
     deleteButton
   },
+  mixin: [detailViewRightMixin],
   props: {
     from: String, // 来自哪个主页面，有："asset"、"alertRule"
     obj: Object // 关联的实体对象

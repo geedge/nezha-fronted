@@ -1,5 +1,6 @@
 <template>
-  <nz-bottom-data-list
+ <nz-bottom-data-list
+    :showTitle='showTitle'
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"
     :layout="['searchInput', 'elementSet']"
@@ -36,16 +37,21 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import terminalLogTable from '@/components/common/table/settings/terminalLogTable'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'terminalLogTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     terminalLogTable
   },
   props: {
-    obj: Object
+    obj: Object,
+    showTitle: {
+      type: Boolean,
+      default: true
+    }
   },
   watch: {
     obj (n) {

@@ -1,12 +1,14 @@
 <template>
   <div>
     <nz-bottom-data-list
+      :showTitle='showTitle'
       :api="url"
       style="height: 100%"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
       :tabs="tabs"
+      :show-title="showTtile"
       @search="search"
       @changeTab="changeTab"
     >
@@ -68,13 +70,14 @@
 import cabinetBox from '../../rightBox/setting/cabinetBox'
 import deleteButton from '../../deleteButton'
 import dataListMixin from '@/components/common/mixin/dataList'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import cabinetTable from '@/components/common/table/settings/cabinetTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 export default {
   name: 'cabinetTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     'cabinet-box': cabinetBox,

@@ -158,6 +158,7 @@ import exportXLSX from '../../exportXLSX'
 import bus from '@/libs/bus'
 import deleteButton from '../../deleteButton'
 import { fromRoute } from '@/components/common/js/constants'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 export default {
   name: 'endpointTab',
   components: {
@@ -168,6 +169,7 @@ export default {
     obj: Object, // 关联的实体对象
     from: { type: String }
   },
+  mixin: [detailViewRightMixin],
   data () {
     return {
       fromRoute: fromRoute,

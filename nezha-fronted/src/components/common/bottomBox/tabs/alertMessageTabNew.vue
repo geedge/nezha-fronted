@@ -1,6 +1,7 @@
 <template>
   <div class="full-width-height">
     <nz-bottom-data-list
+      :showTitle='showTitle'
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"
@@ -93,10 +94,11 @@ import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 
 export default {
   name: 'alertMessageTab',
-  mixins: [dataListMixin, subDataListMixin],
+  mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
   components: {
     nzBottomDataList,
     alertMessageTable,

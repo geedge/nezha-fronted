@@ -1,0 +1,334 @@
+<template>
+  <div class="sub-box">
+      <div style="height: 60px;background: #FFFFFF;border: 1px solid #E7EAED;margin-bottom: 10px">
+
+      </div>
+      <div class="sub-list__tabs">
+      <!--机柜-->
+      <cabinet-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
+      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.dc.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+      <!--告警信息-->
+      <alert-message-tab :showTitle="false" v-if="((from === fromRoute.alertRule || from === fromRoute.asset || from === fromRoute.endpoint || from === fromRoute.project ) && targetTab === 'alertMessage')" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></alert-message-tab>
+      <!--asset页的endpoint列表-->
+      <endpoint-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === fromRoute.endpoint" v-show="subResizeShow" :from="from" :obj="obj" @changeTab="changeTab"></endpoint-tab>
+
+      <!--terminal-log的记录和回放-->
+      <terminal-log-cmd-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'cmdTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.cmd" @changeTab="changeTab"></terminal-log-cmd-tab>
+      <terminal-log-record-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'recordTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.record" @changeTab="changeTab"></terminal-log-record-tab>
+      <terminal-log-monitor-tab :showTitle="false" v-if="from === fromRoute.terminalLog && targetTab === 'monitorTab'" :from="from" :obj="obj" :tabs="tabs.terminalLog.monitor" @changeTab="changeTab" @exit="closeSubList"></terminal-log-monitor-tab>
+
+      <asset-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'asset'" :tabs="tabs.dc.asset" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
+
+      <!--user列表的两个日志-->
+      <operation-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'operationLogTab'" :from="from" :obj="obj" :tabs="tabs.user.operationLog" @changeTab="changeTab"></operation-log-tab>
+      <terminal-log-tab :showTitle="false" v-if="from === fromRoute.user && targetTab === 'terminalLogTab'" :from="from" :obj="obj" :tabs="tabs.user.terminalLog" @changeTab="changeTab"></terminal-log-tab>
+      <!-- asset列表的3个 -->
+      <panel-tab-new @getTableData="getTableData" :paramsType="'asset'" :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.panel" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'alertMessageTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessage" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+      <endpointTabNew :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'endpointTab'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.endpoint" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+      <log-bottom-tab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'log'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.log" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
+      <assetSubTab :showTitle="false" v-if="from === fromRoute.asset && targetTab === 'assetSubTab' && obj.childrenNum" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.asset.alertMessageSub" :targetTab="targetTab" @changeTab="changeTab"></assetSubTab>
+      <!--module列表的tab-->
+      <endpointTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'endpoint'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab="targetTab" @changeTab="changeTab"></endpointTabNew>
+      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.module && targetTab === 'moduleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+      <panel-tab-new @getTableData="getTableData" :paramsType="'module'" :showTitle="false" v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+      <!--endpoint列表的tab-->
+      <panel-tab-new :showTitle="false" v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :paramsType="'endpoint'" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab" @getTableData="getTableData"></panel-tab-new>
+      <endpointQuery :showTitle="false" v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></endpointQuery>
+      <log-bottom-tab :showTitle="false" v-if="from === fromRoute.endpoint && targetTab === 'log' && hasLogConfig" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
+      <alertMessageTabNew  :showTitle="false" v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+      <!--chartTemp的Tab-->
+      <panel-tab-new @getTableData="getTableData"  :paramsType="'template'" :showTitle="false" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
+      <!--alertRule Tab-->
+      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+      <!--model 下滑-->
+      <asset-tab :showTitle="false" v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
+    </div>
+  </div>
+</template>
+
+<script>
+import cabinetTab from '@/components/common/bottomBox/tabs/cabinetTab'
+import alertMessageTab from '@/components/common/bottomBox/tabs/alertMessageTab'
+import alertMessageTabNew from '@/components/common/bottomBox/tabs/alertMessageTabNew'
+import assetSubTab from '@/components/common/bottomBox/tabs/assetSubTab'
+import endpointQuery from '@/components/common/bottomBox/tabs/endpointQuery'
+import endpointTab from '@/components/common/bottomBox/tabs/endpointTab'
+import endpointTabNew from '@/components/common/bottomBox/tabs/endpointTabNew'
+import panelTabNew from '@/components/common/bottomBox/tabs/panelTabNew'
+import terminalLogRecordTab from '@/components/common/bottomBox/tabs/terminalLogRecordTab'
+import terminalLogMonitorTab from '@/components/common/bottomBox/tabs/terminalLogMonitorTab'
+import terminalLogCMDTab from '@/components/common/bottomBox/tabs/terminalLogCMDTab'
+import operationLogTab from '@/components/common/bottomBox/tabs/operationLogTab'
+import terminalLogTab from '@/components/common/bottomBox/tabs/terminalLogTab'
+import assetTab from '@/components/common/bottomBox/tabs/assetTab'
+import { fromRoute } from '@/components/common/js/constants'
+import LogBottomTab from '@/components/common/bottomBox/tabs/logBottomTab'
+
+export default {
+  name: 'detailViewRight',
+  components: {
+    LogBottomTab,
+    cabinetTab,
+    alertMessageTab,
+    endpointTab,
+    terminalLogRecordTab,
+    terminalLogMonitorTab,
+    operationLogTab,
+    terminalLogTab,
+    'terminal-log-cmd-tab': terminalLogCMDTab,
+    endpointTabNew,
+    alertMessageTabNew,
+    endpointQuery,
+    panelTabNew,
+    assetTab,
+    assetSubTab
+  },
+  props: {
+    isFullScreen: Boolean, // 是否全屏
+    subResizeShow: {
+      type: Boolean,
+      default: true
+    }, // resize时，用v-show="subResizeShow"控制页面内容是否显示
+    obj: Object, // 关联的实体对象
+    from: String, // 来自哪个页面
+    tabList: Array, // 动态页签列表
+    targetTab: String // 展示哪个页签
+  },
+  watch: {
+    obj: {
+      immediate: true,
+      handler (n) {
+        console.log(n)
+        if ((this.from === fromRoute.asset) && n) {
+          const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
+          if (n.childrenNum) {
+            if (!this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
+              this.tabs.asset.panel.push(assetSub)
+              this.tabs.asset.alertMessage.push(assetSub)
+              this.tabs.asset.endpoint.push(assetSub)
+              this.tabs.asset.log.push(assetSub)
+            }
+          } else if (this.tabs.asset.panel.find(item => item.prop === assetSub.prop)) {
+            this.tabs.asset.panel = this.tabs.asset.panel.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.alertMessage = this.tabs.asset.alertMessage.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.endpoint = this.tabs.asset.endpoint.filter(item => item.prop !== assetSub.prop)
+            this.tabs.asset.log = this.tabs.asset.log.filter(item => item.prop !== assetSub.prop)
+          }
+        }
+      }
+    }
+  },
+  data () {
+    return {
+      fromRoute: fromRoute,
+      tabs: {
+        terminalLog: {
+          monitor: [
+            { prop: 'monitorTab', name: this.$t('config.terminallog.monitor.monitor'), active: true }
+          ],
+          cmd: [
+            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: true },
+            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: false }
+          ],
+          record: [
+            { prop: 'cmdTab', name: this.$t('config.terminallog.cmd.cmd'), active: false },
+            { prop: 'recordTab', name: this.$t('config.terminallog.record.record'), active: true }
+          ]
+        },
+        user: {
+          operationLog: [
+            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: true },
+            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: false }
+          ],
+          terminalLog: [
+            { prop: 'operationLogTab', name: this.$t('config.operationlog.operationlog'), active: false },
+            { prop: 'terminalLogTab', name: this.$t('config.terminallog.terminallog'), active: true }
+          ]
+          // module tab
+        },
+        asset: {
+          panel: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: true },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false }
+          ],
+          alertMessage: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false }
+          ],
+          endpoint: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: true },
+            { prop: 'log', name: 'Log', active: false }
+          ],
+          log: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: true }
+          ],
+          alertMessageSub: [
+            { prop: 'panelTab', name: this.$t('overall.detail'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false },
+            { prop: 'endpointTab', name: 'Endpoint', active: false },
+            { prop: 'log', name: 'Log', active: false },
+            { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: true }
+          ]
+        },
+        module: {
+          moduleTabTitle: [
+            // { prop: 'panel', name: 'Detail' },
+            { prop: 'endpoint', name: this.$t('asset.endpoint') },
+            { prop: 'moduleAlertMessage', name: this.$t('overall.alert') }
+          ]
+        },
+        endpoint: {
+          endpointTabTitle: [
+            { prop: 'panelTab', name: this.$t('overall.detail') },
+            { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
+            { prop: 'endpointQuery', name: 'Metrics' },
+            { prop: 'log', name: 'Log' }
+          ]
+        },
+        chartTemp: {
+          chartTempTabTitle: [
+            { prop: 'panel', name: this.$t('overall.tempPrev') }
+          ]
+        },
+        alertRule: {
+          alertRule: [
+            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') }
+          ]
+        },
+        model: [
+          { prop: 'asset', name: this.$t('asset.assets'), active: true }
+        ],
+        dc: {
+          cabinet: [
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: true },
+            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
+          ],
+          asset: [
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
+            { prop: 'asset', name: this.$t('asset.assets'), active: true },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: false }
+          ],
+          alertMessage: [
+            { prop: 'cabinet', name: this.$t('config.dc.cabinets'), active: false },
+            { prop: 'asset', name: this.$t('asset.assets'), active: false },
+            { prop: 'alertMessageTab', name: this.$t('overall.alert'), active: true }
+          ]
+        }
+
+      }
+    }
+  },
+  computed: {
+    hasLogConfig () {
+      const config = this.obj.configs.find(c => c.type === 'logs')
+      return config && config.enable === 1
+    },
+    endpointTabs () {
+      const config = this.obj.configs.find(c => c.type === 'logs')
+      const hasLog = config && config.enable === 1
+      const tabs = [
+        { prop: 'panelTab', name: this.$t('overall.detail') },
+        { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
+        { prop: 'endpointQuery', name: 'Metrics' }
+      ]
+      if (hasLog) {
+        tabs.push({ prop: 'log', name: 'Log' })
+      }
+      return tabs
+    }
+  },
+  methods: {
+    exitFullScreen () {
+      this.$emit('exitFullScreen')
+      this.$nextTick(() => { this.afterResize() })
+    },
+    fullScreen () {
+      this.$emit('fullScreen')
+      this.$nextTick(() => { this.afterResize() })
+    },
+    closeSubList () {
+      this.$emit('closeSubList')
+    },
+    listResize (e) {
+      this.$emit('listResize', e)
+      this.$nextTick(() => { this.afterResize() })
+    },
+    changeTab (tab) {
+      this.targetTab = tab
+    },
+    afterResize () {
+      if (this.from === this.fromRoute.endpoint && this.targetTab === 'endpointQuery') {
+        this.$refs.endpointQuery.tableReload()
+      } else if (this.from === this.fromRoute.terminalLog && this.targetTab === 'record') {
+        setTimeout(() => {
+          this.$refs.reminalLogRecordTab.consoleResize()
+        }, 600)
+      }
+    },
+    getTableData () {
+      this.$emit('getTableData')
+    }
+  }
+}
+</script>
+<style scoped lang="scss">
+  .sub-box{
+    height: 100%;
+    flex-direction: column;
+  }
+  .sub-list__tabs {
+    flex: 1;
+    background-color: white;
+    height: calc(100% - 82px);
+    border: 1px solid #E7EAED;
+    &>div {
+      height: 100%;
+      &>.nz-table2 {
+        height: calc(100% - 92px);
+        padding: 20px 20px 0;
+      }
+    }
+    .chart-list{
+      .nz-table2 {
+        box-sizing: border-box;
+        padding: 0;
+      }
+    }
+  }
+  /deep/ .sub-container{
+    height: calc(100% - 45px);
+    position: relative;
+  }
+  .sub-box /deep/ .top-tools.top-tools--sub{
+    border: none;
+    padding: 0 15px 0px 0px;
+    margin-right: 15px;
+    margin-left: 20px;
+    border-bottom: 1px solid #E7EAED;
+  }
+  .sub-box /deep/ .list-width {
+    padding: 0;
+  }
+  .sub-box /deep/ .nz-table2{
+    padding: 20px;
+    height: 100%;
+  }
+  .sub-box /deep/ .table-list{
+    padding: 0;
+    height: 100%;
+  }
+  .sub-box /deep/ .pagination-bottom {
+    bottom: -3px;
+  }
+</style>

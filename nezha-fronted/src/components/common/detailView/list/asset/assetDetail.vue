@@ -1,6 +1,6 @@
 <template>
   <ul class="detail-row-box">
-    <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)">
+    <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
       <div class="detail-row-info">
         <div class="asset-manageIp">
           <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
@@ -23,9 +23,12 @@ import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 export default {
   name: 'assetDetail',
   mixins: [detailViewLeftMixin],
+  props: {
+    detailViewRightObj: {}
+  },
   methods: {
     detailViewRightShow (item) {
-      this.$emit('detailViewRightShow')
+      this.$emit('detailViewRightShow', item)
     }
   }
 }
@@ -67,5 +70,8 @@ export default {
       color: #999999;
       font-weight: 400;
     }
+  }
+  .selected{
+    background: #FFFBF6;
   }
 </style>

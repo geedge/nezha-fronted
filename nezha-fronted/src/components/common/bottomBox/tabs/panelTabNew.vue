@@ -1,6 +1,7 @@
 <template>
   <div class="full-width-height chart-list">
-    <nz-bottom-data-list
+   <nz-bottom-data-list
+      :showTitle='showTitle'
       :layout="[]"
       :tabs="tabs"
       :targetTab="targetTab"
@@ -118,9 +119,10 @@ import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 export default {
   name: 'panelTabNew',
-  mixins: [subDataListMixin],
+  mixins: [subDataListMixin, detailViewRightMixin],
   props: {
     from: String,
     obj: Object,

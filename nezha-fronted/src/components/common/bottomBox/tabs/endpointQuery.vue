@@ -1,6 +1,7 @@
 <template>
   <div class="full-width-height">
-    <nz-bottom-data-list
+   <nz-bottom-data-list
+      :showTitle='showTitle'
       :api="url"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
@@ -70,9 +71,10 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import endpointQueryTab from '@/components/common/table/special/endpointQueryTab'
 import bus from '@/libs/bus'
+import detailViewRightMixin from '@/components/common/mixin/detailViewRightMixin'
 export default {
   name: 'endpointTab',
-  mixins: [subDataListMixin],
+  mixins: [subDataListMixin, detailViewRightMixin],
   props: {
     from: {}
   },

@@ -1,6 +1,8 @@
 <template>
-  <div v-if="detailType === 'list'">
+  <div>
     <nz-data-list
+      v-loading="detailViewLoading"
+      v-show="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -9,7 +11,7 @@
       :search-msg="searchMsg"
       :nz-table-height-offset="assetNzTableHeightOffset"
       @search="search"
-      @detailType="detailType"
+      :detailType="detailType"
       @changeDetailType="changeDetailType"
       @getTableData="getTableData"
       @getDetail="getDetail"
@@ -48,8 +50,8 @@
           </template>
         </top-tool-more-options>
       </template>
-      <template v-slot:search>
-        <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
+      <template v-slot:search >
+        <click-search ref="clickSearch" v-if="detailType === 'list'" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
       </template>
       <template v-slot:default="slotProps">
         <asset-table
@@ -74,36 +76,13 @@
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
-    <transition name="right-box">
-      <asset-box v-if="rightBox.show"
-                 ref="assetBox"
-                 :dc-data="dcData"
-                 :field-group-data="fieldGroupData"
-                 :from="fromRoute.asset"
-                 :obj="object"
-                 :snmp-credential-data="snmpCredentialData"
-                 :state-data="stateData"
-                 :type-data="typeData"
-                 @close="closeRightBox"
-                 @refresh="getTableData"></asset-box>
-    </transition>
-    <transition name="right-box">
-      <asset-batch-edit-box v-if="rightBox.batchShow"
-                            :field-group-data="fieldGroupData"
-                            :snmp-credential-data="snmpCredentialData"
-                            :state-data="stateData"
-                            @close="closeRightBox"
-                            @refresh="getTableData"></asset-batch-edit-box>
-    </transition>
-    <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
-    </transition>
-  </div>
-  <div v-else>
     <nzDetailView
+      v-loading="detailViewLoading"
+      v-show="detailType !== 'list'"
       :api="url"
       :layout="dataListLayout"
       :from="fromRoute.asset"
-      @detailType="detailType"
+      :detailType="detailType"
       :detailViewRightObj="detailViewRightObj"
       @search="searchDetail"
       @changeDetailType="changeDetailType"
@@ -134,6 +113,7 @@
           class="data-detail"
           ref="dataDetail"
           v-loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
           @detailViewRightShow = 'detailViewRightShow'

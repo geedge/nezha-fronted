@@ -3,8 +3,12 @@ export default {
   data () {
     return {
       detailType: 'list',
-      detailViewRightObj: {}
+      detailViewRightObj: '',
+      detailViewLoading: false
     }
+  },
+  created () {
+    this.detailType = localStorage.getItem('detail-view-' + this.tableId) || 'list'
   },
   methods: {
     changeDetailType (flag) {
@@ -12,12 +16,19 @@ export default {
         return
       }
       this.detailType = flag
+      localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       this.pageObj.pageNo = 1
+      this.detailViewLoading = true
       if (flag === 'list') {
+        this.searchLabel = {}
+        this.searchCheckBox = {}
         this.getTableData()
       } else {
         this.getDetail()
       }
+      setTimeout(() => {
+        this.detailViewLoading = false
+      }, 100)
     },
     searchDetail (params) {
       this.getDetail()
@@ -25,7 +36,7 @@ export default {
     getDetail () {
       const params = {
         pageNo: this.pageObj.pageNo,
-        pageSize: 50
+        pageSize: this.pageObj.pageSize
       }
       this.tools.loading = true
       this.$get(this.url, { ...params }).then(response => {
