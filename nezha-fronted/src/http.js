@@ -47,9 +47,9 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
-    if (licenceErrorCode.indexOf(response.data.code) !== -1) {
+    if (licenceErrorCode.indexOf(response.data.code) !== -1 && window.location.href.indexOf('login') !== -1) {
       window.location.href = '/'
-    } else if (response.status === 200) {
+    } else if (response.status === 200 && window.location.href.indexOf('login') !== -1) {
       if (accountErrorCode.indexOf(response.data.code) !== -1) {
         window.location.href = '/'
       }
