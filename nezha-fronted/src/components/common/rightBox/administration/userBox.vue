@@ -52,6 +52,21 @@
           <el-form-item :label="$t('config.user.mobile')" prop="mobile">
             <el-input id="account-input-mobile" v-model="editUser.mobile" maxlength="64" show-word-limit placeholder="" size="small" type="text"></el-input>
           </el-form-item>
+          <!--language-->
+          <el-form-item :label="$t('config.user.language')" prop="lang">
+            <el-select id="account-input-language"
+                       class="right-box__select"
+                       v-model="editUser.lang"
+                       clearable
+                       collapse-tags
+                       placeholder=""
+                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       size="small">
+              <template v-for="item in languageList">
+                <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </template>
+            </el-select>
+          </el-form-item>
           <!--roles-->
           <el-form-item :label="$t('config.user.roles')" prop="roleIds">
             <el-select id="account-input-roleIds"
@@ -171,6 +186,10 @@ export default {
         { value: 0, label: this.$t('config.user.disable') },
         { value: 1, label: this.$t('config.user.enableMfa') },
         { value: 2, label: this.$t('config.user.forceEnable') }
+      ],
+      languageList: [
+        { value: 'en', label: 'English' },
+        { value: 'cn', label: '简体中文' }
       ]
     }
   },

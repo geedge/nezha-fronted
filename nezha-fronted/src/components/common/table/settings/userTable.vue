@@ -145,6 +145,11 @@ export default {
           show: true,
           width: 150
         }, {
+          label: this.$t('config.user.language'),
+          prop: 'lang',
+          show: true,
+          width: 150
+        }, {
           label: this.$t('config.user.enable'),
           prop: 'status',
           show: true,
