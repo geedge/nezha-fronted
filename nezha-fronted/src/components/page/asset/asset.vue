@@ -89,23 +89,7 @@
       @changeDetailType="changeDetailType"
     >
       <template v-slot:top-tool-left>
-        <div style="display: inline-block">
-          <span>Data center :</span>
-          <span>
-            <el-dropdown
-              type="primary"
-              @command="changeDetailType">
-              <button class="top-tool-btn table-column-setting"
-                      type="button">
-
-                <i class="nz-icon nz-icon-arrow-down" />
-              </button>
-              <el-dropdown-menu slot="dropdown" >
-                <el-dropdown-item :command="[item.id,dc]" v-for="(item,index) in dcData" :key="index"><el-checkbox ></el-checkbox>{{item.name}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </span>
-        </div>
+        <detailViewTopSearch :searchDetailObj.sync="searchDetailObj" :detailSearchList="detailSearchList" @reload="searchDetailTop" />
       </template>
       <template v-slot:top-tool-right>
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
@@ -196,6 +180,7 @@ import assetDetail from '@/components/common/detailView/list/asset/assetDetail'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 
 export default {
   name: 'asset',
@@ -209,7 +194,8 @@ export default {
     topToolMoreOptions,
     alertSilenceBox,
     nzDetailView,
-    assetDetail
+    assetDetail,
+    detailViewTopSearch
   },
   mixins: [dataListMixin, detailViewMixin],
   data () {
@@ -365,6 +351,57 @@ export default {
         ping: [],
         modelIds: [],
         fields: ''
+      },
+      detailSearchList: {
+        dc: {
+          label: this.$t('overall.dc'),
+          key: 'dcIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        type: {
+          label: this.$t('overall.type'),
+          key: 'typeIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        ping: {
+          label: 'ping',
+          key: 'ping',
+          type: 'checkBox',
+          children: [
+            { key: 'Down', id: 0, name: 'Down' },
+            { key: 'Up', id: 1, name: 'Up' }
+          ],
+          show: true,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        model: {
+          label: this.$t('asset.model'),
+          key: 'modelIds',
+          type: 'dropdownCheckBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        }
+      },
+      searchDetailObj: {
+        dcIds: [],
+        typeIds: [],
+        ping: [],
+        modelIds: []
       }
     }
   },
@@ -405,6 +442,7 @@ export default {
           if (response.code === 200) {
             resolve(response.data.list.map(d => { return { ...d, value: d.id } }))
             // this.titleSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
+            // this.detailSearchList.type.children = response.data.list.map(d => { return { ...d, value: d.id } })
           }
           resolve()
         })
@@ -551,19 +589,27 @@ export default {
     // 初始化数据
     this.getModelData().then(res => {
       this.titleSearchList.model.children = res
+      this.detailSearchList.model.children = res
       this.titleSearchList.model.show = true
+      this.detailSearchList.model.show = true
     })
     this.getTypeData().then(res => {
       this.titleSearchList.type.children = res
+      this.detailSearchList.type.children = res
       this.titleSearchList.type.show = true
+      this.detailSearchList.type.show = true
     })
     this.getDcData().then(res => {
       this.titleSearchList.dc.children = res
+      this.detailSearchList.dc.children = res
       this.titleSearchList.dc.show = true
+      this.detailSearchList.dc.show = true
     })
     this.getSearchableMetaData().then(res => {
       this.titleSearchList.assetLabel.children = res
+      this.detailSearchList.assetLabel.children = res
       this.titleSearchList.assetLabel.show = true
+      this.detailSearchList.assetLabel.show = true
     })
     this.getStateData()
     this.getTypeTreeData()

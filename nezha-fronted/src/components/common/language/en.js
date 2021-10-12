@@ -162,7 +162,8 @@ const en = {
     oid: 'OID format check error',
     normal: 'Up',
     unusual: 'Down',
-    AuthenticationFailed: 'Authentication failed'
+    AuthenticationFailed: 'Authentication failed',
+    clearAllSelect: 'Clear the selection'
   },
   pageSize: '/page',
   setup: {

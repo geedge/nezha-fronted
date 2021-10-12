@@ -4,7 +4,8 @@ export default {
     return {
       detailType: 'list',
       detailViewRightObj: '',
-      detailViewLoading: false
+      detailViewLoading: false,
+      detailTimer: ''
     }
   },
   created () {
@@ -31,8 +32,43 @@ export default {
         this.$refs.clickSearch && this.$refs.clickSearch.needMore()
       }, 100)
     },
-    searchDetail (params) {
+    searchDetail (searchObj) {
+      this.searchLabel = {}
+      this.pageObj.pageNo = 1
+      for (const item in searchObj) {
+        if (typeof searchObj[item] !== 'undefined' && searchObj[item] !== null && searchObj[item] !== '') {
+          this.$set(this.searchLabel, item, searchObj[item])
+        }
+      }
+      if (this.searchDetailObj) {
+        for (const item in this.searchDetailObj) {
+          if (typeof this.searchDetailObj[item] !== 'undefined' && this.searchDetailObj[item] !== null && this.searchDetailObj[item] !== '') {
+            if (this.searchDetailObj[item].join(',') !== '') {
+              this.$set(this.searchLabel, item, this.searchDetailObj[item].join(','))
+            }
+          }
+        }
+      }
+      if (this.$refs.dataTable) {
+        this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
+      }
       this.getDetail()
+    },
+    searchDetailTop () {
+      if (!this.detailTimer) {
+        this.detailTimer = setTimeout(() => {
+          this.searchDetail()
+          clearTimeout(this.detailTimer)
+          this.detailTimer = ''
+        }, 1000)
+      } else {
+        clearTimeout(this.detailTimer)
+        this.detailTimer = setTimeout(() => {
+          this.searchDetail()
+          clearTimeout(this.detailTimer)
+          this.detailTimer = ''
+        }, 1000)
+      }
     },
     getDetail () {
       const params = {
@@ -40,7 +76,7 @@ export default {
         pageSize: this.pageObj.pageSize
       }
       this.tools.loading = true
-      this.$get(this.url, { ...params }).then(response => {
+      this.$get(this.url, { ...this.searchLabel, ...params }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
           this.tableData = response.data.list

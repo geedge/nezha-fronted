@@ -332,7 +332,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .arrow-down {
   transform: rotate(0);
   transition: all linear .2s;

@@ -157,7 +157,8 @@ const cn = {
     oid: 'OID格式校验错误',
     normal: '正常',
     unusual: '不正常',
-    AuthenticationFailed: '认证失败'
+    AuthenticationFailed: '认证失败',
+    clearAllSelect: '清除选择的内容'
   },
   setup: {
     step0: '欢迎',

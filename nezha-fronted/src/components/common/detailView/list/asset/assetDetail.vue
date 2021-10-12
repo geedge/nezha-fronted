@@ -4,15 +4,17 @@
     <ul class="detail-row-box">
       <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
         <div class="detail-row-info">
-          <div class="asset-manageIp">
+          <div class="asset-manageIp" :title="item.name">
             <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
-          <span slot="reference">
-            <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
-          </span>
+            <span slot="reference">
+              <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
+            </span>
             </el-popover>
-            {{item.manageIp}}
+            <span v-else style="display: inline-block;width: 13px">
+            </span>
+            {{item.name}}
           </div>
-          <div class="asset-name">{{item.name}}</div>
+          <div class="asset-name" :title="item.manageIp">{{item.manageIp}}</div>
         </div>
       </li>
     </ul>
@@ -135,10 +137,14 @@ export default {
   .detail-row-info{
     display: flex;
     height: 100%;
+    width: calc(100% - 15px);
     justify-content:center;
     flex-direction: column;
     > div{
       width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   .asset-manageIp{
     font-size: 16px;

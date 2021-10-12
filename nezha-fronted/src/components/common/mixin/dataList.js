@@ -1,7 +1,6 @@
 import bus from '@/libs/bus'
 import { tableSet } from '@/components/common/js/tools'
 import { fromRoute } from '@/components/common/js/constants'
-import { object } from 'cytoscape/src/is'
 export default {
   data () {
     return {
@@ -312,7 +311,6 @@ export default {
         this.$refs.dataTable.$refs.dataTable.doLayout()
       })
     }
-
   },
   beforeDestroy () {
     if (this.scrollbarWrap) {
