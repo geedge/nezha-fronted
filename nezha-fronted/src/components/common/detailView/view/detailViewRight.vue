@@ -94,10 +94,18 @@ export default {
     }, // resize时，用v-show="subResizeShow"控制页面内容是否显示
     obj: Object, // 关联的实体对象
     from: String, // 来自哪个页面
-    tabList: Array, // 动态页签列表
-    targetTab: String // 展示哪个页签
+    tabList: Array // 动态页签列表
+    // targetTab: String // 展示哪个页签
   },
   watch: {
+    from: {
+      immediate: true,
+      handler (n) {
+        if (n === fromRoute.asset) {
+          this.targetTab = 'panelTab'
+        }
+      }
+    },
     obj: {
       immediate: true,
       handler (n) {
@@ -124,6 +132,7 @@ export default {
   data () {
     return {
       fromRoute: fromRoute,
+      targetTab: '',
       tabs: {
         terminalLog: {
           monitor: [
@@ -338,5 +347,8 @@ export default {
   }
   .sub-box /deep/ .pagination-bottom {
     bottom: -3px;
+  }
+  .sub-box /deep/ .sub-list-tab{
+    cursor: pointer;
   }
 </style>

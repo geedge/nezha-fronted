@@ -1,19 +1,22 @@
 <template>
-  <ul class="detail-row-box">
-    <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
-      <div class="detail-row-info">
-        <div class="asset-manageIp">
-          <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
+  <div class="detail-left-box">
+    <div style="height:40px">123</div>
+    <ul class="detail-row-box">
+      <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
+        <div class="detail-row-info">
+          <div class="asset-manageIp">
+            <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
           <span slot="reference">
             <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
           </span>
-        </el-popover>
-          {{item.manageIp}}
+            </el-popover>
+            {{item.manageIp}}
+          </div>
+          <div class="asset-name">{{item.name}}</div>
         </div>
-        <div class="asset-name">{{item.name}}</div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -26,6 +29,85 @@ export default {
   props: {
     detailViewRightObj: {}
   },
+  data () {
+    return {
+      tableTitle: [
+        {
+          label: 'ID',
+          prop: 'id',
+          show: true,
+          width: 110,
+          sortable: 'custom'
+        }, {
+          label: this.$t('overall.name'),
+          prop: 'name',
+          show: true,
+          minWidth: 150,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.manageIp'),
+          prop: 'manageIp',
+          show: true,
+          minWidth: 140,
+          sortable: 'custom'
+        }, {
+          label: this.$t('overall.type'),
+          prop: 'type',
+          show: true,
+          minWidth: 140,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.state'),
+          prop: 'state',
+          show: true,
+          minWidth: 110,
+          sortable: 'custom'
+        }, {
+          label: this.$t('overall.dc'),
+          prop: 'dc',
+          show: true,
+          minWidth: 140,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.cabinet'),
+          prop: 'cabinet',
+          show: true,
+          minWidth: 110,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.alertNum'),
+          prop: 'alertNum',
+          show: true,
+          minWidth: 140,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.endpointNum2'),
+          prop: 'endpointNum',
+          show: true,
+          minWidth: 160,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.brand'),
+          prop: 'brand',
+          show: true,
+          minWidth: 120,
+          sortable: 'custom'
+        }, {
+          label: this.$t('asset.model'),
+          prop: 'model',
+          show: true,
+          minWidth: 110,
+          sortable: 'custom'
+        }, {
+          label: 'Talon',
+          prop: 'clientState',
+          show: true,
+          sortable: 'custom',
+          minWidth: 150
+        }
+      ]
+    }
+  },
   methods: {
     detailViewRightShow (item) {
       this.$emit('detailViewRightShow', item)
@@ -36,7 +118,7 @@ export default {
 
 <style scoped lang="scss">
   .detail-row-box{
-    /*height: 100%;*/
+    height: calc(100% - 40px);
     overflow: hidden;
     overflow-y: auto;
   }

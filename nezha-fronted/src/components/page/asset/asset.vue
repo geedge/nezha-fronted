@@ -77,16 +77,36 @@
       </template>
     </nz-data-list>
     <nzDetailView
-      v-loading="detailViewLoading"
+      v-loading="detailViewLoading || tools.loading"
       v-show="detailType !== 'list'"
       :api="url"
       :layout="dataListLayout"
       :from="fromRoute.asset"
+      :search-msg="searchMsg"
       :detailType="detailType"
       :detailViewRightObj="detailViewRightObj"
       @search="searchDetail"
       @changeDetailType="changeDetailType"
     >
+      <template v-slot:top-tool-left>
+        <div style="display: inline-block">
+          <span>Data center :</span>
+          <span>
+            <el-dropdown
+              type="primary"
+              @command="changeDetailType">
+              <button class="top-tool-btn table-column-setting"
+                      type="button">
+
+                <i class="nz-icon nz-icon-arrow-down" />
+              </button>
+              <el-dropdown-menu slot="dropdown" >
+                <el-dropdown-item :command="[item.id,dc]" v-for="(item,index) in dcData" :key="index"><el-checkbox ></el-checkbox>{{item.name}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+        </div>
+      </template>
       <template v-slot:top-tool-right>
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
