@@ -140,8 +140,8 @@ export default {
     }
   }
   .clear-all-select{
-    padding-left: 42px;
     padding: 0 20px;
+    padding-left: 42px;
     color: #0052cc;
     font-size: 12px;
   }
