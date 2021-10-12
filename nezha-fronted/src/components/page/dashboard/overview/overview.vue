@@ -1170,9 +1170,17 @@ export default {
           this.$refs.dataCenterMap.setOption({ geo: { zoom: value } })
         }
       }
+    },
+    fullScreenChange () {
+      if (document.fullscreenElement) {
+        this.isFullScreen = true
+      } else {
+        this.isFullScreen = false
+      }
     }
   },
   mounted () {
+    document.addEventListener('fullscreenchange', this.fullScreenChange)
     this.initData()
     this.querySystemState().then(() => {
       this.initDate()
@@ -1180,6 +1188,7 @@ export default {
   },
   beforeDestroy () {
     this.allProject = []
+    document.removeEventListener('fullscreenchange', this.fullScreenChange)
   },
   destroyed () {
     clearInterval(this.freshDataTimer)

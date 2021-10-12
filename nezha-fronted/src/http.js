@@ -11,6 +11,7 @@ err => Promise.reject(err)
 )
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008] // 账号锁定等
 const licenceErrorCode = [711001]
+const noJumpPath = ['#/','#/login']
 
 // 若get请求的url中带问号，则将url上的参数截取，改为对象形式传参
 axios.interceptors.request.use(
@@ -47,10 +48,10 @@ axios.interceptors.request.use(
 )
 axios.interceptors.response.use(
   response => {
-    if (licenceErrorCode.indexOf(response.data.code) !== -1) {
+    if (licenceErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
       window.location.href = '/'
     } else if (response.status === 200) {
-      if (accountErrorCode.indexOf(response.data.code) !== -1) {
+      if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
         window.location.href = '/'
       }
     }

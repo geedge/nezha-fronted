@@ -22,7 +22,7 @@
             </el-cascader-panel>
             <el-cascader-panel v-else v-show="dropDownVisible" ref="metricSelector" slot="dropdown"
                                v-model="cascaderValue" v-clickoutside="closeDropdown" v-loading="tempBoxShowLoading"
-                               :loading="loading" :props="cascaderProps" @change="logLabelChange">
+                               :loading="loading" :props="cascaderProps" @change="logLabelChange" style="margin-top: 5px;">
               <template slot-scope="{ node, data }">
                 <div :title="data.label" class="nz-cascade">
                   {{data.label}}

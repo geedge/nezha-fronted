@@ -326,6 +326,9 @@
 .dc-dropdown.right-public-box-dropdown-top,.right-public-box-select-top.right-public-box-dropdown-top {
   margin: 5px 0 !important;
 }
+.agent-select {
+  z-index: 2200 !important;
+}
 .popper__arrow {
   opacity: 0;
 }

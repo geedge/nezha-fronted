@@ -92,7 +92,7 @@
             <el-tabs v-model="activeName" v-show="metricsShow" v-if="editModule.configs[0].enable">
             <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
               <!--type-->
-              <el-form-item :label='$t("project.endpoint.type")' class="half-form-item" prop="type">
+              <el-form-item :label='$t("project.endpoint.protocol")' class="half-form-item" prop="type">
                 <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top right-box-public-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
                   <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
@@ -658,6 +658,10 @@ export default {
         {
           value: 'snmp',
           name: 'SNMP'
+        },
+        {
+          value: 'https',
+          name: 'HTTPS'
         }
       ],
       logsBasicList: [
@@ -847,7 +851,7 @@ export default {
         return
       }
       this.editModule.type = type
-      if (type !== 'http') {
+      if (type == 'snmp') {
         this.$refs.selectWalk.show()
       }
     },

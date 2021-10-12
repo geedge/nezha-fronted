@@ -159,21 +159,23 @@ export default {
           label: this.$t('profile.role'),
           prop: '',
           icon: 'nz-icon nz-icon-role profile-role'
-        },
-        {
+        }, {
           id: 2,
           label: this.$t('profile.email'),
           prop: '',
           icon: 'nz-icon nz-icon-email profile-email'
-        },
-        {
+        }, {
           id: 3,
           label: this.$t('profile.mobile'),
           prop: '',
           icon: 'nz-icon nz-icon-mobile profile-mobile'
-        },
-        {
+        }, {
           id: 4,
+          label: this.$t('config.user.language'),
+          prop: '',
+          icon: 'nz-icon nz-icon-language-change'
+        }, {
+          id: 5,
           label: this.$t('profile.source'),
           prop: '',
           icon: 'nz-icon nz-icon-laiyuan profile-laiyuan'
@@ -210,7 +212,12 @@ export default {
             this.tableProfile[0].prop = this.userList.roles[0].i18n
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
-            this.tableProfile[3].prop = this.userList.source
+            if (this.userList.lang == 'cn') {
+              this.tableProfile[3].prop = '简体中文'
+            } else {
+              this.tableProfile[3].prop = 'English'
+            }
+            this.tableProfile[4].prop = this.userList.source
             const name = this.userList.name.substr(0, 1)
             this.profileName = name
           }

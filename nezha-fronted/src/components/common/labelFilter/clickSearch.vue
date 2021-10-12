@@ -1,6 +1,6 @@
 <template>
   <div :style="{'height': height + 'px'}" class="search-box__container">
-    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" class="search-content-box">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
       <label class="search-title">{{data.label}}:</label>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
@@ -372,14 +372,16 @@ export default {
   position: fixed;
   visibility: hidden;
 }
-.search-content-box {
+.search-content-box-height.search-content-box {
+  min-height: 31px;
+}
+.search-content-box,.search-content-box-height {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   position: relative;
   padding: 5px 80px 5px 130px;
   width: calc(100vw - 333px);
-  min-height: 31px;
   box-sizing: border-box;
 
   /deep/ .el-checkbox__label {

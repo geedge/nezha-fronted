@@ -74,9 +74,9 @@ export default {
         receiver: [],
         roleIds: '',
         roles: [],
-        lang: '',
         notifications: [],
-        mfaLevel: 0
+        mfaLevel: 0,
+        lang: 'English'
       },
       tableId: 'userTable',
       searchMsg: { // 给搜索框子组件传递的信息
