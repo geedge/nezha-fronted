@@ -438,7 +438,7 @@ export default {
         }
       }
     }
-    .profile-left__center:nth-of-type(6) {
+    .profile-left__center:nth-of-type(7) {
       margin-bottom: 0;
     }
     .profile-left__center {

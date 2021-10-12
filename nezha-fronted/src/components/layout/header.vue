@@ -42,7 +42,7 @@
             <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
           </el-dropdown-item>
           <el-dropdown-item>
-            <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>中文</div>
+            <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>简体中文</div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
