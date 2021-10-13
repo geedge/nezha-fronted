@@ -16,7 +16,7 @@
                        class="right-box__select"
                        clearable
                        placeholder=""
-                       popper-class="prevent-clickoutside"
+                       popper-class="prevent-clickoutside right-box-select-top"
                        size="small"
                        value-key="chartType"
                        @change="varTypeChange">
@@ -31,7 +31,7 @@
                        v-model="editChartTemp.pid"
                        class="right-box__select" clearable
                        placeholder=""
-                       popper-class="prevent-clickoutside"
+                       popper-class="prevent-clickoutside right-box-select-top"
                        size="small"
                        value-key="chartType" >
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in chartTempArr">
