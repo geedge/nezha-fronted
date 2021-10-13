@@ -22,7 +22,7 @@
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
               <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
-                <div><el-input size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"/></div>
+                <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
                       <el-checkbox :label="item3.id">{{item3.name}}</el-checkbox>
@@ -51,10 +51,10 @@
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
               <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
-                <div><el-input size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"/></div>
+                <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
-                      <span :title="item3.name"> {{item3.name}}</span>
+                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
                       <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children">{{item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>
@@ -109,8 +109,20 @@ export default {
   },
   methods: {
     searchStrChange (val, key) {
-      this.detailSearchListCopy[key].searchStr = val
-      this.detailSearchListCopy[key].children = this.detailSearchListCopy[key].oldChildren.filter(children => children.name.indexOf(val) !== -1)
+      if (this.detailSearchListCopy[key].type === 'checkBox') {
+        this.detailSearchListCopy[key].searchStr = val
+        this.detailSearchListCopy[key].children = this.detailSearchListCopy[key].oldChildren.filter(children => children.name.indexOf(val) !== -1)
+      } else {
+        this.detailSearchListCopy[key].searchStr = val
+        const arr = []
+        this.detailSearchListCopy[key].oldChildren.forEach(item => {
+          const children = item.children.filter(children => children.name.indexOf(val) !== -1)
+          if (children && children.length) {
+            arr.push({ ...item, children: children })
+          }
+        })
+        this.detailSearchListCopy[key].children = arr
+      }
     },
     getSearchStr (oldChildren, label) {
       const arr = label.split('-')
@@ -179,6 +191,7 @@ export default {
     max-height: 300px;
     overflow-y: auto;
     .el-dropdown-menu__item{
+      background: #fff !important;
       padding: 0;
       max-width: 200px;
       overflow: hidden;
@@ -197,6 +210,22 @@ export default {
           white-space: nowrap;
         }
       }
+      .el-checkbox:hover{
+        color: #fa901c;
+        background-color: #fafafa !important;
+      }
+      .children-title-name{
+        width: calc(100% - 20px);
+        height: 36px;
+        padding-left: 20px;
+        font-size: 12px;
+        color: #909399;
+        line-height: 30px;
+      }
+    }
+    .el-dropdown-menu__item:not(.is-disabled):hover{
+      color: #606266;
+      background: #fff !important;
     }
   }
   .clear-all-select{

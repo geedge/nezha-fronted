@@ -176,6 +176,9 @@ export default {
       this.$refs.dataList.showBottomBox('alertRuleAlertMessage', alertRule)
     },
     getTableData () {
+      if (this.orderBy) {
+        this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true

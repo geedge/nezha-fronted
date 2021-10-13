@@ -46,6 +46,7 @@
 <!--                type="button" @click="batchModify">-->
 <!--          <i class="nz-icon-batch-edit nz-icon"></i>-->
 <!--        </button>-->
+
       </template>
       <template v-slot:search>
         <click-search :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"></click-search>
@@ -443,6 +444,9 @@ export default {
       }
     },
     getTableData () {
+      if (this.orderBy) {
+        this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       const params = {

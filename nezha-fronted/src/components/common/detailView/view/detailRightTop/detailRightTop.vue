@@ -2,25 +2,25 @@
   <div style="height: 100%">
     <div v-if="from === fromRoute.asset" class="detail-title-box">
       <div>
-        <span class="detail-title-key">Data center :</span> <span class="detail-title-value">{{obj.dc.name}}</span>
+        <span class="detail-title-key">Data center :</span> <span class="detail-title-value">{{obj.dc?obj.dc.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Cabinet :</span> <span class="detail-title-value">{{obj.cabinet.name}}</span>
+        <span class="detail-title-key">Cabinet :</span> <span class="detail-title-value">{{obj.cabinet?obj.cabinet.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Alert :</span> <span class="detail-title-value"><i :class="obj.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> {{obj.alertNum}}</span>
+        <span class="detail-title-key">Alert :</span> <span class="detail-title-value"><i :class="obj.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> {{obj.alertNum?obj.alertNum:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Endpoint :</span> <span class="detail-title-value"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> {{obj.endpointNum}}</span>
+        <span class="detail-title-key">Endpoint :</span> <span class="detail-title-value"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> {{obj.endpointNum?obj.endpointNum:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.brand.name}}</span>
+        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.brand?obj.brand.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.model.name}}</span>
+        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.model?obj.model.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">SN :</span> <span class="detail-title-value">{{obj.sn}}</span>
+        <span class="detail-title-key">SN :</span> <span class="detail-title-value">{{obj.sn?obj.sn:'-'}}</span>
       </div>
     </div>
   </div>

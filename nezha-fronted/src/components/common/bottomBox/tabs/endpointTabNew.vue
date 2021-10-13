@@ -112,6 +112,9 @@ export default {
   },
   methods: {
     getTableData () {
+      if (this.orderBy) {
+        this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      }
       const params = {
         ...this.searchLabel,
         pageNo: this.pageObj.pageNo,

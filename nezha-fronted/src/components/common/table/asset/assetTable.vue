@@ -4,6 +4,7 @@
     ref="dataTable"
     :data="tableData"
     :height="height"
+    :default-sort="orderBy"
     border
     @header-dragend="dragend"
     @sort-change="tableDataSort"

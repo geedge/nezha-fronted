@@ -15,11 +15,13 @@ export default {
     },
     tableId: {
       type: String
-    }
+    },
+    orderByFa: {}
   },
   data () {
     return {
-      operationWidth: '165' // 操作列宽
+      operationWidth: '165', // 操作列宽
+      orderBy: {}
     }
   },
   methods: {
@@ -79,6 +81,21 @@ export default {
         orderBy = '-' + str
       }
       this.$emit('orderBy', orderBy)
+    }
+  },
+  watch: {
+    orderByFa: {
+      immediate: true,
+      handler (n) {
+        if (n) {
+          const index = n.indexOf('-')
+          if (index !== -1) {
+            this.orderBy[n.slice(index + 1)] = 'descending'
+          } else {
+            this.orderBy[n] = 'descending'
+          }
+        }
+      }
     }
   }
 }

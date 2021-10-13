@@ -15,6 +15,7 @@ export default {
         pages: 1,
         total: 0
       },
+      orderBy: '',
       /* 工具参数 */
       tools: {
         loading: true, // 是否显示table加载动画
@@ -70,6 +71,11 @@ export default {
           this.$set(this.searchLabel, key, params[key])
         }
       }
+      if (this.orderBy) {
+        this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
+      }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       this.tools.loading = true
@@ -88,6 +94,9 @@ export default {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
             })
+          }
+          if (this.detailType === 'view') {
+            this.$refs.dataTable.$refs.dataTable.scrollTop = 0
           }
         }
       })
@@ -173,13 +182,10 @@ export default {
           this.$set(this.searchLabel, item, searchObj[item])
         }
       }
-      if (this.$refs.dataTable) {
-        this.$refs.dataTable.$refs.dataTable.bodyWrapper.scrollTop = 0
-      }
       this.getTableData()
     },
     tableDataSort (orderBy) {
-      this.$set(this.searchLabel, 'orderBy', orderBy)
+      this.orderBy = orderBy
       this.getTableData()
     },
     tableTitleReset (src, dist) {

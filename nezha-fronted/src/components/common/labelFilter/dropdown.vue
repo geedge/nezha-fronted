@@ -44,7 +44,9 @@ export default {
           n.forEach(item => {
             if (this.item.children.find(children => children.id == item)) {
               this.cascaderData.push([item])
-              this.$emit('resize', [item])
+              setTimeout(() => {
+                this.$emit('resize', [item])
+              })
             }
           })
         } else if (n && this.type === 'fields') {
@@ -52,7 +54,9 @@ export default {
           if (obj[this.item.id]) {
             obj[this.item.id].forEach(item => {
               this.cascaderData.push([item])
-              this.$emit('resize', [item])
+              setTimeout(() => {
+                this.$emit('resize', [item])
+              })
             })
           }
         }

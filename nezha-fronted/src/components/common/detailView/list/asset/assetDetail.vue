@@ -1,16 +1,21 @@
 <template>
   <div class="detail-left-box">
     <div class="order-box">
-      <el-select v-model="orderBy" placeholder="请选择">
+      <el-select v-model="orderBy" size="small" clearable placeholder="排序方式">
         <el-option
           v-for="item in tableTitle"
+          v-if="item.sortable==='custom'"
           :key="item.prop"
           :label="item.label"
           :value="item.prop">
         </el-option>
       </el-select>
+      <el-button @click="orderTypeChange" size="small" style="height: 32px;padding: 0 5px 0 5px">
+        <i class="nz-icon nz-icon-jiantou-top" v-if="orderType=='ascending'" />
+        <i class="nz-icon nz-icon-jiantou-down" v-if="orderType=='descending'" />
+      </el-button>
     </div>
-    <ul class="detail-row-box">
+    <ul class="detail-row-box" ref="dataTable">
       <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
         <div class="detail-row-info">
           <div class="asset-manageIp" :title="item.name">
@@ -37,9 +42,6 @@ import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 export default {
   name: 'assetDetail',
   mixins: [detailViewLeftMixin],
-  props: {
-    detailViewRightObj: {}
-  },
   data () {
     return {
       tableTitle: [
@@ -141,26 +143,7 @@ export default {
           show: false,
           minWidth: 120
         }
-      ],
-      orderBy: '',
-      orderType: 'ascending'
-    }
-  },
-  methods: {
-    detailViewRightShow (item) {
-      this.$emit('detailViewRightShow', item)
-    }
-  },
-  watch: {
-    orderBy: {
-      handler (n) {
-        this.$emit('orderDetail', n, this.orderType)
-      }
-    },
-    orderType: {
-      handler (n) {
-        this.$emit('orderDetail', this.orderBy, n)
-      }
+      ]
     }
   }
 }
@@ -168,9 +151,11 @@ export default {
 
 <style scoped lang="scss">
   .order-box{
+    display: flex;
     height:40px;
     padding: 0 15px;
-    line-height: 40px
+    line-height: 40px;
+    align-items: center;
   }
   .detail-row-box{
     height: calc(100% - 40px);

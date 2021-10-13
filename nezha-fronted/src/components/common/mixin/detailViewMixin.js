@@ -59,10 +59,30 @@ export default {
       setTimeout(() => {
         this.detailViewLoading = false
         this.$refs.clickSearch && this.$refs.clickSearch.needMore()
+        this.$refs.dataList.$refs.searchInput.sreach_num = 0
+        this.searchMsg.searchLabelList.forEach(searchLabel => {
+          if (this.searchLabel[searchLabel.label]) {
+            console.log(searchLabel.label, this.searchLabel[searchLabel.label])
+            this.$refs.dataList.$refs.searchInput.select_list.push({
+              ...searchLabel,
+              val: this.searchLabel[searchLabel.label]
+            })
+            this.$refs.dataList.$refs.searchInput.sreach_num++
+            this.$refs.dataList.$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
+          }
+        })
       }, 100)
     },
     detailViewRightShow (item) {
       this.detailViewRightObj = item
+    },
+    orderDetail (order, orderType) {
+      if (orderType === 'ascending') {
+        this.orderBy = order
+      } else {
+        this.orderBy = '-' + order
+      }
+      this.getTableData()
     }
   }
 }

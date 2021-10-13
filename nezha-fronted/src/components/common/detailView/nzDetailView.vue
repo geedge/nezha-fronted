@@ -20,7 +20,7 @@
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
                       type="button">
-                <i class="nz-icon nz-icon-guzhangshuju" />
+                <i class="nz-icon nz-icon-xiangxishitu" />
               </button>
               <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>

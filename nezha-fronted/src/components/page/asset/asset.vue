@@ -2,7 +2,7 @@
   <div>
     <nz-data-list
       v-loading="detailViewLoading"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -55,6 +55,7 @@
       <template v-slot:default="slotProps">
         <asset-table
           ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
@@ -115,12 +116,14 @@
       <template v-slot:nz-detail-view-list>
         <asset-detail
           class="data-detail"
-          ref="dataDetail"
+          ref="dataTable"
+          :orderByFa="orderBy"
           v-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
           @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
         >
         </asset-detail>
       </template>
@@ -256,6 +259,7 @@ export default {
       tableId: 'assetTable', // 需要分页的table的id，用于记录每页数量
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [{
+          id: 'ids',
           name: 'ID',
           type: 'input',
           label: 'ids',
@@ -264,21 +268,25 @@ export default {
           name: this.$t('overall.name'),
           type: 'input',
           label: 'name',
+          id: 'name',
           disabled: false
         }, {
           name: 'SN',
           type: 'input',
           label: 'sn',
+          id: 'sn',
           disabled: false
         }, {
           name: 'IP',
           type: 'input',
           label: 'manageIp',
+          id: 'manageIp',
           disabled: false
         }, {
           name: this.$t('asset.state'),
           type: 'assetState',
           label: 'stateIds',
+          id: 'stateIds',
           readonly: true,
           disabled: false
         }]
