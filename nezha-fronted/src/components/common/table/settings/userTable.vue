@@ -65,6 +65,10 @@
         </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else-if="item.prop === 'lastLoginTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
+        <template v-else-if="item.prop === 'lang'">
+          <span v-if="scope.row[item.prop] === 'en'">English</span>
+          <span v-else-if="scope.row[item.prop] === 'cn'">简体中文</span>
+        </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
       </template>
