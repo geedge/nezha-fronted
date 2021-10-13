@@ -39,14 +39,14 @@
             </div>
           </div>
           <div class="nz-detail-view-right">
-<!--            <detailViewRight-->
-<!--              @getTableData = 'getTableData'-->
-<!--              ref="detailViewRight"-->
-<!--              v-if="detailViewRightObj"-->
-<!--              :from="from"-->
-<!--              :obj="detailViewRightObj"-->
-<!--              :target-tab="'panelTab'"-->
-<!--            />-->
+            <detailViewRight
+              @getTableData = 'getTableData'
+              ref="detailViewRight"
+              v-if="detailViewRightObj"
+              :from="from"
+              :obj="detailViewRightObj"
+              :target-tab="'panelTab'"
+            />
           </div>
         </div>
       </div>

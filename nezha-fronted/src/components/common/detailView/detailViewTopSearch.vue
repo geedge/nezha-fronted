@@ -53,8 +53,8 @@
               <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
                 <div><el-input size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
-                      {{item3.name}}
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                      <span :title="item3.name"> {{item3.name}}</span>
                       <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children">{{item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>

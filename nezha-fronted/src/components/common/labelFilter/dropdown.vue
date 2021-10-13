@@ -10,7 +10,7 @@
       v-model="cascaderData"
       :collapse-tags="collapseTags"
       :options="item.children"
-      :props="{ multiple: true, label: 'name', value: 'id' }"
+      :props="{ multiple: true, label: 'name', value: 'id', checkStrictly: true }"
       placeholder=""
       popper-class="click-search-dropdown"
       size="mini"
@@ -31,13 +31,31 @@ export default {
       type: Boolean,
       default: false
     },
-    selectValue: {}
+    selectValue: {},
+    type: {}
   },
   watch: {
     selectValue: {
       immediate: true,
       handler (n) {
         console.log(n)
+        this.cascaderData = []
+        if (n && this.type !== 'fields') {
+          n.forEach(item => {
+            if (this.item.children.find(children => children.id == item)) {
+              this.cascaderData.push([item])
+              this.$emit('resize', [item])
+            }
+          })
+        } else if (n && this.type === 'fields') {
+          const obj = JSON.parse(n)
+          if (obj[this.item.id]) {
+            obj[this.item.id].forEach(item => {
+              this.cascaderData.push([item])
+              this.$emit('resize', [item])
+            })
+          }
+        }
       }
     }
   },

@@ -24,9 +24,11 @@
             v-show="j < data.index || data.showMore"
             :key="j"
             :selectValue="selectValue[data.key]"
+            :type="data.key"
             :ref="`${type}_${item.id}_cascader`"
             :collapse-tags="true"
             :item="item"
+            @resize="(value) => resize(value, type, item, data.key)"
             @blur="casFocus"
             @change="(value) => casChange(value, type, item, data.key)"
             @focus="casFocus"
@@ -236,13 +238,33 @@ export default {
       const inputWidth = tagWidth + this.widthConstant.dropdownCheckBox.moreNumberWidth + this.widthConstant.dropdownCheckBox.arrowDownWidth
       return { tagWidth, inputWidth, width: labelWidth + inputWidth + this.widthConstant.dropdownCheckBox.boxMargin }
     },
+    resize (value, type, item) {
+      const oldInputWidth = item.inputWidth
+      if (type) {
+        if (value.length === 0) { // 回到初始宽度
+          item.width = item.originalWidth
+          item.inputWidth = this.widthConstant.dropdownCheckBox.inputOriginalWidth
+        } else {
+          const showTag = item.children.find(c => c.id == value[0]) // 展示的tag
+          const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 12), item.labelWidth)
+          item.width = width
+          item.inputWidth = inputWidth
+        }
+      }
+      if (item.inputWidth !== oldInputWidth) {
+        this.$nextTick(() => {
+          this.$refs[`${type}_${item.id}_cascader`][0].$el.querySelector('.el-input__inner').style.width = `${item.inputWidth}px`
+          this.needMore(type, item, true)
+        })
+      }
+    },
     setEachCascWidth (value, type, item) {
       if (type) {
         if (value.length === 0) { // 回到初始宽度
           item.width = item.originalWidth
           item.inputWidth = this.widthConstant.dropdownCheckBox.inputOriginalWidth
         } else {
-          const showTag = item.children.find(c => c.id === value[0][0]) // 展示的tag
+          const showTag = item.children.find(c => c.id == value[0]) // 展示的tag
           const { tagWidth, inputWidth, width } = this.computeCascWidth(this.computeDistance(showTag.name, 12), item.labelWidth)
           item.width = width
           item.inputWidth = inputWidth

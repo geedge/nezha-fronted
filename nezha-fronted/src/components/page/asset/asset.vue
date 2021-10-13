@@ -2,7 +2,7 @@
   <div>
     <nz-data-list
       v-loading="detailViewLoading"
-      v-if="detailType === 'list'"
+      v-show="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -115,7 +115,7 @@
       <template v-slot:nz-detail-view-list>
         <asset-detail
           class="data-detail"
-          ref="dataTable"
+          ref="dataDetail"
           v-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
@@ -408,7 +408,8 @@ export default {
           width: 0,
           index: -1
         }
-      }
+      },
+      timer: ''
     }
   },
   methods: {
@@ -465,14 +466,46 @@ export default {
       })
     },
     reloadTable (obj) {
-      Object.keys(obj).forEach(key => {
-        if (typeof obj[key] === 'string') {
-          this.searchCheckBox[key] = obj[key] ? obj[key] : null
+      const params = JSON.parse(JSON.stringify(obj))
+      if (this.detailType === 'view') {
+        const obj = {}
+        params.modelIds = params.modelIdsDetail.map(item => item.split('-')[1])
+        params.fieldsDetail.forEach(item => {
+          const arr = item.split('-')
+          if (obj[arr[0]]) {
+            obj[arr[0]].push(arr[1])
+          } else {
+            obj[arr[0]] = [arr[1]]
+          }
+        })
+        params.fields = JSON.stringify(obj)
+        if (params.fields === '{}') {
+          params.fields = ''
+        }
+        delete params.modelIdsDetail
+        delete params.fieldsDetail
+      }
+      Object.keys(params).forEach(key => {
+        if (typeof params[key] === 'string') {
+          this.searchCheckBox[key] = params[key] ? params[key] : null
         } else {
-          obj[key] && obj[key].length > 0 ? this.searchCheckBox[key] = obj[key].join(',') : this.searchCheckBox[key] = null
+          params[key] && params[key].length > 0 ? this.searchCheckBox[key] = params[key].join(',') : this.searchCheckBox[key] = null
         }
       })
-      this.getTableData()
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      } else {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      }
     },
     getDcData () {
       return new Promise(resolve => {
