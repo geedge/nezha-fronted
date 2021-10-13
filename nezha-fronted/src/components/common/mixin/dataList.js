@@ -80,9 +80,10 @@ export default {
             response.data.list[i].status = response.data.list[i].status + ''
           }
           this.tableData = response.data.list
+          this.detailViewRightObj = this.tableData[0]
           this.pageObj.total = response.data.total
           this.pageObj.pages = response.data.pages
-          if (!this.scrollbarWrap) {
+          if (!this.scrollbarWrap && this.$refs.dataTable.$refs.dataTable) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
               this.toTopBtnHandler(this.scrollbarWrap)
@@ -114,20 +115,12 @@ export default {
     },
     pageNo (val) {
       this.pageObj.pageNo = val
-      if (this.detailType !== 'view') {
-        this.getTableData()
-      } else {
-        this.getDetail()
-      }
+      this.getTableData()
     },
     pageSize (val) {
       this.pageObj.pageSize = val
       localStorage.setItem('nz-pageSize-' + localStorage.getItem('nz-username') + '-' + this.tableId, val)
-      if (this.detailType !== 'view') {
-        this.getTableData()
-      } else {
-        this.getDetail()
-      }
+      this.getTableData()
     },
     add () {
       this.object = this.newObject()
@@ -169,7 +162,7 @@ export default {
     },
     dragend () {
       this.$nextTick(() => {
-        this.$refs.dataTable.$refs.dataTable.doLayout()
+        this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
       })
     },
     search (searchObj) {
@@ -302,13 +295,9 @@ export default {
       this.tools.customTableTitle = this.tools.customTableTitle.concat(arr)
     }
     if (!this.fromBottom) {
-      if (this.detailType !== 'view') {
-        this.getTableData()
-      } else {
-        this.getDetail()
-      }
+      this.getTableData()
       this.$nextTick(() => {
-        this.$refs.dataTable.$refs.dataTable.doLayout()
+        this.$refs.dataTable.$refs.dataTable && this.$refs.dataTable.$refs.dataTable.doLayout()
       })
     }
   },

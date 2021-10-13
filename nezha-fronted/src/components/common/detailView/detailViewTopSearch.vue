@@ -1,26 +1,61 @@
 <template>
   <div style="line-height: 32px;">
-    <div style="display: inline-block;margin-right: 20px" v-for="(item,index) in detailSearchListCopy" :key='index'>
-      <span class="search-title">{{item.label}}:</span>
-      <span>
+    <div style="display: inline-block;margin-right: 20px" v-for="(item,key) in detailSearchListCopy" :key='key'>
+      <span class="search-detail-title">{{item.label}} :</span>
+      <span v-if="item.type === 'checkBox'">
             <el-dropdown
+              class="detail-dropdown"
               type="primary"
               :trigger="'click'"
               :hide-on-click="false"
+              @visible-change="searchStr = detailSearchListCopy[key].searchStr"
             >
               <div>
-                <div class="detail-top-search">
-                   <span v-for="(item2,index2) in searchDetailObj[item.key]" :key="item2" class="search-value">
-                  {{item.children.find(dc=>dc.id==item2).name}}<span v-if="index2+1 !== searchDetailObj[item.key].length">,</span>
+                <div class="detail-top-search" v-if="selectValue[item.key].length">
+                   <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
+                  {{item.oldChildren.find(dc=>dc.id==item2).name}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
                 </span>
+                </div>
+                <div class="detail-top-search" style="text-align: center" v-else>
+                  All
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
               <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
-                <span @click="searchDetailObj[item.key] = []" class="clear-all-select">{{$t('overall.clearAllSelect')}}</span>
-                 <el-checkbox-group v-model="searchDetailObj[item.key]">
+                <div><el-input size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"/></div>
+                 <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
                       <el-checkbox :label="item3.id">{{item3.name}}</el-checkbox>
+                    </el-dropdown-item>
+                 </el-checkbox-group>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+      <span v-else-if="item.type === 'dropdownCheckBox'">
+            <el-dropdown
+              class="detail-dropdown"
+              type="primary"
+              :trigger="'click'"
+              :hide-on-click="false"
+              @visible-change="searchStr = detailSearchListCopy[key].searchStr"
+            >
+              <div>
+                <div class="detail-top-search" v-if="selectValue[item.key].length">
+                   <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
+                  {{getSearchStr(item.oldChildren,item2)}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
+                </span>
+                </div>
+                <div class="detail-top-search" style="text-align: center" v-else>
+                  All
+                </div>
+                <i class="nz-icon nz-icon-arrow-down search-value"/>
+              </div>
+              <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
+                <div><el-input size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"/></div>
+                 <el-checkbox-group v-model="selectValue[item.key]">
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
+                      {{item3.name}}
+                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children">{{item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -60,13 +95,28 @@ export default {
         }
       }
     },
-    searchDetailObj: {
+    selectValue: {
       type: Object
     }
   },
+  computed: {
+  },
   data () {
     return {
-      detailSearchListCopy: {}
+      detailSearchListCopy: {},
+      searchStr: ''
+    }
+  },
+  methods: {
+    searchStrChange (val, key) {
+      this.detailSearchListCopy[key].searchStr = val
+      this.detailSearchListCopy[key].children = this.detailSearchListCopy[key].oldChildren.filter(children => children.name.indexOf(val) !== -1)
+    },
+    getSearchStr (oldChildren, label) {
+      const arr = label.split('-')
+      const obj = oldChildren.find(item => item.id == arr[0])
+      const children = obj.children.find(item => item.id == arr[1])
+      return children.name
     }
   },
   watch: {
@@ -74,14 +124,17 @@ export default {
       immediate: true,
       deep: true,
       handler (n) {
-        console.log(n)
         this.detailSearchListCopy = JSON.parse(JSON.stringify(n))
+        Object.keys(this.detailSearchListCopy).forEach(key => {
+          this.detailSearchListCopy[key].searchStr = ''
+          this.detailSearchListCopy[key].oldChildren = JSON.parse(JSON.stringify(this.detailSearchListCopy[key].children))
+        })
+        console.log(this.detailSearchListCopy)
       }
     },
-    searchDetailObj: {
+    selectValue: {
       deep: true,
       handler (n) {
-        console.log(n, 123123123)
         this.$emit('reload', n)
       }
     }
@@ -90,7 +143,15 @@ export default {
 </script>
 
 <style scoped>
-  .search-title {
+  .detail-dropdown{
+    border: 1px solid #E7EAED;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    margin-left: 5px;
+  }
+  .search-detail-title {
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
@@ -107,11 +168,10 @@ export default {
   .detail-top-search {
     display: inline-block;
     vertical-align: bottom;
-    max-width: 100px;
+    width: 100px;
     overflow: hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
-    margin-left: 5px;
   }
 </style>
 <style lang="scss">

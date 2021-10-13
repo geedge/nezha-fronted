@@ -7,6 +7,7 @@
     <el-cascader
       ref="cascader"
       v-bind="$attrs"
+      v-model="cascaderData"
       :collapse-tags="collapseTags"
       :options="item.children"
       :props="{ multiple: true, label: 'name', value: 'id' }"
@@ -29,6 +30,15 @@ export default {
     collapseTags: {
       type: Boolean,
       default: false
+    },
+    selectValue: {}
+  },
+  watch: {
+    selectValue: {
+      immediate: true,
+      handler (n) {
+        console.log(n)
+      }
     }
   },
   methods: {
@@ -50,7 +60,8 @@ export default {
   },
   data () {
     return {
-      ready: false
+      ready: false,
+      cascaderData: ''
     }
   },
   mounted () {

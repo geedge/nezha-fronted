@@ -2,7 +2,7 @@
   <div>
     <nz-data-list
       v-loading="detailViewLoading"
-      v-show="detailType === 'list'"
+      v-if="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -14,7 +14,6 @@
       :detailType="detailType"
       @changeDetailType="changeDetailType"
       @getTableData="getTableData"
-      @getDetail="getDetail"
     >
       <template v-slot:top-tool-right>
         <button id="asset-filter" :class="{ 'is-focus': dataListLayout.indexOf('clickSearch') > -1 }" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
@@ -78,18 +77,19 @@
     </nz-data-list>
     <nzDetailView
       v-loading="detailViewLoading || tools.loading"
-      v-show="detailType !== 'list'"
+      v-if="detailType !== 'list'"
       :api="url"
+      ref="dataList"
       :layout="dataListLayout"
       :from="fromRoute.asset"
       :search-msg="searchMsg"
       :detailType="detailType"
       :detailViewRightObj="detailViewRightObj"
-      @search="searchDetail"
+      @search="search"
       @changeDetailType="changeDetailType"
     >
       <template v-slot:top-tool-left>
-        <detailViewTopSearch :searchDetailObj.sync="searchDetailObj" :detailSearchList="detailSearchList" @reload="searchDetailTop" />
+        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
       </template>
       <template v-slot:top-tool-right>
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
@@ -115,7 +115,7 @@
       <template v-slot:nz-detail-view-list>
         <asset-detail
           class="data-detail"
-          ref="dataDetail"
+          ref="dataTable"
           v-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
@@ -135,7 +135,7 @@
           small
         >
           <template>
-            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getDetail" @keyup.enter.native="getDetail" size="mini"/>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
             <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
           </template>
         </el-pagination>
@@ -312,7 +312,7 @@ export default {
           index: -1
         },
         ping: {
-          label: 'ping',
+          label: 'Ping',
           key: 'ping',
           type: 'checkBox',
           children: [
@@ -350,7 +350,9 @@ export default {
         typeIds: [],
         ping: [],
         modelIds: [],
-        fields: ''
+        fields: '',
+        modelIdsDetail: [],
+        fieldsDetail: []
       },
       detailSearchList: {
         dc: {
@@ -374,7 +376,7 @@ export default {
           index: -1
         },
         ping: {
-          label: 'ping',
+          label: 'Ping',
           key: 'ping',
           type: 'checkBox',
           children: [
@@ -388,7 +390,17 @@ export default {
         },
         model: {
           label: this.$t('asset.model'),
-          key: 'modelIds',
+          key: 'modelIdsDetail',
+          type: 'dropdownCheckBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        assetLabel: {
+          label: 'More',
+          key: 'fieldsDetail',
           type: 'dropdownCheckBox',
           children: [],
           show: false,
@@ -396,12 +408,6 @@ export default {
           width: 0,
           index: -1
         }
-      },
-      searchDetailObj: {
-        dcIds: [],
-        typeIds: [],
-        ping: [],
-        modelIds: []
       }
     }
   },
@@ -544,6 +550,7 @@ export default {
             this.modelData = response.data.list
             const titleSearchData = {}
             this.modelData.forEach(m => {
+              m.value = []
               if (titleSearchData[m.brand.name]) {
                 titleSearchData[m.brand.name].children.push(m)
               } else {

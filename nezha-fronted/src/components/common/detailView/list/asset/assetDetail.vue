@@ -1,6 +1,15 @@
 <template>
   <div class="detail-left-box">
-    <div style="height:40px">123</div>
+    <div class="order-box">
+      <el-select v-model="orderBy" placeholder="请选择">
+        <el-option
+          v-for="item in tableTitle"
+          :key="item.prop"
+          :label="item.label"
+          :value="item.prop">
+        </el-option>
+      </el-select>
+    </div>
     <ul class="detail-row-box">
       <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
         <div class="detail-row-info">
@@ -53,6 +62,16 @@ export default {
           minWidth: 140,
           sortable: 'custom'
         }, {
+          label: this.$t('overall.parent'),
+          prop: 'parent',
+          show: false,
+          minWidth: 110
+        }, {
+          label: this.$t('overall.children'),
+          prop: 'children',
+          show: false,
+          minWidth: 120
+        }, {
           label: this.$t('overall.type'),
           prop: 'type',
           show: true,
@@ -64,6 +83,11 @@ export default {
           show: true,
           minWidth: 110,
           sortable: 'custom'
+        }, {
+          label: this.$t('asset.pingInfo'),
+          prop: 'pingInfo',
+          show: true,
+          minWidth: 110
         }, {
           label: this.$t('overall.dc'),
           prop: 'dc',
@@ -101,24 +125,53 @@ export default {
           minWidth: 110,
           sortable: 'custom'
         }, {
+          label: 'SN',
+          prop: 'sn',
+          show: true,
+          minWidth: 110
+        }, {
           label: 'Talon',
           prop: 'clientState',
           show: true,
           sortable: 'custom',
           minWidth: 150
+        }, {
+          label: this.$t('asset.purchaseDate'),
+          prop: 'purchaseDate',
+          show: false,
+          minWidth: 120
         }
-      ]
+      ],
+      orderBy: '',
+      orderType: 'ascending'
     }
   },
   methods: {
     detailViewRightShow (item) {
       this.$emit('detailViewRightShow', item)
     }
+  },
+  watch: {
+    orderBy: {
+      handler (n) {
+        this.$emit('orderDetail', n, this.orderType)
+      }
+    },
+    orderType: {
+      handler (n) {
+        this.$emit('orderDetail', this.orderBy, n)
+      }
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
+  .order-box{
+    height:40px;
+    padding: 0 15px;
+    line-height: 40px
+  }
   .detail-row-box{
     height: calc(100% - 40px);
     overflow: hidden;

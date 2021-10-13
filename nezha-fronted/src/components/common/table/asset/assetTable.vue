@@ -52,7 +52,7 @@
           <span v-else >-</span>
         </template>
         <template v-else-if="item.prop === 'pingInfo'">
-          <div class="ping-info">
+          <div class="ping-info" v-if="scope.row.pingInfo">
             <div :class="{'active-icon green-bg':scope.row.pingInfo.status == 1,'active-icon red-bg':scope.row.pingInfo.status == 0}" style="position: relative">
             </div>
             <div class="active-icon-content">{{$t('asset.assetStatPre')+(scope.row.pingInfo.lastUpdate?utcTimeToTimezoneStr(scope.row.pingInfo.lastUpdate):$t('asset.assetStatDown'))}}</div>

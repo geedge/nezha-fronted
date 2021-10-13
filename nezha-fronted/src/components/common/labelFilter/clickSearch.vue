@@ -4,7 +4,7 @@
       <label class="search-title">{{data.label}}:</label>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
-          <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValueOut[data.key]" @change="selectValueOut.change === 0 && selectValueOut.change++">
+          <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
             <template v-for="(item, j) in data.children">
               <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
             </template>
@@ -23,6 +23,7 @@
             v-for="(item, j) in data.children"
             v-show="j < data.index || data.showMore"
             :key="j"
+            :selectValue="selectValue[data.key]"
             :ref="`${type}_${item.id}_cascader`"
             :collapse-tags="true"
             :item="item"
@@ -138,25 +139,14 @@ export default {
       }
     },
     selectValue: {
-      immediate: true,
       deep: true,
       handler (n) {
-        this.selectValueOut = { ...n, change: 0 }
-      }
-    },
-    selectValueOut: {
-      immediate: true,
-      deep: true,
-      handler (n) {
-        if (n && n.change) {
-          this.$emit('reload', n)
-        }
+        this.$emit('reload', n)
       }
     }
   },
   data () {
     return {
-      selectValueOut: {},
       contentWidth: 0, // 搜索框内部区域的宽度
       titleSearchListCopy: {},
       widthConstant: {
@@ -225,16 +215,20 @@ export default {
             })
           })
           const valuesStr = JSON.stringify(values)
-          this.selectValueOut[key] = valuesStr === '{}' || !valuesStr ? null : valuesStr
+          this.selectValue[key] = valuesStr === '{}' || !valuesStr ? null : valuesStr
         } else {
           const values = new Set()
           cascs.forEach(c => {
             const nodes = c.$refs.cascader.getCheckedNodes()
             nodes.forEach(n => values.add(n.data.id))
           })
-          this.selectValueOut[key] = [...values]
+          this.selectValue[key] = [...values]
         }
-        this.selectValueOut.change++
+        if (!this.selectValue.change) {
+          this.selectValue.change = 1
+        } else {
+          this.selectValue.change++
+        }
       })
     },
     computeCascWidth (textWidth, labelWidth) { // label + tag + margin

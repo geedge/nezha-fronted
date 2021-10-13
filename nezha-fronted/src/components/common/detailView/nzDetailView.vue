@@ -39,14 +39,14 @@
             </div>
           </div>
           <div class="nz-detail-view-right">
-            <detailViewRight
-              @getTableData = 'getDetail'
-              ref="detailViewRight"
-              v-if="detailViewRightObj"
-              :from="from"
-              :obj="detailViewRightObj"
-              :target-tab="'panelTab'"
-            />
+<!--            <detailViewRight-->
+<!--              @getTableData = 'getTableData'-->
+<!--              ref="detailViewRight"-->
+<!--              v-if="detailViewRightObj"-->
+<!--              :from="from"-->
+<!--              :obj="detailViewRightObj"-->
+<!--              :target-tab="'panelTab'"-->
+<!--            />-->
           </div>
         </div>
       </div>
@@ -149,8 +149,8 @@ export default {
     search (searchObj) {
       this.$emit('search', searchObj)
     },
-    getDetail () {
-      this.$emit('getDetail')
+    getTableData () {
+      this.$emit('getTableData')
     },
     changeDetailType (item) {
       console.log(item)
