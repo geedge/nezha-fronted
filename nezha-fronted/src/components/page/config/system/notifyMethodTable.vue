@@ -46,7 +46,7 @@
             </template>
             <template v-if="item.prop == 'account'">
               <el-popover :content="rules.account.message" placement="top" trigger="manual" v-model="rules.account.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.account)">
-                <el-select slot="reference" v-model="scope.row[item.prop]" size="small" popper-class="right-public-box-select-top right-public-box-dropdown-top">
+                <el-select slot="reference" v-model="scope.row[item.prop]" :placeholder="$t('el.select.placeholder')" size="small" popper-class="right-public-box-select-top right-public-box-dropdown-top">
                   <template v-for="param in accountParams">
                     <el-option :label="param.label" :value="param.value"></el-option>
                   </template>
