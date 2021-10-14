@@ -376,7 +376,7 @@ export default {
 
 .logo {
   z-index: 2;
-  width: 460px;
+  width: 392px;
   img{
     width: 100%;
   }
@@ -385,25 +385,21 @@ export default {
   z-index: 2;
   background: rgba(106,106,106,0.5);
   border-radius: 8px;
-  padding: 55px 50px 0px 50px;
+  padding: 55px 50px 0 50px;
 }
 .login-box {
   z-index: 2;
-  width: 460px;
+  width: 392px;
   .login-label{
-    font-family: Roboto-Medium;
     font-size: 22px;
     color: #FFFFFF;
     font-weight: 500;
-    color: #ffffff;
   }
   .login-label-foot{
-    font-family: Roboto-Medium;
     font-size: 14px;
     color: #DEDEDE;
     line-height: 20px;
     font-weight: 500;
-    color: #DEDEDE;
     word-break: keep-all;
     width: 90%;
   }
@@ -411,7 +407,7 @@ export default {
 
 .login-box .login-input {
   padding: 12px 0;
-  height: 60px;
+  height: 46px;
   position: relative;
 }
 .login-box .login-input .nz-icon {
@@ -437,7 +433,7 @@ export default {
 .login-foot {
   padding-top: 15px;
   display: flex;
-  width: 460px;
+  width: 392px;
   justify-content: space-between;
   position: relative;
 }
@@ -491,8 +487,8 @@ export default {
 }
 .login-foot-lang-list::before {
   content: " ";
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   border-width: 10px;
   border-style: solid;
   border-color: transparent transparent rgba(0, 0, 0, 0.55) transparent;
