@@ -25,7 +25,7 @@
             <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" disabled size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.role')" v-else prop="roles">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" disabled size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].name" disabled size="small" type="text"></el-input>
           </el-form-item>
           <!--language-->
           <el-form-item :label="$t('config.user.language')" prop="lang">
@@ -123,6 +123,7 @@ export default {
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
+                this.$emit('clickProfile')
               } else {
                 this.$message.error(res.msg)
               }

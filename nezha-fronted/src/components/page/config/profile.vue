@@ -131,7 +131,7 @@
       </div>
     </el-dialog>
     <transition name="right-box">
-      <profile-box v-if="rightBox.show" :obj="object" @close="closeRightBox"></profile-box>
+      <profile-box v-if="rightBox.show" :obj="object" @clickProfile="clickProfile" @close="closeRightBox"></profile-box>
     </transition>
   </div>
 </template>
@@ -224,9 +224,6 @@ export default {
   mounted () {
     this.personalCenter()
   },
-  beforeUpdate () {
-    this.personalCenter()
-  },
   methods: {
     // 请求后端数据
     personalCenter () {
@@ -313,6 +310,9 @@ export default {
       this.$get(this.url).then(res => {
         this.object = res.user
       })
+    },
+    clickProfile () {
+      this.personalCenter()
     },
     closeDialog () {
       this.authBindShow = false
