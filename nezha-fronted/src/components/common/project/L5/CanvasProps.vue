@@ -1779,12 +1779,9 @@ export default {
       const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
       this.$emit('del', delObj)
     },
-<<<<<<< HEAD
-=======
     getMetricOptions () {
       return this.metricOptions
     },
->>>>>>> 4b4994f59cfffd4aad8579464b56be2c5e523769
     addExpression () {
       this.selection.pen.data.expressAllArr.push('')
       this.selection.pen.data.legendsAll.push('')
