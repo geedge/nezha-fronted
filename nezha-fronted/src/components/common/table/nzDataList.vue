@@ -28,8 +28,8 @@
                 <i class="nz-icon nz-icon-liebiao" />
               </button>
               <el-dropdown-menu slot="dropdown" >
-                <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">列表</el-dropdown-item>
-                <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">详细</el-dropdown-item>
+                <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">{{$t('asset.detail.list')}}</el-dropdown-item>
+                <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">{{$t('asset.detail.detail')}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>

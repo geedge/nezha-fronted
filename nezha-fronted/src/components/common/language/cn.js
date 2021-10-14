@@ -158,7 +158,7 @@ const cn = {
     normal: '正常',
     unusual: '不正常',
     AuthenticationFailed: '认证失败',
-    clearAllSelect: '清除选择的内容'
+    clearAllSelect: '清除选择的内容',
   },
   setup: {
     step0: '欢迎',
@@ -708,7 +708,11 @@ const cn = {
     name: '名称',
     dc: '数据中心',
     type: '主机地址',
-    pingInfo: 'Ping'
+    pingInfo: 'Ping',
+    detail: {
+      list: '列表',
+      detail: '详细'
+    }
   },
   config: {
     config: '设置',

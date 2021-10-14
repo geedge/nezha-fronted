@@ -2,25 +2,29 @@
   <div style="height: 100%">
     <div v-if="from === fromRoute.asset" class="detail-title-box">
       <div>
-        <span class="detail-title-key">Data center :</span> <span class="detail-title-value">{{obj.dc?obj.dc.name:'-'}}</span>
+        <span class="detail-title-key">{{$t('dc.dc')}} :</span> <span class="detail-title-value">{{obj.dc?obj.dc.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Cabinet :</span> <span class="detail-title-value">{{obj.cabinet?obj.cabinet.name:'-'}}</span>
+        <span class="detail-title-key">{{$t('dc.cabinets')}} :</span>
+        <span class="detail-title-value">
+          <span v-if="obj.cabinet && obj.cabinet !== '--'">{{obj.cabinet.name}}&nbsp;{{returnCabinet( obj.cabinetStart, obj.cabinetEnd)}}</span>
+          <span v-else >-</span>
+      </span>
       </div>
       <div>
-        <span class="detail-title-key">Alert :</span> <span class="detail-title-value"><i :class="obj.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> {{obj.alertNum?obj.alertNum:'-'}}</span>
+        <span class="detail-title-key">{{$t('dc.alert')}} :</span> <span class="detail-title-value"><i :class="obj.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> {{obj.alertNum?obj.alertNum:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Endpoint :</span> <span class="detail-title-value"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> {{obj.endpointNum?obj.endpointNum:'-'}}</span>
+        <span class="detail-title-key">{{$t('asset.endpoint')}} :</span> <span class="detail-title-value"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> {{obj.endpointNum?obj.endpointNum:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.brand?obj.brand.name:'-'}}</span>
+        <span class="detail-title-key">{{$t('asset.brand')}} :</span> <span class="detail-title-value">{{obj.brand?obj.brand.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">Brand :</span> <span class="detail-title-value">{{obj.model?obj.model.name:'-'}}</span>
+        <span class="detail-title-key">{{$t('asset.model')}} :</span> <span class="detail-title-value">{{obj.model?obj.model.name:'-'}}</span>
       </div>
       <div>
-        <span class="detail-title-key">SN :</span> <span class="detail-title-value">{{obj.sn?obj.sn:'-'}}</span>
+        <span class="detail-title-key">{{$t('asset.sn')}} :</span> <span class="detail-title-value">{{obj.sn?obj.sn:'-'}}</span>
       </div>
     </div>
   </div>
@@ -37,6 +41,14 @@ export default {
   data () {
     return {
       fromRoute: fromRoute
+    }
+  },
+  methods: {
+    returnCabinet (start, end) { // 返回机柜u位信息
+      if (!start || !end) {
+        return ''
+      }
+      return `[${start}-${end}]`
     }
   },
   watch: {
