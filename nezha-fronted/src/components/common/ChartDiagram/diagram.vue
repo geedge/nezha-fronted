@@ -1588,11 +1588,7 @@ export default {
                     text: res.data.imageName,
                     image: data.data,
                     imageId: res.data.id,
-                    unit: this.uploadPic.unit,
-                    rect: {
-                      width: data.width,
-                      height: data.height
-                    }
+                    unit: this.uploadPic.unit
                   }
                 })
               } else {
@@ -1605,11 +1601,7 @@ export default {
                       text: res.data.imageName,
                       image: data.data,
                       imageId: res.data.id,
-                      unit: this.uploadPic.unit,
-                      rect: {
-                        width: data.width,
-                        height: data.height
-                      }
+                      unit: this.uploadPic.unit
                     }
                   }]
                 })

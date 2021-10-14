@@ -451,10 +451,10 @@ const overviewLine = {
 const noDataOption = {
   grid: {
     top: 30,
-    left: 0,
+    left: 20,
     right: 30,
     containLabel: true,
-    bottom: 20// 156
+    bottom: 0// 156
   },
   xAxis: {
     type: 'category',

@@ -7,7 +7,7 @@
     <div class="header-menu">
       <el-dropdown>
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-        <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>

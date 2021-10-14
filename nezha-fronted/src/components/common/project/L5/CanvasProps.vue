@@ -1507,6 +1507,43 @@ export default {
     }
   },
   methods: {
+    queryMetrics () {
+      this.metricOptions = []
+      this.$get('prom/api/v1/label/__name__/values').then(response => {
+        if (response.status == 'success') {
+          const metrics = response.data.sort()
+          const metricMap = new Map()
+          metrics.forEach((item) => {
+            let key = ''
+            if (/^[a-zA-Z]+?_[a-zA-Z]*/.test(item)) {
+              key = item.split('_')[0]
+            } else if (/^_\w*/.test(item)) {
+              key = '      '
+            } else {
+              key = item
+            }
+            if (metricMap.get(key)) {
+              const values = metricMap.get(key)
+              values.push({ label: item, value: item })
+            } else {
+              const values = [{ label: item, value: item }]
+              metricMap.set(key, values)
+            }
+            // this.metricStore.push({label:item,value:item,insertText:item})
+          })
+          for (const key of metricMap.keys()) {
+            const option = {
+              label: key,
+              value: key
+            }
+            if (metricMap.get(key) && metricMap.get(key).length > 1) {
+              option.children = metricMap.get(key)
+            }
+            this.metricOptions.push(option)
+          }
+        }
+      })
+    },
     tabClick (n) {
     },
     moduleIdChange (n) {
@@ -1742,6 +1779,12 @@ export default {
       const delObj = this.selection.pen ? this.selection.pen.id : this.selection.pens
       this.$emit('del', delObj)
     },
+<<<<<<< HEAD
+=======
+    getMetricOptions () {
+      return this.metricOptions
+    },
+>>>>>>> 4b4994f59cfffd4aad8579464b56be2c5e523769
     addExpression () {
       this.selection.pen.data.expressAllArr.push('')
       this.selection.pen.data.legendsAll.push('')
