@@ -1,14 +1,14 @@
 <template>
   <div style="line-height: 32px;">
-    <div style="display: inline-block;margin-right: 20px" v-for="(item,key) in detailSearchListCopy" :key='key'>
-      <span class="search-detail-title">{{item.label}} :</span>
+    <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key'>
+      <span class="search-detail-title"  v-if="!selectValue[item.key].length">{{item.label}} :</span>
       <span v-if="item.type === 'checkBox'">
             <el-dropdown
               class="detail-dropdown"
               type="primary"
               :trigger="'click'"
               :hide-on-click="false"
-              @visible-change="searchStr = detailSearchListCopy[key].searchStr"
+              @visible-change="(val)=>{showDropDown(val, key)}"
             >
               <div>
                 <div class="detail-top-search" v-if="selectValue[item.key].length">
@@ -129,6 +129,10 @@ export default {
       const obj = oldChildren.find(item => item.id == arr[0])
       const children = obj.children.find(item => item.id == arr[1])
       return children.name
+    },
+    showDropDown (val, key) {
+      this.searchStr = this.detailSearchListCopy[key].searchStr
+      this.detailSearchListCopy[key].dropShow = val
     }
   },
   watch: {
@@ -141,7 +145,6 @@ export default {
           this.detailSearchListCopy[key].searchStr = ''
           this.detailSearchListCopy[key].oldChildren = JSON.parse(JSON.stringify(this.detailSearchListCopy[key].children))
         })
-        console.log(this.detailSearchListCopy)
       }
     },
     selectValue: {
@@ -154,14 +157,38 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .search-detail-box{
+    display: inline-block;
+    margin-right: 20px;
+    transition: background-color .1s ease-out;
+    padding-left: 10px;
+    border-radius: 2px;
+  }
+  .search-detail-box:hover{
+    background-color: rgba(9,30,66,.13);
+  }
+  .search-detail-box.select-dropdown{
+    background-color: rgba(9,30,66,.13);
+  }
+  .search-detail-box.show-my-dropdpwn{
+    background-color: #344563;
+    color: #fff;
+    .search-detail-title{
+      color: #fff;
+    }
+    .detail-top-search{
+      color: #fff;
+    }
+    .search-value{
+      color: #fff;
+    }
+  }
   .detail-dropdown{
-    border: 1px solid #E7EAED;
     padding: 0 10px;
     height: 30px;
     line-height: 30px;
     border-radius: 2px;
-    margin-left: 5px;
   }
   .search-detail-title {
     font-size: 14px;
@@ -180,10 +207,10 @@ export default {
   .detail-top-search {
     display: inline-block;
     vertical-align: bottom;
-    width: 100px;
     overflow: hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
+    max-width: 100px;
   }
 </style>
 <style lang="scss">

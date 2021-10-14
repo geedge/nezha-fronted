@@ -25,7 +25,6 @@ export default {
           this.titleSearchList.model.children.forEach(model => {
             const brand = model.children.find(children => modelId == children.id)
             if (brand) {
-              console.log(brand)
               this.selectValue.modelIdsDetail.push(brand.brandId + '-' + modelId)
             }
           })
@@ -71,6 +70,20 @@ export default {
             this.$refs.dataList.$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
           }
         })
+        if (this.orderBy &&  this.$refs.dataTable.$refs.dataTable) {
+          const index = this.orderBy.indexOf('-')
+          let orderBy = ''
+          let orderType = ''
+
+          if (index !== -1) {
+            orderBy = this.orderBy.slice(index + 1)
+            orderType = 'descending'
+          } else {
+            orderBy = this.orderBy
+            orderType = 'ascending'
+          }
+          this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
+        }
       }, 100)
     },
     detailViewRightShow (item) {

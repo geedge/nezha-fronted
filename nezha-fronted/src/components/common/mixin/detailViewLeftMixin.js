@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      orderBy: '',
+      orderBy: 'id',
       orderType: 'ascending',
       renderFirst: ''
     }
@@ -35,7 +35,6 @@ export default {
     orderByFa: {
       immediate: true,
       handler (n) {
-        console.log(n)
         const index = n.indexOf('-')
         this.renderFirst = false
         if (index !== -1) {
@@ -45,6 +44,10 @@ export default {
           this.orderBy = n
           this.orderType = 'ascending'
         }
+        if (!n) {
+          this.orderBy = 'id'
+          this.orderType = 'ascending'
+        }
         setTimeout(() => {
           this.renderFirst = true
         })
@@ -52,7 +55,6 @@ export default {
     },
     orderBy: {
       handler (n) {
-        console.log(n)
         if (this.renderFirst) {
           this.$emit('orderDetail', this.orderBy, this.orderType)
         }

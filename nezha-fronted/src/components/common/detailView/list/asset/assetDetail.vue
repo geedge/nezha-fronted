@@ -1,7 +1,7 @@
 <template>
   <div class="detail-left-box">
     <div class="order-box">
-      <el-select v-model="orderBy" size="small" clearable placeholder="排序方式">
+      <el-select v-model="orderBy" size="small" placeholder="排序方式">
         <el-option
           v-for="item in tableTitle"
           v-if="item.sortable==='custom'"

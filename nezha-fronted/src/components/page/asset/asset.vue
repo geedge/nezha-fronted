@@ -2,7 +2,7 @@
   <div>
     <nz-data-list
       v-loading="detailViewLoading"
-      v-if="detailType === 'list'"
+      v-show="detailType === 'list'"
       ref="dataList"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
@@ -78,7 +78,7 @@
     </nz-data-list>
     <nzDetailView
       v-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
+      v-show="detailType !== 'list'"
       :api="url"
       ref="dataList"
       :layout="dataListLayout"
@@ -116,7 +116,7 @@
       <template v-slot:nz-detail-view-list>
         <asset-detail
           class="data-detail"
-          ref="dataTable"
+          ref="dataDetail"
           :orderByFa="orderBy"
           v-loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
@@ -370,6 +370,7 @@ export default {
           children: [],
           show: false,
           showMore: false,
+          dropShow: false,
           width: 0,
           index: -1
         },
@@ -380,6 +381,7 @@ export default {
           children: [],
           show: false,
           showMore: false,
+          dropShow: false,
           width: 0,
           index: -1
         },
@@ -393,6 +395,7 @@ export default {
           ],
           show: true,
           showMore: false,
+          dropShow: false,
           width: 0,
           index: -1
         },
@@ -403,6 +406,7 @@ export default {
           children: [],
           show: false,
           showMore: false,
+          dropShow: false,
           width: 0,
           index: -1
         },
@@ -413,6 +417,7 @@ export default {
           children: [],
           show: false,
           showMore: false,
+          dropShow: false,
           width: 0,
           index: -1
         }

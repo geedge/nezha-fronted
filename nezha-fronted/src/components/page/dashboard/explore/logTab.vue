@@ -410,7 +410,7 @@ export default {
       return { tableData: filterLevelData, tableChartData: temp }
     },
     filterLogType (data) {
-      const logData = data.filter(l => l.resultType === 'streamsFormat')
+      const logData = data.filter(l => l && (l.resultType === 'streamsFormat'))
       let allTableData = []
       // 合并
       logData.forEach(d => {

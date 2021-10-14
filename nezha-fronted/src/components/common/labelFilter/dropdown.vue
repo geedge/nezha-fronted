@@ -38,7 +38,6 @@ export default {
     selectValue: {
       immediate: true,
       handler (n) {
-        console.log(n)
         this.cascaderData = []
         if (n && this.type !== 'fields') {
           n.forEach(item => {

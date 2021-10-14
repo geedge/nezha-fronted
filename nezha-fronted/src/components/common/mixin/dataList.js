@@ -96,7 +96,7 @@ export default {
             })
           }
           if (this.detailType === 'view') {
-            this.$refs.dataTable.$refs.dataTable.scrollTop = 0
+            this.$refs.dataDetail.$refs.dataTable.scrollTop = 0
           }
         }
       })
