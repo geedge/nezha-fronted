@@ -157,13 +157,13 @@ export default {
         document.location.href = '/'
       })
     },
-    refreshLang () {
-      this.language = localStorage.getItem('nz-language')
-      this.$i18n.locale = this.language
-      this.$nextTick(() => {
-        window.location.reload()
-      })
-    },
+    // refreshLang () {
+    //   this.language = localStorage.getItem('nz-language')
+    //   this.$i18n.locale = this.language
+    //   this.$nextTick(() => {
+    //     // window.location.reload()
+    //   })
+    // },
     showPinDialog () {
       // this.showChangePin = true
       this.$router.push({
@@ -184,7 +184,7 @@ export default {
     initEvent () {
       bus.$on('login', () => {
         this.username = sessionStorage.getItem('nz-username')
-        this.refreshLang()
+        // this.refreshLang()
       })
       if (window.history && window.history.pushState) {
         history.pushState(null, null, document.URL)
