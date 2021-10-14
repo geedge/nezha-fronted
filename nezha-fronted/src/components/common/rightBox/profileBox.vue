@@ -13,7 +13,7 @@
             <el-input maxlength="64" show-word-limit v-model="editProfile.name" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.username')" prop="username">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.username" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.username" disabled size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.email')" prop="email">
             <el-input maxlength="64" show-word-limit v-model="editProfile.email" size="small" type="text"></el-input>
@@ -22,10 +22,10 @@
             <el-input maxlength="64" show-word-limit v-model="editProfile.mobile" size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.role')" v-if="editProfile.roles[0].i18n != ''" prop="roles">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" disabled size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.role')" v-else prop="roles">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" disabled size="small" type="text"></el-input>
           </el-form-item>
           <!--language-->
           <el-form-item :label="$t('config.user.language')" prop="lang">
@@ -43,7 +43,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('profile.source')" prop="source">
-            <el-input maxlength="64" show-word-limit v-model="editProfile.source" size="small" type="text"></el-input>
+            <el-input maxlength="64" show-word-limit v-model="editProfile.source" disabled size="small" type="text"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -87,23 +87,7 @@ export default {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ],
-        username: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        email: [
-          { type: 'email', message: this.$t('validate.email') },
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        roles: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
         lang: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        ],
-        source: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
         ]
       }
