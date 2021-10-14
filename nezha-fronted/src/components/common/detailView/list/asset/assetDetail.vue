@@ -1,18 +1,19 @@
 <template>
   <div class="detail-left-box">
     <div class="order-box">
-      <el-select v-model="orderBy" size="small" placeholder="排序方式">
+      <el-select v-model="orderBy" size="small" :placeholder="$t('asset.detail.orderBy')" class="detail-select">
         <el-option
           v-for="item in tableTitle"
           v-if="item.sortable==='custom'"
           :key="item.prop"
-          :label="item.label"
+          :label="$t('asset.detail.orderByLabel',{label:item.label})"
           :value="item.prop">
+          {{item.label}}
         </el-option>
       </el-select>
-      <el-button @click="orderTypeChange" size="small" style="height: 32px;padding: 0 5px 0 5px">
-        <i class="nz-icon nz-icon-jiantou-top" v-if="orderType=='ascending'" />
-        <i class="nz-icon nz-icon-jiantou-down" v-if="orderType=='descending'" />
+      <el-button @click="orderTypeChange" size="small" style="height: 32px;padding: 0 5px 0 5px;margin-left: 10px" class="detail-button">
+        <i class="nz-icon nz-icon-arrow-up1" v-if="orderType=='ascending'" />
+        <i class="nz-icon nz-icon-arrow-down2" v-if="orderType=='descending'" />
       </el-button>
     </div>
     <ul class="detail-row-box" ref="dataTable">
@@ -156,6 +157,44 @@ export default {
     padding: 0 15px;
     line-height: 40px;
     align-items: center;
+    .detail-select{
+      height: 30px;
+      line-height: 30px;
+      flex: 1;
+      /deep/ .el-input--small{
+        height: 30px;
+        line-height: 30px;
+        background-color: rgba(9,30,66,0.08);
+        border: none;
+        color: #344563;
+        input{
+          height: 30px;
+          line-height: 30px;
+          background-color: rgba(9,30,66,0.08);
+          border: none;
+          color: #344563;
+        }
+      }
+    }
+    .detail-select:hover{
+      /deep/ .el-input--small{
+        input{
+          background-color: rgba(9,30,66,0.13);
+        }
+      }
+    }
+    .detail-button{
+      height: 28px;
+      line-height: 28px;
+      background-color: rgba(9,30,66,0.08);
+      border: none;
+      .nz-icon{
+        color: #344563;
+      }
+    }
+    .detail-button:hover{
+      background-color: rgba(9,30,66,0.13);
+    }
   }
   .detail-row-box{
     height: calc(100% - 40px);

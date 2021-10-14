@@ -711,7 +711,9 @@ const cn = {
     pingInfo: 'Ping',
     detail: {
       list: '列表',
-      detail: '详细'
+      detail: '详细',
+      orderBy: '排序方式',
+      orderByLabel: '按 {label}  排序'
     }
   },
   config: {

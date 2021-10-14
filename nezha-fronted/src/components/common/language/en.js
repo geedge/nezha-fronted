@@ -716,7 +716,13 @@ const en = {
     name: 'Name',
     dc: 'DataCenter',
     type: 'Types',
-    pingInfo: 'Ping'
+    pingInfo: 'Ping',
+    detail: {
+      list: 'List',
+      detail: 'Detail',
+      orderBy: 'OrderBy',
+      orderByLabel: 'Order by  {label}'
+    }
   },
   config: {
     config: 'Setting', // "设置"
