@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('./font/iconfont.woff2?t=1634284850064') format('woff2'),
-  url('./font/iconfont.woff?t=1634284850064') format('woff'),
-  url('./font/iconfont.ttf?t=1634284850064') format('truetype');
+  src: url('./font/iconfont.woff2?t=1634288113261') format('woff2'),
+  url('./font/iconfont.woff?t=1634288113261') format('woff'),
+  url('./font/iconfont.ttf?t=1634288113261') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-label:before {
+  content: "\e747";
 }
 
 .nz-icon-language-change:before {

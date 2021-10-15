@@ -32,7 +32,7 @@
       class="data-column"
     >
       <template slot="header">
-        <span class="data-column__span">{{item.label}}</span>
+        <span class="data-column__span">{{item.label}} <i class="nz-icon nz-icon-label" v-if="item.type==='label'" style="color: #fa901c"/></span>
         <div class="col-resize-area"></div>
       </template>
       <template slot-scope="scope" :column="item">
