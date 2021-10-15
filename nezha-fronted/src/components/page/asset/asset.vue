@@ -80,7 +80,7 @@
       v-loading="detailViewLoading || tools.loading"
       v-if="detailType !== 'list'"
       :api="url"
-      ref="dataList"
+      ref="detailList"
       :layout="dataListLayout"
       :from="fromRoute.asset"
       :search-msg="searchMsg"
@@ -589,25 +589,25 @@ export default {
         })
       })
     },
-    getModelData () {
+    getModelData (data) {
       return new Promise(resolve => {
-        this.$get('asset/model?pageSize=-1').then(response => {
-          if (response.code === 200) {
-            this.modelData = response.data.list
-            const titleSearchData = {}
-            this.modelData.forEach(m => {
-              m.value = []
-              if (titleSearchData[m.brand.name]) {
-                titleSearchData[m.brand.name].children.push(m)
-              } else {
-                titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
-              }
-            })
-            resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
-            // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
-          }
-          resolve()
-        })
+        // this.$get('asset/model?pageSize=-1').then(response => {
+        if (data) {
+          this.modelData = data
+          const titleSearchData = {}
+          this.modelData.forEach(m => {
+            m.value = []
+            if (titleSearchData[m.brand.name]) {
+              titleSearchData[m.brand.name].children.push(m)
+            } else {
+              titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+            }
+          })
+          resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+          // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
+        }
+        resolve()
+        // })
       })
     },
     showEndpoint (asset) {
@@ -636,34 +636,104 @@ export default {
           return this.userData[item].username
         }
       }
+    },
+    getTableData (params) {
+      if (params && Object.keys(params).length > 0) {
+        for (const key in params) {
+          this.$set(this.searchLabel, key, params[key])
+        }
+      }
+      if (this.orderBy) {
+        this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
+      }
+      this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
+      this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.$route.path === '/asset' && !this.titleSearchList.model.children.length) {
+        this.$set(this.searchLabel, 'statistics', 1)
+      } else {
+        delete this.searchLabel.statistics
+      }
+      this.tools.loading = true
+      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
+        this.tools.loading = false
+        if (response.code === 200) {
+          console.log(response)
+          if (response.statistics && this.$route.path === '/asset') {
+            this.setSearchData(response.statistics)
+          }
+          for (let i = 0; i < response.data.list.length; i++) {
+            response.data.list[i].status = response.data.list[i].status + ''
+          }
+          this.tableData = response.data.list
+          this.detailViewRightObj = this.tableData[0]
+          this.pageObj.total = response.data.total
+          this.pageObj.pages = response.data.pages
+          if (!this.scrollbarWrap && this.$refs.dataTable.$refs.dataTable) {
+            this.$nextTick(() => {
+              this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
+              this.toTopBtnHandler(this.scrollbarWrap)
+            })
+          }
+          if (this.detailType === 'view') {
+            this.$refs.dataDetail.$refs.dataTable.scrollTop = 0
+          }
+        }
+      })
+    },
+    setSearchData (statistics) {
+      Object.keys(this.titleSearchList).forEach(key => {
+        const keys = key === 'assetLabel' ? 'meta' : key
+        if (key === 'assetLabel') {
+          this.getSearchableMetaData(statistics[keys]).then(res => {
+            this.titleSearchList.assetLabel.children = res
+            this.detailSearchList.assetLabel.children = res
+            this.titleSearchList.assetLabel.show = true
+            this.detailSearchList.assetLabel.show = true
+          })
+        } else if (key === 'model') {
+          this.getModelData(statistics[keys]).then(res => {
+            this.titleSearchList.model.children = res
+            this.detailSearchList.model.children = res
+            this.titleSearchList.model.show = true
+            this.detailSearchList.model.show = true
+          })
+        } else {
+          this.titleSearchList[key].children = statistics[keys]
+          this.detailSearchList[key].children = statistics[keys]
+        }
+        this.titleSearchList[key].show = true
+        this.detailSearchList[key].show = true
+      })
     }
   },
   mounted () {
     // 初始化数据
-    this.getModelData().then(res => {
-      this.titleSearchList.model.children = res
-      this.detailSearchList.model.children = res
-      this.titleSearchList.model.show = true
-      this.detailSearchList.model.show = true
-    })
-    this.getTypeData().then(res => {
-      this.titleSearchList.type.children = res
-      this.detailSearchList.type.children = res
-      this.titleSearchList.type.show = true
-      this.detailSearchList.type.show = true
-    })
-    this.getDcData().then(res => {
-      this.titleSearchList.dc.children = res
-      this.detailSearchList.dc.children = res
-      this.titleSearchList.dc.show = true
-      this.detailSearchList.dc.show = true
-    })
-    this.getSearchableMetaData().then(res => {
-      this.titleSearchList.assetLabel.children = res
-      this.detailSearchList.assetLabel.children = res
-      this.titleSearchList.assetLabel.show = true
-      this.detailSearchList.assetLabel.show = true
-    })
+    // this.getModelData().then(res => {
+    //   this.titleSearchList.model.children = res
+    //   this.detailSearchList.model.children = res
+    //   this.titleSearchList.model.show = true
+    //   this.detailSearchList.model.show = true
+    // })
+    // this.getTypeData().then(res => {
+    //   this.titleSearchList.type.children = res
+    //   this.detailSearchList.type.children = res
+    //   this.titleSearchList.type.show = true
+    //   this.detailSearchList.type.show = true
+    // })
+    // this.getDcData().then(res => {
+    //   this.titleSearchList.dc.children = res
+    //   this.detailSearchList.dc.children = res
+    //   this.titleSearchList.dc.show = true
+    //   this.detailSearchList.dc.show = true
+    // })
+    // this.getSearchableMetaData().then(res => {
+    //   this.titleSearchList.assetLabel.children = res
+    //   this.detailSearchList.assetLabel.children = res
+    //   this.titleSearchList.assetLabel.show = true
+    //   this.detailSearchList.assetLabel.show = true
+    // })
     this.getStateData()
     this.getTypeTreeData()
     this.getSnmpCredentialData()

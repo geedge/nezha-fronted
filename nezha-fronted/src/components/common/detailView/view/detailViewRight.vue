@@ -1,8 +1,8 @@
 <template>
   <div class="sub-box">
-      <div class="detail-view-right-top">
-        <detail-right-top :obj="obj" :from="from"></detail-right-top>
-      </div>
+<!--      <div class="detail-view-right-top">-->
+<!--        <detail-right-top :obj="obj" :from="from"></detail-right-top>-->
+<!--      </div>-->
       <div class="sub-list__tabs">
       <!--机柜-->
       <cabinet-tab :showTitle="false" v-if="from === fromRoute.dc && targetTab === 'cabinet'" :tabs="tabs.dc.cabinet" v-show="subResizeShow" :obj="obj" @changeTab="changeTab"></cabinet-tab>
@@ -306,7 +306,8 @@ export default {
   .sub-list__tabs {
     flex: 1;
     background-color: white;
-    height: calc(100% - 82px);
+    /*height: calc(100% - 82px);*/
+    height: calc(100% - 12px);
     border: 1px solid #E7EAED;
     &>div {
       height: 100%;
@@ -322,9 +323,11 @@ export default {
       }
     }
   }
-  /deep/ .sub-container{
+  /deep/ .bottom-data-list .sub-container{
     height: calc(100% - 45px);
     position: relative;
+    padding: 0;
+    background-color: #fff;
   }
   .sub-box /deep/ .top-tools.top-tools--sub{
     border: none;

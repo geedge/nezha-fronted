@@ -1,5 +1,5 @@
 <template>
-  <div :style="{'height': height + 'px'}" class="search-box__container">
+  <div :style="{'min-height': height + 'px',height:getHeight + 'px'}" class="search-box__container">
     <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
       <div class="search-title">{{data.label}}:</div>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
@@ -114,8 +114,8 @@ export default {
     },
     height () {
       const paddingHeight = 30
-      const checkBoxRowHeight = 31
-      const labelRowHeight = 38
+      const checkBoxRowHeight = 32
+      const labelRowHeight = 39
       let checkBoxRowCount = 0
       let labelRowCount = 0
       Object.keys(this.titleSearchListCopy).forEach(type => {
@@ -126,6 +126,18 @@ export default {
         }
       })
       return paddingHeight + checkBoxRowHeight * checkBoxRowCount + labelRowHeight * labelRowCount + 2
+    },
+    getHeight () {
+      if (this.changeMoreNum) {
+        let height = 2
+        this.$refs.searchContentBox.forEach(item => {
+          console.log(item.offsetHeight)
+          height += item.offsetHeight
+        })
+        return height
+      } else {
+        return 0
+      }
     }
   },
   watch: {
@@ -177,7 +189,8 @@ export default {
           moreNumberWidth: 42, // 选中选项时右侧的+1、+2...数字提示内容的宽度
           arrowDownWidth: 30 // 输入框右端箭头区域的宽度
         }
-      }
+      },
+      changeMoreNum: 0
     }
   },
   mounted () {
@@ -339,7 +352,11 @@ export default {
       return width
     },
     changShowMore (type) {
+      // this.changeMoreNum = 0
       this.titleSearchListCopy[type].showMore = !this.titleSearchListCopy[type].showMore
+      // this.$nextTick(() => {
+      //   this.changeMoreNum++
+      // })
     }
   },
   destroyed () {
@@ -357,6 +374,8 @@ export default {
   transform: rotate(180deg);
 }
 .nz-label-search {
+  line-height: 40px;
+  margin: 6px 0;
   .el-input__inner {
     width: 60px;
   }
@@ -394,14 +413,12 @@ export default {
 }
 .search-content-box,.search-content-box-height {
   border-bottom: 1px solid $--primary-border-color;
-  flex: 1;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   position: relative;
   padding: 0px 80px 0px 0px;
   box-sizing: border-box;
-  height: 100%;
   /*line-height: 40px;*/
 
   /deep/ .el-checkbox__label {
@@ -420,7 +437,7 @@ export default {
   flex: 1;
   flex-wrap: wrap;
   box-sizing: border-box;
-  line-height: 40px;
+  margin-left: 15px;
   &.search-items--checkbox .el-skeleton {
     height: 21px;
   }

@@ -16,10 +16,15 @@ export default {
       if (this.detailType === flag) {
         return
       }
+      if (this.$refs.dataList) {
+        this.$refs.dataList.bottomBox.showSubList = false
+      }
       this.detailType = flag
+      let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
       if (this.detailType === 'view') {
         // modelIdsDetail
+        dataList = 'detailList'
         this.selectValue.modelIdsDetail = []
         this.selectValue.modelIds.forEach(modelId => {
           this.titleSearchList.model.children.forEach(model => {
@@ -39,6 +44,7 @@ export default {
           })
         }
       } else {
+        dataList = 'dataList'
         const obj = {}
         this.selectValue.modelIds = this.selectValue.modelIdsDetail.map(item => item.split('-')[1])
         this.selectValue.fieldsDetail.forEach(item => {
@@ -58,19 +64,19 @@ export default {
       setTimeout(() => {
         this.detailViewLoading = false
         this.$refs.clickSearch && this.$refs.clickSearch.needMore()
-        this.$refs.dataList.$refs.searchInput.sreach_num = 0
+        this.$refs[dataList].$refs.searchInput.sreach_num = 0
         this.searchMsg.searchLabelList.forEach(searchLabel => {
           if (this.searchLabel[searchLabel.label]) {
             console.log(searchLabel.label, this.searchLabel[searchLabel.label])
-            this.$refs.dataList.$refs.searchInput.select_list.push({
+            this.$refs[dataList].$refs.searchInput.select_list.push({
               ...searchLabel,
               val: this.searchLabel[searchLabel.label]
             })
-            this.$refs.dataList.$refs.searchInput.sreach_num++
-            this.$refs.dataList.$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
+            this.$refs[dataList].$refs.searchInput.sreach_num++
+            this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
           }
         })
-        if (this.orderBy &&  this.$refs.dataTable.$refs.dataTable) {
+        if (this.orderBy && this.$refs.dataTable.$refs.dataTable) {
           const index = this.orderBy.indexOf('-')
           let orderBy = ''
           let orderType = ''
@@ -82,7 +88,7 @@ export default {
             orderBy = this.orderBy
             orderType = 'ascending'
           }
-          this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
+          // this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
         }
       }, 100)
     },

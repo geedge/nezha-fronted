@@ -31,7 +31,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </span>
-      <span v-else-if="item.type === 'dropdownCheckBox'">
+      <span v-else-if="item.type === 'dropdownCheckBox'&& key !== 'assetLabel'">
             <el-dropdown
               class="detail-dropdown"
               type="primary"
@@ -56,6 +56,36 @@
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
 <!--                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>-->
                       <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
+                    </el-dropdown-item>
+                 </el-checkbox-group>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+      <span v-else-if="item.type === 'dropdownCheckBox'&& key === 'assetLabel'">
+            <el-dropdown
+              class="detail-dropdown"
+              type="primary"
+              :trigger="'click'"
+              :hide-on-click="false"
+              @visible-change="searchStr = detailSearchListCopy[key].searchStr"
+            >
+              <div>
+                <div class="detail-top-search" v-if="selectValue[item.key].length">
+                   <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
+                  {{getSearchStr(item.oldChildren,item2,key)}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
+                </span>
+                </div>
+                <div class="detail-top-search" style="text-align: center" v-else>
+                  All
+                </div>
+                <i class="nz-icon nz-icon-arrow-down search-value"/>
+              </div>
+              <el-dropdown-menu slot="dropdown" class="detail-top-search-dropdown">
+                <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
+                 <el-checkbox-group v-model="selectValue[item.key]">
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
+                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item4.name">{{item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -124,11 +154,15 @@ export default {
         this.detailSearchListCopy[key].children = arr
       }
     },
-    getSearchStr (oldChildren, label) {
+    getSearchStr (oldChildren, label, key) {
       const arr = label.split('-')
       const obj = oldChildren.find(item => item.id == arr[0])
       const children = obj.children.find(item => item.id == arr[1])
-      return obj.name + '/' + children.name
+      if (key !== 'assetLabel') {
+        return obj.name + '/' + children.name
+      } else {
+        return children.name
+      }
     },
     showDropDown (val, key) {
       this.searchStr = this.detailSearchListCopy[key].searchStr

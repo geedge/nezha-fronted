@@ -97,7 +97,7 @@ export default {
         reader.readAsText(error.response.data)
       })
     },
-    queryLogData (limit = 1000) { // log的chart和table是一个请求
+    queryLogData (limit = 100) { // log的chart和table是一个请求
       this.loading = true
       if (this.expressions.length > 0) {
         const requestArr = []
