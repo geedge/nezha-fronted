@@ -19,6 +19,7 @@
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
           :table-data="tableData"
+          class="bottom-tab__top"
           @del="del"
           @copy="copy"
           @edit="edit"
