@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1631239483571') format('woff2'),
-       url('iconfont.woff?t=1631239483571') format('woff'),
-       url('iconfont.ttf?t=1631239483571') format('truetype');
+  src: url('iconfont.woff2?t=1634266118107') format('woff2'),
+       url('iconfont.woff?t=1634266118107') format('woff'),
+       url('iconfont.ttf?t=1634266118107') format('truetype');
 }
 
 .nz-icon {
@@ -13,19 +13,39 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.nz-icon-dingshishijian:before {
+.nz-icon-language-change:before {
+  content: "\e746";
+}
+
+.nz-icon-guide1:before {
+  content: "\e744";
+}
+
+.nz-icon-more-app:before {
+  content: "\e745";
+}
+
+.nz-icon-list:before {
+  content: "\e742";
+}
+
+.nz-icon-detail-view:before {
+  content: "\e743";
+}
+
+.nz-icon-history:before {
   content: "\e73f";
 }
 
-.nz-icon-a-rilizhou:before {
+.nz-icon-calendar:before {
   content: "\e740";
 }
 
-.nz-icon-guzhangshuju:before {
+.nz-icon-error-data:before {
   content: "\e741";
 }
 
-.nz-icon-Metrics:before {
+.nz-icon-metrics:before {
   content: "\e73d";
 }
 
@@ -33,7 +53,7 @@
   content: "\e73e";
 }
 
-.nz-icon-weizhi:before {
+.nz-icon-location:before {
   content: "\e737";
 }
 
@@ -109,15 +129,11 @@
   content: "\e63e";
 }
 
-.nz-icon-guide:before {
-  content: "\e669";
-}
-
 .nz-icon-more3:before {
   content: "\e725";
 }
 
-.nz-icon-more2:before {
+.nz-icon-more4:before {
   content: "\e72d";
 }
 
@@ -297,7 +313,7 @@
   content: "\e6ff";
 }
 
-.nz-icon-more-app:before {
+.nz-icon-more2:before {
   content: "\e700";
 }
 
@@ -309,7 +325,7 @@
   content: "\e702";
 }
 
-.nz-icon-language-change:before {
+.nz-icon-language-change1:before {
   content: "\e703";
 }
 
