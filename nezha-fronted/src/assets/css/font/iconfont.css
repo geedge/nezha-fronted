@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1634200870921') format('woff2'),
-       url('iconfont.woff?t=1634200870921') format('woff'),
-       url('iconfont.ttf?t=1634200870921') format('truetype');
+  src: url('iconfont.woff2?t=1634284850064') format('woff2'),
+       url('iconfont.woff?t=1634284850064') format('woff'),
+       url('iconfont.ttf?t=1634284850064') format('truetype');
 }
 
 .nz-icon {
@@ -13,23 +13,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.nz-icon-yuyan:before {
+.nz-icon-language-change:before {
   content: "\e746";
 }
 
-.nz-icon-guide1:before {
+.nz-icon-guide:before {
   content: "\e744";
 }
 
-.nz-icon-wailian:before {
+.nz-icon-more-app:before {
   content: "\e745";
 }
 
-.nz-icon-liebiao:before {
+.nz-icon-list-view:before {
   content: "\e742";
 }
 
-.nz-icon-xiangxishitu:before {
+.nz-icon-detail-view:before {
   content: "\e743";
 }
 
@@ -133,7 +133,7 @@
   content: "\e725";
 }
 
-.nz-icon-more2:before {
+.nz-icon-more4:before {
   content: "\e72d";
 }
 
@@ -313,7 +313,7 @@
   content: "\e6ff";
 }
 
-.nz-icon-more-app:before {
+.nz-icon-more2:before {
   content: "\e700";
 }
 
@@ -325,7 +325,7 @@
   content: "\e702";
 }
 
-.nz-icon-language-change:before {
+.nz-icon-language-change1:before {
   content: "\e703";
 }
 

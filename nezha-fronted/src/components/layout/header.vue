@@ -116,7 +116,6 @@ export default {
           permission: 'header_add_rule'
         }
       ],
-      showChangePin: false,
       showGuide: false
     }
   },
@@ -165,7 +164,6 @@ export default {
     //   })
     // },
     showPinDialog () {
-      // this.showChangePin = true
       this.$router.push({
         path: '/profile',
         query: {
@@ -174,7 +172,6 @@ export default {
       })
     },
     dialogClosed () {
-      this.showChangePin = false
       this.showGuide = false
     },
     cancel () {
@@ -332,7 +329,7 @@ export default {
   .personal {
     display: flex;
     .el-dropdown {
-      margin: 0 10px 0 30px;
+      margin: 0 20px;
       height: 36px;
       line-height: 50px;
       text-align: center;
