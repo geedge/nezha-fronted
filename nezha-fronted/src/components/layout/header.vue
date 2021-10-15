@@ -42,7 +42,7 @@
             <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
           </el-dropdown-item>
           <el-dropdown-item>
-            <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>中文</div>
+            <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>简体中文</div>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -157,13 +157,13 @@ export default {
         document.location.href = '/'
       })
     },
-    refreshLang () {
-      this.language = localStorage.getItem('nz-language')
-      this.$i18n.locale = this.language
-      this.$nextTick(() => {
-        window.location.reload()
-      })
-    },
+    // refreshLang () {
+    //   this.language = localStorage.getItem('nz-language')
+    //   this.$i18n.locale = this.language
+    //   this.$nextTick(() => {
+    //     // window.location.reload()
+    //   })
+    // },
     showPinDialog () {
       // this.showChangePin = true
       this.$router.push({
@@ -184,7 +184,7 @@ export default {
     initEvent () {
       bus.$on('login', () => {
         this.username = sessionStorage.getItem('nz-username')
-        this.refreshLang()
+        // this.refreshLang()
       })
       if (window.history && window.history.pushState) {
         history.pushState(null, null, document.URL)

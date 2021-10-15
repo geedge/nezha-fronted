@@ -76,7 +76,7 @@ export default {
         roles: [],
         notifications: [],
         mfaLevel: 0,
-        lang: 'English'
+        lang: 'en'
       },
       tableId: 'userTable',
       searchMsg: { // 给搜索框子组件传递的信息

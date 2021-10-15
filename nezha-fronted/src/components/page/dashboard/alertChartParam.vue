@@ -11,12 +11,12 @@
           clearable></el-cascader>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.alertRule')">
-        <el-select class="form-item" size="small" popper-class="alert-form-pop right-public-box-dropdown-top right-public-box-select-top no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
+        <el-select class="form-item" size="small" :placeholder="$t('el.select.placeholder')" popper-class="alert-form-pop right-public-box-dropdown-top right-public-box-select-top no-style-class" v-model="parameters.alertRule" clearable id="alert-param-alertrule">
           <el-option v-for="(rule, index) in alertRules" :key="index" :label="rule.name" :value="rule.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.level')" prop="level" class="severity-box">
-        <el-select class="form-item" size="small" popper-class="alert-form-pop right-public-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.level" clearable id="alert-param-level">
+        <el-select class="form-item" size="small" :placeholder="$t('el.select.placeholder')" popper-class="alert-form-pop right-public-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.level" clearable id="alert-param-level">
           <el-option v-for="item in alertPriority" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
               <span>
                  <i class="nz-icon nz-icon-circle" :style="{color:item.color,'font-size':'12px'}"></i> {{item.name}}

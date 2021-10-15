@@ -30,6 +30,10 @@
           </el-popover>
         </div>
       </div>
+      <button id="asset-edit-cancel" class="profile-left__btn" @click="profileBox">
+        <span><i class="nz-icon nz-icon-edit" style="color: #666666;margin-right: 5px;font-size: 18px"></i></span>
+        <span>{{$t('profile.edit')}}</span>
+      </button>
       <div v-for="item in tableProfile" :key="item.id" class="profile-left__center">
         <span style="margin:0 18px 0 0"><i :class="item.icon"></i></span>
         <div class="profile-left__center-title">
@@ -39,7 +43,7 @@
         </div>
       </div>
       <div class="profile-left__center">
-       <span style="margin:0 10px 10px 0"><i class="nz-icon nz-icon-yanzhengma" style="color: orange"></i></span>
+       <span style="margin:0 18px 10px 0"><i class="nz-icon nz-icon-zhongzhi2FA1" style="color: orange;"></i></span>
        <div class="profile-left__center-title">
          <div>{{$t('profile.twoFactorAuthentication')}}</div>
        </div>
@@ -126,20 +130,27 @@
         </button>
       </div>
     </el-dialog>
+    <transition name="right-box">
+      <profile-box v-if="rightBox.show" :obj="object" @clickProfile="clickProfile" @close="closeRightBox"></profile-box>
+    </transition>
   </div>
 </template>
 
 <script>
 import operationRecord from './operationRecord'
-import QRCode from "qrcodejs2";
-import MessageBox from "element-ui/packages/message-box/src/main";
-import i18n from "@/components/common/i18n";
+import QRCode from "qrcodejs2"
+import MessageBox from "element-ui/packages/message-box/src/main"
+import i18n from "@/components/common/i18n"
+import profileBox from '@/components/common/rightBox/profileBox'
+import dataList from '@/components/common/mixin/dataList'
 
 export default {
   name: 'profile',
   components: {
-    operationRecord
+    operationRecord,
+    profileBox
   },
+  mixins: [dataList],
   data () {
     return {
       username: sessionStorage.getItem('nz-username'),
@@ -152,6 +163,18 @@ export default {
       mfaLevel: 0,
       authKey: '',
       authToken: '',
+      url: 'sys/user/profile',
+      object: {},
+      blankObject: { // 空白对象
+        id: '',
+        name: '',
+        username: '',
+        role: '',
+        email: '',
+        mobile: '',
+        language: 'en',
+        source: ''
+      },
       // 右侧列表
       tableProfile: [
         {
@@ -209,7 +232,11 @@ export default {
           if (response.code === 200) {
             this.userList = response.user
             this.mfaLevel = response.user.mfaLevel
-            this.tableProfile[0].prop = this.userList.roles[0].i18n
+            if (response.user.roles[0].i18n) {
+              this.tableProfile[0].prop = this.userList.roles[0].i18n
+            } else {
+              this.tableProfile[0].prop = this.userList.roles[0].name
+            }
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
             if (this.userList.lang == 'cn') {
@@ -277,6 +304,15 @@ export default {
           }
         })
       })
+    },
+    profileBox () {
+      this.rightBox.show = true
+      this.$get(this.url).then(res => {
+        this.object = res.user
+      })
+    },
+    clickProfile () {
+      this.personalCenter()
     },
     closeDialog () {
       this.authBindShow = false
@@ -353,10 +389,11 @@ export default {
     height: calc(100% - 10px);
     width: 360px;
     overflow: auto;
+    position: relative;
     .profile-left__header {
       height: 200px;
-      width: 100%;
-      margin: 10px 0;
+      width: calc(100% - 18px);
+      margin:0 0 50px 18px;
       text-align: center;
       display: flex;
       justify-content: flex-start;
@@ -438,7 +475,27 @@ export default {
         }
       }
     }
-    .profile-left__center:nth-of-type(6) {
+    .profile-left__btn {
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 4px;
+      background: #fff;
+      min-width: 132px;
+      height: 36px;
+      position: absolute;
+      top: 175px;
+      left: 100px;
+      padding: 0 20px;
+      cursor: pointer;
+      span {
+        font-family: Roboto-Regular;
+        font-size: 14px;
+        color: #333333;
+        text-align: left;
+        line-height: 22px;
+        font-weight: 400;
+      }
+    }
+    .profile-left__center:nth-of-type(7) {
       margin-bottom: 0;
     }
     .profile-left__center {
@@ -459,7 +516,6 @@ export default {
         color: #8871DB;
       }
       .profile-left__center-title {
-        margin-left: 8px;
         margin-top: 1px;
         div:nth-of-type(1) {
           padding-bottom: 5px;

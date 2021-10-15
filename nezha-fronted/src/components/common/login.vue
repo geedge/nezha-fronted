@@ -1,5 +1,5 @@
 <template>
-  <div class="login" @click="langListShow = false">
+  <div class="login">
     <div class="model"></div>
     <div class="login-main">
       <div class="logo"><img src="../../assets/img/logo-big.png"></div>
@@ -25,15 +25,15 @@
         <div class="login-foot">
           <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
           <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
-          <div class="login-foot-lang" @click.stop="langListShow = !langListShow">
-            <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>
-            <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>
-            <i class="nz-icon nz-icon-arrow-down"></i>
-          </div>
-          <div class="login-foot-lang-list" v-show="langListShow">
-            <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>
-            <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>
-          </div>
+<!--          <div class="login-foot-lang" @click.stop="langListShow = !langListShow">-->
+<!--            <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>-->
+<!--            <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>-->
+<!--            <i class="nz-icon nz-icon-arrow-down"></i>-->
+<!--          </div>-->
+<!--          <div class="login-foot-lang-list" v-show="langListShow">-->
+<!--            <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>-->
+<!--            <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>-->
+<!--          </div>-->
         </div>
         <div class="login-license">
           <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>
@@ -139,8 +139,7 @@ export default {
       uploadFileList: [],
       uploadFile: { file: '', path: '', uuid: '' },
       loading: false,
-      lang: localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en', // en/cn
-      langListShow: false,
+      lang: 'en', // en/cn
       verifyShow: false,
       authBindShow: false,
       authToken: '',
@@ -166,6 +165,8 @@ export default {
           if (res.code == 200) {
             // 登录成功，记录用户名、token和lang
             this.authToken = res.data.authToken
+            this.lang = res.data.user.lang
+            this.$i18n.locale = this.lang
             sessionStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {
@@ -192,7 +193,6 @@ export default {
               localStorage.setItem('nz-username', this.loginData.username)
               localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
               localStorage.setItem('nz-language', this.lang)
-              this.$i18n.locale = this.lang
               this.loginSuccess(res)
             }
           } else {
@@ -214,7 +214,6 @@ export default {
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
-          this.$i18n.locale = this.lang
           this.loginSuccess(res)
         } else {
           this.authToken = res.data.authToken
@@ -222,12 +221,12 @@ export default {
         }
       })
     },
-    changeLang (lang) {
-      this.lang = lang
-      this.langListShow = false
-      this.$i18n.locale = this.lang
-      localStorage.setItem('nz-language', this.lang)
-    },
+    // changeLang (lang) {
+    //   this.lang = lang
+    //   this.langListShow = false
+    //   this.$i18n.locale = 'cn'
+    //   localStorage.setItem('nz-language', this.lang)
+    // },
     validateLogin () {
       if (!this.loginData.username || !this.loginData.pin) {
         this.$message.error('Empty username or password')
@@ -377,7 +376,7 @@ export default {
 
 .logo {
   z-index: 2;
-  width: 460px;
+  width: 392px;
   img{
     width: 100%;
   }
@@ -386,25 +385,21 @@ export default {
   z-index: 2;
   background: rgba(106,106,106,0.5);
   border-radius: 8px;
-  padding: 55px 50px 0px 50px;
+  padding: 55px 50px 0 50px;
 }
 .login-box {
   z-index: 2;
-  width: 460px;
+  width: 392px;
   .login-label{
-    font-family: Roboto-Medium;
     font-size: 22px;
     color: #FFFFFF;
     font-weight: 500;
-    color: #ffffff;
   }
   .login-label-foot{
-    font-family: Roboto-Medium;
     font-size: 14px;
     color: #DEDEDE;
     line-height: 20px;
     font-weight: 500;
-    color: #DEDEDE;
     word-break: keep-all;
     width: 90%;
   }
@@ -412,7 +407,7 @@ export default {
 
 .login-box .login-input {
   padding: 12px 0;
-  height: 60px;
+  height: 46px;
   position: relative;
 }
 .login-box .login-input .nz-icon {
@@ -438,6 +433,7 @@ export default {
 .login-foot {
   padding-top: 15px;
   display: flex;
+  width: 392px;
   justify-content: space-between;
   position: relative;
 }
@@ -449,7 +445,7 @@ export default {
   border: none;
   outline: none;
   height: 44px;
-  width: 320px;
+  width: 100%;
   cursor: pointer;
   font-size: 14px;
   transition: all linear .2s;
@@ -491,8 +487,8 @@ export default {
 }
 .login-foot-lang-list::before {
   content: " ";
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   border-width: 10px;
   border-style: solid;
   border-color: transparent transparent rgba(0, 0, 0, 0.55) transparent;
