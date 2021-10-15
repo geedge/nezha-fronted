@@ -1,7 +1,7 @@
 <template>
   <el-dropdown :size="size">
     <button id="more" :class="triggerButtonClass" title="more...">
-      <i class="nz-icon nz-icon-more2" style="font-size: 12px;"></i>
+      <i class="nz-icon nz-icon-more2"></i>
     </button>
     <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
       <el-dropdown-item  v-if="showLock">

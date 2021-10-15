@@ -329,7 +329,7 @@ export default {
   .personal {
     display: flex;
     .el-dropdown {
-      margin: 0 10px 0 30px;
+      margin: 0 20px;
       height: 36px;
       line-height: 50px;
       text-align: center;

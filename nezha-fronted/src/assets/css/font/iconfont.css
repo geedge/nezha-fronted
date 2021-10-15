@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1634266118107') format('woff2'),
-       url('iconfont.woff?t=1634266118107') format('woff'),
-       url('iconfont.ttf?t=1634266118107') format('truetype');
+  src: url('iconfont.woff2?t=1634268820326') format('woff2'),
+       url('iconfont.woff?t=1634268820326') format('woff'),
+       url('iconfont.ttf?t=1634268820326') format('truetype');
 }
 
 .nz-icon {
@@ -17,7 +17,7 @@
   content: "\e746";
 }
 
-.nz-icon-guide1:before {
+.nz-icon-guide:before {
   content: "\e744";
 }
 
@@ -25,7 +25,7 @@
   content: "\e745";
 }
 
-.nz-icon-list:before {
+.nz-icon-list-view:before {
   content: "\e742";
 }
 
@@ -33,19 +33,19 @@
   content: "\e743";
 }
 
-.nz-icon-history:before {
+.nz-icon-dingshishijian:before {
   content: "\e73f";
 }
 
-.nz-icon-calendar:before {
+.nz-icon-a-rilizhou:before {
   content: "\e740";
 }
 
-.nz-icon-error-data:before {
+.nz-icon-guzhangshuju:before {
   content: "\e741";
 }
 
-.nz-icon-metrics:before {
+.nz-icon-Metrics:before {
   content: "\e73d";
 }
 
@@ -53,7 +53,7 @@
   content: "\e73e";
 }
 
-.nz-icon-location:before {
+.nz-icon-weizhi:before {
   content: "\e737";
 }
 
