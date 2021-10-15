@@ -8,7 +8,7 @@
     </div>
     <div class="right-box__container">
       <div class="container__form">
-        <el-form class="right-box-form right-box-form-left" label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
+        <el-form label-width="120px" label-position = "top" :model="editCabinet" ref="cabinetForm" :rules="rules">
           <el-form-item :label="$t('overall.name')" prop="name">
             <el-input size='mini' maxlength="64" show-word-limit v-model="editCabinet.name" id="cabinet-box-input-name"/>
           </el-form-item>
@@ -16,7 +16,7 @@
             <el-input size='mini' v-model="currentDc.name" disabled id="cabinet-box-input-dc"/>
           </el-form-item>
           <el-form-item :label="$t('asset.uSize')" prop="uSize">
-            <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize"></el-input>
+            <el-input v-model.number="editCabinet.uSize" :max="47" id="cabinet-box-input-uSize" size="small"></el-input>
           </el-form-item>
           <el-form-item :label="$t('overall.remark')">
             <el-input size='mini' maxlength="256" show-word-limit v-model="editCabinet.remark" type="textarea" :rows="2" id="cabinet-box-input-remark"/>
