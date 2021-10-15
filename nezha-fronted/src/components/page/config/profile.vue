@@ -142,7 +142,6 @@ import QRCode from "qrcodejs2"
 import MessageBox from "element-ui/packages/message-box/src/main"
 import i18n from "@/components/common/i18n"
 import profileBox from '@/components/common/rightBox/profileBox'
-// import dataList from '@/components/common/mixin/dataList'
 
 export default {
   name: 'profile',
@@ -150,7 +149,6 @@ export default {
     operationRecord,
     profileBox
   },
-  // mixins: [dataList],
   data () {
     return {
       username: sessionStorage.getItem('nz-username'),
@@ -200,7 +198,7 @@ export default {
           id: 4,
           label: this.$t('config.user.language'),
           prop: '',
-          icon: 'nz-icon nz-icon-language-change'
+          icon: 'nz-icon nz-icon-language-change profile-lang'
         }, {
           id: 5,
           label: this.$t('profile.source'),
@@ -521,6 +519,9 @@ export default {
       }
       .profile-laiyuan {
         color: #8871DB;
+      }
+      .profile-lang {
+        color: #6F7CD2;
       }
       .profile-left__center-title {
         margin-top: 1px;
