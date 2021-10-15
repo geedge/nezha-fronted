@@ -21,7 +21,7 @@
           <el-form-item :label="$t('profile.mobile')" prop="mobile">
             <el-input maxlength="64" show-word-limit v-model="editProfile.mobile" size="small" type="text"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('profile.role')" v-if="editProfile.roles[0].i18n != ''" prop="roles">
+          <el-form-item :label="$t('profile.role')" v-if="editProfile.roles[0].i18n !== ''" prop="roles">
             <el-input maxlength="64" show-word-limit v-model="editProfile.roles[0].i18n" disabled size="small" type="text"></el-input>
           </el-form-item>
           <el-form-item :label="$t('profile.role')" v-else prop="roles">
@@ -82,7 +82,6 @@ export default {
         { value: 'en', label: 'English' },
         { value: 'cn', label: '简体中文' }
       ],
-      roles: [],
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

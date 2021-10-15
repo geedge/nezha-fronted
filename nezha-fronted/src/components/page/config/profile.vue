@@ -142,7 +142,7 @@ import QRCode from "qrcodejs2"
 import MessageBox from "element-ui/packages/message-box/src/main"
 import i18n from "@/components/common/i18n"
 import profileBox from '@/components/common/rightBox/profileBox'
-import dataList from '@/components/common/mixin/dataList'
+// import dataList from '@/components/common/mixin/dataList'
 
 export default {
   name: 'profile',
@@ -150,7 +150,7 @@ export default {
     operationRecord,
     profileBox
   },
-  mixins: [dataList],
+  // mixins: [dataList],
   data () {
     return {
       username: sessionStorage.getItem('nz-username'),
@@ -165,6 +165,10 @@ export default {
       authToken: '',
       url: 'sys/user/profile',
       object: {},
+      // 侧滑
+      rightBox: {
+        show: false
+      },
       blankObject: { // 空白对象
         id: '',
         name: '',
@@ -306,10 +310,13 @@ export default {
       })
     },
     profileBox () {
-      this.rightBox.show = true
       this.$get(this.url).then(res => {
         this.object = res.user
+        this.rightBox.show = true
       })
+    },
+    closeRightBox () {
+      this.rightBox.show = false
     },
     clickProfile () {
       this.personalCenter()
