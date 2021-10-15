@@ -23,6 +23,7 @@
           :now-time="nowTime"
           :table-data="tableData"
           :endpointTab="true"
+          class="bottom-box__top"
           @del="del"
           @edit="edit"
           @copy="copy"
