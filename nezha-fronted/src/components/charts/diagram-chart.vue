@@ -212,7 +212,6 @@ export default {
       this.firstShow = true // 展示操作按键
 
       this.panelIdInner = panelId
-      // console.log(chartItem)
       this.data = chartItem
       this.text = chartItem.param.text
       this.screenText = chartItem.param.text

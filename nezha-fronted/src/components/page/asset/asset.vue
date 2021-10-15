@@ -1,5 +1,73 @@
 <template>
   <div>
+    <nzDetailView
+      v-loading="detailViewLoading || tools.loading"
+      v-if="detailType !== 'list'"
+      :api="url"
+      ref="detailList"
+      :layout="dataListLayout"
+      :from="fromRoute.asset"
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      @search="search"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-left>
+        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          :permissions="{
+                  import: 'asset_add',
+                  export: 'asset_view'
+                }"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="asset"
+          export-url="/asset/asset/export"
+          import-url="/asset/asset/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <asset-detail
+          class="data-detail"
+          ref="dataDetail"
+          :orderByFa="orderBy"
+          v-loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
+        >
+        </asset-detail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
     <nz-data-list
       v-loading="detailViewLoading"
       v-show="detailType === 'list'"
@@ -76,74 +144,6 @@
         <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
       </template>
     </nz-data-list>
-    <nzDetailView
-      v-loading="detailViewLoading || tools.loading"
-      v-if="detailType !== 'list'"
-      :api="url"
-      ref="detailList"
-      :layout="dataListLayout"
-      :from="fromRoute.asset"
-      :search-msg="searchMsg"
-      :detailType="detailType"
-      :detailViewRightObj="detailViewRightObj"
-      @search="search"
-      @changeDetailType="changeDetailType"
-    >
-      <template v-slot:top-tool-left>
-        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
-      </template>
-      <template v-slot:top-tool-right>
-        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
-          <i class="nz-icon nz-icon-create-square"></i>
-        </button>
-        <top-tool-more-options
-          ref="export"
-          id="model"
-          :params="searchLabel"
-          :params2="searchCheckBox"
-          :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_view'
-                }"
-          class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="asset"
-          export-url="/asset/asset/export"
-          import-url="/asset/asset/import"
-          @afterImport="getTableData"
-        >
-        </top-tool-more-options>
-      </template>
-      <template v-slot:nz-detail-view-list>
-        <asset-detail
-          class="data-detail"
-          ref="dataDetail"
-          :orderByFa="orderBy"
-          v-loading="tools.loading"
-          :detailViewRightObj="detailViewRightObj"
-          :api="url"
-          :table-data="tableData"
-          @detailViewRightShow = 'detailViewRightShow'
-          @orderDetail="orderDetail"
-        >
-        </asset-detail>
-      </template>
-      <!-- 分页组件 -->
-      <template v-slot:pagination>
-        <el-pagination
-          @current-change="pageNo"
-          :current-page.sync="pageObj.pageNo"
-          :page-size="20"
-          :total="pageObj.total"
-          layout="prev, slot, next"
-          small
-        >
-          <template>
-            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
-            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
-          </template>
-        </el-pagination>
-      </template>
-    </nzDetailView>
     <transition name="right-box">
       <asset-box v-if="rightBox.show"
                  ref="assetBox"
@@ -659,7 +659,6 @@ export default {
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
-          console.log(response)
           if (response.statistics && this.$route.path === '/asset') {
             this.setSearchData(response.statistics)
           }
@@ -700,8 +699,8 @@ export default {
             this.detailSearchList.model.show = true
           })
         } else {
-          this.titleSearchList[key].children = statistics[keys]
-          this.detailSearchList[key].children = statistics[keys]
+          this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
+          this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
         }
         this.titleSearchList[key].show = true
         this.detailSearchList[key].show = true

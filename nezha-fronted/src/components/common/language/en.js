@@ -718,8 +718,8 @@ const en = {
     type: 'Types',
     pingInfo: 'Ping',
     detail: {
-      list: 'List',
-      detail: 'View',
+      list: 'List view',
+      detail: 'Detail view',
       orderBy: 'OrderBy',
       orderByLabel: 'Order by  {label}'
     }

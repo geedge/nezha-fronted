@@ -20,7 +20,7 @@
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
                       type="button">
-                <i class="nz-icon nz-icon-xiangxishitu" />
+                <i class="nz-icon nz-icon-detail-view" />
               </button>
               <el-dropdown-menu slot="dropdown" >
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">{{$t('asset.detail.list')}}</el-dropdown-item>

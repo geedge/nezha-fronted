@@ -16,9 +16,8 @@ export default {
       if (this.detailType === flag) {
         return
       }
-      if (this.$refs.dataList) {
-        this.$refs.dataList.bottomBox.showSubList = false
-      }
+      this.$refs.dataList.bottomBox.showSubList = false
+      this.detailViewRightObj = ''
       this.detailType = flag
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
@@ -67,7 +66,6 @@ export default {
         this.$refs[dataList].$refs.searchInput.sreach_num = 0
         this.searchMsg.searchLabelList.forEach(searchLabel => {
           if (this.searchLabel[searchLabel.label]) {
-            console.log(searchLabel.label, this.searchLabel[searchLabel.label])
             this.$refs[dataList].$refs.searchInput.select_list.push({
               ...searchLabel,
               val: this.searchLabel[searchLabel.label]
@@ -88,7 +86,7 @@ export default {
             orderBy = this.orderBy
             orderType = 'ascending'
           }
-          // this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
+          this.$refs.dataTable.$refs.dataTable.sort(orderBy, orderType)
         }
       }, 100)
     },

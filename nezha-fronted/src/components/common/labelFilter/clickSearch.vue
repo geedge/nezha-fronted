@@ -131,7 +131,6 @@ export default {
       if (this.changeMoreNum) {
         let height = 2
         this.$refs.searchContentBox.forEach(item => {
-          console.log(item.offsetHeight)
           height += item.offsetHeight
         })
         return height
