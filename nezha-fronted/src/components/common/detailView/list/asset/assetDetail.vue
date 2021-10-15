@@ -11,10 +11,10 @@
           {{item.label}}
         </el-option>
       </el-select>
-      <el-button @click="orderTypeChange" size="small" style="height: 32px;padding: 0 5px 0 5px;margin-left: 10px" class="detail-button">
+      <button @click="orderTypeChange" size="small" class="detail-button top-tool-btn table-column-setting margin-l-10">
         <i class="nz-icon nz-icon-arrow-up1" v-if="orderType=='ascending'" />
         <i class="nz-icon nz-icon-arrow-down2" v-if="orderType=='descending'" />
-      </el-button>
+      </button>
     </div>
     <ul class="detail-row-box" ref="dataTable">
       <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
@@ -157,44 +157,44 @@ export default {
     padding: 0 15px;
     line-height: 40px;
     align-items: center;
-    .detail-select{
-      height: 30px;
-      line-height: 30px;
-      flex: 1;
-      /deep/ .el-input--small{
-        height: 30px;
-        line-height: 30px;
-        background-color: rgba(9,30,66,0.08);
-        border: none;
-        color: #344563;
-        input{
-          height: 30px;
-          line-height: 30px;
-          background-color: rgba(9,30,66,0.08);
-          border: none;
-          color: #344563;
-        }
-      }
-    }
-    .detail-select:hover{
-      /deep/ .el-input--small{
-        input{
-          background-color: rgba(9,30,66,0.13);
-        }
-      }
-    }
-    .detail-button{
-      height: 28px;
-      line-height: 28px;
-      background-color: rgba(9,30,66,0.08);
-      border: none;
-      .nz-icon{
-        color: #344563;
-      }
-    }
-    .detail-button:hover{
-      background-color: rgba(9,30,66,0.13);
-    }
+    /*.detail-select{*/
+    /*  height: 30px;*/
+    /*  line-height: 30px;*/
+    /*  flex: 1;*/
+    /*  /deep/ .el-input--small{*/
+    /*    height: 30px;*/
+    /*    line-height: 30px;*/
+    /*    background-color: rgba(9,30,66,0.08);*/
+    /*    border: none;*/
+    /*    color: #344563;*/
+    /*    input{*/
+    /*      height: 30px;*/
+    /*      line-height: 30px;*/
+    /*      background-color: rgba(9,30,66,0.08);*/
+    /*      border: none;*/
+    /*      color: #344563;*/
+    /*    }*/
+    /*  }*/
+    /*}*/
+    /*.detail-select:hover{*/
+    /*  /deep/ .el-input--small{*/
+    /*    input{*/
+    /*      background-color: rgba(9,30,66,0.13);*/
+    /*    }*/
+    /*  }*/
+    /*}*/
+    /*.detail-button{*/
+    /*  height: 28px;*/
+    /*  line-height: 28px;*/
+    /*  background-color: rgba(9,30,66,0.08);*/
+    /*  border: none;*/
+    /*  .nz-icon{*/
+    /*    color: #344563;*/
+    /*  }*/
+    /*}*/
+    /*.detail-button:hover{*/
+    /*  background-color: rgba(9,30,66,0.13);*/
+    /*}*/
   }
   .detail-row-box{
     height: calc(100% - 40px);

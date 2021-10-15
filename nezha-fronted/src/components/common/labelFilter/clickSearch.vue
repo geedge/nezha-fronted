@@ -1,7 +1,7 @@
 <template>
   <div :style="{'height': height + 'px'}" class="search-box__container">
     <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
-      <label class="search-title">{{data.label}}:</label>
+      <div class="search-title">{{data.label}}:</div>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
           <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
@@ -365,7 +365,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px 0 15px 17px;
+  /*padding: 15px 0 15px 17px;*/
   box-sizing: border-box;
   border: 1px solid $--right-box-border-color;
   background-color: #FFFFFF;
@@ -373,16 +373,17 @@ export default {
   overflow-y: auto;
 }
 .search-title {
-  position: absolute;
   width: 130px;
-  top: 7px;
-  left: 0;
-  line-height: 18px;
   font-size: 14px;
   color: #666666;
   letter-spacing: 0;
-  font-weight: 500;
+  font-weight: 600;
   overflow: hidden;
+  height: 100%;
+  line-height: 40px;
+  padding-left: 20px;
+  box-sizing: border-box;
+  background: #F9F9F9;
 }
 .search-content-box--copy {
   position: fixed;
@@ -392,13 +393,16 @@ export default {
   min-height: 31px;
 }
 .search-content-box,.search-content-box-height {
+  border-bottom: 1px solid $--primary-border-color;
+  flex: 1;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   position: relative;
-  padding: 5px 80px 5px 130px;
-  width: calc(100vw - 333px);
+  padding: 0px 80px 0px 0px;
   box-sizing: border-box;
+  height: 100%;
+  /*line-height: 40px;*/
 
   /deep/ .el-checkbox__label {
     max-width: 150px;
@@ -408,11 +412,15 @@ export default {
     vertical-align: text-bottom;
   }
 }
+.search-content-box:last-of-type{
+  border-bottom: none;
+}
 .search-items {
   display: flex;
-  width: 100%;
+  flex: 1;
   flex-wrap: wrap;
-
+  box-sizing: border-box;
+  line-height: 40px;
   &.search-items--checkbox .el-skeleton {
     height: 21px;
   }

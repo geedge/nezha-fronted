@@ -719,7 +719,7 @@ const en = {
     pingInfo: 'Ping',
     detail: {
       list: 'List',
-      detail: 'Detail',
+      detail: 'View',
       orderBy: 'OrderBy',
       orderByLabel: 'Order by  {label}'
     }

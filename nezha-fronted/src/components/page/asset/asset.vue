@@ -78,7 +78,7 @@
     </nz-data-list>
     <nzDetailView
       v-loading="detailViewLoading || tools.loading"
-      v-show="detailType !== 'list'"
+      v-if="detailType !== 'list'"
       :api="url"
       ref="dataList"
       :layout="dataListLayout"

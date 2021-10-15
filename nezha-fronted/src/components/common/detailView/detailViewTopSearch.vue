@@ -54,8 +54,8 @@
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
-                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children">{{item4.name}}</el-checkbox>
+<!--                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>-->
+                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -128,7 +128,7 @@ export default {
       const arr = label.split('-')
       const obj = oldChildren.find(item => item.id == arr[0])
       const children = obj.children.find(item => item.id == arr[1])
-      return children.name
+      return obj.name + '/' + children.name
     },
     showDropDown (val, key) {
       this.searchStr = this.detailSearchListCopy[key].searchStr
@@ -166,24 +166,24 @@ export default {
     border-radius: 2px;
   }
   .search-detail-box:hover{
-    background-color: rgba(9,30,66,.13);
+    background: #F9F9F9;
   }
   .search-detail-box.select-dropdown{
-    background-color: rgba(9,30,66,.13);
+    background: #F9F9F9;
   }
-  .search-detail-box.show-my-dropdpwn{
-    background-color: #344563;
-    color: #fff;
-    .search-detail-title{
-      color: #fff;
-    }
-    .detail-top-search{
-      color: #fff;
-    }
-    .search-value{
-      color: #fff;
-    }
-  }
+  /*.search-detail-box.show-my-dropdpwn{*/
+  /*  background-color: #344563;*/
+  /*  color: #fff;*/
+  /*  .search-detail-title{*/
+  /*    color: #fff;*/
+  /*  }*/
+  /*  .detail-top-search{*/
+  /*    color: #fff;*/
+  /*  }*/
+  /*  .search-value{*/
+  /*    color: #fff;*/
+  /*  }*/
+  /*}*/
   .detail-dropdown{
     padding: 0 10px;
     height: 30px;
