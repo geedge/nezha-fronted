@@ -335,7 +335,7 @@ export default {
         model: {
           label: this.$t('asset.model'),
           key: 'modelIds',
-          type: 'dropdownCheckBox',
+          type: 'checkBox',
           children: [],
           show: false,
           showMore: false,
@@ -402,7 +402,7 @@ export default {
         model: {
           label: this.$t('asset.model'),
           key: 'modelIdsDetail',
-          type: 'dropdownCheckBox',
+          type: 'checkBox',
           children: [],
           show: false,
           showMore: false,
@@ -482,7 +482,7 @@ export default {
       const params = JSON.parse(JSON.stringify(obj))
       if (this.detailType === 'view') {
         const obj = {}
-        params.modelIds = params.modelIdsDetail.map(item => item.split('-')[1])
+        params.modelIds = params.modelIdsDetail
         params.fieldsDetail.forEach(item => {
           const arr = item.split('-')
           if (obj[arr[0]]) {
@@ -594,16 +594,19 @@ export default {
         // this.$get('asset/model?pageSize=-1').then(response => {
         if (data) {
           this.modelData = data
-          const titleSearchData = {}
+          const arr = []
+          // const titleSearchData = {}
           this.modelData.forEach(m => {
             m.value = []
-            if (titleSearchData[m.brand.name]) {
-              titleSearchData[m.brand.name].children.push(m)
-            } else {
-              titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
-            }
+            arr.push({ ...m, name: m.brand.name + '/' + m.name, value: m.id })
+            // if (titleSearchData[m.brand.name]) {
+            //   titleSearchData[m.brand.name].children.push(m)
+            // } else {
+            //   titleSearchData[m.brand.name] = { ...m.brand, children: [m] }
+            // }
           })
-          resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+          // resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+          resolve(arr)
           // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
         }
         resolve()
@@ -652,9 +655,9 @@ export default {
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.$route.path === '/asset' && !this.titleSearchList.model.children.length) {
         this.$set(this.searchLabel, 'statistics', 1)
-      } else {
+      }/* else {
         delete this.searchLabel.statistics
-      }
+      } */
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
@@ -767,3 +770,12 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+  .list-page /deep/ .main-container{
+    display: flex;
+    flex-direction: column;
+    /deep/ .nz-table2{
+      flex: 1;
+    }
+  }
+</style>

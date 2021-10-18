@@ -109,23 +109,29 @@ export default {
         } else if (data.type === 'dropdownCheckBox') {
           className = 'search-items--dropdown'
         }
+        if (data.showMore) {
+          className += 'more'
+        }
         return className
       }
     },
     height () {
-      const paddingHeight = 30
-      const checkBoxRowHeight = 32
-      const labelRowHeight = 39
+      const paddingHeight = 0
+      const checkBoxRowHeight = 40
+      const labelRowHeight = 40
       let checkBoxRowCount = 0
       let labelRowCount = 0
       Object.keys(this.titleSearchListCopy).forEach(type => {
+        if (this.titleSearchListCopy[type].children.length === 0) {
+          return
+        }
         if (this.titleSearchListCopy[type].type === 'checkBox') {
           checkBoxRowCount++
         } else if (this.titleSearchListCopy[type].type === 'dropdownCheckBox') {
           labelRowCount++
         }
       })
-      return paddingHeight + checkBoxRowHeight * checkBoxRowCount + labelRowHeight * labelRowCount + 2
+      return paddingHeight + checkBoxRowHeight * checkBoxRowCount + labelRowHeight * labelRowCount + checkBoxRowCount + labelRowCount + 1
     },
     getHeight () {
       if (this.changeMoreNum) {
@@ -388,9 +394,9 @@ export default {
   }
 }
 .search-box__container {
-  display: flex;
+  /*display: flex;*/
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   /*padding: 15px 0 15px 17px;*/
   box-sizing: border-box;
   border: 1px solid $--right-box-border-color;
@@ -424,7 +430,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   position: relative;
-  padding: 0px 80px 0px 0px;
+  padding: 0;
   box-sizing: border-box;
   /*line-height: 40px;*/
 
@@ -436,6 +442,13 @@ export default {
     vertical-align: text-bottom;
   }
 }
+.search-content-box {
+  background: #F9F9F9;
+  align-items: unset;
+  .search-title{
+    /*flex: 1;*/
+  }
+}
 .search-content-box:last-of-type{
   border-bottom: none;
 }
@@ -444,12 +457,22 @@ export default {
   flex: 1;
   flex-wrap: wrap;
   box-sizing: border-box;
-  margin-left: 15px;
+  padding-left: 15px;
+  padding-right: 80px;
+  background: #FFFFFF;
   &.search-items--checkbox .el-skeleton {
     height: 21px;
   }
   &.search-items--dropdown .el-skeleton {
     height: 28px;
+  }
+  .el-checkbox{
+    line-height: 40px;
+  }
+}
+.more.search-items{
+  .el-checkbox{
+    line-height: 40px;
   }
 }
 .search-more {

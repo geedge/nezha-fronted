@@ -22,7 +22,7 @@
                       type="button">
                 <i class="nz-icon nz-icon-detail-view" />
               </button>
-              <el-dropdown-menu slot="dropdown" >
+              <el-dropdown-menu slot="dropdown"  class="right-public-box-dropdown-top">
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">{{$t('asset.detail.list')}}</el-dropdown-item>
                 <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">{{$t('asset.detail.detail')}}</el-dropdown-item>
               </el-dropdown-menu>

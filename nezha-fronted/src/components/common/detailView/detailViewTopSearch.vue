@@ -1,16 +1,17 @@
 <template>
   <div style="line-height: 32px;">
-    <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key'>
-      <span class="search-detail-title"  v-if="!selectValue[item.key].length">{{item.label}} :</span>
+    <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key' v-show="item.children.length">
       <span v-if="item.type === 'checkBox'">
             <el-dropdown
+              :placement="'bottom-start'"
               class="detail-dropdown"
               type="primary"
               :trigger="'click'"
               :hide-on-click="false"
               @visible-change="(val)=>{showDropDown(val, key)}"
             >
-              <div>
+              <div style="padding-left: 10px;">
+                <span class="search-detail-title"  v-if="!selectValue[item.key].length">{{item.label}} :</span>
                 <div class="detail-top-search" v-if="selectValue[item.key].length">
                    <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
                   {{item.oldChildren.find(dc=>dc.id==item2).name}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
@@ -33,13 +34,15 @@
           </span>
       <span v-else-if="item.type === 'dropdownCheckBox'&& key !== 'assetLabel'">
             <el-dropdown
+              :placement="'bottom-start'"
               class="detail-dropdown"
               type="primary"
               :trigger="'click'"
               :hide-on-click="false"
               @visible-change="searchStr = detailSearchListCopy[key].searchStr"
             >
-              <div>
+             <div style="padding-left: 10px;">
+                <span class="search-detail-title"  v-if="!selectValue[item.key].length">{{item.label}} :</span>
                 <div class="detail-top-search" v-if="selectValue[item.key].length">
                    <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
                   {{getSearchStr(item.oldChildren,item2)}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
@@ -63,13 +66,15 @@
           </span>
       <span v-else-if="item.type === 'dropdownCheckBox'&& key === 'assetLabel'">
             <el-dropdown
+              :placement="'bottom-start'"
               class="detail-dropdown"
               type="primary"
               :trigger="'click'"
               :hide-on-click="false"
               @visible-change="searchStr = detailSearchListCopy[key].searchStr"
             >
-              <div>
+              <div style="padding-left: 10px;">
+                <span class="search-detail-title"  v-if="!selectValue[item.key].length">{{item.label}} :</span>
                 <div class="detail-top-search" v-if="selectValue[item.key].length">
                    <span v-for="(item2,index2) in selectValue[item.key]" :key="item2" class="search-value">
                   {{getSearchStr(item.oldChildren,item2,key)}}<span v-if="index2+1 !== selectValue[item.key].length">,</span>
@@ -196,7 +201,6 @@ export default {
     display: inline-block;
     margin-right: 20px;
     transition: background-color .1s ease-out;
-    padding-left: 10px;
     border-radius: 2px;
   }
   .search-detail-box:hover{
@@ -230,6 +234,7 @@ export default {
     letter-spacing: 0;
     line-height: 14px;
     font-weight: 600;
+    margin-right: 10px;
   }
   .search-value{
     font-size: 14px;
