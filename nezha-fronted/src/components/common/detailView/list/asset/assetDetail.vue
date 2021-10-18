@@ -1,7 +1,7 @@
 <template>
   <div class="detail-left-box">
     <div class="order-box">
-      <el-select v-model="orderBy" size="small" :placeholder="$t('asset.detail.orderBy')" class="detail-select">
+      <el-select v-model="orderBy" size="small" :placeholder="$t('asset.detail.orderBy')" popper-class="right-box-select-top" class="detail-select">
         <el-option
           v-for="item in tableTitle"
           v-if="item.sortable==='custom'"
