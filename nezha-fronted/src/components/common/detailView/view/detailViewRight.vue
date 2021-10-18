@@ -109,6 +109,7 @@ export default {
     obj: {
       immediate: true,
       handler (n) {
+        this.targetTab = 'panelTab'
         if ((this.from === fromRoute.asset) && n) {
           const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
           if (n.childrenNum) {
