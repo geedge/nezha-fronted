@@ -93,8 +93,8 @@
             <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
               <!--type-->
               <el-form-item :label='$t("project.endpoint.protocol")' class="half-form-item" prop="type">
-                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top right-box-public-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
-                  <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                <el-select id="module-box-input-type" v-model="editModule.configs[0].config.protocol" :disabled="!!editModule.id && editModule.configs[0].config.protocol === 'snmp'" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top right-box-public-dropdown prevent-clickoutside" size="small" value-key="id" @change="changeBasicType">
+                  <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value" :disabled="item.disabled && !!editModule.id"></el-option>
                 </el-select>
               </el-form-item>
               <!--host-->
@@ -653,15 +653,18 @@ export default {
       typeList: [
         {
           value: 'http',
-          name: 'HTTP'
-        },
-        {
-          value: 'snmp',
-          name: 'SNMP'
+          name: 'HTTP',
+          disabled: false
         },
         {
           value: 'https',
-          name: 'HTTPS'
+          name: 'HTTPS',
+          disabled: false
+        },
+        {
+          value: 'snmp',
+          name: 'SNMP',
+          disabled: true
         }
       ],
       logsBasicList: [
