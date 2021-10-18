@@ -20,6 +20,7 @@
           :height="subTableHeight"
           :table-data="tableData"
           @del="del"
+          class="cabinet-table__top"
           @copy="copy"
           @edit="edit"
           @orderBy="tableDataSort"

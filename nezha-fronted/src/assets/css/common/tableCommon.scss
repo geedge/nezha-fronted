@@ -322,6 +322,11 @@
       top: 41px !important;
     }
   }
+  .cabinet-table__top {
+    .el-table__fixed-body-wrapper {
+      top: 40px !important;
+    }
+  }
   .el-table__body-wrapper, .el-table__fixed-body-wrapper {
     box-shadow: 1px 0 $--right-box-border-color;
 
