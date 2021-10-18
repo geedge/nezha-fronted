@@ -112,7 +112,7 @@
               <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                 <!--type-->
                 <el-form-item :label='$t("project.endpoint.protocol")' class="half-form-item" prop="type">
-                  <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id && editEndpoint.configs[0].config.protocol === 'snmp'" class="right-box__select" placeholder="" popper-class="prevent-clickoutside" size="small" value-key="id">
+                  <el-select id="module-box-input-type" v-model="editEndpoint.configs[0].config.protocol" :disabled="!!editEndpoint.id && editEndpoint.configs[0].config.protocol === 'snmp'" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                     <el-option v-for="item in typeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value" :disabled="item.disabled && !!editEndpoint.id"></el-option>
                   </el-select>
                 </el-form-item>
