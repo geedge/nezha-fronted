@@ -21,7 +21,6 @@
           :table-data="tableData"
           :assetTab="true"
           @del="del"
-          class="bottom-box__top"
           @edit="edit"
           @cli="cli"
           @duplicate="duplicate"

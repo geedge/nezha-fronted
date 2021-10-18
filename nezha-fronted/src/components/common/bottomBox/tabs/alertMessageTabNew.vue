@@ -28,7 +28,6 @@
           :now-time="nowTime"
           :table-data="tableData"
           :alertMessageTabNew="true"
-          class="bottom-box__top"
           @del="del"
           @showText="showText"
           @edit="edit"
