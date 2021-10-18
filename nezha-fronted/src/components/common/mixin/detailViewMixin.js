@@ -59,7 +59,6 @@ export default {
           this.selectValue.fields = ''
         }
       }
-      this.pageObj.pageNo = 1
       setTimeout(() => {
         this.detailViewLoading = false
         this.$refs.clickSearch && this.$refs.clickSearch.needMore()

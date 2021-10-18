@@ -702,6 +702,13 @@ export default {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
           this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
         }
+        if (this.titleSearchList[key].children.length === 0) {
+          // delete this.titleSearchList[key]
+          // delete this.detailSearchList[key]
+        } else {
+          this.titleSearchList[key].show = true
+          this.detailSearchList[key].show = true
+        }
         this.titleSearchList[key].show = true
         this.detailSearchList[key].show = true
       })

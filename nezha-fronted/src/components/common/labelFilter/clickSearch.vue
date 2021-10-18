@@ -1,6 +1,6 @@
 <template>
   <div :style="{'min-height': height + 'px',height:getHeight + 'px'}" class="search-box__container">
-    <div v-for="(data, type, index) in titleSearchListCopy" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-if="data.children&&data.children.length" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
       <div class="search-title">{{data.label}}:</div>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
@@ -215,16 +215,24 @@ export default {
         this.titleSearchListCopy[type].children.forEach(c => {
           cascs.push(this.$refs[`${type}_${c.id}_cascader`][0])
         })
-        if (type === 'assetLabel') { // label特殊处理，组织成{“id”:[“张三”,"lw"],"id":["李四"]}
+        if (type === 'assetLabel' || type === 'state') { // label特殊处理，组织成{“id”:[“张三”,"lw"],"id":["李四"]}
           const values = {}
           cascs.forEach(c => {
             const nodes = c.$refs.cascader.getCheckedNodes()
             nodes.forEach(n => {
               const metaId = n.data.metaId
-              if (values[metaId]) {
-                values[metaId].push(n.data.name)
+              if (type === 'assetLabel') {
+                if (values[metaId]) {
+                  values[metaId].push(n.data.name)
+                } else {
+                  values[metaId] = [n.data.name]
+                }
               } else {
-                values[metaId] = [n.data.name]
+                if (values[metaId]) {
+                  values[metaId].push(n.data.id)
+                } else {
+                  values[metaId] = [n.data.id]
+                }
               }
             })
           })

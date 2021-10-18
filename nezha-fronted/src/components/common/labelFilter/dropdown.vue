@@ -39,7 +39,7 @@ export default {
       immediate: true,
       handler (n) {
         this.cascaderData = []
-        if (n && this.type !== 'fields') {
+        if (n && this.type !== 'fields' && this.type !== 'state') {
           n.forEach(item => {
             if (this.item.children.find(children => children.id == item)) {
               this.cascaderData.push([item])
@@ -48,7 +48,7 @@ export default {
               })
             }
           })
-        } else if (n && this.type === 'fields') {
+        } else if (n && (this.type === 'fields' || this.type === 'state')) {
           const obj = JSON.parse(n)
           if (obj[this.item.id]) {
             obj[this.item.id].forEach(item => {

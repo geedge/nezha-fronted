@@ -292,7 +292,7 @@ export default {
         state: {
           label: 'State',
           key: 'state',
-          type: 'checkBox',
+          type: 'dropdownCheckBox',
           children: [],
           show: false,
           showMore: false,
@@ -313,7 +313,7 @@ export default {
       selectValue: {
         projectIds: [],
         moduleIds: [],
-        state: [],
+        state: '',
         type: []
       },
       searchCheckBox: {},
@@ -449,6 +449,11 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
+      if (this.$route.path === '/monitor/endpoint' && !this.titleSearchList.project.children.length) {
+        this.$set(this.searchLabel, 'statistics', 1)
+      } else {
+        delete this.searchLabel.statistics
+      }
       const params = {
         ...this.searchLabel,
         ...this.searchCheckBox
@@ -458,6 +463,9 @@ export default {
       this.$get(this.url, params).then(response => {
         this.tools.loading = false
         if (response.code === 200) {
+          if (response.statistics && this.$route.path === '/monitor/endpoint') {
+            this.setSearchData(response.statistics)
+          }
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].configs.forEach(item => {
               item.config = JSON.parse(item.config)
@@ -475,42 +483,91 @@ export default {
       })
     },
     reloadTable (obj) {
-      Object.keys(obj).forEach(key => {
-        if (key === 'change') {
-          return
+      const params = JSON.parse(JSON.stringify(obj))
+      if (this.detailType === 'view') {
+        const obj = {}
+        params.modelIds = params.modelIdsDetail.map(item => item.split('-')[1])
+        params.fieldsDetail.forEach(item => {
+          const arr = item.split('-')
+          if (obj[arr[0]]) {
+            obj[arr[0]].push(arr[1])
+          } else {
+            obj[arr[0]] = [arr[1]]
+          }
+        })
+        params.fields = JSON.stringify(obj)
+        if (params.fields === '{}') {
+          params.fields = ''
         }
-        this.searchCheckBox[key] = obj[key].join(',')
+        delete params.modelIdsDetail
+        delete params.fieldsDetail
+      }
+      Object.keys(params).forEach(key => {
+        if (typeof params[key] === 'string') {
+          this.searchCheckBox[key] = params[key] ? params[key] : null
+        } else {
+          params[key] && params[key].length > 0 ? this.searchCheckBox[key] = params[key].join(',') : this.searchCheckBox[key] = null
+        }
       })
-      this.getTableData()
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      } else {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      }
     },
-    getTitleSearch () {
-      this.$get('monitor/project', { pageSize: -1 }).then(res => {
-        if (res.code === 200) {
-          this.titleSearchList.project.children = res.data.list.map(item => {
-            return { key: item.name, value: item.id, name: item.name }
+    getSearchableStateData (data) {
+      return new Promise(resolve => {
+        // this.$get('asset/model?pageSize=-1').then(response => {
+        if (data) {
+          this.modelData = data
+          const titleSearchData = {}
+          this.modelData.forEach(m => {
+            m.value = []
+            m.metaId = m.type
+            if (titleSearchData[m.type]) {
+              titleSearchData[m.type].children.push(m)
+            } else {
+              titleSearchData[m.type] = { ...m, children: [m], name: m.type, id: m.type }
+            }
           })
-          this.titleSearchList.project.show = true
+          resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
+          // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
         }
+        resolve()
+        // })
       })
-      this.$get('monitor/module', { pageSize: -1 }).then(res => {
-        if (res.code === 200) {
-          this.titleSearchList.module.children = res.data.list.map(item => {
-            return { key: item.name, value: item.id, name: item.name }
+    },
+    setSearchData (statistics) {
+      Object.keys(this.titleSearchList).forEach(key => {
+        let keys = key
+        if (key === 'projectIds') {
+          keys = 'project'
+        } else if (key === 'moduleIds') {
+          keys = 'module'
+        }
+        if (key === 'state') {
+          this.getSearchableStateData(statistics[keys]).then(res => {
+            this.titleSearchList.state.children = res
+            // this.detailSearchList.state.children = res
+            this.titleSearchList.state.show = true
+            // this.detailSearchList.state.show = true
           })
-          this.titleSearchList.module.show = true
+        } else {
+          this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
+          // this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
         }
+        this.titleSearchList[key].show = true
+        // this.detailSearchList[key].show = true
       })
-      this.titleSearchList.state.children = [
-        { key: 'Down', value: 0, name: 'Down' },
-        { key: 'Up', value: 1, name: 'Up' },
-        { key: 'Suspended', value: 2, name: 'Suspended' }
-      ]
-      // this.titleSearchList.type.children = [
-      //   { key: 'Metrics', value: 'metrics', name: 'Metrics' },
-      //   { key: 'Logs', value: 'logs', name: 'Logs' }
-      // ]
-      this.titleSearchList.state.show = true
-      // this.titleSearchList.type.show = true
     },
     batchModify () {
       if (!this.batchDeleteObjs.length) {
@@ -550,7 +607,7 @@ export default {
       this.selectValue.projectIds = [Number(localStorage.getItem('endpointProjectId'))]
       // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
     }
-    this.getTitleSearch()
+    // this.getTitleSearch()
   },
   watch: {
     $route: {
