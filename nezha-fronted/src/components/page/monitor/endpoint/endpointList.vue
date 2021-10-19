@@ -484,27 +484,19 @@ export default {
     },
     reloadTable (obj) {
       const params = JSON.parse(JSON.stringify(obj))
-      if (this.detailType === 'view') {
-        const obj = {}
-        params.modelIds = params.modelIdsDetail.map(item => item.split('-')[1])
-        params.fieldsDetail.forEach(item => {
-          const arr = item.split('-')
-          if (obj[arr[0]]) {
-            obj[arr[0]].push(arr[1])
-          } else {
-            obj[arr[0]] = [arr[1]]
-          }
-        })
-        params.fields = JSON.stringify(obj)
-        if (params.fields === '{}') {
-          params.fields = ''
-        }
-        delete params.modelIdsDetail
-        delete params.fieldsDetail
-      }
+      delete this.searchCheckBox.metricsStates
+      delete this.searchCheckBox.logsStates
       Object.keys(params).forEach(key => {
         if (typeof params[key] === 'string') {
-          this.searchCheckBox[key] = params[key] ? params[key] : null
+          if (key === 'state') {
+            const state = JSON.parse(params[key])
+            if (state.metrics) {
+              this.searchCheckBox.metricsStates = state.metrics.join(',')
+            }
+            if (state.logs) {
+              this.searchCheckBox.logsStates = state.logs.join(',')
+            }
+          }
         } else {
           params[key] && params[key].length > 0 ? this.searchCheckBox[key] = params[key].join(',') : this.searchCheckBox[key] = null
         }
