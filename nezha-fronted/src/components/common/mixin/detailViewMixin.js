@@ -17,7 +17,9 @@ export default {
         return
       }
       this.$refs.dataList.bottomBox.showSubList = false
-      this.detailViewRightObj = ''
+      if (this.orderBy) {
+        this.detailViewRightObj = ''
+      }
       this.detailType = flag
       let dataList = ''
       localStorage.setItem('detail-view-' + this.tableId, this.detailType)
@@ -25,11 +27,15 @@ export default {
         dataList = 'detailList'
         if (this.from === this.fromRoute.asset) {
           this.setAsset(true)
+        } else if (this.from === this.fromRoute.endpoint) {
+          this.setEndpoint(true)
         }
       } else {
         dataList = 'dataList'
         if (this.from === this.fromRoute.asset) {
           this.setAsset(false)
+        } else if (this.from === this.fromRoute.endpoint) {
+          this.setEndpoint(false)
         }
       }
       setTimeout(() => {
@@ -107,6 +113,33 @@ export default {
         this.selectValue.fields = JSON.stringify(obj)
         if (this.selectValue.fields === '{}') {
           this.selectValue.fields = ''
+        }
+      }
+    },
+    setEndpoint (flag) {
+      if (flag) {
+        this.selectValue.stateDetail = []
+        if (this.selectValue.state) {
+          const obj = JSON.parse(this.selectValue.state)
+          Object.keys(obj).forEach(key => {
+            obj[key].forEach(item => {
+              this.selectValue.stateDetail.push(key + '-' + item)
+            })
+          })
+        }
+      } else {
+        const obj = {}
+        this.selectValue.stateDetail.forEach(item => {
+          const arr = item.split('-')
+          if (obj[arr[0]]) {
+            obj[arr[0]].push(arr[1])
+          } else {
+            obj[arr[0]] = [arr[1]]
+          }
+        })
+        this.selectValue.state = JSON.stringify(obj)
+        if (this.selectValue.state === '{}') {
+          this.selectValue.state = ''
         }
       }
     }

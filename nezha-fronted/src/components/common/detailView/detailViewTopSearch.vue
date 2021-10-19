@@ -32,7 +32,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </span>
-      <span v-else-if="item.type === 'dropdownCheckBox'&& key !== 'assetLabel'">
+      <span v-else-if="item.type === 'dropdownCheckBox'&& key !== 'assetLabel' && key !== 'state'">
             <el-dropdown
               :placement="'bottom-start'"
               class="detail-dropdown"
@@ -64,7 +64,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </span>
-      <span v-else-if="item.type === 'dropdownCheckBox'&& key === 'assetLabel'">
+      <span v-else-if="item.type === 'dropdownCheckBox'&& (key === 'assetLabel' || key === 'state')">
             <el-dropdown
               :placement="'bottom-start'"
               class="detail-dropdown"
@@ -90,7 +90,7 @@
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
                       <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item4.name">{{item4.name}}</el-checkbox>
+                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item4.name" :a="item3.id+'-'+item4.id">{{item4.name}}</el-checkbox>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>

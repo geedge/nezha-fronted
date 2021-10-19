@@ -122,7 +122,7 @@
 
       </template>
       <template v-slot:search>
-        <click-search :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"></click-search>
+        <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"></click-search>
       </template>
       <template  v-slot:default="slotProps">
         <endpoint-table
@@ -413,7 +413,7 @@ export default {
         },
         state: {
           label: 'State',
-          key: 'state',
+          key: 'stateDetail',
           type: 'dropdownCheckBox',
           children: [],
           show: false,
@@ -436,6 +436,7 @@ export default {
         projectIds: [],
         moduleIds: [],
         state: '',
+        stateDetail: [],
         type: []
       },
       searchCheckBox: {},
@@ -610,9 +611,25 @@ export default {
       const params = JSON.parse(JSON.stringify(obj))
       delete this.searchCheckBox.metricsStates
       delete this.searchCheckBox.logsStates
+      if (this.detailType === 'view') {
+        const obj = {}
+        params.stateDetail.forEach(item => {
+          const arr = item.split('-')
+          if (obj[arr[0]]) {
+            obj[arr[0]].push(arr[1])
+          } else {
+            obj[arr[0]] = [arr[1]]
+          }
+        })
+        params.state = JSON.stringify(obj)
+        if (params.state === '{}') {
+          params.state = ''
+        }
+        delete params.stateDetail
+      }
       Object.keys(params).forEach(key => {
         if (typeof params[key] === 'string') {
-          if (key === 'state') {
+          if (key === 'state' && params[key]) {
             const state = JSON.parse(params[key])
             if (state.metrics) {
               this.searchCheckBox.metricsStates = state.metrics.join(',')
@@ -649,11 +666,19 @@ export default {
           this.modelData.forEach(m => {
             m.value = []
             m.metaId = m.type
-            if (titleSearchData[m.type]) {
-              titleSearchData[m.type].children.push(m)
-            } else {
-              titleSearchData[m.type] = { ...m, children: [m], name: m.type, id: m.type }
+            if (!titleSearchData[m.type]) {
+              titleSearchData[m.type] = { ...m, children: [], name: m.type, id: m.type }
             }
+            if (m.id == '1') {
+              titleSearchData[m.type].children[0] = m
+            } else if (m.id == '0') {
+              titleSearchData[m.type].children[1] = m
+            } else if (m.id == '2') {
+              titleSearchData[m.type].children[2] = m
+            }
+          })
+          this.modelData.forEach(m => {
+            titleSearchData[m.type].children = titleSearchData[m.type].children.filter(item => item)
           })
           resolve(Object.keys(titleSearchData).map(b => titleSearchData[b]))
           // this.titleSearchList.model.children = Object.keys(titleSearchData).map(b => titleSearchData[b])
