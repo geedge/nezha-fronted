@@ -10,6 +10,7 @@
       :search-msg="searchMsg"
       :detailType="detailType"
       :detailViewRightObj="detailViewRightObj"
+      :dataLength="tableData.length"
       @search="search"
       @changeDetailType="changeDetailType"
     >

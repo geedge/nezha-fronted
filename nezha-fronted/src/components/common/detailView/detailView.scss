@@ -2,6 +2,15 @@
   width: 100%;
   height: calc(100% - 60px);
   display: flex;
+  .no-data{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    color: #909399;
+    font-size: 14px;
+  }
   .nz-detail-view-left{
     width: 260px;
     display: flex;

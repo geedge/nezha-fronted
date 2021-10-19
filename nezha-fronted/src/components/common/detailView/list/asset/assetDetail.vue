@@ -17,9 +17,16 @@
       </button>
     </div>
     <ul class="detail-row-box" ref="dataTable">
-      <li v-for="(item,index) in tableData" :key="index" class="detail-row" @click="detailViewRightShow(item)" :class="item.id === detailViewRightObj.id ? 'selected' : ''">
+      <li
+        v-for="(item,index) in tableData"
+        :key="index"
+        class="detail-row"
+        :class="item.id === detailViewRightObj.id ? 'selected' : ''"
+        @click="detailViewRightShow(item)"
+        @mouseenter="labelHover(item, 'asset', true, $event)"
+        @mouseleave="labelHover(item, 'asset', false)">
         <div class="detail-row-info">
-          <div class="asset-manageIp" :title="item.name">
+          <div class="asset-manageIp">
             <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
             <span slot="reference">
               <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
@@ -31,6 +38,12 @@
           </div>
           <div class="asset-name" :title="item.manageIp">{{item.manageIp}}</div>
         </div>
+        <alertLabel
+          v-if="item && item.loading"
+          :id="item.id"
+          :that="item"
+          :type="'asset'"
+        ></alertLabel>
       </li>
     </ul>
   </div>
@@ -39,10 +52,13 @@
 <script>
 
 import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
-
+import alertLabel from '@/components/common/alert/alertLabel'
 export default {
   name: 'assetDetail',
   mixins: [detailViewLeftMixin],
+  components: {
+    alertLabel
+  },
   data () {
     return {
       tableTitle: [
@@ -146,6 +162,18 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    // label 鼠标划入
+    labelHover (item, type, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+      }
+      this.$set(item, 'loading', loading)
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
   }
 }
 </script>

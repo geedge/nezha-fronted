@@ -32,13 +32,16 @@
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
         <div :style="{ height: nzTableHeight }" class="nz-detail-view">
-          <div class="nz-detail-view-left">
+          <div class="nz-detail-view-left" v-if="dataLength">
             <slot name="nz-detail-view-list"></slot>
             <div v-if="showLayout.indexOf('pagination') > -1" class="nz-detail-view-pagination">
               <slot name="pagination"></slot>
             </div>
           </div>
-          <div class="nz-detail-view-right">
+          <div v-else class="no-data">
+            No Data
+          </div>
+          <div class="nz-detail-view-right"   v-if="detailViewRightObj">
             <detailViewRight
               @getTableData = 'getTableData'
               ref="detailViewRight"
@@ -78,6 +81,10 @@ export default {
     },
     customTableTitle: {
       type: Array
+    },
+    dataLength: {
+      type: Number,
+      default: 1
     },
     layout: {
       type: Array,
