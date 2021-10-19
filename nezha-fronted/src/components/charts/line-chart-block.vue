@@ -1985,6 +1985,37 @@ export default {
       if (getChart(this.chartIndex)) {
         const divHeight = this.$refs.legendArea.offsetHeight
         getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+        let minInterval = ''
+        let splitNumber = ''
+        if (this.fromTopo) {
+          const panelTime = localStorage.getItem('panelTime') ? JSON.parse(localStorage.getItem('panelTime')) : ['', '']
+          if (panelTime[0]) {
+            const numInterval = new Date(panelTime[1]).getTime() - new Date(panelTime[0]).getTime()
+            if (numInterval >= 60 * 60 * 1000) {
+              minInterval = 20 * 60 * 1000
+            } else if (numInterval >= 30 * 60 * 1000 && numInterval < 60 * 60 * 1000) {
+              minInterval = 10 * 60 * 1000
+            } else if (numInterval >= 15 * 60 * 1000 && numInterval < 30 * 60 * 1000) {
+              minInterval = 5 * 60 * 1000
+            } else if (numInterval >= 5 * 60 * 1000 && numInterval < 15 * 60 * 1000) {
+              minInterval = 1 * 60 * 1000
+            } else {
+              minInterval = 15 * 1000
+            }
+          } else {
+            minInterval = 20 * 60 * 1000
+          }
+          getChart(this.chartIndex).setOption({ xAxis: { minInterval: minInterval } })
+        } else {
+          if (this.$refs.resizeBox.offsetWidth < 200) {
+            splitNumber = 1
+          } else if (this.$refs.resizeBox.offsetWidth < 300) {
+            splitNumber = 3
+          } else if (this.$refs.resizeBox.offsetWidth < 500) {
+            splitNumber = 5
+          }
+          getChart(this.chartIndex).setOption({ xAxis: { splitNumber: splitNumber } })
+        }
       }
     }
   },
