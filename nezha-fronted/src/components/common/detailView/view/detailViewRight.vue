@@ -103,6 +103,8 @@ export default {
       handler (n) {
         if (n === fromRoute.asset) {
           this.targetTab = 'panelTab'
+        } else if (n === fromRoute.endpoint) {
+          this.targetTab = 'panelTab'
         }
       }
     },

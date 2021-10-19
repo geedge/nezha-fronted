@@ -1,7 +1,78 @@
 <template>
   <div>
+    <nzDetailView
+      v-loading="detailViewLoading || tools.loading"
+      v-if="detailType !== 'list'"
+      :api="url"
+      ref="detailList"
+      :layout="dataListLayout"
+      :from="fromRoute.endpoint"
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      :dataLength="tableData.length"
+      @search="search"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-left>
+        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          :permissions="{
+                  import: 'asset_add',
+                  export: 'asset_view'
+                }"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="asset"
+          export-url="/asset/asset/export"
+          import-url="/asset/asset/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <endpoint-detail
+          class="data-detail"
+          ref="dataDetail"
+          :orderByFa="orderBy"
+          v-loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
+        >
+        </endpoint-detail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
     <nz-data-list
+      v-loading="detailViewLoading"
       ref="dataList"
+      v-show="detailType === 'list'"
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.endpoint"
@@ -9,6 +80,8 @@
       :search-msg="searchMsg"
       :nz-table-height-offset="endpointNzTableHeightOffset"
       @search="search"
+      :detailType="detailType"
+      @changeDetailType="changeDetailType"
       @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
@@ -140,6 +213,10 @@ import batchAddEndpoint from '@/components/common/rightBox/batchAddEndpoint'
 import clickSearch from '@/components/common/labelFilter/clickSearch'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
+import nzDetailView from '@/components/common/detailView/nzDetailView'
+import detailViewMixin from '@/components/common/mixin/detailViewMixin'
+import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
+import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 
 export default {
   name: 'endpointList',
@@ -153,9 +230,12 @@ export default {
     batchModifyEndpoint,
     topToolMoreOptions,
     alertSilenceBox,
-    batchAddEndpoint
+    batchAddEndpoint,
+    nzDetailView,
+    endpointDetail,
+    detailViewTopSearch
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'monitor/endpoint',
@@ -236,7 +316,7 @@ export default {
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 244px)', // 主列表table高度
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
+      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
@@ -269,6 +349,48 @@ export default {
       },
       titleSearch: {},
       titleSearchList: {
+        project: {
+          label: 'Project',
+          key: 'projectIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        module: {
+          label: 'Module',
+          key: 'moduleIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        state: {
+          label: 'State',
+          key: 'state',
+          type: 'dropdownCheckBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        }
+        // type: {
+        //   label: 'Type',
+        //   key: 'type',
+        //   type: 'checkBox',
+        //   children: [],
+        //   show: false,
+        //   showMore: false,
+        //   width: 0,
+        //   index: -1
+        // }
+      },
+      detailSearchList: {
         project: {
           label: 'Project',
           key: 'projectIds',
@@ -446,13 +568,13 @@ export default {
     getTableData () {
       if (this.orderBy) {
         this.$set(this.searchLabel, 'orderBy', this.orderBy)
+      } else {
+        delete this.searchLabel.orderBy
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
       if (this.$route.path === '/monitor/endpoint' && !this.titleSearchList.project.children.length) {
         this.$set(this.searchLabel, 'statistics', 1)
-      } else {
-        delete this.searchLabel.statistics
       }
       const params = {
         ...this.searchLabel,
@@ -472,7 +594,9 @@ export default {
             })
           }
           this.tableData = response.data.list
+          this.detailViewRightObj = this.tableData[0]
           this.pageObj.total = response.data.total
+          this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
@@ -549,16 +673,16 @@ export default {
         if (key === 'state') {
           this.getSearchableStateData(statistics[keys]).then(res => {
             this.titleSearchList.state.children = res
-            // this.detailSearchList.state.children = res
+            this.detailSearchList.state.children = res
             this.titleSearchList.state.show = true
-            // this.detailSearchList.state.show = true
+            this.detailSearchList.state.show = true
           })
         } else {
           this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
-          // this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
+          this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id, key: d.name, name: d.name } })
         }
         this.titleSearchList[key].show = true
-        // this.detailSearchList[key].show = true
+        this.detailSearchList[key].show = true
       })
     },
     batchModify () {
