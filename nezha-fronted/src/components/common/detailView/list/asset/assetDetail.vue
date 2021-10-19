@@ -27,11 +27,9 @@
         @mouseleave="labelHover(item, 'asset', false)">
         <div class="detail-row-info">
           <div class="asset-manageIp">
-            <el-popover :content="$t('asset.assetStatPre')+(item.pingInfo.lastUpdate?utcTimeToTimezoneStr(item.pingInfo.lastUpdate):$t('asset.assetStatDown'))" v-if="item.pingInfo" placement="right" trigger="hover">
-            <span slot="reference">
+            <span v-if="item.pingInfo" >
               <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
             </span>
-            </el-popover>
             <span v-else style="display: inline-block;width: 13px">
             </span>
             {{item.name}}

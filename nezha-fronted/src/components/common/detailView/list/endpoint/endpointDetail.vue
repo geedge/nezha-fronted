@@ -27,9 +27,45 @@
         @mouseleave="labelHover(item, 'endpoint', false)">
         <div class="detail-row-info">
           <div class="asset-manageIp">
+            <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
           </div>
-          <div class="asset-name" :title="item.manageIp">{{item.asset?item.asset.manageIp:''}}</div>
+          <div class="asset-name">
+            <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="item.configs[0].state<2">
+              <div>
+                <div v-html="suspendedStr(item.configs[0].state)"></div>
+              </div>
+              <span slot="reference" style="width: auto">
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+              <span v-if="item.configs[0].state===0 || !item.configs[0].state">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="item.configs[0].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="item.configs[0].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
+            </span>
+            </el-popover>
+            <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="item.configs[1].state<2">
+              <div>
+                <div v-html="suspendedStr(item.configs[1].state)"></div>
+              </div>
+              <span slot="reference" style="width: auto">
+              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+              <span v-if="item.configs[1].state===0 || !item.configs[1].state">
+                <span class="active-icon red-bg inline-block"></span>
+              </span>
+              <span v-else-if="item.configs[1].state===1">
+                <span class="active-icon green-bg inline-block"></span>
+              </span>
+              <span v-else-if="item.configs[1].state">
+                <span class="active-icon gray-bg inline-block"></span>
+              </span>
+            </span>
+            </el-popover>
+          </div>
         </div>
         <alertLabel
           v-if="item && item.loading"
@@ -125,6 +161,30 @@ export default {
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
     },
+    suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
+      if (!status || status === 1 || status == 0) { return '' }
+      const arr = status.toString(2).split('')
+      while (arr.length < 4) {
+        arr.unshift('0')
+      }
+      arr.pop()
+      let str = ''
+      arr.forEach((item, index) => {
+        if (index === 0) {
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> DC</div>`
+        }
+        if (index === 1) {
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> ASSET</div>`
+        }
+        if (index === 2) {
+          str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> ENDPOINT</div>`
+        }
+        // if (index === 3) {
+        //   str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
+        // }
+      })
+      return str
+    },
   }
 }
 </script>
@@ -217,5 +277,14 @@ export default {
   }
   .selected{
     background: #FFFBF6;
+  }
+  .colorEF7458{
+    color: #EF7458;
+  }
+  .color23BF9A{
+    color: #23BF9A;
+  }
+  .colorFA901C{
+    color: #fa901c;
   }
 </style>

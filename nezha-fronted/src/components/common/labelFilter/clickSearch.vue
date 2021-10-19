@@ -1,6 +1,6 @@
 <template>
   <div :style="{'min-height': height + 'px',height:getHeight + 'px'}" class="search-box__container">
-    <div v-for="(data, type, index) in titleSearchListCopy" v-if="data.children&&data.children.length" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
+    <div v-for="(data, type, index) in titleSearchListCopy" v-if="!(data.children&&data.children.length === 0&&type==='assetLabel')" v-cloak :key="index" ref="searchContentBox" :class="{'search-content-box-height': data.length == 0}" class="search-content-box">
       <div class="search-title">{{data.label}}:</div>
       <el-skeleton v-if="data.type === 'checkBox'" :class="skeletonClass(data)" :loading="!data.show" :rows="1" class="search-items">
         <template>
@@ -122,7 +122,7 @@ export default {
       let checkBoxRowCount = 0
       let labelRowCount = 0
       Object.keys(this.titleSearchListCopy).forEach(type => {
-        if (this.titleSearchListCopy[type].children.length === 0) {
+        if (this.titleSearchListCopy[type].children.length === 0 && type === 'assetLabel') {
           return
         }
         if (this.titleSearchListCopy[type].type === 'checkBox') {
