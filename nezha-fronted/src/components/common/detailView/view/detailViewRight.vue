@@ -101,17 +101,13 @@ export default {
     from: {
       immediate: true,
       handler (n) {
-        if (n === fromRoute.asset) {
-          this.targetTab = 'panelTab'
-        } else if (n === fromRoute.endpoint) {
-          this.targetTab = 'panelTab'
-        }
+        this.setTargetTab()
       }
     },
     obj: {
       immediate: true,
       handler (n) {
-        this.targetTab = 'panelTab'
+        this.setTargetTab()
         if ((this.from === fromRoute.asset) && n) {
           const assetSub = { prop: 'assetSubTab', name: this.$t('overall.assetSubTab'), active: false }
           if (n.childrenNum) {
@@ -291,6 +287,15 @@ export default {
     },
     getTableData () {
       this.$emit('getTableData')
+    },
+    setTargetTab () {
+      if (this.from === fromRoute.asset) {
+        this.targetTab = 'panelTab'
+      } else if (this.from === fromRoute.endpoint) {
+        this.targetTab = 'panelTab'
+      } else if (this.from === fromRoute.module) {
+        this.targetTab = 'endpoint'
+      }
     }
   }
 }

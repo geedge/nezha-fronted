@@ -1,14 +1,86 @@
 <template>
   <div class="module-list">
+    <nzDetailView
+      v-loading="detailViewLoading || tools.loading"
+      v-if="detailType !== 'list'"
+      :api="url"
+      ref="detailList"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
+      :from="fromRoute.module"
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      :dataLength="tableData.length"
+      @search="search"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-left>
+<!--        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />-->
+      </template>
+      <template v-slot:top-tool-right>
+        <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
+          <i class="nz-icon nz-icon-create-square"></i>
+        </button>
+        <top-tool-more-options
+          ref="export"
+          id="model"
+          :params="searchLabel"
+          :params2="searchCheckBox"
+          :permissions="{
+                  import: 'asset_add',
+                  export: 'asset_view'
+                }"
+          class="top-tool-export margin-l-10 margin-r-10"
+          export-file-name="asset"
+          export-url="/asset/asset/export"
+          import-url="/asset/asset/import"
+          @afterImport="getTableData"
+        >
+        </top-tool-more-options>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <endpoint-detail
+          class="data-detail"
+          ref="dataDetail"
+          :orderByFa="orderBy"
+          v-loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
+        >
+        </endpoint-detail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
     <nz-data-list
       ref="dataList"
       :api="url"
       :tableId="tableId"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
-      :layout="['searchInput', 'elementSet', 'pagination']"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
       :search-msg="searchMsg"
       @search="search"
+      :detailType="detailType"
+      @changeDetailType="changeDetailType"
+      @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
         <button id="account-add" v-has="'monitor_module_add'" :title="$t('overall.createModule')" class="top-tool-btn"
@@ -77,6 +149,10 @@ import moduleTable from '@/components/common/table/settings/moduleTable'
 import exportXLSX from '@/components/common/exportXLSX'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import nzDetailView from '@/components/common/detailView/nzDetailView'
+import detailViewMixin from '@/components/common/mixin/detailViewMixin'
+import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
+import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 
 export default {
   name: 'moduleList',
@@ -87,9 +163,12 @@ export default {
     moduleTable,
     'export-excel': exportXLSX,
     alertSilenceBox,
-    topToolMoreOptions
+    topToolMoreOptions,
+    nzDetailView,
+    endpointDetail,
+    detailViewTopSearch
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'monitor/module',
@@ -317,6 +396,7 @@ export default {
             response.data.list[i].status = response.data.list[i].status + ''
           }
           this.tableData = response.data.list
+          this.detailViewRightObj = this.tableData[0]
           this.pageObj.total = response.data.total
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
