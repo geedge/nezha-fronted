@@ -1,5 +1,5 @@
 <template>
-  <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel right-public-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" width="310" :disabled="disabled">
+  <el-popover :placement="placement" :popper-class="chartBox === true ? 'nz-pop nz-pop-select-panel right-box-select-top nz-pop-select-panel__dropdown' : 'nz-pop nz-pop-select-panel right-public-box-select-top right-public-box-dropdown-top nz-pop-select-panel__dropdown'" ref="selectPanelPopBox" transition="slide" v-model="popBox.show" :width="chartBox === true ? 626 : 310" :disabled="disabled">
     <div>
       <div class="pop-item-wider">
 
@@ -65,7 +65,8 @@ export default {
     showPanel: { type: Object },
     panelLock: { type: Boolean, default: true },
     disabled: { type: Boolean, default: false },
-    filterPanel: { type: String }
+    filterPanel: { type: String },
+    chartBox: { type: Boolean }
   },
   mounted () {
     this.$refs.panelTree.setCurrentKey(this.panel)
