@@ -31,40 +31,7 @@
             {{item.name}}
           </div>
           <div class="asset-name">
-            <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="item.configs[0].state<2">
-              <div>
-                <div v-html="suspendedStr(item.configs[0].state)"></div>
-              </div>
-              <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
-              <span v-if="item.configs[0].state===0 || !item.configs[0].state">
-                <span class="active-icon red-bg inline-block"></span>
-              </span>
-              <span v-else-if="item.configs[0].state===1">
-                <span class="active-icon green-bg inline-block"></span>
-              </span>
-              <span v-else-if="item.configs[0].state">
-                <span class="active-icon gray-bg inline-block"></span>
-              </span>
-            </span>
-            </el-popover>
-            <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="item.configs[1].state<2">
-              <div>
-                <div v-html="suspendedStr(item.configs[1].state)"></div>
-              </div>
-              <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
-              <span v-if="item.configs[1].state===0 || !item.configs[1].state">
-                <span class="active-icon red-bg inline-block"></span>
-              </span>
-              <span v-else-if="item.configs[1].state===1">
-                <span class="active-icon green-bg inline-block"></span>
-              </span>
-              <span v-else-if="item.configs[1].state">
-                <span class="active-icon gray-bg inline-block"></span>
-              </span>
-            </span>
-            </el-popover>
+            <span>{{item.asset?item.asset.manageIp:'-'}}</span>
           </div>
         </div>
         <alertLabel
