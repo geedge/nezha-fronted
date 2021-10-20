@@ -301,13 +301,19 @@ export default {
   watch: {
     dropdownMenuShow (n) {
       this.$emit('dropmenu-change', n)
+    },
+    chartData: {
+      deep: true,
+      immediate: true,
+      handler (n) {
+        if (n.param) {
+          this.showList = !n.param.collapse
+        }
+      }
     }
   },
   mounted () {
     this.firstLoad = false
-    if (this.chartData.param) {
-      this.showList = !this.chartData.param.collapse
-    }
   },
   beforeDestroy () {
     this.clearChart()
