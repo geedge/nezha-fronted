@@ -39,7 +39,7 @@
         </top-tool-more-options>
       </template>
       <template v-slot:nz-detail-view-list>
-        <endpoint-detail
+        <module-detail
           class="data-detail"
           ref="dataDetail"
           :orderByFa="orderBy"
@@ -50,7 +50,7 @@
           @detailViewRightShow = 'detailViewRightShow'
           @orderDetail="orderDetail"
         >
-        </endpoint-detail>
+        </module-detail>
       </template>
       <!-- 分页组件 -->
       <template v-slot:pagination>
@@ -151,7 +151,7 @@ import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
 import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
-import endpointDetail from '@/components/common/detailView/list/endpoint/endpointDetail'
+import moduleDetail from '@/components/common/detailView/list/module/moduleDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 
 export default {
@@ -165,7 +165,7 @@ export default {
     alertSilenceBox,
     topToolMoreOptions,
     nzDetailView,
-    endpointDetail,
+    moduleDetail,
     detailViewTopSearch
   },
   mixins: [dataListMixin, detailViewMixin],
@@ -398,6 +398,7 @@ export default {
           this.tableData = response.data.list
           this.detailViewRightObj = this.tableData[0]
           this.pageObj.total = response.data.total
+          this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper

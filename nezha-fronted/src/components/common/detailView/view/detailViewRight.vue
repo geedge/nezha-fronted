@@ -295,6 +295,8 @@ export default {
         this.targetTab = 'panelTab'
       } else if (this.from === fromRoute.module) {
         this.targetTab = 'endpoint'
+      } else if (this.from === fromRoute.alertRule) {
+        this.targetTab = 'alertRuleAlertMessage'
       }
     }
   }

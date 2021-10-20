@@ -710,8 +710,8 @@ const cn = {
     type: '主机地址',
     pingInfo: 'Ping',
     detail: {
-      list: '列表',
-      detail: '详细',
+      list: '列表视图',
+      detail: '详细视图',
       orderBy: '排序方式',
       orderByLabel: '按 {label}  排序'
     }
