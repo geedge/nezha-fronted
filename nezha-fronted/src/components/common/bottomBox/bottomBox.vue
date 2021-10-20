@@ -417,5 +417,11 @@ export default {
 .bottom-box .sub-container .nz-table2{
   height: calc(100% - 20px);
 }
+.asset-detail .sub-container .nz-table2 {
+  height: 100%;
+}
+.endpoint-tab-new .sub-container .nz-table2 {
+  height: 100%;
+}
 /* end--二级顶部工具栏*/
 </style>

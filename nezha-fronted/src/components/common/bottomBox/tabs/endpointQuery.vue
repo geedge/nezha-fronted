@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height">
+  <div class="full-width-height endpoint-tab-new">
     <nz-bottom-data-list
       :api="url"
       :layout="['searchInput', 'elementSet']"

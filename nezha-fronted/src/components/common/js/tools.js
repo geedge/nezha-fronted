@@ -231,7 +231,7 @@ export const bottomBoxWindow = {
   fullScreen (vm) {
     window.resizing = true
     const contentRightDom = document.querySelector('.list-page') // 右侧内容区
-    const contentRightHeight = contentRightDom.offsetHeight// 可视高度
+    const contentRightHeight = contentRightDom.offsetHeight - 9// 可视高度
     vm.bottomBox.isFullScreen = true
     // 主列表
     vm.bottomBox.mainListHeight = document.querySelector('.main-list-with-sub').offsetHeight // 记录全屏前主列表的高度
