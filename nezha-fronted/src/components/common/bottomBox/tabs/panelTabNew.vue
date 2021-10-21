@@ -1,6 +1,6 @@
 <template>
-  <div class="full-width-height chart-list">
-   <nz-bottom-data-list
+  <div class="full-width-height chart-list asset-detail">
+    <nz-bottom-data-list
       :showTitle='showTitle'
       :layout="[]"
       :tabs="tabs"

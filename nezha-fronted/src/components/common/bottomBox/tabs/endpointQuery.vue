@@ -1,6 +1,6 @@
 <template>
-  <div class="full-width-height">
-   <nz-bottom-data-list
+  <div class="full-width-height endpoint-tab-new">
+    <nz-bottom-data-list
       :showTitle='showTitle'
       :api="url"
       :layout="['searchInput', 'elementSet']"
