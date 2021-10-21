@@ -8,7 +8,7 @@
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"
       :tabs="tabs"
-      :show-title="showTtile"
+      :show-title="showTitle"
       @search="search"
       @changeTab="changeTab"
     >
@@ -84,6 +84,9 @@ export default {
     'delete-button': deleteButton,
     cabinetTable,
     topToolMoreOptions
+  },
+  props: {
+    showTitle: {}
   },
   data () {
     return {

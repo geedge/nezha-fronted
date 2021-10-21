@@ -297,6 +297,8 @@ export default {
         this.targetTab = 'endpoint'
       } else if (this.from === fromRoute.alertRule) {
         this.targetTab = 'alertRuleAlertMessage'
+      } else if (this.from === fromRoute.dc) {
+        this.targetTab = 'cabinet'
       }
     }
   }

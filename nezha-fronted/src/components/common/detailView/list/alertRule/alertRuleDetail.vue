@@ -23,7 +23,15 @@
         class="detail-row"
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)">
-        <div class="detail-row-info">
+        <el-popover
+          placement="right"
+          popper-class="alert-message-tooltip"
+          style="position: relative"
+          @show="alertMessageHover(item, true)"
+          @hide="alertMessageHover(item, false)"
+          trigger="hover">
+          <alertRuleInfo v-if="item.loading" :id="item.id" :severity-data="severityData" :that="item" @showText="showText(item)"></alertRuleInfo>
+          <div class="detail-row-info" slot="reference">
           <div class="asset-manageIp">
             <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
@@ -37,8 +45,23 @@
             </span>
           </div>
         </div>
+        </el-popover>
       </li>
     </ul>
+    <el-dialog class="nz-dialog table-chart-dialog" :title="$t('alert.config.trbShot')"
+               :visible.sync="dialogShowText"
+               width="96%"  @close="dialogShowText = false" :modal-append-to-body="false">
+      <div slot="title">
+        <span class="nz-dialog-title">{{$t('alert.config.trbShot')}}</span>
+      </div>
+      <div class="rich-text-screen-container"  >
+        <div id="chartScreenContainer"  ref="chartScreenContainer" class="text-content" >
+          <el-scrollbar style="height: 100%;" class="el-scrollbar-normal">
+            <div style="height: 100%;" v-html="dialogText" ></div>
+          </el-scrollbar>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,11 +69,13 @@
 
 import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 import alertLabel from '@/components/common/alert/alertLabel'
+import alertRuleInfo from '@/components/common/alert/alertRuleInfo'
 export default {
   name: 'alertRuleDetail',
   mixins: [detailViewLeftMixin],
   components: {
-    alertLabel
+    alertLabel,
+    alertRuleInfo
   },
   data () {
     return {
@@ -133,8 +158,14 @@ export default {
           minWidth: 100,
           sortable: 'custom'
         }
-      ]
+      ],
+      severityData: [],
+      dialogText: '',
+      dialogShowText: false
     }
+  },
+  mounted () {
+    this.getSeverityData()
   },
   methods: {
     // label 鼠标划入
@@ -170,6 +201,28 @@ export default {
         // }
       })
       return str
+    },
+    getSeverityData () {
+      this.$get('alert/severity', { pageNo: 1, pageSize: -1 }).then(response => {
+        if (response.code == 200) {
+          this.severityData = response.data.list
+        }
+      })
+    },
+    // alertName鼠标划入
+    alertMessageHover (item, loading, e) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item, 'position', position)
+      }
+      this.$set(item, 'loading', loading)
+      // item.loading = true;
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    showText (row) {
+      this.dialogShowText = true
+      this.dialogText = row.trbShot
     }
   }
 }

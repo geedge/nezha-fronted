@@ -22,7 +22,9 @@
         :key="index"
         class="detail-row"
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
-        @click="detailViewRightShow(item)">
+        @click="detailViewRightShow(item)"
+        @mouseenter="labelHover(item, 'module', true, $event)"
+        @mouseleave="labelHover(item, 'module', false)">
         <div class="detail-row-info">
           <div class="asset-manageIp">
             <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
@@ -32,6 +34,12 @@
             <span>{{item.project?item.project.name:'-'}}</span>
           </div>
         </div>
+        <alertLabel
+          v-if="item && item.loading"
+          :id="item.id"
+          :that="item"
+          :type="'module'"
+        ></alertLabel>
       </li>
     </ul>
   </div>
