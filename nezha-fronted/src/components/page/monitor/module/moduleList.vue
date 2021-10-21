@@ -73,6 +73,7 @@
       ref="dataList"
       :api="url"
       :tableId="tableId"
+      v-show="detailType === 'list'"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.module"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
