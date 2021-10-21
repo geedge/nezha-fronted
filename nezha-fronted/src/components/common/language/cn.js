@@ -835,9 +835,9 @@ const cn = {
       authtype: '认证方式',
       statusItem: {
         connecting: '连接中',
-        connectionFailed: '连接失败',
+        connectionFailed: '发送失败',
         over: '已结束',
-        kickedOut: '被踢出',
+        kickedOut: '强制退出',
         unknownError: '未知错误'
       },
       option: '操作',
@@ -892,7 +892,8 @@ const cn = {
       loginUser: '登陆用户',
       sourceIp: '源 IP',
       sourceUser: '源用户',
-      SessionId: '会话 ID'
+      SessionId: '会话 ID',
+      stop: '停止'
     },
     dc: {
       dc: '数据中心',

@@ -876,9 +876,9 @@ const en = {
       authtype: 'AuthType',
       statusItem: {
         connecting: 'Connecting',
-        connectionFailed: 'Connection failed',
-        over: 'Over',
-        kickedOut: 'Kicked out',
+        connectionFailed: 'Failed',
+        over: 'Close',
+        kickedOut: 'Stopped',
         unknownError: 'Unknown error'
       },
       option: 'Operation', // "操作",
@@ -932,7 +932,8 @@ const en = {
       loginUser: 'Login user',
       sourceIp: 'Source IP',
       sourceUser: 'Source user',
-      SessionId: 'Session ID'
+      SessionId: 'Session ID',
+      stop: 'Stop'
     },
     operationlog: {
       operationlog: 'Operation log',

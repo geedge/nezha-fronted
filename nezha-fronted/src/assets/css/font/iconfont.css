@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1634288113261') format('woff2'),
-       url('iconfont.woff?t=1634288113261') format('woff'),
-       url('iconfont.ttf?t=1634288113261') format('truetype');
+  src: url('iconfont.woff2?t=1634809124279') format('woff2'),
+       url('iconfont.woff?t=1634809124279') format('woff'),
+       url('iconfont.ttf?t=1634809124279') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,42 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-Panelkong:before {
+  content: "\e748";
+}
+
+.nz-icon-Projectkong:before {
+  content: "\e74f";
+}
+
+.nz-icon-Assetkong:before {
+  content: "\e750";
+}
+
+.nz-icon-ZD:before {
+  content: "\e74e";
+}
+
+.nz-icon-failed:before {
+  content: "\e749";
+}
+
+.nz-icon-stop:before {
+  content: "\e74a";
+}
+
+.nz-icon-unknown-error:before {
+  content: "\e74c";
+}
+
+.nz-icon-over:before {
+  content: "\e74b";
+}
+
+.nz-icon-connecting:before {
+  content: "\e74d";
 }
 
 .nz-icon-label:before {
@@ -395,10 +431,6 @@
 
 .nz-icon-terminal-log:before {
   content: "\e6f7";
-}
-
-.nz-icon-ZD:before {
-  content: "\e6f9";
 }
 
 .nz-icon-revoke1:before {

@@ -37,7 +37,12 @@
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'state'">
-          <span>{{getStatusText(scope.row.status)}}</span>
+          <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
+            <div slot="content">
+              {{getStatusText(scope.row.status)}}
+            </div>
+            <span><i class="nz-icon" :class="statusClass(scope.row.status)"/></span>
+          </el-tooltip>
         </template>
         <template  v-else-if="item.prop === 'uuid'">
           <el-popover
@@ -56,7 +61,7 @@
           <span> {{utcTimeToTimezoneStr(scope.row.startTime)}}</span>
         </template>
         <template v-else-if="item.prop === 'duration'">
-          <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
+          <el-tooltip effect="light" placement="right">
             <div slot="content">
               {{$t('config.terminallog.endTime')}}<br/>
               {{utcTimeToTimezoneStr(scope.row.endTime)}}
@@ -86,7 +91,7 @@
               <i class="nz-icon nz-icon-more3"></i>
             </div>
             <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
-              <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">Kill</span></el-dropdown-item>
+              <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">{{$t('config.terminallog.stop')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -199,6 +204,22 @@ export default {
           return calcDurationByStringTimeB(record.startTime, record.endTime)
         }
         return ''
+      }
+    },
+    statusClass () {
+      return function (status) {
+        switch (status) {
+          case 0:
+            return 'nz-icon-connecting color23bf9a'
+          case 1:
+            return 'nz-icon-failed colorffa416'
+          case 2:
+            return 'nz-icon-over color999999'
+          case 3:
+            return 'nz-icon-stop colorec7f66'
+          case 4:
+            return 'nz-icon-unknown-error color535b64'
+        }
       }
     }
   }

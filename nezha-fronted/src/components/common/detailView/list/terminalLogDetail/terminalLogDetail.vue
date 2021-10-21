@@ -26,8 +26,13 @@
       >
         <div class="detail-row-info">
           <div class="asset-manageIp">
-            <span :class="{'active-icon green-bg':item.status === 0,'active-icon red-bg':item.status !== 0}"></span>
-            <span>{{item.remoteAddr?item.remoteAddr:'-'}}</span>
+            <el-tooltip effect="light" placement="right">
+              <div slot="content">
+                {{getStatusText(item.status)}}
+              </div>
+              <span><i class="nz-icon" :class="statusClass(item.status)"/></span>
+            </el-tooltip>
+            <span>{{getRemoteText(item)}}</span>
           </div>
           <div class="asset-name">
             <span>{{item.username?item.username:'-'}}</span>
@@ -43,11 +48,40 @@
 import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 import alertLabel from '@/components/common/alert/alertLabel'
 import { terminalLog } from '@/components/common/js/constants'
+import {calcDurationByStringTimeB} from "@/components/common/js/tools";
 export default {
   name: 'terminalLogDetail',
   mixins: [detailViewLeftMixin],
   components: {
     alertLabel
+  },
+  computed: {
+    getStatusText () {
+      return function (status) {
+        return terminalLog.status[status]
+      }
+    },
+    getRemoteText () {
+      return function (record) {
+        return `${record.loginUser}@${record.host}:${record.port}`
+      }
+    },
+    statusClass () {
+      return function (status) {
+        switch (status) {
+          case 0:
+            return 'nz-icon-connecting color23bf9a'
+          case 1:
+            return 'nz-icon-failed colorffa416'
+          case 2:
+            return 'nz-icon-over color999999'
+          case 3:
+            return 'nz-icon-stop colorec7f66'
+          case 4:
+            return 'nz-icon-unknown-error color535b64'
+        }
+      }
+    }
   },
   data () {
     return {
@@ -124,11 +158,6 @@ export default {
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
     },
-    getStatusText () {
-      return function (status) {
-        return terminalLog.status[status]
-      }
-    }
   }
 }
 </script>
