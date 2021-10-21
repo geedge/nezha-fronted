@@ -301,6 +301,8 @@ export default {
         this.targetTab = 'cabinet'
       } else if (this.from === fromRoute.terminalLog) {
         this.targetTab = 'cmdTab'
+      } else if (this.from === fromRoute.user) {
+        this.targetTab = 'operationLogTab'
       }
     }
   }
