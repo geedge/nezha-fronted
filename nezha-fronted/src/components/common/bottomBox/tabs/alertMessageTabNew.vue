@@ -24,6 +24,7 @@
         <alertMessageTable
           ref="dataTable"
           :api="url"
+          :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
           :now-time="nowTime"

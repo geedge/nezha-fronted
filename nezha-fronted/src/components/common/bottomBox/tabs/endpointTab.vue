@@ -52,6 +52,7 @@
       :data="tableData"
       border
       v-loading="tools.loading"
+      :loading="tools.loading"
       class="nz-table endpoint-table"
       :height="$tableHeight.noPagination"
       :cell-class-name="messageStyle"

@@ -27,9 +27,13 @@
         <div class="detail-row-info">
           <div class="asset-manageIp">
             <span class="flex-align-center">
-                <span class="user-name-top">{{item.name}}</span>
-                <el-tag size="mini" v-if="mfaEnable == '1' || item.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+              <span v-if="item.status" >
+                <span :class="{'active-icon green-bg':item.status == 1,'active-icon gray-bg':item.status == 0}"></span>
               </span>
+              <span v-else style="display: inline-block;width: 13px"></span>
+              <span class="user-name-top">{{item.name}}</span>
+              <el-tag size="mini" v-if="mfaEnable == '1' || item.mfaLevel > 0" style="margin-left: 5px">2FA</el-tag>
+            </span>
           </div>
           <div class="asset-name">
             <span>@{{item.username}}</span>

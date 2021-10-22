@@ -566,6 +566,7 @@ export default {
           this.$store.state.showPanel.id = 0
           this.$store.state.showPanel.name = ''
           this.$store.state.showPanel.type = 'dashboard'
+
         } else {
           if (response.msg) {
             this.$message.error(response.msg)

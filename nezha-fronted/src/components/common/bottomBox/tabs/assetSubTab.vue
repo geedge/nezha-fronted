@@ -17,6 +17,7 @@
           ref="dataTable"
           :api="url"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :custom-table-title="tools.customTableTitle"
           :height="subTableHeight"
           :table-data="tableData"

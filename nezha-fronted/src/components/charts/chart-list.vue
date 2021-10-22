@@ -263,12 +263,13 @@
       </div>
    </draggable>
 <!--    <el-row v-if="dataList.length === 0"  class="noData"></el-row>-->
-    <div v-if="dataList.length === 0" class="no-data">
+    <div v-if="panelLoading" class="no-data">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#nz-icon-no-data-panel"></use>
       </svg>
       <div class="no-data-div">No data</div>
     </div>
+    <div v-else>&nbsp;</div>
     <!--<div class="page-shadow" v-if="showShadow"></div>-->
   </div>
 </template>
@@ -303,7 +304,7 @@ export default {
     obj: Object,
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
-    panelDataList: Array
+    panelDataList: Array,
   },
 
   components: {
@@ -332,6 +333,7 @@ export default {
         start: '',
         end: ''
       },
+      panelLoading: false,
       extraMarginBottom: 0, // dom额外的margin
       panelId: '',
       timer: null,
@@ -715,12 +717,13 @@ export default {
             item.isLoaded = false
           })
           // chart数据存在dataTotalListBak中
-          if (response.data.list) {
+          if (response.data.list.length > 0) {
             this.dataTotalListBak = response.data.list
+            this.panelLoading = false
           } else {
             this.dataTotalListBak = response.data
+            this.panelLoading = true
           }
-
           let chartListTmp = []
           // 查询条件带name
           if (this.filter.searchName) {
