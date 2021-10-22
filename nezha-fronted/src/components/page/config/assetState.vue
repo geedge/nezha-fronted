@@ -22,6 +22,7 @@
           id="role-list-table"
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :data="tableData"
           :height="mainTableHeight"
           border

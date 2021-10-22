@@ -113,6 +113,7 @@
         <module-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :tableId="tableId"
           :custom-table-title="tools.customTableTitle"

@@ -482,3 +482,10 @@
 .fade-leave-active {
   transition: opacity 1s;
 }
+.right-no-data /deep/ .icon {
+  width: 5rem;
+  height: 5rem;
+}
+.right-no-data {
+  line-height: 21px;
+}

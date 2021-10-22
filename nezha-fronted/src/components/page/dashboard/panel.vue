@@ -79,7 +79,7 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div ref="dashboardScrollbar" :class="overScroll10?'border-t-1-de':'border-t-1-tr'" id="dashboardScrollbar" style="height: calc(100% - 20px); overflow: auto;">
+          <div ref="dashboardScrollbar" id="dashboardScrollbar" class="border-t-1-de" style="height: calc(100% - 20px); overflow: auto;">
             <div class="box-content">
               <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
@@ -892,6 +892,7 @@ export default {
 <style lang="scss">
   .border-t-1-de{
     border-top: 1px solid #dedede;
+    padding-top: 10px;
   }
   .border-t-1-tr{
     border-top: 1px solid transparent;

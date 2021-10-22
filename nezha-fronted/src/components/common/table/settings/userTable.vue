@@ -54,14 +54,14 @@
           </template>
         </template>
         <template v-else-if="item.prop === 'status'">
-          <el-switch
-            v-model="scope.row.status"
-            :active-color="theme.themeColor"
-            :disabled="isCurrentUser(scope.row.username) || !hasButton('user_edit') || (scope.row.username === 'admin' && scope.row.id === 1)"
-            active-value="1"
-            inactive-value="0"
-            @change="val => {statusChange(scope.row)}">
-          </el-switch>
+          <div v-if="scope.row[item.prop] === 1">
+            <div class="active-icon green-bg inline-block"></div>
+            {{ $t('overall.enabled') }}
+          </div>
+          <div v-else-if="scope.row[item.prop] === 0">
+            <div class="active-icon red-bg inline-block"></div>
+            {{ $t('overall.disabled') }}
+          </div>
         </template>
         <span v-else-if="item.prop === 'createTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else-if="item.prop === 'lastLoginTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
@@ -93,6 +93,14 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template v-if="!loading" slot="empty">
+      <div class="right-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+      </div>
+    </template>
   </el-table>
 </template>
 
@@ -101,6 +109,9 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'userTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [ // 原始table列
@@ -154,7 +165,7 @@ export default {
           show: true,
           width: 150
         }, {
-          label: this.$t('config.user.enable'),
+          label: this.$t('config.user.state'),
           prop: 'status',
           show: true,
           width: 100

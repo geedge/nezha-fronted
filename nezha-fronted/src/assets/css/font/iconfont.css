@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('iconfont.woff2?t=1634867510407') format('woff2'),
-       url('iconfont.woff?t=1634867510407') format('woff'),
-       url('iconfont.ttf?t=1634867510407') format('truetype');
+  src: url('iconfont.woff2?t=1634897057336') format('woff2'),
+       url('iconfont.woff?t=1634897057336') format('woff'),
+       url('iconfont.ttf?t=1634897057336') format('truetype');
 }
 
 .nz-icon {
@@ -17,15 +17,15 @@
   content: "\e74a";
 }
 
-.nz-icon-Panelkong:before {
+.nz-icon-no-data-panel:before {
   content: "\e748";
 }
 
-.nz-icon-Projectkong:before {
+.nz-icon-no-data-project:before {
   content: "\e74f";
 }
 
-.nz-icon-Assetkong:before {
+.nz-icon-no-data-list:before {
   content: "\e750";
 }
 

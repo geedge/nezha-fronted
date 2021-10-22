@@ -64,6 +64,14 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template v-if="!loading" slot="empty">
+      <div class="right-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+      </div>
+    </template>
   </el-table>
 </template>
 
@@ -72,6 +80,9 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'roleTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [ // 原table列

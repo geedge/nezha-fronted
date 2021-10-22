@@ -228,6 +228,12 @@
             >
               <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
             </div>
+            <div v-show="showNoData" class="topo-noData">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#nz-icon-no-data-project"></use>
+              </svg>
+              <div class="content">No data</div>
+            </div>
           </div>
           <!--endpoint-->
           <transition name="right-box">
@@ -393,6 +399,7 @@ export default {
         bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
         bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
       ],
+      showNoData: false,
       topologyInfo: {
         fontSize: 14,
         align: 'left',
@@ -771,6 +778,11 @@ export default {
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           let data = res.data.topo
+          if (!res.data.topo || !res.data.topo.pens.length) {
+            this.showNoData = true
+          } else {
+            this.showNoData = false
+          }
           if (this.isPreview) {
             data = this.previewData
           }
@@ -1816,6 +1828,7 @@ export default {
 
     editTopology (val) {
       this.editTopologyFlag = true
+      this.showNoData = false
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
       setTimeout(() => {

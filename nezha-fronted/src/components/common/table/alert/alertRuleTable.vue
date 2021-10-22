@@ -90,15 +90,23 @@
                 <div ><i class="nz-icon nz-icon-dingshishijian"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
               </div>
             </div>
-            <el-switch
-              slot="reference"
-              v-model="scope.row.state"
-              :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"
-              active-color="#ee9d3f"
-              :active-value="1"
-              :inactive-value="0"
-              @change="(val)=>{$emit('statusChange', scope.row)}"
-            />
+<!--            <el-switch-->
+<!--              slot="reference"-->
+<!--              v-model="scope.row.state"-->
+<!--              :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"-->
+<!--              active-color="#ee9d3f"-->
+<!--              :active-value="1"-->
+<!--              :inactive-value="0"-->
+<!--              @change="(val)=>{$emit('statusChange', scope.row)}"-->
+<!--            />-->
+            <div slot="reference" v-if="scope.row[item.prop] === 1">
+              <div class="active-icon green-bg inline-block"></div>
+              {{ $t('overall.enabled') }}
+            </div>
+            <div slot="reference" v-else-if="scope.row[item.prop] === 0">
+              <div class="active-icon red-bg inline-block"></div>
+              {{ $t('overall.disabled') }}
+            </div>
           </el-popover>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -125,6 +133,14 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template v-if="!loading" slot="empty">
+      <div class="right-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+      </div>
+    </template>
   </el-table>
 </template>
 
@@ -134,6 +150,9 @@ import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
   name: 'alertRuleTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [

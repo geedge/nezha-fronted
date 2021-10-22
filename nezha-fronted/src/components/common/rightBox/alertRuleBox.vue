@@ -133,11 +133,11 @@
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -168,11 +168,11 @@
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -189,11 +189,11 @@
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -258,11 +258,11 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -280,11 +280,11 @@
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>

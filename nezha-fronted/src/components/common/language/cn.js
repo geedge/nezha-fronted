@@ -159,6 +159,8 @@ const cn = {
     unusual: '不正常',
     AuthenticationFailed: '认证失败',
     clearAllSelect: '清除选择的内容',
+    disabled: '已禁用',
+    enabled: '启用'
   },
   setup: {
     step0: '欢迎',
@@ -725,6 +727,7 @@ const cn = {
     user: {
       userList: '用户列表',
       user: '用户',
+      state: '状态',
       name: '姓名', // "用户"
       username: '登录名', // 登录名
       roles: '角色',
