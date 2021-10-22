@@ -4,7 +4,7 @@
     <multipleTime v-if="showMultiple" ref="multipleTime" :stepSearchTime="searchTime" class="multiple-time margin-r-10" @change="dateChange(searchTime)"/>
     <chart-unit v-if="useChartUnit" v-model="unit" class="margin-r-10"></chart-unit>
     <div v-show="useRefresh" class="top-tool-btn-group">
-      <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="refreshDataFunc">
+      <button :id="id+'-refresh'" class="top-tool-btn top-tool-btn--text" @click="antiShake">
         <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;
         <span><slot name="added-text"></slot></span>
       </button>
@@ -87,7 +87,8 @@ export default {
       interval: -1,
       unit: 2,
       dropdownShow: false,
-      interLabel: ''
+      interLabel: '',
+      timer: ''
     }
   },
   created () {
@@ -152,6 +153,22 @@ export default {
       this.searchTime = time
       this.$emit('change', this.searchTime)
       this.refreshDataFunc()
+    },
+    antiShake () {
+      console.log('aaaaa')
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.refreshDataFunc()
+          this.timer = ''
+        }, 200)
+      } else {
+        console.log('123123')
+        this.timer = setTimeout(() => {
+          this.refreshDataFunc()
+          this.timer = ''
+        }, 200)
+      }
     }
   },
   watch: {
