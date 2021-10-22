@@ -20,6 +20,7 @@
         <user-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

@@ -162,7 +162,9 @@ const en = {
     oid: 'OID format check error',
     normal: 'Up',
     unusual: 'Down',
-    AuthenticationFailed: 'Authentication failed'
+    AuthenticationFailed: 'Authentication failed',
+    disabled: 'Disabled',
+    enabled: 'Enabled'
   },
   pageSize: '/page',
   setup: {
@@ -726,6 +728,7 @@ const en = {
     user: {
       userList: 'User list', // "用户列表"
       user: 'User',
+      state: 'State',
       // 列表表头
       name: 'Name', // "用户"
       username: 'Username', // 登录名

@@ -5,13 +5,34 @@
     position:relative;
     box-sizing: border-box;
   }
-  .noData{
-    text-align: center
+  .no-data{
+    height: 1189px;
+    width: 100%;
+    position: relative;
+    .icon {
+      width: 5rem;
+      height: 5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -52px;
+      margin-left: -40px;
+      text-align: center;
+    }
+    .no-data-div {
+      position: absolute;
+      font-size: 16px;
+      color: #333333;
+      font-weight: 400;
+      margin-left: -29px;
+      top: 52.5%;
+      left: 50%
+    }
   }
   .list-width{
     width: 100%;
     /*height: 100%;*/
-    padding: 0 10px 5px 20px;
+    padding: 0 10px 5px 10px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
 
@@ -241,7 +262,13 @@
                       :chart-index="index"></chart-group>
       </div>
    </draggable>
-    <el-row v-if="dataList.length === 0"  class="noData"></el-row>
+<!--    <el-row v-if="dataList.length === 0"  class="noData"></el-row>-->
+    <div v-if="dataList.length === 0" class="no-data">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#nz-icon-no-data-panel"></use>
+      </svg>
+      <div class="no-data-div">No data</div>
+    </div>
     <!--<div class="page-shadow" v-if="showShadow"></div>-->
   </div>
 </template>
@@ -683,7 +710,7 @@ export default {
         if (response.code === 200) {
           setTimeout(() => {
             this.finshGetData = false
-          }, 1000)
+          }, 100)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })

@@ -20,6 +20,7 @@
         <api-key-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :table-id="tableId"
           :api="url"
           :custom-table-title="tools.customTableTitle"

@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
           <!--enable-->
-          <el-form-item :label="$t('config.user.enable')">
+          <el-form-item :label="$t('config.user.state')">
             <el-switch id="account-input-status" v-model="editUser.status" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.id==1) " active-color="#ee9d3f" active-value="1"
                        inactive-value="0">
             </el-switch>

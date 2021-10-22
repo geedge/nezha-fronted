@@ -41,14 +41,14 @@
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-switch
-            v-model="scope.row.state"
-            :disabled="!hasButton('dc_edit') || !hasButton('dc_edit')"
-            active-color="#ee9d3f"
-            active-value="ON"
-            inactive-value="OFF"
-            @change="(val)=>{$emit('statusChange', scope.row)}"
-          />
+          <div v-if="scope.row[item.prop] === 'ON'">
+            <div class="active-icon green-bg inline-block"></div>
+            {{ $t('overall.enabled') }}
+          </div>
+          <div v-else-if="scope.row[item.prop] === 'OFF'">
+            <div class="active-icon red-bg inline-block"></div>
+            {{ $t('overall.disabled') }}
+          </div>
         </template>
         <template v-else-if="item.prop === 'longitude'">
           <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
@@ -99,6 +99,15 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template v-if="!loading" slot="empty">
+      <div class="right-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+      </div>
+    </template>
+
   </el-table>
 </template>
 
@@ -108,6 +117,9 @@ import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools
 export default {
   name: 'dcTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       regNum: /^[0-9]+.?[0-9]*/,

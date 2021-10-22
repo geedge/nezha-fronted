@@ -157,7 +157,9 @@ const cn = {
     oid: 'OID格式校验错误',
     normal: '正常',
     unusual: '不正常',
-    AuthenticationFailed: '认证失败'
+    AuthenticationFailed: '认证失败',
+    disabled: '已禁用',
+    enabled: '启用'
   },
   setup: {
     step0: '欢迎',
@@ -718,6 +720,7 @@ const cn = {
     user: {
       userList: '用户列表',
       user: '用户',
+      state: '状态',
       name: '姓名', // "用户"
       username: '登录名', // 登录名
       roles: '角色',

@@ -230,11 +230,9 @@
             </div>
             <div v-show="showNoData" class="topo-noData">
               <svg class="icon" aria-hidden="true">
-                <use xlink:href="#nz-icon-Projectkong"></use>
+                <use xlink:href="#nz-icon-no-data-project"></use>
               </svg>
-              <div style="text-align: center;font-size: 16px;
-color: #333333;
-font-weight: 400;">No data</div>
+              <div class="icon" style="font-size: 16px;color: #333333;font-weight: 400;top: 57%;left: 51%">No data</div>
             </div>
           </div>
           <!--endpoint-->
