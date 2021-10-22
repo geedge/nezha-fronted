@@ -37,12 +37,7 @@
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'state'">
-          <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
-            <div slot="content">
-              {{getStatusText(scope.row.status)}}
-            </div>
-            <span><i class="nz-icon" :class="statusClass(scope.row.status)"/></span>
-          </el-tooltip>
+          <span><i class="nz-icon" :class="statusClass(scope.row.status)"/>  {{getStatusText(scope.row.status)}}</span>
         </template>
         <template  v-else-if="item.prop === 'uuid'">
           <el-popover

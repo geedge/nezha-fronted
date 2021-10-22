@@ -1,8 +1,8 @@
 @font-face {
   font-family: "nz-icon"; /* Project id 2030432 */
-  src: url('./font/iconfont.woff2?t=1634809124279') format('woff2'),
-  url('./font/iconfont.woff?t=1634809124279') format('woff'),
-  url('./font/iconfont.ttf?t=1634809124279') format('truetype');
+  src: url('./font/iconfont.woff2?t=1634867510407') format('woff2'),
+  url('./font/iconfont.woff?t=1634867510407') format('woff'),
+  url('./font/iconfont.ttf?t=1634867510407') format('truetype');
 }
 
 .nz-icon {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nz-icon-stop:before {
+  content: "\e74a";
 }
 
 .nz-icon-Panelkong:before {
@@ -31,10 +35,6 @@
 
 .nz-icon-failed:before {
   content: "\e749";
-}
-
-.nz-icon-stop:before {
-  content: "\e74a";
 }
 
 .nz-icon-unknown-error:before {

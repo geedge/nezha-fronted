@@ -683,7 +683,7 @@ export default {
         if (response.code === 200) {
           setTimeout(() => {
             this.finshGetData = false
-          }, 1000)
+          }, 100)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
