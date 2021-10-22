@@ -33,7 +33,12 @@
           </el-form-item>
           <el-form-item :label="$t('asset.state')" prop="stateId">
             <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id"></el-option>
+              <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id">
+                <div style="display: flex;justify-content: space-between;padding: 5px;">
+                  <div>{{state.name}}</div>
+                  <div style="width: 450px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;color: #999999" :title="state.remark">{{state.remark}}</div>
+                </div>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.manageIp')" prop="manageIp">
@@ -424,7 +429,7 @@ export default {
         this.isEdit = true
         this.editAsset = JSON.parse(JSON.stringify(n))
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
-        this.editAsset.stateId = n.state ? n.state.id : ''
+        this.editAsset.stateId = n.state ? n.state.id : 2
         this.editAsset.typeId = n.type ? n.type.id : ''
         this.$nextTick(() => {
           if (n.id) {

@@ -308,6 +308,7 @@ export default {
       extraMarginBottom: 0, // dom额外的margin
       panelId: '',
       timer: null,
+      finshGetData: false,
       dataTotalList: [], // 懒加载：总记录数
       dataTotalListBak: [], // 用于查询：懒加载，总记录备份
       isPage: false, // 是否分页懒加载
@@ -596,6 +597,10 @@ export default {
 
     // 获取panel详情数据,获取panel下所有chart列表
     getData (params) {
+      if (this.finshGetData) {
+        return
+      }
+      this.finshGetData = true
       const param = {
         panelId: params.panelId,
         query: params.query,
@@ -676,6 +681,9 @@ export default {
       if (!params.panelId) { return } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
+          setTimeout(() => {
+            this.finshGetData = false
+          }, 1000)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })

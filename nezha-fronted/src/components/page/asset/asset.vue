@@ -219,7 +219,7 @@ export default {
         pid: '',
         sn: '',
         manageIp: '',
-        stateId: '',
+        stateId: 2,
         purchaseDate: null,
         dcId: '',
         cabinetId: '',
