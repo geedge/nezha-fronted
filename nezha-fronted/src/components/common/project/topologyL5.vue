@@ -232,7 +232,7 @@
               <svg class="icon" aria-hidden="true">
                 <use xlink:href="#nz-icon-no-data-project"></use>
               </svg>
-              <div class="icon" style="font-size: 16px;color: #333333;font-weight: 400;top: 57%;left: 51%">No data</div>
+              <div class="content">No data</div>
             </div>
           </div>
           <!--endpoint-->

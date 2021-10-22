@@ -545,11 +545,20 @@
 .selpop {
   cursor: pointer;
 }
-.topo-noData /deep/ .icon{
-  width: 5rem;
-  height: 5rem;
+.topo-noData{
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+  .content{
+    text-align: center;
+    font-size: 16px;
+    color: #333333;
+    font-weight: 400;
+  }
+}
+.topo-noData /deep/ .icon{
+  width: 5rem;
+  height: 5rem;
+
 }
