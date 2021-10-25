@@ -111,7 +111,7 @@
                       show-overflow-tooltip
                     ></el-table-column>
                     <template slot="empty">
-                      <div v-if="!tools.loading" class="right-no-data">
+                      <div v-if="!tools.loading" class="table-no-data">
                         <svg class="icon" aria-hidden="true">
                           <use xlink:href="#nz-icon-no-data-list"></use>
                         </svg>
