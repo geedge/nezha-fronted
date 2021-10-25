@@ -17,6 +17,7 @@
             <el-dropdown
               type="primary"
               v-if="showLayout.indexOf('detailViewSet') > -1"
+              trigger="click"
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
                       type="button">
