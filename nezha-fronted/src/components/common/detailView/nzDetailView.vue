@@ -31,7 +31,7 @@
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
-        <div :style="{ height: nzTableHeight }" class="nz-detail-view">
+        <div :style="{ height: nzTableHeight }" class="nz-detail-view" :class="dataLength?'':'nz-detail-view-no-data'">
           <div class="nz-detail-view-left" v-if="dataLength">
             <slot name="nz-detail-view-list"></slot>
             <div v-if="showLayout.indexOf('pagination') > -1" class="nz-detail-view-pagination">
@@ -39,7 +39,10 @@
             </div>
           </div>
           <div v-else class="no-data">
-            No Data
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#nz-icon-no-data-list"></use>
+            </svg>
+            <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
           </div>
           <div class="nz-detail-view-right"   v-if="detailViewRightObj">
             <detailViewRight
@@ -182,5 +185,8 @@ export default {
   @import './detailView.scss';
   .active{
     color: #fa901c;
+  }
+  .nz-detail-view-no-data{
+    border-top: 1px solid #E7EAED;
   }
 </style>
