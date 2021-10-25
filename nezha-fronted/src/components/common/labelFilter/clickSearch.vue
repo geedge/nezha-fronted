@@ -6,7 +6,7 @@
         <template>
           <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
             <template v-for="(item, j) in data.children">
-              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value">{{item.key || item.name || item.label}}</el-checkbox>
+              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value" :title="item.key || item.name || item.label">{{item.key || item.name || item.label}}</el-checkbox>
             </template>
           </el-checkbox-group>
         </template>
@@ -89,7 +89,7 @@ export default {
         let top
         switch (type) {
           case 'checkBox': {
-            top = 4
+            top = 8
             break
           }
           case 'dropdownCheckBox': {
@@ -317,7 +317,7 @@ export default {
       this.$set(item, 'isFocus', isFocus)
     },
     needMore (type, item, expand) {
-      const contentWidth = this.$refs.searchContentBox[0].offsetWidth - 210
+      const contentWidth = this.$refs.searchContentBox[0].offsetWidth - 240
       // 窗口尺寸没改变，则只重排当前type
       if (type && contentWidth === this.contentWidth) {
         this.titleSearchListCopy[type].width = 0
@@ -367,6 +367,7 @@ export default {
     changShowMore (type) {
       // this.changeMoreNum = 0
       this.titleSearchListCopy[type].showMore = !this.titleSearchListCopy[type].showMore
+      // this.needMore()
       // this.$nextTick(() => {
       //   this.changeMoreNum++
       // })
