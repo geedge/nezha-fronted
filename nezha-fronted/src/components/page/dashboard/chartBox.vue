@@ -406,7 +406,7 @@
               <el-row style="margin-top: 18px">
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover placement="top" trigger="hover" width="211">
+                  <el-popover placement="top" trigger="click" width="211">
                     <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
@@ -429,7 +429,7 @@
           <div v-if="editChart.type == 'singleStat'||editChart.type == 'table'" class="form__sub-title">
           <span>
             {{$t('dashboard.panel.chartForm.valMapping.name')}}
-            <el-popover  placement="top" trigger="hover" width="275">
+            <el-popover  placement="top" trigger="click" width="275">
               <div style="white-space: pre-wrap;">{{$t('dashboard.panel.chartForm.valueMappingTip')}}</div>
               <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
             </el-popover>

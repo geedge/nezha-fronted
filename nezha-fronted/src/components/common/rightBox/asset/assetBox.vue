@@ -241,7 +241,7 @@
                 </span>
                 <el-popover
                   placement="right"
-                  trigger="hover"
+                  trigger="click"
                   :content="$t('asset.talonPrompt')">
                   <i slot="reference" class="nz-icon nz-icon-about"></i>
                 </el-popover>

@@ -36,7 +36,7 @@
                     <div :key="index" class="inner-row">
                       <div class="inner-col left">ID：{{item.id}}</div>
                       <div class="inner-col right">
-                        <el-popover placement="right"  width="50" trigger="hover" :content="(item.state == 1?'up':'down')+'['+(item.lastUpdate&&item.lastUpdate!=''?(new Date(item.lastUpdate).getHours()+':'+new Date(item.lastUpdate).getMinutes()):'--')+']'" >
+                        <el-popover placement="right"  width="50" trigger="click" :content="(item.state == 1?'up':'down')+'['+(item.lastUpdate&&item.lastUpdate!=''?(new Date(item.lastUpdate).getHours()+':'+new Date(item.lastUpdate).getMinutes()):'--')+']'" >
                           <div slot="reference" style="width: 20px">
                             <div @mouseover="resetZIndex($event)" :class="{'active-icon green':item.state == 1,'active-icon red':item.state == 0}"></div>
                           </div>

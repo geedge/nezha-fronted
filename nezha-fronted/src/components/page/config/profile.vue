@@ -9,7 +9,7 @@
           <el-popover
             placement="right-start"
             style="line-height: .1;"
-            trigger="hover"
+            trigger="click"
             :content="userList.name">
             <div slot="reference">
               <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">
@@ -20,7 +20,7 @@
           </el-popover>
           <el-popover
             placement="right-start"
-            trigger="hover"
+            trigger="click"
             :content="'@' + userList.username">
             <div slot="reference">
               <span :class="(mfaEnable == '1' || mfaLevel > 0)?'MfaName':'name'">

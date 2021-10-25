@@ -42,7 +42,7 @@
           <div style="height: 100%">
             <div style="height: 100%; overflow: auto;">
               <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
-                <el-popover placement="top" trigger="hover" >
+                <el-popover placement="top" trigger="click" >
                   <div>
                     <div>
                       <span>{{$t('overall.name')}}:</span>
@@ -78,7 +78,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" title="Download" @click="downloadMib(scope.row)"><i class="nz-icon nz-icon-download"></i></button>
-        <el-dropdown size="medium" v-has="['snmp_mibFile_edit','snmp_mibFile_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['snmp_mibFile_edit','snmp_mibFile_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

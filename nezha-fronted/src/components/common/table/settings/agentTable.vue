@@ -41,7 +41,7 @@
               </span>
         <span v-else-if="item.prop === 'checkTime'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <span v-else-if="item.prop === 'status'">
-          <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="hover" width="200">
+          <el-popover :content="$t('asset.assetStatPre')+(scope.row.checkTime?utcTimeToTimezoneStr(scope.row.checkTime):$t('asset.assetStatDown'))" placement="right" trigger="click" width="200">
             <div slot="reference" style="width: 20px">
               <div :class="{'active-icon green-bg':scope.row[item.prop] == '1','active-icon red-bg':scope.row[item.prop] == '0' || scope.row[item.prop] == '-1' || scope.row[item.prop] == '-2'}"></div>
             </div>
@@ -58,7 +58,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" v-has="'agent_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
-        <el-dropdown size="medium" v-has="['agent_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['agent_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

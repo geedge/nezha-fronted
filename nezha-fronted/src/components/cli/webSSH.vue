@@ -64,7 +64,7 @@
               slot="label"
               placement="top"
               width="150"
-              trigger="hover"
+              trigger="click"
               :popper-class="'popover-webshell'"
             >
             <div>
@@ -84,7 +84,7 @@
             slot="label"
             placement="bottom-start"
             width="150"
-            trigger="hover"
+            trigger="click"
             :popper-class="'popover-webshell'"
           >
             <div>

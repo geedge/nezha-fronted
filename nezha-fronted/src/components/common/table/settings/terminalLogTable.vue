@@ -43,7 +43,7 @@
           <el-popover
             placement="right-start"
             width="200"
-            trigger="hover"
+            trigger="click"
             :content="scope.row.uuid">
             <span slot="reference">{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
           </el-popover>
@@ -81,7 +81,7 @@
       <div slot-scope="scope" class="table-operation-items">
         <template v-if="scope.row.status == 0">
           <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
-          <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+          <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
@@ -92,7 +92,7 @@
         </template>
         <template v-else>
           <button class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-          <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+          <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>

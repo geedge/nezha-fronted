@@ -12,7 +12,7 @@
         class="nz-icon nz-icon-delete"></i>
               </span>
       &nbsp;
-      <el-dropdown v-has="'asset_connect'" trigger="hover" @command="cli">
+      <el-dropdown v-has="'asset_connect'" trigger="click" @command="cli">
         <span :id="'asset-ssh-'+row.id" class="content-right-option" title="CLI"><i
           :class="{'gray-filter': !row.accounts || row.accounts.length === 0 || (row.accounts.length === 1 && row.accounts.find(t => t.protocol === 'SNMP'))}" class="nz-icon nz-icon-cli"></i>
         </span>

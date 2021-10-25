@@ -8,7 +8,7 @@
         <i class="global-active-color nz-icon nz-icon-refresh" style="font-size: 14px"></i>&nbsp;
         <span><slot name="added-text"></slot></span>
       </button>
-      <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)">
+      <button id="browser-go" class="top-tool-btn top-tool-btn--dropdown" @click="dropdownHandler(dropdownShow)">
         <span class="select-refresh-time-label" v-if="interval !== -1">{{interLabel}}</span>
         <i class="nz-icon nz-icon-arrow-down" style="font-size: 12px;"></i>
         <transition name="el-zoom-in-top">
@@ -120,13 +120,10 @@ export default {
       }
     },
     dropdownHandler (show) {
-      if (show) {
-        clearTimeout(timeout)
+      if (!show) {
         this.dropdownShow = true
       } else {
-        timeout = setTimeout(() => {
-          this.dropdownShow = false
-        }, 700)
+        this.dropdownShow = false
       }
     },
     getIntervalData (interval) { // interval:结束时间到现在的秒数

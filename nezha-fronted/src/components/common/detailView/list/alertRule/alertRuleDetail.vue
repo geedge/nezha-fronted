@@ -29,7 +29,7 @@
           style="position: relative"
           @show="alertMessageHover(item, true)"
           @hide="alertMessageHover(item, false)"
-          trigger="hover">
+          trigger="click">
           <alertRuleInfo v-if="item.loading" :id="item.id" :severity-data="severityData" :that="item" @showText="showText(item)"></alertRuleInfo>
           <div class="detail-row-info" slot="reference">
           <div class="asset-manageIp">

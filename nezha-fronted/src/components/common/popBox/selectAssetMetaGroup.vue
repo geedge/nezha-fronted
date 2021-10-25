@@ -23,7 +23,7 @@
               <span>
                 <el-popover
                   placement="right"
-                  trigger="hover"
+                  trigger="click"
                   :content="node.label">
                   <span slot="reference">{{ node.label }}</span>
                 </el-popover>

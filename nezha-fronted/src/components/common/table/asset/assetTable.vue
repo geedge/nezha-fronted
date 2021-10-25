@@ -118,7 +118,7 @@
       <div slot-scope="scope" class="table-operation-items">
         <button v-if="assetTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
         <button v-else class="table-operation-item" @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['asset_edit','asset_connect','asset_add','asset_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['asset_edit','asset_connect','asset_add','asset_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

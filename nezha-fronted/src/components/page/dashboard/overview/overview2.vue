@@ -201,7 +201,7 @@
             <span>{{$t("dashboard.overview.alert.moduleTopN")}}</span>
             <!--<span> <el-input v-model="col"  size="small"/></span>-->
             <!--<span> <el-input v-model="length" size="small"/></span>-->
-            <!--<el-dropdown trigger="hover" :show-timeout="0" size="small">
+            <!--<el-dropdown trigger="click" :show-timeout="0" size="small">
               <span>Top&nbsp;{{topFilter.rule}}<i class="nz-icon nz-icon-arrow-down el-icon&#45;&#45;right"></i></span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="(item,index) in topFilter.optionals" :key="index" @click.native="topNChange('rule', item)">{{item}}</el-dropdown-item>

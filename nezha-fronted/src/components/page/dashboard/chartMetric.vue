@@ -260,7 +260,7 @@
       <el-row :gutter="4">
         <el-col :span="4">
           {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-          <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="hover">
+          <el-popover :content="$t('dashboard.panel.chartForm.legendTip')" placement="top" width="150" trigger="click">
             <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 12px; -webkit-transform:scale(0.75);display:inline-block;" @mouseover="resetZIndex"></i>
           </el-popover>
         </el-col>

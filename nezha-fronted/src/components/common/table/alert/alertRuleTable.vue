@@ -63,7 +63,7 @@
         <template v-else-if="item.prop === 'state'">
           <el-popover
             placement="right"
-            trigger="hover"
+            trigger="click"
             :open-delay="300"
             :width="225"
             popper-class="schedEnableTitle"
@@ -120,7 +120,7 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" @click="queryMessage(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['alertRule_edit','alertRule_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['alertRule_edit','alertRule_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

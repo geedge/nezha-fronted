@@ -119,7 +119,7 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
+          <el-popover placement="left" trigger="click" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
             <div>
               <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
             </div>
@@ -136,7 +136,7 @@
               </span>
             </span>
           </el-popover>
-          <el-popover placement="right" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
+          <el-popover placement="right" trigger="click" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
             <div>
               <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
             </div>
@@ -170,7 +170,7 @@
       <div slot-scope="scope" class="table-operation-items">
         <button v-if="endpointTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
         <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

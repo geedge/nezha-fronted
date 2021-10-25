@@ -12,7 +12,7 @@
             v-if="isError"
             placement="top-start"
             :close-delay=10
-            trigger="hover"
+            trigger="click"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error">
@@ -25,7 +25,7 @@
 <!--              v-if="seriesItem.length!==seriesItemArr.length"-->
 <!--              placement="top-start"-->
 <!--              :close-delay=10-->
-<!--              trigger="hover"-->
+<!--              trigger="click"-->
 <!--              popper-class="chart-warring-popper">-->
 <!--            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItem.length}}</div>-->
 <!--            <span slot="reference" class="panel-info-corner panel-info-corner&#45;&#45;error"  @click="loadMore">-->
@@ -97,7 +97,7 @@
             v-if="isError"
             placement="top-start"
             :close-delay=10
-            trigger="hover"
+            trigger="click"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference"  class="panel-info-corner panel-info-corner--error">

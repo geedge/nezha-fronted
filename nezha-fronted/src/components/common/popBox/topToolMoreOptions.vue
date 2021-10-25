@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown :size="size">
+  <el-dropdown trigger="click" :size="size">
     <button id="more" :class="triggerButtonClass" title="more...">
       <i class="nz-icon nz-icon-more2"></i>
     </button>
