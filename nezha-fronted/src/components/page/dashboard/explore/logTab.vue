@@ -83,7 +83,7 @@
         </el-table-column>
       </el-table>
       <template>
-        <div v-if="!loading" class="right-no-data">
+        <div v-if="!loading" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>
@@ -568,7 +568,7 @@ export default {
   .log-table{
     position: relative;
     min-height: 200px;
-    .right-no-data {
+    .table-no-data {
       position: absolute;
       top: 50%;
       left: 50%;

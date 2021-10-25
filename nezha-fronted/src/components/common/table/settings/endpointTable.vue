@@ -185,7 +185,7 @@
       </div>
     </el-table-column>
     <template slot="empty">
-      <div v-if="!loading" class="right-no-data">
+      <div v-if="!loading" class="table-no-data">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#nz-icon-no-data-list"></use>
         </svg>
