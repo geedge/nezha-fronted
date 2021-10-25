@@ -263,7 +263,7 @@
       </div>
    </draggable>
 <!--    <el-row v-if="dataList.length === 0"  class="noData"></el-row>-->
-    <div v-if="panelLoading" class="no-data">
+    <div v-if="chartListNoData" class="no-data">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#nz-icon-no-data-panel"></use>
       </svg>
@@ -304,7 +304,7 @@ export default {
     obj: Object,
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
-    panelDataList: Array,
+    panelDataList: Array
   },
 
   components: {
@@ -333,7 +333,7 @@ export default {
         start: '',
         end: ''
       },
-      panelLoading: false,
+      chartListNoData: false,
       extraMarginBottom: 0, // dom额外的margin
       panelId: '',
       timer: null,
@@ -548,13 +548,20 @@ export default {
         this.dataTotalListBak.forEach((item) => {
           item.isLoaded = false
           item.isHide = false
+          this.chartListNoData = false
           chartListTmp.push(item)
         })
       }
 
       this.dataTotalList = [...chartListTmp]
       this.dataList = [...this.dataTotalList]
-
+      let isAllHide = true
+      this.dataList.map(item => {
+        if (!item.isHide) {
+          isAllHide = false
+        }
+      })
+      this.chartListNoData = isAllHide
       this.$nextTick(() => {
         if (this.dataList.length > 0) {
           this.dataList.forEach((item, index) => {
@@ -719,10 +726,10 @@ export default {
           // chart数据存在dataTotalListBak中
           if (response.data.list.length > 0) {
             this.dataTotalListBak = response.data.list
-            this.panelLoading = false
+            this.chartListNoData = false
           } else {
             this.dataTotalListBak = response.data
-            this.panelLoading = true
+            this.chartListNoData = true
           }
           let chartListTmp = []
           // 查询条件带name
