@@ -746,6 +746,8 @@ export default {
                 this.defaultTableVisible = true
               } else {
                 // this.defaultTableVisible = false;
+                this.pageObj.total = 0
+                this.pageObj.pageNo = 1
               }
             }
             this.tools.loading = false
