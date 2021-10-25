@@ -32,6 +32,7 @@
           :height="mainTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
+          :loading="tools.loading"
           @del="del"
           @edit="edit"
           @showText="showText"

@@ -44,6 +44,7 @@
           ref="dataDetail"
           :orderByFa="orderBy"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"

@@ -82,7 +82,15 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-else class="chart-no-data">No Data</div>
+      <template>
+        <div v-if="!loading" class="right-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
     </div>
   </div>
 </template>
@@ -98,7 +106,8 @@ export default {
     showSwitch: {
       type: Boolean,
       default: true
-    }
+    },
+    loading: Boolean
   },
   computed: {
     tableTimeFormat () {
@@ -559,6 +568,14 @@ export default {
   .log-table{
     position: relative;
     min-height: 200px;
+    .right-no-data {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -35px;
+      margin-left: -50px;
+      text-align: center;
+    }
   }
   .log-table .nz-table2 {
     padding: 10px 0 0 0;
