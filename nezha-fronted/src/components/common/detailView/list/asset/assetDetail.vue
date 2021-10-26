@@ -27,11 +27,7 @@
         @mouseleave="labelHover(item, 'asset', false)">
         <div class="detail-row-info">
           <div class="asset-manageIp">
-            <span v-if="item.pingInfo" >
-              <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
-            </span>
-            <span v-else style="display: inline-block;width: 13px">
-            </span>
+            <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
           </div>
           <div class="asset-name" :title="item.manageIp">{{item.manageIp}}</div>
@@ -178,92 +174,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .order-box{
-    display: flex;
-    height:40px;
-    padding: 0 15px;
-    line-height: 40px;
-    align-items: center;
-    /*.detail-select{*/
-    /*  height: 30px;*/
-    /*  line-height: 30px;*/
-    /*  flex: 1;*/
-    /*  /deep/ .el-input--small{*/
-    /*    height: 30px;*/
-    /*    line-height: 30px;*/
-    /*    background-color: rgba(9,30,66,0.08);*/
-    /*    border: none;*/
-    /*    color: #344563;*/
-    /*    input{*/
-    /*      height: 30px;*/
-    /*      line-height: 30px;*/
-    /*      background-color: rgba(9,30,66,0.08);*/
-    /*      border: none;*/
-    /*      color: #344563;*/
-    /*    }*/
-    /*  }*/
-    /*}*/
-    /*.detail-select:hover{*/
-    /*  /deep/ .el-input--small{*/
-    /*    input{*/
-    /*      background-color: rgba(9,30,66,0.13);*/
-    /*    }*/
-    /*  }*/
-    /*}*/
-    /*.detail-button{*/
-    /*  height: 28px;*/
-    /*  line-height: 28px;*/
-    /*  background-color: rgba(9,30,66,0.08);*/
-    /*  border: none;*/
-    /*  .nz-icon{*/
-    /*    color: #344563;*/
-    /*  }*/
-    /*}*/
-    /*.detail-button:hover{*/
-    /*  background-color: rgba(9,30,66,0.13);*/
-    /*}*/
-  }
-  .detail-row-box{
-    height: calc(100% - 40px);
-    overflow: hidden;
-    overflow-y: auto;
-  }
-  .detail-row{
-    width: 245px;
-    padding: 0px 0 0px 15px;
-    height: 60px;
-    border-bottom: 1px solid #E7EAED;
-    cursor: pointer;
-  }
-  .detail-row:last-of-type{
-    border-bottom: none
-  }
-  .detail-row-info{
-    display: flex;
-    height: 100%;
-    width: calc(100% - 15px);
-    justify-content:center;
-    flex-direction: column;
-    > div{
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  .asset-manageIp{
-    font-size: 16px;
-    color: #333333;
-    font-weight: 400;
-  }
-    .asset-name {
-      padding-left: 22px;
-      width: calc(100% - 22px);
-      font-size: 14px;
-      color: #999999;
-      font-weight: 400;
-    }
-  }
-  .selected{
-    background: #FFFBF6;
-  }
+  @import '../detailList';
 </style>

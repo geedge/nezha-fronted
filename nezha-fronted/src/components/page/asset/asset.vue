@@ -213,7 +213,7 @@ export default {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: localStorage.getItem('dataList-layout' + 'assetTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'assetTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       assetNzTableHeightOffset: 281, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',
