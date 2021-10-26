@@ -24,12 +24,12 @@
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)">
         <el-popover
-          placement="right"
-          popper-class="alert-message-tooltip"
+          placement="right-start"
+          popper-class="alert-message-tooltip alert-rule-detail"
           style="position: relative"
           @show="alertMessageHover(item, true)"
           @hide="alertMessageHover(item, false)"
-          trigger="click">
+          trigger="hover">
           <alertRuleInfo v-if="item.loading" :id="item.id" :severity-data="severityData" :that="item" @showText="showText(item)"></alertRuleInfo>
           <div class="detail-row-info" slot="reference">
           <div class="asset-manageIp">
@@ -227,7 +227,11 @@ export default {
   }
 }
 </script>
-
+<style>
+.alert-rule-detail {
+  left: 440px !important;
+}
+</style>
 <style scoped lang="scss">
   .order-box{
     display: flex;

@@ -72,12 +72,6 @@
             :type="'module'"
           ></alertLabel>
         </template>
-        <template v-else-if="item.prop === 'alerts'">
-          <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
-            <i class="nz-icon nz-icon-overview-alert" :class="scope.row.alertNum>0?'colorEF7458':'color23BF9A'"/>
-            {{scope.row.alertNum}}
-          </span>
-        </template>
         <template v-else-if="item.prop === 'asset'">
           <span
             class="pointer"
@@ -93,6 +87,12 @@
             :that="scope.row[item.prop]"
             :type="'asset'"
           ></alertLabel>
+        </template>
+        <template v-else-if="item.prop === 'alerts'">
+          <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row.alertNum>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row.alertNum}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'configs'">
 <!--          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable">-->
@@ -119,7 +119,7 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-popover placement="left" trigger="click" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
+          <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
             <div>
               <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
             </div>
@@ -136,7 +136,7 @@
               </span>
             </span>
           </el-popover>
-          <el-popover placement="right" trigger="click" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
+          <el-popover placement="right" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
             <div>
               <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
             </div>

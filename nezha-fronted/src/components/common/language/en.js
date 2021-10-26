@@ -1259,6 +1259,10 @@ const en = {
     startAt: 'Start time', // "开始时间"
     notify: 'Notification', // "通知方式"
     endAt: 'End time', // "结束时间"
+    name: 'Name',
+    state: 'State',
+    type: 'Type',
+    alertNum: 'Alert',
     list: {
       // 表头
       linked: 'Linked', // "关联"

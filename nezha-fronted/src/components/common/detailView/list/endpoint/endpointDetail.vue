@@ -38,6 +38,7 @@
           v-if="item && item.loading"
           :id="item.id"
           :that="item"
+          :detail-list="true"
           :type="'endpoint'"
         ></alertLabel>
       </li>

@@ -63,14 +63,14 @@
         <template v-else-if="item.prop === 'state'">
           <el-popover
             placement="right"
-            trigger="click"
+            trigger="hover"
             :open-delay="300"
-            :width="225"
+            :width="215"
             popper-class="schedEnableTitle"
           >
             <div>
               <div class="margin-b-10">
-                {{$t('alert.config.schedEnable')}} :
+                {{$t('alert.config.schedEnable')}}
                 <el-switch
                   style="margin-left: 14px"
                   slot="reference"
@@ -82,12 +82,12 @@
                 />
               </div>
               <div>
-                <div class="margin-b-10">{{$t('alert.config.schedDays')}} :</div>
+                <div class="margin-b-10">{{$t('alert.config.schedDays')}}</div>
                 <div class="margin-b-5" style="display: flex">
-                  <i class="nz-icon nz-icon-a-rilizhou"/>
+                  <i class="nz-icon nz-icon-a-rilizhou" style="color: #FA901C;"/>
                   <span v-html="weekStr(scope.row.schedDays)"></span>
                 </div>
-                <div ><i class="nz-icon nz-icon-dingshishijian"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+                <div ><i class="nz-icon nz-icon-dingshishijian" style="color: #FA901C;"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
               </div>
             </div>
 <!--            <el-switch-->
@@ -320,11 +320,17 @@ export default {
   padding: 2px 6px;
 }
 .schedEnableTitle{
-  padding: 15px 20px;
+  padding: 20px 15px;
+  margin-right: 0;
+  left: 1995px !important;
+  background: #FFFFFF;
+  border: 1px solid rgba(119,131,145,0.60);
+  box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+  border-radius: 3px;
 }
 .schedEnableTitle .nz-icon-a-rilizhou, .schedEnableTitle .nz-icon-dingshishijian{
   font-size: 14px;
-  color: #FA901C;
+  color: #666666;
   margin-right: 12px;
 }
 .schedEnableTitle .week-item{
@@ -332,7 +338,7 @@ export default {
   height: 22px;
   line-height: 22px;
   opacity: 0.9;
-  background: #F7F7FA;
+  background: #F6F6FA;
   border-radius: 2px;
   display: inline-block;
   font-size: 12px;

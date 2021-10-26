@@ -1257,6 +1257,10 @@ const cn = {
     notify: '通知', // "通知方式"
     startAt: '开始时间',
     endAt: '结束时间',
+    name: '名称',
+    state: '状态',
+    type: '类型',
+    alertNum: '告警数量',
     list: {
       linked: '关联',
       type: '类别',

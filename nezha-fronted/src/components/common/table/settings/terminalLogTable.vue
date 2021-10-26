@@ -43,7 +43,7 @@
           <el-popover
             placement="right-start"
             width="200"
-            trigger="click"
+            trigger="hover"
             :content="scope.row.uuid">
             <span slot="reference">{{scope.row.uuid.substring(0, 8).toUpperCase()}}</span>
           </el-popover>
