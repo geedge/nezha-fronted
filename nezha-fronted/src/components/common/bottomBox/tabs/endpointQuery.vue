@@ -36,10 +36,10 @@
           <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
             <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
               <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
-            </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
+            </button><button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="nz-icon nz-icon-arrow-down"></i>
             <transition name="el-zoom-in-top">
-              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover">
+              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;">
                 <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
                 <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
               </div>
@@ -119,7 +119,7 @@ export default {
       fromBottom: true,
       selectedEndpoints: [],
       queryExpression: '',
-      dropdownShow: '',
+      dropdownShow: false,
       timeout: null,
       formatTime: '',
       hideSameLabels: true
@@ -192,13 +192,10 @@ export default {
       this.$refs.endpointQueryTab.viewGraph()
     },
     dropdownHandler (show) {
-      if (show) {
-        clearTimeout(this.timeout)
+      if (!show) {
         this.dropdownShow = true
       } else {
-        this.timeout = setTimeout(() => {
-          this.dropdownShow = false
-        }, 700)
+        this.dropdownShow = false
       }
     },
     changSelectionF (arr) {
