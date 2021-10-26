@@ -460,16 +460,17 @@ export default {
 
 <style lang="scss" scoped>
   .tooltip-box{
-    background: #FFFFFF;
-    box-shadow: 1px 2px 8px 0 rgba(0,0,0,0.11);
-    border-radius: 4px;
-    padding: 10px;
-    max-height: 400px;
-    min-height: 200px;
-    height: 100%;
-    box-sizing: border-box;
-    .tooltip-box-chart{
+      padding: 10px;
+      max-height: 400px;
+      min-height: 200px;
+      height: 100%;
+      box-sizing: border-box;
+      background: #FFFFFF;
       border: 1px solid #E7EAED;
+      box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+      border-radius: 3px 3px 3px 3px;
+
+    .tooltip-box-chart{
       max-height: 400px;
       min-height: 200px;
       height: 100%;
@@ -491,10 +492,11 @@ export default {
         font-weight: 400;
         word-break: break-word;
         padding-right: 5px;
-        height: calc(100% - 24px) !important;
-        margin-top: 24px;
+        height: calc(100% - 29px) !important;
+        margin-top: 29px;
         padding-top: 5px;
         line-height: 16px;
+        border-top: 1px dashed  #DCE1E7;
       }
     }
     .tooltip-box-info{
@@ -505,14 +507,18 @@ export default {
       min-width: 186px;
       max-width: 300px;
     }
+      /deep/ .line-area{
+          padding: 0;
+      }
   }
 /deep/ .topology-chart-title{
-  text-align: left;
-  width: 100%;
-  line-height: 20px;
-  height: 24px;
-  padding: 5px 10px 0 10px;
-  box-sizing: border-box;
+    text-align: left;
+    width: 100%;
+    line-height: 19px;
+    padding: 5px 0 5px 10px;
+    height: 29px;
+    box-sizing: border-box;
+    border-bottom: 1px dashed  #DCE1E7;
 }
   .topology-tool-tip /deep/ .topology-chart-title{
     margin-top: -23px;
