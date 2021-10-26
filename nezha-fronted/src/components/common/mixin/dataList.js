@@ -225,6 +225,7 @@ export default {
       } else {
         this.dataListLayout.push('clickSearch')
       }
+      localStorage.setItem('dataList-layout' + this.tableId, JSON.stringify(this.dataListLayout))
     },
     addSilence (row, type) {
       this.blankSilenceObject.startAt = bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')

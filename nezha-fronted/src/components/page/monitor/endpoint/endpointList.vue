@@ -317,7 +317,7 @@ export default {
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 244px)', // 主列表table高度
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: localStorage.getItem('dataList-layout' + 'endpointTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'endpointTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [
