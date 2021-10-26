@@ -124,7 +124,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Module</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</div>
+        <div class="alert-label-value"><i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/> <span>{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</span></div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Asset</div>
@@ -142,7 +142,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">State</div>
-        <div class="alert-label-value" style="margin-left: 3px">
+        <div class="alert-label-value">
            <span style="width: auto">
             <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0 || !alertLabelData.configs[0].state">

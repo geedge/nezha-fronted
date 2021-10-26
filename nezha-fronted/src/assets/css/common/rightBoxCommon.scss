@@ -40,7 +40,11 @@
     }
   }
 }
-
+.right-box-container__left.right-box__container {
+  .el-textarea__inner {
+    padding: 5px 70px 4px 10px;
+  }
+}
 .right-box__container {
   .right-box-form{
     width: calc(100% - 60px);
