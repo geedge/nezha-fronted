@@ -90,7 +90,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">Description</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '-'}}</div>
+        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
       </div>
     </div>
 

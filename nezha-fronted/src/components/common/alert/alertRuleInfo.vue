@@ -3,19 +3,19 @@
     <div class="alert-rule-info" >
       <div class="alert-rule-box">
         <div class="alert-rule-title">ID</div>
-        <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : ''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.id ? alertRuleData.id : '--'}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.name')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : ''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.name ? alertRuleData.name : '--'}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.type')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.type ? alertRuleData.type : ''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.type ? alertRuleData.type : '--'}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.severity')}}</div>
-        <div class="alert-rule-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : ''}}</div>
+        <div class="alert-rule-value"><i class="nz-icon nz-icon-circle" :style="{color:severityColor,'font-size':'12px','margin-right':'5px'}"></i>{{alertRuleData.severityId ? severityData.find(s => alertRuleData.severityId === s.id).name : '--'}}</div>
         <!--        <div class="alert-rule-value severity">
                   <span v-if="alertRuleData && alertRuleData.severity === 'P1'" class="P1">
                     {{$CONSTANTS.alertMessage.severityData.find(s => {return s.value === 'P1'}).label}}
@@ -30,11 +30,11 @@
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.config.threshold')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.threshold ? alertRuleData.threshold : ''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.threshold ? alertRuleData.threshold : '--'}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.config.expr')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : ''}}</div>
+        <div class="alert-rule-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.alertNum')}}</div>
