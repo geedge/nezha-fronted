@@ -207,6 +207,7 @@ export default {
   data () {
     return {
       url: 'asset/asset',
+      from: 'asset',
       filter: {},
       // 侧滑
       rightBox: {

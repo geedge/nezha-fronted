@@ -240,6 +240,7 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
+      from: 'endpoint',
       importBoxShow: false,
       importResult: {},
       blankObject: {
