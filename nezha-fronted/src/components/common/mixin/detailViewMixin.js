@@ -1,5 +1,3 @@
-import project from "@/components/page/monitor/project/project";
-
 export default {
   props: {},
   data () {

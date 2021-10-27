@@ -1985,6 +1985,9 @@ export default {
       if (getChart(this.chartIndex)) {
         const divHeight = this.$refs.legendArea.offsetHeight
         getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+        if (!getChart(this.chartIndex).getOption()) {
+          return
+        }
         let minInterval = ''
         let splitNumber = ''
         if (this.fromTopo) {
