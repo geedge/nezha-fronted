@@ -85,7 +85,7 @@
           <el-collapse v-show="!showIntroduce" v-model="collapseValue" class="explore-collapse" @change="logsCollapseChange">
             <!--metric-->
             <template v-if="showMetrics">
-              <el-collapse-item name="1" title="Graph">
+              <el-collapse-item name="1" title="Graph" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="exploreChart" :unit="chartUnit"></chart>
                 </div>
@@ -127,12 +127,12 @@
             </template>
             <!--log-->
             <template v-else>
-              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph">
+              <el-collapse-item v-if="showTab.indexOf('1') > -1" name="1" title="Graph" class="el-collapse-item__height">
                 <div class="chart-room">
                   <chart ref="logChart" :unit="chartUnit" v-loading="chartLoading"></chart>
                 </div>
               </el-collapse-item>
-              <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
+              <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs" class="el-collapse-item__height">
                 <log-tab ref="logDetail" :log-data="logData" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-loading="chartLoading"></log-tab>
               </el-collapse-item>
             </template>
@@ -1345,6 +1345,9 @@ export default {
     border-bottom: 1px solid #e7eaed !important;
   }
   /*外部引用 样式end*/
+  .el-collapse-item__height  /deep/ .el-collapse-item__wrap{
+    overflow: unset;
+  }
 </style>
 <style lang="scss">
   .explore-table {
