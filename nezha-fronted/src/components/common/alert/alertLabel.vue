@@ -81,7 +81,7 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.asset')}}</div>
         <div class="alert-label-value">
-          <i class="nz-icon nz-icon-overview-project monitorColor" :class="alertLabelData.assetNum > 0?'color23BF9A':'color23BF9A'"/>&nbsp;
+          <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
           <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
         </div>
       </div>
@@ -122,7 +122,7 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.asset')}}</div>
         <div class="alert-label-value">
-          <i class="nz-icon nz-icon-overview-project monitorColor" :class="alertLabelData.assetNum > 0?'color23BF9A':'color23BF9A'"/>&nbsp;
+          <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>
           <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
         </div>
       </div>
@@ -162,8 +162,8 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.asset')}}</div>
         <div class="alert-label-value">
-          <i class="nz-icon nz-icon-overview-project monitorColor" :class="alertLabelData.assetNum > 0?'color23BF9A':'color23BF9A'"/>&nbsp;
-          <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
+          <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"></i>&nbsp;
+          <span>{{alertLabelData && alertLabelData.asset.name ? alertLabelData.asset.name : '--'}}</span>
         </div>
       </div>
       <div class="alert-label-box">
@@ -226,7 +226,7 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.asset')}}</div>
         <div class="alert-label-value">
-          <i class="nz-icon nz-icon-overview-project monitorColor" :class="alertLabelData.assetNum > 0?'color23BF9A':'color23BF9A'"/>&nbsp;
+          <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
           <span>{{alertLabelData && alertLabelData.assetNum && alertLabelData.assetNum ? alertLabelData.assetNum: '--'}}</span>
         </div>
       </div>
