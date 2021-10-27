@@ -29,10 +29,6 @@
                 </div>-->
       </div>
       <div class="alert-rule-box">
-        <div class="alert-rule-title">{{$t('alert.config.threshold')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.threshold ? alertRuleData.threshold : '--'}}</div>
-      </div>
-      <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.config.expr')}}</div>
         <div class="alert-rule-value">{{alertRuleData.expr ? (alertRuleData.expr + alertRuleData.operator + formatThreshold(alertRuleData.threshold,alertRuleData.unit)) : '--'}}</div>
       </div>
@@ -141,7 +137,6 @@ export default {
     },
     severityDataColor () {
       this.severityData.map(item => {
-        console.log(item.color)
         this.severityColor = item.color
       })
     }
