@@ -275,6 +275,7 @@ export default {
             name: this.$t('overall.projectName'),
             type: 'project',
             label: 'projectIds',
+            id: 11,
             readonly: true,
             disabled: false
           }
@@ -425,19 +426,28 @@ export default {
   },
   created () {
     if (localStorage.getItem('moduleProjectId')) {
-      this.searchLabel.projectIds = localStorage.getItem('moduleProjectId')
+      this.searchLabel.projectIds = JSON.parse(localStorage.getItem('moduleProjectId'))[0]
     }
     if (localStorage.getItem('moduleProjectId')) {
+      const project = JSON.parse(localStorage.getItem('moduleProjectId'))
+      let dataList = ''
+      if (this.detailType !== 'view') {
+        dataList = 'dataList'
+      } else {
+        dataList = 'detailList'
+      }
       setTimeout(() => {
-        this.$refs.dataList.$refs.searchInput.select_list.push({
+        this.$refs[dataList].$refs.searchInput.select_list.push({
           id: 11,
-          name: 'project id',
-          type: 'input',
+          name: this.$t('overall.projectName'),
+          type: 'project',
           label: 'projectIds',
           disabled: false,
-          val: localStorage.getItem('moduleProjectId')
+          val: project[1],
+          valnum: project[0]
         })
-        this.$refs.dataList.$refs.searchInput.sreach_num = 1
+        this.$refs[dataList].$refs.searchInput.sreach_num = 1
+        this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs[dataList].$refs.searchInput.searchLabelList.filter(item => item.label !== 'projectIds')
       })
     }
   },

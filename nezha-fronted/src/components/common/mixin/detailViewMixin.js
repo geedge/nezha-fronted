@@ -1,3 +1,5 @@
+import project from "@/components/page/monitor/project/project";
+
 export default {
   props: {},
   data () {
@@ -42,12 +44,29 @@ export default {
         this.detailViewLoading = false
         this.$refs.clickSearch && this.$refs.clickSearch.needMore()
         this.$refs[dataList].$refs.searchInput.sreach_num = 0
+        this.$refs[dataList].$refs.searchInput.select_list = []
+        console.log(this.searchMsg.searchLabelList)
         this.searchMsg.searchLabelList.forEach(searchLabel => {
           if (this.searchLabel[searchLabel.label]) {
-            this.$refs[dataList].$refs.searchInput.select_list.push({
-              ...searchLabel,
-              val: this.searchLabel[searchLabel.label]
-            })
+            let val = this.searchLabel[searchLabel.label]
+            console.log(val)
+            if (searchLabel.label === 'projectIds') {
+              const project = this.$refs.dataList.$refs.searchInput.projectSelect.find(project => val == project.id || val == project.name)
+              console.log(project)
+              val = project.name
+              const valnum = project.id
+              this.$refs[dataList].$refs.searchInput.select_list.push({
+                ...searchLabel,
+                val: val,
+                valnum: valnum
+              })
+            } else {
+              this.$refs[dataList].$refs.searchInput.select_list.push({
+                ...searchLabel,
+                val: val
+              })
+            }
+
             this.$refs[dataList].$refs.searchInput.sreach_num++
             this.$refs[dataList].$refs.searchInput.searchLabelList = this.$refs.dataList.$refs.searchInput.searchLabelList.filter(item => searchLabel.label !== item.label)
           }

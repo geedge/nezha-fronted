@@ -53,7 +53,7 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-         <span class="alert-num">
+         <span class="alert-num" @click="jumpAlertMessage(scope.row)">
             <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
             {{scope.row[item.prop]}}
           </span>
@@ -142,8 +142,12 @@ export default {
       this.$store.commit('currentProjectChange', project)
     },
     jumpModule (row) {
-      localStorage.setItem('moduleProjectId', row.id)
+      localStorage.setItem('moduleProjectId', JSON.stringify([row.id, row.name]))
       this.$router.push({ path: '/monitor/module' })
+    },
+    jumpAlertMessage (row) {
+      localStorage.setItem('alertMessageProjectId', row.id)
+      this.$router.push({ path: '/alertMessage' })
     },
     jumpEndpoint (row) {
       localStorage.setItem('endpointProjectId', row.id)

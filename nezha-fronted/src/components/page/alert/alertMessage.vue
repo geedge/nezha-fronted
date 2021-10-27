@@ -352,6 +352,19 @@ export default {
       }
     }
   },
+  created () {
+    if (localStorage.getItem('alertMessageProjectId')) {
+      this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
+      this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('alertMessageProjectId')) {
+      this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
+      // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
+    }
+    // this.getTitleSearch()
+  },
   methods: {
     labelsSort (obj) {
       const buildIn = ['asset', 'endpoint', 'module', 'cpu', 'project', 'datacenter', 'parent_asset', 'user']
@@ -990,6 +1003,9 @@ export default {
       }
     },
     deleteMessage () {}
+  },
+  destroyed () {
+    localStorage.removeItem('endpointProjectId')
   }
 }
 </script>
