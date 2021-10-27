@@ -12,7 +12,7 @@
             v-if="isError"
             :close-delay=10
             placement="top-start"
-            trigger="click"
+            trigger="hover"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error">

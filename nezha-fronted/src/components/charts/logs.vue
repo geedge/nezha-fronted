@@ -12,7 +12,7 @@
             v-if="isError"
             placement="top-start"
             :close-delay=10
-            trigger="click"
+            trigger="hover"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference" class="panel-info-corner panel-info-corner--error">
@@ -97,7 +97,7 @@
             v-if="isError"
             placement="top-start"
             :close-delay=10
-            trigger="click"
+            trigger="hover"
             popper-class="chart-error-popper">
             <div >{{errorContent}}</div>
             <span slot="reference"  class="panel-info-corner panel-info-corner--error">

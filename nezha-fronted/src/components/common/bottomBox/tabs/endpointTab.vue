@@ -111,7 +111,7 @@
           </div>
           <span v-else-if="item.prop === 'lastUpdate'">{{dateFormat(scope.row.lastUpdate)}}</span>
           <span v-else-if="item.prop === 'state'" >
-            <el-popover placement="right" trigger="click" :content="getStateContent(scope.row)" popper-class="small-pop">
+            <el-popover placement="right" trigger="hover" :content="getStateContent(scope.row)" popper-class="small-pop">
               <div slot="reference" style="width: 20px">
                 <div :class="{'active-icon green':scope.row.state == '1','active-icon red':scope.row.state == '0', 'active-icon gray':scope.row.state == '2'}"></div>
               </div>
