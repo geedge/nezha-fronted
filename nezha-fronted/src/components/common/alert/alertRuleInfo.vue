@@ -243,6 +243,7 @@ export default {
     text-align: left;
     color: #1a1a1a;
     padding: 0 3px 0 13px;
+    width: 159px;
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;

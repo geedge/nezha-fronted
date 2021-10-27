@@ -104,6 +104,32 @@
         <div class="alert-label-value">{{alertLabelData && alertLabelData ? alertLabelData.name : '--'}}</div>
       </div>
       <div class="alert-label-box">
+        <div class="alert-label-title">Module</div>
+        <div class="alert-label-value">
+          <i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;
+          <span>{{alertLabelData && alertLabelData.module && alertLabelData.module.name ? alertLabelData.module.name : '--'}}</span></div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Endpoint</div>
+        <div class="alert-label-value">
+          <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
+          <span>{{alertLabelData && alertLabelData.endpointNum ? alertLabelData.endpointNum : '--'}}</span></div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Asset</div>
+        <div class="alert-label-value">
+          <i v-if="alertLabelData" class="nz-icon nz-icon-cabinet monitorColor" :class="alertLabelData && alertLabelData.assetName > 0 ? 'colorEF7458' : 'color23BF9A'"/>&nbsp;
+          <span>{{alertLabelData && alertLabelData.assetNum ? alertLabelData.assetNum: 0}}</span>
+        </div>
+      </div>
+      <div class="alert-label-box">
+        <div class="alert-label-title">Alert</div>
+        <div class="alert-label-value">
+          <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
+          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0 + ' ' + alertActiveStr()}}</span>
+        </div>
+      </div>
+      <div class="alert-label-box">
         <div class="alert-label-title">Description</div>
         <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
       </div>
