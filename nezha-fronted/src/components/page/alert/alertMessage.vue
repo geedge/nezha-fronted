@@ -1005,7 +1005,7 @@ export default {
     deleteMessage () {}
   },
   destroyed () {
-    localStorage.removeItem('endpointProjectId')
+    localStorage.removeItem('alertMessageProjectId')
   }
 }
 </script>
