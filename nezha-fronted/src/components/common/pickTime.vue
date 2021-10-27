@@ -152,7 +152,6 @@ export default {
       this.refreshDataFunc()
     },
     antiShake () {
-      console.log('aaaaa')
       if (this.timer) {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
@@ -160,7 +159,6 @@ export default {
           this.timer = ''
         }, 200)
       } else {
-        console.log('123123')
         this.timer = setTimeout(() => {
           this.refreshDataFunc()
           this.timer = ''
