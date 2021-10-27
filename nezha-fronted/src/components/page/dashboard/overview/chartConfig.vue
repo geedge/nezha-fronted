@@ -53,7 +53,7 @@ const commonOption = {
     },
     tooltip: { // 和 option.tooltip 的配置项相同
       show: true,
-      position: 'top',
+      position: 'bottom',
       formatter (param) {
         return param.title // 自定义的 DOM 结构
       },
