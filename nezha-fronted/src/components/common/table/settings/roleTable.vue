@@ -35,12 +35,13 @@
       </template>
       <template slot-scope="scope" :column="item">
         <template v-if="item.prop === 'name'">
-          <template v-if="scope.row.i18n">
-            <span>{{$t(scope.row.i18n)}}</span>
-          </template>
-          <template v-else-if="scope.row.name">
-            <span>{{scope.row.name}}</span>
-          </template>
+          <span>{{scope.row.name}}</span>
+<!--          <template v-if="scope.row.i18n">-->
+<!--            <span>{{$t(scope.row.i18n)}}</span>-->
+<!--          </template>-->
+<!--          <template v-else-if="scope.row.name">-->
+<!--            <span>{{scope.row.name}}</span>-->
+<!--          </template>-->
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
         <span v-else>-</span>
