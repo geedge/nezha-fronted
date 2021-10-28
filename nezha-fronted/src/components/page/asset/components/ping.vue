@@ -2,7 +2,7 @@
   <el-popover
     :content="formatPingTime(model.pingLastUpdate)"
     placement="bottom"
-    trigger="click"
+    trigger="hover"
     width="200"
   >
     <div slot="reference" style="width: 100%">

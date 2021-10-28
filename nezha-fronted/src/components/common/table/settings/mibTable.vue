@@ -42,7 +42,7 @@
           <div style="height: 100%">
             <div style="height: 100%; overflow: auto;">
               <div v-for="(n,i) in scope.row['modelsDetail']" :key="n.name+'-'+n.id+'-'+i" class="detail-item-content">
-                <el-popover placement="top" trigger="click" >
+                <el-popover placement="top" trigger="hover" >
                   <div>
                     <div>
                       <span>{{$t('overall.name')}}:</span>
