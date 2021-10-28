@@ -109,7 +109,7 @@ export default {
           label: this.$t('config.model.name'),
           prop: 'name',
           show: true,
-          width: 350,
+          minWidth: 350,
           sortable: 'custom'
         }, {
           label: this.$t('config.model.brand'),
