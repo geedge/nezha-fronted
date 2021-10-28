@@ -12,10 +12,10 @@
     <template v-slot:top-tool-right>
       <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" suffix-icon="el-icon-search" @keyup.enter.native="queryLogData()">
         <el-select slot="prepend" v-model="matchSymbol" class="symbol-select" size="small" style="width: 60px;">
-          <el-option value="|="></el-option>
-          <el-option value="!="></el-option>
-          <el-option value="|~"></el-option>
-          <el-option value="!~"></el-option>
+          <el-option value="|=" style="font-family: Inter-Regular"></el-option>
+          <el-option value="!=" style="font-family: Inter-Regular"></el-option>
+          <el-option value="|~" style="font-family: Inter-Regular"></el-option>
+          <el-option value="!~" style="font-family: Inter-Regular"></el-option>
         </el-select>
       </el-input>
       <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :use-chart-unit="false" :use-refresh="false">
