@@ -143,7 +143,7 @@ export default {
           label: this.$t('alert.silence.name'),
           prop: 'name',
           show: true,
-          width: 150
+          minWidth: 150
         }, {
           label: this.$t('alert.silence.matchers'),
           prop: 'matchers',
