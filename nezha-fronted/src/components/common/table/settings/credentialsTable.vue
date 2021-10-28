@@ -88,7 +88,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#nz-icon-no-data-list"></use>
         </svg>
-        <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
+        <div class="table-no-data__title">No results found</div>
       </div>
       <div v-else>&nbsp;</div>
     </template>
