@@ -126,7 +126,7 @@ export default {
           label: this.$t('config.user.name'),
           prop: 'name',
           show: true,
-          width: 600,
+          minWidth: 600,
           sortable: 'custom'
         },
         // {
