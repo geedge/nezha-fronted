@@ -344,6 +344,7 @@ export default {
     position: relative;
     padding: 0;
     background-color: #fff;
+    overflow-y: hidden;
   }
   .sub-box /deep/ .top-tools.top-tools--sub{
     border: none;

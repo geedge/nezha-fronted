@@ -213,7 +213,7 @@ export default {
     },
     statusClass () {
       return function (status) {
-        switch (status) {
+        switch (Number(status)) {
           case 0:
             return 'nz-icon-connecting color23bf9a'
           case 1:
