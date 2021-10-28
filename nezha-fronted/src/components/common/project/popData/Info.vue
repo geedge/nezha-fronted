@@ -17,11 +17,24 @@
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('project.endpoint.endpoints') }}</span>
-          <span class="content-text">{{moduleInfo.endpointNum?moduleInfo.endpointNum:'--'}}</span>
+          <span class="content-text">
+            <i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;
+            <span>{{moduleInfo.endpointNum ? moduleInfo.endpointNum : 0}}</span>
+          </span>
+        </div>
+        <div class="content-box">
+          <span class="content-title">{{ $t('overall.asset') }}</span>
+          <span class="content-text">
+             <i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;
+              <span>{{ moduleInfo.assetNum ? moduleInfo.assetNum: 0}}</span>
+            </span>
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('overall.alert') }}</span>
-          <span class="content-text">{{moduleInfo.alertNum?moduleInfo.alertNum:'--'}}</span>
+          <span class="content-text">
+           <i :class="moduleInfo.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
+          <span>{{moduleInfo.alertNum ? moduleInfo.alertNum : 0}}</span>
+          </span>
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('overall.remark') }}</span>
@@ -76,13 +89,15 @@ export default {
     margin-right: 15px;
     flex-direction: column;
     justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid #E7EAED;
+    box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+    border-radius: 3px 3px 3px 3px 0 0;
   }
   .info-box{
     background: #FFFFFF;
-    border: 1px solid #E7EAED;
-    width: 334px;
     margin-bottom: 15px;
-    box-shadow: 1px 2px 4px 0 rgba(0,0,0,0.12), -1px 1px 9px -1px rgba(205,205,205,0.77);
+    min-width: 260px;
   }
   .info-box-title{
     background: #EFEFEF;
@@ -96,33 +111,26 @@ export default {
   .info-box-content{
     font-size: 12px;
     color: #333333;
-    /*border: 1px solid rgba(205,205,205,0.77);*/
   }
   .content-box{
     padding: 0 12px;
-    height: 29px;
+    height: 26px;
     line-height: 24px;
   }
-  .info-box-content .content-box:not(:last-child){
-    border-bottom: 1px solid rgba(205,205,205,0.77);
-  }
   .content-title{
-    font-size: 12px;
+    font-size: 14px;
     color: #333333;
-    width: 120px;
+    min-width: 120px;
     display: inline-block;
-    border-right: 1px solid rgba(205,205,205,0.77);
+    color: #666666;
     padding: 3px 0;
   }
   .content-text{
-    width: 175px;
     color: #333333;
-    font-size: 12px;
-    display: inline-block;
+    font-size: 14px;
     padding: 3px 5px;
   }
   .module-type{
-    border: 1px solid #DCDCDC;
     text-align: center;
     width: 44px;
     display: inline-block;
@@ -131,13 +139,11 @@ export default {
     line-height: 20px;
   }
   .module-type:first-child{
-    border-right-color:rgba(255,140,14,0.54);
     border-radius: 4px 0 0 4px;
     margin-right: -4px;
     border-right: none;
   }
   .module-type:last-child{
-    border-left-color:rgba(255,140,14,0.54);
     border-radius: 0 4px 4px 0;
     z-index: -1;
   }
