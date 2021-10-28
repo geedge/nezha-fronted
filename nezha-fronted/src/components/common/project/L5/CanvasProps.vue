@@ -251,7 +251,7 @@
                   <template>
                     <el-col class="legend-title">
                       {{ $t('dashboard.panel.chartForm.legend') }}&nbsp;
-                      <el-popover placement="top" trigger="click" width="211">
+                      <el-popover placement="top" trigger="hover" width="211">
                         <div style="word-break:keep-all;">{{ $t('dashboard.panel.chartForm.legendTip') }}</div>
                         <i slot="reference" class="nz-icon nz-icon-info-normal" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"
                            @mouseover="rz"></i>

@@ -14,7 +14,7 @@
           <el-popover
             placement="bottom"
             width="111"
-            trigger="click"
+            trigger="hover"
             class="scale-number-box"
             popper-class="scale-number-popover no-style-class"
            >

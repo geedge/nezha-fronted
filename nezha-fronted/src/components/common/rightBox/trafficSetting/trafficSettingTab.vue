@@ -18,7 +18,7 @@
              size="small"
              v-model="assetSetting.host"
            ></el-autocomplete>
-          <el-popover @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="click">
+          <el-popover @hide="popHide" @show="popShow" placement="bottom" popper-class="no-style-class" trigger="hover">
           <div class="mib-browser-ad-search">
             <el-row class="mib-browser-ad-search-item" style="font-weight: bold">{{$t('config.dc.traffic.snmpSetting')}}</el-row>
             <el-row class="mib-browser-ad-search-item">
