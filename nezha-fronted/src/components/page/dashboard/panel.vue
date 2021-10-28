@@ -80,8 +80,8 @@
         </div>
         <div id="tableList" class="table-list">
           <div ref="dashboardScrollbar" id="dashboardScrollbar" class="border-t-1-de" style="height: calc(100% - 20px); overflow: auto;">
-            <div class="box-content">
-              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
+            <div class="box-content" v-loading="chartListLoading">
+              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
           </div>
         </div>
@@ -124,6 +124,7 @@ export default {
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
+      chartListLoading: true,
       rightBox: { // 面板弹出框相关
         chart: { show: false },
         chartTemp: { show: false },
@@ -835,6 +836,13 @@ export default {
           wrap.scrollTop = currentTop
         }
       }, 20)
+    },
+    load (dataList) {
+      if (dataList.length > 0) {
+        this.chartListLoading = false
+      } else {
+        this.chartListLoading = !dataList.length === 0
+      }
     }
   },
   created () {

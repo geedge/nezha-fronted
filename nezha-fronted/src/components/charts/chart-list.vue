@@ -31,7 +31,7 @@
   }
   .list-width{
     width: 100%;
-    /*height: 100%;*/
+    //height: 100%;
     padding: 0 10px 5px 10px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
@@ -723,6 +723,7 @@ export default {
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
+          this.$emit('panel-list-loading', response.data.list)
           // chart数据存在dataTotalListBak中
           if (response.data.list.length > 0) {
             this.dataTotalListBak = response.data.list
