@@ -83,11 +83,11 @@
         </el-table-column>
       </el-table>
       <template v-if="exploreItem">
-        <div v-if="loadingExplore" class="table-no-data">
+        <div v-if="exploreLogTable" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>
-          <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found1</div>
+          <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
         </div>
         <div v-else>&nbsp;</div>
       </template>
@@ -96,7 +96,7 @@
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>
-          <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found2</div>
+          <div style="font-size: 16px;color: #333333;font-weight: 400;">No results found</div>
         </div>
         <div v-else>&nbsp;</div>
       </template>
@@ -116,8 +116,8 @@ export default {
       type: Boolean,
       default: true
     },
-    loadingExplore: Boolean,
     loadingBottom: Boolean,
+    exploreLogTable: Boolean,
     exploreItem: Boolean
   },
   computed: {

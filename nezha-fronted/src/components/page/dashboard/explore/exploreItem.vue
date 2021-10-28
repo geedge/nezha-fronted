@@ -133,7 +133,7 @@
                 </div>
               </el-collapse-item>
               <el-collapse-item v-if="showTab.indexOf('2') > -1" name="2" title="Logs">
-                <log-tab ref="logDetail" :log-data="logData" :loading-explore="chartLoading" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-loading="chartLoading"></log-tab>
+                <log-tab ref="logDetail" :log-data="logData" :explore-log-table="logTabNoData" :explore-item="true" :tab-index="tabIndex" @exportLog="exportLog" @limitChange="queryLogData" v-loading="chartLoading"></log-tab>
               </el-collapse-item>
             </template>
           </el-collapse>
@@ -325,6 +325,7 @@ export default {
   data () {
     return {
       chartLoading: false,
+      logTabNoData: false,
       rightBox: { // 面板弹出框相关
         show: false
       },
@@ -492,6 +493,11 @@ export default {
           }
           if (res.length > 0) {
             const logData = res.map(r => r.data)
+            if (logData[0].result.length > 0) {
+              this.logTabNoData = false
+            } else {
+              this.logTabNoData = true
+            }
             const hasGraph = logData.some(d => d.resultType === 'matrix')
             const hasLog = logData.some(d => d.resultType === 'streamsFormat')
             const graphTabIndex = this.showTab.indexOf('1')
