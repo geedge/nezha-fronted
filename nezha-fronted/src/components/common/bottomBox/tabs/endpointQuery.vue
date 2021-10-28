@@ -20,7 +20,7 @@
               <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float:right" @click="focusInput"></i>
             </el-input>
           </div>
-          <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
+          <div class="margin-r-20 nz-btn-group">
             <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button><my-date-picker
             v-model="formatTime"
             type="datetime"
