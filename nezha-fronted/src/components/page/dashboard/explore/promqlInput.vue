@@ -784,6 +784,10 @@ export default {
   .nz-cascade {
     padding: 0 10px 0 25px;
     position: relative;
+    overflow: hidden;
+    width: calc(100% - 50px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .nz-cascade .nz-icon-template2 {
     display: none;
