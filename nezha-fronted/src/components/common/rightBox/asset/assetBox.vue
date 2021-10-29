@@ -71,7 +71,7 @@
               v-model="editAsset.purchaseDate"
               placeholder=""
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               style="width: 100%"
               type="date"
               value-format="yyyy-MM-dd">
@@ -141,7 +141,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
-                        popper-class="right-box-select-top right-public-box-dropdown-top"
+                        popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%">
                       </my-date-picker>
@@ -152,7 +152,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType"
                         placeholder=""
-                        popper-class="right-box-select-top right-public-box-dropdown-top"
+                        popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%"
                         value-format="yyyy-MM-dd">
@@ -174,7 +174,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top limit-height"
+              popper-class="prevent-clickoutside right-box-select-top limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>

@@ -22,7 +22,7 @@
             <el-select
               v-model="editAlertRule.type"
               class="right-box__select half-form-item"
-              popper-class="right-box-select-top  prevent-clickoutside"
+              popper-class="right-box-select-top prevent-clickoutside"
               size="small"
               :disabled="showTypeSelect"
               @change="selectAlertRuleMetric">
@@ -35,7 +35,7 @@
           </el-form-item>
           <!--severity-->
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
-            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top  prevent-clickoutside" size="small">
+            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
@@ -226,7 +226,7 @@
               :format="'HH:mm'"
               v-model="editAlertRule.schedStime"
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               :clearable = 'false'
               :picker-options="{
               }">
@@ -236,7 +236,7 @@
               :value-format="'HH:mm'"
               :format="'HH:mm'"
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               :clearable = 'false'
               v-model="editAlertRule.schedEtime"
               :picker-options="{

@@ -41,7 +41,7 @@
             </template>
             <template v-if="item.prop == 'role'">
               <el-popover :content="rules.roleId.message" placement="top" trigger="manual" v-model="rules.roleId.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.roleId)">
-                <el-select v-model="scope.row[item.prop]" size="small" :placeholder="$t('el.select.placeholder')" value-key="id" slot="reference" popper-class="api-select right-box-select-top  role-system-table">
+                <el-select v-model="scope.row[item.prop]" size="small" :placeholder="$t('el.select.placeholder')" value-key="id" slot="reference" popper-class="api-select right-box-select-top right-public-box-dropdown-top role-system-table">
                   <template v-for="role in roles" >
                     <el-option :label="role.name" :value="role"></el-option>
                   </template>
