@@ -155,7 +155,7 @@
           <el-form-item :label="$t('overall.remark')" prop="description">
             <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
-          <div class="alert-rule-split-title">Effective configuration</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.effectiveConfig') }}</div>
           <!--state-->
           <el-form-item :label="$t('alert.config.state')" prop="state" class="half-form-item">
             <el-select
@@ -244,7 +244,7 @@
               }">
             </el-time-picker>
           </el-form-item>
-          <div class="alert-rule-split-title">Notification configuration</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.notificationConfig') }}</div>
           <!--notifyActive-->
           <el-form-item :label="$t('alert.config.notifyActive')" prop="notifyActive" class="half-form-item">
             <el-select
@@ -320,7 +320,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <div class="alert-rule-split-title">More</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.more') }}</div>
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
             <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
