@@ -37,7 +37,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small">
               <template v-for="item in mfaLevelList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -60,7 +60,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small">
               <template v-for="item in languageList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -76,7 +76,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small"
                        @change="()=>{this.$forceUpdate()}">
               <template v-for="role in roles">

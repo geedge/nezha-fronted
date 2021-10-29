@@ -22,7 +22,7 @@
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
-              <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
@@ -53,7 +53,7 @@
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
-              <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
@@ -85,7 +85,7 @@
                 </div>
                 <i class="nz-icon nz-icon-arrow-down search-value"/>
               </div>
-              <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
                     <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >

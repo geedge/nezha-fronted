@@ -90,7 +90,7 @@
   <div id="panel-calender" :class="{'calendar--small': size === 'small'}" class="calendar">
     <my-date-picker prefix-icon=" " class="panel-time-picker-hidden " size="mini" ref="calendar"
                     format="yyyy/MM/dd HH:mm:ss" @change="dateChange" v-model="searchTime" type="datetimerange"
-                    popper-class="panel-time-picker-popper"
+                    popper-class="panel-time-picker-popper time-picker-popover__select-top"
                     :range-separator="$t('dashboard.panel.to')"
                     :start-placeholder="$t('dashboard.panel.startTime')"
                     :end-placeholder="$t('dashboard.panel.endTime')" align="right">
@@ -107,7 +107,7 @@
         :visible-arrow="false"
         :disabled="isPopoverDisabled"
         trigger="hover"
-        popper-class="popper-z-index right-public-box-select-top right-public-box-dropdown-top"
+        popper-class="popper-z-index right-box-select-top right-public-box-dropdown-top"
         id="panel-calender-popover">
         <template v-if="this.searchTime&&this.searchTime.length>1">
           <el-row  :gutter="10" class="calendar-popover">

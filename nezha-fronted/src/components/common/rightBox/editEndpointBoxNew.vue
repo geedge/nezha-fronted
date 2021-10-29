@@ -28,13 +28,13 @@
         <el-form ref="moduleForm" :model="editEndpoint" :rules="rules" label-position = "top" label-width="120px">
           <!--project-->
           <el-form-item :label='$t("project.project.projectName")' prop="projectId">
-            <el-select id="module-box-input-project" v-model="editEndpoint.projectId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id" @change="changeProject">
+            <el-select id="module-box-input-project" v-model="editEndpoint.projectId" :disabled="disabled" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" @change="changeProject">
               <el-option v-for="item in projectList" :id="'module-project-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
           <!--module-->
           <el-form-item :label='$t("project.module.module")' prop="moduleId">
-            <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+            <el-select @change="renderEndpoint" id="module-box-input-module" v-model="editEndpoint.moduleId" :disabled="!editEndpoint.projectId || disabled " class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
               <el-option v-for="item in moduleList" :id="'module-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -164,7 +164,7 @@
                 </el-row>
                   <!--credentials-->
                   <el-form-item :label='$t("project.endpoint.credentials")' prop="credentials">
-                    <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id" disabled>
+                    <el-select id="module-box-input-credentials" v-model="editEndpoint.configs[0].config.snmpCredentialsId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" disabled>
                       <el-option v-for="item in credentialList" :id="'module-type-'+item.id" :key="item.id" :label="item.name" :value="item.id"></el-option>
                     </el-select>
                   </el-form-item>
@@ -248,7 +248,7 @@
                     </div>
                     <div>
                       <el-form-item :prop="'configs.0.config.relabel_config.' + index + '.action'" class="" :label="'Action'" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
-                        <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
+                        <el-select v-model="item.action" :id="'action' + index " class="right-box__select " placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="actionChange(index)" :rules="[{ required: true, message: $t('validate.required'), trigger: 'change' }]">
                           <el-option v-for="item2 in actionList" :id="'module-action-'+item2.label" :key="item2.label" :label="item2.label" :value="item2.value"></el-option>
                         </el-select>
                       </el-form-item>
@@ -319,7 +319,7 @@
               <el-tab-pane v-if="editEndpoint.configs[0].config.protocol !== 'snmp'" :label="$t('project.endpoint.auth')" name="Auth">
                 <!--authtype-->
                 <el-form-item :label='$t("project.endpoint.type")' prop="authtype">
-                  <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
+                  <el-select id="module-box-input-auth-type" v-model="authType" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id" @change="changeAuthType">
                     <el-option v-for="item in authTypeList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
@@ -355,7 +355,7 @@
                   <el-tab-pane :label="$t('project.endpoint.basic')" name="Basic">
                     <!--type-->
                     <el-form-item :label='$t("project.endpoint.type")' class="half-form-item">
-                      <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
+                      <el-select id="module-box-input-type" v-model="item.type" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="logsBasicTypeChange(index)">
                         <el-option v-for="item in logsBasicList" :id="'module-type-'+item.id" :key="item.value" :label="item.name" :value="item.value"></el-option>
                       </el-select>
                     </el-form-item>
@@ -496,7 +496,7 @@
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
                         >
 <!--                          <el-input v-model="item2.format" placeholder="key" size="mini"></el-input>-->
-                          <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
+                          <el-select v-model="item2.format" :id="'timestamp' + index +'-' + index2" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
                             <el-option v-for="item in timestampList" :id="'module-timestamp-'+item" :key="item" :label="item" :value="item"></el-option>
                           </el-select>
                         </el-form-item>
