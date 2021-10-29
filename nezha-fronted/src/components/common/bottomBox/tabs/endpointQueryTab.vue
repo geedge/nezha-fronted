@@ -9,6 +9,10 @@
 .project-calendar{
   margin-top: 2px;
 }
+  .control-icon-unchecked {
+    color: #999999;
+    cursor: not-allowed;
+  }
 </style>
 <style>
   .endpoint-dialog .el-dialog__body{

@@ -123,6 +123,15 @@ export default {
       setTimeout(function () {
         temp.queryEndpoint()
       }, 100)
+    },
+    batchDeleteObjs: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+        this.$emit('selectedEndpointsChange', n)
+        }
+      }
     }
   },
   data () {

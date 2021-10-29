@@ -33,8 +33,8 @@
           >
           </my-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
           </div>
-          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
-            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
+          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 28px;">
+            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" @click="viewGraph">
               <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
             </button><button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="nz-icon nz-icon-arrow-down"></i>
@@ -57,6 +57,7 @@
           :hideSameLabels="hideSameLabels"
           :queryExpression="queryExpression"
           @changSelection="changSelectionF"
+          @selectedEndpointsChange="selectedEndpointsChange"
         />
       </template>
 <!--      <template v-slot:pagination>-->
@@ -201,6 +202,9 @@ export default {
     changSelectionF (arr) {
       this.changSelection = arr
     },
+    selectedEndpointsChange (n) {
+      this.selectedEndpoints = n
+    },
     toTop (wrap) {
       let currentTop = wrap.scrollTop
       const interval = currentTop / 10
@@ -220,5 +224,10 @@ export default {
   .full-width-height{
     width: 100%;
     height: 100%;
+  }
+  .control-icon-unchecked {
+    color: #bcbec2;
+    cursor: not-allowed;
+    background-color: #f4f4f5;
   }
 </style>
