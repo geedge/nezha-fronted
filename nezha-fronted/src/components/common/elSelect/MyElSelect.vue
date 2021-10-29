@@ -135,7 +135,7 @@
 <script>
 import Emitter from 'pl-table/src/mixins/emitter'
 import Focus from 'pl-table/src/mixins/focus'
-import Locale from 'pl-table/src/mixins/locale'
+import Locale from 'element-ui/src/mixins/locale'
 import ElInput from 'pl-table/package/input'
 import ElSelectMenu from 'pl-table/package/select/src/select-dropdown.vue'
 import ElOption from 'pl-table/package/select/src/option.vue'
