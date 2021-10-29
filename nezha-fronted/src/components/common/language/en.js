@@ -295,6 +295,7 @@ const en = {
         type: 'Type',
         unit: 'Unit',
         url: 'URL',
+        name: 'Name',
         legend: 'Legend',
         statistics: 'Statistics',
         legendTip: 'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',

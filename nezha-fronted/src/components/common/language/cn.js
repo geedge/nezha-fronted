@@ -284,6 +284,7 @@ const cn = {
         chartName: '图表名称',
         type: '类型',
         url: 'URL',
+        name: '名称',
         statistics: '统计数据',
         sync: '同步到设备',
         last: '最后的',

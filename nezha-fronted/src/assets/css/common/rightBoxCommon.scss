@@ -115,10 +115,8 @@
   }
   .el-form-item {
     .el-input--small.not-fixed-height {
-      height: 32px;
-      .el-input__count {
-        line-height: 29px;
-        height: 25px;
+      .el-textarea__inner {
+        min-height: 32px !important;
       }
     }
   }
