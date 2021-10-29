@@ -1323,6 +1323,9 @@ const en = {
       state: 'State',
       schedEnable: 'Schedule',
       schedDays: 'Effective time',
+      more: 'More',
+      effectiveConfig: 'Effective configuration',
+      notificationConfig: 'Notification configuration',
       notifyActive: 'Active Notification',
       notifyExpired: 'Expired notification',
       trbShot: 'Trouble shooting'
