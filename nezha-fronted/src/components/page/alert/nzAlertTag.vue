@@ -30,12 +30,11 @@ export default {
   border-radius: 4px;
   display: inline-block;
   box-sizing: content-box;
+  display: inline-flex;
 }
 .nz-alert-tag__label {
   border-radius: 3px 0 0 3px;
   padding: 0 4px;
-  min-width: 36px;
-  max-width: 100px;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -47,6 +46,7 @@ export default {
   margin-left: -1px;
 }
 .nz-alert-tag__content {
+  flex: 1;
   border-radius: 0 3px 3px 0;
   padding: 0 4px;
   min-width: 36px;
