@@ -774,7 +774,7 @@ export default {
                 if (i !== 0) {
                   str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
                 }
-                const value = bus.computeTimezone(item.data[0])
+                const value = bus.computeTimezone(item.data[0] - self.minusTime)
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
@@ -1748,6 +1748,7 @@ export default {
             })
             if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.data.elements.length) {
               const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+              this.minusTime = minusTime
               let cutPoint = 0
               res.forEach((item, index) => {
                 if (index < res.length / 2) {
