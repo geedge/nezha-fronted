@@ -50,6 +50,7 @@
 
     .top-tool-right {
       display: flex;
+      flex-shrink: 0;
     }
     .top-tool-left {
       display: flex;
