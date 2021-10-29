@@ -56,24 +56,18 @@ export default {
   data () {
     return {
       loading: true,
-      moduleInfo: {
-        project: { name: '' },
-        name: '',
-        type: 'http',
-        remark: '',
-        port: '',
-        path: '',
-        seq: '',
-        assetNum: '',
-        endpointNum: ''
-      }
+      moduleInfo: {}
     }
   },
   mounted () {
     this.loading = true
     this.$get('/monitor/module/' + this.moduleId).then(res => {
       this.loading = false
-      this.moduleInfo = res.data
+      if (res.code === 200) {
+        this.moduleInfo = res.data
+      } else {
+        this.$message.error(res.msg)
+      }
     })
   },
   methods: {},
