@@ -655,10 +655,12 @@ export default {
   }
 }
 </script>
-
 <style scoped lang="scss">
   .no-resize{
     background: rgba(255,255,255,0);
+  }
+  /deep/ .el-textarea.no-resize .el-input__count {
+    right: 5px !important;
   }
   .promqlInput {
     position: relative;
@@ -835,5 +837,8 @@ export default {
   }
   .nz-temp-box .nz-btn-style-normal-new{
     margin-left: 10px;
+  }
+  .right-box__container .form-row-item .input-box .el-textarea.no-resize .el-textarea__inner {
+    width: 476px;
   }
 </style>
