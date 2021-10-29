@@ -336,6 +336,19 @@ export default {
             this.isCustom = true
             this.$refs.calendar.focus()
             this.$refs.calendar.pickerVisible = true
+            if (document.getElementById('viewGraphDialog')) { // 处理 多弹出的z-index的问题 当前为 alertMessage的处理
+              const viewGraphDialogStyle = window.getComputedStyle(document.getElementById('viewGraphDialog', null))
+              console.log(viewGraphDialogStyle['z-index'])
+              setTimeout(() => {
+                if (viewGraphDialogStyle['z-index'] !== 'auto') {
+                  const dom = document.getElementsByClassName('el-picker-panel')
+                  Array.prototype.forEach.call(dom, function (element) {
+                    element.style['z-index'] = viewGraphDialogStyle['z-index'] + 1
+                  })
+                  this.$refs.calendar.$el.style['z-index'] = viewGraphDialogStyle['z-index'] + 1
+                }
+              })
+            }
           }
         } else {
           this.isCustom = false
