@@ -948,6 +948,10 @@ export default {
         useUTC: false, // 使用本地时间
         series: dataArg
       }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      }
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
       }
@@ -1024,7 +1028,6 @@ export default {
               getChart(self.chartIndex).clear()
               getChart(self.chartIndex).setOption(option)// 创建图表
             }
-
             self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
           }, 800)
