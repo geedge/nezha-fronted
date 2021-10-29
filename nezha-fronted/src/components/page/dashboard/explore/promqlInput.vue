@@ -741,6 +741,13 @@ export default {
 
   /deep/ .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
     padding: 0;
+    max-width: 250px;
+    /deep/ .nz-cascade {
+      overflow: hidden;
+      width: calc(100% - 50px);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .metric-selector-title{
   /*'width':plugins.indexOf('metric-selector') > -1 ? '110px':'100%',*/
