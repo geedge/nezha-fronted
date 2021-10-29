@@ -7,7 +7,7 @@
     <div class="header-menu">
       <el-dropdown trigger="click">
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-        <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
@@ -37,7 +37,7 @@
         <div class="header-menu--item">
           <i class="nz-icon nz-icon-language-change"></i>
         </div>
-        <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item>
             <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
           </el-dropdown-item>
@@ -48,7 +48,7 @@
       </el-dropdown>
       <el-dropdown trigger="click">
         <div class="personal-avatar"><span>{{name.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
-        <el-dropdown-menu  style="width: 142px" class="right-public-box-select-top right-public-box-dropdown-top" slot="dropdown">
+        <el-dropdown-menu  style="width: 142px" class="right-box-select-top right-public-box-dropdown-top" slot="dropdown">
           <div class="personal-dropdown">
             <div class="personal-dropdown__username">{{name}}</div>
             <div class="personal-dropdown__name">@{{username}}</div>

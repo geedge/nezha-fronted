@@ -220,8 +220,8 @@
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.cabinet')}}</div>
         <div class="alert-label-value">
-          <i v-if="alertLabelData" class="nz-icon nz-icon-cabinet monitorColor" :class="alertLabelData && alertLabelData.cabinet > 0 ? 'color23BF9A' : 'colorEF7458'"/>&nbsp;
-          <span>{{alertLabelData && alertLabelData.cabinet && alertLabelData.cabinet.name ? alertLabelData.cabinet.name : 0}}</span></div>
+          <i v-if="alertLabelData" class="nz-icon nz-icon-cabinet monitorColor" :class="alertLabelData && alertLabelData.cabinetNum> 0 ? 'color23BF9A' : 'colorEF7458'"/>&nbsp;
+          <span>{{alertLabelData && alertLabelData.cabinetNum ? alertLabelData.cabinetNum : 0}}</span></div>
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.asset')}}</div>
