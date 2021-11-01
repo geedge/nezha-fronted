@@ -462,10 +462,12 @@ export default {
   padding-right: 80px;
   background: #FFFFFF;
   &.search-items--checkbox .el-skeleton {
-    height: 21px;
+    height: 28px;
+    line-height: 40px;
   }
   &.search-items--dropdown .el-skeleton {
     height: 28px;
+    line-height: 40px;
   }
   .el-checkbox{
     line-height: 40px;
