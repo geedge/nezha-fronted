@@ -31,7 +31,7 @@
       </pick-time>
     </template>
     <template v-slot>
-      <log-tab ref="logDetail" v-loading="loading" :loading-bottom="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+      <log-tab ref="logDetail" v-loading="loading" :loading-bottom="endpointLoading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
 <!--      <div v-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>-->
     </template>
   </nz-bottom-data-list>
@@ -63,7 +63,8 @@ export default {
       expressions: [''],
       matchSymbol: '|=',
       matchContent: '',
-      loading: true
+      loading: true,
+      endpointLoading: false
     }
   },
   methods: {
@@ -118,6 +119,11 @@ export default {
         })
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
+          if (this.logData[0].result.length > 0) {
+            this.endpointLoading = false
+          } else {
+            this.endpointLoading = true
+          }
         }).finally(() => {
           this.loading = false
         })
