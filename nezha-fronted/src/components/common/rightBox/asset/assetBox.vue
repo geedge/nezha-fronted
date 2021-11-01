@@ -24,7 +24,7 @@
             <el-select
               v-model="editAsset.pid"
               class="right-box__select"
-              popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+              popper-class="right-box-select-top prevent-clickoutside"
               size="small"
               :placeholder="$t('el.select.placeholder')"
               value-key="id">
@@ -32,8 +32,13 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.state')" prop="stateId">
-            <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
-              <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id"></el-option>
+            <el-select v-model="editAsset.stateId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
+              <el-option v-for="state in options.stateOptions" :key="state.id" :label="state.name" :value="state.id">
+                <div style="display: flex;justify-content: space-between;padding: 5px;">
+                  <div>{{state.name}}</div>
+                  <div style="width: 450px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;color: #999999" :title="state.remark">{{state.remark}}</div>
+                </div>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('asset.manageIp')" prop="manageIp">
@@ -51,7 +56,7 @@
               :placeholder="lockModelInputValue"
               :options="options.brandAndModelOptions"
               :props="{ label: 'name', value: 'id' }"
-              popper-class="prevent-clickoutside right-public-box-dropdown-top right-public-box-select-top limit-height"
+              popper-class="prevent-clickoutside right-public-box-dropdown-top right-box-select-top limit-height"
               size="small"
               style="width: 100%;"
             ></el-cascader>
@@ -66,7 +71,7 @@
               v-model="editAsset.purchaseDate"
               placeholder=""
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               style="width: 100%"
               type="date"
               value-format="yyyy-MM-dd">
@@ -109,7 +114,7 @@
                   </el-checkbox-group>
                 </template>
                 <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                  <el-select v-model="label.value[0]" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
+                  <el-select v-model="label.value[0]" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small">
                     <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                   </el-select>
                 </template>
@@ -136,7 +141,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType === assetConstants.labelSubTypeData.date ? 'dateRange' : 'datetimerange'"
                         placeholder=""
-                        popper-class="right-box-select-top right-public-box-dropdown-top"
+                        popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%">
                       </my-date-picker>
@@ -147,7 +152,7 @@
                         v-model="label.value[0]"
                         :type="JSON.parse(label.param).subType"
                         placeholder=""
-                        popper-class="right-box-select-top right-public-box-dropdown-top"
+                        popper-class="right-box-select-top"
                         size="small"
                         style="width: 100%"
                         value-format="yyyy-MM-dd">
@@ -169,7 +174,7 @@
               :options="options.fieldGroupOptions"
               :props="labelCascProp"
               class="hide-input"
-              popper-class="prevent-clickoutside right-public-box-select-top right-public-box-dropdown-top limit-height"
+              popper-class="prevent-clickoutside right-box-select-top limit-height"
               size="small"
               @change="addLabel"
             ></el-cascader>
@@ -178,7 +183,7 @@
           <template v-if="editAsset.type && editAsset.type.authProtocol === assetConstants.authProtocolData.ssh">
             <div class="form__sub-title">SSH</div>
             <el-form-item :label="$t('asset.authType')" prop="authType">
-              <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="value">
+              <el-select v-model="editAsset.authType" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
                 <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
               </el-select>
             </el-form-item>
@@ -221,7 +226,7 @@
           <template v-if="editAsset.type && editAsset.type.snmpEnable === 1">
             <div class="form__sub-title">SNMP</div>
             <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId">
-              <el-select v-model="editAsset.snmpCredentialId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+              <el-select v-model="editAsset.snmpCredentialId" class="right-box__select" :placeholder="$t('el.select.placeholder')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="snmp in options.snmpCredentialOptions" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
             </el-form-item>
@@ -424,7 +429,7 @@ export default {
         this.isEdit = true
         this.editAsset = JSON.parse(JSON.stringify(n))
         this.editAsset.brandAndModel = [this.editAsset.brand.id, this.editAsset.model.id]
-        this.editAsset.stateId = n.state ? n.state.id : ''
+        this.editAsset.stateId = n.state ? n.state.id : 2
         this.editAsset.typeId = n.type ? n.type.id : ''
         this.$nextTick(() => {
           if (n.id) {

@@ -54,7 +54,7 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'alertNum'">
-         <span class="alert-num">
+         <span class="alert-num" @click="jumpAlertMessage(scope.row)">
             <i class="nz-icon nz-icon-overview-alert" :class="scope.row[item.prop]>0?'colorEF7458':'color23BF9A'"/>
             {{scope.row[item.prop]}}
           </span>
@@ -68,11 +68,11 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" @click="changeProjectTopo(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['project_edit','project_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['project_edit','project_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
-          <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item :command="['edit', scope.row]" v-has="'project_edit'"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item :command="['delete', scope.row, `sys/user?ids=${scope.row.id}`]" v-has="'project_delete'"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'project_edit'" :command="['copy', scope.row, 'project']"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
@@ -81,6 +81,15 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template  slot="empty">
+      <div v-if="!loading" class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -89,6 +98,9 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'projectTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [ // 原始table列
@@ -131,8 +143,12 @@ export default {
       this.$store.commit('currentProjectChange', project)
     },
     jumpModule (row) {
-      localStorage.setItem('moduleProjectId', row.id)
+      localStorage.setItem('moduleProjectId', JSON.stringify([row.id, row.name]))
       this.$router.push({ path: '/monitor/module' })
+    },
+    jumpAlertMessage (row) {
+      localStorage.setItem('alertMessageProjectId', row.id)
+      this.$router.push({ path: '/alertMessage' })
     },
     jumpEndpoint (row) {
       localStorage.setItem('endpointProjectId', row.id)

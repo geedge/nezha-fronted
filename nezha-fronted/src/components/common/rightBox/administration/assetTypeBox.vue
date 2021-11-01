@@ -33,7 +33,7 @@
           </el-form-item>
           <!--authProtocol-->
           <el-form-item :label='$t("config.assetType.authProtocol")' prop="authProtocol">
-            <el-select class="right-box__select" popper-class="right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside" v-model="editAssetType.authProtocol" placeholder="Please select">
+            <el-select class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" v-model="editAssetType.authProtocol" placeholder="Please select">
               <el-option :key="option.value" v-for="option in assetConstants.assetType.authProtocolOptions" :value="option.value" :label="option.label"></el-option>
             </el-select>
           </el-form-item>

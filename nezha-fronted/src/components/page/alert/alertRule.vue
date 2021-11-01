@@ -44,6 +44,7 @@
           ref="dataDetail"
           :orderByFa="orderBy"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
@@ -110,6 +111,7 @@
         <alert-rule-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

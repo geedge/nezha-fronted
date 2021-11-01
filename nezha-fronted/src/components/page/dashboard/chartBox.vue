@@ -15,7 +15,7 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+          <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="title">
             <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
           </el-form-item>
           <el-form-item v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp'" :label="$t('dashboard.panel.title')" prop="panelName">
@@ -43,7 +43,7 @@
 
             <!--group-->
             <el-form-item :label="$t('dashboard.panel.chartForm.group')" class="form-item--half-width" prop="group">
-              <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="chartType">
+              <el-select id="chart-box-group" v-model="editChart.groupId" :disabled="editChart.type==='group'" clearable placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="chartType">
                 <el-option v-for="item in groupArr" :key="item.id" :label="item.name" :value="item.id">
                   <span class="panel-dropdown-label-txt" >{{item.name}}</span>
                 </el-option>
@@ -53,7 +53,7 @@
 
           <!--   varType   -->
           <el-form-item :label="$t('dashboard.panel.chartForm.varType')" v-if="from === 'chartTemp'">
-            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
+            <el-select id="chart-box-group" v-model="editChart.varType" :disabled="!!editChart.id" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" clearable placeholder="" size="small" value-key="chartType">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in varTypeArr">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
@@ -104,7 +104,7 @@
             <el-form-item v-show="editChart.type !='text' && editChart.type !=='url'&& editChart.type !=='group'&& editChart.type !=='diagram'" :label="$t('dashboard.panel.chartForm.unit')" class="form-item--half-width" prop="unit">
               <el-cascader id="chart-box-unit" v-model="editChart.unit" :options="unitOptions" :props="{ expandTrigger: 'hover',emitPath:false }"  :show-all-levels="false" filterable
                            placeholder=""
-                           popper-class="dc-dropdown right-public-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
+                           popper-class="dc-dropdown right-box-select-top right-public-box-dropdown-top prevent-clickoutside chart-box-unit"
                            size="small"
                            style="width: 100%"
                            @change="unitSelected"
@@ -237,7 +237,7 @@
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
                   <el-popover placement="top" trigger="hover" width="211">
-                    <div style="word-break:keep-all;">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
+                    <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
                 </el-col>
@@ -403,6 +403,7 @@ export default {
   data () {
     return {
       fromRoute,
+      language: localStorage.getItem('nz-language'),
       optionBtn: {
         save: false
       },

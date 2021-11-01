@@ -41,14 +41,14 @@
           <template v-else>-</template>
         </template>
         <template v-else-if="item.prop === 'state'">
-          <el-switch
-            v-model="scope.row.state"
-            :disabled="!hasButton('dc_edit') || !hasButton('dc_edit')"
-            active-color="#ee9d3f"
-            active-value="ON"
-            inactive-value="OFF"
-            @change="(val)=>{$emit('statusChange', scope.row)}"
-          />
+          <div v-if="scope.row[item.prop] === 'ON'">
+            <div class="active-icon green-bg inline-block"></div>
+            {{ $t('overall.enabled') }}
+          </div>
+          <div v-else-if="scope.row[item.prop] === 'OFF'">
+            <div class="active-icon gray-bg inline-block"></div>
+            {{ $t('overall.disabled') }}
+          </div>
         </template>
         <template v-else-if="item.prop === 'longitude'">
           <template v-if="regNumTest(scope.row.longitude)">{{scope.row.longitude}}</template>
@@ -88,17 +88,26 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" v-has="'dc_edit'" @click="tableOperation(['edit', scope.row])"><i class="nz-icon nz-icon-edit"></i></button>
-        <el-dropdown size="medium" v-has="['dc_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['dc_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
-          <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-has="'dc_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'dc_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
     </el-table-column>
+    <template  slot="empty">
+      <div v-if="!loading" class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -108,6 +117,9 @@ import { showTableTooltip, hideTableTooltip } from '@/components/common/js/tools
 export default {
   name: 'dcTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       regNum: /^[0-9]+.?[0-9]*/,

@@ -24,7 +24,7 @@
         :show-overflow-tooltip="true"
         :label="$t('project.endpoint.element')">
         <template v-slot="scope">
-          <el-popover trigger="click" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
+          <el-popover trigger="hover" placement="right" v-if="typeof scope.row.metricTip != 'undefined' && scope.row.metricTip != null">
             <div>
               <ul>
                 <li><span class="metirc-tip-list">metric&nbsp;:&nbsp;</span><span>{{scope.row.metricTip.metric?scope.row.metricTip.metric:'&#45;&#45;'}}</span></li>
@@ -45,6 +45,15 @@
         :label="$t('project.endpoint.value')"
         min-width="180">
       </el-table-column>
+      <template  slot="empty">
+        <div v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
     </el-table>
     <div class="query-page-option">
       <Pagination ref="Pagination" :pageObj="pageObj" :tableId="tableId" @pageNo='pageNo' @pageSize='pageSize'></Pagination>
@@ -114,6 +123,15 @@ export default {
       setTimeout(function () {
         temp.queryEndpoint()
       }, 100)
+    },
+    batchDeleteObjs: {
+      immediate: true,
+      deep: true,
+      handler (n) {
+        if (n) {
+        this.$emit('selectedEndpointsChange', n)
+        }
+      }
     }
   },
   data () {

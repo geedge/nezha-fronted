@@ -38,7 +38,7 @@
           <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
           <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
         </div>
-        <div class="top-tool-btn-group">
+        <div class="top-tool-btn-group" style="margin-left: 10px">
           <button v-if="plugins.indexOf('add') > -1" class="top-tool-btn"
                @click="addExpression"><i class="nz-icon nz-icon-plus"></i></button>
           <button v-if="plugins.indexOf('copy') > -1" class="top-tool-btn"
@@ -84,7 +84,7 @@
             </el-col>
             <el-col
               :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
-              :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 160px)':'100%',height: '100%',}">
+              :style="{height: '100%'}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <el-input v-model="expressionList[index]" @input="metricKeyDown" type="textarea" :maxlength="styleType === 3 ? 512 : 4096" show-word-limit
                           :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
@@ -642,7 +642,172 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+  .no-resize{
+    background: rgba(255,255,255,0);
+  }
+  /deep/ .el-textarea.no-resize .el-input__count {
+    right: 5px !important;
+  }
+  .promqlInput {
+    position: relative;
+    width: 100%;
+    display: flex;
+  }
 
+  .promqlInput .query-row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .input-box .append-msg {
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+  }
+
+  .input-box .error {
+    color: #F56C6C;
+  }
+
+  .promqlInput .query-options {
+    /*display: flex;*/
+    /*justify-content: flex-start;*/
+    /*width: 84px;*/
+  }
+
+  .query-options .option {
+    /*border-right: 1px solid #dde4ed;*/
+    /*border-radius: 3px;*/
+    /*background-color: #dde4ed;*/
+    width: 34px;
+    height: 29px !important;
+    line-height: 30px;
+    text-align: center;
+  }
+
+  .query-options .option:focus, .query-options .option:hover {
+    background-color:   rgb(247, 248, 250);
+  }
+
+  .query-row .input-box {
+    flex: auto;
+  }
+
+  .metric-btn {
+    height: 29px !important;
+    width: 105px;
+    margin-left: 1px;
+  }
+
+  .metric-btn:hover, .metric-btn:focus {
+    background-image:  linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%);
+    color: #606266;
+  }
+
+  .metric-selector .el-cascader-panel {
+    height: 300px;
+    position: absolute;
+    z-index: 2100;
+    background-color: #FFF;
+  }
+
+  .expr-title {
+    width: 120px;
+    padding-right: 20px;
+    text-align: right;
+    color: #666;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 22px;
+  }
+
+  /deep/ .el-cascader-node {
+    padding: 0;
+  }
+
+  /deep/ .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
+    padding: 0;
+    max-width: 250px;
+    /deep/ .nz-cascade {
+      overflow: hidden;
+      width: calc(100% - 50px);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .metric-selector-title{
+  /*'width':plugins.indexOf('metric-selector') > -1 ? '110px':'100%',*/
+  /*'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ',*/
+  /*'text-align':'left', 'color': '#666',*/
+  /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
+    width:108px;
+    margin-right: 10px;
+    height: 32px;
+    text-align: left;
+    padding: 0 0 0 10px;
+    font-weight: 400;
+    line-height: 33px;
+    background: #E7EAED;
+    border-radius: $--primary-border-radius;
+    font-family: ArialMT;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+  }
+  .metric-selector-input-box{
+    width: calc(100% - 160px);
+  }
+  .metric-null-input-box{
+    width: 100%;
+  }
+  .metric-null-title{
+    width:100%;
+    font-weight: bold;
+    letter-spacing: 0;
+  }
+  .nz-cascade {
+    padding: 0 10px 0 25px;
+    position: relative;
+    overflow: hidden;
+    width: calc(100% - 50px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nz-cascade .nz-icon-template2 {
+    display: none;
+  }
+
+  .nz-cascade-temp .nz-icon-template2{
+    display: inline-block;
+    position: absolute;
+    left: 5px;
+
+    /*background: #F8F9FB;*/
+  }
+  .cascader-panel-more {
+    text-align: center;
+  }
+  .temp-form-box{
+    width: 480px;
+  }
+  .temp-form-box .temp-form-box-title{
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .temp-form-box .temp-form-box-col{
+    margin-right: 10px;
+  }
+  .explore-select-header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+</style>
 <style>
   .input-box .el-input__inner {
     height: 30px;

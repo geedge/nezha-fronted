@@ -661,7 +661,7 @@ export default {
           },
           tooltip: { // 和 option.tooltip 的配置项相同
             show: true,
-            position: 'top',
+            position: 'bottom',
             formatter: function (param) {
               return param.title // 自定义的 DOM 结构
             },
@@ -769,7 +769,7 @@ export default {
                 if (i !== 0) {
                   str += '<div style="border:1px dashed #333;width:100%;margin-top: 5px"></div>'
                 }
-                const value = bus.computeTimezone(item.data[0])
+                const value = bus.computeTimezone(item.data[0] - self.minusTime)
                 const tData = new Date(value)
                 str += '<div style="margin-bottom: 5px;margin-top: 5px">'
                 str += bus.timeFormate(tData)
@@ -943,6 +943,10 @@ export default {
         useUTC: false, // 使用本地时间
         series: dataArg
       }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      }
       if (unit.type == 'Time') {
         delete option.yAxis.maxInterval
       }
@@ -1019,7 +1023,6 @@ export default {
               getChart(self.chartIndex).clear()
               getChart(self.chartIndex).setOption(option)// 创建图表
             }
-
             self.$refs['localLoading' + self.chartIndex].endLoading()
             self.firstShow = true // 展示操作按键
           }, 800)
@@ -1740,6 +1743,7 @@ export default {
             })
             if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length && res.length > this.data.elements.length) {
               const minusTime = (new Date(this.searchTime[0]).getTime() - new Date(this.$refs.pickTime.$refs.multipleTime.searchTime[0]).getTime())
+              this.minusTime = minusTime
               let cutPoint = 0
               res.forEach((item, index) => {
                 if (index < res.length / 2) {
@@ -1980,6 +1984,9 @@ export default {
       if (getChart(this.chartIndex)) {
         const divHeight = this.$refs.legendArea.offsetHeight
         getChart(this.chartIndex).resize({ height: (this.data.height * this.stepWidth - divHeight - chartResizeTool.titleHeight - chartResizeTool.chartBlankHeight) })
+        if (!getChart(this.chartIndex).getOption()) {
+          return
+        }
         let minInterval = ''
         let splitNumber = ''
         if (this.fromTopo) {

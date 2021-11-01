@@ -60,6 +60,7 @@
             :height="'calc(100% - 46px)'"
             :customTableTitle="tableTitle"
             :tableId="''"
+            :detailList="false"
             :projectAlertId="'tableContainer'+chartIndex"
             @tableDataSort="tableDataSort"
             @del="deleteMessage"
@@ -82,8 +83,9 @@
             </div>
           </div>
           <alertMessageTable
-            :id="'tableContainer'+chartIndex"
+            :id="'tableContainerScreen'+chartIndex"
             :tableData="storedScreanTableData"
+            :detailList="false"
             :loading="loadingTable"
             :height="'calc(100% - 20px)'"
             :customTableTitle="tableTitle"
@@ -92,7 +94,7 @@
             @tableDataSort="tableDataSort"
             @del="deleteMessage"
             @messageDetail="messageDetail"
-            ref="alertListTable"
+            ref="alertListScreenTable"
             :form="'chartList'"
             :fromPath="'/alertList'"
             style="height: calc(100% - 50px)"
@@ -422,7 +424,7 @@ export default {
     screenDialogClose () {
       this.screenModal = false
       this.deleteBox.ids = []
-      this.$refs.alertListScreenTable.$refs.alertListTable.clearSelection()
+      this.$refs.alertListScreenTable.$refs.dataTable.clearSelection()
     },
     selectChange (s) {
       const ids = []
@@ -886,10 +888,12 @@ export default {
     // 全屏查看
     showAllScreen () {
       this.dropdownMenuShow = false
-      this.storedScreanTableData = this.storedTableData
+      // this.storedScreanTableData = this.storedTableData
+      this.storedScreanTableData = JSON.parse(JSON.stringify(this.storedTableData))
       this.screenModal = true
       this.deleteBox.ids = []
-      this.$refs.alertListTable.$refs.alertListTable.clearSelection()
+      // this.$refs.alertListTable.$refs.alertListTable.clearSelection()
+      // this.$refs.alertListScreenTable.$refs.dataTable.clearSelection()
       this.screenPageObj = { ...this.pageObj }
     },
     // 设置数据, filter区分

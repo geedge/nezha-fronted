@@ -23,7 +23,7 @@
               :fetch-suggestions="querySearch"
               :placeholder="$t('overall.placeHolder')"
               class="inline-input"
-              popper-class="right-public-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top right-public-box-dropdown-top"
               size="small"
               style="width: 100%;"
             ></el-autocomplete>
@@ -234,5 +234,8 @@ export default {
 <style scoped>
 /deep/ .metric-selector-title{
   margin-left: 0 !important;
+}
+/deep/ .query-row  .metric-selector-input-box {
+  width: calc(100% - 120px);
 }
 </style>

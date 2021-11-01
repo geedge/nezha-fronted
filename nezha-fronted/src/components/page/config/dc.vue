@@ -72,6 +72,7 @@
     <nz-data-list
       ref="dataList"
       :api="url"
+      v-show="detailType === 'list'"
       :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.dc"
@@ -113,6 +114,7 @@
         <dc-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"

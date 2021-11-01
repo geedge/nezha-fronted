@@ -4,7 +4,7 @@
       id="module-box-logs-pipeline-type"
       class="right-box__select"
       placeholder=""
-      popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside pipeline"
+      popper-class="right-box-select-top prevent-clickoutside pipeline"
       size="small"
       ref="select"
       v-model="pipelineOptionValue"

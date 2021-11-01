@@ -22,7 +22,7 @@
             <el-select
               v-model="editAlertRule.type"
               class="right-box__select half-form-item"
-              popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+              popper-class="right-box-select-top prevent-clickoutside"
               size="small"
               :disabled="showTypeSelect"
               @change="selectAlertRuleMetric">
@@ -35,7 +35,7 @@
           </el-form-item>
           <!--severity-->
           <el-form-item :label="$t('alert.severity')" class="severity-box half-form-item" prop="severityId">
-            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
+            <el-select id="alert-box-input-severity" v-model="editAlertRule.severityId" class="right-box__select" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option v-for="item in severityData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
                 <div style="display: flex;justify-content: space-between;padding: 5px;">
                   <div><i :style="{color:item.color,'font-size':'12px'}" class="nz-icon nz-icon-circle"></i> {{item.name}}</div>
@@ -103,7 +103,7 @@
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.unit')" class="half-form-item" prop="unit" :rules="[{ required: this.editAlertRule.type !== 3, message: this.$t('validate.required'), trigger: 'blur' }]">
             <el-cascader id="alert-box-input-unit" v-model="editAlertRule.unit" :options="unitOptions" :props="{ expandTrigger: 'click',emitPath:false }" :show-all-levels="false" filterable
                          placeholder=""
-                         popper-class="no-style-class dc-dropdown right-public-box-dropdown-top unit-popper-class"
+                         popper-class="no-style-class dc-dropdown  unit-popper-class"
                          size="small"
                          :disabled="!showSnmpTrap"
                          style="width: 100%"
@@ -129,15 +129,15 @@
               v-model="editAlertRule.autoExpired"
               class="right-box__select half-form-item"
               placeholder=""
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top "
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -155,7 +155,7 @@
           <el-form-item :label="$t('overall.remark')" prop="description">
             <el-input id="alert-box-input-description" v-model="editAlertRule.description" maxlength="256" placeholder="" rows="4" show-word-limit size="small" type="textarea"></el-input>
           </el-form-item>
-          <div class="alert-rule-split-title">Effective configuration</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.effectiveConfig') }}</div>
           <!--state-->
           <el-form-item :label="$t('alert.config.state')" prop="state" class="half-form-item">
             <el-select
@@ -164,15 +164,15 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -185,15 +185,15 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -208,7 +208,7 @@
               placeholder=""
               multiple
               @change="$refs.alertRuleForm.validateField('schedDays')"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
             >
               <el-option
@@ -226,7 +226,7 @@
               :format="'HH:mm'"
               v-model="editAlertRule.schedStime"
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               :clearable = 'false'
               :picker-options="{
               }">
@@ -236,7 +236,7 @@
               :value-format="'HH:mm'"
               :format="'HH:mm'"
               size="small"
-              popper-class="right-box-select-top right-public-box-dropdown-top"
+              popper-class="right-box-select-top"
               :clearable = 'false'
               v-model="editAlertRule.schedEtime"
               :picker-options="{
@@ -244,7 +244,7 @@
               }">
             </el-time-picker>
           </el-form-item>
-          <div class="alert-rule-split-title">Notification configuration</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.notificationConfig') }}</div>
           <!--notifyActive-->
           <el-form-item :label="$t('alert.config.notifyActive')" prop="notifyActive" class="half-form-item">
             <el-select
@@ -253,16 +253,16 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -275,16 +275,16 @@
               class="right-box__select half-form-item"
               placeholder=""
               :popper-append-to-body="false"
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
               @change="receiverAndNotifyValidate"
             >
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.on')"
+                :label="$t('overall.enabled')"
                 :value="1">
               </el-option>
               <el-option
-                :label="$t('dashboard.panel.chartForm.lockList.off')"
+                :label="$t('overall.disabled')"
                 :value="0">
               </el-option>
             </el-select>
@@ -298,7 +298,7 @@
               filterable
               multiple
               placeholder=""
-              popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top"
+              popper-class="prevent-clickoutside right-box-select-top"
               size="small"
               value-key="userId"
               @change="receiverShowChange"
@@ -315,12 +315,12 @@
           </el-form-item>
           <!--notify-->
           <el-form-item :label="$t('alert.notify')" :rules="[{ required: editAlertRule.notifyExpired || editAlertRule.notifyActive, message: this.$t('validate.required'), trigger: 'change' }]" class="notify-box" prop="method" >
-            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
+            <el-select id="alert-box-input-notify" v-model="editAlertRule.method" class="right-box__select" multiple placeholder="" :popper-append-to-body="false" popper-class="right-box-select-top prevent-clickoutside" size="small">
               <el-option v-for="item in notifyData" :id="'alert-severity-'+item.value" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <div class="alert-rule-split-title">More</div>
+          <div class="alert-rule-split-title">{{ $t('alert.config.more') }}</div>
           <el-form-item :label="$t('alert.config.trbShot')" prop="trbShot">
             <rich-text-editor ref="richTextEditor" :edit-data="editAlertRule.trbShot" @after-init="afterInitRich"></rich-text-editor>
           </el-form-item>
@@ -672,4 +672,68 @@ export default {
 .hide-icon .el-input__suffix {
   display: none;
 }
+</style>
+<style scoped lang="scss">
+  .severity-circle{
+    position: absolute;
+    left: 10px;
+    top: 0;
+  }
+  .severity-box{
+    position: relative;
+  }
+  .severity-box /deep/ .el-select .el-input__inner{
+    padding-left: 25px;
+  }
+  .half-form-item {
+    width: calc(50% - 5px);
+    display: inline-block;
+    .el-form-item__content,.el-select{
+      width: 100%;
+    }
+  }
+  .right-box-alert-rule /deep/ .right-box__container .el-form-item__content .el-input-group--prepend{
+    width: 100%;
+  }
+  /deep/ .rich-text-editor{
+    line-height: 24px;
+  }
+   /deep/ .el-input-group__prepend{
+     position: relative;
+     .hide-icon{
+       width: 38px;
+       .el-input__inner{
+         border: none;
+         text-align: center;
+       }
+     }
+  }
+  .alert-rule-split-title{
+    background: #F6F6F6;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+    line-height: 24px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    height: 24px;
+  }
+  /deep/ .el-form-item__content .el-input-group{
+    vertical-align: middle;
+  }
+  .severity-item{
+    color: #999999;
+    font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+  }
+  .text-ellipsis{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
+  }
+  /deep/ .query-row  .metric-selector-input-box {
+    width: calc(100% - 120px);
+  }
 </style>

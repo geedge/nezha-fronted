@@ -128,6 +128,7 @@
         <endpoint-table
           ref="dataTable"
            v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
@@ -163,31 +164,43 @@
     </transition>
     <transition name="right-box"><alert-silence-box v-if='silenceBoxShow' :alert-silence="objectSilence" @close="closeSilenceBox"></alert-silence-box>
 </transition>
-    <el-dialog :close-on-click-modal="false" :show-close="true" :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
+    <el-dialog :close-on-click-modal="false" :show-close="true" destroy-on-close :title='$t("overall.batchAddEndpoint")' :visible.sync="importBoxShow" :width="'600px'" append-to-body class="nz-dialog" @close="closeDialog">
       <div class="upload-body result-body">
-        <div>
-          <span class="result-title">{{$t('overall.result.total')}}:</span>
-          <span>{{importResult&&importResult.totalNum?importResult.totalNum:0}}</span>
-        </div>
-        <div>
-          <span class="result-title">{{$t('overall.result.failed')}}:</span>
-          <span>{{importResult&&importResult.failNum?importResult.failNum:0}}</span>
-          <span class="result-title">{{$t('overall.result.success')}}:</span>
-          <span>{{importResult&&importResult.successNum?importResult.successNum:0}}</span>
-        </div>
-        <div>
-          <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
-          <div v-if="importResult&&importResult.failDetail" class="result-detail">
-            <div style="height: 100%; overflow: auto;">
-              <template v-for="(item, index) in importResult.failDetail">
-                <div :key="index" class="import-result-block">
-                  <div class="import-result-item">
-                    <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                    <div>{{item.info}} {{item.errorMsg}}</div>
-                  </div>
-                </div>
-              </template>
+        <div v-if="importResult&&importResult.failNum">
+          <div class="result-title-top">
+            <div class="">
+              <i class="nz-icon nz-icon-import-success"/>
+              <span v-if="importResult">{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
             </div>
+            <div class="">
+              <i class="nz-icon nz-icon-import-failed"/>
+              <span v-if="importResult">{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
+            </div>
+          </div>
+          <div>
+            <div v-if="importResult&&importResult.failDetail" class="result-detail">
+              <div style="height: 100%; overflow: auto">
+                <template v-for="(item, index) in importResult.failDetail">
+                  <div :key="index" class="import-result-block">
+                    <div class="import-result-item">
+                      <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                      <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="result-success-box">
+          <div>
+            <i class="nz-icon nz-icon-import-success"/>
+          </div>
+          <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
+          <div class="result-success-txt">
+            {{$t('overall.result.imported')}}
+            <span style="color: #333333" v-if="importResult">{{importResult.successNum}}</span>
+            {{$t('overall.result.records')}}
           </div>
         </div>
       </div>
@@ -195,6 +208,9 @@
         <div class="el-message-box__btns">
           <button :id="'xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" @click="rollbackImport">
             <span>{{$t('overall.rollbackImport')}}</span>
+          </button>
+          <button :id="'xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+            <span>{{$t('overall.close')}}</span>
           </button>
         </div>
       </div>
@@ -239,6 +255,7 @@ export default {
   data () {
     return {
       url: 'monitor/endpoint',
+      from: 'endpoint',
       importBoxShow: false,
       importResult: {},
       blankObject: {
@@ -316,7 +333,7 @@ export default {
       tableId: 'endpointTable',
       queryPermission: 'account_view',
       endpointTableHeight: 'calc(100% - 244px)', // 主列表table高度
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: localStorage.getItem('dataList-layout' + 'endpointTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'endpointTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       searchMsg: { // 给搜索框子组件传递的信息
         zheze_none: true,
         searchLabelList: [

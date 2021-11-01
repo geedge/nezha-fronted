@@ -44,6 +44,7 @@
           ref="dataDetail"
           :orderByFa="orderBy"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :detailViewRightObj="detailViewRightObj"
           :api="url"
           :table-data="tableData"
@@ -126,6 +127,7 @@
           ref="dataTable"
           :orderByFa="orderBy"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
@@ -205,13 +207,14 @@ export default {
   data () {
     return {
       url: 'asset/asset',
+      from: 'asset',
       filter: {},
       // 侧滑
       rightBox: {
         batchShow: false
       },
       silenceBoxShow: false,
-      dataListLayout: ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
+      dataListLayout: localStorage.getItem('dataList-layout' + 'assetTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'assetTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination', 'detailViewSet'],
       assetNzTableHeightOffset: 281, // 包含click-search时nz-table的高度
       blankObject: {
         id: '',
@@ -219,7 +222,7 @@ export default {
         pid: '',
         sn: '',
         manageIp: '',
-        stateId: '',
+        stateId: 2,
         purchaseDate: null,
         dcId: '',
         cabinetId: '',

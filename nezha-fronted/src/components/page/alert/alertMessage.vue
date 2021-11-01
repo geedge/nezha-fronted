@@ -5,21 +5,27 @@
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.alertMessage"
-      :layout="['searchInput', 'elementSet', 'pagination']"
+      :layout="dataListLayout"
       :search-msg="searchMsg"
       @search="search"
       v-loading="tools.loading"
     >
       <template v-slot:top-tool-right>
-        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top">
           <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
+        <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
+          <i class="nz-icon nz-icon-funnel"></i>
+        </button>
         <pick-time v-model="searchTime" :default-pick="12" :refresh-data-func="getTableData" :show-empty="true" :use-chart-unit="false" :use-refresh="false"></pick-time>
         <button id="roles-add" v-has="'alertMessage_view'" :title="$t('overall.exportExcelLower')" class="top-tool-btn margin-r-10"
                 type="button" @click="showExportDialog">
           <i class="nz-icon-download1 nz-icon"></i>
         </button>
         <delete-button id="alert-msg-batch-delete" v-has="'alertMessage_expired'" :api="url" :clickFunction="batchDel" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
+      </template>
+      <template v-slot:search >
+        <click-search ref="clickSearch" :select-value.sync="selectValue" :title-search-list="titleSearchList" @reload="reloadTable"/>
       </template>
       <template v-slot:default="slotProps">
         <alert-message-table
@@ -29,6 +35,7 @@
           :height="mainTableHeight"
           :now-time="nowTime"
           :table-data="tableData"
+          :loading="tools.loading"
           @del="del"
           @edit="edit"
           @showText="showText"
@@ -129,7 +136,8 @@ import chartDataFormat from '@/components/charts/chartDataFormat'
 import chart from '@/components/page/dashboard/overview/chart'
 import { alertMessage as alertMessageConstant, fromRoute } from '@/components/common/js/constants'
 import alertSilenceBox from '@/components/common/rightBox/alertSilenceBox'
-import logsTempData from '@/components/charts/logsTempData'
+import clickSearch from '@/components/common/labelFilter/clickSearch'
+
 export default {
   name: 'alertMessage',
   components: {
@@ -138,13 +146,15 @@ export default {
     chart,
     nzDataList,
     deleteButton,
-    alertSilenceBox
+    alertSilenceBox,
+    clickSearch
   },
   mixins: [dataListMixin],
   data () {
     return {
       chartLoading: false,
       stateOptions: alertMessageConstant.states,
+      dataListLayout: localStorage.getItem('dataList-layout' + 'alertMessageTable') ? JSON.parse(localStorage.getItem('dataList-layout' + 'alertMessageTable')) : ['searchInput', 'elementSet', 'clickSearch', 'pagination'],
       state: '1',
       dialogShowText: false,
       dialogText: '',
@@ -220,7 +230,98 @@ export default {
       viewAssetState: false,
       nowTime: '',
       logData: [],
-      resultType: ''
+      resultType: '',
+      titleSearchList: {
+        project: {
+          label: this.$t('dashboard.overview.project.project'),
+          key: 'projectIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        module: {
+          label: this.$t('dashboard.overview.project.module'),
+          key: 'moduleIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        dc: {
+          label: this.$t('overall.dc'),
+          key: 'dcIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        severity: {
+          label: this.$t('alert.severity'),
+          key: 'severityIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        }
+      },
+      selectValue: {
+        dcIds: [],
+        projectIds: [],
+        moduleIds: [],
+        modelIds: [],
+        severityIds: []
+      },
+      detailSearchList: {
+        project: {
+          label: this.$t('dashboard.overview.project.project'),
+          key: 'projectIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        module: {
+          label: this.$t('dashboard.overview.project.module'),
+          key: 'moduleIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        dc: {
+          label: this.$t('overall.dc'),
+          key: 'dcIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        },
+        severity: {
+          label: this.$t('alert.severity'),
+          key: 'severityIds',
+          type: 'checkBox',
+          children: [],
+          show: false,
+          showMore: false,
+          width: 0,
+          index: -1
+        }
+      }
     }
   },
   computed: {
@@ -247,6 +348,19 @@ export default {
         return key + '：' + value
       }
     }
+  },
+  created () {
+    if (localStorage.getItem('alertMessageProjectId')) {
+      this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
+      this.searchCheckBox.projectIds = this.selectValue.projectIds.join(',')
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('alertMessageProjectId')) {
+      this.selectValue.projectIds = [Number(localStorage.getItem('alertMessageProjectId'))]
+      // this.$refs.clickSearch.selectValueOut.projectIds = [localStorage.getItem('endpointProjectId')]
+    }
+    // this.getTitleSearch()
   },
   methods: {
     labelsSort (obj) {
@@ -305,6 +419,9 @@ export default {
       })
     },
     messageDetail (row) {
+      if (row.alertRule.type == 3) {
+        return
+      }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true
@@ -605,20 +722,117 @@ export default {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
+      if (this.$route.path === '/alertMessage') {
+        this.$set(this.searchLabel, 'statistics', 1)
+      }/* else {
+        delete this.searchLabel.statistics
+      } */
       this.tools.loading = true
       if (state) {
         delete this.searchLabel.startAt
         delete this.searchLabel.endAt
       }
-      this.$get(this.url, this.searchLabel).then(response => {
+      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
         if (response.code == 200) {
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
           this.tableData = response.data.list
+          if (response.statistics && this.$route.path === '/alertMessage') {
+            this.setSearchData(response.statistics)
+          }
+          /* const axiosAll = []
+            this.$nextTick(() => {
+              this.tableData.forEach((item) => {
+                item.labels = JSON.parse(item.labels)
+                if (!this.isBuildIn(item.alertRule)) {
+                  const paramStr = JSON.stringify(this.promQueryParamConvert(item))
+                  axiosAll.push(axios.get('/prom/api/v1/query?query=' + paramStr.substring(1, paramStr.length - 1).replace(/\+/g, '%2B').replace(/ /g, '%20').replace(/\\/g, '')))
+                } else {
+                  axiosAll.push('')
+                }
+              })
+              axios.all(axiosAll).then(res => {
+                res.forEach((item, index) => {
+                  let current = []
+                  const response2 = item.data
+                  if (response2.data && response2.data.result && response2.data.result.length > 0) {
+                    current = response2.data.result[0].value.map((item, i) => {
+                      if (i == 0) {
+                        return bus.computeTimezone(item)
+                      } else {
+                        return parseFloat(item).toFixed(2)
+                      }
+                    })
+                  } else {
+                    current = [null, null]
+                  }
+                  this.tableData[index].current = current
+                })
+                this.$set(this.tableData, [...this.tableData])
+              })
+            }) */
           this.deleteBox.ids = ''
           this.pageObj.total = response.data.total
         }
       })
+    },
+    setSearchData (statistics) {
+      Object.keys(this.titleSearchList).forEach(key => {
+        const keys = key === 'assetLabel' ? 'meta' : key
+        this.titleSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
+        this.detailSearchList[key].children = statistics[keys].map(d => { return { ...d, value: d.id } })
+        if (this.titleSearchList[key].children.length === 0) {
+          // delete this.titleSearchList[key]
+          // delete this.detailSearchList[key]
+        } else {
+          this.titleSearchList[key].show = true
+          this.detailSearchList[key].show = true
+        }
+        this.titleSearchList[key].show = true
+        this.detailSearchList[key].show = true
+      })
+    },
+    reloadTable (obj) {
+      const params = JSON.parse(JSON.stringify(obj))
+      if (this.detailType === 'view') {
+        const obj = {}
+        params.modelIds = params.modelIdsDetail
+        params.fieldsDetail.forEach(item => {
+          const arr = item.split('-')
+          if (obj[arr[0]]) {
+            obj[arr[0]].push(arr[1])
+          } else {
+            obj[arr[0]] = [arr[1]]
+          }
+        })
+        params.fields = JSON.stringify(obj)
+        if (params.fields === '{}') {
+          params.fields = ''
+        }
+        delete params.modelIdsDetail
+        delete params.fieldsDetail
+      }
+      Object.keys(params).forEach(key => {
+        if (typeof params[key] === 'string') {
+          this.searchCheckBox[key] = params[key] ? params[key] : null
+        } else {
+          params[key] && params[key].length > 0 ? this.searchCheckBox[key] = params[key].join(',') : this.searchCheckBox[key] = null
+        }
+      })
+      if (!this.timer) {
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      } else {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.getTableData()
+          clearTimeout(this.timer)
+          this.timer = ''
+        }, 1000)
+      }
     },
     promQueryParamConvert (alert) {
       const obj = { ...alert }
@@ -789,6 +1003,25 @@ export default {
       }
     },
     deleteMessage () {}
+  },
+  destroyed () {
+    localStorage.removeItem('alertMessageProjectId')
   }
 }
 </script>
+
+<style scoped lang="scss">
+  .active{
+    border-bottom: 3px solid #fa901c;
+    color: #333;
+    cursor: default;
+    font-weight: bold;
+  }
+  .list-page /deep/ .main-container{
+    display: flex;
+    flex-direction: column;
+    /deep/ .nz-table2{
+      flex: 1;
+    }
+  }
+</style>

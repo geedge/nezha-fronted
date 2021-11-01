@@ -45,6 +45,15 @@
         <span v-else>-</span>
       </template>
     </el-table-column>
+    <template slot="empty">
+      <div v-if="!loading" class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -53,6 +62,9 @@ import table from '@/components/common/mixin/table'
 export default {
   name: 'operationLog',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [

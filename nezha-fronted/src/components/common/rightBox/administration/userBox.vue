@@ -37,7 +37,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small">
               <template v-for="item in mfaLevelList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -60,7 +60,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small">
               <template v-for="item in languageList">
                 <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -76,7 +76,7 @@
                        clearable
                        collapse-tags
                        placeholder=""
-                       popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                       popper-class="right-box-select-top  prevent-clickoutside"
                        size="small"
                        @change="()=>{this.$forceUpdate()}">
               <template v-for="role in roles">
@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
           <!--enable-->
-          <el-form-item :label="$t('config.user.enable')">
+          <el-form-item :label="$t('config.user.state')">
             <el-switch id="account-input-status" v-model="editUser.status" :disabled="isCurrentUser(editUser.username) || (editUser.username==='admin' && editUser.id==1) " active-color="#ee9d3f" active-value="1"
                        inactive-value="0">
             </el-switch>

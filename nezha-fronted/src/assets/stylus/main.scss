@@ -1217,6 +1217,78 @@ li {
   /*overflow-y: auto;*/
   margin-bottom: 20px;
 }
+.result-title-top{
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.nz-icon-import-success{
+  margin-right: 5px;
+  color: #23BF9A ;
+  font-size: 14px;
+  background: #fff;
+}
+.nz-icon-import-failed {
+  margin-right: 5px;
+  color: #EC7F66 ;
+  font-size: 14px;
+  background: #fff;
+}
+.result-detail {
+  opacity: 0.9;
+  background: #F6F8FA;
+  border: 1px solid #E7EAED;
+  border-radius: 2px;
+  padding: 12px;
+  margin-top: 10px;
+  height: 180px;
+  .import-result-item {
+    display: flex;
+    margin-bottom: 5px;
+    .line-num {
+      font-family: Roboto-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 16px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    .line-content{
+      flex: 1;
+      font-family: Roboto-Black;
+      font-size: 14px;
+      color: #666666;
+      letter-spacing: 0;
+      line-height: 16px;
+      font-weight: 400;
+      overflow: hidden;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+  }
+}
+.result-success-box {
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #666666;
+  letter-spacing: 0;
+  font-weight: 600;
+  .nz-icon-import-success {
+    color: #23BF9A;
+    font-size: 80px;
+  }
+  .result-success-txt{
+    margin-top: 10px;
+  }
+}
 .result-body{
   text-align: left;
   line-height: 20px;

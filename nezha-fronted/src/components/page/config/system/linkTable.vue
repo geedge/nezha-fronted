@@ -66,17 +66,26 @@
           </template>
           <template v-else>
             <button class="table-operation-item" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
-            <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+            <el-dropdown size="medium" trigger="click" @command="tableOperation">
               <div class="table-operation-item table-operation-item--more">
                 <i class="nz-icon nz-icon-more3"></i>
               </div>
-              <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
                 <el-dropdown-item :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
         </div>
       </el-table-column>
+      <template  slot="empty">
+        <div v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
     </el-table>
 </template>
 
@@ -86,6 +95,9 @@ import bus from '../../../../libs/bus'
 import table from '@/components/common/mixin/table'
 export default {
   name: 'linkTable',
+  props: {
+    loading: Boolean
+  },
   mixins: [table, tableCommon],
   data () {
     return {

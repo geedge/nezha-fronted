@@ -1,17 +1,74 @@
 <template>
   <div>
+    <nzDetailView
+      v-loading="detailViewLoading || tools.loading"
+      v-if="detailType !== 'list'"
+      :api="url"
+      ref="detailList"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
+      :from="fromRoute.terminalLog"
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      :dataLength="tableData.length"
+      @search="search"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-left>
+        <!--        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />-->
+      </template>
+      <template v-slot:top-tool-right>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <terminalLogDetail
+          class="data-detail"
+          ref="dataDetail"
+          :orderByFa="orderBy"
+          v-loading="tools.loading"
+          :loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
+        >
+        </terminalLogDetail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
     <nz-data-list
       ref="dataList"
       :api="url"
-      :layout="['searchInput', 'elementSet', 'pagination']"
+      v-show="detailType === 'list'"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.terminalLog"
       @search="search"
-      :search-msg="searchMsg">
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      @changeDetailType="changeDetailType"
+      @getTableData="getTableData"
+    >
       <template v-slot:default="slotProps">
         <terminal-log-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
@@ -37,14 +94,21 @@
 import nzDataList from '@/components/common/table/nzDataList'
 import dataListMixin from '@/components/common/mixin/dataList'
 import terminalLogTable from '@/components/common/table/settings/terminalLogTable'
+import nzDetailView from '@/components/common/detailView/nzDetailView'
+import detailViewMixin from '@/components/common/mixin/detailViewMixin'
+import terminalLogDetail from '@/components/common/detailView/list/terminalLogDetail/terminalLogDetail'
+import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 
 export default {
   name: 'terminalLog',
   components: {
     nzDataList,
-    terminalLogTable
+    terminalLogTable,
+    nzDetailView,
+    terminalLogDetail,
+    detailViewTopSearch
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'terminal/session',
@@ -117,7 +181,9 @@ export default {
         if (response.code === 200) {
           this.tableData = response.data.list
           this.nowTime = this.utcTimeToTimezoneStr(response.time)
+          this.detailViewRightObj = this.tableData[0]
           this.pageObj.total = response.data.total
+          this.pageObj.pages = response.data.pages
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper

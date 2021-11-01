@@ -37,7 +37,7 @@
       <template slot-scope="scope" :column="item">
         <span v-if="item.prop === 'time'">{{utcTimeToTimezoneStr(scope.row[item.prop])}}</span>
         <template v-else-if="item.prop === 'state'">
-          <span>{{getStatusText(scope.row.status)}}</span>
+          <span><i class="nz-icon" :class="statusClass(scope.row.status)"/>  {{getStatusText(scope.row.status)}}</span>
         </template>
         <template  v-else-if="item.prop === 'uuid'">
           <el-popover
@@ -56,7 +56,7 @@
           <span> {{utcTimeToTimezoneStr(scope.row.startTime)}}</span>
         </template>
         <template v-else-if="item.prop === 'duration'">
-          <el-tooltip :disabled="!scope.row.status" effect="light" placement="right">
+          <el-tooltip effect="light" placement="right">
             <div slot="content">
               {{$t('config.terminallog.endTime')}}<br/>
               {{utcTimeToTimezoneStr(scope.row.endTime)}}
@@ -81,28 +81,37 @@
       <div slot-scope="scope" class="table-operation-items">
         <template v-if="scope.row.status == 0">
           <button :title="$t('config.terminallog.monitor.monitor')" class="table-operation-item" @click="showBottomBox('monitorTab', scope.row)"><i class="nz-icon nz-icon-JC"></i></button>
-          <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+          <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
-            <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
-              <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">Kill</span></el-dropdown-item>
+            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
+              <el-dropdown-item :command="['shutdown', scope.row]"><i class="nz-icon nz-icon-ZD"></i><span class="operation-dropdown-text">{{$t('config.terminallog.stop')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
         <template v-else>
           <button class="table-operation-item" @click="showBottomBox('cmdTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-          <el-dropdown size="medium" trigger="hover" @command="tableOperation">
+          <el-dropdown size="medium" trigger="click" @command="tableOperation">
             <div class="table-operation-item table-operation-item--more">
               <i class="nz-icon nz-icon-more3"></i>
             </div>
-            <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+            <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
               <el-dropdown-item :command="['recordTab', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('config.terminallog.record.record')}}</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
       </div>
     </el-table-column>
+    <template  slot="empty">
+      <div v-if="!loading" class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -116,7 +125,8 @@ export default {
   props: {
     nowTime: {},
     terminalLogTab: Boolean,
-    terminalLog: Boolean
+    terminalLog: Boolean,
+    loading: Boolean
   },
   data () {
     return {
@@ -199,6 +209,22 @@ export default {
           return calcDurationByStringTimeB(record.startTime, record.endTime)
         }
         return ''
+      }
+    },
+    statusClass () {
+      return function (status) {
+        switch (Number(status)) {
+          case 0:
+            return 'nz-icon-connecting color23bf9a'
+          case 1:
+            return 'nz-icon-failed colorffa416'
+          case 2:
+            return 'nz-icon-over color999999'
+          case 3:
+            return 'nz-icon-stop colorec7f66'
+          case 4:
+            return 'nz-icon-unknown-error color535b64'
+        }
       }
     }
   }

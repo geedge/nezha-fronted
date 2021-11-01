@@ -72,12 +72,6 @@
             :type="'module'"
           ></alertLabel>
         </template>
-        <template v-else-if="item.prop === 'alerts'">
-          <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
-            <i class="nz-icon nz-icon-overview-alert" :class="scope.row.alertNum>0?'colorEF7458':'color23BF9A'"/>
-            {{scope.row.alertNum}}
-          </span>
-        </template>
         <template v-else-if="item.prop === 'asset'">
           <span
             class="pointer"
@@ -93,6 +87,12 @@
             :that="scope.row[item.prop]"
             :type="'asset'"
           ></alertLabel>
+        </template>
+        <template v-else-if="item.prop === 'alerts'">
+          <span class="alert-num" @click="showBottomBox('endpointAlertMessage', scope.row)">
+            <i class="nz-icon nz-icon-overview-alert" :class="scope.row.alertNum>0?'colorEF7458':'color23BF9A'"/>
+            {{scope.row.alertNum}}
+          </span>
         </template>
         <template v-else-if="item.prop === 'configs'">
 <!--          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable">-->
@@ -114,7 +114,7 @@
             <span class="configs-endpoint metrics">[{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]</span>
             <div class="endpointConfigsTips" slot="content">
               <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
-              <pre >{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
+              <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
             </div>
           </el-tooltip>
         </template>
@@ -170,11 +170,11 @@
       <div slot-scope="scope" class="table-operation-items">
         <button v-if="endpointTab"  class="table-operation-item" v-has="'model_edit'" @click="$emit('edit', scope.row)"><i class="nz-icon nz-icon-edit"></i></button>
         <button v-else class="table-operation-item"  @click="$emit('showBottomBox', 'panelTab', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['monitor_endpoint_edit','monitor_endpoint_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
-          <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
 <!--            <el-dropdown-item v-if="!endpointTab" :command="['endpointQuery', scope.row]"><i class="nz-icon nz-icon-search"></i><span class="operation-dropdown-text">{{$t('overall.query')}}</span></el-dropdown-item>-->
             <el-dropdown-item v-if="!endpointTab" v-has="'monitor_endpoint_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'monitor_endpoint_delete'" :command="['delete', scope.row, `sys/endpoint?ids=${scope.row.id}`]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
@@ -184,6 +184,15 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template slot="empty">
+      <div v-if="!loading" class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -201,7 +210,8 @@ export default {
       type: Boolean,
       default: true
     },
-    endpointTab: Boolean
+    endpointTab: Boolean,
+    loading: Boolean
   },
   data () {
     return {
@@ -394,13 +404,24 @@ export default {
 </style>
 <style>
   .endpointConfigsTips{
-    height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    min-width: 150px;
+    padding:3px 3px 0 8px ;
   }
   .copy-value-content{
     position: absolute;
-    right: 1px;
-    top: 4px;
+    right: 6px;
+    top: 6px;
+  }
+  .data-column__endpoint {
+    background: #FFFFFF;
+    border: 1px solid #E7EAED;
+    box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+    border-radius: 3px 3px 3px 3px 0 0;
+  }
+  .copy-value-content__pre {
+    height: 200px;
+    margin-top: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 </style>

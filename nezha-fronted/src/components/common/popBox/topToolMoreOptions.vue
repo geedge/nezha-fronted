@@ -1,9 +1,9 @@
 <template>
-  <el-dropdown :size="size">
+  <el-dropdown trigger="click" :size="size">
     <button id="more" :class="triggerButtonClass" title="more...">
       <i class="nz-icon nz-icon-more2"></i>
     </button>
-    <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+    <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
       <el-dropdown-item  v-if="showLock">
         <div @click="panelLock=!panelLock" id="panel-lock"><i :class="{'nz-icon nz-icon-lock':panelLock,'nz-icon nz-icon-unlock':!panelLock}"></i>{{panelLock ? $t("overall.locked") : $t("overall.unlocked")}}</div>
       </el-dropdown-item>
@@ -19,7 +19,7 @@
       <slot name="after"></slot>
     </el-dropdown-menu>
 
-    <el-dialog :close-on-click-modal="importBox.type!=3" :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
+    <el-dialog :close-on-click-modal="importBox.type!=3" destroy-on-close :show-close="true" :title="importBox.title" :visible.sync="importBox.show" :width="importBox.width" append-to-body class="nz-dialog" @close="closeDialog">
       <div v-if="importBox.type == 1">
         <div class="upload-body">
           <el-upload :id="id+'-xlsx-input-file'" ref="uploadExcel" :auto-upload="false"  :file-list="importFileList" :on-change="importChange" accept=".xlsx,.xls"  action="" class="upload-demo" drag>
@@ -56,29 +56,41 @@
       </div>
       <div v-if="importBox.type==3">
         <div class="upload-body result-body">
-          <div>
-            <span class="result-title">{{$t('overall.result.total')}}:</span>
-            <span>{{importResult&&importResult.totalNum?importResult.totalNum:0}}</span>
-          </div>
-          <div>
-            <span class="result-title">{{$t('overall.result.failed')}}:</span>
-            <span>{{importResult&&importResult.failNum?importResult.failNum:0}}</span>
-            <span class="result-title">{{$t('overall.result.success')}}:</span>
-            <span>{{importResult&&importResult.successNum?importResult.successNum:0}}</span>
-          </div>
-          <div>
-            <div class="result-title">{{$t('overall.result.failedDetail')}}:</div>
-            <div v-if="importResult&&importResult.failDetail" class="result-detail">
-              <div style="height: 100%; overflow: auto;">
-                <template v-for="(item, index) in importResult.failDetail">
-                  <div :key="index" class="import-result-block">
-                    <div class="import-result-item">
-                      <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
-                      <div>{{item.errorMsg}}</div>
-                    </div>
-                  </div>
-                </template>
+          <div v-if="importResult&&importResult.failNum">
+            <div class="result-title-top">
+              <div class="">
+                <i class="nz-icon nz-icon-import-success"/>
+                 <span>{{$t('overall.result.successNum',{successNum:importResult.successNum})}}</span><br/>
               </div>
+              <div class="">
+                 <i class="nz-icon nz-icon-import-failed"/>
+                 <span>{{$t('overall.result.failedNum',{failedNum:importResult.failNum,total:importResult.totalNum})}}</span>
+              </div>
+            </div>
+            <div>
+              <div v-if="importResult&&importResult.failDetail" class="result-detail">
+                <div style="height: 100%; overflow: auto">
+                  <template v-for="(item, index) in importResult.failDetail">
+                    <div :key="index" class="import-result-block">
+                      <div class="import-result-item">
+                        <div class="line-num">{{$t('overall.result.line',[item.lineNo])}}</div>
+                        <div class="line-content" :title="item.errorMsg">{{item.errorMsg}}</div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="result-success-box">
+            <div>
+              <i class="nz-icon nz-icon-import-success"/>
+            </div>
+            <div class="result-success-txt">{{$t('overall.result.successfully')}}</div>
+            <div class="result-success-txt">
+              {{$t('overall.result.imported')}}
+              <span style="color: #333333" v-if="importResult">{{importResult.successNum}}</span>
+              {{$t('overall.result.records')}}
             </div>
           </div>
         </div>
@@ -86,6 +98,9 @@
           <div class="el-message-box__btns">
             <button :id="id+'-xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" @click="rollbackImport">
               <span>{{$t('overall.rollbackImport')}}</span>
+            </button>
+            <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+              <span>{{$t('overall.close')}}</span>
             </button>
           </div>
         </div>
@@ -132,7 +147,8 @@ export default {
       importFileList: [],
       importResult: null,
       exportShow: false,
-      panelLock: true
+      panelLock: true,
+      language: localStorage.getItem('nz-language')
     }
   },
   mounted () {
@@ -224,9 +240,11 @@ export default {
     },
     closeDialog () {
       this.importBox.show = false
-      this.importResult = null
-      this.importFileList = []
-      this.importFile = null
+      this.$nextTick(() => {
+        this.importResult = null
+        this.importFileList = []
+        this.importFile = null
+      })
     },
     downloadTemplate () {
       const language = localStorage.getItem('nz-language') || 'en' // 初始未选择默认 en 英文

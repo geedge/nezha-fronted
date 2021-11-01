@@ -70,7 +70,7 @@
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
                 <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
-                  <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
+                  <span>{{ scope.row.value}}</span>
                 </div>
               </template>
             </el-table-column>

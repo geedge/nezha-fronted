@@ -79,9 +79,9 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div ref="dashboardScrollbar" :class="overScroll10?'border-t-1-de':'border-t-1-tr'" id="dashboardScrollbar" style="height: calc(100% - 20px); overflow: auto;">
-            <div class="box-content">
-              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @on-add-group-item-chart="addGroupItem"></chart-list>
+          <div ref="dashboardScrollbar" id="dashboardScrollbar" class="border-t-1-de" style="height: calc(100% - 20px); overflow: auto;">
+            <div class="box-content" v-loading="chartListLoading">
+              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>
           </div>
         </div>
@@ -124,6 +124,7 @@ export default {
       panelLock: true,
       showTopBtn: false, // top按钮
       visible: false,
+      chartListLoading: true,
       rightBox: { // 面板弹出框相关
         chart: { show: false },
         chartTemp: { show: false },
@@ -566,6 +567,7 @@ export default {
           this.$store.state.showPanel.id = 0
           this.$store.state.showPanel.name = ''
           this.$store.state.showPanel.type = 'dashboard'
+
         } else {
           if (response.msg) {
             this.$message.error(response.msg)
@@ -680,6 +682,13 @@ export default {
           wrap.scrollTop = currentTop
         }
       }, 20)
+    },
+    load (dataList) {
+      if (dataList.length > 0) {
+        this.chartListLoading = false
+      } else {
+        this.chartListLoading = !dataList.length === 0
+      }
     }
   },
   created () {
@@ -735,3 +744,79 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .border-t-1-de{
+    border-top: 1px solid #dedede;
+    padding-top: 10px;
+  }
+  .border-t-1-tr{
+    border-top: 1px solid transparent;
+  }
+  .panel {
+    height: 100%;
+    display: flex;
+    flex-direction:column;
+  }
+
+  .panel .el-table {
+    border-radius: 5px;
+  }
+
+  /* begin-chart list*/
+  .table-list {
+    margin-top: 0px;
+    overflow-y: auto;
+    height: calc(100% - 50px);
+    flex: 1;
+  }
+
+  .box-content {
+    position: relative;
+    height: 100%;
+  }
+  .panel-select-header {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 15px;
+  }
+  .panel-select-tail {
+    border-top: 1px solid  #DEDEDE;
+    .panel-select-add {
+      line-height: 32px;
+      height: 32px;
+      display: inline-block;
+      cursor: pointer;
+      i {
+        color: #FA901C;
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 20px;
+      }
+    }
+  }
+  /* end-chart list*/
+</style>
+<style lang="scss">
+  @import '@/assets/css/common/tableCommon.scss';
+</style>
+<style scoped>
+  .loading {
+    position: fixed;
+    left: 250px;
+    top: 59px;
+    height: 100%;
+    width: 100%;
+    background: center center no-repeat #fff;
+    z-index: 10;
+  }
+  .show-panel-name{
+    display: inline-block;
+    padding: 0 7px;
+    font-weight: bold;
+    max-width: 310px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    vertical-align: bottom;
+  }
+</style>

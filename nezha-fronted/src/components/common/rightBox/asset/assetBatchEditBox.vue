@@ -11,14 +11,14 @@
         <!-- Edit type -->
         <el-form ref="assetEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.editType')" prop="editType">
-            <el-select v-model="editData.editType" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="value">
+            <el-select v-model="editData.editType" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
               <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
             </el-select>
           </el-form-item>
           <!-- 第一级：Edit type = account -->
           <template v-if="editData.editType === assetConstants.editTypeData.account">
             <el-form-item :label="$t('asset.authProtocol')" prop="authProtocol">
-              <el-select v-model="editData.authProtocol" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="value">
+              <el-select v-model="editData.authProtocol" class="right-box__select" :placeholder="$t('overall.select')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
                 <el-option v-for="type in assetConstants.authProtocolOptions" :key="type.value" :label="type.label" :value="type.value"/>
               </el-select>
             </el-form-item>
@@ -26,7 +26,7 @@
             <template v-if="editData.authProtocol === assetConstants.authProtocolData.ssh">
               <div class="form__sub-title">{{$t('asset.sshAccount')}}</div>
               <el-form-item :label="$t('asset.authType')" prop="authType">
-                <el-select v-model="editData.authType" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="value">
+                <el-select v-model="editData.authType" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
                   <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
                 </el-select>
               </el-form-item>
@@ -103,7 +103,7 @@
                     </el-checkbox-group>
                   </template>
                   <template v-else-if="label.type.toUpperCase() === assetConstants.labelTypeData.SELECT">
-                    <el-select v-model="label.value" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small">
+                    <el-select v-model="label.value" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small">
                       <el-option v-for="item in JSON.parse(label.param).items" :key="item.name" :label="item.name" :value="item.name"></el-option>
                     </el-select>
                   </template>
@@ -163,7 +163,7 @@
                 :options="fieldGroupData"
                 :props="labelCascProp"
                 class="hide-input"
-                popper-class="prevent-clickoutside right-public-box-select-top.right-public-box-dropdown-top limit-height"
+                popper-class="prevent-clickoutside right-box-select-top right-public-box-dropdown-top limit-height"
                 size="small"
                 @change="addLabel"
               ></el-cascader>
@@ -173,7 +173,7 @@
           <!-- 第一级：Edit type = state -->
           <template v-if="editData.editType === assetConstants.editTypeData.state">
             <el-form-item :label="$t('asset.state')" prop="stateId">
-              <el-select v-model="editData.stateId" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+              <el-select v-model="editData.stateId" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="state in stateData" :key="state.id" :label="state.name" :value="state.id"></el-option>
               </el-select>
             </el-form-item>
@@ -182,7 +182,7 @@
           <!-- 第一级：Edit type = snmp credential -->
           <template v-if="editData.editType === assetConstants.editTypeData.snmpCredential">
             <el-form-item :label="$t('asset.snmpCredential')" prop="snmpCredentialId">
-              <el-select v-model="editData.snmpCredentialId" class="right-box__select" popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside" size="small" value-key="id">
+              <el-select v-model="editData.snmpCredentialId" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="id">
                 <el-option v-for="snmp in snmpCredentialData" :key="snmp.id" :label="snmp.name" :value="snmp.id"></el-option>
               </el-select>
             </el-form-item>

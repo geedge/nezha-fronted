@@ -41,7 +41,7 @@
             </template>
             <template v-if="item.prop == 'role'">
               <el-popover :content="rules.roleId.message" placement="top" trigger="manual" v-model="rules.roleId.switch" popper-class="small-pop warn-pop" @after-enter="popShow(rules.roleId)">
-                <el-select v-model="scope.row[item.prop]" size="small" :placeholder="$t('el.select.placeholder')" value-key="id" slot="reference" popper-class="api-select right-public-box-select-top right-public-box-dropdown-top role-system-table">
+                <el-select v-model="scope.row[item.prop]" size="small" :placeholder="$t('el.select.placeholder')" value-key="id" slot="reference" popper-class="api-select right-box-select-top right-public-box-dropdown-top role-system-table">
                   <template v-for="role in roles" >
                     <el-option :label="role.name" :value="role"></el-option>
                   </template>
@@ -58,7 +58,7 @@
                   format="yyyy-MM-dd HH:mm:ss"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
-                  popper-class="item-system-table right-public-box-dropdown-top right-public-box-select-top"
+                  popper-class="item-system-table right-public-box-dropdown-top right-box-select-top"
                   :picker-options="pickerOptions"
                   :placeholder="$t('el.datepicker.selectTime')">
                 </my-date-picker>
@@ -98,6 +98,15 @@
           </template>
         </div>
       </el-table-column>
+      <template  slot="empty">
+        <div v-if="!loading" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
     </el-table>
 </template>
 
@@ -106,6 +115,9 @@ import { tableCommon } from './systemCommon'
 import table from '@/components/common/mixin/table'
 export default {
   name: 'apiKeyTable',
+  props: {
+    loading: Boolean
+  },
   mixins: [table, tableCommon],
   data () {
     return {

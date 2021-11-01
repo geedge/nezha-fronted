@@ -12,10 +12,18 @@
     <template v-slot:top-tool-right>
       <el-input v-model="matchContent" class="margin-r-10" placeholder="" size="small" suffix-icon="el-icon-search" @keyup.enter.native="queryLogData()">
         <el-select slot="prepend" v-model="matchSymbol" class="symbol-select" size="small" style="width: 60px;">
-          <el-option value="|="></el-option>
-          <el-option value="!="></el-option>
-          <el-option value="|~"></el-option>
-          <el-option value="!~"></el-option>
+          <el-option value="|=">
+            <span style="font-family: Inter-Regular">|=</span>
+          </el-option>
+          <el-option value="!=">
+            <span style="font-family: Inter-Regular">!=</span>
+          </el-option>
+          <el-option value="|~">
+            <span style="font-family: Inter-Regular">|~</span>
+          </el-option>
+          <el-option value="!~">
+            <span style="font-family: Inter-Regular">!~</span>
+          </el-option>
         </el-select>
       </el-input>
       <pick-time id="explore" ref="pickTime" v-model="filterTime" :refresh-data-func="queryLogData" :use-chart-unit="false" :use-refresh="false">
@@ -23,8 +31,8 @@
       </pick-time>
     </template>
     <template v-slot>
-      <log-tab ref="logDetail" v-loading="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
-      <div v-if="!logData" v-loading="loading" class="log-no-data">No Data</div>
+      <log-tab ref="logDetail" v-loading="loading" :loading-bottom="endpointLoading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
+<!--      <div v-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>-->
     </template>
   </nz-bottom-data-list>
 </template>
@@ -55,7 +63,8 @@ export default {
       expressions: [''],
       matchSymbol: '|=',
       matchContent: '',
-      loading: true
+      loading: true,
+      endpointLoading: false
     }
   },
   methods: {
@@ -110,6 +119,11 @@ export default {
         })
         axios.all(requestArr).then(res => {
           this.logData = res.map(r => r.data)
+          if (this.logData[0].result.length > 0) {
+            this.endpointLoading = false
+          } else {
+            this.endpointLoading = true
+          }
         }).finally(() => {
           this.loading = false
         })

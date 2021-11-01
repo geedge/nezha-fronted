@@ -24,8 +24,8 @@
         :class="item.id === detailViewRightObj.id ? 'selected' : ''"
         @click="detailViewRightShow(item)">
         <el-popover
-          placement="right"
-          popper-class="alert-message-tooltip"
+          placement="right-start"
+          popper-class="alert-message-tooltip alert-rule-detail"
           style="position: relative"
           @show="alertMessageHover(item, true)"
           @hide="alertMessageHover(item, false)"
@@ -227,3 +227,11 @@ export default {
   }
 }
 </script>
+<style>
+.alert-rule-detail {
+  left: 440px !important;
+}
+</style>
+<style scoped lang="scss">
+  @import '../detailList';
+</style>

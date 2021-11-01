@@ -2,6 +2,7 @@
 // import 'element-ui/lib/theme-chalk/index.css'
 import 'xterm/dist/xterm.css'
 import '@/assets/css/main.scss'
+import '@/assets/css/font/iconfont.js'
 import ElementUI from 'element-ui'
 import i18n from './components/common/i18n'
 

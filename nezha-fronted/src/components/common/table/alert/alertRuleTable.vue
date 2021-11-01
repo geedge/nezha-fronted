@@ -65,12 +65,12 @@
             placement="right"
             trigger="hover"
             :open-delay="300"
-            :width="225"
+            :width="215"
             popper-class="schedEnableTitle"
           >
             <div>
               <div class="margin-b-10">
-                {{$t('alert.config.schedEnable')}} :
+                {{$t('alert.config.schedEnable')}}
                 <el-switch
                   style="margin-left: 14px"
                   slot="reference"
@@ -82,23 +82,31 @@
                 />
               </div>
               <div>
-                <div class="margin-b-10">{{$t('alert.config.schedDays')}} :</div>
+                <div class="margin-b-10">{{$t('alert.config.schedDays')}}</div>
                 <div class="margin-b-5" style="display: flex">
-                  <i class="nz-icon nz-icon-a-rilizhou"/>
+                  <i class="nz-icon nz-icon-a-rilizhou" style="color: #FA901C;"/>
                   <span v-html="weekStr(scope.row.schedDays)"></span>
                 </div>
-                <div ><i class="nz-icon nz-icon-dingshishijian"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
+                <div ><i class="nz-icon nz-icon-dingshishijian" style="color: #FA901C;"/>{{scope.row.schedStime+' - '+scope.row.schedEtime}}</div>
               </div>
             </div>
-            <el-switch
-              slot="reference"
-              v-model="scope.row.state"
-              :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"
-              active-color="#ee9d3f"
-              :active-value="1"
-              :inactive-value="0"
-              @change="(val)=>{$emit('statusChange', scope.row)}"
-            />
+<!--            <el-switch-->
+<!--              slot="reference"-->
+<!--              v-model="scope.row.state"-->
+<!--              :disabled="!hasButton('dc_edit') || !hasButton('dc_edit') || !!Number(scope.row.buildIn)"-->
+<!--              active-color="#ee9d3f"-->
+<!--              :active-value="1"-->
+<!--              :inactive-value="0"-->
+<!--              @change="(val)=>{$emit('statusChange', scope.row)}"-->
+<!--            />-->
+            <div slot="reference" v-if="scope.row[item.prop] === 1">
+              <div class="active-icon green-bg inline-block"></div>
+              {{ $t('overall.enabled') }}
+            </div>
+            <div slot="reference" v-else-if="scope.row[item.prop] === 0">
+              <div class="active-icon gray-bg inline-block"></div>
+              {{ $t('overall.disabled') }}
+            </div>
           </el-popover>
         </template>
         <span v-else-if="scope.row[item.prop]">{{scope.row[item.prop]}}</span>
@@ -112,11 +120,11 @@
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
         <button class="table-operation-item" @click="queryMessage(scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown size="medium" v-has="['alertRule_edit','alertRule_delete']" trigger="hover" @command="tableOperation">
+        <el-dropdown size="medium" v-has="['alertRule_edit','alertRule_delete']" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>
-          <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+          <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
             <el-dropdown-item v-if="!scope.row.buildIn" v-has="'alertRule_edit'" :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>
             <el-dropdown-item v-if="!scope.row.buildIn" v-has="'alertRule_delete'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('overall.delete')}}</span></el-dropdown-item>
             <el-dropdown-item v-if="!scope.row.buildIn" v-has="'alertRule_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
@@ -125,6 +133,15 @@
         </el-dropdown>
       </div>
     </el-table-column>
+    <template slot="empty">
+      <div  v-if="!loading"  class="table-no-data">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#nz-icon-no-data-list"></use>
+        </svg>
+        <div class="table-no-data__title">No results found</div>
+      </div>
+      <div v-else>&nbsp;</div>
+    </template>
   </el-table>
 </template>
 
@@ -134,6 +151,9 @@ import chartDataFormat from '@/components/charts/chartDataFormat'
 export default {
   name: 'alertRuleTable',
   mixins: [table],
+  props: {
+    loading: Boolean
+  },
   data () {
     return {
       tableTitle: [
@@ -269,5 +289,58 @@ export default {
 <style scoped>
   /deep/ .active-icon {
     margin-left: 5px;
+  }
+</style>
+<style>
+.severity .P1{
+  background: #F5846A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P2{
+  background: #F7A54A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P3{
+  background: #F1C13D;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.schedEnableTitle{
+  padding: 20px 15px;
+  margin-right: 0;
+  left: 1995px !important;
+  background: #FFFFFF;
+  border: 1px solid rgba(119,131,145,0.60);
+  box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+  border-radius: 3px;
+}
+.schedEnableTitle .nz-icon-a-rilizhou, .schedEnableTitle .nz-icon-dingshishijian{
+  font-size: 14px;
+  color: #666666;
+  margin-right: 12px;
+}
+.schedEnableTitle .week-item{
+  width: 32px;
+  height: 22px;
+  line-height: 22px;
+  opacity: 0.9;
+  background: #F6F6FA;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 12px;
+  color: #666666;
+  letter-spacing: 0;
+  font-weight: 400;
+  padding-left: 3px;
+  margin-right: 12px;
+  margin-bottom: 6px;
   }
 </style>

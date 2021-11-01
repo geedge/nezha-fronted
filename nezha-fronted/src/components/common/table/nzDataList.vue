@@ -20,6 +20,7 @@
             </button>
             <el-dropdown
               type="primary"
+              trigger="click"
               v-if="showLayout.indexOf('detailViewSet') > -1"
               class="margin-l-5"
               @command="changeDetailType">
@@ -27,7 +28,7 @@
                       type="button">
                 <i class="nz-icon nz-icon-list-view" />
               </button>
-              <el-dropdown-menu slot="dropdown"  class="right-public-box-dropdown-top">
+              <el-dropdown-menu slot="dropdown"  class="right-public-box-dropdown-top right-box-select-top">
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">{{$t('asset.detail.list')}}</el-dropdown-item>
                 <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">{{$t('asset.detail.detail')}}</el-dropdown-item>
               </el-dropdown-menu>

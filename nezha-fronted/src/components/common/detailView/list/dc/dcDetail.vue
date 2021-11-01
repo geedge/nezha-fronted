@@ -38,6 +38,7 @@
           v-if="item && item.loading"
           :id="item.id"
           :that="item"
+          :detail-list="true"
           :type="'dc'"
         ></alertLabel>
       </li>
@@ -57,7 +58,7 @@ export default {
   },
   data () {
     return {
-      tableTitle: [ // 原始table列
+      tableTitle: [
         {
           label: 'ID',
           prop: 'id',
@@ -65,36 +66,57 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.moduleName'),
+          label: this.$t('overall.name'),
           prop: 'name',
           show: true,
           minWidth: 200,
           sortable: 'custom'
         }, {
-          label: this.$t('project.project.projectName'),
-          prop: 'project',
+          label: this.$t('asset.location'),
+          prop: 'location',
+          show: true
+        }, {
+          label: this.$t('config.dc.cabinetNum'),
+          prop: 'cabinetNum',
           show: true,
-          width: 200,
-          sortable: 'custom'
-        },
-        {
-          label: this.$t('project.endpoint.endpoint'),
-          prop: 'endpointNum',
-          show: true,
-          width: 200,
+          minWidth: 100,
           sortable: 'custom'
         }, {
-          label: this.$t('project.module.alerts'),
-          prop: 'alertNum',
+          label: this.$t('config.dc.assets'),
+          prop: 'assetNum',
           show: true,
-          width: 200,
+          minWidth: 90,
           sortable: 'custom'
-        },
-        {
-          label: this.$t('overall.remark'),
-          prop: 'remark',
+        }, {
+          label: this.$t('config.dc.alert'),
+          prop: 'alertNum',
+          show: true
+        }, {
+          label: this.$t('asset.tel'),
+          prop: 'tel',
+          show: false,
+          minWidth: 100
+        }, {
+          label: this.$t('asset.principal'),
+          prop: 'principal',
+          show: false,
+          minWidth: 120
+        }, {
+          label: this.$t('config.dc.longitude'),
+          prop: 'longitude',
+          show: false,
+          minWidth: 100
+        }, {
+          label: this.$t('config.dc.latitude'),
+          prop: 'latitude',
+          show: false,
+          minWidth: 100
+        }, {
+          label: this.$t('config.dc.state'),
+          prop: 'state',
           show: true,
-          minWidth: 150
+          minWidth: 100,
+          sortable: 'custom'
         }
       ]
     }
@@ -133,3 +155,7 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+  @import '../detailList';
+</style>

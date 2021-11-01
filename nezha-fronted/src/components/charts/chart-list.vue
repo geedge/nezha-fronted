@@ -5,12 +5,34 @@
     position:relative;
     box-sizing: border-box;
   }
-  .noData{
-    text-align: center
+  .no-data{
+    height: 1189px;
+    width: 100%;
+    position: relative;
+    .icon {
+      width: 5rem;
+      height: 5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -52px;
+      margin-left: -40px;
+      text-align: center;
+    }
+    .no-data-div {
+      position: absolute;
+      font-size: 16px;
+      color: #333333;
+      font-weight: 400;
+      margin-left: -29px;
+      top: 52.5%;
+      left: 50%
+    }
   }
   .list-width{
     width: 100%;
-    padding: 0 10px 5px 20px;
+    //height: 100%;
+    padding: 0 10px 5px 10px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
   }
@@ -211,7 +233,14 @@
                       :chart-index="index"></chart-group>
       </div>
    </draggable>
-    <el-row v-if="dataList.length === 0"  class="noData"></el-row>
+<!--    <el-row v-if="dataList.length === 0"  class="noData"></el-row>-->
+    <div v-if="chartListNoData" class="no-data">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#nz-icon-no-data-panel"></use>
+      </svg>
+      <div class="no-data-div">No data</div>
+    </div>
+    <div v-else>&nbsp;</div>
     <!--<div class="page-shadow" v-if="showShadow"></div>-->
   </div>
 </template>
@@ -275,9 +304,11 @@ export default {
         start: '',
         end: ''
       },
+      chartListNoData: false,
       extraMarginBottom: 0, // dom额外的margin
       panelId: '',
       timer: null,
+      finshGetData: false,
       dataTotalList: [], // 懒加载：总记录数
       dataTotalListBak: [], // 用于查询：懒加载，总记录备份
       isPage: false, // 是否分页懒加载
@@ -488,13 +519,20 @@ export default {
         this.dataTotalListBak.forEach((item) => {
           item.isLoaded = false
           item.isHide = false
+          this.chartListNoData = false
           chartListTmp.push(item)
         })
       }
 
       this.dataTotalList = [...chartListTmp]
       this.dataList = [...this.dataTotalList]
-
+      let isAllHide = true
+      this.dataList.map(item => {
+        if (!item.isHide) {
+          isAllHide = false
+        }
+      })
+      this.chartListNoData = isAllHide
       this.$nextTick(() => {
         if (this.dataList.length > 0) {
           this.dataList.forEach((item, index) => {
@@ -566,6 +604,10 @@ export default {
 
     // 获取panel详情数据,获取panel下所有chart列表
     getData (params) {
+      if (this.finshGetData) {
+        return
+      }
+      this.finshGetData = true
       const param = {
         panelId: params.panelId,
         query: params.query,
@@ -646,16 +688,21 @@ export default {
       if (!params.panelId) { return } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
+          setTimeout(() => {
+            this.finshGetData = false
+          }, 100)
           response.data.list.forEach((item, index) => {
             item.isLoaded = false
           })
+          this.$emit('panel-list-loading', response.data.list)
           // chart数据存在dataTotalListBak中
-          if (response.data.list) {
+          if (response.data.list.length > 0) {
             this.dataTotalListBak = response.data.list
+            this.chartListNoData = false
           } else {
             this.dataTotalListBak = response.data
+            this.chartListNoData = true
           }
-
           let chartListTmp = []
           // 查询条件带name
           if (this.filter.searchName) {

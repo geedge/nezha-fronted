@@ -1,6 +1,6 @@
 <template>
-  <div class="full-width-height">
-   <nz-bottom-data-list
+  <div class="full-width-height endpoint-tab-new">
+    <nz-bottom-data-list
       :showTitle='showTitle'
       :api="url"
       :layout="['searchInput', 'elementSet']"
@@ -20,7 +20,7 @@
               <i slot="suffix" class="el-input__icon nz-icon nz-icon-search" style="float:right" @click="focusInput"></i>
             </el-input>
           </div>
-          <div class="margin-r-20 nz-btn-group nz-btn-group-size-small nz-btn-group-light">
+          <div class="margin-r-20 nz-btn-group">
             <button @click="changeTime(-10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-prepend" id="endpoint-query-changetime"><i class="el-icon-d-arrow-left"></i></button><my-date-picker
             v-model="formatTime"
             type="datetime"
@@ -33,13 +33,13 @@
           >
           </my-date-picker><button @click="changeTime(10)" class="nz-btn nz-btn-size-normal nz-btn-style-light change-time-height nz-input-group-append"><i class="el-icon-d-arrow-right"></i></button>
           </div>
-          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 24px;">
-            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="viewGraph">
+          <div class="nz-btn-group nz-btn-group-size-normal nz-btn-group-light" style="height: 28px;">
+            <button class="nz-btn nz-btn-size-normal nz-btn-style-light" :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}" @click="viewGraph">
               <i class="nz-icon nz-icon-chart"  :class="{'control-icon-unchecked':selectedEndpoints.length<1,'control-icon-checked':selectedEndpoints.length>0}"></i>
-            </button><button @mouseenter="dropdownHandler(true)" @mouseleave="dropdownHandler(false)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
+            </button><button @click="dropdownHandler(dropdownShow)" class="nz-btn nz-btn-size-normal nz-btn-style-light export-dropdown-btn" id="browser-go">
             <i class="nz-icon nz-icon-arrow-down"></i>
             <transition name="el-zoom-in-top">
-              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover">
+              <div v-if="dropdownShow" class="endpoint-query-dropdown el-popover" style="right: 11px;top: 33px;">
                 <span style="padding-top: 2px">{{$t('project.endpoint.hideSameLabels')}}</span>
                 <el-switch v-model="hideSameLabels" active-color="#ee9d3f" size="small"></el-switch>
               </div>
@@ -57,6 +57,7 @@
           :hideSameLabels="hideSameLabels"
           :queryExpression="queryExpression"
           @changSelection="changSelectionF"
+          @selectedEndpointsChange="selectedEndpointsChange"
         />
       </template>
 <!--      <template v-slot:pagination>-->
@@ -119,7 +120,7 @@ export default {
       fromBottom: true,
       selectedEndpoints: [],
       queryExpression: '',
-      dropdownShow: '',
+      dropdownShow: false,
       timeout: null,
       formatTime: '',
       hideSameLabels: true
@@ -192,17 +193,17 @@ export default {
       this.$refs.endpointQueryTab.viewGraph()
     },
     dropdownHandler (show) {
-      if (show) {
-        clearTimeout(this.timeout)
+      if (!show) {
         this.dropdownShow = true
       } else {
-        this.timeout = setTimeout(() => {
-          this.dropdownShow = false
-        }, 700)
+        this.dropdownShow = false
       }
     },
     changSelectionF (arr) {
       this.changSelection = arr
+    },
+    selectedEndpointsChange (n) {
+      this.selectedEndpoints = n
     },
     toTop (wrap) {
       let currentTop = wrap.scrollTop
@@ -219,3 +220,14 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .full-width-height{
+    width: 100%;
+    height: 100%;
+  }
+  .control-icon-unchecked {
+    color: #bcbec2;
+    cursor: not-allowed;
+    background-color: #f4f4f5;
+  }
+</style>

@@ -54,9 +54,7 @@ export default {
   watch: {
     from: {
       immediate: true,
-      handler (n) {
-        console.log(n === fromRoute.asset)
-      }
+      handler (n) {}
     }
   }
 }

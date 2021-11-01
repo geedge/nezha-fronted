@@ -26,7 +26,7 @@
       </div>
       <div class="log-operation">
         <span class="operation-label">{{$t('overall.limit')}}:</span>
-        <el-select v-model="limit" size="small" style="width: 100px;" popper-class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-select v-model="limit" size="small" style="width: 100px;" popper-class="right-box-select-top ">
           <el-option v-for="option in limitOptions" :key="option" :value="option"></el-option>
         </el-select>
       </div>
@@ -79,7 +79,24 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-else class="chart-no-data">No Data</div>
+      <template v-if="exploreItem">
+        <div v-if="exploreLogTable" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
+      <template v-else>
+        <div v-if="loadingBottom" class="table-no-data">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#nz-icon-no-data-list"></use>
+          </svg>
+          <div class="table-no-data__title">No results found</div>
+        </div>
+        <div v-else>&nbsp;</div>
+      </template>
     </div>
   </div>
 </template>
@@ -95,7 +112,10 @@ export default {
     showSwitch: {
       type: Boolean,
       default: true
-    }
+    },
+    loadingBottom: Boolean,
+    exploreLogTable: Boolean,
+    exploreItem: Boolean
   },
   computed: {
     tableTimeFormat () {
@@ -147,7 +167,7 @@ export default {
         {
           type: 'unknown',
           keywords: [],
-          color: '#dde4ed'
+          color: '#B4C7DE'
         }
       ],
       tableData: [],
@@ -546,3 +566,118 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.log-detail {
+  position: relative;
+  * {
+    box-sizing: border-box;
+  }
+  .log-table{
+    position: relative;
+    min-height: 200px;
+    .table-no-data {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -35px;
+      margin-left: -50px;
+      text-align: center;
+    }
+  }
+  .log-table .nz-table2 {
+    padding: 10px 0 0 0;
+    position: relative;
+    .el-table__body {
+      border-collapse: separate;
+      border-spacing: 0 6px;
+
+      td {
+        vertical-align: top;
+        padding: 1px 0;
+        border: none;
+      }
+      td.el-table__expanded-cell {
+        padding: 0 0 0 60px;
+        background-color: #fafafa;
+      }
+      // 左侧边框
+      td:first-child {
+        border-left: 3px solid;
+      }
+      td.log-border--debug {
+        border-left-color: #1f78c1;
+      }
+      td.log-border--info {
+        border-left-color: #7eb26d;
+      }
+      td.log-border--warn {
+        border-left-color: #ff851b;
+      }
+      td.log-border--error {
+        border-left-color: #e24d42;
+      }
+      td.log-border--fatel {
+        border-left-color: #705da0;
+      }
+      td.log-border--trace {
+        border-left-color: #6ed0e0;
+      }
+      td.log-border--unknown {
+        border-left-color: #dde4ed;
+      }
+      td.el-table__expanded-cell:first-child {
+        border-left: none;
+      }
+      // 不换行
+      .log-row-wrap--no-wrap .cell {
+        white-space: nowrap;
+        overflow: visible;
+        .text-ellipsis{
+          overflow:hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap
+        }
+      }
+      .cell {
+        .text-ellipsis{
+          overflow:visible;
+          text-overflow:unset;
+          white-space: unset;
+        }
+      }
+    }
+  }
+
+  .log-chart {
+    height: 300px;
+    width: 100%;
+  }
+  .log-operations {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    padding: 0 10px 0 20px;
+    border: 1px solid #E4E8EB;
+    border-radius: 2px;
+
+    .log-operation {
+      display: flex;
+      align-items: center;
+
+      &.log-operation--right {
+        margin-left: auto;
+      }
+      &:not(:last-of-type) {
+        margin-right: 30px;
+      }
+
+      .operation-label {
+        padding-right: 10px;
+        color: #666666;
+      }
+    }
+  }
+}
+</style>

@@ -17,12 +17,13 @@
             <el-dropdown
               type="primary"
               v-if="showLayout.indexOf('detailViewSet') > -1"
+              trigger="click"
               @command="changeDetailType">
               <button class="top-tool-btn table-column-setting"
                       type="button">
                 <i class="nz-icon nz-icon-detail-view" />
               </button>
-              <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+              <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
                 <el-dropdown-item :command="'list'" :class="detailType === 'list' ? 'active' : ''">{{$t('asset.detail.list')}}</el-dropdown-item>
                 <el-dropdown-item :command="'view'" :class="detailType === 'view' ? 'active' : ''">{{$t('asset.detail.detail')}}</el-dropdown-item>
               </el-dropdown-menu>
@@ -31,7 +32,7 @@
           <!-- 顶部分页组件，当打开底部上滑框时出现 -->
           <!-- <div v-if="showLayout.indexOf('pagination') > -1" class="pagination-top pagination-top-hide display-none"></div>-->
         </div>
-        <div :style="{ height: nzTableHeight }" class="nz-detail-view">
+        <div :style="{ height: nzTableHeight }" class="nz-detail-view" :class="dataLength?'':'nz-detail-view-no-data'">
           <div class="nz-detail-view-left" v-if="dataLength">
             <slot name="nz-detail-view-list"></slot>
             <div v-if="showLayout.indexOf('pagination') > -1" class="nz-detail-view-pagination">
@@ -39,7 +40,10 @@
             </div>
           </div>
           <div v-else class="no-data">
-            No Data
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#nz-icon-no-data-list"></use>
+            </svg>
+            <div class="table-no-data__title">No results found</div>
           </div>
           <div class="nz-detail-view-right"   v-if="detailViewRightObj">
             <detailViewRight
@@ -178,3 +182,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+  @import './detailView.scss';
+  .active{
+    color: #fa901c;
+  }
+  .nz-detail-view-no-data{
+    border-top: 1px solid #E7EAED;
+  }
+</style>

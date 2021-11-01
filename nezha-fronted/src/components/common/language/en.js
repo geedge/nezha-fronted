@@ -103,7 +103,7 @@ const en = {
     importExcel: 'Import',
     importExcelLower: 'import',
     exportExcelLower: 'export',
-    rollbackImport: 'Rollback',
+    rollbackImport: 'Undo',
     exportCur: 'Current page',
     exportAll: 'All',
     importFile: 'Please upload file',
@@ -120,7 +120,12 @@ const en = {
       failed: 'Fail',
       success: 'Success',
       failedDetail: 'Failed Detail',
-      line: 'Line {0}:'
+      line: 'Line {0}:',
+      successNum: '{successNum} records imported successfully',
+      failedNum: '{failedNum} out of {total} records failed to import',
+      successfully: 'Import completed successfully!',
+      imported: 'You have imported',
+      records: 'records'
     },
     reset: 'Reset',
     submit: 'Save',
@@ -141,6 +146,12 @@ const en = {
     children: 'Children asset',
     assetSubTab: 'Children asset',
     dc: 'Data center',
+    manageIp: 'Manage IP',
+    cabinet: 'Cabinet',
+    brand: 'Brand',
+    model: 'Model',
+    location: 'Location',
+    module: 'Module',
     labels: 'Label',
     moreOption: 'More option',
     copy: 'Copy',
@@ -163,7 +174,10 @@ const en = {
     normal: 'Up',
     unusual: 'Down',
     AuthenticationFailed: 'Authentication failed',
-    clearAllSelect: 'Clear the selection'
+    clearAllSelect: 'Clear the selection',
+    disabled: 'Disabled',
+    enabled: 'Enabled',
+    close: 'Close'
   },
   pageSize: '/page',
   setup: {
@@ -287,6 +301,7 @@ const en = {
         type: 'Type',
         unit: 'Unit',
         url: 'URL',
+        name: 'Name',
         legend: 'Legend',
         statistics: 'Statistics',
         legendTip: 'Controls the name of the time series, using name or pattern. For example {{hostname}} will be replaced with label value for the label hostname.',
@@ -733,6 +748,7 @@ const en = {
     user: {
       userList: 'User list', // "用户列表"
       user: 'User',
+      state: 'State',
       // 列表表头
       name: 'Name', // "用户"
       username: 'Username', // 登录名
@@ -876,9 +892,9 @@ const en = {
       authtype: 'AuthType',
       statusItem: {
         connecting: 'Connecting',
-        connectionFailed: 'Connection failed',
-        over: 'Over',
-        kickedOut: 'Kicked out',
+        connectionFailed: 'Failed',
+        over: 'Close',
+        kickedOut: 'Stopped',
         unknownError: 'Unknown error'
       },
       option: 'Operation', // "操作",
@@ -932,7 +948,8 @@ const en = {
       loginUser: 'Login user',
       sourceIp: 'Source IP',
       sourceUser: 'Source user',
-      SessionId: 'Session ID'
+      SessionId: 'Session ID',
+      stop: 'Stop'
     },
     operationlog: {
       operationlog: 'Operation log',
@@ -1255,6 +1272,10 @@ const en = {
     startAt: 'Start time', // "开始时间"
     notify: 'Notification', // "通知方式"
     endAt: 'End time', // "结束时间"
+    name: 'Name',
+    state: 'State',
+    type: 'Type',
+    alertNum: 'Alert',
     list: {
       // 表头
       linked: 'Linked', // "关联"
@@ -1309,6 +1330,9 @@ const en = {
       state: 'State',
       schedEnable: 'Schedule',
       schedDays: 'Effective time',
+      more: 'More',
+      effectiveConfig: 'Effective configuration',
+      notificationConfig: 'Notification configuration',
       notifyActive: 'Active Notification',
       notifyExpired: 'Expired notification',
       trbShot: 'Trouble shooting'

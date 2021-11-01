@@ -12,7 +12,7 @@
           <el-dropdown trigger="click" size="small" placement="bottom-start" v-has="'topo_icon_list'">
             <span class="el-dropdown-title"><i class="iconfont icon-cube"></i> <i
               class="nz-icon nz-icon-arrow-down"></i></span>
-            <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-public-box-select-top right-public-box-dropdown-top">
+            <el-dropdown-menu slot="dropdown" @click="dropdownClick" class="right-box-select-top right-public-box-dropdown-top">
               <div style="height: 450px"  v-loading="imgageLoading">
                 <el-card shadow="hover" style="height:420px;width:284px;overflow-y: auto"
                          class="project-topology-add-node">
@@ -57,7 +57,7 @@
             <div class="full pr10">
               <el-select v-model="lineName" size="small"
                          :popper-append-to-body="false"
-                         popper-class="right-public-box-select-top right-public-box-dropdown-top"
+                         popper-class="right-box-select-top"
                          @change="changeTopologyOpt(lineName,'lineName')">
                <div slot="prefix">
                 <div class="icon-item" style="width: 100%;padding: 0">
@@ -228,6 +228,12 @@
             >
               <topoTooltip :chartDataParent="chartData" :filterTime="filterTime"/>
             </div>
+            <div v-show="showNoData" class="topo-noData">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#nz-icon-no-data-project"></use>
+              </svg>
+              <div class="content">No data</div>
+            </div>
           </div>
           <!--endpoint-->
           <transition name="right-box">
@@ -280,7 +286,7 @@
         <el-col :span="4" class="upload-pic-label">{{ $t('overall.folder') }}</el-col>
         <el-col :span="20">
           <el-autocomplete
-            popper-class="right-public-box-select-top right-public-box-dropdown-top"
+            popper-class="right-box-select-top right-public-box-dropdown-top"
             :maxlength="64" show-word-limit
             class="inline-input"
             v-model="uploadPic.unit"
@@ -393,6 +399,7 @@ export default {
         bus.timeFormate(bus.getOffsetTimezoneData(-1), 'yyyy-MM-dd hh:mm:ss'),
         bus.timeFormate(bus.getOffsetTimezoneData(), 'yyyy-MM-dd hh:mm:ss')
       ],
+      showNoData: false,
       topologyInfo: {
         fontSize: 14,
         align: 'left',
@@ -771,6 +778,11 @@ export default {
         }
         this.$get('monitor/project/topo', { projectId: this.obj.id }).then(res => {
           let data = res.data.topo
+          if (!res.data.topo || !res.data.topo.pens.length) {
+            this.showNoData = true
+          } else {
+            this.showNoData = false
+          }
           if (this.isPreview) {
             data = this.previewData
           }
@@ -1816,6 +1828,7 @@ export default {
 
     editTopology (val) {
       this.editTopologyFlag = true
+      this.showNoData = false
       this.topoScreenState = JSON.parse(JSON.stringify(this.topoScreen))
       this.$store.commit('setShowTopoScreen', true)
       setTimeout(() => {

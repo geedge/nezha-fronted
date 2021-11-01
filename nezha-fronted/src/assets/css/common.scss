@@ -69,6 +69,21 @@
 .orange-bg {
   background-color: $--color-primary !important;
 }
+.colorffa416{
+  color: #ffa416;
+}
+.colorec7f66{
+  color: #ec7f66;
+}
+.color535b64{
+  color: #535b64;
+}
+.color999999{
+  color: #999999;
+}
+.color23bf9a{
+  color: #23bf9a;
+}
 .timezone-area{
   display: inline-block;
   vertical-align: middle;
@@ -153,4 +168,11 @@ td .nz-icon-gear:before{
   border-color: transparent;
   box-shadow: -1px 1px 10px -1px $--dropdown-menu-box-shadow-color;
   border-radius: 2px;
+}
+.icon {
+  width: 5rem;
+  height: 5rem;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }

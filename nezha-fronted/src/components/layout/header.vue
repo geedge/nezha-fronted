@@ -5,9 +5,9 @@
       <el-breadcrumb-item v-for="crumb in breadcrumb" :key="crumb.code">{{$t(crumb.i18n)}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="header-menu">
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <div class="header-menu__item"><i class="nz-icon nz-icon-more-app"></i></div>
-        <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item v-for="(item, index) in linkData" :key="index" :index="'0-' + index" v-if="linkData.length">
             <span class="link-title">
               <i class="nz-icon nz-icon-link"></i>
@@ -19,25 +19,25 @@
           </div>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
         <div id="header-open-cli" @click="cli">
           <div class="header-menu__item"><i class="nz-icon nz-icon-terminal"></i></div>
           <span v-show="$store.state.consoleCount>0" class="right-tip">{{$store.state.consoleCount<=10?$store.state.consoleCount:'10+'}}</span>
         </div>
       </el-dropdown>
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <el-dropdown-menu></el-dropdown-menu>
         <div class="header-menu__item" @click="showGuide = true"><i class="nz-icon nz-icon-guide"></i></div>
       </el-dropdown>
     </div>
     <!--个人操作-->
     <div class="personal">
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <div class="header-menu--item">
           <i class="nz-icon nz-icon-language-change"></i>
         </div>
-        <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
+        <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
           <el-dropdown-item>
             <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
           </el-dropdown-item>
@@ -46,7 +46,7 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown>
+      <el-dropdown trigger="click">
         <div class="personal-avatar"><span>{{name.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
         <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
           <div class="personal-dropdown">

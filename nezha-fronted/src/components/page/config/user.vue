@@ -1,13 +1,67 @@
 <template>
   <div>
+    <nzDetailView
+      v-loading="detailViewLoading || tools.loading"
+      v-if="detailType !== 'list'"
+      :api="url"
+      ref="detailList"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
+      :from="fromRoute.user"
+      :search-msg="searchMsg"
+      :detailType="detailType"
+      :detailViewRightObj="detailViewRightObj"
+      :dataLength="tableData.length"
+      @search="search"
+      @changeDetailType="changeDetailType"
+    >
+      <template v-slot:top-tool-left>
+        <!--        <detailViewTopSearch :selectValue.sync="selectValue" :detailSearchList="detailSearchList" @reload="reloadTable" />-->
+      </template>
+      <template v-slot:top-tool-right>
+      </template>
+      <template v-slot:nz-detail-view-list>
+        <userDetail
+          class="data-detail"
+          ref="dataDetail"
+          :orderByFa="orderBy"
+          v-loading="tools.loading"
+          :detailViewRightObj="detailViewRightObj"
+          :api="url"
+          :table-data="tableData"
+          @detailViewRightShow = 'detailViewRightShow'
+          @orderDetail="orderDetail"
+        >
+        </userDetail>
+      </template>
+      <!-- 分页组件 -->
+      <template v-slot:pagination>
+        <el-pagination
+          @current-change="pageNo"
+          :current-page.sync="pageObj.pageNo"
+          :page-size="20"
+          :total="pageObj.total"
+          layout="prev, slot, next"
+          small
+        >
+          <template>
+            <el-input-number ref="jumpInput" v-model="pageObj.pageNo" :controls="false" :min="1" :max="pageObj.pages" class="jump-input" @change="getTableData" @keyup.enter.native="getTableData" size="mini"/>
+            <span class="jump-pages">/&nbsp{{pageObj.pages}}</span>
+          </template>
+        </el-pagination>
+      </template>
+    </nzDetailView>
     <nz-data-list
       ref="dataList"
       :api="url"
+      v-show="detailType === 'list'"
       :custom-table-title.sync="tools.customTableTitle"
       :from="fromRoute.user"
-      :layout="['searchInput', 'elementSet', 'pagination']"
+      :layout="['searchInput', 'elementSet', 'pagination','detailViewSet']"
       :search-msg="searchMsg"
       @search="search"
+      :detailType="detailType"
+      @changeDetailType="changeDetailType"
+      @getTableData="getTableData"
     >
       <template v-slot:top-tool-right>
         <button id="account-add" v-has="'user_add'" :title="$t('overall.createUser')" class="top-tool-btn margin-r-10"
@@ -20,6 +74,7 @@
         <user-table
           ref="dataTable"
           v-loading="tools.loading"
+          :loading="tools.loading"
           :api="url"
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
@@ -50,15 +105,22 @@ import dataListMixin from '@/components/common/mixin/dataList'
 import userTable from '@/components/common/table/settings/userTable'
 import MessageBox from 'element-ui/packages/message-box/src/main'
 import i18n from '@/components/common/i18n'
+import nzDetailView from '@/components/common/detailView/nzDetailView'
+import detailViewMixin from '@/components/common/mixin/detailViewMixin'
+import userDetail from '@/components/common/detailView/list/userDetail/userDetail'
+import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
 export default {
   name: 'user',
   components: {
     nzDataList,
     userBox,
     deleteButton,
-    userTable
+    userTable,
+    nzDetailView,
+    userDetail,
+    detailViewTopSearch
   },
-  mixins: [dataListMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'sys/user',

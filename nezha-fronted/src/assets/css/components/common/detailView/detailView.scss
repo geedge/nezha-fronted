@@ -13,6 +13,7 @@
     justify-content: center;
     color: $--color-text-secondary;
     font-size: 14px;
+    flex-direction: column;
   }
   .nz-detail-view-left{
     width: 260px;
@@ -66,6 +67,11 @@
     font-size: 14px;
     color: $--color-text-regular;
     vertical-align: middle;
+  }
+  /deep/ .bottom-log {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 15px;
   }
 }
 .detail-view {

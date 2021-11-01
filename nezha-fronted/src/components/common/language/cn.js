@@ -27,6 +27,12 @@ const cn = {
     unlocked: '已解锁',
     dashboard: '仪表盘',
     dc: '数据中心',
+    manageIp: '主机IP',
+    cabinet: '机柜',
+    brand: '品牌',
+    model: '型号',
+    location: '位置',
+    module: '模块',
     project: '系统',
     monitor: '监控',
     alert: '告警',
@@ -116,7 +122,12 @@ const cn = {
       failed: '失败',
       success: '成功',
       failedDetail: '失败详情',
-      line: '第{0}行:'
+      line: '第{0}行:',
+      successNum: '{successNum} 条记录导入成功',
+      failedNum: '{total} 条记录中有 {failedNum} 条导入失败',
+      successfully: '导入成功完成!',
+      imported: '已导入',
+      records: '条记录'
     },
     reset: '重置',
     submit: '保存',
@@ -131,11 +142,11 @@ const cn = {
       stack: '查看堆叠图',
       stackBack: '返回原始图'
     },
-    SyncSave: '保存同时更新 Assets',
+    SyncSave: '保存同时更新资产',
     copySuccess: '复制成功',
-    parent: '父级 asset',
-    children: '子级 asset',
-    assetSubTab: '子级 asset',
+    parent: '父级资产',
+    children: '子级资产',
+    assetSubTab: '子级资产',
     moreOption: '更多选项',
     copy: '复制',
     duplicate: '复制',
@@ -159,6 +170,9 @@ const cn = {
     unusual: '不正常',
     AuthenticationFailed: '认证失败',
     clearAllSelect: '清除选择的内容',
+    disabled: '已禁用',
+    enabled: '启用',
+    close: '关闭'
   },
   setup: {
     step0: '欢迎',
@@ -197,9 +211,9 @@ const cn = {
     username: '用户名',
     pin: '密码',
     alertPath: '网站URL',
-    alertPrefix: 'Alert prefix',
-    haMode: 'HA mode',
-    haVip: 'Virtual IP',
+    alertPrefix: '警报前缀',
+    haMode: 'HA 模式',
+    haVip: '虚拟的 IP',
     next: '下一步',
     back: '返回',
     finish: '完成',
@@ -226,14 +240,14 @@ const cn = {
     filePath: '文件路径',
     closeTip: '是否断开所有连接，关闭窗口？',
     remember: '记住我的决定',
-    protocol: 'Protocol',
-    authType: 'Auth type',
+    protocol: '协议',
+    authType: '认证类型',
     host: 'Host',
     port: 'Port',
-    authUsername: 'Username',
-    authPin: 'Password',
-    authUserTip: 'Username prompt',
-    authPinTip: 'Password prompt',
+    authUsername: '用户名',
+    authPin: '密码',
+    authUserTip: '用户名提示',
+    authPinTip: '密码提示',
     authPriKey: 'Key'
   },
   pageSize: '条/页',
@@ -242,9 +256,9 @@ const cn = {
     pin: '密码',
     login: '登录',
     verify: '验证',
-    verifyDialogTitle: 'Two Factor Authentication Set Up',
-    verifyTitle: 'Two-Factor Authentication',
-    verifyContent: 'Enter the code from the two -factor app on your mobile device. If you\' ve lost your device, you may enter one of your recovery codes.',
+    verifyDialogTitle: '双因子认证设置',
+    verifyTitle: '双因子认证',
+    verifyContent: '在您的移动设备上输入来自双因子应用程序的代码。 如果您丢失了设备，您可以输入您的恢复代码之一。',
     verifyPlaceholder: '验证码',
     bindFail: '绑定失败'
   },
@@ -276,9 +290,10 @@ const cn = {
         chartName: '图表名称',
         type: '类型',
         url: 'URL',
-        statistics: 'Statistics',
+        name: '名称',
+        statistics: '统计数据',
         sync: '同步到设备',
-        last: 'Last',
+        last: '最后的',
         threshold: '阈值',
         thresholds: '阈值',
         group: '组',
@@ -304,7 +319,7 @@ const cn = {
             staticTip: '双大括号中的内容将会在asset页面被替换'
           },
           singleStat: {
-            label: 'Single value'
+            label: '单值'
           },
           pie: {
             label: '饼图'
@@ -364,26 +379,26 @@ const cn = {
           state: '状态'
         },
         valMapping: {
-          name: 'Value mapping',
+          name: '值映射',
           from: 'From',
           to: 'To',
-          text: 'Text',
+          text: '文本',
           value: 'Value',
-          range: 'Range'
+          range: '范围'
         },
         legendValue: '图例选项',
         content: '内容',
-        tooltip: 'Tooltip',
+        tooltip: '工具提示',
         displayChart: '图表',
-        aggregation: 'Aggregation',
+        aggregation: '聚合',
         varType: '变量类型',
-        pid: 'Chart 模板',
-        selectAsset: '请选择Asset',
+        pid: '图表模板',
+        selectAsset: '请选择资产',
         selectEndpoint: '请选择Endpoint',
-        time: 'Time',
-        descending: 'Descending',
-        wrapLines: 'Wrap lines',
-        limit: 'Limit'
+        time: '时间',
+        descending: '降序',
+        wrapLines: '换行',
+        limit: '限制'
       },
       chartTableColumn: {
         metric: '指标',
@@ -500,8 +515,8 @@ const cn = {
           dc: '数据中心'
         },
         ok: 'OK',
-        alarm: 'Alarm',
-        total: 'Total'
+        alarm: '警报',
+        total: '全部的'
       },
       project: {
         project: '系统',
@@ -649,7 +664,7 @@ const cn = {
     sshAccount: 'SSH账号',
     protocol: '协议',
     sshProtocol: 'SSH',
-    telnetProtocol: 'Telnet',
+    telnetProtocol: '远程登录',
     userTip: '用户名提示',
     pinTip: '密码提示',
     reloginpinTip: 'RELOGIN提示',
@@ -725,6 +740,7 @@ const cn = {
     user: {
       userList: '用户列表',
       user: '用户',
+      state: '状态',
       name: '姓名', // "用户"
       username: '登录名', // 登录名
       roles: '角色',
@@ -798,12 +814,12 @@ const cn = {
       checkTime: '检查时间',
       dataCenter: '数据中心',
       agent: {
-        agent: 'Agent',
-        title: '下载Agent',
+        agent: '代理',
+        title: '下载代理',
         download: '下载',
         osType: 'OS 类型',
         autoScript: '自动安装脚本',
-        type: 'Agent类型'
+        type: '代理类型'
       }
     },
     agent: {
@@ -835,9 +851,9 @@ const cn = {
       authtype: '认证方式',
       statusItem: {
         connecting: '连接中',
-        connectionFailed: '连接失败',
+        connectionFailed: '发送失败',
         over: '已结束',
-        kickedOut: '被踢出',
+        kickedOut: '强制退出',
         unknownError: '未知错误'
       },
       option: '操作',
@@ -892,7 +908,8 @@ const cn = {
       loginUser: '登陆用户',
       sourceIp: '源 IP',
       sourceUser: '源用户',
-      SessionId: '会话 ID'
+      SessionId: '会话 ID',
+      stop: '停止'
     },
     dc: {
       dc: '数据中心',
@@ -954,16 +971,16 @@ const cn = {
       params: '请求参数',
       state: '请求结果',
       operations: {
-        add: 'add',
-        query: 'query',
-        update: 'update',
+        add: '添加',
+        query: '询问',
+        update: '更新',
         import: 'import',
         export: 'export',
-        delete: 'delete',
-        reset: 'reset',
-        unknown: 'unknown',
-        login: 'login',
-        logout: 'logout'
+        delete: '删除',
+        reset: '重启',
+        unknown: '未知',
+        login: '登陆',
+        logout: '登出'
       },
       response: '响应'
     },
@@ -1039,21 +1056,21 @@ const cn = {
         monitor: '监控',
         metricsTitle: '指标配置',
         logsTitle: '日志配置',
-        alertApi: 'Alert api',
+        alertApi: '告警 api',
         prometheusFederation: 'Federation',
         asset_ping_from: 'Ping from',
         metrics_storage_retention: '保存天数',
         metrics_storage_type: '保存模式',
         metrics_storage_s3_endpoint: 'Endpoint',
         metrics_storage_s3_bucket: 'Bucket name',
-        metrics_storage_s3_access_key: 'Access key',
-        metrics_storage_s3_secret_access_key: 'Secret key',
+        metrics_storage_s3_access_key: '访问密钥',
+        metrics_storage_s3_secret_access_key: '密钥',
         logs_storage_retention: '保存天数',
         logs_storage_type: '保存模式',
         logs_storage_s3_endpoint: 'Endpoint',
         logs_storage_s3_bucket: 'Bucket name',
-        logs_storage_s3_access_key: 'Access key',
-        logs_storage_s3_secret_access_key: 'Secret key',
+        logs_storage_s3_access_key: '访问密钥',
+        logs_storage_s3_secret_access_key: '密钥',
         logs_query_range_default_limit: '查询最大条数',
         local: '本地文件存储',
         s3: 'S3对象存储'
@@ -1082,14 +1099,14 @@ const cn = {
         terminal: '终端',
         terminalNum: '最大终端数量',
         timeout: '超时时间',
-        userTip: 'Telnet 用户名提示',
-        pinTip: 'Telnet 密码提示',
+        userTip: '远程登陆用户名提示',
+        pinTip: '远程登陆密码提示',
         localRetention: '本地存储'
       },
       ldap: {
         ldap: 'LDAP',
         address: 'LDAP地址',
-        dn: 'Bind DN',
+        dn: '绑定 DN',
         pin: '密码',
         ou: '用户OU',
         ouTip: '使用符号 "|" 分隔OU',
@@ -1103,7 +1120,7 @@ const cn = {
       link: {
         link: '链接',
         name: '名称',
-        url: 'Url',
+        url: 'URl',
         operation: '操作',
         add: '添加',
         update: '更新',
@@ -1233,8 +1250,8 @@ const cn = {
     },
     chartTemp: {
       chartTemp: '图表模板',
-      type: 'Type',
-      varType: 'Variable type'
+      type: '类型',
+      varType: '变量类型'
     }
   },
   alert: {
@@ -1253,6 +1270,10 @@ const cn = {
     notify: '通知', // "通知方式"
     startAt: '开始时间',
     endAt: '结束时间',
+    name: '名称',
+    state: '状态',
+    type: '类型',
+    alertNum: '告警数量',
     list: {
       linked: '关联',
       type: '类别',
@@ -1297,17 +1318,20 @@ const cn = {
         alertNumTrend: '告警数量趋势',
         affectEntity: '影响'
       },
-      timeout: 'Timeout(s)',
-      inr: 'Evaluation interval',
-      inrPlaceholder: 'Default global scrape interval',
-      inrError: 'Evaluation Interval cannot be less than 15',
-      autoExpired: 'Automatic expired',
+      timeout: '超时时间(s)',
+      inr: '评估区间',
+      inrPlaceholder: '默认全局抓取间隔',
+      inrError: '评估间隔不能小于 15',
+      autoExpired: '自动过期',
       state: '状态',
-      schedEnable: 'Schedule',
-      schedDays: 'Effective time',
-      notifyActive: 'Active Notification',
-      notifyExpired: 'Expired notification',
-      trbShot: 'Trouble shooting'
+      schedEnable: '日程',
+      schedDays: '有效时间',
+      more: '更多的',
+      effectiveConfig: '有效配置',
+      notificationConfig: '通知配置',
+      notifyActive: '主动通知',
+      notifyExpired: '过期通知',
+      trbShot: '故障排除'
     },
     silence: {
       name: '名称',
@@ -1381,7 +1405,7 @@ const cn = {
       contextName: '内容名称',
       alerts: '告警',
       privpin: '隐私密码',
-      asset: 'Asset',
+      asset: '资产',
       editEndpoint: '修改 Endpoint',
       createEndpoint: '新增 Endpoint',
       batchEndpoint: '批量 Endpoint',
@@ -1424,12 +1448,12 @@ const cn = {
       scrape_timeout_placeholder: '默认全局超时时间',
       protocol: '协议',
       type: '类型',
-      bearer_token: 'bearer token',
+      bearer_token: '第三方 token',
       username: '用户名',
       pin: '密码',
-      authTypeNull: 'none',
-      authTypeWord: 'basic auth',
-      authTypeToken: 'bearer token',
+      authTypeNull: '无',
+      authTypeWord: '基础认证',
+      authTypeToken: '第三方 token',
       name: '名称',
       configs: '配置',
       state: '状态',

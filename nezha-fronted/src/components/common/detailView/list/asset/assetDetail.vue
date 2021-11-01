@@ -27,11 +27,7 @@
         @mouseleave="labelHover(item, 'asset', false)">
         <div class="detail-row-info">
           <div class="asset-manageIp">
-            <span v-if="item.pingInfo" >
-              <span :class="{'active-icon green-bg':item.pingInfo.status == 1,'active-icon red-bg':item.pingInfo.status == 0}"></span>
-            </span>
-            <span v-else style="display: inline-block;width: 13px">
-            </span>
+            <i class="nz-icon nz-icon-overview-alert" :class="item.alertNum>0?'colorEF7458':'color23BF9A'"/>
             {{item.name}}
           </div>
           <div class="asset-name" :title="item.manageIp">{{item.manageIp}}</div>
@@ -40,6 +36,7 @@
           v-if="item && item.loading"
           :id="item.id"
           :that="item"
+          :detail-list="true"
           :type="'asset'"
         ></alertLabel>
       </li>
@@ -174,3 +171,7 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+  @import '../detailList';
+</style>
