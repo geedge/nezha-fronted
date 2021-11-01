@@ -161,7 +161,7 @@ export default {
     position: fixed;
     background-color: white;
     z-index: 3000;
-    padding: 10px;
+    padding: 10px 23px 10px 10px;
     border-radius: 4px;
     box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
@@ -230,7 +230,7 @@ export default {
   }
   .alert-rule-title{
     text-align: left;
-    width: 110px;
+    min-width: 110px;
     color: #666;
     padding: 0 3px 0 13px;
   }

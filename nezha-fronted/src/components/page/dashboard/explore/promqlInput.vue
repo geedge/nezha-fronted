@@ -38,7 +38,7 @@
           <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
           <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
         </div>
-        <div class="top-tool-btn-group">
+        <div class="top-tool-btn-group" style="margin-left: 10px">
           <button v-if="plugins.indexOf('add') > -1" class="top-tool-btn"
                @click="addExpression"><i class="nz-icon nz-icon-plus"></i></button>
           <button v-if="plugins.indexOf('copy') > -1" class="top-tool-btn"
@@ -706,7 +706,6 @@ export default {
 
   .query-row .input-box {
     flex: auto;
-    margin-right: 10px;
   }
 
   .metric-btn {
@@ -842,7 +841,7 @@ export default {
   .nz-temp-box .nz-btn-style-normal-new{
     margin-left: 10px;
   }
-  .right-box__container .form-row-item .input-box .el-textarea.no-resize .el-textarea__inner {
-    width: 476px;
-  }
+  /*.right-box__container .form-row-item .input-box .el-textarea.no-resize .el-textarea__inner {*/
+  /*  width: 476px;*/
+  /*}*/
 </style>

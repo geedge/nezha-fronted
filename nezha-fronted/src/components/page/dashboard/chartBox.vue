@@ -185,7 +185,7 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form ref="chartForm" :model="editChart" :rules="rules" label-position= "top" label-width="120px">
-          <el-form-item :label='$t("dashboard.panel.chartForm.chartName")' prop="title">
+          <el-form-item :label='$t("dashboard.panel.chartForm.name")' prop="title">
             <el-input maxlength="64" show-word-limit size="small" v-model="editChart.name" id="chart-box-title"></el-input>
           </el-form-item>
           <el-form-item v-if="showPanel.type !== fromRoute.project && showPanel.type !== fromRoute.asset && showPanel.type !== fromRoute.endpoint && showPanel.type !== fromRoute.model && from!=='chartTemp'" :label="$t('dashboard.panel.title')" prop="panelName">
