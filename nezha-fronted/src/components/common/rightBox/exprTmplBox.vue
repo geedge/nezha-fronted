@@ -235,4 +235,7 @@ export default {
 /deep/ .metric-selector-title{
   margin-left: 0 !important;
 }
+/deep/ .query-row  .metric-selector-input-box {
+  width: calc(100% - 120px);
+}
 </style>

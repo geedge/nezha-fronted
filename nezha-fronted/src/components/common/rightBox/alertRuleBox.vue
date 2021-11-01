@@ -733,4 +733,7 @@ export default {
     text-overflow:ellipsis;
     white-space:nowrap
   }
+  /deep/ .query-row  .metric-selector-input-box {
+    width: calc(100% - 120px);
+  }
 </style>

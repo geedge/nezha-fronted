@@ -84,7 +84,7 @@
             </el-col>
             <el-col
               :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
-              :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 160px)':'100%',height: '100%',}">
+              :style="{height: '100%'}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
                 <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                 <el-input v-model="expressionList[index]" @input="metricKeyDown" type="textarea" :maxlength="styleType === 3 ? 512 : 4096" show-word-limit
