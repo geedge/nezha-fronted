@@ -94,6 +94,7 @@
               :id="scope.row[item.label].id"
               :that="scope.row[item.label]"
               :type="item.label"
+              :alert-table-dialog="true"
             ></alertLabel>
           </span>
         </template>
