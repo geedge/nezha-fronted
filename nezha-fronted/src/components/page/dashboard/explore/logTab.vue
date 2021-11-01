@@ -92,7 +92,7 @@
         <div v-else>&nbsp;</div>
       </template>
       <template v-else>
-        <div v-if="!loadingBottom" class="table-no-data">
+        <div v-if="loadingBottom" class="table-no-data">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#nz-icon-no-data-list"></use>
           </svg>
