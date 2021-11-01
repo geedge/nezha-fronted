@@ -103,7 +103,7 @@ const en = {
     importExcel: 'Import',
     importExcelLower: 'import',
     exportExcelLower: 'export',
-    rollbackImport: 'Rollback',
+    rollbackImport: 'Undo',
     exportCur: 'Current page',
     exportAll: 'All',
     importFile: 'Please upload file',
@@ -120,7 +120,12 @@ const en = {
       failed: 'Fail',
       success: 'Success',
       failedDetail: 'Failed Detail',
-      line: 'Line {0}:'
+      line: 'Line {0}:',
+      successNum: '{successNum} records imported successfully',
+      failedNum: '{failedNum} out of {total} records failed to import',
+      successfully: 'Import completed successfully!',
+      imported: 'You have imported',
+      records: 'records'
     },
     reset: 'Reset',
     submit: 'Save',
@@ -171,7 +176,8 @@ const en = {
     AuthenticationFailed: 'Authentication failed',
     clearAllSelect: 'Clear the selection',
     disabled: 'Disabled',
-    enabled: 'Enabled'
+    enabled: 'Enabled',
+    close: 'Close'
   },
   pageSize: '/page',
   setup: {

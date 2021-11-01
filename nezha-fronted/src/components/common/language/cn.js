@@ -122,7 +122,12 @@ const cn = {
       failed: '失败',
       success: '成功',
       failedDetail: '失败详情',
-      line: '第{0}行:'
+      line: '第{0}行:',
+      successNum: '{successNum} 条记录导入成功',
+      failedNum: '{total} 条记录中有 {failedNum} 条导入失败',
+      successfully: '导入成功完成!',
+      imported: '已导入',
+      records: '条记录'
     },
     reset: '重置',
     submit: '保存',
@@ -166,7 +171,8 @@ const cn = {
     AuthenticationFailed: '认证失败',
     clearAllSelect: '清除选择的内容',
     disabled: '已禁用',
-    enabled: '启用'
+    enabled: '启用',
+    close: '关闭'
   },
   setup: {
     step0: '欢迎',
