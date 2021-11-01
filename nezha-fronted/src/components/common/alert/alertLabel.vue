@@ -257,7 +257,8 @@ export default {
     type: {},
     // labelLoading:{},
     that: {},
-    detailList: Boolean
+    detailList: Boolean,
+    alertTableDialog: Boolean
   },
   /* watch:{
       labelLoading: {
@@ -332,6 +333,8 @@ export default {
       const self = this
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
+        const dialog = document.getElementsByClassName('el-dialog')[2] // 获取元素类名为 el-dialog的元素数组第二个
+        const dialogHeight = dialog.clientHeight // 获取元素窗口
         const leftOffSetView = this.detailList ? -80 : 10
         const topOffSetView = this.detailList ? 0 : 0
         const leftOffSet = this.detailList ? -80 : 10
@@ -341,6 +344,11 @@ export default {
           return {
             left: `${position.left + position.width + leftOffSet}px`,
             top: `${position.top - elHeight + topOffSet}px`
+          }
+        } else if (dialogHeight && this.alertTableDialog) { // dialogHeight 为获取的元素窗口,this.alertTableDialog // 为了判断是alertMessageTable页面使用的组件
+          return {
+            left: `${position.left + position.width - 40}px`,
+            top: `${position.top - 95}px`
           }
         } else {
           return {
