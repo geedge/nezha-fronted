@@ -80,7 +80,7 @@ export default {
       interLabel: '',
       theme: {
         themeColor: ''
-      }
+      },
       timer: ''
     }
   },
