@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="alert-message-list">
     <nz-data-list
       ref="dataList"
       :api="url"
@@ -1009,19 +1009,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-  .active{
-    border-bottom: 3px solid #fa901c;
-    color: #333;
-    cursor: default;
-    font-weight: bold;
-  }
-  .list-page /deep/ .main-container{
-    display: flex;
-    flex-direction: column;
-    /deep/ .nz-table2{
-      flex: 1;
-    }
-  }
-</style>

@@ -1,44 +1,5 @@
-<style scoped>
-  .chartBox {
-    float:left;
-    padding: 0 10px 10px 0;
-    position:relative;
-    box-sizing: border-box;
-  }
-  .no-data{
-    height: 1189px;
-    width: 100%;
-    position: relative;
-    .icon {
-      width: 5rem;
-      height: 5rem;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-top: -52px;
-      margin-left: -40px;
-      text-align: center;
-    }
-    .no-data-div {
-      position: absolute;
-      font-size: 16px;
-      color: #333333;
-      font-weight: 400;
-      margin-left: -29px;
-      top: 52.5%;
-      left: 50%
-    }
-  }
-  .list-width{
-    width: 100%;
-    //height: 100%;
-    padding: 0 10px 5px 10px;
-    box-sizing: border-box;
-    overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
-  }
-</style>
 <template>
-  <div class="list-width"  id="listContainer" ref="listContainer"><!--v-drag-->
+  <div id="listContainer" ref="listContainer" class="list-width charts__chart-list"><!--v-drag-->
 
     <draggable v-model="dataList" :disabled="panelLock" :move="move" @end="end" @start="start"
                :scroll-sensitivity="150"

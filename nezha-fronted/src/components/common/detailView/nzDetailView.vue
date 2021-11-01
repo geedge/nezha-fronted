@@ -182,12 +182,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  @import './detailView.scss';
-  .active{
-    color: #fa901c;
-  }
-  .nz-detail-view-no-data{
-    border-top: 1px solid #E7EAED;
-  }
-</style>

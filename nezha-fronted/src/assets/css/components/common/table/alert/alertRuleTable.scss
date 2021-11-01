@@ -20,11 +20,17 @@
   padding: 2px 6px;
 }
 .schedEnableTitle {
-  padding: 15px 20px;
+  padding: 20px 15px;
+  margin-right: 0;
+  left: 1995px !important;
+  background: $--background-color-empty;
+  border: 1px solid rgba(119,131,145,0.60);
+  box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
+  border-radius: 3px;
 }
 .schedEnableTitle .nz-icon-a-rilizhou, .schedEnableTitle .nz-icon-dingshishijian {
   font-size: 14px;
-  color: $--color-primary;
+  color: $--color-text-regular;
   margin-right: 12px;
 }
 .schedEnableTitle .week-item {

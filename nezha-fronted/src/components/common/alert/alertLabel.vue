@@ -177,7 +177,7 @@
         <div class="alert-label-title">{{$t('overall.state')}}</div>
         <div class="alert-label-value">
            <span style="width: auto">
-            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[0].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -189,7 +189,7 @@
             </span>
           </span>
           <span style="width: auto">
-            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
             <span v-if="alertLabelData && alertLabelData.configs[1].state === 0">
               <span class="active-icon red-bg inline-block"></span>
             </span>
@@ -401,110 +401,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-  .alert-label {
-    position: fixed;
-    background-color: white;
-    z-index: 3000;
-    padding: 10px 23px 10px 10px;
-    border-radius: 4px;
-    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
-  }
-  .alert-label__border {
-    background: #FFFFFF;
-    border: 1px solid #E7EAED;
-    box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
-    border-radius: 3px 3px 3px 3px 0 0;
-  }
-  .alert-labelUp {
-    position: fixed;
-    background-color: white;
-    z-index: 3000;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
-  }
-  .alert-label::after {
-    content: '';
-    display: block;
-    width:0;
-    height:0;
-    overflow: hidden;
-    font-size: 0;
-    line-height: 0;
-    /*border: 5px;*/
-    /*border-style: dashed solid dashed dashed;*/
-    /*border-color: transparent #fff transparent transparent;*/
-    position: absolute;
-    top: 20px;
-    left: 0;
-    transform: translate(-100%, -50%);
-  }
-  .alert-labelUp::after {
-    content: '';
-    display: block;
-    width:0;
-    height:0;
-    overflow: hidden;
-    font-size: 0;
-    line-height: 0;
-    /*border: 5px;*/
-    /*border-style: dashed solid dashed dashed;*/
-    /*border-color: transparent #fff transparent transparent;*/
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    transform: translate(-100%, -50%);
-  }
-  .alert-label-info{
-    /*border: 1px solid #ebeef5;*/
-    border-bottom: none;
-    font-size: 13px;
-    line-height: 26px;
-  }
-  .alert-label-box{
-    display: flex;
-    flex-direction: row;
-    /*border-bottom: 1px solid #ebeef5;*/
-  }
-  .alert-label-title{
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    line-height: 23px;
-    min-width: 110px;
-    padding: 0 3px 0 13px;
-  }
-  .alert-label-value{
-    height: 26px;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 23px;
-  }
-  .alert-label-remark {
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-    max-width: 210px;
-  }
-  .danger{
-    background-color: #d64f40;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  .success{
-    background-color: #50d050;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  /deep/.active-icon{
-    margin-top: 0;
-  }
-  .colorFA901C{
-    color: #fa901c;
-  }
-</style>

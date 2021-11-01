@@ -1,6 +1,15 @@
-.active {
-  border-bottom: 3px solid $--color-primary;
-  color: $--color-text-primary;
-  cursor: default;
-  font-weight: bold;
+.alert-message-list {
+  .active {
+    border-bottom: 3px solid $--color-primary;
+    color: $--color-text-primary;
+    cursor: default;
+    font-weight: bold;
+  }
+  .list-page .main-container{
+    display: flex;
+    flex-direction: column;
+    .nz-table2{
+      flex: 1;
+    }
+  }
 }

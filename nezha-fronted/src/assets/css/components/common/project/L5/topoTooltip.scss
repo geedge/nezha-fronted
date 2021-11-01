@@ -1,15 +1,15 @@
 .tooltip-box {
   background: $--background-color-empty;
-  box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.11);
+  box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   padding: 10px;
   max-height: 400px;
   min-height: 200px;
   height: 100%;
   box-sizing: border-box;
+  border: 1px solid $--border-color-light;
 
   .tooltip-box-chart {
-    border: 1px solid $--border-color-light;
     max-height: 400px;
     min-height: 200px;
     height: 100%;
@@ -38,6 +38,7 @@
       margin-top: 24px;
       padding-top: 5px;
       line-height: 16px;
+      border-top: 1px dashed $--border-color-base;
     }
   }
 
@@ -61,7 +62,6 @@
   .topology-tool-tip .topology-chart-title {
     margin-top: -23px;
     border-bottom: 1px dashed $--border-color-base;
-    padding-left: 0;
     margin-left: 10px;
     padding: 0;
     box-sizing: border-box;

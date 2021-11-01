@@ -39,6 +39,7 @@
     position: relative;
     padding: 0;
     background-color: $--background-color-empty;
+    overflow-y: hidden;
   }
 
   .sub-box .top-tools.top-tools--sub {

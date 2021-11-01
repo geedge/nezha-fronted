@@ -4,13 +4,11 @@
   font-size: 12px;
   line-height: 20px;
   border-radius: 4px;
-  display: inline-block;
+  display: inline-flex;
   box-sizing: content-box;
   .nz-alert-tag__label {
     border-radius: 3px 0 0 3px;
     padding: 0 4px;
-    min-width: 36px;
-    max-width: 100px;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -22,6 +20,7 @@
     margin-left: -1px;
   }
   .nz-alert-tag__content {
+    flex: 1;
     border-radius: 0 3px 3px 0;
     padding: 0 4px;
     min-width: 36px;
@@ -34,10 +33,10 @@
     display: inline-block;
   }
   .nz-alert-tag_normal {
-    border-color: #409eff;
+    border-color: $--color-text-link;
     .nz-alert-tag__label {
-      border-right: 1px solid #409eff;
-      background-color: #409eff;
+      border-right: 1px solid $--color-text-link;
+      background-color: $--color-text-link;
       color: white;
     }
   }

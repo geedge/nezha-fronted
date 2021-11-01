@@ -1,4 +1,5 @@
 @import './charts/chart.scss';
+@import './charts/chart-list.scss';
 @import './cli/webSSH.scss';
 @import './common/alert/alertLabel.scss';
 @import './common/alert/alertRuleInfo.scss';
@@ -19,6 +20,7 @@
 @import './common/popBox/selectAssetType.scss';
 @import './common/popBox/selectPanel.scss';
 @import './common/popBox/selectWalk.scss';
+@import './common/project/popData/Info.scss';
 @import './common/project/L5/popData/common.scss';
 @import './common/project/L5/CanvasContextMenu.scss';
 @import './common/project/L5/CanvasProps.scss';

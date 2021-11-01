@@ -124,7 +124,7 @@
               <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
             </div>
             <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics active" /> {{$t('project.endpoint.metrics')}} </span>
               <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
@@ -141,7 +141,7 @@
               <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
             </div>
             <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs active" /> {{$t('project.endpoint.logs')}} </span>
               <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
                 <span class="active-icon red-bg inline-block"></span>
               </span>
@@ -337,11 +337,6 @@ export default {
 }
 </script>
 <style scoped>
-  .endpoint-num{
-    padding: 0 3px;
-    cursor: pointer;
-    border-radius: 2px;
-  }
   .bagEF7458{
     background: #EF7458;
     color: #fff;
@@ -367,38 +362,13 @@ export default {
   .color23BF9A{
     color: #23BF9A;
   }
-  .endpoint-num, .alert-num{
-    cursor: pointer;
-  }
   .inline-block{
     display: inline-block;
   }
   .pointer{
     cursor: pointer;
   }
-  .state-box{
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid #E7EAED;
-    border-bottom: none;
-  }
-  .state-box-content{
-    padding: 0 5px;
-    width: 50%;
-    border-bottom: 1px solid #E7EAED;
-  }
-  .state-box-content:nth-of-type(odd){
-    border-right: 1px solid #E7EAED;
-  }
-  .state-content-text{
-    width:64px;text-align:left;margin-right: 5px;display: inline-block
-  }
-  .colorFA901C{
-    color: #fa901c;
-  }
   .endpoint-cell-left{
-    /*display: inline-block;*/
-    /*width: 70px;*/
     margin-right: 5px;
   }
 </style>
@@ -411,12 +381,6 @@ export default {
     position: absolute;
     right: 6px;
     top: 6px;
-  }
-  .data-column__endpoint {
-    background: #FFFFFF;
-    border: 1px solid #E7EAED;
-    box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
-    border-radius: 3px 3px 3px 3px 0 0;
   }
   .copy-value-content__pre {
     height: 200px;

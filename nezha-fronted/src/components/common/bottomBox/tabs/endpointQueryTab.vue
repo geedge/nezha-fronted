@@ -1,18 +1,14 @@
 <style scope>
-  .chart-bottom {
-    text-align: center;
-    margin-top: 16px;
-  }
-  .plTableBox.nz-table /deep/  .el-table{
-    display: block !important;
-  }
+.plTableBox.nz-table /deep/  .el-table{
+  display: block !important;
+}
 .project-calendar{
   margin-top: 2px;
 }
-  .control-icon-unchecked {
-    color: #999999;
-    cursor: not-allowed;
-  }
+.control-icon-unchecked {
+  color: #999999;
+  cursor: not-allowed;
+}
 </style>
 <style>
   .endpoint-dialog .el-dialog__body{

@@ -80,5 +80,8 @@
     width: calc(100% - 20px);
   }
 }
+.nz-detail-view-no-data {
+  border-top: 1px solid $--border-color-light;
+}
 
 

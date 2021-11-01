@@ -232,6 +232,3 @@ export default {
   left: 440px !important;
 }
 </style>
-<style scoped lang="scss">
-  @import '../detailList';
-</style>

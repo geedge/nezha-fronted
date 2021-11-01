@@ -6,6 +6,14 @@
   .log-table{
     position: relative;
     min-height: 200px;
+    .table-no-data {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -35px;
+      margin-left: -50px;
+      text-align: center;
+    }
   }
   .log-table .nz-table2 {
     padding: 10px 0 0 0;

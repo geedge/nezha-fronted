@@ -16,7 +16,7 @@
   line-height: 0;
   border: 5px;
   border-style: dashed solid dashed dashed;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent $--background-color-empty transparent transparent;
   position: absolute;
   top: 100px;
   left: 0;
@@ -47,7 +47,7 @@
   line-height: 0;
   border: 5px;
   border-style: dashed solid dashed dashed;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent $--background-color-empty transparent transparent;
   position: absolute;
   bottom: 95px;
   left: 0;
@@ -61,7 +61,6 @@
   box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
 }
 .alert-rule-info{
-  border: 1px solid $--border-color-light;
   border-bottom: none;
   font-size: 13px;
   line-height: 26px;

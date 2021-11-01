@@ -1214,32 +1214,30 @@ li {
 }
 .result-detail{
   height: 100px;
-  /*overflow-y: auto;*/
   margin-bottom: 20px;
 }
 .result-title-top{
-  font-family: Roboto-Regular;
   font-size: 14px;
-  color: #333333;
+  color: $--color-text-primary;
   letter-spacing: 0;
   font-weight: 400;
 }
 .nz-icon-import-success{
   margin-right: 5px;
-  color: #23BF9A ;
+  color: $--color-success;
   font-size: 14px;
-  background: #fff;
+  background: $--background-color-empty;
 }
 .nz-icon-import-failed {
   margin-right: 5px;
-  color: #EC7F66 ;
+  color: $--color-danger;
   font-size: 14px;
-  background: #fff;
+  background: $--background-color-empty;
 }
 .result-detail {
   opacity: 0.9;
-  background: #F6F8FA;
-  border: 1px solid #E7EAED;
+  background: $--background-color-base;
+  border: 1px solid $--border-color-light;
   border-radius: 2px;
   padding: 12px;
   margin-top: 10px;
@@ -1248,9 +1246,8 @@ li {
     display: flex;
     margin-bottom: 5px;
     .line-num {
-      font-family: Roboto-Medium;
       font-size: 14px;
-      color: #333333;
+      color: $--color-text-primary;
       letter-spacing: 0;
       line-height: 16px;
       font-weight: 600;
@@ -1258,16 +1255,14 @@ li {
     }
     .line-content{
       flex: 1;
-      font-family: Roboto-Black;
       font-size: 14px;
-      color: #666666;
+      color: $--color-text-regular;
       letter-spacing: 0;
       line-height: 16px;
       font-weight: 400;
       overflow: hidden;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }
@@ -1278,11 +1273,11 @@ li {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  color: #666666;
+  color: $--color-text-regular;
   letter-spacing: 0;
   font-weight: 600;
   .nz-icon-import-success {
-    color: #23BF9A;
+    color: $--color-success;
     font-size: 80px;
   }
   .result-success-txt{
@@ -1307,7 +1302,6 @@ li {
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  /*height:600px;*/
   max-height:calc(100% - 30px);
   max-width:calc(100% - 30px);
 }
