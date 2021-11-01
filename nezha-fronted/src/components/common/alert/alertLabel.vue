@@ -94,7 +94,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.remark')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
+        <div class="alert-label-value alert-label-remark">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
       </div>
     </div>
 
@@ -135,7 +135,7 @@
       </div>
       <div class="alert-label-box">
         <div class="alert-label-title">{{$t('overall.remark')}}</div>
-        <div class="alert-label-value">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
+        <div class="alert-label-value alert-label-remark">{{alertLabelData && alertLabelData.remark ? alertLabelData.remark : '--'}}</div>
       </div>
     </div>
 
@@ -441,7 +441,7 @@ export default {
     position: fixed;
     background-color: white;
     z-index: 3000;
-    padding: 10px;
+    padding: 10px 23px 10px 10px;
     border-radius: 4px;
     box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }
@@ -503,26 +503,25 @@ export default {
     /*border-bottom: 1px solid #ebeef5;*/
   }
   .alert-label-title{
-    font-family: Roboto-Regular;
     font-size: 14px;
     color: #666666;
     letter-spacing: 0;
     line-height: 23px;
-    font-weight: 400;
-    min-width: 100px;
+    min-width: 110px;
     padding: 0 3px 0 13px;
-    min-width: 100px;
   }
   .alert-label-value{
     height: 26px;
-    ont-family: Roboto-Regular;
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
     line-height: 23px;
-    font-weight: 400;
-    padding: 0 3px 0 13px;
-    word-break: break-all;
+  }
+  .alert-label-remark {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    max-width: 210px;
   }
   .danger{
     background-color: #d64f40;
