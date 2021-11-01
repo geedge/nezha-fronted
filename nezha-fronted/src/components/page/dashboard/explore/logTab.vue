@@ -170,7 +170,7 @@ export default {
         {
           type: 'unknown',
           keywords: [],
-          color: '#dde4ed'
+          color: '#B4C7DE'
         }
       ],
       tableData: [],
