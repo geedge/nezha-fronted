@@ -1,6 +1,3 @@
-<style lang="scss">
-@import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -291,13 +288,3 @@ export default {
   }
 }
 </script>
-<style>
-  .center-content .content-static-url{
-    font-weight: bold;
-    font-size: 24px;
-  }
-  .center-content .content-static-tip{
-    font-size: 18px;
-    color: lightgrey;
-  }
-</style>

@@ -1,7 +1,6 @@
 // import '@/assets/stylus/index.scss'
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
 import 'xterm/dist/xterm.css'
-import '@/assets/stylus/main.scss'
 import '@/assets/css/main.scss'
 import ElementUI from 'element-ui'
 import i18n from './components/common/i18n'
@@ -31,7 +30,6 @@ import MyElSelect from './components/common/elSelect/MyElSelect'
 import loading from '@/components/common/loading'
 import pickTime from '@/components/common/pickTime'
 import bus from '@/libs/bus'
-import theme from '@/assets/css/theme.scss'
 import myDatePicker from '@/components/common/myDatePicker'
 import vSelectPage from '@/components/common/v-selectpagenew'
 import nzDataList from '@/components/common/table/nzDataList'
@@ -92,8 +90,7 @@ Vue.mixin({
         delete: false,
         refresh: false,
         query: false
-      },
-      theme: theme // scss主题变量
+      }
     }
   },
   methods: {
@@ -188,7 +185,7 @@ Vue.mixin({
     getButtonList () {
       return this.$store.state.buttonList
     },
-    $routePath: function () {
+    $routePath () {
       return this.$route.path
     }
   }

@@ -1,0 +1,110 @@
+.multiple-time-box {
+  .loading-font {
+    color: #232f3e !important;
+  }
+  .popper-z-index {
+    z-index: 3000 !important;
+  }
+  .nz-dashboard-dropdown-bg {
+    background: $--color-primary;
+    color: #fff;
+  }
+  .calendar-dropdown-title {
+    line-height: 28px;
+    padding-left: 5px;
+    margin-left: 0;
+    margin-top: -3px !important;
+    text-align: left;
+    border-radius: 2px;
+    min-width: 80px;
+    height: 28px;
+    border: solid 1px $--border-color-base;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+  }
+  .calendar-popover {
+    line-height: 22px;
+    text-align: center;
+  }
+  .panel-time-picker-hidden {
+    width: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    height: 0 !important;
+    overflow: hidden;
+  }
+  .time-picker-button {
+    padding: 0 1px !important;
+    height: 24px !important;
+    margin-top: 0 !important;
+  }
+
+  .time-picker-left-button {
+    margin-right: 4px;
+  }
+
+  .time-picker-right-button {
+    margin-left: 4px;
+  }
+  .calendar-popover-text {
+  }
+  .multiple-time-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .compare-box .nz-icon-compare {
+    border-right: none;
+  }
+  .calendar {
+    border: none;
+    box-sizing: content-box;
+    line-height: unset;
+    height: 100%;
+    margin-left: -6px;
+    margin-right: 10px;
+  }
+  .nz-icon-compare {
+    background: $--background-color-empty;
+    border: 1px solid $--border-color-base;
+    border-radius: 2px;
+    padding: 6px 8px;
+  }
+  .multiple-time-datepicker-enter-active {
+    animation: bounce-in .5s;
+  }
+  .multiple-time-datepicker-leave-active {
+    animation: bounce-in .5s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      width: 0;
+      overflow: hidden;
+    }
+    100% {
+      width: 125px;
+      overflow: hidden;
+    }
+  }
+}
+.panel-time-picker-popper[x-placement^=bottom] .popper__arrow {
+  left: 85% !important;
+}
+
+.panel-time-picker-popper .el-date-table td.today span {
+  color: #232f3e !important;
+}
+
+.panel-time-picker-popper .el-picker-panel__footer button:nth-child(1){
+  display:none;
+}
+
+.dropdown--suffix {
+  padding: 0 8px;
+  color: #aaa;
+}

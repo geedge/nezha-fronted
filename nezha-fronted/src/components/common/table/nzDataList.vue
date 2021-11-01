@@ -194,8 +194,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .active{
-    color: #fa901c;
-  }
-</style>

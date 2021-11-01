@@ -19,16 +19,6 @@
           </ul>
         </transition>
       </button>
-<!--      <el-popover v-model="visible" placement="bottom-start" :width="50" trigger="click" popper-class="interval-refresh-popover" >
-        <ul class="popover_ul">
-          <li v-for="i in $CONSTANTS.intervalList" :style="{color:interval == i.value ? '#31749C' : ''}" :key="i.value + i.label" @click="selectInterval(i)">
-            {{i.label}}
-          </li>
-        </ul>
-        <button type="button" class="top-tool-btn" slot="reference">
-          <span v-if="interval.value && interval.value != -1">{{interval.label}}</span><i class="nz-icon nz-icon-arrow-down" style="font-size: 14px"></i>
-        </button>
-      </el-popover>-->
     </div>
   </div>
 </template>
@@ -87,7 +77,10 @@ export default {
       interval: -1,
       unit: 2,
       dropdownShow: false,
-      interLabel: ''
+      interLabel: '',
+      theme: {
+        themeColor: ''
+      }
     }
   },
   created () {
@@ -165,7 +158,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .interval-refresh {
   display: flex;
 }

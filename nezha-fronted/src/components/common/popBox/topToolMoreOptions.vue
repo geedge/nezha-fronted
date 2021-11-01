@@ -394,15 +394,6 @@ export default {
     formatNum (num) {
       return num > 9 ? num : '0' + num
     }
-    // getParamsType () {
-    //   const path = this.$route.path
-    //   switch (path) {
-    //     case '/panel': this.paramsType = 'dashboard'; break
-    //     case '/asset': this.paramsType = 'asset'; break
-    //     case '/monitor/endpoint': this.paramsType = 'endpoint'; break
-    //     default: this.paramsType = ''; break
-    //   }
-    // }
   },
   watch: {
     panelLock: {
@@ -414,7 +405,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

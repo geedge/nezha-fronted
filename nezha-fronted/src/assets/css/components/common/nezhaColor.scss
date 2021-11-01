@@ -1,0 +1,97 @@
+.nz-color {
+  .vc-sketch-field--single, .vc-sketch-field .vc-input__label {
+    display: none;
+  }
+  .vc-sketch-color-wrap {
+    margin-left: 16px;
+  }
+  .vc-sketch-presets {
+    line-height: 24px;
+  }
+  .vc-sketch-presets-color {
+    margin: 0 7px 0 0;
+  }
+  .vue-color {
+    position: fixed;
+    z-index: 1;
+  }
+
+  .color-content {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 15px;
+    left: 66px;
+  }
+  .color-tab {
+    height: 28px;
+    line-height: 28px;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid $--border-color-light;
+    border-bottom: none;
+    background-color: $--background-color-empty;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    z-index: 2;
+  }
+  .color-tab div {
+    text-align: center;
+    flex: 1;
+    color: $--color-text-secondary;
+    transition: all .3s cubic-bezier(.645, .045, .355, 1);
+    background: $--background-color-1;
+    cursor: pointer;
+    border-top: 2px solid transparent;
+  }
+  .color-tab div:hover {
+    color: $--color-primary;
+  }
+  .color-tab .color-active {
+    background-color: $--background-color-empty;
+    font-size: 14px;
+    color: $--color-primary;
+    font-weight: 700;
+    border-color: $--color-primary;
+  }
+
+  .color {
+    position: relative;
+  }
+
+  .color-show {
+    border: 1px solid $--border-color-light;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+
+  .color-show .color-text {
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: $--color-text-primary;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .color-show-left {
+    width: 18px;
+    height: 18px;
+    border: 1px solid $--border-color-light;
+    border-radius: 5px;
+    margin: 0 5px;
+    text-align: center;
+  }
+
+  .color-arrows {
+    color: #C0C4CC;
+    position: absolute;
+    right: 12px;
+  }
+
+  .color-arrows .nz-icon {
+    font-size: 12px;
+  }
+}

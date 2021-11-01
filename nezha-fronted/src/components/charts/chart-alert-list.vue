@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize" :id="id">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -83,7 +80,6 @@
             <div class="float-right panel-calendar dialog-tool">
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :show-time-picker="false" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="alert-chart"></pick-time>
             </div>
-<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <alertMessageTable
             :id="'tableContainer'+chartIndex"
@@ -826,14 +822,10 @@ export default {
         // this.showLoadingScreen = false;
         this.$refs['localLoadingScreen' + this.chartIndex].endLoading()
       } else {
-        // this.showLoading = false;
         this.$refs['localLoading' + this.chartIndex].endLoading()
       }
     },
     resize (chartItem) {
-      const deHeight = this.$chartResizeTool.titleHeight + this.$chartResizeTool.chartTableBlankHeight
-      // const container = document.querySelector('#chartTableDiv' + this.chartIndex + ' .table-container')
-      // container.style.height = `calc(100% - ${deHeight}px)`
       this.tableHeight = 'calc(100% - 34px)'
     },
     showLoad (chartItem) {

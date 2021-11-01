@@ -13,15 +13,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.container {
-  box-sizing: border-box;
-  height: calc(100% - 50px);
-  background-color: #f6f6f6;
-  width: 100%;
-  &>div {
-    height: 100%;
-  }
-}
-</style>

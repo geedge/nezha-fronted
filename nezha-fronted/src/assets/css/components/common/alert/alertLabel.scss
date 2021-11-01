@@ -1,0 +1,65 @@
+.alert-label, .alert-labelUp {
+  position: fixed;
+  background-color: $--background-color-empty;
+  z-index: 3000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+
+  .alert-label-info{
+    border: 1px solid $--border-color-light;
+    border-bottom: none;
+    font-size: 13px;
+    line-height: 26px;
+  }
+  .alert-label-box{
+    display: flex;
+    justify-content:space-between;
+    border-bottom: 1px solid $--border-color-light;
+  }
+  .alert-label-title{
+    text-align: left;
+    width: 110px;
+    border-right: 1px solid $--border-color-light;
+    color: $--color-text-regular;
+    padding: 0 3px 0 13px;
+  }
+  .alert-label-value{
+    text-align: left;
+    width: 150px;
+    color: #1a1a1a;
+    padding: 0 3px 0 13px;
+    word-break: break-all;
+  }
+  .danger{
+    background-color: $--color-danger;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .success{
+    background-color: $--color-success;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .active-icon{
+    margin-top: 0;
+  }
+}
+.alert-label::after, .alert-labelUp::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed solid dashed dashed;
+  border-color: transparent #fff transparent transparent;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  transform: translate(-100%, -50%);
+}

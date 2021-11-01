@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>

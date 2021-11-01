@@ -231,7 +231,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 /deep/ .metric-selector-title{
   margin-left: 0 !important;
 }

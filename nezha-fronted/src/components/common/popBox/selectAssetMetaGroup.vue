@@ -28,10 +28,6 @@
                   <span slot="reference">{{ node.label }}</span>
                 </el-popover>
               </span>
-<!--              <span class="tree&#45;&#45;operation">-->
-<!--                <span class="panel-dropdown-btn panel-dropdown-btn-delete" @click.stop="del(data)"><i class="nz-icon nz-icon-delete"></i></span>-->
-<!--                <span class="panel-dropdown-btn" @click.stop="edit(data)"><i class="nz-icon nz-icon-edit"></i></span>-->
-<!--              </span>-->
               <el-row class="block-col-2" style="width: 35px;">
                 <el-col>
                   <el-dropdown placement="bottom-end" trigger="click">
@@ -119,66 +115,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.movable {
-  .el-tree-node__content {
-    cursor: move;
-    .tree--node>span:first-of-type {
-      cursor: pointer;
-    }
-    .tree--node>span:last-of-type>span {
-      cursor: pointer;
-    }
-  }
-}
-.tree--node>span:last-of-type>span>i {
-  font-weight: normal !important;
-}
-.select-panel-tree {
-  height: 350px;
-  overflow: auto;
-}
-.select-panel-tree .el-tree-node__content {
-  height: 34px;
-  line-height: 34px;
-}
-.select-panel-tree .el-tree-node__content:hover {
-  color: $global-text-color-active;
-}
-.select-panel-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
-  background-color: #F5F7FA;
-  font-weight: bold;
-  color: $global-text-color-active;
-}
-.tree--node {
-  display: flex;
-  justify-content: space-between;
-  width: calc(100% - 28px);
-}
-.tree--node span:nth-of-type(1) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: break-word;
-}
-.tree--operation {
-  opacity: 0;
-}
-.tree--node:hover .tree--operation {
-  opacity: 1;
-}
-.panel-dropdown-btn {
-  color: #60BEFF;
-}
-.panel-dropdown-btn:hover {
-  color: #409EFF;
-}
-.panel-dropdown-btn-delete {
-  color: #F98D9A;
-}
-
-.panel-dropdown-btn-delete:hover {
-  color: #D96D7A;
-}
-</style>

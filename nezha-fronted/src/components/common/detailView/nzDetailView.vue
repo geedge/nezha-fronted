@@ -1,5 +1,5 @@
 <template>
-  <div :class="from" class="list-page">
+  <div :class="from" class="list-page detail-view">
     <!-- 主页面 -->
     <div class="main-list">
       <!-- 顶部工具栏 -->
@@ -178,9 +178,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  @import './detailView.scss';
-  .active{
-    color: #fa901c;
-  }
-</style>

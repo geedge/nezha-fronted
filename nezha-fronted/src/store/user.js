@@ -3,6 +3,7 @@ import router from '../router'
 import bus from '../libs/bus'
 import { sortByOrderNum } from '../permission'
 import moment from 'moment-timezone'
+import { theme } from '@/components/common/js/constants'
 
 const user = {
   state: {
@@ -45,6 +46,12 @@ const user = {
         localStorage.setItem('nz-sys-logo', res.data.systemLogo)
       }
       localStorage.setItem('nz-sys-timezone', res.data.timezone)
+
+      const currentTheme = res.data.user.theme ? theme.find(t => t.value === res.data.user.theme).label : 'light'
+      localStorage.setItem(`nz-user-${res.data.user.id}-theme`, currentTheme)
+      const body = document.getElementsByTagName('body')[0]
+      body.setAttribute('class', `theme-${currentTheme}`)
+
       localStorage.setItem('timezoneOffset', moment.tz(res.data.timezone).format('Z'))
       localStorage.setItem('nz-sys-default-cabinet-usize', res.data.defaultCabinetUsize)
       localStorage.setItem('nz-sys-max-terminal-num', res.data.maxTerminalNum)
@@ -67,11 +74,11 @@ const user = {
       })
       get('/sys/user/profile').then(response => {
         if (response.code === 200) {
-          const userList = response.user
+          const user = response.user
           // 保存当前用户的 userId
-          localStorage.setItem('nz-user-id', userList.id)
+          localStorage.setItem('nz-user-id', user.id)
           // 保存当前用户 name
-          localStorage.setItem('nz-user-name', userList.name)
+          localStorage.setItem('nz-user-name', user.name)
         }
       })
     },

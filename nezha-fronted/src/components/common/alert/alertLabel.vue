@@ -156,46 +156,8 @@ export default {
   props: {
     id: {},
     type: {},
-    // labelLoading:{},
     that: {}
   },
-  /* watch:{
-      labelLoading: {
-        immediate: true,
-        handler(n) {
-          if(this.type==='asset'){
-            this.$get('/asset/info?id='+this.id).then((res)=>{
-              if(res.msg==='success'){
-                this.loading=false;
-                this.alertLabelData=res.data.Basic;
-              } else{
-                this.$message.error(res.msg);
-              }
-            })
-          }
-          if(this.type==='project'){
-            this.$get('/project/info?id='+this.id).then((res)=>{
-              if(res.msg==='success'){
-                this.loading=false;
-                this.alertLabelData=res.data.basic;
-              } else{
-                this.$message.error(res.msg);
-              }
-            })
-          }
-          if(this.type==='module'){
-            this.$get('/module?id='+this.id).then((res)=>{
-              if(res.msg==='success'){
-                this.loading=false;
-                this.alertLabelData=res.data.list[0];
-              } else{
-                this.$message.error(res.msg);
-              }
-            })
-          }
-        }
-      }
-    }, */
   data () {
     return {
       alertLabelData: null,
@@ -323,102 +285,7 @@ export default {
         return this.$t('asset.notInStock')
       }
     }
-  },
-  mounted () {},
-  beforeDestroy () {
-
   }
 }
 
 </script>
-
-<style scoped>
-  .alert-label {
-    position: fixed;
-    background-color: white;
-    z-index: 3000;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
-  }
-  .alert-labelUp {
-    position: fixed;
-    background-color: white;
-    z-index: 3000;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
-  }
-  .alert-label::after {
-    content: '';
-    display: block;
-    width:0;
-    height:0;
-    overflow: hidden;
-    font-size: 0;
-    line-height: 0;
-    border: 5px;
-    border-style: dashed solid dashed dashed;
-    border-color: transparent #fff transparent transparent;
-    position: absolute;
-    top: 20px;
-    left: 0;
-    transform: translate(-100%, -50%);
-  }
-  .alert-labelUp::after {
-    content: '';
-    display: block;
-    width:0;
-    height:0;
-    overflow: hidden;
-    font-size: 0;
-    line-height: 0;
-    border: 5px;
-    border-style: dashed solid dashed dashed;
-    border-color: transparent #fff transparent transparent;
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    transform: translate(-100%, -50%);
-  }
-  .alert-label-info{
-    border: 1px solid #ebeef5;
-    border-bottom: none;
-    font-size: 13px;
-    line-height: 26px;
-  }
-  .alert-label-box{
-    display: flex;
-    justify-content:space-between;
-    border-bottom: 1px solid #ebeef5;
-  }
-  .alert-label-title{
-    text-align: left;
-    width: 110px;
-    border-right: 1px solid #ebeef5;
-    color: #666;
-    padding: 0 3px 0 13px;
-  }
-  .alert-label-value{
-    text-align: left;
-    width: 150px;
-    color: #1a1a1a;
-    padding: 0 3px 0 13px;
-    word-break: break-all;
-  }
-  .danger{
-    background-color: #d64f40;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  .success{
-    background-color: #50d050;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  /deep/.active-icon{
-    margin-top: 0;
-  }
-</style>

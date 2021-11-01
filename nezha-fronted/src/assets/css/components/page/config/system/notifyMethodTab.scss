@@ -1,0 +1,29 @@
+.notify-method-tab {
+  .notify-table{
+    height:  calc(100% - 110px)
+  }
+  .notify-table .el-table{
+    height: calc(100% - 10px) !important;
+  }
+  .notificationMessage{
+    margin-left: 20px;
+    display: flex;
+    width: calc(100% - 39px);
+    background: $--background-color-base;
+    color: $--color-text-secondary;
+    margin-bottom: 10px;
+    font-size: 14px;
+    justify-content: left;
+    justify-items: center;
+    align-items: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .notificationMessage .nz-icon {
+    font-size: 20px;
+  }
+  .notificationMessage .more{
+    font-size: 14px;
+    cursor: pointer;
+  }
+}

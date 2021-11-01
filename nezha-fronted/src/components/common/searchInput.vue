@@ -1315,9 +1315,6 @@ export default {
     },
     // 点击选择 搜索类型
     select_name (val, ind, id, type, label, disabled, readonly, e) {
-      // if(id==43||id==45||id==48){  //根据id判断是否开启ip验证
-      //     this.select_conditionsName=true
-      // }
       if (type == 'input') {
         this.downBool = true
       } else {
@@ -1326,10 +1323,6 @@ export default {
       this.no_condition = ''
       this.searchMsg.zheze_none = false
       if (!disabled) {
-        // 下标为0 不再直接执行查询
-        // if (ind == 0) {
-        //   this.select()
-        // } else
         if (id == 7) {
           this.searchLabelList.splice(ind, 1)
           this.select_list.push({
@@ -1356,30 +1349,10 @@ export default {
           this.sreach_num = this.select_list.length - 1
           this.input_list = !this.input_list
           setTimeout(document.getElementById('sreach_input').focus(), 500)
-          /* this.searchLabelList.forEach(val=>{
-                    if(val.id==30||val.id==31||val.id==32||val.id==33){
-                      val.disabled = true
-                    }
-                  })
-
-                }else if(id==30||id==31||id==32||id==33){
-                  this.searchLabelList.splice(ind, 1)
-                  this.select_list.push({
-                    name: val,
-                    id:id,
-                    type:type,
-                    label:label,
-                    disabled:disabled
-                  }) */
           this.change_sreach_show = false
           this.sreach_num = this.select_list.length - 1
           this.input_list = !this.input_list
-          setTimeout('document.getElementById("sreach_input").focus()', 500)
-          /* this.searchLabelList.forEach(val=>{
-                    if(val.id==29){
-                      val.disabled = true
-                    }
-                  }) */
+          setTimeout(document.getElementById('sreach_input').focus(), 500)
         } else {
           this.searchLabelList.splice(ind, 1)
           this.select_list.push({
@@ -1459,8 +1432,6 @@ export default {
     if (this.position) {
       this.where = this.$route.path + this.position
     }
-    /* this.defaultItem ? this.select_list.push({name:this.defaultItem,label:this.defaultItem}) : '';
-            this.defaultValue != '' ? this.no_condition=this.defaultValue:''; */
     this.restructure_historyDate()
     setTimeout(() => {
       if (this.$route.path === '/asset') {
@@ -1486,9 +1457,6 @@ export default {
       }
     }, 1000)
     JSON.parse(JSON.stringify(this.searchMsg.searchLabelList)).forEach(val => {
-      // if (val.name == 'Protocol') {
-      //   this.schemaTypeSelect = val.doc.data
-      // }
       if (val.prop == 'common_action') {
         this.actionSelect = val.doc.data
       }
@@ -1509,354 +1477,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.search-btn {
-  height: 30px;
-  width: 32px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  border-left: 1px solid $--primary-border-color;
-  background-color: #F9F9F9;
-
-  i {
-    color: #666;
-    font-size: 14px;
-  }
-}
-.search-btn:focus:not(.nz-btn-disabled) {
-  background-color: $btn-light-background-color-hover;
-  i {
-    color: $btn-normal-background-color-new;
-  }
-}
-.search-input-placeholder{
-  font-size: 12px;
-  color: #999999;
-  position: absolute;
-  left: 7px;
-}
-.top-tools input {
-  background-color: white;
-}
-    .new-search{
-      display: flex;
-      position: relative;
-      line-height: 25px;
-      border-radius: 2px;
-      border: 1px solid $--primary-border-color;
-    }
-    .new-search .search-input-all{
-        width: 226px !important;
-        min-width: 226px;
-        background-color: white;
-        color: rgba(0,0,0,.55);
-        height: 30px;
-        line-height: 30px;
-        border-bottom-left-radius: 2px;
-        border-top-left-radius: 2px;
-        display: flex;
-        position: relative;
-    }
-    input {
-        background-color: $content-right-background-color;
-    }
-    .search-input-all .btn-retract{
-        padding: 0 4px;
-        text-align: center;
-    }
-    .search-input-all .search-history{
-        padding: 0px 7px;
-        height: 18px;
-        line-height: 18px;
-        text-align: center;
-        border-right: 1px solid #e5e5e5;
-        margin-top: 6px;
-        position: relative;
-    }
-    .search-input-all .input-center-box{
-        flex: 1;
-        height: 100%;
-        overflow: hidden;
-    }
-    .search-input-all .clear-search{
-        padding: 0 5px;
-        text-align: center;
-        font-size: 12px;
-    }
-    .dataBackG{
-        background: #f0f0f0;
-    }
-    .none{
-        display: none !important;
-    }
-    .search-text{
-        display: inline-block;
-        margin-right: 20px;
-    }
-    .sreach_box{
-        position: relative;
-        width: 80%;
-        height: 25px;
-        padding: 20px;
-        background: #fff;
-        margin: 200px auto;
-    }
-    .keyring_sreach_right_btn{
-        width: 18%;
-        height: 25px;
-        float: right;
-        line-height: 25px;
-        text-align: center;
-        border: 1px solid #dfdfdf;
-    }
-    .keyring_sreach_right_btn .right-btn-group{
-        float: left;
-        width: 80%;
-        border-right: 1px solid #dfdfdf;
-        box-sizing: border-box;
-    }
-    .keyring_sreach_right_btn .right-btn-icon{
-        float: left;
-        width: 19%;
-    }
-    .sreach_box .close_zhezhao{
-        position: absolute;
-        right: 0;
-        top: -50px;
-        width: 24px;
-        height: 25px;
-        border-radius: 50%;
-        background: #fff;
-        text-align: center;
-        line-height: 28px;
-        font-size: 12px;
-    }
-
-    .localStorage_list_box{
-        position: absolute;
-        left: 10px;
-        top: 36px;
-        width: auto;
-        min-width:250px;
-        max-width: 350px;
-        height: auto;
-        border: 1px solid #dfdfdf;
-        background: #fff;
-        color: #2e2e2e;
-        text-align: left;
-        border-radius: 3px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 9999;
-        font-size: 12px;
-    }
-    .localStorage_list_box .list_box_title{
-        width: 100%;
-        height: 40px;
-        line-height: 40px;
-        line-height: 40px;
-        text-align: center;
-        position: relative;
-        border-bottom: 1px solid #dfdfdf;
-        color: #2e2e2e;
-    }
-    .localStorage_list_box .list_box_title i{
-        position: absolute;
-        right: 10px;
-        top: 0px;
-    }
-    .localStorage_list_box .list_box_content{
-      text-align: left;
-      padding: 5px 0;
-      box-sizing: border-box;
-      border-bottom: 1px solid #dfdfdf;
-    }
-    .localStorage_list_box ul li{
-      padding: 5px 10px;
-      line-height: 20px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    .localStorage_list_box ul li:hover{
-        background: #f0f0f0;
-        cursor:pointer;
-    }
-
-    .localStorage_list_box ul li span{
-        color: #2e2e2e;
-    }
-    .localStorage_list_box ul li .value{
-      font-weight: 600;
-      width: 350px;
-    }
-    .localStorage_list_box .list_box_clear{
-        padding-left: 10px;
-        line-height: 40px;
-    }
-    .localStorage_list_box .list_box_clear:hover{
-        background: #f0f0f0;
-        cursor:pointer;
-    }
-    .input-center-box .sreach_fixe_left{
-        width: auto;
-        display: flex;
-        height: 100%;
-        min-width: 100%;
-    }
-    .sreach_list{
-        display: flex;
-        justify-content:flex-start;
-        height: 100%;
-        padding-left: 10px;
-    }
-    .sreach_fixe_left .selectinfo_box{
-        display: flex;
-        flex-shrink: 0;
-        width: auto;
-        height: auto;
-        margin: 3px 2px;
-        font-size: 12px;
-    }
-    .selectinfo_box .select_condition{
-        float:left;
-        height: 13px;
-        padding: 3px;
-        background:#f8f8f8;
-        line-height: 13px;
-        color: rgba(0,0,0,.55);
-    }
-    .selectinfo_box .select_content{
-        float: left;
-        line-height: 13px;
-        height: 13px;
-        padding: 3px;
-        background: #f0f0f0;
-        color: rgba(0,0,0,0.85);
-        display: flex;
-    }
-    .selectinfo_box .select_content .nz-icon-close{
-      font-size: 12px;
-    }
-    .selectinfo_box .select_content>span {
-      max-width: 100px;
-      display: inline-block;
-      white-space: nowrap;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    .select_input{
-        height: 100%;
-        flex: 1;
-        float: left;
-        width: 100px;
-    }
-    .select_input input{
-        width: calc(100% - 1px);
-        height: 100%;
-        border: none;
-        float: left;
-        padding-left: 5px !important;
-        box-sizing: border-box;
-        outline: none;
-    }
-    .select_input input:focus {
-        border:none;
-        box-shadow:none;
-        outline: none;
-    }
-    .select_input .select_info_list{
-        position: fixed;
-        /*left: 100px;
-        top: 36px;*/
-        width: auto;
-        max-height: 240px;
-        padding: 5px 0;
-        background: #fff;
-        border: 1px solid #e5e5e5;
-        border-radius: 3px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        overflow-y: auto;
-        z-index: 9999;
-        /*right: 139px;*/
-    }
-    .select_info_list ul li{
-        padding: 5px 10px;
-        line-height: 20px;
-        text-overflow: ellipsis;
-        width: 150px;
-        word-break: break-all;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    .select_info_list ul li:hover{
-        background: #f0f0f0;
-        cursor: pointer;
-    }
-    .sreach_input .input{
-        flex: 1;
-        height: 100%;
-        padding-left: 10px !important;
-        box-sizing: border-box;
-        position: relative;
-    }
-    .sreach_input .input input{
-        width: 100%;
-        height: 100%;
-        border: none;
-        padding: 0 !important;
-        float: left;
-    }
-    .sreach_box input:focus {
-        outline: none;
-        border-color: transparent;
-        box-shadow: none;
-    }
-    .sreach_input input::placeholder{
-        color: rgba(0,0,0,0.55)
-    }
-    .input_list{
-        position: fixed;
-        /*left: 47px;
-        top: 36px;*/
-        width: auto;
-        max-width: 400px;
-        max-height: 240px;
-        min-width: 300px;
-        background: #fff;
-        border-radius: 3px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 101;
-        overflow-y: auto;
-        font-size: 12px;
-    }
-    .input_list ul{
-        padding: 4px 0;
-    }
-    .input_list ul li{
-        padding: 4px 10px;
-        line-height: 16px;
-        height: 20px;
-    }
-    .input_list ul li:hover{
-        background: #f0f0f0;
-        cursor:pointer;
-    }
-    .search-style-ind{
-        background: #f0f0f0;
-        cursor:pointer;
-    }
-    .sreach_fixe>i{
-        margin-right: 15px;
-    }
-    .is-disabled{
-        color: #C0C4CC;
-        cursor: not-allowed !important;
-        background: #fff !important;
-    }
-    li {
-        list-style: none;
-    }
-</style>

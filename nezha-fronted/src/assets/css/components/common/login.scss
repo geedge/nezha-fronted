@@ -1,0 +1,295 @@
+.login {
+  .model {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(130, 130, 135, 0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .logo {
+    z-index: 2;
+    width: 392px;
+    img{
+      width: 100%;
+    }
+  }
+  .login-main {
+    z-index: 2;
+    background: rgba(106,106,106,0.5);
+    border-radius: 8px;
+    padding: 55px 50px 0 50px;
+  }
+  .login-box {
+    z-index: 2;
+    width: 392px;
+    .login-label{
+      font-size: 22px;
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+    .login-label-foot{
+      font-size: 14px;
+      color: #DEDEDE;
+      line-height: 20px;
+      font-weight: 500;
+      word-break: keep-all;
+      width: 90%;
+    }
+  }
+
+  .login-box .login-input {
+    padding: 12px 0;
+    height: 46px;
+    position: relative;
+  }
+  .login-box .login-input .nz-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 20px;
+  }
+  .login-box .login-input input {
+    height: 100%;
+    width: calc(100% - 60px);
+    background-color: rgba(0, 0, 0, 0.55);
+    padding-left: 60px;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    color: white;
+    border-radius: 4px;
+  }
+
+  .login-foot {
+    padding-top: 15px;
+    display: flex;
+    width: 392px;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .login-btn {
+    color: white;
+    border-radius: 2px;
+    background-color: mix(white, #FA901C, 20%);
+    border: none;
+    outline: none;
+    height: 44px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all linear .2s;
+  }
+  .login-btn:not(.nz-btn-disabled):hover {
+    background-color: mix(white, #FA901C, 30%);
+  }
+
+  .login-foot-lang {
+    position: relative;
+    cursor: pointer;
+    background: rgba(0,0,0,0.25);
+    border-radius: 4px;
+    padding: 0 14px;
+  }
+  .login-foot-lang .nz-icon:not(.nz-icon-arrow-up):not(.nz-icon-arrow-down) {
+    font-size: 30px;
+    color: white;
+    margin-right: 30px;
+    line-height: 45px;
+  }
+  .login-foot-lang-list {
+    position: absolute;
+    height: 25px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.55);
+    top: 70px;
+    right: 0;
+    border-radius: 4px;
+  }
+  .login-foot-lang-list .nz-icon {
+    font-size: 25px;
+    color: white;
+    cursor: pointer;
+  }
+  .login-foot .el-loading-spinner {
+    width: 36px;
+    height: 36px;
+  }
+  .login-foot-lang-list::before {
+    content: " ";
+    width: 0;
+    height: 0;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.55) transparent;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .login-foot-buildOn{
+    position: absolute;
+    bottom: 20px;
+    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    a{
+      font-size: 14px;
+      color: #eee;
+      text-shadow: 1px 1px 3px #333;
+      text-decoration: none;
+    }
+  }
+  .nz-icon-arrow-down, .nz-icon-arrow-up {
+    position: absolute;
+    font-size: 18px;
+    color: white;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+  }
+  .login-license{
+    margin-top: 40px;
+    text-align: center;
+    line-height: 30px;
+    .license-warn{
+      color: #d92926;
+      text-shadow: 1px 1px 3px #ddd;
+    }
+    .license-info {
+      margin-bottom: 10px;
+      color: white;
+      text-shadow: 1px 1px 3px #333;
+      white-space: nowrap;
+    }
+    .login-btn{
+      height: 40px;
+      width: auto;
+      padding: 0 20px;
+    }
+  }
+  .login-dialog-title{
+    background: #F9F9F9;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: 400;
+    padding: 10px;
+    margin-bottom: 10px;
+    word-break: keep-all;
+  }
+  .login-dialog-title2{
+    background: rgba(246,248,250, 0.9);
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    height: 248px;
+    padding: 15px;
+    position: relative;
+    .copy-value-content{
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      cursor: pointer;
+    }
+    .login-dialog-recover{
+      height: calc(100% - 30px);overflow-y: auto
+    }
+  }
+  .enter-code{
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .qrCode-box{
+    display: flex;
+    align-items: center;
+  }
+  .qrCode-content{
+    padding: 4px;
+    margin-left: 10px;
+  }
+  .qrCode-text{
+    width: 60%;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .qrCode-authKey{
+    background: rgba(246,248,250,09);
+    border: 1px solid #E7EAED;
+    border-radius: 2px;
+    padding: 5px 12px;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-top: 12px;
+  }
+  .footer {
+    .footer__btn {
+      margin: 0 15px;
+      height: 30px;
+      min-width: 74px;
+      padding: 0 15px;
+      color: white;
+      background-color: #FA901C;
+      border: none;
+      border-radius: 4px;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color linear .2s, color linear .1s;
+    }
+    .footer__btn:hover:not(.footer__btn--disabled) {
+      background-color: mix(white, #FA901C, 20%);
+    }
+    .footer__btn--light {
+      background-color: white;
+      border: 1px solid #DEDEDE;
+      color: #333;
+    }
+    .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
+      background-color: white;
+      border-color: mix(white, #FA901C, 50%);
+      color: #FA901C;
+    }
+    .footer__btn--disabled {
+      opacity: .6;
+      cursor: default;
+    }
+  }
+  .nz-dialog .el-dialog__body{
+    padding-bottom: 0;
+  }
+  .verify-link{
+    font-family: Roboto-Black;
+    font-size: 14px;
+    color: #3C92F1;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .verify-link:hover{
+    border-bottom: 1px solid  #3C92F1;
+  }
+  .circle{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #CECECE;
+    margin-right: 10px;
+  }
+}

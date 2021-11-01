@@ -87,9 +87,6 @@
               <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" :id="id+'-xlsx-import-rollback'">
                 <span>{{$t('overall.rollbackImport')}}</span>
               </button>
-              <!--<button  @click="closeDialog"  class="el-button el-button&#45;&#45;default el-button&#45;&#45;small">-->
-                <!--<span>{{$t('overall.cancel')}}</span>-->
-              <!--</button>-->
             </div>
           </div>
       </div>
@@ -406,7 +403,7 @@ export default {
     top:2px;
     padding: 0 8px;
     background-image: linear-gradient(180deg, #fff 0%, #E0E0E0 100%);
-    border: 0px;
+    border: 0;
     color: #666;
     -webkit-box-shadow: 0 0 1px 1px rgba(162,162,162,0.5);
     box-shadow: 0 0 1px 1px rgba(162,162,162,0.5);

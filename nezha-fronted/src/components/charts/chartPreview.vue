@@ -1,45 +1,15 @@
-<style scoped>
-    .chart-preview-dialog{
-    }
-    .nz-preview-picker{
-    }
-    .hidden{
-      visibility: hidden;
-    }
-    .visible{
-      visibility: visible;
-    }
-    .chart-title {
-      display: flex;
-      justify-content: space-between;
-    }
-    .chart-title-text{
-      max-width:calc(100% - 20px);
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-  /deep/ .el-dialog__body{
+<style>
+  #chartPreviewDailog .el-dialog__body {
+    padding-bottom:20px !important;
+  }
+  #chartPreviewDailog .el-dialog__header{
+    padding: 20px 20px 0 !important;
+  }
+  /deep/ .el-dialog__body {
     height: 70vh;
     display: block;
     min-height: 300px;
   }
-    /deep/ .el-table thead{
-      color: #333;
-    }
-</style>
-<style>
-  .char-url-preview html{
-
-  }
-  #chartPreviewDailog .el-dialog__body {
-    padding-bottom:20px !important;
-  }
-
-  #chartPreviewDailog .el-dialog__header{
-    padding: 20px 20px 0px !important;
-  }
-
 </style>
 <template>
     <el-dialog class="chart-preview-dialog nz-dialog" id="chartPreviewDailog"
@@ -303,38 +273,12 @@ export default {
         chartContainerId = 'chartDiagramPreview'
       }
 
-      // 设置高度 chart-table
-      // this.$nextTick(() => {
-      //   // const chartBox = document.getElementById('chartPreviewDailog');
-      //   // let height = this.chart.height;
-      //   let height = Math.round(this.chart.height / 10) * 10
-      //   if (height < this.minHeight) {
-      //     height = this.minHeight
-      //   }
-      //
-      //   const dailogBox = document.querySelector('#chartPreviewDailog  .el-dialog')
-      //   dailogBox.style.height = `${height}px`
-      //
-      //   // const addChartBox = document.querySelector('.right-box-add-chart')
-      //   // addChartBox.style.cssText =  'z-index:1500 !important';
-      //   if (chartType === 'table') {
-      //     const chartDiv = document.getElementById(chartContainerId)
-      //     chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 25}px`
-      //     const tableBox = document.getElementById('tableContainer')
-      //     tableBox.style.height = `${height - this.titleHeight - this.pageHeight - 25}px`// -75-32+25
-      //   } else {
-      //     const chartDiv = document.getElementById(chartContainerId)
-      //     chartDiv.style.height = `${height - this.chartSpaceHeight - this.titleHeight - 15}px`
-      //   }
-      // })
-
       this.screenModal = true
     },
     setLoadFrame () {
       if (this.chart.type === 'url') {
         const that = this
         this.$nextTick(() => {
-          // const iframeBox = document.querySelector('#chartUrlPreview')
           const iframe = document.querySelector('#chartUrlFrame')
 
           // 处理兼容行问题

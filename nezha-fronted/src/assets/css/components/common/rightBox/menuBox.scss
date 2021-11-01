@@ -1,0 +1,17 @@
+.right-box-menu .el-input-number .el-input__inner {
+  text-align: left !important;
+}
+.right-box-menu {
+  .right-box-sub-title {
+    #add-permission {
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      i {
+        font-size: 17px;
+        background-color: $--background-color-base;
+      }
+    }
+  }
+}

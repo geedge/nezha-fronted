@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -153,10 +150,8 @@
             <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
             <div class="float-right panel-calendar dialog-tool">
 
-              <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" :showMultiple="true" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
             </div>
-            <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div class="line-area" ref="screenShowArea"  id="screenShowArea"  style="margin-top:0px;" @mouseenter="mouseEnterFullChart" @mouseleave="mouseLeaveFullChart"></div>
           <div class="chart-no-data" v-show="noData">No Data</div>

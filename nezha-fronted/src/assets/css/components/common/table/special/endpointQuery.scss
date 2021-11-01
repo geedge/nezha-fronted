@@ -1,0 +1,29 @@
+.endpoint-query-tab {
+  .el-dialog__body {
+    height: calc(100% - 48px) !important;
+    padding-bottom: 0 !important;
+    width: calc(100% - 40px) !important;
+  }
+
+  .query-page-option {
+    width: 100%;
+    background: $--background-color-empty;
+    margin-top: 10px;
+  }
+
+  .pagination {
+    padding-top: 0;
+  }
+
+  .top-tool-btn--text {
+    background: $--background-color-empty;
+    border-radius: 2px 0 0 2px;
+    outline: none;
+    height: 32px;
+    border: 1px solid $--border-color-base;
+    border-right: none;
+    line-height: 30px;
+    margin-right: -5px;
+    padding: 0 5px;
+  }
+}

@@ -54,31 +54,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-  .chart-unit{
-    width: 100px;
-  }
-  .chart-unit.el-cascader .el-input.is-focus .el-input__inner {
-    border-color: #FBCEA4;
-  }
-  .chart-unit .el-input__suffix-inner {
-    color: #aaa;
-  }
-  .unit-pop-class .el-cascader-panel{
-    height: 200px;
-    background-color: #FFF;
-  }
-  .input-prepend{
-    height: 26px;
-    margin-top: 1px;
-    padding:0 5px !important;
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-  }
-  .chart-unit .el-input__inner{
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-  }
-</style>

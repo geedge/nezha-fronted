@@ -8,7 +8,7 @@
         </div>
       </el-menu-item>
     </el-menu>
-    <el-menu :collapse="isShrink" :default-active="route" active-text-color="#FA901C" background-color="#202F3F" class="menu-list" mode="vertical" text-color="#BEBEBE" unique-opened @select="jump">
+    <el-menu :collapse="isShrink" :default-active="route" active-text-color="#FA901C" class="menu-list" mode="vertical" text-color="#BEBEBE" unique-opened @select="jump">
       <template v-for="(menu, index) in menuList">
         <el-submenu v-if="menu.children && menu.children.length > 0" :key="index" :index="`${index}`">
           <template slot="title">
@@ -125,108 +125,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.left-menu {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: #202F3F;
-
-  .el-menu-item .nz-icon, .el-submenu .nz-icon {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 5px;
-    width: 24px;
-    text-align: center;
-    font-size: 18px;
-  }
-  >.el-menu:not(.el-menu--collapse) {
-    width: 240px;
-  }
-  >.el-menu.menu-list {
-    height: calc(100% - 110px);
-    border-right: none;
-    overflow: auto;
-
-    >.el-submenu.is-active .el-submenu__title {
-      background-color: #101B27 !important;
-    }
-    .el-submenu.is-active>.el-submenu__title, .el-submenu.is-active>.el-submenu__title>i {
-      color: white !important;
-    }
-    .el-submenu.is-opened .el-menu-item:not(.is-active), .el-submenu.is-opened .el-submenu__title {
-      background-color: #182534 !important;
-    }
-    .is-opened.is-active{
-      background-color: #182534 !important;
-    }
-    .el-submenu.is-active:not(.is-opened)>.el-submenu__title{
-      border-left: 3px #FA901C solid;
-    }
-    .el-menu-item.is-active {
-      background-color: #101B27 !important;
-      border-left: 3px #FA901C solid;
-    }
-    .el-menu-item, .el-submenu__title {
-      height: 46px;
-      line-height: 46px;
-      border-left: 3px #101B27 solid;
-    }
-  }
-
-  /*---滚动条默认显示样式--*/
-  >.el-menu::-webkit-scrollbar-thumb {
-    background-color: rgba(255,255,255,.4);
-    border-radius: 2px;
-    border: none;
-  }
-  /*---鼠标点击滚动条显示样式--*/
-  >.el-menu::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255,255,255,.3);
-    border-radius: 2px;
-  }
-  /*---滚动条大小--*/
-  >.el-menu::-webkit-scrollbar {
-    width: 6px;
-    height: 14px;
-  }
-  >.el-menu.header-logo {
-    border-right: none;
-    >.el-menu-item {
-      padding: 13px 0 0 18px !important;
-      height: 50px;
-      border-right: 1px solid #202F3F;
-      box-sizing: border-box;
-      background-color: #182534 !important;
-
-      .logo {
-        display: flex;
-        box-sizing: border-box;
-
-        img {
-          box-shadow: 0 0 2px 0 rgba(0,0,0,0.50);
-        }
-
-        .system-name {
-          padding-left: 5px;
-          color: white;
-          font-size: 12px;
-          letter-spacing: 0;
-          line-height: 34px;
-          font-weight: 400;
-        }
-      }
-    }
-  }
-}
-.el-menu--popup {
-  .el-menu-item {
-    height: 49px;
-    line-height: 49px;
-  }
-  .el-menu-item.is-active {
-    background-color: #101B27 !important;
-  }
-}
-</style>

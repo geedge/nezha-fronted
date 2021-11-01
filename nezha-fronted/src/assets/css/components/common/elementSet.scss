@@ -1,0 +1,67 @@
+.pop-custom {
+  padding: 0 12px 12px 12px;
+  border: 1px solid $--border-color-light;
+  box-shadow: $--pop-box-shadow;
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  width: 200px;
+  color: $--color-text-regular;
+  background: $--background-color-empty;
+  border-radius: 4px;
+  z-index: 999999;
+}
+.pop-custom-top {
+  padding: 0 12px 12px 12px;
+  border: 1px solid $--border-color-light;
+  box-shadow: $--pop-box-shadow;
+  position: absolute;
+  top: 45px;
+  right: 20px;
+  width: 200px;
+  color: $--color-text-regular;
+  background: $--background-color-empty;
+  border-radius: 4px;
+  z-index: 999999;
+}
+.pop-custom-explore {
+  top: 33px;
+}
+.relative-position .pop-custom {
+  top: 33px;
+}
+.custom-labels {
+  margin-top: 12px;
+  width: 100%;
+  height: 300px;
+}
+.custom-labels i {
+  color: #04b330;
+  font-size: 14px;
+  position: absolute;
+  left: 5px;
+  top: 6px;
+}
+.custom-label {
+  padding: 2px 0 2px 25px;
+  position: relative;
+  cursor: default;
+  font-size: 14px;
+}
+.custom-title {
+  padding: 2px 0 2px 2px;
+}
+.custom-label-disabled {
+  cursor: not-allowed;
+  background: $--background-color-base;
+  opacity: 0.7;
+}
+.custom-bottom-btns {
+  margin-top: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.unshow {
+  display: none;
+}

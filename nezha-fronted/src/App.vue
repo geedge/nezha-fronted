@@ -35,15 +35,3 @@ export default {
   width: 100%;
 }
 </style>
-<style>
-  .app {
-    height: 100%;
-    overflow-y: hidden;
-  }
-  .app>.el-scrollbar__wrap>.el-scrollbar__view {
-    height: 100%;
-  }
-  .app>.el-scrollbar__bar.is-vertical {
-    display: none;
-  }
-</style>

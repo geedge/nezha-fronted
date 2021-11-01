@@ -2,6 +2,7 @@
   <el-table
     id="userTable"
     ref="dataTable"
+    class="user-table"
     :data="tableData"
     :height="height"
     border
@@ -56,7 +57,6 @@
         <template v-else-if="item.prop === 'status'">
           <el-switch
             v-model="scope.row.status"
-            :active-color="theme.themeColor"
             :disabled="isCurrentUser(scope.row.username) || !hasButton('user_edit') || (scope.row.username === 'admin' && scope.row.id === 1)"
             active-value="1"
             inactive-value="0"
@@ -187,28 +187,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .flex-align-center{
-    display: flex;
-    align-items: center;
-  }
-  /deep/ .el-tag.el-tag--mini{
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 12px;
-    height: 12px;
-    vertical-align: middle;
-  }
-  .user-name-top{
-    color: #333;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    vertical-align: middle;
-  }
-  .user-name-bottom{
-    color: #999999;
-    font-size: 14px;
-    line-height: 14px;
-  }
-</style>

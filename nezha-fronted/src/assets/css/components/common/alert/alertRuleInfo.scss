@@ -1,0 +1,113 @@
+.alert-rule-tip {
+  position: fixed;
+  background-color: $--background-color-empty;
+  z-index: 3000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+}
+.alert-rule-tip::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed solid dashed dashed;
+  border-color: transparent #fff transparent transparent;
+  position: absolute;
+  top: 100px;
+  left: 0;
+  transform: translate(-100%, -50%);
+}
+.alert-rule-abs {
+  background-color: $--background-color-empty;
+  z-index: 3000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+}
+.alert-rule-tip-Up {
+  position: fixed;
+  background-color: $--background-color-empty;
+  z-index: 3000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+}
+.alert-rule-tip-Up::after {
+  content: '';
+  display: block;
+  width:0;
+  height:0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed solid dashed dashed;
+  border-color: transparent #fff transparent transparent;
+  position: absolute;
+  bottom: 95px;
+  left: 0;
+  transform: translate(-100%, -50%);
+}
+.alert-rule-abs-Up {
+  background-color: $--background-color-empty;
+  z-index: 3000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+}
+.alert-rule-info{
+  border: 1px solid $--border-color-light;
+  border-bottom: none;
+  font-size: 13px;
+  line-height: 26px;
+}
+.alert-rule-box{
+  display: flex;
+  justify-content:space-between;
+  border-bottom: 1px solid $--border-color-light;
+}
+.alert-rule-title{
+  text-align: left;
+  width: 110px;
+  border-right: 1px solid $--border-color-light;
+  color: $--color-text-regular;
+  padding: 0 3px 0 13px;
+}
+.alert-rule-value{
+  text-align: left;
+  width: 150px;
+  color: #1a1a1a;
+  padding: 0 3px 0 13px;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
+  i {
+    color: $--color-primary;
+  }
+}
+.severity .P1{
+  background: #F5846A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P2{
+  background: #F7A54A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P3{
+  background: #F1C13D;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}

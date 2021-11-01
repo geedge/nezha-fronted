@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -20,20 +17,6 @@
               <span class="panel-info-corner-inner"></span>
            </span>
           </el-popover>
-<!--          <span class="moreTitle">-->
-<!--            <el-popover-->
-<!--              v-if="seriesItem.length!==seriesItemArr.length"-->
-<!--              placement="top-start"-->
-<!--              :close-delay=10-->
-<!--              trigger="hover"-->
-<!--              popper-class="chart-warring-popper">-->
-<!--            <div class="moreTitle">{{$t('dashboard.panel.moreTitle')}}{{$t('dashboard.panel.showAll')}}{{seriesItem.length}}</div>-->
-<!--            <span slot="reference" class="panel-info-corner panel-info-corner&#45;&#45;error"  @click="loadMore">-->
-<!--              <i class="nz-icon nz-icon-warning fa"></i>-->
-<!--              <span class="panel-info-corner-inner"></span>-->
-<!--           </span>-->
-<!--          </el-popover>-->
-<!--          </span>-->
           <el-dropdown trigger="click" class="nz-chart-top" :key="'chartDropdown'+chartIndex"  v-clickoutside="clickos" :class="{'move-able':!isLock}">
             <el-dropdown-menu style="display: none"></el-dropdown-menu>
             <span class="el-dropdown-link chart-title">
@@ -108,11 +91,8 @@
           <div slot="title" >
             <span class="nz-dialog-title">{{chartData.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
-
-              <!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;"  @change="dateChange"></time-picker>-->
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="line-chart"></pick-time>
             </div>
-            <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div :id="'chartContainer'+chartIndex"  ref="chartContainer" class="logs-content"  >
             <div v-if="showTabScreen.length==2" class="show-tab-icon">
@@ -753,11 +733,7 @@ export default {
     padding: 0 5px;
   }
   .show-tab-icon .nz-icon.is-active-icon{
-    /*color: #FA901C;*/
     color: #BDE3FD;
-  }
-  .logs-content:hover .show-tab-icon{
-
   }
   /deep/ .chart-no-data{
     width: calc(100% - 30px);

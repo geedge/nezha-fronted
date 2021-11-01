@@ -279,37 +279,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .right-box-project-alert{
-    width: 850px;
-    padding-right: 30px;
-  }
-  .right-box-title{
-    font-weight: bold;
-    padding-left: 20px;
-    position: absolute;
-    z-index: 1;
-  }
-  .mc{
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 11;
-  }
-  /deep/.resize-box .danger{
-    background-color: #f9f9f9 !important;
-  }
-  .top-tools{
-    float: right;
-  }
-  /deep/ .top-tools>div{
-    margin-top: 6px;
-  }
-  .right-box  /deep/ .list-page .main-container{
-    background: #fff;
-  }
-  /* end--table*/
-</style>

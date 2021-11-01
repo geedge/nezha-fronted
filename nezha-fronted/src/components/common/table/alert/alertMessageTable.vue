@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import '../../../charts/chart';
-</style>
 <template>
   <!--表格-->
   <el-table
@@ -560,8 +557,6 @@ export default {
         this.$set(item, 'position', position)
       }
       this.$set(item, 'loading', loading)
-      // item.loading = true;
-      // this.$set(this.tableData,index,item);// 调用父组件
     },
     // label 鼠标划入
     labelHover (item, type, loading, e) {
@@ -574,21 +569,11 @@ export default {
         this.$set(item[type], 'position', position)
       }
       this.$set(item[type], 'loading', loading)
-      // this.$set(this.tableData,index,item);// 调用父组件
     },
     // Severity Label
     returnSeverityLabel (key) {
       return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
     }
-    /* plpsscrolly(el,self){
-        if (el._ps_.scrollbarYTop > 50) {
-          self.tools.showTopBtn = true;
-          self.tools.tableHover = true;
-        } else {
-          self.tools.showTopBtn = false;
-          self.tools.tableHover = false;
-        }
-      }, */
   }
 }
 
@@ -596,109 +581,5 @@ export default {
 <style>
   .alert-message-tooltip.el-popover{
     padding: 0 !important;
-  }
-</style>
-<style scoped lang=scss>
-  .pointer{
-    background: #FA901c;
-    border-radius: 2px;
-    border: none;
-    width: 40px;
-    height: 22px;
-    box-sizing: border-box;
-    text-align:center;
-    color: #fff;
-    font-size: 12px;
-    margin-right: 20px;
-  }
-  .alertLabelInfo{
-    border: 1px solid #ebeef5;
-    border-bottom: none;
-    font-size: 13px;
-    line-height: 26px;
-  }
-  .alertLabelBox{
-    display: flex;
-    justify-content:space-between;
-    border-bottom: 1px solid #ebeef5;
-  }
-  .alertLabelTitle{
-    text-align: left;
-    width: 90px;
-    border-right: 1px solid #ebeef5;
-    color: #666;
-    padding: 0 3px 0 13px;
-  }
-  .alertLabelValue{
-    text-align: left;
-    width: 150px;
-    color: #1a1a1a;
-    padding: 0 3px 0 13px;
-  }
-  .danger{
-    background-color: #d64f40;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  .success{
-    background-color: #50d050;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  /deep/.active-icon{
-    margin-top: 0;
-  }
-  .contentTable{
-    height: calc(100% - 105px)
-  }
-  .contentProject{
-    height: calc(100% - 60px);
-    margin-bottom: 15px;
-  }
-  .tabelH100{
-    height: 100% !important;
-  }
-  /deep/.too-long-split{
-    vertical-align: bottom;
-  }
-  /deep/.el-tooltip{
-    display: inline-block;
-  }
-  /deep/.alert-clean-pop.el-popover{
-    top: -30px !important;
-  }
-  .pointer{
-    cursor: pointer;
-  }
-  .severity .P1{
-    background: #F5846A;
-    border-radius: 2px;
-    font-size: 12px;
-    color: #FFFFFF;
-    padding: 2px 6px;
-  }
-  .severity .P2{
-    background: #F7A54A;
-    border-radius: 2px;
-    font-size: 12px;
-    color: #FFFFFF;
-    padding: 2px 6px;
-  }
-  .severity .P3{
-    background: #F1C13D;
-    border-radius: 2px;
-    font-size: 12px;
-    color: #FFFFFF;
-    padding: 2px 6px;
-  }
-  .red,.green{
-    color: white;
-    padding: 2px 5px;
-    border-radius: 4px;
-  }
-  /deep/ .nz-message .el-textarea textarea{
-    height: 108px !important;
   }
 </style>

@@ -720,30 +720,6 @@ export default {
   },
   mounted () {
     // 初始化数据
-    // this.getModelData().then(res => {
-    //   this.titleSearchList.model.children = res
-    //   this.detailSearchList.model.children = res
-    //   this.titleSearchList.model.show = true
-    //   this.detailSearchList.model.show = true
-    // })
-    // this.getTypeData().then(res => {
-    //   this.titleSearchList.type.children = res
-    //   this.detailSearchList.type.children = res
-    //   this.titleSearchList.type.show = true
-    //   this.detailSearchList.type.show = true
-    // })
-    // this.getDcData().then(res => {
-    //   this.titleSearchList.dc.children = res
-    //   this.detailSearchList.dc.children = res
-    //   this.titleSearchList.dc.show = true
-    //   this.detailSearchList.dc.show = true
-    // })
-    // this.getSearchableMetaData().then(res => {
-    //   this.titleSearchList.assetLabel.children = res
-    //   this.detailSearchList.assetLabel.children = res
-    //   this.titleSearchList.assetLabel.show = true
-    //   this.detailSearchList.assetLabel.show = true
-    // })
     this.getStateData()
     this.getTypeTreeData()
     this.getSnmpCredentialData()
@@ -771,12 +747,12 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
+<style scoped>
   .list-page /deep/ .main-container{
     display: flex;
     flex-direction: column;
-    /deep/ .nz-table2{
-      flex: 1;
-    }
+  }
+  /deep/ .nz-table2{
+    flex: 1;
   }
 </style>

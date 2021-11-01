@@ -481,9 +481,6 @@ export default {
   /deep/ .nz-meta-group-box{
     min-width: 220px;
   }
-  /*.asset-meta-param /deep/ .el-radio__label{*/
-  /*  display: none;*/
-  /*}*/
   .asset-meta-param-row{
     text-align: center;
     margin-bottom: 10px;

@@ -9,12 +9,6 @@
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div ref="replayTab" class="replay-tab">
-<!--        <div class="sub-top-tools">-->
-<!--          <div class="sub-list-tabs">-->
-<!--            <div class="sub-list-tab-title">ID：{{obj.id}}</div>-->
-<!--            <div class="sub-list-tab sub-list-tab-active">{{$t("config.terminallog.monitor.monitor")}}</div>-->
-<!--          </div>-->
-<!--        </div>-->
         <div class="replay-container">
           <div ref="recordConsole" class="record-console">
             <div :id="obj.uuid" class="record-terminal"></div>
@@ -296,73 +290,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .replay-tab {
-    height: 100%;
-  }
-
-  .replay-container {
-    height: 100%;
-  }
-
-  .record-console {
-    padding: 10px 4px 10px 10px;
-    background-color: black;
-    height: 100%;
-  }
-
-  .terminal-replay-progress {
-    height: 20px;
-    padding: 3px 0;
-    position: relative;
-    width: 500px;
-  }
-
-  #terminal-kill {
-    margin-bottom: 5px;
-  }
-
-  .terminal-replay-progress-bar {
-    top: 50%;
-    transform: translateY(-50%);
-
-    .el-progress-bar__inner {
-      transition: unset;
-      user-select: none;
-    }
-  }
-
-  .replay-operate {
-    .nz-btn {
-      margin-right: 8px;
-
-      .nz-icon {
-        font-size: 14px;
-      }
-    }
-  }
-
-  .operate-skip {
-    margin: 0 12px !important;
-  }
-
-  .time-box {
-    border: none;
-    border-radius: 16px;
-  }
-
-  .progress-controller {
-    position: absolute;
-    height: 14px;
-    width: 14px;
-    border-radius: 50%;
-    background-color: #409eef;
-    top: 50%;
-    transform: translate(-7px, -50%);
-  }
-
-  .progress-controller:hover {
-    background-color: #207ecf;
-  }
-</style>

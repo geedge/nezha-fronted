@@ -1,0 +1,9 @@
+.container {
+  box-sizing: border-box;
+  height: calc(100% - 50px);
+  background-color: $--background-color-base;
+  width: 100%;
+  &>div {
+    height: 100%;
+  }
+}

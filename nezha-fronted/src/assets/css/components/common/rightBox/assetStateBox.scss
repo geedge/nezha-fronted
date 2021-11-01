@@ -1,0 +1,20 @@
+.right-box-asset-state {
+  .right-box-sub-title {
+    #add-notification {
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      i {
+        font-size: 17px;
+        background-color: $--background-color-base;
+      }
+    }
+  }
+}
+
+.notification-item {
+  .el-select {
+    width: 100px;
+  }
+}

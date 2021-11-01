@@ -1,0 +1,134 @@
+/* begin--二级顶部工具栏*/
+.sub-top-tools {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $--border-color-base;
+  border-bottom: 1px solid $--border-color-light;
+  margin: 0 -6px;
+  padding-right: 80px;
+  background-color: $--color-primary;
+  margin-bottom: 10px;
+}
+.sub-top-tools>div {
+  margin-top: 2px;
+}
+.sub-top-tools .top-tool-search {
+  width: 260px;
+  margin: -1px 0 0 0;
+  .select_input input {
+    background-color: $--background-color-empty;
+  }
+}
+.bottom-data-list .sub-container {
+  padding: 10px;
+  height: calc(100% - 64px);
+  background-color: $--background-color-base;
+  overflow-y: auto;
+  &>div {
+    background-color: $--background-color-empty;
+  }
+  &>.nz-table2 {
+    height: 100%;
+    padding-top: 20px !important;
+  }
+}
+.sub-top-tools .top-tool-btn-txt .nz-icon{
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 6px;
+}
+.sub-top-tool-right {
+  display: flex;
+  align-content: center;
+}
+.has-sub-popper {
+  color: $--color-danger;
+}
+.sub-box {
+  height: 50%;
+  position: relative;
+}
+.sub-list {
+  height: calc(100% - 9px);
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  top: 9px;
+
+  .sub-list__tabs {
+    height: 100%;
+    background-color: $--background-color-empty;
+
+    &>div {
+      height: 100%;
+      background-color: $--background-color-base;
+
+      &>.nz-table2 {
+        height: calc(100% - 92px);
+        padding: 20px 20px 0;
+      }
+    }
+    .chart-list{
+      .nz-table2 {
+        box-sizing: border-box;
+        padding: 0;
+      }
+    }
+  }
+}
+.main-and-sub-transition {
+  transition: .4s height;
+}
+
+.bottom-panel {
+  padding-top: 15px;
+  background-color: $--background-color-empty;
+  padding-bottom: 10px;
+  height: calc(100% - 30px);
+}
+.bottom-log {
+  padding: 15px;
+}
+.bottom-common {
+  padding: 20px;
+  height: 100%;
+  box-sizing: border-box;
+}
+.chart-temp{
+  height: calc(100% - 20px);
+  overflow-y: auto;
+}
+.resize-modal {
+  width: calc(100% - 240px);
+  opacity: 0.6;
+  background-color: #f5f9ff;
+  border: 1px solid #a7d0f7;
+  box-sizing: border-box;
+  position: fixed;
+  cursor: ns-resize;
+  display: none;
+  z-index: 20;
+  vertical-align: bottom;
+  bottom: 0;
+}
+.bottom-box .sub-container{
+  height: calc(100% - 64px);
+}
+.bottom-box .sub-container .nz-table2{
+  height: calc(100% - 20px);
+}
+/* end--二级顶部工具栏*/
+
+.log-no-data {
+  height: 300px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $--color-text-secondary;
+}
+.symbol-select .el-input__inner {
+  padding-left: 8px;
+}

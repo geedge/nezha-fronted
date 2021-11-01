@@ -1,5 +1,5 @@
 <template>
-  <div class="main-list">
+  <div class="main-list main-list--project">
     <projectList ref="dataList" :class="showList?'projectList':'hide'"/>
     <projectTopo :class="showList?'projectTopo':'projectTopo ml10'" />
   </div>
@@ -38,35 +38,6 @@ export default {
         }
       }
     }
-  },
-  mounted () {
-  },
-  methods: {}
+  }
 }
 </script>
-
-<style scoped lang="scss">
-.main-list{
-  height: 100%;
-  width: 100%;
-  display: flex;
-  background: #f6f6f6;
-  .projectList{
-    flex: 1;
-    margin-right: 10px;
-  }
-  .projectTopo{
-    flex: 1;
-    margin-right: 10px;
-  }
-  .hide{
-    display: none;
-  }
-  .ml10{
-    margin-left: 10px;
-  }
-}
-  /deep/ .main-container{
-    padding-right: 0px !important;
-  }
-</style>

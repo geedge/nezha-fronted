@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%">
+  <div class="notify-method-tab" style="height: 100%">
     <nz-data-list
       ref="dataList"
       class="notify-table"
@@ -113,34 +113,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  .notify-table{
-    height:  calc(100% - 110px)
-
-  }
-  .notify-table .el-table{
-    height: calc(100% - 10px) !important;
-  }
-  .notificationMessage{
-    margin-left: 20px;
-    display: flex;
-    width: calc(100% - 39px);
-    background: #F6F6F6;
-    color: #999999;
-    margin-bottom: 10px;
-    font-size: 14px;
-    justify-content: left;
-    justify-items: center;
-    align-items: flex-start;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  .notificationMessage .nz-icon {
-    font-size: 20px;
-  }
-  .notificationMessage .more{
-    font-size: 14px;
-    cursor: pointer;
-  }
-</style>

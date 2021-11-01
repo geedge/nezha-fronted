@@ -63,39 +63,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .expression-info{
-    padding: 5px;
-    height: 100%;
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    .expression-info-title{
-      font-size: 14px;
-      color: #333333;
-      letter-spacing: 0;
-      font-weight: 600;
-      line-height: 40px;
-      height: 40px;
-      border-bottom: 1px  dashed #DCE1E7;
-    }
-    .expression-info-content{
-      height: calc(100% - 60px);
-      overflow-y: auto;
-      padding:5px;
-    }
-    .info-title{
-      overflow: hidden;
-      padding-right: 10px;
-      text-overflow: ellipsis;
-      line-height: 20px;
-      font-weight: 500;
-      word-break:keep-all; /* 不换行 */
-      white-space:nowrap; /* 不换行 */
-    }
-    .info-content{
-      text-align: center;
-    }
-  }
-</style>

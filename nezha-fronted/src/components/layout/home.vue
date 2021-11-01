@@ -45,27 +45,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.home {
-  display: flex;
-  transition: all .2s;
-  .body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: calc(100% - 240px);
-    transition: all .2s;
-  }
-}
-.temp-dom {
-  visibility: hidden;
-  font-size: 14px;
-  position: fixed;
-}
-.temp-dom--12 {
-  visibility: hidden;
-  font-size: 12px;
-  position: fixed;
-}
-</style>

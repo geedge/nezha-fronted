@@ -219,9 +219,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .full-width-height{
-    width: 100%;
-    height: 100%;
-  }
-</style>

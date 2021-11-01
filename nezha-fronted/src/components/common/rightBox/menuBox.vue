@@ -250,26 +250,6 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-  .right-box-menu .el-input-number .el-input__inner{
-
-    text-align: left !important;
-  }
-  .right-box-menu {
-    .right-box-sub-title {
-      #add-permission {
-        border: none;
-        outline: none;
-        cursor: pointer;
-
-        i {
-          font-size: 17px;
-          background-color: #f6f6f6;
-        }
-      }
-    }
-  }
-</style>
 <style scoped>
   .form-item-title{
     position: absolute;

@@ -164,19 +164,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  .project-list{
-    .project-page{
-      margin: 0 0 0 20px;
-      border: 1px solid $--right-box-border-color;
-      border-top: none;
-      /deep/ .pagination{
-        padding: 5px 0;
-      }
-    }
-    /deep/ .pagination-bottom{
-      width: calc(100% - 30px);
-      bottom: 18px;
-    }
-  }
-</style>

@@ -64,14 +64,8 @@ export default {
       // 调整终端容器高度
       const consoleBox = document.getElementById('ternimalContainer' + this.idIndex)
       consoleBox.style.height = `${consoleHeigt - 55}px`
-      // 调整终端高度
-      /* let cols = this.term.cols
-      if (consoleWidth) { // 需要调整宽度???
-        cols = consoleWidth / 11// 目前字体，一个字母宽11
-      } */
       // 调整终端可视区域高度
       document.getElementsByClassName('xterm-screen')[this.idIndex].style.height = `${consoleHeigt - 10}px`
-      // this.term.resize(parseInt(cols),(parseInt(rows)-this.minRow));
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize)
       })
@@ -84,11 +78,9 @@ export default {
         cols: this.term.cols, // cols和rows在resizeConsole方法已经设置
         rows: this.term.rows
       }
-      // alert(JSON.stringify(winStyle));
       this.$post('terminal/resize', winStyle).then(response => {
         if (response.code === 200) {
           this.term.fit()
-          // this.term.scrollToBottom();
         } else {
           this.$message.error(response.msg)
         }
@@ -98,8 +90,6 @@ export default {
       if (resizeHeight) {
         this.termimalHeight = resizeHeight
       }
-      // this.isFullScreen = isFullScreen;
-      // this.term.toggleFullScreen(isFullScreen);//全屏后无法显示顶部菜单和tab
       let height = document.body.clientHeight - this.topMenuHeight// 可视高度
       const width = document.body.clientWidth// 可视宽度
       let rows = height / (this.fontSize + this.fontSpaceHeight)
@@ -136,20 +126,6 @@ export default {
       this.$nextTick(() => { // 解决进入全屏和退出全屏是底部隐藏
         this.setFontSize(this.fontSize)
       })
-
-      /*
-      window.addEventListener('resize',this.windowChange)
-
-      windowChange(){
-        this.term.fit();
-        this.term.scrollToBottom();
-      }
-
-// 关闭时,取消监听
-      websocket.onclose = function(evt) {
-        console.log("close", evt);
-        window.removeEventListener('resize',this.windowChange)
-      }; */
     },
     focusConsole () {
       this.term.focus()
@@ -175,22 +151,9 @@ export default {
       const terminalContainer = document.getElementById('terminal' + this.idIndex)
       this.term = new Terminal({
         rows: rows, // 15行大概300px高，无法设置heigh，只能设置rows
-        // cursorBlink:true,//光标闪烁
         cursorStyle: 'block', // 光标样式  null | 'block' | 'underline' | 'bar'
-        // bellStyle:'sound',
         disableStdin: false, // 是否应禁用输入
         fontSize: this.fontSize
-        // lineHeight:1,
-        // fontFamily: 'NotoSans',
-        // scrollback: 800, //回滚
-        // tabStopWidth: 8, //制表宽度
-        // screenKeys: true//
-        /*
-        theme:{
-          foreground:'yellow',//字体
-          background:'#060101',//背景色
-          cursor:'help',//鼠标
-        } */
       })
       this.term.open(terminalContainer)
       this.term.focus()
@@ -228,15 +191,6 @@ export default {
       // 返回
       this.terminalSocket.onmessage = function (evt) {
         let backContent = evt.data
-        /*
-        if(that.inputSecret){//当前为密码输入状态
-        }
-        if(backContent.length>1){
-          let pwdInput = backContent.endsWith(that.psdCont);
-          if(pwdInput){//输入密码
-            that.inputSecret = true;
-          }
-        } */
 
         const welComIndex = backContent.indexOf(that.welcomeBackContent)
         if (welComIndex > -1) { // 无服务器信息（只与nezha进行了连接）
@@ -269,10 +223,6 @@ export default {
               }
               that.$emit('refreshConsoleTitle', connectResult)// 1:grey 2 green 3 red
             } else if (connectFailIndex > -1) {
-              const startIndex = successContentIndex + that.successBackContent.length + 1
-              backContent = backContent.substring(startIndex)
-              // const endIndex = backContent.indexOf('\r\n')
-              // const title = backContent.substring(0, endIndex)
               const connectResult = {
                 title: '',
                 color: 3
@@ -285,7 +235,6 @@ export default {
       // 关闭
       this.terminalSocket.onclose = () => {
         // 报错sorry的，还没来得及看信息就关闭
-        // this.$emit("closeConsole",this.terminal.name);//
         this.term.setOption('disableStdin', true)
       }
 
@@ -336,25 +285,15 @@ export default {
         this.$post('terminal/resize', winStyle).then(response => {
           if (response.code === 200) {
             this.term.fit()
-            // this.term.scrollToBottom();
           } else {
             this.$message.error(response.msg)
           }
         })
       })
-      // alert(JSON.stringify(winStyle));
-
-      // console.log(winStyle)
     }
   },
   mounted () {
     this.create()
-  },
-  created () {
-
-  },
-  beforeCreate () {
-
   },
   beforeDestroy () {
     this.closeSocket()

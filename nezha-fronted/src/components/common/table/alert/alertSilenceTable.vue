@@ -44,16 +44,6 @@
           </el-tooltip>
         </template>
         <template v-else-if="item.prop === 'matchers'">
-<!--          <div class="nz-silence-tag-box">-->
-<!--              <span v-if="scope.row.linkId!==-1" class="nz-silence-tag blue">-->
-<!--              <span class="nz-silence-tag-title">{{scope.row.type}}</span>-->
-<!--              <span :title="scope.row.linkName" class="nz-silence-tag-content">{{scope.row.linkName}}</span>-->
-<!--            </span>-->
-<!--            <span v-if="scope.row.ruleId!==-1" class="nz-silence-tag rule-gray">-->
-<!--              <span class="nz-silence-tag-title">Alert rule</span>-->
-<!--              <span :title="scope.row.ruleName" class="nz-silence-tag-content">{{scope.row.ruleName}}</span>-->
-<!--            </span>-->
-<!--          </div>-->
           <span v-for="(item1, i) in labelsSort(scope.row.matchers)" :key="i">
               <span >
                 <nz-alert-tag
@@ -95,7 +85,6 @@
             <i class="nz-icon nz-icon-more3"></i>
           </div>
           <el-dropdown-menu slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top">
-<!--            <el-dropdown-item :command="['edit', scope.row]"><i class="nz-icon nz-icon-edit"></i><span class="operation-dropdown-text">{{$t('overall.edit')}}</span></el-dropdown-item>-->
             <el-dropdown-item v-has="'alertSilence_edit'" :command="['copy', scope.row]"><i class="nz-icon nz-icon-override"></i><span class="operation-dropdown-text">{{$t('overall.duplicate')}}</span></el-dropdown-item>
             <el-dropdown-item v-has="'alertSilence_expire'" :command="['delete', scope.row]"><i class="nz-icon nz-icon-delete"></i><span class="operation-dropdown-text">{{$t('buttons.delete')}}</span></el-dropdown-item>
           </el-dropdown-menu>
@@ -213,78 +202,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.nz-silence-tag-box{
-  width: 100%;
-  height: 100%;
-  .nz-silence-tag{
-    /*float: left;*/
-    /*margin-top: 5px;*/
-  }
-}
-.nz-silence-tag{
-  min-width: 80px;
-  margin-right: 5px;
-  border-radius: 4px;
-  display: inline-flex;
-  width: auto;
-  height: 20px;
-  line-height: 20px;
-  .nz-silence-tag-title{
-    color: #fff;
-    text-align: center;
-    padding: 0 5px;
-  }
-  .nz-silence-tag-content{
-    padding: 0 10px;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-  }
-}
-.nz-silence-tag.blue{
-  border: 1px solid #3C92F1;
-  .nz-silence-tag-title{
-    background: #3C92F1;
-  }
-}
-.nz-silence-tag.rule-gray{
-  border: 1px solid #7F8696;
-  .nz-silence-tag-title{
-    background: #7F8696;
-  }
-}
-
-.silence-active{
-  background: #E3F2D9;
-  border-radius: 4px;
-  font-family: PingFangSC-Regular;
-  font-size: 14px;
-  color: #0AB000;
-  line-height: 14px;
-  font-weight: 400;
-  padding: 0 5px;
-}
-.silence-pending{
-  background: #FFECD9;
-  border-radius: 4px;
-  font-family: PingFangSC-Regular;
-  font-size: 14px;
-  color: #FA901C;
-  line-height: 20px;
-  font-weight: 400;
-  padding: 0 5px;
-}
-.silence-expired{
-  background: #9e9c98;
-  border-radius: 4px;
-  font-family: PingFangSC-Regular;
-  font-size: 14px;
-  color: #ffffff;
-  line-height: 14px;
-  font-weight: 400;
-  padding: 0 5px;
-}
-</style>

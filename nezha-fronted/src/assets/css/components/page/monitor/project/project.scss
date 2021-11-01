@@ -1,0 +1,61 @@
+.main-list--project {
+  .main-list{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background: $--background-color-base;
+    .projectList{
+      flex: 1;
+      margin-right: 10px;
+    }
+    .projectTopo{
+      flex: 1;
+      margin-right: 10px;
+    }
+    .hide{
+      display: none;
+    }
+    .ml10{
+      margin-left: 10px;
+    }
+  }
+  .main-container{
+    padding-right: 0 !important;
+  }
+}
+.project-calendar .el-input__inner {
+  height: 24px;
+}
+
+.change-time-height {
+  height: 23px;
+}
+
+.date-pick-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.date-pick-group button:first-of-type {
+  margin-right: 4px;
+}
+
+.date-pick-group button:last-of-type {
+  margin-left: 4px;
+}
+
+.project-list{
+  .project-page{
+    margin: 0 0 0 20px;
+    border: 1px solid $--border-color-light;
+    border-top: none;
+    .pagination{
+      padding: 5px 0;
+    }
+  }
+  .pagination-bottom{
+    width: calc(100% - 30px);
+    bottom: 18px;
+  }
+}

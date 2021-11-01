@@ -24,7 +24,7 @@
     </template>
     <template v-slot>
       <log-tab ref="logDetail" v-loading="loading" :log-data="logData" :tab-index="9" @exportLog="exportLog" @limitChange="queryLogData"></log-tab>
-      <div v-loading="loading" v-if="!logData" style="height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; color: #999;">No Data</div>
+      <div v-if="!logData" v-loading="loading" class="log-no-data">No Data</div>
     </template>
   </nz-bottom-data-list>
 </template>
@@ -130,9 +130,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.symbol-select .el-input__inner {
-  padding-left: 8px;
-}
-</style>

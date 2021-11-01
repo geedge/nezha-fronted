@@ -50,16 +50,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.explores {
-  display: flex;
-  padding: 10px 0 10px 10px;
-  background-color: #f6f6f6;
-  box-sizing: border-box;
-
-  .el-table--border::after, .el-table--group::after, .el-table::before {
-    height: 0;
-  }
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width-height">
+  <div class="full-width-height endpoint-query-tab">
     <el-table
       id="endpointTable"
       ref="dataTable"
@@ -545,33 +545,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .full-width-height{
-    width: 100%;
-    height: 100%;
-  }
-  /deep/  .el-dialog__body{
-    height: calc(100% - 48px)!important;
-    padding-bottom: 0!important;
-    width: calc(100% - 40px)!important;
-  }
-  .query-page-option{
-    width: 100%;
-    background: #fff;
-    margin-top: 10px;
-  }
-  /deep/ .pagination{
-    padding-top: 0;
-  }
-  /deep/ .top-tool-btn--text{
-    background: #fff;
-    border-radius: 2px 0 0 2px;
-    outline: none;
-    height: 32px;
-    border: 1px solid #d8dce1;
-    border-right: none;
-    line-height: 30px;
-    margin-right: -5px;
-    padding: 0 5px;
-  }
-</style>

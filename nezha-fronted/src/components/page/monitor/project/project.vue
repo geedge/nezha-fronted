@@ -1,28 +1,3 @@
-<style lang="scss">
-  @import '../../../charts/chart';
-
-  .project-calendar .el-input__inner {
-    height: 24px;
-  }
-
-  .change-time-height {
-    height: 23px;
-  }
-
-  .date-pick-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .date-pick-group button:first-of-type {
-    margin-right: 4px;
-  }
-
-  .date-pick-group button:last-of-type {
-    margin-left: 4px;
-  }
-</style>
 <template>
   <div class="project">
     <topologyL5 v-if="reloadFacade" ref="facade" v-has="'topo_list'" :obj="currentProject" :topologyIndexF="topologyIndexF" targetTab.sync="panel" @changeTopologyIndexF="changeTopologyIndexF"/>
@@ -702,7 +677,7 @@ export default {
     bus.$off('alert-message-change')
     if (this.scrollbarWrap) {
       this.scrollbarWrap.removeEventListener('scroll', bus.debounce)
-    };
+    }
   }
 }
 </script>

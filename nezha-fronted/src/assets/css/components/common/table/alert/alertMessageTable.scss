@@ -1,0 +1,102 @@
+.pointer{
+  background: $--color-primary;
+  border-radius: 2px;
+  border: none;
+  width: 40px;
+  height: 22px;
+  box-sizing: border-box;
+  text-align:center;
+  color: #fff;
+  font-size: 12px;
+  margin-right: 20px;
+}
+.alertLabelInfo{
+  border: 1px solid $--border-color-light;
+  border-bottom: none;
+  font-size: 13px;
+  line-height: 26px;
+}
+.alertLabelBox{
+  display: flex;
+  justify-content:space-between;
+  border-bottom: 1px solid $--border-color-light;
+}
+.alertLabelTitle{
+  text-align: left;
+  width: 90px;
+  border-right: 1px solid $--border-color-light;
+  color: #666;
+  padding: 0 3px 0 13px;
+}
+.alertLabelValue{
+  text-align: left;
+  width: 150px;
+  color: #1a1a1a;
+  padding: 0 3px 0 13px;
+}
+.danger{
+  background-color: #d64f40;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+.success{
+  background-color: #50d050;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+/deep/.active-icon{
+  margin-top: 0;
+}
+.contentTable{
+  height: calc(100% - 105px)
+}
+.contentProject{
+  height: calc(100% - 60px);
+  margin-bottom: 15px;
+}
+.tabelH100{
+  height: 100% !important;
+}
+/deep/.too-long-split{
+  vertical-align: bottom;
+}
+/deep/.el-tooltip{
+  display: inline-block;
+}
+/deep/.alert-clean-pop.el-popover{
+  top: -30px !important;
+}
+.pointer{
+  cursor: pointer;
+}
+.severity .P1{
+  background: #F5846A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P2{
+  background: #F7A54A;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.severity .P3{
+  background: #F1C13D;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 2px 6px;
+}
+.red,.green{
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+/deep/ .nz-message .el-textarea textarea{
+  height: 108px !important;
+}

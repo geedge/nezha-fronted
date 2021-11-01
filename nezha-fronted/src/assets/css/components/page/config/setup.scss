@@ -1,0 +1,172 @@
+.setup {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  .logo-header {
+    padding-left: 20px;
+    width: 100%;
+    height: 50px;
+    background-color: #202f3f;
+    position: relative;
+  }
+  .logo-header-text {
+    font-family: Verdand;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: $--border-color-base;
+  }
+  .language-select {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    z-index: 2;
+    margin-top: 15px;
+    margin-right: 20px;
+  }
+  .flex-box{
+    height: calc(100% - 50px);
+  }
+  .step-box {
+    width: 240px;
+    height: 100%;
+  }
+  .setup-box {
+    width: calc(100% - 240px);
+    height: 100%;
+  }
+  .step-box .step-inner {
+    height: 100%;
+    padding: 20px;
+    padding-left: 0;
+    box-sizing: border-box;
+  }
+
+  .setup-box .setup-inner {
+    position: relative;
+    height: 100%;
+    padding: 40px 30px 0 30px;
+    border: 10px solid $--border-color-light;
+    box-sizing: border-box;
+  }
+  .setup-inner .setup-config {
+    position: relative;
+    height: 100%;
+  }
+  .setup-inner .setup-help {
+    width: calc(100% - 710px);;
+    height:calc(100% - 50px);
+    position: absolute;
+    top: 20px;
+    right: 0;
+    border-left: 1px solid $--border-color-light;
+    padding-left: 30px;
+  }
+  .setup-help .help-header {
+    font-family: Roboto-Medium;
+    font-size: 22px;
+    color: $--color-text-primary;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .setup-help .help-body {
+    font-family: Roboto-Regular;
+    font-size: 16px;
+    color: $--color-text-primary;
+    line-height: 28px;
+    font-weight: 400;
+  }
+  .welcome {
+    line-height: 35px;
+    font-size: 16px;
+  }
+  .welcome .wel-header {
+    font-family: Roboto-Medium;
+    font-size: 26px;
+    color: $--color-text-primary;
+    font-weight: 500;
+  }
+  .wizard-header {
+    font-family: Roboto-Bold;
+    font-size: 14px;
+    color: $--color-text-primary;
+    font-weight: 700;
+  }
+  .welcome ul li {
+    list-style: inside !important;
+    font-family: Roboto-Regular;
+    font-size: 14px;
+    color: $--color-text-primary;
+    font-weight: 400;
+  }
+  .welcome pre {
+    border: 1px solid $--border-color-light;
+    border-left: 4px solid $--color-primary;
+    border-radius: 0;
+    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+    font-size: 14px;
+    background-color: $--background-color-base;
+    color: $--color-text-primary;
+    padding: 15px;
+    height: 48px;
+    line-height: 16px;
+    box-sizing: border-box;
+  }
+  .welcome .content-divider {
+    height: 1px;
+    width: 100%;
+    border-bottom: 1px solid $--border-color-light;
+    margin: 5px 0;
+  }
+  .setup-bottom-btn {
+    width: 100%;
+    height: 49px;
+    position: absolute;
+    bottom: 0;
+    right: 20px;
+    padding-top: 20px;
+    text-align: right;
+  }
+  /* 步骤条样式 */
+  .el-step{
+    height: 46px ;
+  }
+  .el-step .el-step__head{
+    display: none ;
+  }
+  .el-step .el-step__main{
+    padding-left: 20px ;
+    height: 46px ;
+    line-height: 46px;
+  }
+  .el-step .el-step__main .el-step__title{
+    padding: 0 0 0 20px;
+    font-family: Roboto-Medium;
+    font-size: 16px;
+    color: $--color-text-secondary;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-top: 11px;
+  }
+  .el-step .el-step__main .el-step__title.is-process{
+    border-left:2px solid $--color-primary ;
+    color: $--color-text-primary;
+    font-weight: 500;
+    padding-left: 18px;
+  }
+  .el-step .el-step__main .el-step__title.is-success{
+    color: $--color-text-primary;
+    font-weight: 500;
+  }
+  .el-step .el-step__main .el-step__description{
+    display: none ;
+  }
+  .el-select-dropdown__item.selected{
+    font-weight: 400;
+  }
+  .el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+    border-bottom: unset !important;
+    color: $--color-text-primary;
+    background-color: transparent;
+  }
+}

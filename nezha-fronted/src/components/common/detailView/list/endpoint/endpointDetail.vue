@@ -126,7 +126,6 @@ export default {
         this.$set(item, 'position', position)
       }
       this.$set(item, 'loading', loading)
-      // this.$set(this.tableData,index,item);// 调用父组件
     },
     suspendedStr (status) { // 10进制转为2进制 分别给对应的状态
       if (!status || status === 1 || status == 0) { return '' }
@@ -146,112 +145,9 @@ export default {
         if (index === 2) {
           str += `<div><div class="active-icon inline-block ${item == '0' ? 'gray-bg' : 'green-bg'}"></div> ENDPOINT</div>`
         }
-        // if (index === 3) {
-        //   str += `<div>PROMETHEUS <div class="active-icon inline-block ${item == '0' ? 'red-bg' : 'green-bg'}"></div></div>`
-        // }
       })
       return str
-    },
+    }
   }
 }
 </script>
-
-<style scoped lang="scss">
-  .order-box{
-    display: flex;
-    height:40px;
-    padding: 0 15px;
-    line-height: 40px;
-    align-items: center;
-    /*.detail-select{*/
-    /*  height: 30px;*/
-    /*  line-height: 30px;*/
-    /*  flex: 1;*/
-    /*  /deep/ .el-input--small{*/
-    /*    height: 30px;*/
-    /*    line-height: 30px;*/
-    /*    background-color: rgba(9,30,66,0.08);*/
-    /*    border: none;*/
-    /*    color: #344563;*/
-    /*    input{*/
-    /*      height: 30px;*/
-    /*      line-height: 30px;*/
-    /*      background-color: rgba(9,30,66,0.08);*/
-    /*      border: none;*/
-    /*      color: #344563;*/
-    /*    }*/
-    /*  }*/
-    /*}*/
-    /*.detail-select:hover{*/
-    /*  /deep/ .el-input--small{*/
-    /*    input{*/
-    /*      background-color: rgba(9,30,66,0.13);*/
-    /*    }*/
-    /*  }*/
-    /*}*/
-    /*.detail-button{*/
-    /*  height: 28px;*/
-    /*  line-height: 28px;*/
-    /*  background-color: rgba(9,30,66,0.08);*/
-    /*  border: none;*/
-    /*  .nz-icon{*/
-    /*    color: #344563;*/
-    /*  }*/
-    /*}*/
-    /*.detail-button:hover{*/
-    /*  background-color: rgba(9,30,66,0.13);*/
-    /*}*/
-  }
-  .detail-row-box{
-    height: calc(100% - 40px);
-    overflow: hidden;
-    overflow-y: auto;
-  }
-  .detail-row{
-    width: 245px;
-    padding: 0px 0 0px 15px;
-    height: 60px;
-    border-bottom: 1px solid #E7EAED;
-    cursor: pointer;
-  }
-  .detail-row:last-of-type{
-    border-bottom: none
-  }
-  .detail-row-info{
-    display: flex;
-    height: 100%;
-    width: calc(100% - 15px);
-    justify-content:center;
-    flex-direction: column;
-    > div{
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  .asset-manageIp{
-    font-size: 16px;
-    color: #333333;
-    font-weight: 400;
-  }
-    .asset-name {
-      padding-left: 22px;
-      width: calc(100% - 22px);
-      font-size: 14px;
-      color: #999999;
-      font-weight: 400;
-    }
-  }
-  .selected{
-    background: #FFFBF6;
-  }
-  .colorEF7458{
-    color: #EF7458;
-  }
-  .color23BF9A{
-    color: #23BF9A;
-  }
-  .colorFA901C{
-    color: #fa901c;
-  }
-</style>

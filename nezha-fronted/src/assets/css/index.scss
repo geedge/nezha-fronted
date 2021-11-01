@@ -1,0 +1,43 @@
+@font-face { // 由于主题嵌套原因，原ele的icon图标字体加载会出错，需重写
+  font-family: 'element-icons';
+  src: url('~@/assets/css/themes/src/fonts/element-icons.woff') format('woff'), /* chrome, firefox */
+  url('~@/assets/css/themes/src/fonts/element-icons.ttf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  font-weight: normal;
+  font-display: auto;
+  font-style: normal;
+}
+$--font-path: '~element-ui/lib/theme-chalk/fonts'; // 避免ele原字体加载语句出错
+
+[v-cloak] {
+  display: none !important;
+}
+body {
+  height: 100%;
+  min-width: 1024px;
+  margin:0 !important;
+  padding: 0 !important;
+  cursor: default !important;
+}
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 默认主题和暗色主题 */
+.theme-light {
+  @import './themes/theme-light.scss'; // 加载主题变量
+  @import './themes/src/index.scss'; // 加载ele样式
+  @import './components/index'; // 加载nezha组件样式
+  @import './common/index.scss'; // 加载通用样式
+  @import './common.scss';
+  @import '../stylus/main.scss';
+}
+
+.theme-dark {
+  @import './themes/theme-dark.scss'; // 加载主题变量
+  @import './themes/src/index.scss'; // 加载ele样式
+  @import './components/index'; // 加载nezha组件样式
+  @import './common/index.scss'; // 加载通用样式
+  @import './common.scss';
+  @import '../stylus/main.scss';
+}

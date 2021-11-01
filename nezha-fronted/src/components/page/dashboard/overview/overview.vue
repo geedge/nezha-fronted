@@ -808,13 +808,13 @@ export default {
               let marker
               if (dcStat.color === 1) {
                 shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: this.theme.successColor, opacity: 0.42, fillColor: this.theme.successColor, fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
+                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#23BF9A', opacity: 0.42, fillColor: '#23BF9A', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
               } else if (dcStat.color === 2) {
                 shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: this.theme.dangerColor, opacity: 0.42, fillColor: this.theme.dangerColor, fillOpacity: 0.5, radius: symbolSize, className: 'real-marker error-item' })
+                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#EC7F66', opacity: 0.42, fillColor: '#EC7F66', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker error-item' })
               } else if (dcStat.color === 3) {
                 shadowMarker = L.circleMarker([dcStat.latitude, dcStat.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: this.theme.suspendedColor, opacity: 0.42, fillColor: this.theme.suspendedColor, fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
+                marker = L.circleMarker([dcStat.latitude, dcStat.longitude], { interactive: false, color: '#9e9c98', opacity: 0.42, fillColor: '#9e9c98', fillOpacity: 0.5, radius: symbolSize, className: 'real-marker' })
               }
               shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
               shadowMarker.on('mouseover', (param) => {
@@ -829,118 +829,6 @@ export default {
           })
         })
       })
-
-      /* new Promise(resolve => {
-        const requests = [axios.get('dc?pageSize=-1'), axios.get('stat/dc/state')]
-        axios.all(requests).then((result) => {
-          if (result) {
-            let dcInfos = null
-            let dcStats = null
-            if (result[0].data && result[0].data.code == 200) {
-              dcInfos = result[0].data.data.list
-            }
-            if (result[1].data && result[1].data.code == 200) {
-              dcStats = result[1].data.data
-            }
-            if (dcInfos && dcStats) {
-              dcInfos.sort((a, b) => {
-                return a.assetNum - b.assetNum
-              })
-              const bigScatter = 10
-              const mediumScatter = 8
-              const smallScatter = 6
-              const maxAssetTotal = dcInfos[dcInfos.length - 1].assetNum // 获取asset数量最大值
-
-              const bigBoundary = Number.parseInt(maxAssetTotal / 3 * 2) // 根据最大值定下大图标、中图标的阈值
-              const mediumBoundary = Number.parseInt(maxAssetTotal / 3)
-              dcInfos.forEach(dcInfo => {
-                if (regNum.test(dcInfo.latitude) && regNum.test(dcInfo.longitude)) {
-                  let symbolSize
-                  if (dcInfo.assetNum >= bigBoundary) {
-                    symbolSize = bigScatter
-                  } else if (dcInfo.assetNum < bigBoundary && dcInfo.assetNum >= mediumBoundary) {
-                    symbolSize = mediumScatter
-                  } else {
-                    symbolSize = smallScatter
-                  }
-                  let shadowMarker = null
-                  let marker = null
-                  if (dcInfo.state === 'ON') {
-                    const hasAlert = dcStat.alertP1 != 0 || dcStat.alertP2 != 0 || dcStat.alertP3 != 0 || dcStat.assetPingDown != 0 || dcStat.endpointDown != 0 || dcStat.promDown != 0
-                    shadowMarker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                    marker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { interactive: false, color: hasAlert ? '#DE5D3F' : '#23BF9A', opacity: 0.42, fillColor: hasAlert ? '#DE5D3F' : '#23BF9A', fillOpacity: 0.5, radius: symbolSize, className: hasAlert ? 'real-marker error-item' : 'real-marker ' })
-                    shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
-                  } else {
-                    shadowMarker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                    marker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { interactive: false, color: '#010101', opacity: 0.35, fillColor: '#010101', fillOpacity: 0.35, radius: symbolSize, className: 'real-marker' })
-                    shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
-                  }
-                  shadowMarker.on('mouseover', (param) => {
-                    // console.info(param);
-                    const point = param.containerPoint
-                    const event = param.originalEvent
-                    this.tooltip.x = event.clientX + point.x - event.layerX - 5
-                    this.tooltip.y = event.clientY + point.y - event.layerY
-                  })
-                  shadowMarker.addTo(this.map)
-                  marker.addTo(this.map)
-                }
-              })
-            }
-            /!* if (dcInfos && dcStats) {
-              const dcStatsCopy = Object.assign([], dcStats)
-              dcStatsCopy.sort((a, b) => {
-                return a.assetTotal - b.assetTotal
-              })
-              const bigScatter = 10
-              const mediumScatter = 8
-              const smallScatter = 6
-              const maxAssetTotal = dcStatsCopy[dcStatsCopy.length - 1].assetTotal
-
-              const bigBoundary = Number.parseInt(maxAssetTotal / 3 * 2)
-              const mediumBoundary = Number.parseInt(maxAssetTotal / 3)
-              for (const dcStat of dcStats) {
-                const dcId = dcStat.id
-                const dcInfo = dcInfos.find((item) => {
-                  return item.id == dcId
-                })
-                if (regNum.test(dcInfo.latitude) && regNum.test(dcInfo.longitude)) {
-                  let symbolSize = mediumScatter
-                  if (dcStat.assetTotal >= bigBoundary) {
-                    symbolSize = bigScatter
-                  } else if (dcStat.assetTotal < bigBoundary && dcStat.assetTotal >= mediumBoundary) {
-                    symbolSize = mediumScatter
-                  } else {
-                    symbolSize = smallScatter
-                  }
-                  let shadowMarker = null
-                  let marker = null
-                  if (dcInfo.state === 'ON') {
-                    const hasAlert = dcStat.alertP1 != 0 || dcStat.alertP2 != 0 || dcStat.alertP3 != 0 || dcStat.assetPingDown != 0 || dcStat.endpointDown != 0 || dcStat.promDown != 0
-                    shadowMarker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                    marker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { interactive: false, color: hasAlert ? '#DE5D3F' : '#23BF9A', opacity: 0.42, fillColor: hasAlert ? '#DE5D3F' : '#23BF9A', fillOpacity: 0.5, radius: symbolSize, className: hasAlert ? 'real-marker error-item' : 'real-marker ' })
-                    shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
-                  } else {
-                    shadowMarker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { opacity: 0, fillOpacity: 0, radius: symbolSize + 10 })
-                    marker = L.circleMarker([dcInfo.latitude, dcInfo.longitude], { interactive: false, color: '#010101', opacity: 0.35, fillColor: '#010101', fillOpacity: 0.35, radius: symbolSize, className: 'real-marker' })
-                    shadowMarker.bindTooltip(this.mapTooltipFormatter(dcStat), { sticky: false, pane: 'myPane', direction: 'left', data: dcStat })
-                  }
-                  shadowMarker.on('mouseover', (param) => {
-                    // console.info(param);
-                    const point = param.containerPoint
-                    const event = param.originalEvent
-                    this.tooltip.x = event.clientX + point.x - event.layerX - 5
-                    this.tooltip.y = event.clientY + point.y - event.layerY
-                  })
-                  shadowMarker.addTo(this.map)
-                  marker.addTo(this.map)
-                }
-              }
-            } *!/
-          }
-          resolve()
-        })
-      }) */
     },
     queryAlertStatByModule () {
       return new Promise(resolve => {
@@ -984,53 +872,6 @@ export default {
       return result
     },
     mapTooltipFormatter (dcStat) {
-      /*  <div class="tooltip--row">
-            <div class="tooltip-asset">
-              <div class="tooltip-asset--title"><span>${this.$t('asset.asset')}</span><span>Total：${dcStat.assetTotal}</span></div>
-              <div class="tooltip-asset--row">
-                <div>${this.$t('asset.state')}</div>
-                <div class="tooltip-asset--sub-rows">
-                  <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('asset.inStock')}</div>
-                    <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetInStock}</span></div>
-                  </div>
-                  <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('asset.notInStock')}</div>
-                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetOutStock}</span></div>
-                  </div>
-                  <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('asset.suspended')}</div>
-                    <div class="sub-row--value"><div class="sign gray-sign"></div><span>${dcStat.assetSuspended}</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="tooltip-asset--row tooltip-asset--ping ">
-                <div style="line-height: 50px">${this.$t('asset.left.ping')}</div>
-                <div class="tooltip-asset--sub-rows">
-                  <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('dashboard.overview.asset.pingUp')}</div>
-                    <div class="sub-row--value"><div class="sign green-sign"></div><span>${dcStat.assetPingUp}</span></div>
-                  </div>
-                  <div class="tooltip-asset--sub-row">
-                    <div class="sub-row--label">${this.$t('dashboard.overview.asset.pingDown')}</div>
-                    <div class="sub-row--value"><div class="sign red-sign"></div><span>${dcStat.assetPingDown}</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="tooltip-alert">
-              <div class="tooltip-alert--title"><span>${this.$t('dashboard.overview.asset.alert')}</span><span>${dcStat.alertTotal}</span></div>
-              <div class="tooltip-alert--row">
-                <div class="row--label row--label__p1">P1</div><div class="row--value row--value__p1">${dcStat.alertP1}</div>
-              </div>
-              <div class="tooltip-alert--row">
-                <div class="row--label row--label__p2">P2</div><div class="row--value row--value__p2">${dcStat.alertP2}</div>
-              </div>
-              <div class="tooltip-alert--row">
-                <div class="row--label row--label__p3">P3</div><div class="row--value row--value__p3">${dcStat.alertP3}</div>
-              </div>
-            </div>
-          </div> */
       return `<div class="tooltip">
           <div class="tooltip--title">${dcStat.name}</div>
           <div class="tooltip--row">
@@ -1198,87 +1039,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import './overview2.scss';
-.leaflet-control-zoom{
-  border: 1px solid #E7EAED !important;
-  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77) !important;
-  .leaflet-control-zoom-out,.leaflet-control-zoom-in{
-    opacity: .7;
-    background: #FFF;
-  }
-}
-.leaflet-control-attribution{
-  background-color: unset !important;
-  color: rgba(178, 178, 178, 0.77);
-}
+<style>
 @keyframes error-animation{
   0% {fill-opacity:.5}
   50% {fill-opacity:0.75}
   100% {fill-opacity:1}
 }
-.error-item{
-  color: #FADED7 ;
-  animation: error-animation 1s infinite ease-in-out;
-  animation-direction:normal;
-}
-.real-marker{
-  pointer-events: none;
-}
-.error-color{
-
-}
-.my-pane {
-  position: fixed;
-  width: 1px;
-  z-index: 99999;
-  height: 1px;
-  background-color: transparent;
-}
-.leaflet-bottom{
-  z-index: 409;
-}
-.el-carousel--horizontal{
-  height: 100%;
-}
-.el-carousel__container{
-  height: calc(100% - 36px);
-}
-.el-carousel__item .project-name {
-  font-size: 18px;
-  margin: 0;
-  position: absolute;
-  z-index: 1;
-}
-
-.el-carousel__item:nth-child(2n) {
-  /*background-color: #99a9bf;*/
-}
-
-.el-carousel__item:nth-child(2n+1) {
-  /*background-color: #d3dce6;*/
-}
-</style>
-<style lang="scss" scoped>
-.maskLayer{
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  cursor: pointer;
-}
-/deep/ .el-carousel__indicator--horizontal .el-carousel__button{
-  background-color: #C0C4CC;
-  opacity: .24;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-}
-/deep/ .el-carousel__indicator--horizontal.is-active .el-carousel__button{
-  opacity: 1;
-}
-
 </style>

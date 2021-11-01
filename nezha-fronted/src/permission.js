@@ -34,6 +34,7 @@ router.beforeEach((to, from, next) => {
             store.commit('setMenuList', sortByOrderNum(res.data.menus))
             store.commit('setButtonList', res.data.buttons)
             store.commit('setRoleList', res.data.roles)
+            document.getElementsByTagName('body')[0].setAttribute('class', 'theme-' + localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`))
             resolve()
           })
         })

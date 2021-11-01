@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style scoped>
   .chartBox {
     float:left;
     padding: 0 10px 10px 0;
@@ -10,39 +10,9 @@
   }
   .list-width{
     width: 100%;
-    /*height: 100%;*/
     padding: 0 10px 5px 20px;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
-
-    /*&>div {*/
-    /*  height: 100%;*/
-    /*  overflow-y: auto;*/
-    /*}*/
-  }
-</style>
-<style lang="scss">
-  .vue-resizable-handle {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    bottom: 0;
-    right: 0;
-    cursor: se-resize;
-    box-sizing: border-box;
-    user-select: none;
-    z-index: 99;
-  }
-  .vue-resizable-handle:after {
-    border-right: 2px solid #acb6bf;
-    border-bottom: 2px solid #acb6bf;
-    content: "";
-    position: absolute;
-    right: 3px;
-    bottom: 3px;
-    width: 5px;
-    height: 5px;
-    box-sizing: inherit;
   }
 </style>
 <template>

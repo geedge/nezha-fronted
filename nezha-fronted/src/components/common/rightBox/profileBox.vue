@@ -42,6 +42,9 @@
               </template>
             </el-select>
           </el-form-item>
+          <el-form-item label="Theme" prop="theme">
+            <el-radio v-for="t in theme" :key="t.value" v-model="editProfile.theme" :label="t.value">{{t.label}}</el-radio>
+          </el-form-item>
           <el-form-item :label="$t('profile.source')" prop="source">
             <el-input maxlength="64" show-word-limit v-model="editProfile.source" disabled size="small" type="text"></el-input>
           </el-form-item>
@@ -61,6 +64,7 @@
 
 <script>
 import editRigthBox from '@/components/common/mixin/editRigthBox'
+import { theme } from '@/components/common/js/constants'
 
 export default {
   name: 'modelbox',
@@ -75,6 +79,7 @@ export default {
   mixins: [editRigthBox],
   data () {
     return {
+      theme: theme,
       url: 'sys/user/profile',
       rightBox: { profile: { show: false } },
       editProfile: {},
@@ -120,6 +125,14 @@ export default {
             this.$put(this.url, this.editProfile).then(res => {
               this.prevent_opt.save = false
               if (res.code === 200) {
+                // 若主题变更，则更改主题
+                const currentTheme = theme.find(t => t.value === this.editProfile.theme).label || 'light'
+                const oldTheme = localStorage.getItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`)
+                if (currentTheme !== oldTheme) {
+                  localStorage.setItem(`nz-user-${localStorage.getItem('nz-user-id')}-theme`, currentTheme)
+                  const body = document.getElementsByTagName('body')[0]
+                  body.setAttribute('class', `theme-${currentTheme}`)
+                }
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
                 this.$emit('clickProfile')
@@ -134,6 +147,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-@import '@/assets/css/common/rightBoxCommon.scss';
-</style>

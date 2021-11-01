@@ -86,7 +86,6 @@
               :class="plugins.indexOf('metric-selector') > -1 ?'metric-selector-input-box':'metric-null-input-box'"
               :style="{'width':plugins.indexOf('metric-selector') > -1 ? 'calc(100% - 160px)':'100%',height: '100%',}">
               <div class="input-box" @click="dropDownVisible=false" v-if="plugins.indexOf('metric-input') > -1">
-                <!--<editor :styleType="styleType" :metric-list="metricStore" :historyParam="historyParam" v-model="expressionList[index]" ref="editor" @on-enter="expressionChange" @on-blur="expressionChange" ></editor>-->
                 <el-input v-model="expressionList[index]" @input="metricKeyDown" type="textarea" :maxlength="styleType === 3 ? 512 : 4096" show-word-limit
                           :autosize="{ minRows: 1, maxRows: 6}" class="not-fixed-height no-resize" ref="elInput"></el-input>
                 <div class="append-msg error" v-if="errorMsg"><span>{{errorMsg}}</span></div>
@@ -123,11 +122,6 @@
               <el-input class="temp-form-box-input" v-model="tempBox.vars[index]" :id="'tempBox'+index" size="small" :disabled="true"></el-input>
             </el-col>
             <el-col :span="16" v-if="format(item).key">
-              <!--<el-input v-model="tempBox[item]" :id="'tempBox'+item"  size="small"></el-input>-->
-              <!--<el-select v-model="tempBox[item]" size="small" style="width: 100%" :popper-class="'nz-temp-box'">-->
-                <!--<el-option v-for="(item1,index) in format(item).arr" :key="index" :label="item1[format(item).value]" :value="item1[format(item).value]">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
               <select-alert-silence :filter-silence="filterSilence" :silence-data="format(item).arr" :panel-lock="false" :placement="'bottom-start'" :typeContentLoading="typeContentLoading"
                                     @selectSilence="(val)=>{silenceChange(val,item)}" ref="selectPanel" style="width: 240px;">
                 <template v-slot:header>
@@ -164,12 +158,10 @@
 
 <script>
 import selectAlertSilence from '../../../common/alert/selectAlertSilence'
-import editor from './editor'
 import { get } from '@/http'
 export default {
   name: 'promqlInput',
   components: {
-    editor: editor,
     selectAlertSilence
   },
   props: {
@@ -211,7 +203,6 @@ export default {
       cascaderValue: '',
       errorMsg: null,
       appendMsg: null,
-      editorValue: '',
       firstAddEvent: true,
       tempBoxShow: false,
       tempBox: {
@@ -351,8 +342,6 @@ export default {
     metricChange: function (value) {
       if (!value) return
       this.expressionList[this.index] = value
-      // this.insertText(value)
-      // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
@@ -360,9 +349,7 @@ export default {
     },
     metricChangeNew (value) {
       if (!value) return
-      // this.expressionList[this.index] = value
       this.insertText(value)
-      // this.$refs.editor.setContent(value)
       this.dropDownVisible = false
       this.$emit('change', value)
       this.$forceUpdate()
@@ -656,164 +643,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-  .no-resize{
-    background: rgba(255,255,255,0);
-  }
-  .promqlInput {
-    position: relative;
-    width: 100%;
-    display: flex;
-  }
-
-  .promqlInput .query-row {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .input-box .append-msg {
-    font-size: 12px;
-    line-height: 1;
-    padding-top: 4px;
-  }
-
-  .input-box .error {
-    color: #F56C6C;
-  }
-
-  .promqlInput .query-options {
-    /*display: flex;*/
-    /*justify-content: flex-start;*/
-    /*width: 84px;*/
-  }
-
-  .query-options .option {
-    /*border-right: 1px solid #dde4ed;*/
-    /*border-radius: 3px;*/
-    /*background-color: #dde4ed;*/
-    width: 34px;
-    height: 29px !important;
-    line-height: 30px;
-    text-align: center;
-  }
-
-  .query-options .option:focus, .query-options .option:hover {
-    background-color:   rgb(247, 248, 250);
-  }
-
-  .query-row .input-box {
-    flex: auto;
-    margin-right: 10px;
-  }
-
-  .metric-btn {
-    height: 29px !important;
-    width: 105px;
-    margin-left: 1px;
-  }
-
-  .metric-btn:hover, .metric-btn:focus {
-    background-image:  linear-gradient(180deg, rgb(247, 248, 250) 0%, rgb(247, 248, 250) 100%);
-    color: #606266;
-  }
-
-  .metric-selector .el-cascader-panel {
-    height: 300px;
-    position: absolute;
-    z-index: 2100;
-    background-color: #FFF;
-  }
-
-  .expr-title {
-    width: 120px;
-    padding-right: 20px;
-    text-align: right;
-    color: #666;
-    font-size: 14px;
-    letter-spacing: 0;
-    line-height: 22px;
-  }
-
-  /deep/ .el-cascader-node {
-    padding: 0;
-  }
-
-  /deep/ .el-cascader-menu:last-child .el-cascader-node, /deep/ .el-cascader-node__label {
-    padding: 0;
-  }
-  .metric-selector-title{
-  /*'width':plugins.indexOf('metric-selector') > -1 ? '110px':'100%',*/
-  /*'padding': plugins.indexOf('metric-selector') > -1 ?'0 0 0 10px':'0 20px 0 0 ',*/
-  /*'text-align':'left', 'color': '#666',*/
-  /*'font-weight':plugins.indexOf('metric-selector') > -1 ?'400':'bold',*/
-    width:108px;
-    margin-right: 10px;
-    height: 32px;
-    text-align: left;
-    padding: 0 0 0 10px;
-    font-weight: 400;
-    line-height: 33px;
-    background: #E7EAED;
-    border-radius: $--primary-border-radius;
-    font-family: ArialMT;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-  }
-  .metric-selector-input-box{
-    width: calc(100% - 160px);
-  }
-  .metric-null-input-box{
-    width: 100%;
-  }
-  .metric-null-title{
-    width:100%;
-    font-weight: bold;
-    letter-spacing: 0;
-  }
-  .nz-cascade {
-    padding: 0 10px 0 25px;
-    position: relative;
-  }
-  .nz-cascade .nz-icon-template2 {
-    display: none;
-  }
-
-  .nz-cascade-temp .nz-icon-template2{
-    display: inline-block;
-    position: absolute;
-    left: 5px;
-
-    /*background: #F8F9FB;*/
-  }
-  .cascader-panel-more {
-    text-align: center;
-  }
-  .temp-form-box{
-    width: 480px;
-  }
-  .temp-form-box .temp-form-box-title{
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-  .temp-form-box .temp-form-box-col{
-    margin-right: 10px;
-  }
-  .explore-select-header {
-    text-align: center;
-    margin-bottom: 14px;
-  }
-</style>
 <style>
-  .metric-selector-pop {
-    position: relative;
-    z-index: 2100;
-  }
   .input-box .el-input__inner {
     height: 30px;
   }

@@ -61,35 +61,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.detail-title-box{
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  justify-content:  flex-start;
-  align-items: center;
-  height: 100%;
-  padding-left: 15px;
-  & > div{
-    height: 100%;
-    line-height: 60px;
-    margin-right: 40px;
-  }
-  .detail-title-key{
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    line-height: 20px;
-    font-weight: 400;
-  }
-  .detail-title-value{
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 20px;
-    font-weight: 400;
-    margin-left: 10px;
-  }
-}
-</style>

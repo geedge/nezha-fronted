@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -26,7 +23,7 @@
         <div ref="chartInfo" class="chart-info" :id="'chartInfoDiv' + chartIndex" v-cloak>
           <div ref="scrollbar" style="height: 100%;width:100%; overflow: auto;">
             <div v-for="(item, index) in detail" :key="index" class="chart-sub">
-              <template v-if="isEmptyTab(item)">
+              <template v-if="isNotEmptyTab(item)">
                 <div class="chart-sub-title" @click="hideElement(index)">
                   <span v-if="data.from !== fromRoute.endpoint"><i :class="{'nz-icon nz-icon-caret-right': show.indexOf(index) === -1,'nz-icon nz-icon-caret-bottom': show.indexOf(index) > -1}"></i></span>
                   <span>{{item.title}}</span>
@@ -319,7 +316,7 @@ export default {
         return ''
       }
     },
-    isEmptyTab () {
+    isNotEmptyTab () {
       return function (item) {
         return item.data && Object.keys(item.data).length > 0
       }

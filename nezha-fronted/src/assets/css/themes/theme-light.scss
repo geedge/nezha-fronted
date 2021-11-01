@@ -1,0 +1,91 @@
+/*** 主题色，主题切换相关 ***/
+
+/* 1.主色(覆盖element-ui内置变量) */
+$--color-primary: #FA901C;
+
+/* 2.背景色 */
+// 空白背景色
+$--background-color-empty: #FFFFFE;
+// 基础背景色(覆盖element-ui内置变量)
+$--background-color-base: #F6F6F6;
+// 背景色1
+$--background-color-1: #EFEFEF;
+
+// 左侧菜单背景色
+$--left-menu-background-color-base: #202F3F;
+// 左侧菜单激活背景色
+$--left-menu-background-color-active: #101B27;
+// 左侧菜单展开背景色
+$--left-menu-background-color-open: #182534;
+// 左侧菜单hover背景色
+$--menu-item-hover-fill: #101B27;
+
+/* 3.字色 */
+// 标题字色(覆盖element-ui内置变量)
+$--color-text-primary: #333332;
+// 普通字色(覆盖element-ui内置变量)
+$--color-text-regular: #666665;
+// 次要字色(覆盖element-ui内置变量)
+$--color-text-secondary: #999998;
+// 链接字色
+$--color-text-link: #3C92F1;
+
+/* 4.边框色 */
+// 普通边框色(覆盖element-ui内置变量)
+$--border-color-base: #DEDEDE;
+// 浅边框色(覆盖element-ui内置变量)
+$--border-color-light: #E7EAED;
+// 普通边框色focus
+$--border-color-base-focus: #C7C7C7;
+
+/* 5.提示色 */
+// 正常绿色(覆盖element-ui内置变量)
+$--color-success: #23BF9A;
+// 警告橙色(覆盖element-ui内置变量)
+$--color-warning: #FA901C;
+// 危险红色(覆盖element-ui内置变量)
+$--color-danger: #EC7F66;
+// 普通灰色(覆盖element-ui内置变量)
+$--color-info: #999998;
+// 停用灰色
+$--color-suspended: #9e9c98;
+// 监控色
+$--color-monitor: #98AEC5;
+
+/* 6.table */
+// 表头字色
+$--table-header-font-color: $--color-text-primary;
+// 行背景色
+$--table-row-background-color: $--background-color-empty;
+// 行鼠标hover背景色
+$--table-row-hover-background-color: #fffbf6;
+// 表头背景色
+$--table-header-background-color: $--background-color-empty;
+// body背景色
+$--table-body-background-color: $--background-color-empty;
+
+/* 7.checkbox */
+// 背景色
+$--checkbox-background-color: $--background-color-empty;
+$--checkbox-border-color: $--border-color-base-focus;
+
+/* 8.滚动条 */
+// 背景色
+$--scrollbar-background-color: #DDDDDD;
+$--scrollbar-background-color-hover: #C8C8C8;
+
+/* 9.dashboard */
+$--dashboard-background-color-empty: $--background-color-empty;
+$--dashboard-card-border-color: $--border-color-light;
+$--dashboard-card-header-background-color: $--background-color-1;
+
+/* 10.dropdown */
+$--dropdown-menu-box-shadow-color: rgba(0, 0, 0, 0.1);
+
+/* 11.input */
+$--input-background-color: $--background-color-empty;
+
+
+/*** themes/common.scss是与主题切换无关的变量 ***/
+@import './src/common/var.scss';
+@import './common.scss';

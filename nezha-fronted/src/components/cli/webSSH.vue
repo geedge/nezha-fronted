@@ -1,15 +1,4 @@
-<style lang="scss">
-  @import './webSSH.scss';
-  .config-dropdown.w260{
-    width: 260px;
-  }
-</style>
 <template>
-  <!--  <div id="shell-service" data-yunlog-scope="popup" :class="{'shell-service-max': isFullScreen,'shell-service':true}" v-show="consoleShow">
-      <div class="resize-modal">
-        <div class="sub-list-resize-copy">一</div>
-      </div>
-      <div id="shell-split" class="shell-split shell-iconfont" @mousedown="dragEagle" v-show="!isFullScreen">一</div>-->
   <div :class="{'shell-service-max': isFullScreen,'shell-service':true}" class="sub-box ani-webSHH-height cli" data-yunlog-scope="popup" id="shell-service" ref="webSShBox" style="height: 0;background: #000">
     <div class="resize-modal">
       <div class="sub-list-resize-copy" style="width: 100%">一</div>
@@ -19,32 +8,6 @@
     <div class="sub-list" style='position: relative;'>
       <!--el-drawer 打开后会对第一个未隐藏的元素聚焦 所以添加一隐藏的input 防止聚焦-->
       <input style='width: 0;height: 0;opacity: 0;display: inherit;' />
-    <!--  <el-menu  @select="handleSelect" mode="horizontal" style='position: absolute;left:0px;top:0px;border-top: 1px solid #DCDFE6;' class="horizontal">
-        <el-submenu index="1"  popper-class="horizontal" style="width:40px;">
-          <template slot="title" ><i class="nz-icon nz-icon-728bianjiqi_zitidaxiao" style="position: absolute;left: 10px;top: 4px;"></i></template>
-          &lt;!&ndash;<el-submenu index="1-1">&ndash;&gt;
-          &lt;!&ndash;<template slot="title">文字大小</template>&ndash;&gt;
-          <el-menu-item @click="changeFontSize(12)" :class="{fontSet:true,menuActive:fontSize==12, smallFont:true}" index="1-1">A</el-menu-item>
-          <el-menu-item @click="changeFontSize(15)" :class="{fontSet:true,menuActive:fontSize==15, middleFont:true}" index="1-2">A</el-menu-item>
-          <el-menu-item @click="changeFontSize(20)" :class="{fontSet:true,menuActive:fontSize==20, bigFont:true}" index="1-3">A</el-menu-item>
-          &lt;!&ndash;<el-menu-item class="fontSet" index="1-4">大</el-menu-item>&ndash;&gt;
-          &lt;!&ndash;</el-submenu>&ndash;&gt;
-          &lt;!&ndash;<el-submenu index="1-2" >&ndash;&gt;
-          &lt;!&ndash;<template slot="title">字体</template>&ndash;&gt;
-          &lt;!&ndash;<el-menu-item index="1-2-1">Monosapace</el-menu-item>&ndash;&gt;
-          &lt;!&ndash;<el-menu-item index="1-2-2">Courier New</el-menu-item>&ndash;&gt;
-          &lt;!&ndash;</el-submenu>&ndash;&gt;
-        </el-submenu>
-&lt;!&ndash;        <el-submenu index="2" style="width:50px;" popper-class="horizontal">&ndash;&gt;
-&lt;!&ndash;          <template slot="title" ><i class="nz-icon nz-icon-upload console-title-icon" style="position: absolute;left: 10px;top: 4px;"></i></template>&ndash;&gt;
-&lt;!&ndash;          <el-menu-item @click="showUploadBox" index="2-1">&ndash;&gt;
-&lt;!&ndash;            <div>{{$t('webshell.upload')}}</div>&ndash;&gt;
-&lt;!&ndash;          </el-menu-item>&ndash;&gt;
-&lt;!&ndash;          <el-menu-item @click="showDownloadBox" index="2-2">&ndash;&gt;
-&lt;!&ndash;            <div>{{$t('webshell.download')}}</div>&ndash;&gt;
-&lt;!&ndash;          </el-menu-item>&ndash;&gt;
-&lt;!&ndash;        </el-submenu>&ndash;&gt;
-      </el-menu>-->
 
       <el-tabs :before-leave="beforeLeave"
                @tab-click="handleClick"
@@ -99,13 +62,6 @@
       <i @click="fullScreen" class="el-icon-full-screen console-title-icon" style='right:38px;' v-if="!isFullScreen"></i>
       <i @click="exitFullScreen" class="nz-icon nz-icon-exit-full-screen console-title-icon" style='right:38px;' v-else></i>
       <i @click="closeConsole" class="nz-icon nz-icon-close console-title-icon" style='right:8px;'></i>
-      <!--
-      <i style='right:103px;' @click="minScreen" class="nz-icon nz-icon-minus console-title-icon"></i>
-      <i style='right:70px;;' @click="fullScreen" class="el-icon-full-screen console-title-icon"></i>
-      <i style='right:38px;' class="el-icon-copy-document console-title-icon" ></i>
-      <i style='right:8px;' @click="closeConsole" class="nz-icon nz-icon-close console-title-icon"></i>
-      -->
-      <!--nz-icon-setting  nz-icon nz-icon-minus  el-icon-full-screen  el-icon-copy-document-->
     </div>
 
     <div >
@@ -122,9 +78,6 @@
                            ref="uploadFile" >
                   <i class="nz-icon nz-icon-upload"></i>
                   <div class="el-upload__text">{{$t('overall.dragFileTip')}}，{{$t('overall.or')}}&nbsp;<em>{{$t('overall.clickUpload')}}</em></div>
-                  <!--<button type="button" class="nz-btn nz-btn-size-normal nz-btn-style-normal">
-                    <span class="top-tool-btn-txt" >{{$t('webshell.fileSelect')}}</span>
-                  </button>-->
                 </el-upload>
               </el-col>
             </el-row>
@@ -1006,66 +959,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .ani-webSHH-height{
-    transition: height .25s ease-in;
-  }
-  .sub-list{
-    background: #E4E7ED;
-  }
-  .flex /deep/ .el-form-item__content{
-    display: flex;
-  }
-  .nz-btn-style-normal-new{
-    margin-left: 10px;
-    margin-top: 2px;
-  }
-  /deep/ .custom .el-form-item {
-    width: calc(50% - 30px);
-    display: inline-block;
-  }
-  /deep/ .custom .el-form-item:nth-child(even) {
-    margin-left: 10px;
-  }
-  /deep/ .el-select--small{
-    width: 100%;
-  }
-  .custom-footer{
-    box-shadow: none;
-  }
-</style>
-<style lang="scss">
-  .popover-webshell{
-    margin-top: 0 !important;
-   .popover-webshell-item{
-     padding: 5px;
-     font-family: Roboto-Regular;
-     font-size: 14px;
-     color: #666666;
-     font-weight: 400;
-     .nz-icon{
-       margin-right: 5px;
-       font-size: 16px;
-     }
-   }
-    .popover-webshell-item:hover{
-      background: #F6F6F6;
-      font-family: Roboto-Regular;
-      font-size: 14px;
-      color: #FA901C;
-      font-weight: 400;
-    }
-    .popper__arrow{
-      display: none;
-    }
-  }
-  div.sp-header{
-    display: none;
-  }
-  /deep/ .horizontal .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
-    border: none;
-  }
-  /deep/ .horizontal .el-menu--popup .el-menu-item.is-active{
-    background: #fff;
-  }
-</style>

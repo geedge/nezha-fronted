@@ -2,6 +2,7 @@
   <el-table
     id="roleTable"
     ref="dataTable"
+    class="asset-table2"
     :data="tableData"
     :height="height"
     :default-sort="orderBy"
@@ -40,9 +41,6 @@
         <template v-else-if="item.prop === 'state'">{{scope.row.state ? scope.row.state.name : '-'}}</template>
         <template v-else-if="item.prop === 'endpointNum'">
           <span style="cursor: pointer" @click="$emit('showBottomBox', 'endpointTab', scope.row)"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i> <span>{{scope.row.endpointNum ? scope.row.endpointNum : 0}}</span></span>
-<!--          <div :class="messageStyle(item, scope.row)" @mouseenter="showTableTooltip(`${$t('asset.down')} / ${$t('asset.suspended')} / ${$t('asset.total')}`, true, $event)" @mouseleave="hideTableTooltip">
-            <span class="link" style="padding: 2px 8px" @click="showEndpoint(scope.row)">{{scope.row.endpointDownNum}}/{{scope.row.endpointSuspendedNum}}/{{scope.row.endpointNum}}</span>
-          </div>-->
         </template>
         <template v-else-if="item.prop === 'alertNum'">
           <span style="cursor: pointer" @click="$emit('showBottomBox', 'alertMessageTab', scope.row)"><i :class="scope.row.alertNum ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i> <span>{{scope.row.alertNum ? scope.row.alertNum : 0}}</span></span>
@@ -320,53 +318,6 @@ export default {
       }
       return `[${start}-${end}]`
     }
-    // formatPingTime (str) {
-    //   if (!str || str == '') {
-    //     return this.$t('asset.assetStatPre') + this.$t('asset.assetStatDown')
-    //   }
-    //   const ds = '-'
-    //   const ts = ':'
-    //   const time = new Date(bus.UTCTimeToConfigTimezone(str))
-    //   const year = time.getFullYear()
-    //   const month = time.getMonth() + 1 > 9 ? time.getMonth() + 1 : ('0' + (time.getMonth() + 1))
-    //   const day = time.getDate() > 9 ? time.getDate() : ('0' + time.getDate())
-    //   const hours = time.getHours() > 9 ? time.getHours() : ('0' + time.getHours())
-    //   const minutes = time.getMinutes() > 9 ? time.getMinutes() : ('0' + time.getMinutes())
-    //   const seconds = time.getSeconds() > 9 ? time.getSeconds() : ('0' + time.getSeconds())
-    //   return this.$t('asset.assetStatPre') + year + ds + month + ds + day + ' ' + hours + ts + minutes + ts + seconds
-    // }
   }
 }
 </script>
-<style scoped lang="scss">
-  /deep/ .el-table__row{
-    td{
-      position: relative;
-    }
-  }
-.active-icon-content {
-  display: none;
-  position: absolute;
-  background: #FFF;
-  min-width: 150px;
-  border: 1px solid #EBEEF5;
-  padding: 12px;
-  z-index: 2000;
-  color: #606266;
-  line-height: 1.4;
-  text-align: justify;
-  font-size: 14px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  left: 100%;
-  top: -60%;
-  width: auto;
-  white-space: nowrap;
-  transform: translateY(50%);
-}
-
-.ping-info:hover {
-  .active-icon-content{
-    display: block;
-  }
-}
-</style>

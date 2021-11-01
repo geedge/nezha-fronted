@@ -1,7 +1,7 @@
 <style scoped>
   .chartBox {
     float:left;
-    padding: 0px 10px 10px 0;
+    padding: 0 10px 10px 0;
     position:relative;
     box-sizing: border-box;
   }
@@ -10,39 +10,9 @@
   }
   .list-width{
     width: calc(100% - 2px);
-    padding: 5px 10px 5px 0px;
+    padding: 5px 10px 5px 0;
     box-sizing: border-box;
     overflow: hidden;/*避免鼠标第一次放到曲线时，x轴出现滚动条后消失*/
-  }
-</style>
-<style lang="scss">
-  .vue-resizable-handle {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    bottom: 0;
-    right: 0;
-    cursor: se-resize;
-    box-sizing: border-box;
-    user-select: none;
-    z-index: 99;
-  }
-  .vue-resizable-handle:after {
-    border-right: 2px solid #acb6bf;
-    border-bottom: 2px solid #acb6bf;
-    content: "";
-    position: absolute;
-    right: 3px;
-    bottom: 3px;
-    width: 5px;
-    height: 5px;
-    box-sizing: inherit;
-  }
-
-  .temp-dom {
-    visibility: hidden;
-    font-size: 14px;
-    position: fixed;
   }
 </style>
 <template>
@@ -1622,5 +1592,4 @@ export default {
   }
 
 }
-
 </script>

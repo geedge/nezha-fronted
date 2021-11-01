@@ -190,7 +190,7 @@
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                     />
                   </el-form-item>
-                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  <span :id="'moduel-remove-param-'+index" class="param-box-row-symbol" @click="removeParam(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
                 </div>
               </div>
               <div style="text-align: center">
@@ -209,7 +209,7 @@
                   <el-form-item :prop="'labelModule.' + index + '.value'" class="param-box-row-value">
                     <el-input v-model="item.value" placeholder="value" size="mini"></el-input>
                   </el-form-item>
-                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                  <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeLabel(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
                 </div>
               </div>
               <div style="text-align: center">
@@ -262,7 +262,6 @@
                        <el-input id="module-box-input-target_label" v-model="item.target_label" placeholder='' size="small"></el-input>
                      </el-form-item>
                    </div>
-<!--                    <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removeRelabel(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>-->
                     <transition name="el-zoom-in-top">
                       <div v-show="item.showAllRelabelOption" >
                         <!--Regex-->
@@ -384,7 +383,7 @@
                       <el-form-item class="param-box-row-value">
                         <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
                       </el-form-item>
-                      <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+                      <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1"></i></span>
                     </div>
                   </div>
                   <div style="text-align: center">
@@ -419,7 +418,7 @@
                       </el-form-item>
                     </div>
                     <div v-if="item2.type === 'json'">
-                      <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Expressions</label>
+                      <label class="module-form__label">Expressions</label>
                       <div  v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                         <el-form-item
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.key'"
@@ -482,7 +481,7 @@
                       </el-form-item>
                     </div>
                     <div v-if="item2.type === 'labels'">
-                      <label style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
+                      <label class="module-form__label" style="padding-bottom: 6px;font-size: 14px;line-height: 16px;color: #666;">Key/value</label>
                       <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                         <el-form-item
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
@@ -1397,236 +1396,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  .module-walk-box {
-    width: 100%;
-    border: 1px solid #DCDFE6;
-    border-radius: 4px;
-    min-height: 32px;
-    margin-bottom: 22px;
-    padding: 3px 0;
-  }
-  .module-walk-box i {
-    color: #C0C4CC;
-  }
-  .walk-box-item {
-    padding: 5px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .walk-box-item-txt {
-    color: #606266;
-  }
-  .walk-box-item-op span:first-of-type {
-    margin-right: 4px;
-  }
-  .walk-box-item-op span {
-    cursor: pointer;
-  }
-  .walk-box-op {
-    width: 18px;
-    margin: 5px 0 5px 15px;
-    cursor: pointer;
-  }
-  .el-cascader {
-    width: 100%;
-  }
-  .el-cascader__tags {
-    height: calc(100% - 10px);
-    width: 100%;
-  }
-  .right-box-module .el-cascader .el-input__inner {
-    height: 150px;
-  }
-  .right-box-form-tip{
-    color: #999999;
-    line-height: 21px;
-  }
-  .half-form-item {
-    width: calc(50% - 5px);
-    display: inline-block;
-    padding: 0 0px 0 0px;
-  }
-  .half-form-item:nth-child(even){
-    padding-left: 0;
-  }
-  /deep/ .el-tabs__item{
-    width: 90px;
-    padding: 0;
-    text-align: center;
-  }
-  /deep/ .el-tabs__item.is-active{
-    color: #FA901C
-  }
-  /deep/ .el-tabs__active-bar{
-    background-color: #FA901C
-  }
-  /deep/ .el-radio-group{
-    width: 100%;
-  }
-  /deep/ .el-radio{
-    width: 100%;
-  }
-  /deep/ .el-autocomplete{
-    width: 100%;
-  }
-  /deep/ .el-tabs__content{
-    /*padding-left: 18px;*/
-  }
-  .need-rotate.nz-icon-arrow-down{
-    display: inline-block;
-    transition: transform .3s;
-  }
-  .need-rotate.nz-icon-arrow-down.is-active{
-    transform: rotate(
-      -180deg
-    );
-  }
-  .module-add-label{
-    display: inline-block;
-    width: 16px;
-    height: 18px;
-    background: rgba(250,144,28,0.1);
-    border: 1px solid #FFE0BD;
-    border-radius: 2px;
-    text-align: center;
-    line-height: 18px;
-  }
-  .configs-copy-value{
-    opacity: 0.9;
-    background: #F6F8FA;
-    border: 1px solid #E7EAED;
-    border-radius: 2px;
-    height: 140px;
-    position: relative;
-    margin-top: 10px;
-    padding: 10px 0px 10px 15px;
-    width:100%;
-    margin-left: 0px;
-    pre{
-      max-height: 300px;
-      min-height: 100px;
-    }
-  }
-  .configs-copy-value .copy-value-content{
-    position: absolute;
-    right: 20px;
-    top: 14px;
-    cursor: pointer;
-  }
-  /deep/ .ti-input{
-    min-height: 30px;
-    overflow-x: hidden;
-    border-radius: 2px;
-    padding: 0 !important;
-  }
-  /deep/ .ti-tag{
-    background-color: #f4f4f5;
-    border-color: #e9e9eb;
-    color: #909399;
-    padding: 2px 4px!important;;
-  }
-  /deep/ .el-form-item__content .el-input-group {
-    vertical-align: unset;
-  }
-  /deep/ .special-tabs.el-tabs.el-tabs--top{
-    border: 1px dashed #D8D9DA;
-    padding: 7px 10px;
-    margin-top: 10px;
-    position: relative;
-  }
-  .nz-icon-minus-medium {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-    background: rgba(236,127,102,0.1);
-    padding: 2px 6px;
-    color: #EC7F66;
-  }
-  .endpoint-title{
-    border: 1px solid #E7EAED;
-    border-radius: 2px;
-    display: flex;
-    padding: 8px 10px;
-    justify-content: space-between;
-  }
-  .endpoint-title .endpoint-title-content{
-    font-family: Roboto-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    text-align: right;
-    font-weight: 500;
-    .nz-icon-arrow-down{
-      display: inline-block;
-      transition: transform .3s;
-      color: #BDBDBD;
-      font-size: 12px;
-    }
-    .nz-icon-arrow-down.is-active{
-      transform: rotate(
-          -90deg
-      );
-    }
-  }
-  .value-mapping-add {
-    background: rgba(250,144,28,0.1);
-    border: 1px solid #FFE0BD;
-    margin-bottom: 10px;
-    height: 24px;
-    line-height: 24px;
-    color: #FA901C;
-    box-sizing: border-box;
-  }
-  #module-box-relabel /deep/ .vue-tags-input{
-    max-width: unset;
-  }
-  /deep/ .is-error .vue-tags-input{
-    border: 1px solid #F56C6C;
-  }
-  .pipeline-box{
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #E7EAED;
-    padding-bottom: 3px;
-    margin-bottom: 10px;
-    .pipeline-title{
-      font-family: Roboto-Medium;
-      font-size: 14px;
-      color: #FA901C;
-      letter-spacing: 0;
-      font-weight: 600;
-      text-transform: Capitalize;
-    }
-  }
-</style>
-<style>
-  .sub-label {
-    padding-right: 15px;
-    font-size: 14px;
-    color: #666;
-    text-align: left;
-    line-height: 30px;
-    padding-left: 15px;
-    font-weight: bold;
-  }
-  .sub-label-required::after {
-    content: '*';
-    color: #F56C6C;
-    margin-left: 4px;
-  }
-  .module-box-type {
-    margin: 25px 0 10px -15px;
-  }
-  .walk-close-box {
-    margin-left: 6px;
-    width: 14px;
-  }
-  .walk-close {
-    font-size: 12px;
-  }
-  .config-dropdown.hide-element{
-    border: none!important;
-  }
-</style>

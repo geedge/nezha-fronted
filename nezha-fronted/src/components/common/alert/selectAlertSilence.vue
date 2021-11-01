@@ -2,9 +2,7 @@
   <el-popover :placement="placement" popper-class="nz-pop nz-pop-select-panel nz-pop-select-silence" ref="selectSilencePopBox" transition="slide" v-model="popBox.show" width="320">
     <div>
       <div class="pop-item-wider">
-
         <slot name="header"></slot>
-
         <div class="select-panel-tree">
           <el-tree
             :data="silenceData"
@@ -118,72 +116,6 @@ export default {
       this.$refs.panelTree.setCurrentKey(data)
       this.esc()
     }
-    // tree设为单选
-    /* clearOthers(data, checked, child) {
-        if (checked) {
-          this.panel = data;
-          this.$refs.panelTree.setCheckedKeys([data.id]);
-        } else {
-          this.panel = {id: '', name: ''};
-        }
-      } */
   }
 }
 </script>
-
-<style lang="scss">
-  .movable {
-    .el-tree-node__content {
-      cursor: move;
-      .tree--node>span:first-of-type {
-        cursor: pointer;
-      }
-      .tree--node>span:last-of-type>span {
-        cursor: pointer;
-      }
-    }
-  }
-  .tree--node>span:last-of-type>span>i {
-    font-weight: normal !important;
-  }
-  .select-panel-tree {
-    height: 350px;
-    overflow: auto;
-  }
-  .select-panel-tree .el-tree-node__content {
-    height: 34px;
-    line-height: 34px;
-  }
-  .select-panel-tree .el-tree-node__content:hover {
-    color: $global-text-color-active;
-  }
-  .select-panel-tree .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
-    background-color: #F5F7FA;
-    font-weight: bold;
-    color: $global-text-color-active;
-  }
-  .tree--node {
-    display: flex;
-    justify-content: space-between;
-    width: calc(100% - 28px);
-  }
-  .tree--operation {
-    opacity: 0;
-  }
-  .tree--node:hover .tree--operation {
-    opacity: 1;
-  }
-  .panel-dropdown-btn {
-    color: #60BEFF;
-  }
-  .panel-dropdown-btn:hover {
-    color: #409EFF;
-  }
-  .panel-dropdown-btn-delete {
-    color: #F98D9A;
-  }
-
-  .panel-dropdown-btn-delete:hover {
-    color: #D96D7A;
-  }
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div style="line-height: 32px;">
+  <div class="detail-view-top-search" style="line-height: 32px;">
     <div class="search-detail-box" :class="[selectValue[item.key].length?'select-dropdown':'',detailSearchListCopy[key].dropShow?'show-my-dropdpwn':'']" v-for="(item,key) in detailSearchListCopy" :key='key' v-show="item.children.length">
       <span v-if="item.type === 'checkBox'">
             <el-dropdown
@@ -105,16 +105,6 @@ export default {
   name: 'detailViewTopSearch',
   props: {
     detailSearchList: {
-      /*
-      * project: {
-          label: 'Project', // 显示的label
-          key: 'projectIds', // 搜索使用的key
-          type: 'checkBox', // 类型
-          children: []      // 需要展示的子集
-          showMore: false, // 是否需要显示更多
-          index: 最大宽度的个数, // 是否需要显示更多
-        },
-      * */
       type: Object,
       default () {
         return {
@@ -195,112 +185,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-  .search-detail-box{
-    display: inline-block;
-    margin-right: 20px;
-    transition: background-color .1s ease-out;
-    border-radius: 2px;
-  }
-  .search-detail-box:hover{
-    background: #F9F9F9;
-  }
-  .search-detail-box.select-dropdown{
-    background: #F9F9F9;
-  }
-  /*.search-detail-box.show-my-dropdpwn{*/
-  /*  background-color: #344563;*/
-  /*  color: #fff;*/
-  /*  .search-detail-title{*/
-  /*    color: #fff;*/
-  /*  }*/
-  /*  .detail-top-search{*/
-  /*    color: #fff;*/
-  /*  }*/
-  /*  .search-value{*/
-  /*    color: #fff;*/
-  /*  }*/
-  /*}*/
-  .detail-dropdown{
-    padding: 0 10px;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 2px;
-  }
-  .search-detail-title {
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-    font-weight: 600;
-    margin-right: 10px;
-  }
-  .search-value{
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    line-height: 14px;
-    font-weight: 400;
-  }
-  .detail-top-search {
-    display: inline-block;
-    vertical-align: bottom;
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    max-width: 100px;
-  }
-</style>
-<style lang="scss">
-  .detail-top-search-dropdown{
-    max-height: 300px;
-    overflow-y: auto;
-    .el-dropdown-menu__item{
-      background: #fff !important;
-      padding: 0;
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      .el-checkbox{
-        width: calc(100% - 20px);
-        height: 36px;
-        padding: 0 0 0 20px;
-        display: flex;
-        align-items: center;
-        .el-checkbox__label{
-          flex: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-      .el-checkbox:hover{
-        color: #fa901c;
-        background-color: #fafafa !important;
-      }
-      .children-title-name{
-        width: calc(100% - 20px);
-        height: 36px;
-        padding-left: 20px;
-        font-size: 12px;
-        color: #909399;
-        line-height: 30px;
-      }
-    }
-    .el-dropdown-menu__item:not(.is-disabled):hover{
-      color: #606266;
-      background: #fff !important;
-    }
-  }
-  .clear-all-select{
-    padding: 0 20px;
-    padding-left: 42px;
-    color: #0052cc;
-    font-size: 12px;
-  }
-  .clear-all-select:hover{
-    text-decoration: underline;
-  }
-</style>

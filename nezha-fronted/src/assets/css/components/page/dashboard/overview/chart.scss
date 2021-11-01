@@ -1,0 +1,57 @@
+.chart-room {
+  .showMore{
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  .nz-icon-jinggao{
+    color: $--color-warning;
+    margin-right: 5px;
+    font-size: 14px;
+  }
+  .moreChart{
+    color: rgb(87, 148, 242);
+    cursor: pointer;
+  }
+
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .legend-container{
+    overflow: auto;
+    width: calc(100% - 30px);
+    max-height:80px;
+    min-height:25px;
+    /*height: 80px;*/
+    font-size:12px;
+    text-align:left;
+    left: 10px;
+    bottom: 5px;
+    line-height: 18px;
+    position: absolute;
+  }
+  .legend-container .legend-item{
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow-x:hidden;
+    cursor:pointer;
+    display:inline-block;
+    float:left;
+    line-height: 20px;
+  }
+  .ft-gr{
+    color:lightgray;
+  }
+  .legend-shape{
+    display:inline-block;
+    margin-right:5px;
+    border-radius:10px;
+    width:15px;
+    height:5px;
+    vertical-align: middle;
+  }
+}

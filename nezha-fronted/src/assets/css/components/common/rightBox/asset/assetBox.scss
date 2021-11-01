@@ -1,0 +1,44 @@
+.placeholder-emphasize input::-webkit-input-placeholder {
+  color: $--color-text-regular !important;
+}
+.el-form__sub-title {
+  border: 1px solid $--border-color-light;
+  color: $--color-text-regular;
+  font-size: 14px;
+  padding: 0 10px;
+  line-height: 32px;
+  margin: 0 0 20px;
+  display: flex;
+  justify-content: space-between;
+  .el-switch {
+    line-height: 32px;
+    height: 32px;
+  }
+  .nz-icon-arrow-down{
+    display: inline-block;
+    transition: transform .3s;
+    color: #BDBDBD;
+    font-size: 12px;
+  }
+  .nz-icon-arrow-down.is-active{
+    transform: rotate(
+        -90deg
+    );
+  }
+}
+.need-rotate.nz-icon-arrow-down{
+  display: inline-block;
+  transition: transform .3s;
+}
+.need-rotate.nz-icon-arrow-down.is-active{
+  transform: rotate(
+      -180deg
+  );
+}
+.nz-btn-size-normal-new.nz-btn-style-light-new {
+  font-size: 12px;
+  color: #3C92F1;
+  i {
+    font-size: 12px;
+  }
+}

@@ -1,11 +1,5 @@
 <template>
   <div ref="box" class="box-hexagon" v-clickoutside="{obj:{},func:hexagonSvgClearScale}" v-if="boxhexagonShow">
-    <!--<div class="hexagon-text" :style="{top:hexagonTextPos.top,left:hexagonTextPos.left}" v-show="hexagonTextPos.show">-->
-    <!--<span v-if="hexagonTextPos.data">-->
-    <!--{{hexagonTextPos.data?hexagonTextPos.data.alertName:''}}-->
-    <!--{{hexagonTextPos.data?hexagonTextPos.data.nums:''}}-->
-    <!--</span>-->
-    <!--</div>-->
     <div :id="hexagonSvgID">
 
     </div>
@@ -847,7 +841,6 @@ export default {
       getHexagon(this.hexagonSvgID).allHexagonText = null// 文本内容
     }
     window.removeEventListener('visibilitychange', this.reload)
-    // clearTimeout(this.timer)
   }
 }
 </script>

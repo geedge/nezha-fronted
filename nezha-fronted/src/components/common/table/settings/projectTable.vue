@@ -2,6 +2,7 @@
   <el-table
     id="userTable"
     ref="dataTable"
+    class="project-table"
     :data="tableData"
     :height="height"
     border
@@ -147,26 +148,3 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
-  .module-num{
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    padding: 0 3px;
-    cursor: pointer;
-    .nz-icon-overview-module{
-    color: rgb(122, 208, 188)
-    }
-  }
-  .alert-num{
-    padding: 0 3px;
-    cursor: pointer;
-    border-radius: 2px;
-  }
-  .colorEF7458{
-    color: #EF7458;
-  }
-  .color23BF9A{
-    color: #23BF9A;
-  }
-</style>

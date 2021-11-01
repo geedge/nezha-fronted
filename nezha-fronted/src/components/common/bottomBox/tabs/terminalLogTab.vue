@@ -1,5 +1,5 @@
 <template>
- <nz-bottom-data-list
+  <nz-bottom-data-list
     :showTitle='showTitle'
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"

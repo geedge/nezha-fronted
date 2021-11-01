@@ -1,0 +1,98 @@
+.range-time {
+  /deep/ .el-radio-button--small .el-radio-button__inner, /deep/ .el-radio-group {
+    width: 100%
+  }
+
+  /deep/ .el-radio-button {
+    width: 14.2%
+  }
+
+  /deep/ .el-date-editor.el-range-editor.el-input__inner.el-date-editor--datetimerange.el-range-editor--mini {
+    width: 100%;
+  }
+
+  .datepicker {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    .datepicker-box{
+      width: 48%;
+      flex: 1;
+      position: relative;
+      /deep/ .el-date-editor.el-input, /deep/ .el-date-editor.el-input__inner{
+        width: 100%;
+      }
+      /deep/ .el-input__inner{
+        text-align: center;
+      }
+      .datepicker-title{
+        position: absolute;
+        left: 15px;
+        z-index: 1;
+      }
+    }
+  }
+}
+.matchers{
+  /deep/ .el-input__prefix{
+    left: 0;
+  }
+  /deep/ .el-form-item__error{
+    left: 126px;
+    padding-top: 5px;
+  }
+  .matchers-type{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    .matchers-type-title{
+      width: 125px;
+      background: $--border-color-light;
+      font-family: ArialMT;
+      font-size: 14px;
+      color: $--color-text-primary;
+      letter-spacing: 0;
+      font-weight: 400;
+      text-align: center;
+    }
+    /deep/ .matchers-type-title.el-select--small .el-input__inner{
+      background:$--border-color-light;
+      font-family: ArialMT;
+      font-size: 14px;
+      color: $--color-text-primary;
+      letter-spacing: 0;
+      font-weight: 400;
+      text-align: center;
+      border: none;
+    }
+    .matchers-type-content{
+      flex: 1;
+    }
+  }
+}
+/deep/ .silence-matchers-value{
+  width: calc(100% - 100px);
+}
+/deep/ .silence-matchers-key{
+  width: 100%;
+}
+.silence-matchers-regex{
+  margin-left: 10px;
+}
+/deep/ .param-box-row-key{
+  width: 36%;
+}
+/deep/ .param-box-row-value{
+  width: 50%;
+}
+.module-add-label{
+  display: inline-block;
+  width: 300px;
+  height: 18px;
+  background: #FFFCF9;
+  border: 1px solid #FFE0BD;
+  border-radius: 2px;
+  text-align: center;
+  line-height: 18px;
+  margin-right: 80px;
+}

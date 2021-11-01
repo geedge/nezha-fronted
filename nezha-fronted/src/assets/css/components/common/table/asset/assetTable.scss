@@ -1,0 +1,32 @@
+.asset-table2 {
+  .el-table__row {
+    td {
+      position: relative;
+    }
+  }
+  .active-icon-content {
+    display: none;
+    position: absolute;
+    background: $--background-color-empty;
+    min-width: 150px;
+    border: 1px solid $--border-color-light;
+    padding: 12px;
+    z-index: 2000;
+    color: $--color-text-regular;
+    line-height: 1.4;
+    text-align: justify;
+    font-size: 14px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    left: 100%;
+    top: -60%;
+    width: auto;
+    white-space: nowrap;
+    transform: translateY(50%);
+  }
+
+  .ping-info:hover {
+    .active-icon-content {
+      display: block;
+    }
+  }
+}

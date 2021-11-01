@@ -1,0 +1,50 @@
+.select-walk-tree {
+  height: 350px;
+  overflow-y: auto;
+}
+.select-walk-tree .el-tree-node__content {
+  height: 34px;
+  line-height: 34px;
+}
+.select-walk-tree .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: $--background-color-base;
+  font-weight: bold;
+  color: $--color-primary;
+}
+.select-walk-tree .el-tree .el-checkbox {
+  display: none;
+}
+.nz-pop-select-walk {
+  padding: 0 !important;
+}
+.walk-active {
+  color: $--color-primary;
+}
+.walk-tree-item {
+  height: 34px;
+  line-height: 34px;
+}
+.walk-detail {
+  z-index: 10000 !important;
+}
+
+.walk-pop {
+  position: fixed;
+  transform: translate(-100%, -100%);
+}
+.walk-pop::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+  border: 5px;
+  border-style: dashed dashed dashed solid;
+  border-color: transparent transparent transparent #fff;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(10px, -50%);
+}

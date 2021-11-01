@@ -1,0 +1,59 @@
+.severity-circle{
+  position: absolute;
+  left: 10px;
+  top: 0;
+}
+.severity-box{
+  position: relative;
+}
+.severity-box /deep/ .el-select .el-input__inner{
+  padding-left: 25px;
+}
+.half-form-item {
+  width: calc(50% - 5px);
+  display: inline-block;
+  .el-form-item__content,.el-select{
+    width: 100%;
+  }
+}
+.right-box-alert-rule /deep/ .right-box__container .el-form-item__content .el-input-group--prepend{
+  width: 100%;
+}
+/deep/ .rich-text-editor{
+  line-height: 24px;
+}
+/deep/ .el-input-group__prepend{
+  position: relative;
+  .hide-icon{
+    width: 38px;
+    .el-input__inner{
+      border: none;
+      text-align: center;
+    }
+  }
+}
+.alert-rule-split-title{
+  background: $--background-color-base;
+  font-size: 14px;
+  color: $--color-text-primary;
+  letter-spacing: 0;
+  font-weight: 400;
+  line-height: 24px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  height: 24px;
+}
+/deep/ .el-form-item__content .el-input-group{
+  vertical-align: middle;
+}
+.severity-item{
+  color: $--color-text-secondary;
+  font-size: 12px;
+  max-width: 120px;
+  overflow: hidden;
+}
+.text-ellipsis{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}

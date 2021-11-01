@@ -181,39 +181,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.right-box__select{
-  position: absolute;
-  left: -55px;
-  top: 0;
-}
-</style>
-<style lang="scss">
-  .pipeline{
-    width: 178px !important;
-    .el-select-group__wrap:not(:last-of-type){
-      padding-bottom: 0;
-    }
-    .el-select-group__title{
-      padding-left: 10px;
-      line-height: 32px;
-    }
-    .el-select-dropdown__item{
-      padding: 0 10px;
-      height: 32px;
-      line-height: 32px;
-    }
-    .el-select-group__wrap:not(:last-of-type)::after{
-      bottom: -2px;
-      left: 10px;
-      right: 10px;
-    }
-    .el-select-dropdown__wrap{
-      max-height: 300px;
-    }
-    .popper__arrow{
-      display: none !important;
-    }
-  }
-</style>

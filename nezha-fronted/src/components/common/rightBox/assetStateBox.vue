@@ -149,32 +149,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-  .right-box-asset-state {
-    .right-box-sub-title {
-      #add-notification {
-        border: none;
-        outline: none;
-        cursor: pointer;
-
-        i {
-          font-size: 17px;
-          background-color: #f6f6f6;
-        }
-      }
-    }
-  }
-
-  .notification-item {
-    .el-select {
-      width: 100px;
-
-    }
-  }
-</style>
-<style scoped>
-  .form-item-title{
-    position: absolute;
-    left: -120px;
-  }
-</style>

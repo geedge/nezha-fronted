@@ -1,0 +1,44 @@
+.agent-dialog .agent-box{
+  padding:10px;
+}
+
+.agent-box >.right-box-form>.el-form-item.half-form-item{
+  width: 220px;
+}
+.agent-box >.right-box-form>.el-form-item.half-form-item:nth-child(odd){
+  width: 220px;
+}
+
+.agent-box .download-url{
+  margin-left: 12px !important;
+}
+.agent-box .download-url .url-copy i{
+  font-size: 20px;
+}
+.agent-box .download-url pre code {
+  border: 1px solid $--border-color-base;
+  border-radius: 0;
+  font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+  line-height: 40px;
+  padding: 5px 20px 5px 5px;
+  white-space: nowrap;
+  background-color: $--background-color-base;
+  color: $--color-text-primary;
+}
+
+.agent-box .download-url code {
+  color: $--color-text-primary;
+}
+.download-url  .el-input.is-disabled .el-input__inner{
+  background-color: $--background-color-base;;
+  border-color: $--border-color-light;
+  color: $--color-text-primary;
+  cursor: text;
+}
+.download-url  .el-input__suffix {
+  position: absolute;
+  -webkit-transition: all .3s;
+  height: 100%;
+  color: $--color-text-primary;
+  text-align: center;
+}

@@ -1,6 +1,3 @@
-<style lang="scss">
-  @import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -314,31 +311,3 @@ export default {
   }
 }
 </script>
-<style>
-  .center-content .content-static-url{
-    font-weight: bold;
-    font-size: 24px;
-  }
-  .center-content .content-static-tip{
-    font-size: 18px;
-    color: lightgrey;
-  }
-  .resize-box-group{
-    position: unset !important;
-  }
-</style>
-<style scoped>
-  .chart-title .nz-icon-arrow-down{
-    display: inline-block;
-    transition: transform .3s;
-  }
-  .chart-title .nz-icon-arrow-down.is-active{
-    transform: rotate(
-      -90deg
-    );
-  }
-  .collapse-content{
-    font-size: 12px;
-    color: #999999;
-  }
-</style>

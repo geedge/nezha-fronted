@@ -284,8 +284,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  /deep/ td .nz-icon-gear:before{
-    color: #606266;
-  }
-</style>

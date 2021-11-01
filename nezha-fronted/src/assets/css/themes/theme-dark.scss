@@ -1,0 +1,93 @@
+/*** 主题色，主题切换相关 ***/
+
+/* 1.主色(覆盖element-ui内置变量) */
+$--color-primary: #FA901C;
+
+/* 2.背景色 */
+// 空白背景色
+$--background-color-empty: #222329;
+// 基础背景色(覆盖element-ui内置变量)
+$--background-color-base: #18171D;
+// 背景色1
+$--background-color-1: #444440;
+
+// 左侧菜单背景色
+$--left-menu-background-color-base: $--background-color-empty;
+// 左侧菜单激活背景色
+$--left-menu-background-color-active: #191A1E;
+// 左侧菜单展开背景色
+$--left-menu-background-color-open: #191A1E;
+// 左侧菜单hover背景色
+$--menu-item-hover-fill: #191A1E;
+
+/* 3.字色 */
+// 标题字色
+$--color-text-primary: #FFFFFE;
+// 普通字色
+$--color-text-regular: #BEBEBE;
+// 次要字色
+$--color-text-secondary: #999998;
+// 链接字色
+$--color-text-link: #3C92F1;
+
+/* 4.边框色 */
+// 普通边框色
+$--border-color-base: transparent;
+// 浅边框色
+$--border-color-light: #2e2e2e;
+// 普通边框色focus
+$--border-color-base-focus: #C7C7C7;
+
+/* 5.提示色 */
+// 正常绿色
+$--color-success: #23BF9A;
+// 警告橙色
+$--color-warning: #FA901C;
+// 危险红色
+$--color-danger: #EC7F66;
+// 普通灰色
+$--color-info: #999998;
+// 停用灰色
+$--color-suspended: #9e9c98;
+// 监控色
+$--color-monitor: #98AEC5;
+
+/* 6.table */
+// 表头字色
+$--table-header-font-color: #D8D8D8;
+// 行背景色
+$--table-row-background-color: $--background-color-empty;
+// 行鼠标hover背景色
+$--table-row-hover-background-color: #18171D;
+// 表头背景色
+$--table-header-background-color: #191A1E;
+// body背景色
+$--table-body-background-color: $--background-color-empty;
+
+/* 7.checkbox */
+// 背景色
+$--checkbox-background-color: $--background-color-empty;
+$--checkbox-border-color: #454545;
+
+/* 8.滚动条 */
+// 背景色
+$--scrollbar-background-color: #404040;
+$--scrollbar-background-color-hover: #505050;
+
+/* 9.dashboard */
+$--dashboard-background-color-empty: $--background-color-base;
+$--dashboard-card-border-color: $--background-color-empty;
+$--dashboard-card-header-background-color: $--background-color-empty;
+
+/* 10.dropdown */
+$--dropdown-menu-box-shadow-color: rgba(8,3,3,0.77);
+
+/* 11.input */
+$--input-background-color: $--background-color-base;
+
+
+
+
+/*** themes/common.scss是与主题切换无关的变量 ***/
+@import './src/common/var.scss';
+@import './common.scss';

@@ -1,0 +1,101 @@
+.record-container {
+  height: calc(100% - 50px);
+  overflow: auto;
+  position: relative;
+}
+.record-container--record {
+  background-color: white;
+  width: calc(100% - 6px);
+  padding: 16px 15px 6px 15px;
+  border: 1px solid $--border-color-base;
+  box-sizing: border-box;
+  min-height: 100px;
+
+  .record--title {
+    color: $--color-text-primary;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .record--list {
+    display: grid;
+    gap: 6px 12px;
+    grid-template-columns: 150px auto;
+    font-size: 14px;
+    color: $--color-text-primary;
+
+    .detail--time {
+      line-height: 22px;
+      grid-column: 1/span 1;
+      display: flex;
+      font-size: 12px;
+      align-items: flex-start;
+
+      span {
+        background-color: $--background-color-1;
+        padding: 2px 10px;
+      }
+    }
+
+    .detail--cmd {
+      line-height: 22px;
+      grid-column: 2/span 1;
+      display: flex;
+
+      span {
+        padding: 2px 10px;
+      }
+    }
+
+    .detail--cmd__green {
+      background-color: #B4FDB1;
+    }
+    .detail--cmd__red {
+      background-color: #FFD2C2;
+    }
+  }
+
+  .record--more {
+    text-align: center;
+    margin-top: 15px;
+
+    .more-btn {
+      color: $--color-text-secondary;
+      cursor: pointer;
+
+      .nz-icon {
+        font-size: 14px;
+      }
+    }
+  }
+}
+.record-container--record-tip {
+  position: absolute;
+  right: 20px;
+  top: 17px;
+
+  .record--title {
+    color: $--color-text-primary;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .detail--cmd {
+    line-height: 22px;
+    font-size: 14px;
+    padding-left: 20px;
+
+    span {
+      padding: 3px 10px;
+    }
+  }
+
+  .detail--cmd__green {
+    background-color: #A7F29E;
+  }
+  .detail--cmd__red {
+    background-color: #FBe2DE;
+  }
+}

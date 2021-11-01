@@ -267,60 +267,7 @@ export default {
 }
 </script>
 <style scoped>
-  .colorEF7458{
-    color: #EF7458;
-  }
-  .color23BF9A{
-    color: #23BF9A;
-  }
   /deep/ .active-icon {
     margin-left: 5px;
-  }
-</style>
-<style>
-.severity .P1{
-  background: #F5846A;
-  border-radius: 2px;
-  font-size: 12px;
-  color: #FFFFFF;
-  padding: 2px 6px;
-}
-.severity .P2{
-  background: #F7A54A;
-  border-radius: 2px;
-  font-size: 12px;
-  color: #FFFFFF;
-  padding: 2px 6px;
-}
-.severity .P3{
-  background: #F1C13D;
-  border-radius: 2px;
-  font-size: 12px;
-  color: #FFFFFF;
-  padding: 2px 6px;
-}
-.schedEnableTitle{
-  padding: 15px 20px;
-}
-.schedEnableTitle .nz-icon-a-rilizhou, .schedEnableTitle .nz-icon-dingshishijian{
-  font-size: 14px;
-  color: #FA901C;
-  margin-right: 12px;
-}
-.schedEnableTitle .week-item{
-  width: 32px;
-  height: 22px;
-  line-height: 22px;
-  opacity: 0.9;
-  background: #F7F7FA;
-  border-radius: 2px;
-  display: inline-block;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0;
-  font-weight: 400;
-  padding-left: 3px;
-  margin-right: 12px;
-  margin-bottom: 6px;
   }
 </style>

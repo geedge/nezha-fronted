@@ -1,11 +1,11 @@
 <template>
- <nz-bottom-data-list
+  <nz-bottom-data-list
     :showTitle='showTitle'
     :layout="[]"
     :tabs="tabs"
     @changeTab="changeTab"
     :title="'Session ID'"
-  >
+   >
     <template v-slot:title><span :title="obj.uuid.substring(0, 8).toUpperCase()">{{obj.uuid.substring(0, 8).toUpperCase()}}</span></template>
     <template v-slot>
       <div class="replay-container">
@@ -348,60 +348,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.replay-tab {
-  height: 100%;
-}
-.replay-container {
-  height: calc(100% - 40px);
-}
-.record-console {
-  padding: 10px 4px 10px 10px;
-  background-color: black;
-  height: calc(100% - 65px) !important;
-}
-.terminal-replay-progress {
-  height: 20px;
-  padding: 3px 0;
-  position: relative;
-  width: 500px;
-}
-.terminal-replay-progress-bar {
-  top: 50%;
-  transform: translateY(-50%);
-
-  .el-progress-bar__inner {
-    transition: unset;
-    user-select: none;
-  }
-}
-.replay-operate {
-  .nz-btn {
-    margin-right: 8px;
-
-    .nz-icon {
-      font-size: 14px;
-    }
-  }
-}
-.operate-skip {
-  margin: 0 12px !important;
-}
-.time-box {
-  border: none;
-  border-radius: 16px;
-}
-.progress-controller {
-  position: absolute;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  background-color: #409eef;
-  top: 50%;
-  transform: translate(-7px, -50%);
-}
-.progress-controller:hover {
-  background-color: #207ecf;
-}
-</style>

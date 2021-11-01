@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="asset-meta">
     <nz-data-list
       ref="dataList"
       :api="url"
@@ -281,76 +281,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .content{
-    display: flex;
-    height: calc(100% - 40px);
-  }
-  .asset-meta-group{
-    width: 200px;
-    height: calc(100% - 100px);
-    background: #fff;
-    margin-right: 10px;
-    border: 1px solid #d4d4d4;
-  }
-  .asset-meta-table{
-    flex: 1;
-  }
-  .group-title {
-    background-image: linear-gradient(#f8f8f8, #e6e6e6);
-    border-bottom: 1px solid #d4d4d4;
-    display: flex;
-    justify-content: flex-end;
-    padding: 3px 5px;
-  }
-  .group-box{
-    height: 100%;
-    overflow-y:auto;
-  }
-  /deep/ .el-tree-node.is-current>.el-tree-node__content{
-    background-color: #F5F7FA;
-    color: #ee9d3f;
-  }
-  /deep/ .el-tree-node.is-current>.el-tree-node__content .meta-group{
-    background-color: #F5F7FA;
-    color: #ee9d3f;
-  }
-  /deep/ .el-tree-node__content:hover .meta-group {
-    color: #ee9d3f;
-  }
-  .meta-group{
-    color: #606266;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .meta-group .nz-icon-edit{
-    color: #606266;
-  }
-  .meta-group .icon-box{
-    display: none;
-  }
-  .meta-group:hover .icon-box{
-    display: inline-block;
-  }
-
-  .panel-select-header {
-    text-align: center;
-  }
-  .panel-select-tail {
-    border-top: 1px solid  #DEDEDE;
-    .panel-select-add {
-      line-height: 32px;
-      height: 32px;
-      display: inline-block;
-      cursor: pointer;
-      i {
-        color: #FA901C;
-        font-size: 12px;
-        font-weight: bold;
-        padding-left: 20px;
-      }
-    }
-  }
-</style>

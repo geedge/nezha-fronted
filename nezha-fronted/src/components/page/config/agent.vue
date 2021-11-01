@@ -223,16 +223,8 @@ export default {
 
       if (id.indexOf('curl') != -1) {
         this.curlVisible = true
-        // let timeout = setTimeout(()=>{
-        //   this.curlVisible = false;
-        //   clearTimeout(timeout)
-        // },1000)
       } else {
         this.wgetVisible = true
-        // let timeout = setTimeout(()=>{
-        //   this.wgetVisible = false;
-        //   clearTimeout(timeout)
-        // },1000)
       }
     },
     popShow: function (where) {
@@ -300,55 +292,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .agent-dialog .agent-box{
-    padding:10px;
-  }
-
-  .agent-box >.right-box-form>.el-form-item.half-form-item{
-    width: 220px;
-  }
-  .agent-box >.right-box-form>.el-form-item.half-form-item:nth-child(odd){
-    width: 220px;
-  }
-
-  .agent-box .download-url{
-      margin-left: 12px !important;
-  }
-  .agent-box .download-url .url-copy{
-
-  }
-  .agent-box .download-url .url-copy i{
-    font-size: 20px;
-  }
-  .agent-box .download-url pre code {
-    border: 1px solid #ddd;
-    border-radius: 0;
-    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
-    line-height: 40px;
-    padding: 5px 20px 5px 5px;
-    white-space: nowrap;
-    background-color: #F6F8FA;;
-    color: #333;
-  }
-
-  .agent-box .download-url code {
-    color: #333;
-  }
-
-</style>
-<style>
-  .download-url  .el-input.is-disabled .el-input__inner{
-    background-color: #F6F8FA;;
-    border-color: #E4E7ED;
-    color: #333;
-    cursor: text;
-  }
-  .download-url  .el-input__suffix {
-    position: absolute;
-    -webkit-transition: all .3s;
-    height: 100%;
-    color: #333;
-    text-align: center;
-  }
-</style>

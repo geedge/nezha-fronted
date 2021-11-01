@@ -1,0 +1,108 @@
+.arrow-down {
+  transform: rotate(0);
+  transition: all linear .2s;
+}
+.arrow-down.arrow-up {
+  transform: rotate(180deg);
+}
+.nz-label-search {
+  line-height: 40px;
+  margin: 6px 0;
+  .el-input__inner {
+    width: 60px;
+  }
+}
+.search-box__container {
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid $--border-color-light;
+  background-color: $--background-color-empty;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.search-title {
+  width: 130px;
+  font-size: 14px;
+  color: $--color-text-regular;
+  letter-spacing: 0;
+  font-weight: 600;
+  overflow: hidden;
+  height: 100%;
+  line-height: 40px;
+  padding-left: 20px;
+  box-sizing: border-box;
+  background: $--background-color-base;
+}
+.search-content-box--copy {
+  position: fixed;
+  visibility: hidden;
+}
+.search-content-box-height.search-content-box {
+  min-height: 31px;
+}
+.search-content-box,.search-content-box-height {
+  border-bottom: 1px solid $--border-color-base;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 0;
+  box-sizing: border-box;
+
+  /deep/ .el-checkbox__label {
+    max-width: 150px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+    vertical-align: text-bottom;
+  }
+}
+.search-content-box {
+  background: $--background-color-base;
+  align-items: unset;
+}
+.search-content-box:last-of-type{
+  border-bottom: none;
+}
+.search-items {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding-left: 15px;
+  padding-right: 80px;
+  background: $--background-color-empty;
+  &.search-items--checkbox .el-skeleton {
+    height: 21px;
+  }
+  &.search-items--dropdown .el-skeleton {
+    height: 28px;
+  }
+  .el-checkbox{
+    line-height: 40px;
+  }
+}
+.more.search-items{
+  .el-checkbox{
+    line-height: 40px;
+  }
+}
+.search-more {
+  position: absolute;
+  right: 4px;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 8px;
+  font-size: 12px;
+  color: $--color-text-primary;
+  box-sizing: border-box;
+  border: 1px solid $--border-color-base;
+  border-radius: 2px;
+  cursor: pointer;
+
+  i {
+    color: $--color-text-secondary;
+    font-size: 12px;
+  }
+}

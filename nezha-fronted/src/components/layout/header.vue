@@ -48,7 +48,7 @@
       </el-dropdown>
       <el-dropdown>
         <div class="personal-avatar"><span>{{name.substr(0, 1)}}</span>&nbsp;<i class="nz-icon nz-icon-arrow-down"></i></div>
-        <el-dropdown-menu  style="width: 142px" class="right-public-box-select-top right-public-box-dropdown-top" slot="dropdown">
+        <el-dropdown-menu  slot="dropdown" class="right-public-box-select-top right-public-box-dropdown-top" style="width: 142px; line-height: 36px;">
           <div class="personal-dropdown">
             <div class="personal-dropdown__username">{{name}}</div>
             <div class="personal-dropdown__name">@{{username}}</div>
@@ -70,12 +70,10 @@
 <script>
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
-// import changePin from '../page/config/changePin'
 import guide from '@/components/common/popBox/guide'
 export default {
   name: 'Header',
   components: {
-    // 'change-password': changePin,
     guide
   },
   data () {
@@ -259,139 +257,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.header {
-  display: flex;
-  height: 50px;
-  .personal-avatar {
-    cursor: pointer;
-    span {
-      width: 32px;
-      height: 32px;
-      display: inline-block;
-      line-height: 32px;
-      background: rgba(60,146,241,0.10);
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #3C92F1;
-      letter-spacing: 0;
-      font-weight: 500;
-      text-transform: capitalize;
-      border-radius: 100%;
-    }
-  }
-  .header-menu {
-    display: flex;
-    justify-content: flex-end;
-    flex-grow: 1;
-
-    .el-dropdown {
-      width: 60px;
-      text-align: center;
-      height: 36px;
-      line-height: 50px;
-      .el-dialog{
-        width: 1000px;
-        height: 70px;
-        .el-dialog__header{
-          background-color: orange;
-          .el-dialog__title{
-            color: #fff;
-          }
-          .el-dialog__close{
-            color: #fff;
-            line-height: 50px;
-            font-size: 30px;
-          }
-        }
-      }
-
-    }
-  }
-  .header-menu--item {
-    color: #778391;
-    cursor: pointer;
-    transition: color linear .2s;
-    i {
-      font-size: 18px;
-    }
-  }
-  .header-menu--item:hover {
-    color: #313336;
-  }
-  .header-menu__item {
-    i {
-      font-size: 20px;
-      cursor: pointer;
-    }
-  }
-  .personal {
-    display: flex;
-    .el-dropdown {
-      margin: 0 20px;
-      height: 36px;
-      line-height: 50px;
-      text-align: center;
-    }
-    .login-user {
-      color: #333;
-      i {
-        color: #999;
-        font-size: 12px;
-      }
-    }
-  }
-  .right-tip {
-    position: absolute;
-    left: 30px;
-    top: 10px;
-    padding: 0 6px;
-    line-height: 15px;
-    height: 15px;
-    background-color: #ba3939;
-    opacity: .9;
-    border-radius: 7px;
-    color: white;
-    font-size: 6px;
-  }
-  .left-menu--pin {
-    width: 20px;
-    font-size: 20px;
-    font-weight: 100;
-    color: #999999;
-    transition: all .4s;
-    height: 100%;
-    line-height: 50px;
-    margin-left: 10px;
-    i {
-      transform: rotateY(0);
-      transition: transform .4s;
-      cursor: pointer;
-    }
-    i.icon-reverse {
-      transform: rotateY(180deg);
-    }
-  }
-  .left-menu--pin-normal{
-  }
-  .left-menu--pin-reverse{
-  }
-}
-.link-title a {
-  color: inherit;
-  text-decoration: none;
-}
-.nz-breakcrumb {
-  padding-left: 15px;
-  line-height: 50px;
-
-  .el-breadcrumb__item .el-breadcrumb__inner {
-    color: #999;
-  }
-}
-.header-link-nodata{
-  color: #999999;
-  padding: 20px 20px;
-}
-</style>

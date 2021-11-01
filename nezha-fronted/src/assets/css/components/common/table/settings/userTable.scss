@@ -1,0 +1,25 @@
+.user-table {
+  .flex-align-center {
+    display: flex;
+    align-items: center;
+  }
+  .el-tag.el-tag--mini {
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 12px;
+    height: 12px;
+    vertical-align: middle;
+  }
+  .user-name-top {
+    color: $--color-text-primary;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    vertical-align: middle;
+  }
+  .user-name-bottom {
+    color: $--color-text-secondary;
+    font-size: 14px;
+    line-height: 14px;
+  }
+}

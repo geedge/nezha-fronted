@@ -1,0 +1,30 @@
+.silence-active{
+  background: #E3F2D9;
+  border-radius: 4px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #0AB000;
+  line-height: 14px;
+  font-weight: 400;
+  padding: 0 5px;
+}
+.silence-pending{
+  background: #FFECD9;
+  border-radius: 4px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: $--color-primary;
+  line-height: 20px;
+  font-weight: 400;
+  padding: 0 5px;
+}
+.silence-expired{
+  background: #9e9c98;
+  border-radius: 4px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 14px;
+  font-weight: 400;
+  padding: 0 5px;
+}

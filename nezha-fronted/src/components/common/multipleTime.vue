@@ -1,126 +1,6 @@
-<style scoped lang="scss">
-  .loading-font{
-    color:#232f3e !important;
-  }
-  popper-z-index{
-    z-index: 3000 !important;
-  }
-  .calendar{
-  }
-  .nz-dashboard-dropdown-bg {
-    background: $global-text-color-active;
-    color: #fff;
-  }
-  .calendar-dropdown-title {
-    line-height:28px;
-    padding-left:5px;
-    margin-left:0px;
-    margin-top: -3px !important;
-    text-align:left;
-    border-radius:2px;
-    min-width:80px;
-    height:28px;
-    border:solid 1px  #d8dce1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .el-dropdown-link {
-    cursor: pointer;
-  }
-  .calendar-popover{
-    line-height:22px;
-    text-align:center;
-  }
-  .panel-time-picker-hidden{
-    width:0px !important;
-    padding:0px !important;
-    border:0px !important;
-   height: 0 !important;
-    overflow: hidden;
-  }
-  .time-picker-button{
-    padding: 0 1px !important;
-    height:24px !important;
-    margin-top:0px !important;
-  }
-
-  .time-picker-left-button{
-    margin-right: 4px;
-  }
-
-  .time-picker-right-button{
-    margin-left: 4px;
-  }
-  .calendar-popover-text {}
-  .multiple-time-box{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4px;
-  }
-  .compare-box{
-    /*line-height: 50px;*/
-  }
-  .compare-box .nz-icon-compare{
-   border-right: none;
-  }
-  .calendar{
-    /*width: 125px;*/
-    border: none;
-    box-sizing: content-box;
-    line-height: unset;
-    height: 100%;
-    margin-left: -6px;
-    margin-right: 10px;
-  }
-  .nz-icon-compare{
-    background: #FFFFFF;
-    border: 1px solid $--primary-border-color;
-    border-radius: 2px;
-    padding: 6px 8px;
-  }
-  .multiple-time-datepicker-enter-active {
-    animation: bounce-in .5s;
-  }
-  .multiple-time-datepicker-leave-active {
-    animation: bounce-in .5s reverse;
-  }
-  @keyframes bounce-in {
-    0% {
-      width: 0;
-      overflow: hidden;
-    }
-    100% {
-     width:125px;
-      overflow: hidden;
-    }
-  }
-</style>
-<style lang="scss">
-  .panel-time-picker-popper[x-placement^=bottom] .popper__arrow {
-    left: 85% !important;
-  }
-  .panel-time-picker-popper[x-placement^=bottom] {
-  }
-
-  .panel-time-picker-popper .el-date-table td.today span {
-    color: #232f3e !important;
-  }
-
-  .panel-time-picker-popper .el-picker-panel__footer button:nth-child(1){
-    display:none;
-  }
-
-  .dropdown--suffix {
-    padding: 0 8px;
-    color: #aaa;
-  }
-</style>
 <template>
   <div class="multiple-time-box">
     <div :class="showDropdown?'compare-box':''"><i class="nz-icon nz-icon-compare" @click="changeShowDropdown" /></div>
-<!--    name="multiple-time-datepicker"-->
     <transition>
       <div v-show="showDropdown" id="panel-calender" class="calendar">
         <my-date-picker prefix-icon=" " size="mini" ref="calendar"
@@ -128,11 +8,6 @@
                         popper-class="panel-time-picker-popper"
                         align="right">
         </my-date-picker>
-        <!--
-        <button type="button" style="border-radius: 1px 1px 1px 1px" @click="right()" v-show="isCustom"
-                class="nz-btn nz-btn-size-normal nz-btn-style-light time-picker-button time-picker-right-button" >
-          <i style="font-size: 12px" class="el-icon-arrow-right"></i>
-        </button>-->
         <el-dropdown @command="timeChange" @visible-change="popoverClick"   class="calendar-dropdown-title" ref="timePickerDropdown" trigger="click">
           <el-popover
             placement="bottom-end"
@@ -165,7 +40,6 @@
             </div>
           </el-popover>
           <el-dropdown-menu class="nz-dashboard-dropdown right-public-box-select-top right-public-box-dropdown-top popper-z-index" slot="dropdown">
-            <!-- <el-dropdown-item >{{$t('dashboard.panel.customTimeRange')}}</el-dropdown-item>  -->
             <template v-for="(item, index) in timeData" >
               <el-dropdown-item v-if="item.id !== 12" :key="index" :class="showTime.id === item.id ? 'nz-dashboard-dropdown-bg' : ''" :command="item">
                 {{item.text}}
@@ -361,15 +235,6 @@ export default {
         if (this.searchTime[0]) {
           this.startTime = this.searchTime[0]
         }
-        // let timerPicker = document.querySelector('#timePickerContent');
-        // timerPicker.innerText = val.text;
-        /*
-        let tipElementList = document.getElementsByClassName('calendar-popover-text');
-        if(tipElementList && tipElementList.length===3){
-          tipElementList[0].innerHTML = this.searchTime[0];
-          tipElementList[1].innerHTML = this.$t("dashboard.panel.to");
-          tipElementList[2].innerHTML = this.searchTime[1];
-        } */
 
         const id = val.id
         if (id === 0) { // custom
@@ -463,9 +328,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.bR4004{
-  border-radius: 4px 0 0 4px ;
-}
-</style>

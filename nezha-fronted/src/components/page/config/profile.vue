@@ -31,7 +31,7 @@
         </div>
       </div>
       <button id="asset-edit-cancel" class="profile-left__btn" @click="profileBox">
-        <span><i class="nz-icon nz-icon-edit" style="color: #666666;margin-right: 5px;font-size: 18px"></i></span>
+        <span><i class="nz-icon nz-icon-edit"></i></span>
         <span>{{$t('profile.edit')}}</span>
       </button>
       <div v-for="item in tableProfile" :key="item.id" class="profile-left__center">
@@ -59,7 +59,7 @@
           <span>{{$t('profile.update')}}</span>
         </el-button>
       </div>
-      <div class="profile-hr" style="height: 1px;background-color: #E7EAED;width: 320px; margin: 40px auto"></div>
+      <div class="profile-hr" style=""></div>
       <div class="profile-left__bottom">
         <div class="profile-left__bottom-title">
           <div>{{$t('profile.lastLoginIp')}}</div>
@@ -116,7 +116,7 @@
         </div>
         <div class="login-dialog-title2">
           <div class="login-dialog-recover">
-            <div v-for="(item, index) in recoveryCode" :key="index" style="color: #999999;">
+            <div v-for="(item, index) in recoveryCode" :key="index">
               <span class="circle"></span>
               {{item}}
             </div>
@@ -138,9 +138,9 @@
 
 <script>
 import operationRecord from './operationRecord'
-import QRCode from "qrcodejs2"
-import MessageBox from "element-ui/packages/message-box/src/main"
-import i18n from "@/components/common/i18n"
+import QRCode from 'qrcodejs2'
+import MessageBox from 'element-ui/packages/message-box/src/main'
+import i18n from '@/components/common/i18n'
 import profileBox from '@/components/common/rightBox/profileBox'
 
 export default {
@@ -175,7 +175,8 @@ export default {
         email: '',
         mobile: '',
         language: 'en',
-        source: ''
+        source: '',
+        theme: 1
       },
       // 右侧列表
       tableProfile: [
@@ -350,7 +351,7 @@ export default {
           width: 124,
           height: 124,
           colorDark: '#333333', // 二维码颜色
-          colorLight: '#ffffff', // 二维码背景色
+          colorLight: 'white', // 二维码背景色
           correctLevel: QRCode.CorrectLevel.L// 容错率，L/M/H
         })
       } else {
@@ -381,346 +382,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.profile {
-  display: flex;
-  height: calc(100% - 10px);
-  .profile-left {
-    margin: 10px 0 10px 10px;
-    background: #FFFFFF;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.06);
-    border-radius: 2px;
-    height: calc(100% - 10px);
-    width: 360px;
-    overflow: auto;
-    position: relative;
-    .profile-left__header {
-      height: 200px;
-      width: calc(100% - 18px);
-      margin:0 0 50px 18px;
-      text-align: center;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      .profile-left__header-avatar {
-        height: 80px;
-        width: 80px;
-        line-height: 80px;
-        margin-left: 20px;
-        span {
-          display: inline-block;
-          background: rgba(60,146,241,0.10);
-          font-family: PingFangSC-Medium;
-          text-transform: capitalize;
-          width: 100%;
-          height: 100%;
-          font-size: 30px;
-          color: #3C92F1;
-          letter-spacing: 0;
-          font-weight: 500;
-          border-radius: 100%;
-        }
-      }
-      .profile-left__header-username {
-        height: 80px;
-        padding-left: 15px;
-        text-align: left;
-        .name{
-          display: inline-block;
-          max-width: 200px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          vertical-align: middle;
-          padding-top: 4px;
-        }
-        .MfaName{
-          display: inline-block;
-          max-width: 158px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          white-space: nowrap;
-          vertical-align: middle;
-          padding-top: 4px;
-        }
-        div:nth-of-type(1) {
-          font-family: Roboto-Medium;
-          max-width: 200px;
-          font-size: 18px;
-          color: #333333;
-          letter-spacing: 0;
-          line-height: 22px;
-          font-weight: 500;
-          padding: 9px 0 0 0;
-        }
-        div:nth-of-type(2) {
-          font-family: Roboto-Regular;
-          font-size: 18px;
-          color: #666666;
-          letter-spacing: 0;
-          line-height: 22px;
-          font-weight: 400;
-        }
-        .profile-left__header-username__span {
-          display: inline-block;
-          text-align: center;
-          width: 42px;
-          height: 24px;
-          line-height: 25px;
-          margin-left: 10px;
-          background-color: #ecf5ff;
-          border-color: #d9ecff;
-          border-radius: 10px;
-          font-family: Roboto-Regular;
-          font-size: 14px;
-          color: #409EFF;
-          letter-spacing: 0;
-          font-weight: 400;
-        }
-      }
-    }
-    .profile-left__btn {
-      border: 1px solid rgba(0,0,0,0.15);
-      border-radius: 4px;
-      background: #fff;
-      min-width: 132px;
-      height: 36px;
-      position: absolute;
-      top: 175px;
-      left: 100px;
-      padding: 0 20px;
-      cursor: pointer;
-      span {
-        font-family: Roboto-Regular;
-        font-size: 14px;
-        color: #333333;
-        text-align: left;
-        line-height: 22px;
-        font-weight: 400;
-      }
-    }
-    .profile-left__center:nth-of-type(7) {
-      margin-bottom: 0;
-    }
-    .profile-left__center {
-      margin: 0 0 20px 26px;
-      /*border: 1px solid red;*/
-      display: flex;
-      justify-content: flex-start;
-      .profile-role {
-        color: #00C398;
-      }
-      .profile-email {
-        color: #0093F8;
-      }
-      .profile-mobile {
-        color: #EC7F66;
-      }
-      .profile-laiyuan {
-        color: #8871DB;
-      }
-      .profile-lang {
-        color: #6F7CD2;
-      }
-      .profile-left__center-title {
-        margin-top: 1px;
-        div:nth-of-type(1) {
-          padding-bottom: 5px;
-          ont-family: Roboto-Regular;
-          font-size: 14px;
-          color: #666666;
-          letter-spacing: 0;
-          font-weight: 400;
-        }
-        div:nth-of-type(2) {
-          ont-family: Roboto-Regular;
-          font-size: 14px;
-          color: #333333;
-          letter-spacing: 0;
-          font-weight: 400;
-        }
-      }
-    }
-    .profile-left__button {
-      margin-left: 50px;
-      .profile-left__button-footer__btn {
-        margin: 0 10px;
-        height: 30px;
-        min-width: 74px;
-        padding: 0 15px;
-        border-radius: 4px;
-      }
-      .footer__btn {
-        background-color: #FA901C;
-        color: white;
-        border: 1px solid #fff;
-      }
-      .footer__btns {
-        background-color: #fff;
-        color: #333;
-        border: 1px solid #ccc;
-      }
-      .footer__btns:hover {
-        opacity: .6;
-        color: #FA901C;
-        border: 1px solid #FA901C;
-      }
-      .footer__btn:hover {
-        opacity: .6;
-      }
-      .is-disabled,.is-disabled:hover{
-        color: #C0C4CC;
-        cursor: not-allowed;
-        background-image: none;
-        background-color: #FFF;
-        border-color: #EBEEF5;
-      }
-    }
-    .profile-left__bottom {
-      width: 320px;
-      margin: 0 10px 15px;
-      .profile-left__bottom-title {
-        width: 275px;
-        margin: auto;
-        padding: 0 0 30px 0;
-        div:nth-of-type(1) {
-          ont-family: Roboto-Regular;
-          font-size: 14px;
-          color: #666666;
-          letter-spacing: 0;
-          line-height: 25px;
-          font-weight: 400;
-        }
-        div:nth-of-type(2) {
-          ont-family: Roboto-Regular;
-          font-size: 14px;
-          color: #333333;
-          letter-spacing: 0;
-          line-height: 25px;
-          font-weight: 400;
-        }
-      }
-    }
-  }
-}
-.login-dialog-title{
-  background: #F9F9F9;
-  font-size: 14px;
-  color: #666666;
-  letter-spacing: 0;
-  line-height: 20px;
-  font-weight: 400;
-  padding: 10px;
-  margin-bottom: 10px;
-  word-break: keep-all;
-}
-.login-dialog-title2{
-  background: rgba(246,248,250, 0.9);
-  border: 1px solid #E7EAED;
-  border-radius: 2px;
-  height: 248px;
-  padding: 15px;
-  position: relative;
-  .copy-value-content{
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    cursor: pointer;
-  }
-  .login-dialog-recover{
-    height: calc(100% - 30px);overflow-y: auto
-  }
-}
-.enter-code{
-  ont-size: 14px;
-  color: #666666;
-  letter-spacing: 0;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-.qrCode-box{
-  display: flex;
-  align-items: center;
-}
-.qrCode-content{
-  padding: 4px;
-  margin-left: 10px;
-}
-.qrCode-text{
-  width: 60%;
-  margin-left: 10px;
-  font-size: 14px;
-  color: #666666;
-  letter-spacing: 0;
-  font-weight: 400;
-}
-.qrCode-authKey{
-  background: rgba(246,248,250,09);
-  border: 1px solid #E7EAED;
-  border-radius: 2px;
-  padding: 5px 12px;
-  font-size: 14px;
-  color: #333333;
-  letter-spacing: 0;
-  font-weight: 400;
-  margin-top: 12px;
-}
-/deep/ .nz-dialog .el-dialog__body{
-  padding-bottom: 0;
-}
-.verify-link{
-  font-family: Roboto-Black;
-  font-size: 14px;
-  color: #3C92F1;
-  letter-spacing: 0;
-  line-height: 20px;
-  font-weight: 400;
-  cursor: pointer;
-}
-.verify-link:hover{
-  border-bottom: 1px solid  #3C92F1;
-}
-.circle{
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #CECECE;
-  margin-right: 10px;
-}
-.footer {
-  .footer__btn {
-    margin: 0 15px;
-    height: 30px;
-    min-width: 74px;
-    padding: 0 15px;
-    color: white;
-    background-color: var(--theme-color);
-    border: none;
-    border-radius: 4px;
-    outline: none;
-    box-sizing: border-box;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color linear .2s, color linear .1s;
-  }
-  .footer__btn:hover:not(.footer__btn--disabled) {
-    background-color: var(--theme-color-light-20);
-  }
-  .footer__btn--light {
-    background-color: white;
-    border: 1px solid $--primary-border-color;
-    color: #333;
-  }
-  .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
-    background-color: white;
-    border-color: var(--theme-color-light-50);
-    color: var(--theme-color);
-  }
-  .footer__btn--disabled {
-    opacity: .6;
-    cursor: default;
-  }
-}
-</style>

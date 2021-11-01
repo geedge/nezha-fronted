@@ -1,6 +1,3 @@
-<style lang="scss">
-@import './chart.scss';
-</style>
 <template>
   <div class="nz-chart-resize">
     <div class="resize-shadow" ref="resizeShadow"></div>
@@ -67,10 +64,8 @@
           <div slot="title">
             <span class="nz-dialog-title">{{data.name}}</span>
             <div class="float-right panel-calendar dialog-tool">
-<!--              <time-picker ref="calendarPanel" class="nz-dashboard-picker" style="margin-top: -12px;" @change="dateChange"></time-picker>-->
               <pick-time :refresh-data-func="dateChange" v-model="searchTime" :use-chart-unit="false" ref="pickTime" style="height: 28px;" id="single-chart"></pick-time>
             </div>
-<!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <div class="single-stat-screen-container"  >
             <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}"  class="single-stat-content" id="chartScreenContainer" ref="chartScreenContainer">

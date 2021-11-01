@@ -497,37 +497,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .error{
-    border: 1px solid #F56C6C !important;
-  }
-  .right-box-sub-title{
-    width: calc(100% - 70px);
-    margin-left: 15px;
-  }
-  /deep/ .el-table thead .cell{
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-    font-weight: 400;
-    padding: 5px;
-  }
-  .table-operation-items{
-    display: flex;
-    justify-content: space-around;
-  }
-  /deep/ .el-table th{
-    padding: 7px 0;
-  }
-  .configs-endpoint{
-    border-radius: 4px;
-    padding: 2px 7px;
-  }
-  .configs-endpoint.metrics{
-    color: #3C92F1;
-  }
-  .configs-endpoint.logs{
-    color: #25BF9A;
-  }
-</style>

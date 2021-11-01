@@ -25,7 +25,6 @@ import bus from '../../../../libs/bus'
 import EleResize from '../../../common/js/divResize'
 import { randomcolor } from '../../../common/js/radomcolor/randomcolor'
 import { formatScientificNotation } from '@/components/common/js/tools'
-// import * as mapGeoJson from "../../../common/js/world";
 
 export default {
   name: 'chart',
@@ -302,21 +301,6 @@ export default {
           this.$set(this.legend, index, (function () { const legend = vm.legend[index]; legend.isGray = !legend.isGray; return legend }()))
         }
       }
-      /* let curIsGrey=this.legend[index].isGray;
-          if(this.chart){
-            if(curIsGrey){
-              this.chart.dispatchAction({
-                type: 'legendSelect',
-                name: legendName
-              });
-            }else{
-              this.chart.dispatchAction({
-                type: 'legendUnSelect',
-                name: legendName
-              });
-            }
-            this.$set(this.legend[index],'isGray',!curIsGrey)
-          } */
     },
     clickLegend2 (legendName, index) {
       const curIsGrey = this.legend[index].isGray
@@ -604,70 +588,7 @@ export default {
     this.$refs.chartRoom.removeEventListener('mousemove', this.chartRoomMouseMove)
     if (this.chart) {
       this.chart.clear()
-      /* this.chart.off('mouseover');
-          this.chart.off('mouseout');
-          EleResize.off(this.$el, this.resize, this.chartType); */
     }
   }
 }
 </script>
-<!--<style>
- @import "../../../charts/chart.scss";
-</style>-->
-<style scoped>
-  .showMore{
-    text-align: center;
-    font-size: 12px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-  }
-  .nz-icon-jinggao{
-    color: rgb(255, 133, 27);
-    margin-right: 5px;
-    font-size: 14px;
-  }
-  .moreChart{
-    color: rgb(87, 148, 242);
-    cursor: pointer;
-  }
-  .chart-room{
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-  .chart-room .legend-container{
-    overflow: auto;
-    width: calc(100% - 30px);
-    max-height:80px;
-    min-height:25px;
-    /*height: 80px;*/
-    font-size:12px;
-    text-align:left;
-    left: 10px;
-    bottom: 5px;
-    line-height: 18px;
-    position: absolute;
-  }
-  .chart-room .legend-container .legend-item{
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    overflow-x:hidden;
-    cursor:pointer;
-    display:inline-block;
-    float:left;
-    line-height: 20px;
-  }
-  .chart-room .ft-gr{
-    color:lightgray;
-  }
-  .chart-room .legend-shape{
-    display:inline-block;
-    margin-right:5px;
-    border-radius:10px;
-    width:15px;
-    height:5px;
-    vertical-align: middle;
-  }
-</style>
