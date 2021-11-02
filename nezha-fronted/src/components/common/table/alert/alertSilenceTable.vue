@@ -126,7 +126,8 @@ export default {
   },
   mixins: [table],
   props: {
-    loading: Boolean
+    loading: Boolean,
+    nowTime: {}
   },
   data () {
     return {

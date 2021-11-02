@@ -25,6 +25,7 @@
           :custom-table-title="tools.customTableTitle"
           :height="mainTableHeight"
           :table-data="tableData"
+          :nowTime="nowTime"
           @del="del"
           @edit="edit"
           @copy="copy"
@@ -163,6 +164,7 @@ export default {
       this.tools.loading = true
       this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
         this.tools.loading = false
+        this.nowTime = this.utcTimeToTimezoneStr(response.time)
         if (response.code === 200) {
           for (let i = 0; i < response.data.list.length; i++) {
             response.data.list[i].status = response.data.list[i].status + ''

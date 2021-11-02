@@ -36,6 +36,7 @@ const cn = {
     project: '系统',
     monitor: '监控',
     alert: '告警',
+    alertRuleEvalLog: 'Eval log',
     asset: '资产',
     config: '设置',
     administration: '系统管理',
@@ -1265,6 +1266,7 @@ const cn = {
     alertMessage: '告警信息',
     rule: '告警规则',
     alertRule: '告警规则',
+    alertRuleMessage: 'Message',
     alertList: '告警信息',
     alertConfig: '告警规则',
     alertName: '告警名称',
@@ -1360,7 +1362,7 @@ const cn = {
     },
     P1Rule: 'P1: 万分紧急，可导致业务瘫痪的告警',
     P2Rule: 'P2: 重要，需要紧急关注的警报，但还没有影响业务',
-    P3Rule: 'P3: 轻微警报，需要处理，但不紧急'
+    P3Rule: 'P3: 轻微警报，需要处理，但不紧急',
   },
   project: {
     chart: {
