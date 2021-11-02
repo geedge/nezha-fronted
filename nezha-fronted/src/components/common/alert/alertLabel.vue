@@ -516,22 +516,19 @@ export default {
     font-size: 14px;
     color: #666666;
     letter-spacing: 0;
-    line-height: 23px;
+    line-height: 26px;
     min-width: 110px;
     padding: 0 3px 0 13px;
   }
   .alert-label-value{
-    height: 26px;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    max-width: 200px;
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
-    line-height: 23px;
-  }
-  .alert-label-remark {
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
-    max-width: 210px;
+    line-height: 26px;
   }
   .danger{
     background-color: #d64f40;
