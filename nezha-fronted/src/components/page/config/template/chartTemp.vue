@@ -37,7 +37,8 @@
                 type="button" @click="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="expression-template-list"
           export-url="visual/panel/export"

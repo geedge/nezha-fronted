@@ -172,7 +172,12 @@ const cn = {
     clearAllSelect: '清除选择的内容',
     disabled: '已禁用',
     enabled: '启用',
-    close: '关闭'
+    close: '关闭',
+    records: '导出形式',
+    fileFormat: '文件格式',
+    allData: '全部数据',
+    selectRecords: '选中的数据',
+    current: '当前页'
   },
   setup: {
     step0: '欢迎',

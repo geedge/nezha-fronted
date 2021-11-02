@@ -177,7 +177,12 @@ const en = {
     clearAllSelect: 'Clear the selection',
     disabled: 'Disabled',
     enabled: 'Enabled',
-    close: 'Close'
+    close: 'Close',
+    records: 'Records',
+    fileFormat: 'File format',
+    allData: 'All data',
+    selectRecords: 'Select records',
+    current: 'Current page'
   },
   pageSize: '/page',
   setup: {
