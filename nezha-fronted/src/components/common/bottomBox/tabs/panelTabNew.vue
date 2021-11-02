@@ -212,7 +212,8 @@ export default {
       // deleteObj: {}, // 删除对象
       // ---图表相关参数--end
       scrollbarWrap: null,
-      panelDataList: []
+      panelDataList: [],
+      batchDeleteObjs: []
     }
   },
   components: {
