@@ -257,7 +257,8 @@ export default {
     type: {},
     // labelLoading:{},
     that: {},
-    detailList: Boolean
+    detailList: Boolean,
+    alertTableDialog: Boolean
   },
   /* watch:{
       labelLoading: {
@@ -332,24 +333,28 @@ export default {
       const self = this
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
-        const dialog = document.querySelector('#dialog-alert-massage .el-dialog')
-        const dialogHeight = dialog.getBoundingClientRect()
         const leftOffSetView = this.detailList ? -80 : 10
         const topOffSetView = this.detailList ? 0 : 0
-        const leftOffSet = this.detailList ? -80 : 10
-        const topOffSet = this.detailList ? 70 : 0
+        const leftOffSet = this.detailList ? -80 : 20
+        const topOffSet = this.detailList ? 45 : 0
         const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
         if (position.top + elHeight > clientHeight) {
+          console.log(leftOffSet, topOffSet)
           return {
             left: `${position.left + position.width + leftOffSet}px`,
             top: `${position.top - elHeight + topOffSet}px`
           }
-        } else if (dialogHeight) {
-          return {
-            left: `${position.left + position.width + 10 - dialogHeight.x}px`,
-            top: `${position.top - dialogHeight.y}px`
+        } else if (this.alertTableDialog) {
+          const dialog = document.querySelector('#dialog-alert-massage .el-dialog')
+          const dialogHeight = dialog.getBoundingClientRect()
+          if (dialogHeight) {
+            return {
+              left: `${position.left + position.width + 10 - dialogHeight.x}px`,
+              top: `${position.top - dialogHeight.y}px`
+            }
           }
         } else {
+          console.log(leftOffSetView, topOffSetView)
           return {
             left: `${position.left + position.width + leftOffSetView}px`,
             top: `${position.top + topOffSetView}px`

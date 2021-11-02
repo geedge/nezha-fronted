@@ -103,6 +103,7 @@
             :fromPath="'/alertList'"
             style="height: calc(100% - 50px)"
             :showOption="false"
+            :chart-alert-list="true"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
