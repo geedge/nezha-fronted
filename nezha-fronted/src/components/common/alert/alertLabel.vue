@@ -300,7 +300,8 @@ export default {
   data () {
     return {
       alertLabelData: null,
-      loading: true
+      loading: true,
+      heightList: 0
     }
   },
   components: {
@@ -330,18 +331,15 @@ export default {
   },
   computed: {
     calcPosition () {
-      const self = this
       return function (position) {
         const clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight
         const leftOffSetView = this.detailList ? -80 : 10
-        const topOffSetView = this.detailList ? 0 : 0
-        const leftOffSet = this.detailList ? -80 : 20
-        const topOffSet = this.detailList ? 45 : 0
-        const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
-        if (position.top + elHeight > clientHeight) {
+        const leftOffSet = this.detailList ? -80 : 10
+        const topOffSet = this.detailList ? 60 : 22
+        if (position.top + this.heightList > clientHeight) {
           return {
             left: `${position.left + position.width + leftOffSet}px`,
-            top: `${position.top - elHeight + topOffSet}px`
+            top: `${position.top - this.heightList + topOffSet}px`
           }
         } else if (this.alertTableDialog) {
           const dialog = document.querySelector('#dialog-alert-massage .el-dialog')
@@ -355,7 +353,7 @@ export default {
         } else {
           return {
             left: `${position.left + position.width + leftOffSetView}px`,
-            top: `${position.top + topOffSetView}px`
+            top: `${position.top}px`
           }
         }
       }
@@ -438,7 +436,9 @@ export default {
       }
     }
   },
-  mounted () {},
+  mounted () {
+    this.heightList = this.$refs.alertLabels.getBoundingClientRect().height
+  },
   beforeDestroy () {
 
   }
