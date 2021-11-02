@@ -3,7 +3,7 @@ import store from './store'
 import { get, post } from './http'
 import ElementUI from 'element-ui'
 import Vue from 'vue'
-import i18n from './components/common/i18n'
+import i18n, { loadI18n } from './components/common/i18n'
 import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
@@ -26,6 +26,15 @@ router.beforeEach((to, from, next) => {
       })
     })
   } else if (sessionStorage.getItem('nz-token')) {
+    // 从localStorage加载i18n
+    if (!store.getters.i18nIsReady) {
+      loadI18n()
+      const langList = localStorage.getItem('nz-language-list')
+      if (langList) {
+        store.commit('setLangList', JSON.parse(langList))
+      }
+      store.commit('i18nReady', true)
+    }
     new Promise(resolve => {
       if (store.getters.menuList.length === 0) {
         const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
