@@ -339,7 +339,6 @@ export default {
         const topOffSet = this.detailList ? 45 : 0
         const elHeight = self.type === 'asset' ? 318 : (self.type === 'project' ? 70 : 70)
         if (position.top + elHeight > clientHeight) {
-          console.log(leftOffSet, topOffSet)
           return {
             left: `${position.left + position.width + leftOffSet}px`,
             top: `${position.top - elHeight + topOffSet}px`
@@ -354,7 +353,6 @@ export default {
             }
           }
         } else {
-          console.log(leftOffSetView, topOffSetView)
           return {
             left: `${position.left + position.width + leftOffSetView}px`,
             top: `${position.top + topOffSetView}px`

@@ -11,7 +11,16 @@
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.type')}}</div>
-        <div class="alert-rule-value">{{alertRuleData.type ? alertRuleData.type : '--'}}</div>
+        <div class="alert-rule-value">
+          <span v-if="alertRuleData.type === 1">
+            {{$t('project.metrics.metrics')}}
+          </span>
+          <span v-else-if="alertRuleData.type === 2">
+            {{$t('overall.logs')}}
+          </span>
+          <span v-else-if="alertRuleData.type === 3">SNMP trap</span>
+          <span v-else>--</span>
+        </div>
       </div>
       <div class="alert-rule-box">
         <div class="alert-rule-title">{{$t('alert.severity')}}</div>
