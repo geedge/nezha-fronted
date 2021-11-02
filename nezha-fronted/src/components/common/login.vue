@@ -7,12 +7,12 @@
         <div class="login-label"></div>
         <div class="login-input" v-if="!verifyShow">
           <i class="nz-icon nz-icon-user"></i>
-          <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')" @keydown.enter="login"></input>
+          <input id="usernameInput" v-model="loginData.username" autocomplete="on" name="userName" placeholder="Username" @keydown.enter="login"></input>
         </div>
         <div class="login-label"></div>
         <div class="login-input"  v-if="!verifyShow">
           <i class="nz-icon nz-icon-password"></i>
-          <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')" @keydown.enter="login"></input>
+          <input v-model="loginData.pin" autocomplete="on" name="password" placeholder="Password" type="password" @keydown.enter="login"></input>
         </div>
         <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
         <div class="login-input"  v-if="verifyShow">
@@ -23,17 +23,8 @@
           {{$t('login.verifyContent')}}
         </div>
         <div class="login-foot">
-          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
+          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">Login</button>
           <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
-<!--          <div class="login-foot-lang" @click.stop="langListShow = !langListShow">-->
-<!--            <i v-if="lang == 'en'" class="nz-icon nz-icon-lang-en"></i>-->
-<!--            <i v-else-if="lang == 'cn'" class="nz-icon nz-icon-lang-zh"></i>-->
-<!--            <i class="nz-icon nz-icon-arrow-down"></i>-->
-<!--          </div>-->
-<!--          <div class="login-foot-lang-list" v-show="langListShow">-->
-<!--            <i v-if="lang != 'en'" @click="changeLang('en')" class="nz-icon nz-icon-lang-en"></i>-->
-<!--            <i v-if="lang != 'cn'" @click="changeLang('cn')" class="nz-icon nz-icon-lang-zh"></i>-->
-<!--          </div>-->
         </div>
         <div class="login-license">
           <div class="license-warn" v-if="license.warnInfo">{{license.warnInfo}}</div>

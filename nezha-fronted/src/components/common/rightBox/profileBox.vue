@@ -37,8 +37,8 @@
                        placeholder=""
                        popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
-              <template v-for="item in languageList">
-                <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <template v-for="item in langList">
+                <el-option :key="item.value" :label="item.name" :value="item.value"></el-option>
               </template>
             </el-select>
           </el-form-item>
@@ -71,17 +71,17 @@ export default {
       type: Object
     }
   },
-  computed: {},
+  computed: {
+    langList () {
+      return this.$store.getters.getLangList
+    }
+  },
   mixins: [editRigthBox],
   data () {
     return {
       url: 'sys/user/profile',
       rightBox: { profile: { show: false } },
       editProfile: {},
-      languageList: [
-        { value: 'en', label: 'English' },
-        { value: 'cn', label: '简体中文' }
-      ],
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }

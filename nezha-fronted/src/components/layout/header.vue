@@ -38,12 +38,15 @@
           <i class="nz-icon nz-icon-language-change"></i>
         </div>
         <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top">
-          <el-dropdown-item>
+          <el-dropdown-item v-for="lang in langList" :key="lang.value">
+            <div :style="language === lang.value ? 'color:#f90' : ''" @click="changeLocal(lang.value)"><i :class="`nz-icon-lang-${lang.value}`" class="nz-icon"></i>{{lang.name}}</div>
+          </el-dropdown-item>
+<!--          <el-dropdown-item>
             <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
           </el-dropdown-item>
           <el-dropdown-item>
             <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>简体中文</div>
-          </el-dropdown-item>
+          </el-dropdown-item>-->
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown trigger="click">
@@ -208,6 +211,9 @@ export default {
     },
     route () {
       return this.$route.path
+    },
+    langList () {
+      return this.$store.getters.getLangList
     },
     breadcrumb () {
       if (this.$route.path === '/profile') {
