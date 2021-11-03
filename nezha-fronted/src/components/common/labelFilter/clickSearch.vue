@@ -463,14 +463,18 @@ export default {
   background: #FFFFFF;
   &.search-items--checkbox .el-skeleton {
     height: 28px;
-    line-height: 40px;
+    line-height: 45px;
   }
   &.search-items--dropdown .el-skeleton {
     height: 28px;
-    line-height: 40px;
+    line-height: 45px;
+  }
+  .el-skeleton {
+    height: 28px;
+    line-height: 45px;
   }
   .el-checkbox{
-    line-height: 40px;
+    line-height: 45px;
   }
 }
 .more.search-items{
