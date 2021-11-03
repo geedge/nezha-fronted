@@ -160,9 +160,6 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editGlobalization = JSON.parse(JSON.stringify(n))
-        if (!this.editGlobalization.id) {
-          this.languageList[1].value = 'en'
-        }
       }
     }
   }
