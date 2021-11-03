@@ -464,6 +464,9 @@ export default {
       })
     },
     messageDetail (row) {
+      if (row.alertRule.type == 3) {
+        return
+      }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true

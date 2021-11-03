@@ -589,8 +589,6 @@ export default {
               }
             })
             // this.titleSearchList.assetLabel.children = data
-            console.log(metaData)
-            console.log(data)
             resolve(data)
             setTimeout(() => {
               const title = this.tools.customTableTitle
