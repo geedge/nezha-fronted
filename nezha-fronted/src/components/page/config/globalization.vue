@@ -65,7 +65,7 @@ export default {
         ids: '',
         name: '',
         code: '',
-        lang: 'English',
+        lang: 'en',
         value: ''
       },
       searchMsg: { // 给搜索框子组件传递的信息
