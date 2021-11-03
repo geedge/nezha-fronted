@@ -115,6 +115,10 @@ export default new Router({
           component: resolve => require(['../components/page/config/system.vue'], resolve)
         },
         {
+          path: '/i18n',
+          component: resolve => require(['@/components/page/config/globalization.vue'], resolve)
+        },
+        {
           path: '/alertMessage',
           component: resolve => require(['../components/page/alert/alertMessage.vue'], resolve)
         },

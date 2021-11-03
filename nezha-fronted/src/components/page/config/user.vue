@@ -154,20 +154,6 @@ export default {
     }
   },
   methods: {
-    statusChange (user) {
-      if (user.roles) {
-        user.roleIds = user.roles.map(t => t.id)
-      }
-      this.$put('sys/user', user).then(response => {
-        if (response.code === 200) {
-          this.rightBox.show = false
-          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-        } else {
-          this.$message.error(response.msg)
-        }
-        this.getTableData()
-      })
-    },
     edit (u, copyFlag) {
       this.$get(`${this.url}/${u.id}`).then(response => {
         const user = response.user

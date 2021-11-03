@@ -127,7 +127,6 @@
           @orderBy="tableDataSort"
           @reload="getTableData"
           @selectionChange="selectionChange"
-          @statusChange='statusChange'
           @showBottomBox="(targetTab, object) => { $refs.dataList.showBottomBox(targetTab, object) }"></dc-table>
       </template>
       <!-- 分页组件 -->
@@ -230,17 +229,6 @@ export default {
     }
   },
   methods: {
-    statusChange (dc) {
-      this.$put(this.url, dc).then(response => {
-        if (response.code === 200) {
-          this.rightBox.show = false
-          this.$message({ duration: 1000, type: 'success', message: this.$t('tip.saveSuccess') })
-        } else {
-          this.$message.error(response.msg)
-        }
-        this.getTableData()
-      })
-    },
     getUserData () {
       return new Promise(resolve => {
         this.$get('sys/user', { pageSize: -1, pageNo: 1 }).then(response => {
