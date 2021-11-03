@@ -17,7 +17,12 @@
       @blur="$emit('blur', item, false, $event)"
       @change="change"
       @focus="$emit('focus', item, true, $event)"
-    ></el-cascader>
+    >
+      <template slot-scope="{ node, data }">
+        <span>{{ data.name }}</span>
+        <span class="search-content-num">({{data.num}})</span>
+      </template>
+    </el-cascader>
   </div>
 </template>
 
