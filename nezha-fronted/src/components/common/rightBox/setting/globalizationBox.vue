@@ -144,9 +144,6 @@ export default {
       this.$get('/sys/dict/all', { type: 'lang' }).then(response => {
         if (response.code === 200) {
           this.languageList = response.data
-          if (!this.editGlobalization.id) {
-            this.languageList[1].value = 'en'
-          }
         } else {
           this.$message.error(response.msg)
         }
@@ -163,6 +160,9 @@ export default {
       handler (n, o) {
         this.isEdit = true
         this.editGlobalization = JSON.parse(JSON.stringify(n))
+        if (!this.editGlobalization.id) {
+          this.languageList[1].value = 'en'
+        }
       }
     }
   }
