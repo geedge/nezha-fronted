@@ -145,7 +145,7 @@ export default {
         if (response.code === 200) {
           this.languageList = response.data
           if (!this.editGlobalization.id) {
-            this.languageList[0].value = 'en'
+            this.languageList[1].value = 'en'
           }
         } else {
           this.$message.error(response.msg)

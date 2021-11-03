@@ -60,7 +60,7 @@ export default {
   data () {
     return {
       url: 'sys/i18n',
-      tableId: 'dcTable', // 需要分页的table的id，用于记录每页数量
+      tableId: 'i18nTable', // 需要分页的table的id，用于记录每页数量
       blankObject: {
         ids: '',
         name: '',
