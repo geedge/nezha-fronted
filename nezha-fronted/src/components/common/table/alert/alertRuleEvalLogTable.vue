@@ -89,19 +89,16 @@ export default {
           prop: 'state',
           show: true,
           minWidth: 100,
-          sortable: 'custom'
         }, {
           label: this.$t('alert.alertRuleMessage'),
           prop: 'msg',
           show: true,
           minWidth: 100,
-          sortable: 'custom'
         }, {
           label: this.$t('alert.silence.startTime'),
           prop: 'stts',
           show: true,
           minWidth: 300,
-          sortable: 'custom'
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',
