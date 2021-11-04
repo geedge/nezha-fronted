@@ -226,6 +226,11 @@ export default {
   mounted () {
     this.personalCenter()
   },
+  computed: {
+    langList () {
+      return this.$store.getters.getLangList
+    }
+  },
   methods: {
     // 请求后端数据
     personalCenter () {
@@ -241,10 +246,9 @@ export default {
             }
             this.tableProfile[1].prop = this.userList.email
             this.tableProfile[2].prop = this.userList.mobile
-            if (this.userList.lang == 'cn') {
-              this.tableProfile[3].prop = '简体中文'
-            } else {
-              this.tableProfile[3].prop = 'English'
+            const findLang = this.langList.find(lang => this.userList.lang === lang.value)
+            if (findLang) {
+              this.tableProfile[3].prop = findLang.name
             }
             this.tableProfile[4].prop = this.userList.source
             const name = this.userList.name.substr(0, 1)
@@ -316,8 +320,13 @@ export default {
     closeRightBox () {
       this.rightBox.show = false
     },
-    clickProfile () {
+    clickProfile (refresh) {
       this.personalCenter()
+      if (refresh) {
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      }
     },
     closeDialog () {
       this.authBindShow = false

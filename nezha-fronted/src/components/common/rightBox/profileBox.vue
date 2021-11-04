@@ -122,7 +122,13 @@ export default {
               if (res.code === 200) {
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
-                this.$emit('clickProfile')
+                if (this.editProfile.lang !== localStorage.getItem('nz-language')) {
+                  localStorage.setItem('nz-language', this.editProfile.lang)
+                  this.$i18n.locale = this.editProfile.lang
+                  this.$emit('clickProfile', true)
+                } else {
+                  this.$emit('clickProfile', false)
+                }
               } else {
                 this.$message.error(res.msg)
               }

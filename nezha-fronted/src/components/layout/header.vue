@@ -41,12 +41,6 @@
           <el-dropdown-item v-for="lang in langList" :key="lang.value">
             <div :style="language === lang.value ? 'color:#f90' : ''" @click="changeLocal(lang.value)"><i :class="`nz-icon-lang-${lang.value}`" class="nz-icon"></i>{{lang.name}}</div>
           </el-dropdown-item>
-<!--          <el-dropdown-item>
-            <div id="header-to-english" :style="language === 'en'?'color:#f90':''" @click="changeLocal('en')"><i class="nz-icon nz-icon-lang-en"></i>English</div>
-          </el-dropdown-item>
-          <el-dropdown-item>
-            <div id="header-to-chinese" :style="language === 'cn'?'color:#f90':''" @click="changeLocal('cn')"><i class="nz-icon nz-icon-lang-zh"></i>简体中文</div>
-          </el-dropdown-item>-->
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown trigger="click">
@@ -65,7 +59,6 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-<!--    <change-password :cur-user="username" :show-dialog="showChangePin" @click="showPinDialog" @dialogClosed="dialogClosed"></change-password>-->
     <guide :show-dialog="showGuide" @dialogClosed="dialogClosed" @close="showGuide = false"></guide>
   </div>
 </template>
@@ -73,12 +66,10 @@
 <script>
 import bus from '../../libs/bus'
 import { mapActions } from 'vuex'
-// import changePin from '../page/config/changePin'
 import guide from '@/components/common/popBox/guide'
 export default {
   name: 'Header',
   components: {
-    // 'change-password': changePin,
     guide
   },
   data () {
@@ -143,7 +134,6 @@ export default {
     getLinkData () {
       this.$get('link').then(response => {
         this.$store.commit('setLinkData', response.data.list)
-        // this.linkData = response.data.list
       })
     },
     changeLocal (lang) {
@@ -159,13 +149,6 @@ export default {
         document.location.href = '/'
       })
     },
-    // refreshLang () {
-    //   this.language = localStorage.getItem('nz-language')
-    //   this.$i18n.locale = this.language
-    //   this.$nextTick(() => {
-    //     // window.location.reload()
-    //   })
-    // },
     showPinDialog () {
       this.$router.push({
         path: '/profile',

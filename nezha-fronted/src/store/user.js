@@ -3,7 +3,6 @@ import router from '../router'
 import bus from '../libs/bus'
 import { sortByOrderNum } from '@/permission'
 import moment from 'moment-timezone'
-import i18n, { loadI18n } from '@/components/common/i18n'
 
 const user = {
   state: {
@@ -74,32 +73,6 @@ const user = {
           // 保存当前用户 name
           localStorage.setItem('nz-user-name', userList.name)
         }
-      })
-      // 获取用户语言，存进localStorage
-      localStorage.setItem('nz-language', res.data.user.lang || 'en')
-      // 获取国际化内容
-      const getI18nData = new Promise(resolve => get('/sys/i18n/lang').then(response => {
-        if (response.code === 200) {
-          const i18nData = response.data
-          localStorage.setItem('nz-i18n-data', JSON.stringify(i18nData))
-          resolve(i18nData)
-        } else {
-          resolve()
-        }
-      }))
-      // 获取可选语言
-      const getLangList = new Promise(resolve => get('/sys/dict/all?type=lang').then(response => {
-        if (response.code === 200) {
-          const langList = response.data.map(lang => ({ name: lang.name, value: lang.value }))
-          store.commit('setLangList', langList)
-          localStorage.setItem('nz-language-list', JSON.stringify(langList))
-        }
-        resolve()
-      }))
-      Promise.all([getI18nData, getLangList]).then(response => {
-        console.info(response)
-        response[0] && loadI18n(response[0])
-        store.commit('i18nReady', true)
       })
     },
     logoutSuccess (store, res) {

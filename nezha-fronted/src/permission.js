@@ -12,8 +12,8 @@ const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state'] /
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
 
 router.beforeEach((to, from, next) => {
+  const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
   if (to.path === '/login') { // 拦截登录页面，系统初始化检查
-    const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
     Vue.http.get(configUrl).then(config => {
       get(config.body.baseUrl + 'setup/inited').then(res => {
         if (res.code === 200) {
@@ -24,20 +24,33 @@ router.beforeEach((to, from, next) => {
           }
         }
       })
+      if (!store.getters.i18nIsReady) {
+        get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
+          if (res.code === 200) {
+            loadI18n(res.data)
+            store.commit('i18nReady', true)
+          }
+        })
+      }
     })
   } else if (sessionStorage.getItem('nz-token')) {
     // 从localStorage加载i18n
     if (!store.getters.i18nIsReady) {
-      loadI18n()
+      Vue.http.get(configUrl).then(config => {
+        get(config.body.baseUrl + 'sys/i18n/lang').then(response => {
+          if (response.code === 200) {
+            loadI18n(response.data)
+            store.commit('i18nReady', true)
+          }
+        })
+      })
       const langList = localStorage.getItem('nz-language-list')
       if (langList) {
         store.commit('setLangList', JSON.parse(langList))
       }
-      store.commit('i18nReady', true)
     }
     new Promise(resolve => {
       if (store.getters.menuList.length === 0) {
-        const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
         Vue.http.get(configUrl).then(config => {
           post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
             store.commit('setMenuList', sortByOrderNum(res.data.menus))
