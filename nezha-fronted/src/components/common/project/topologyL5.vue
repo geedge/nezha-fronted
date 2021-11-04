@@ -1906,6 +1906,8 @@ export default {
     saveTopology () {
       this.previewData = ''
       this.isPreview = false
+      this.editTopologyFlag = true
+      this.showNoData = false
       const topologyData = getTopology(this.topologyIndex).pureData()
       let flag = true
       const arr = []
@@ -2050,7 +2052,7 @@ export default {
         getTopology(this.topologyIndex).lock(1)
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
-        this.reload()
+        // this.reload()
       })
     },
     previewExit () { // 继续编辑
