@@ -212,27 +212,6 @@
     text-align: center;
     line-height: 28px;
   }
-  .top-tool-btn{
-    height: 32px;
-    width: 32px;
-    border: 1px solid $--border-color-base;
-    outline: none;
-    border-radius: 2px;
-    background-color: $--background-color-base;
-    -webkit-transition: background-color linear .1s;
-    transition: background-color linear .1s;
-    padding: 0;
-  }
-  .top-tool-btn:hover{
-    background-color: #fff;
-  }
-  .top-tool-btn:focus{
-    background-color: #fff;
-    border-color: #FBCEA4;
-  }
-  .top-tool-btn:focus .nz-icon{
-    color: #FBCEA4;
-  }
   .el-form-item__content .el-input-group {
     vertical-align: unset;
   }

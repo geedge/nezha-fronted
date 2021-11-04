@@ -52,7 +52,7 @@
           </el-dropdown>
         </div>
         <div class="mt-10 single-stat-container" v-cloak  v-show="firstShow" >
-          <div :id="'chartContainer'+chartIndex"  :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" class="single-stat-content" ref="chartContainer">
+          <div :id="'chartContainer'+chartIndex"  ref="chartContainer" :style="{color:mapping?mapping.color.text:'',background:mapping?mapping.color.bac:''}" class="single-stat-content">
             {{serieSingleStat}}
             <div class="chart-no-data" v-show="noData">No Data</div>
           </div>
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div class="single-stat-screen-container"  >
-            <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}"  class="single-stat-content" id="chartScreenContainer" ref="chartScreenContainer">
+            <div id="chartScreenContainer"  ref="chartScreenContainer" :style="{color:mapping?mapping.color.text:'',background:mapping?mapping.color.bac:''}" class="single-stat-content">
               {{serieSingleStat}}
               <div class="chart-no-data" v-show="noData">No Data</div>
             </div>

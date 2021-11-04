@@ -42,7 +42,7 @@
               <div class="el-form-item__tip">{{$t('config.system.basic.TwoFactorAuthentication')}}</div>
             </el-form-item>
             <el-form-item>
-              <button style="margin-top: 8px;" id="system-basic-save" @click="saveSetInfo('basic','basicForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id="system-basic-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div >
@@ -154,7 +154,7 @@
               <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"-->
               <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
               <!--              >{{$t('overall.reset')}}</button>-->
-              <button id="system-monitor-save" @click="saveSetInfo('monitor','monitorForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_basic_save'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id="system-monitor-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -202,7 +202,7 @@
             <el-form-item style="padding-top: 20px;">
 <!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
               <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
-              <button id="system-email-save" @click="saveSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_email_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id="system-email-save" v-has="'system_email_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -228,7 +228,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-              <button @click="saveSetInfo('terminal','terminalForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_terminal_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button v-has="'system_terminal_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('terminal','terminalForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -269,8 +269,8 @@
             </el-form-item>
             <el-form-item>
 <!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
-              <button id='system-ldap-test' @click="testSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('config.system.email.testConnection')}}</button>
-              <button id='system-ldap-save' @click="saveSetInfo('ldap','ldapForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_ldap_save'" :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.submit')}}</button>
+              <button id='system-ldap-test' :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" @click="testSetInfo('ldap','ldapForm')">{{$t('config.system.email.testConnection')}}</button>
+              <button id='system-ldap-save' v-has="'system_ldap_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
         </div>
@@ -310,7 +310,7 @@
               <el-input id="system-reset-pin" v-model="reset.pin" type="password"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button @click="resetSys()" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" v-has="'system_reset_reset'"  :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}">{{$t('overall.reset')}}</el-button>
+              <el-button v-has="'system_reset_reset'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="resetSys()">{{$t('overall.reset')}}</el-button>
             </el-form-item>
           </el-form>
         </div>

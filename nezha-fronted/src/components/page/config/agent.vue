@@ -57,7 +57,7 @@
             </el-select>
           </el-form-item>
           <el-form-item   class="half-form-item">
-            <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" type="button" @click="downloadAgent">{{$t('config.agent.agent.download')}}</button>
+            <button :class="{'nz-btn-disabled':downloadAgentFlag}" :disabled="downloadAgentFlag" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="downloadAgent">{{$t('config.agent.agent.download')}}</button>
           </el-form-item>
           <div class="right-box-sub-title">{{$t('config.agent.agent.autoScript')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>

@@ -112,6 +112,8 @@
 import { mapActions } from 'vuex'
 import QRCode from 'qrcodejs2'
 import bus from '@/libs/bus.js'
+import { get } from '@/http'
+import { loadI18n } from '@/components/common/i18n'
 export default {
   name: 'login',
   data () {
@@ -158,6 +160,28 @@ export default {
             this.authToken = res.data.authToken
             this.lang = res.data.user.lang
             this.$i18n.locale = this.lang
+            // 获取国际化内容
+            const getI18nData = new Promise(resolve => get('/sys/i18n/lang').then(response => {
+              if (response.code === 200) {
+                const i18nData = response.data
+                resolve(i18nData)
+              } else {
+                resolve()
+              }
+            }))
+            // 获取可选语言
+            const getLangList = new Promise(resolve => get('/sys/dict/all?type=lang').then(response => {
+              if (response.code === 200) {
+                const langList = response.data.map(lang => ({ name: lang.name, value: lang.value }))
+                this.$store.commit('setLangList', langList)
+                localStorage.setItem('nz-language-list', JSON.stringify(langList))
+              }
+              resolve()
+            }))
+            Promise.all([getI18nData, getLangList]).then(response => {
+              response[0] && loadI18n(response[0])
+              this.$store.commit('i18nReady', true)
+            })
             sessionStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {
               if (res.data.authBind === 0) {

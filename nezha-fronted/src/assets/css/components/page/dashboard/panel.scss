@@ -21,6 +21,10 @@
   overflow-y: auto;
   height: calc(100% - 50px);
   flex: 1;
+  background-color: $--dashboard-background-color-empty;
+  &>div {
+    background-color: $--dashboard-background-color-empty;
+  }
 }
 
 .box-content {
@@ -66,4 +70,5 @@
   text-overflow:ellipsis;
   white-space:nowrap;
   vertical-align: bottom;
+  color: $--color-text-primary;
 }

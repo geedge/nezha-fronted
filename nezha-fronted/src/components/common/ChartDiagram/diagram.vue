@@ -104,18 +104,18 @@
           >
              {{$t('project.topology.preview')}}
            </button>
-            <button @click="previewExit" v-if="isPreview" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+            <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light-new" @click="previewExit"
                     style="margin-right: 20px"
             >
              {{$t('project.topology.previewExit')}}
            </button>
-           <button @click="saveTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="saveTopology"
                    :disabled="prevent_opt.save"
                    :class="{'nz-btn-disabled':prevent_opt.save}"
                    style="margin-right: 20px">
              {{$t('project.topology.save')}}
            </button>
-           <button @click="cancelTopology" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" style="margin-right: 20px">
+           <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-right: 20px" @click="cancelTopology">
              {{$t('project.topology.exit')}}
            </button>
          </span>
@@ -294,11 +294,11 @@
       </el-row>
       <div class="upload-pic-row" style="text-align: center">
             <span>
-               <button @click="uploadPicShow=false" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="margin-right: 20px">
+               <button class="nz-btn nz-btn-size-normal nz-btn-style-light-new" style="margin-right: 20px" @click="uploadPicShow=false">
              {{$t('project.topology.exit')}}
            </button>
 
-              <button @click="imgUpload" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new"
+              <button class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="imgUpload"
                       v-has="'topo_icon_save'" :disabled="prevent_opt.save"
                       :class="{'nz-btn-disabled':prevent_opt.save}"
                       style="margin-right: 20px">

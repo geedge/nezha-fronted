@@ -36,62 +36,25 @@
   opacity: 1;
   color: white;
 }
-.nz-btn.nz-btn-size-normal {
-  font-size: 12px;
-  height: 28px;
-  padding: 0 8px;
-}
-.nz-btn.nz-btn-size-small {
-  font-size: 12px;
-  padding: 2px 5px;
-}
-.nz-btn.nz-btn-size-small i {
-  font-size: 12px;
-}
 .nz-btn-size-large {
   padding: 0 15px;
   height: 28px;
 }
-.nz-btn.nz-btn-style-light { /* 浅色按钮 */
-  background-image: $--background-color-empty;
-  border:0;
-  color: $--color-text-regular;
-  box-shadow: 0 0 1px 1px rgba(162,162,162,0.50);
-  letter-spacing: 0;
-}
-.nz-btn.nz-btn-style-pure-white { /*纯白色按钮*/
-  background-color: $--background-color-empty;
-  color: #444;
-  border: 1px solid #dcdfe6;
-}
-.nz-btn.nz-btn-size-small.nz-btn-style-square { /* 单图标时是个正方形*/
-  padding: 2px 5px;
-}
-.nz-btn.nz-btn-size-normal.nz-btn-style-square { /* 单图标时是个正方形*/
-  padding: 4px 6px;
-}
-.nz-btn.nz-btn-style-light:hover:not(.nz-btn-disabled) {
-  //background-image: $--background-color-empty-hover;
-}
-.nz-btn.nz-btn-style-pure-white:hover:not(.nz-btn-disabled) {
-  background-color: $--border-color-base;
-}
-
-.nz-btn.nz-btn-size-normal-new{
+.nz-btn.nz-btn-size-normal {
   height: 30px;
   line-height: 30px;
   text-align: center;
   min-width: 74px;
   padding: 0 10px;
 }
-.nz-btn.nz-btn-size-small-new{
+.nz-btn.nz-btn-size-small {
   height: 24px;
   line-height: 22px;
   text-align: center;
   min-width: 60px;
   padding: 0 10px;
 }
-.nz-btn.nz-btn-size-mini-new{
+.nz-btn.nz-btn-size-mini {
   height: 22px;
   line-height: 22px;
   text-align: center;
@@ -99,49 +62,69 @@
   padding: 0 5px;
 }
 .nz-btn.nz-btn-style-normal { /* 新版橙色按钮 */
-  background: $--color-primary;
-  color: white;
-  border: 1px solid $--color-primary;
+  background: $--button-primary-background-color;
+  color: $--button-primary-color;
+  border: 1px solid $--button-primary-background-color;
 }
-.nz-btn.nz-btn-style-error-new { /* 新版红色色按钮 */
-  background: #EF7C62;
-  color: white;
-  border: 1px solid #EF7C62;
+.nz-btn.nz-btn-style-error { /* 红色按钮 */
+  background: $--color-danger;
+  color: $--button-primary-color;
+  border: 1px solid $--color-danger;
 }
-.nz-btn.nz-btn-style-light-new { /* 新版浅色按钮 */
-  background: $--background-color-empty;
-  border: 1px solid $--border-color-base;
-  color: $--color-text-regular;
+.nz-btn.nz-btn-style-gray { /* 灰色按钮 */
+  background: $--button-gray-background-color;
+  border: 1px solid $--button-gray-border-color;
+  color: $--button-gray-color;
   letter-spacing: 0;
 }
-.nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) { /* 新版橙色按钮hover */
-  background: $--color-primary;
-  color: white;
-  border: 1px solid $--color-primary;
+.nz-btn.nz-btn-style-light-gray { /* 浅灰色按钮 */
+  background: $--button-light-gray-background-color;
+  border: 1px solid $--button-light-gray-border-color;
+  color: $--button-light-gray-color;
+  letter-spacing: 0;
 }
-.nz-btn.nz-btn-style-error-new:hover:not(.nz-btn-disabled) { /* 新版红色按钮hover */
+.nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) { /* 橙色按钮hover */
+  background: $--button-primary-hover-background-color;
+  color: $--button-primary-color;
+  border: 1px solid $--button-primary-hover-background-color;
+}
+.nz-btn.nz-btn-style-error:hover:not(.nz-btn-disabled) { /* 红色按钮hover */
   background: #F38b73;
-  color: white;
+  color: $--button-primary-color;
   border: 1px solid  #F38b73;
 }
-.nz-btn.nz-btn-style-light-new:hover:not(.nz-btn-disabled) { /* 新版浅色按钮hover */
-  border: 1px solid rgba(250,144,28,0.3);
-  color: $--color-text-regular;
+.nz-btn.nz-btn-style-gray:hover:not(.nz-btn-disabled) { /* 灰色按钮hover */
+  border: 1px solid $--button-gray-hover-border-color;
+  background: $--button-gray-hover-background-color;
+  color: $--button-gray-hover-color;
   letter-spacing: 0;
 }
-.nz-btn.nz-btn-style-normal:active:not(.nz-btn-disabled) { /* 新版橙色按钮active' */
-  background: $--color-primary;
-  color: white;
-  border-color: $--color-primary;
+.nz-btn.nz-btn-style-gray:hover:not(.nz-btn-disabled) { /* 浅灰色按钮hover */
+  border: 1px solid $--button-light-gray-hover-border-color;
+  background: $--button-light-gray-hover-background-color;
+  color: $--button-light-gray-hover-color;
+  letter-spacing: 0;
 }
-.nz-btn.nz-btn-style-error-new:active:not(.nz-btn-disabled) { /* 新版红色按钮active' */
+.nz-btn.nz-btn-style-normal:active:not(.nz-btn-disabled) { /* 橙色按钮active' */
+  background: $--button-primary-active-background-color;
+  color: $--button-primary-color;
+  border-color: $--button-primary-active-background-color;
+}
+.nz-btn.nz-btn-style-error:active:not(.nz-btn-disabled) { /* 红色按钮active' */
   background: #EF7C62;
-  color: white;
+  color: $--button-primary-color;
   border-color: #Eb6D51;
 }
-.nz-btn.nz-btn-style-light-new:active:not(.nz-btn-disabled) { /* 新版浅色按钮active*/
-  border: 1px solid $--color-primary;
-  color: $--color-primary;
+.nz-btn.nz-btn-style-gray:active:not(.nz-btn-disabled) { /* 灰色按钮active*/
+  background: $--button-gray-active-background-color;
+  border: 1px solid $--button-gray-active-border-color;
+  color: $--button-gray-active-color;
+  letter-spacing: 0;
+}
+.nz-btn.nz-btn-style-gray:active:not(.nz-btn-disabled) { /* 浅灰色按钮active*/
+  background: $--button-light-gray-active-background-color;
+  border: 1px solid $--button-light-gray-active-border-color;
+  color: $--button-light-gray-active-color;
   letter-spacing: 0;
 }
 

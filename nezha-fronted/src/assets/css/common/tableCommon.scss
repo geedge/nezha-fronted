@@ -74,15 +74,25 @@
     height: 32px;
     width: 36px;
     cursor: pointer;
-    border: 1px solid $--border-color-base;
+    border: 1px solid $--button-gray-border-color;
     outline: none;
     border-radius: $--button-border-radius;
     background-color: $--button-gray-background-color;
     transition: background-color linear .1s;
+    color: $--button-gray-color;
 
     i {
       font-size: 14px;
       color: $--button-gray-color;
+    }
+  }
+  .top-tool-btn.top-tool-btn--light-gray {
+    border: 1px solid $--button-light-gray-border-color;
+    color: $--button-light-gray-color;
+    background-color: $--button-light-gray-background-color;
+
+    i {
+      color: $--button-light-gray-color;
     }
   }
   .top-tool-btn.top-tool-btn--text {
@@ -92,10 +102,36 @@
   }
   .top-tool-btn:hover:not(.nz-btn-disabled) {
     background-color: $--button-gray-hover-background-color;
+    border: 1px solid $--button-gray-hover-border-color;
+    color: $--button-gray-hover-color;
+
+    i {
+      color: $--button-gray-hover-color;
+    }
   }
   .top-tool-btn:focus:not(.nz-btn-disabled), .top-tool-btn.is-focus {
+    background-color: $--button-gray-active-background-color;
+    border: 1px solid $--button-gray-active-border-color;
+    color: $--button-gray-active-color;
+
+    i {
+      color: $--button-gray-active-color;
+    }
+  }
+  .top-tool-btn.top-tool-btn--light-gray:hover:not(.nz-btn-disabled) {
     background-color: $--button-gray-hover-background-color;
-    border: 1px solid #FBCEA4 !important;
+    border: 1px solid $--button-gray-hover-border-color;
+    color: $--button-gray-hover-color;
+
+    i {
+      color: $--button-gray-hover-color;
+    }
+  }
+  .top-tool-btn.top-tool-btn--light-gray:focus:not(.nz-btn-disabled), .top-tool-btn.top-tool-btn--light-gray.is-focus {
+    background-color: $--button-gray-active-background-color;
+    border: 1px solid $--button-gray-active-border-color;
+    color: $--button-gray-active-color;
+
     i {
       color: $--button-gray-active-color;
     }
@@ -103,7 +139,6 @@
   .top-tool-btn--delete.top-tool-btn:focus:not(.nz-btn-disabled) {
     background-color: $--button-gray-hover-background-color;
     border-color: #FFC4B9;
-
     i {
       color: #F0745A;
     }
@@ -494,7 +529,7 @@
 /*table提示样式*/
 .el-tooltip__popper.is-light {
   border: 1px solid #EBEEF5;
-  color: #606266;
+  color: $--color-text-regular;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
 .col-resize-area {

@@ -84,7 +84,7 @@
           </div>
           <div slot="footer" class="footer">
             <div class="el-message-box__btns">
-              <button @click="rollbackImport"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" :id="id+'-xlsx-import-rollback'">
+              <button :id="id+'-xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal nz-btn-style-error" @click="rollbackImport">
                 <span>{{$t('overall.rollbackImport')}}</span>
               </button>
             </div>

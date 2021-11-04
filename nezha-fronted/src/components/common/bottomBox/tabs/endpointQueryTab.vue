@@ -114,7 +114,7 @@
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
           <pick-time :refresh-data-func="queryChartDate" :use-refresh="false" v-model="searchTime" style="height: 28px;" @unitChange="chartUnitChange" id="endpoint-query-full-chart" :show-multiple="true" ref="pickTime"></pick-time>
-          <button @click="saveChart" class="nz-btn nz-btn-size-large nz-btn-style-normal-new" v-has="'project_endpoint_query_chart_toAdd'" id="endpoint-query-full-chart-save">{{$t('dashboard.metric.saveChart')}}</button>
+          <button id="endpoint-query-full-chart-save" v-has="'project_endpoint_query_chart_toAdd'" class="nz-btn nz-btn-size-large nz-btn-style-normal" @click="saveChart">{{$t('dashboard.metric.saveChart')}}</button>
         </div>
       </div>
       <chart ref="endpointChart" :unit="chartUnit" :minusTime="minusTime"></chart>

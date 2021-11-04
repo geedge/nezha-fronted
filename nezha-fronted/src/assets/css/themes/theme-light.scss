@@ -85,6 +85,34 @@ $--dropdown-menu-box-shadow-color: rgba(0, 0, 0, 0.1);
 /* 11.input */
 $--input-background-color: $--background-color-empty;
 
+/* 12.按钮 */
+$--button-primary-color: #FFFFFE; // 普通按钮字色
+$--button-primary-background-color: $--color-primary; // 普通按钮背景色
+$--button-primary-hover-background-color: mix(#FFF, $--color-primary, 10%);
+$--button-primary-active-background-color: mix(#000, $--color-primary, 10%);
+
+// 黑暗模式下，灰按钮有两种色值，明亮模式下只有一种；为了区分黑暗模式的两种按钮，此处设button-gray和button-light-gray两种前缀，颜色一深一浅，明亮模式下这两种的色值是一样的；
+// button-gray用于普通列表顶部的按钮，button-light-gray用户dashboard、panel顶部按钮
+$--button-gray-color: $--color-text-regular; // 灰色按钮字色
+$--button-gray-hover-color: $--button-gray-color; // 灰色按钮hover字色
+$--button-gray-active-color: $--color-primary; // 灰色按钮focus字色
+$--button-gray-background-color: $--background-color-base; // 灰色按钮背景色
+$--button-gray-hover-background-color: $--background-color-empty; // 灰色按钮hover背景色
+$--button-gray-active-background-color: $--button-gray-hover-background-color; // 灰色按钮focus背景色
+$--button-gray-border-color: $--border-color-base; // 灰色按钮边框色
+$--button-gray-hover-border-color: $--button-gray-border-color; // 灰色按钮hover边框色
+$--button-gray-active-border-color: $--button-gray-active-color; // 灰色按钮focus边框色
+
+$--button-light-gray-color: $--color-text-regular; // 灰色按钮字色
+$--button-light-gray-hover-color: $--button-gray-color; // 灰色按钮hover字色
+$--button-light-gray-active-color: $--color-primary; // 灰色按钮focus字色
+$--button-light-gray-background-color: $--background-color-base; // 灰色按钮背景色
+$--button-light-gray-hover-background-color: $--background-color-empty; // 灰色按钮hover背景色
+$--button-light-gray-active-background-color: $--button-gray-hover-background-color; // 灰色按钮focus背景色
+$--button-light-gray-border-color: $--border-color-base; // 灰色按钮边框色
+$--button-light-gray-hover-border-color: $--button-gray-border-color; // 灰色按钮hover边框色
+$--button-light-gray-active-border-color: $--button-gray-border-color; // 灰色按钮focus边框色
+
 
 /*** themes/common.scss是与主题切换无关的变量 ***/
 @import './src/common/var.scss';

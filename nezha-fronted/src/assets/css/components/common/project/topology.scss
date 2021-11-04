@@ -455,27 +455,6 @@
     color: $--color-primary;
   }
 }
-.top-tool-btn{
-  height: 32px;
-  width: 32px;
-  border: 1px solid $--border-color-base;
-  outline: none;
-  border-radius: 2px;
-  background-color: $--background-color-base;
-  -webkit-transition: background-color linear .1s;
-  transition: background-color linear .1s;
-  padding: 0;
-}
-.top-tool-btn:hover{
-  background-color: $--background-color-empty;
-}
-.top-tool-btn:focus{
-  background-color: $--background-color-empty;
-  border-color: #FBCEA4;
-}
-.top-tool-btn:focus .nz-icon{
-  color: #FBCEA4;
-}
 .right-bottom-zoom{
   position: absolute;
   bottom: 30px;

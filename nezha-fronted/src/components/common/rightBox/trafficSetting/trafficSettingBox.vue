@@ -16,10 +16,10 @@
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button type="button" v-cancel="{obj:traffic,func:esc}" id="traffic-setting-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new">
+      <button id="traffic-setting-esc" v-cancel="{obj:traffic,func:esc}" class="nz-btn nz-btn-size-normal nz-btn-style-light-new" type="button">
         <span>{{$t('overall.cancel')}}</span>
       </button>
-      <button @click="save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="traffic-setting-save" type="button" v-has="'dc_trafficSetting_save'">
+      <button id="traffic-setting-save" v-has="'dc_trafficSetting_save'" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="save">
         <span>{{$t('overall.save')}}</span>
       </button>
     </div>

@@ -49,10 +49,10 @@
     }
   }
   .nz-alert-tag_info {
-    border-color: #909399;
+    border-color: $--color-text-secondary;
     .nz-alert-tag__label {
-      border-right: 1px solid #909399;
-      background-color: #909399;
+      border-right: 1px solid $--color-text-secondary;
+      background-color: $--color-text-secondary;
       color: white;
     }
   }

@@ -144,10 +144,10 @@
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <button id="temp-box-esc" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" @click="tempBoxShowChange(false)">
+        <button id="temp-box-esc" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="tempBoxShowChange(false)">
           <span>{{$t('overall.cancel')}}</span>
         </button>
-      <button :disabled="prevent_opt.save" @click="tempBoxShowChange(true)" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" id="chart-box-save" v-has="`expressionTemplate_add`" >
+      <button id="chart-box-save" v-has="`expressionTemplate_add`" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="tempBoxShowChange(true)" >
         <span>{{$t('overall.save')}}</span>
       </button>
       </span>
@@ -652,10 +652,10 @@ export default {
   .nz-temp-box /deep/ .el-dialog__footer{
     margin-top: 0;
   }
-  .nz-temp-box .nz-btn-style-light-new{
+  .nz-temp-box .nz-btn-style-light{
     margin-right: 10px;
   }
-  .nz-temp-box .nz-btn-style-normal-new{
+  .nz-temp-box .nz-btn-style-normal{
     margin-left: 10px;
   }
 </style>

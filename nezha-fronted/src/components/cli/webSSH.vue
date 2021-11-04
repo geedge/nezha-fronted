@@ -168,7 +168,7 @@
                 :placeholder="$t('dashboard.panel.chartForm.selectAsset')"
                 id="box-input-asset-id"
                 :result-format="resultFormat"></v-selectpage>
-              <button @click.prevent="connect" type="button" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new">Connect</button>
+              <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click.prevent="connect">Connect</button>
             </el-form-item>
           </el-form>
         </div>

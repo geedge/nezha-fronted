@@ -206,7 +206,7 @@
       </div>
       <div slot="footer" class="footer">
         <div class="el-message-box__btns">
-          <button :id="'xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-error-new" @click="rollbackImport">
+          <button :id="'xlsx-import-rollback'"  class="nz-btn nz-btn-size-normal nz-btn-style-error" @click="rollbackImport">
             <span>{{$t('overall.rollbackImport')}}</span>
           </button>
           <button :id="'xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">

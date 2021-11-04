@@ -1043,10 +1043,10 @@ li {
 
   .el-message-box__btns {
     .el-button:not(.el-button--primary):focus{
-      color: #606266;
+      color: $--color-text-regular;
     }
     .el-button:not(.el-button--primary):hover {
-      color: #606266;
+      color: $--color-text-regular;
       opacity: .8;
       border-color: #DCDFE6;
       background-color: $--background-color-empty;
@@ -1327,7 +1327,7 @@ li {
   background-color: #FAFAFA;
 }
 .el-dropdown-multi .el-dropdown-menu__item:focus {
-  color: #606266;
+  color: $--color-text-regular;
 }
 /*一些单选label宽度设为一样*/
 .same-label-width .el-radio-button__inner {
@@ -1345,7 +1345,7 @@ li {
   top:50%;
   width:100%;
   text-align:center;
-  color: #909399;
+  color: $--color-text-secondary;
   font-family: NotoSans !important;
   font-size: 12px !important;
 }

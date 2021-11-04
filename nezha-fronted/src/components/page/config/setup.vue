@@ -166,13 +166,13 @@
           </template>
           <div class="setup-bottom-btn">
 
-            <button @click="preStep" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" v-if="activeStep != 0" style="background-color:#fff;color:#333;border:1px solid rgba(0,0,0,0.15);">
+            <button v-if="activeStep != 0" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="background-color:#fff;color:#333;border:1px solid rgba(0,0,0,0.15);" @click="preStep">
               <span>{{$t('setup.back')}}</span>
             </button>
-            <button @click="nextStep"  class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_next" v-if="activeStep != 3" :class="{'nz-btn-disabled':prevent_next}">
+            <button v-if="activeStep != 3"  :class="{'nz-btn-disabled':prevent_next}" :disabled="prevent_next" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="nextStep">
               <span>{{$t('setup.next')}}</span>
             </button>
-            <button  @click="finishStep" class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" :disabled="prevent_finish" v-if="activeStep == 3" :class="{'nz-btn-disabled':prevent_finish}">
+            <button  v-if="activeStep == 3" :class="{'nz-btn-disabled':prevent_finish}" :disabled="prevent_finish" class="nz-btn nz-btn-size-normal nz-btn-style-normal" @click="finishStep">
               <span>{{$t('setup.finish')}}</span>
             </button>
           </div>

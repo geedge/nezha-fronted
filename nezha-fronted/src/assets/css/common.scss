@@ -176,3 +176,10 @@ td .nz-icon-gear:before{
   fill: currentColor;
   overflow: hidden;
 }
+.time-no-data {
+  text-align: center;
+  width: 100%;
+  color: $--color-text-secondary;
+  font-family: NotoSans !important;
+  font-size: 12px !important;
+}

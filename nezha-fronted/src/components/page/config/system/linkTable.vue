@@ -61,8 +61,8 @@
         <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
         <div slot-scope="scope" class="table-operation-items">
           <template v-if="scope.row.edit">
-            <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-normal-new" :disabled="prevent_opt.save" @click="saveOrUpdate(scope.row)"  style="margin-right: 10px"><span>{{$t('overall.save')}}</span></button>
-            <button type="button" class="nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="cancel(scope.row)" :disabled="prevent_opt.save"><span>{{$t('overall.cancel')}}</span></button>
+            <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-normal" style="margin-right: 10px" type="button"  @click="saveOrUpdate(scope.row)"><span>{{$t('overall.save')}}</span></button>
+            <button :disabled="prevent_opt.save" class="nz-btn nz-btn-size-mini nz-btn-style-light" type="button" @click="cancel(scope.row)"><span>{{$t('overall.cancel')}}</span></button>
           </template>
           <template v-else>
             <button class="table-operation-item" @click="toEdit(scope.row)"><i class="nz-icon nz-icon-edit"></i></button>

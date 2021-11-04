@@ -500,7 +500,7 @@
 .color-tab div {
   text-align: center;
   flex: 1;
-  color: #909399;
+  color: $--color-text-secondary;
   transition: all .3s cubic-bezier(.645, .045, .355, 1);
   background: #E4E7ED;
   cursor: pointer;

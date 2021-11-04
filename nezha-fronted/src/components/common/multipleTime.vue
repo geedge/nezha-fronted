@@ -29,7 +29,7 @@
               </el-row>
             </template>
             <template v-else>
-              <div style="text-align: center;width: 100%;color: #909399;font-family: NotoSans !important;font-size: 12px !important;">{{$t("dashboard.panel.noDate")}}</div>
+              <div class="time-no-data">{{$t("dashboard.panel.noDate")}}</div>
             </template>
             <div  class="el-dropdown-link" slot="reference">
               <i class="nz-icon nz-icon-time" style="width:20px;"></i>
