@@ -257,7 +257,7 @@
                         class="half-form-item" :label="'Source labels'"
                         :rules="[
                                        { required: item.action === 'replace' || item.action === 'keep' || item.action === 'drop', message: $t('validate.required'), trigger: 'change' },
-                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : '', trigger: 'change' }
+                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : requirdRelabel, trigger: 'change' }
                                      ]">
                         <vue-tags-input
                           v-model="item.tags"
@@ -587,6 +587,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
+import vm from "@/main";
 
 export default {
   name: 'editEndpointBoxNew',
@@ -816,6 +817,9 @@ export default {
   methods: {
     arrLength: arrLength,
     port: port,
+    requirdRelabel (rule, value, callback) {
+      callback()
+    },
     selectWalk (walk) {
       if (this.editEndpoint.configs[0].config.walk.indexOf(walk) != -1) {
         this.editEndpoint.configs[0].config.walk.splice(this.editEndpoint.configs[0].config.walk.indexOf(walk), 1)
