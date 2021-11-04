@@ -57,14 +57,30 @@
     </nz-data-list>
     <!--导出-->
     <div class="export-xlsx">
-      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="300px" @close="closeDialog">
-        <div class="upload-body">
-          <button id="alert-msg-exportcur" class="el-button el-button--default el-button--small" @click="exportCur">
-            <span>{{$t('overall.exportCur')}}</span>
-          </button>
-          <button id="alert-msg-exportall" class="el-button el-button--default el-button--small" @click="exportAll">
-            <span>{{$t('overall.exportAll')}}</span>
-          </button>
+      <el-dialog :modal-append-to-body='false' :show-close="true" :title="importBox.title" :visible.sync="importBox.show" class="nz-dialog" width="600px" @close="closeDialog">
+        <div class="upload-body" style="height: 170px">
+          <div class="export-box">
+            <span class="export-title">Records</span>
+            <el-radio-group v-model="importBox.record"  size="small">
+              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!batchDeleteObjs.length">{{item.name}}</el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="export-box">
+            <span class="export-title">File format</span>
+            <el-radio-group v-model="importBox.format"  size="small">
+              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="item.value!==1">{{item.name}}</el-radio-button>
+            </el-radio-group>
+          </div>
+        </div>
+        <div slot="footer" class="footer">
+          <div class="el-message-box__btns">
+            <button :id="'-xlsx-import-export'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="exportData">
+              <span style="text-transform:Capitalize">{{$t('config.operationlog.operations.export')}}</span>
+            </button>
+            <button :id="'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+              <span>{{$t('overall.close')}}</span>
+            </button>
+          </div>
         </div>
       </el-dialog>
     </div>
@@ -163,7 +179,7 @@ export default {
       dialogText: '',
       url: 'alert/message',
       // 导出相关
-      importBox: { show: false, title: this.$t('overall.exportExcel') },
+      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
       deleteBox: { show: false, ids: '', remark: '', state: 2 },
       // 详情相关
       graphShow: false,
@@ -324,7 +340,17 @@ export default {
           width: 0,
           index: -1
         }
-      }
+      },
+      recordArr: [
+        { name: this.$t('overall.allData'), value: 'all' },
+        { name: this.$t('overall.selectRecords'), value: 'records' },
+        { name: this.$t('overall.current'), value: 'current' }
+      ],
+      formatArr: [
+        { name: 'XLSX', value: 1 },
+        { name: 'CSV', value: 2 },
+        { name: 'JSON', value: 3 }
+      ]
     }
   },
   computed: {
@@ -886,12 +912,21 @@ export default {
     closeDialog () {
       this.importBox.show = false
       this.deleteBox.show = false
+      this.$nextTick(() => {
+        this.importResult = null
+        this.importFileList = []
+        this.importFile = null
+        this.importBox.value = 1
+        this.importBox.record = 'all'
+      })
     },
     dialogClose () {
       this.graphShow = false
     },
     exportCur () {
       const searchLabel = Object.assign({}, this.searchLabel)
+      searchLabel.format = this.importBox.format
+      delete searchLabel.statistics
       this.$set(searchLabel, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel({ ...searchLabel, state: this.state })
       this.closeDialog()
@@ -899,6 +934,8 @@ export default {
     exportAll () {
       const temp = JSON.parse(JSON.stringify(this.searchLabel))
       temp.pageSize = -1
+      delete temp.statistics
+      temp.format = this.importBox.format
       this.$set(temp, 'language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
       this.exportExcel({ ...temp, state: this.state })
       this.closeDialog()
@@ -1005,7 +1042,43 @@ export default {
         }
       }
     },
-    deleteMessage () {}
+    deleteMessage () {},
+    exportData () {
+      if (this.importBox.record === 'all') {
+        this.exportAll()
+      } else if (this.importBox.record === 'current') {
+        this.exportCur()
+      } else if (this.importBox.record === 'records') {
+        this.exportRecords()
+      }
+    },
+    exportRecords () {
+      const params = JSON.parse(JSON.stringify(this.searchLabel))
+      params.format = this.importBox.format
+      delete params.statistics
+      if (this.params2) {
+        Object.keys(this.params2).forEach(key => {
+          if (params[key]) {
+            if (params[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(params[key], this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]') {
+              params[key].concat(this.params2[key])
+            }
+          } else {
+            params[key] = this.params2[key]
+          }
+        })
+      }
+      params.pageSize = -1
+      // if (this.importUrl.indexOf('endpoint') > -1){
+      //   delete params.moduleId
+      // }
+      params.language = localStorage.getItem('nz-language') || 'en'
+      params.format = this.importBox.format
+      params.ids = this.batchDeleteObjs.map(item => item.id).join(',')
+      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
+      this.closeDialog()
+    },
   },
   destroyed () {
     localStorage.removeItem('alertMessageProjectId')

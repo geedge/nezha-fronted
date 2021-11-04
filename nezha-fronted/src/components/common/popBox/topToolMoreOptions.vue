@@ -338,6 +338,7 @@ export default {
       }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
@@ -371,6 +372,7 @@ export default {
       // }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
@@ -405,6 +407,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       params.ids = this.deleteObjs.map(item => item.id).join(',')
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
@@ -506,27 +509,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.export-box{
-  display: flex;
-  margin-top: 30px;
-  align-items: center;
-  .export-title {
-    display: inline-block;
-    width: 100px;
-    text-align: left;
-    font-size: 14px;
-    color: #666666;
-    letter-spacing: 0;
-    font-weight: 600;
-  }
-  /deep/ .el-radio-group{
-    flex: 1;
-    .el-radio-button--small {
-      width: 142px;
-      .el-radio-button__inner{
-        width: 100%;
-      }
-    }
-  }
-}
+
 </style>
