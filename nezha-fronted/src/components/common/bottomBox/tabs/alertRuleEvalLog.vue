@@ -98,35 +98,11 @@ export default {
       if (this.obj) {
         this.$set(this.searchLabel, 'id', this.obj.id)
       }
-      this.$get(this.url, { ...this.searchLabel, ...this.searchCheckBox }).then(response => {
+      this.$get('alert/rule/' + this.obj.id + '/evalLog').then(response => {
         this.tools.loading = false
         this.nowTime = this.utcTimeToTimezoneStr(response.time)
-        // response = {
-        //   code: 200,
-        //   msg: 'success',
-        //   data: {
-        //     list: [{
-        //       ruleId: 1,
-        //       state: 200,
-        //       msg: 'success',
-        //       stts: 1634215095277,
-        //       etts: 1634215095377
-        //     }, {
-        //       ruleId: 1,
-        //       state: 201,
-        //       msg: 'success',
-        //       stts: 1634215095477,
-        //       etts: 1634215095577
-        //     }
-        //     ]
-        //   }
-        // }
         if (response.code === 200) {
-          for (let i = 0; i < response.data.list.length; i++) {
-            response.data.list[i].status = response.data.list[i].status + ''
-          }
-          this.tableData = response.data.list
-          this.pageObj.total = response.data.total
+          this.tableData = response.data
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper

@@ -20,7 +20,7 @@
     >
       <template slot-scope="{ node, data }">
         <span>{{ data.name }}</span>
-        <span class="search-content-num">({{data.num}})</span>
+        <span class="search-content-num">({{data.num || 0 }})</span>
       </template>
     </el-cascader>
   </div>

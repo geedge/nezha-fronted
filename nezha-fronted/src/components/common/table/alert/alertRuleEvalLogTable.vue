@@ -41,6 +41,7 @@
           <div>
             <div :class="{'active-icon green-bg':scope.row.state == 200,'active-icon red-bg':scope.row.state != 200}" style="position: relative">
             </div>
+            <span>{{scope.row.state == 200?'Ok':'Error'}}</span>
           </div>
         </template>
         <template v-else-if="item.prop === 'duration'">
@@ -73,7 +74,7 @@
 
 <script>
 import table from '@/components/common/mixin/table'
-import { calcDurationByStringTimeB } from '@/components/common/js/tools'
+import { calcDurationByStringTimeMs } from '@/components/common/js/tools'
 export default {
   name: 'alertRuleTable',
   mixins: [table],
@@ -113,9 +114,9 @@ export default {
   methods: {
     getDuration (record) {
       if (record.etts) {
-        return calcDurationByStringTimeB(record.stts, record.etts)
+        return calcDurationByStringTimeMs(record.stts, record.etts)
       }
-      return calcDurationByStringTimeB(record.stts, this.utcTimeToTimezoneStr(this.nowTime))
+      return calcDurationByStringTimeMs(record.stts, this.utcTimeToTimezoneStr(this.nowTime))
     }
   }
 }
