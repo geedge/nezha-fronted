@@ -89,23 +89,27 @@ export default {
           width: 80,
           sortable: 'custom'
         }, {
-          label: this.$t('i18n.name'),
+          label: this.$t('config.menus.name'),
           prop: 'name',
           show: true,
+          minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('i18n.code'),
+          label: this.$t('config.menus.code'),
           prop: 'code',
           show: true,
+          minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('i18n.lang'),
+          label: this.$t('config.menus.lang'),
           prop: 'lang',
           show: true,
+          minWidth: 150,
           sortable: 'custom'
         }, {
-          label: this.$t('i18n.value'),
+          label: this.$t('config.menus.value'),
           prop: 'value',
+          minWidth: 150,
           show: true
         }
         // , {

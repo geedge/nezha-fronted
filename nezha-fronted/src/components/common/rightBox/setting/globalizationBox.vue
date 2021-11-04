@@ -2,7 +2,7 @@
   <div class="right-box right-box-dc" v-clickoutside="{obj:editGlobalization,func:clickOutside}">
     <!-- begin--标题-->
     <div class="right-box__header">
-      <div class="header__title">{{editGlobalization.id ? ($t("i18n.editI18n")) : $t("i18n.createI18n")}}</div>
+      <div class="header__title">{{editGlobalization.id ? ($t("config.menus.editI18n")) : $t("config.menus.createI18n")}}</div>
       <div class="header__operation">
         <span v-cancel="{obj: editGlobalization, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
@@ -11,13 +11,13 @@
     <div class="right-box__container">
       <div class="container__form">
         <el-form label-width="120px" size="small" :model="editGlobalization" label-position = "top" ref="globalizationForm">
-          <el-form-item :label='$t("i18n.name")' prop="name">
+          <el-form-item :label='$t("config.menus.name")' prop="name">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.name" size="small" id="dc-box-input-name"></el-input>
           </el-form-item>
-          <el-form-item :label='$t("i18n.code")' prop="code">
+          <el-form-item :label='$t("config.menus.code")' prop="code">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.code" size="small" id="dc-box-input-code"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('i18n.lang')" prop="lang">
+          <el-form-item :label="$t('config.menus.lang')" prop="lang">
             <el-select id="account-input-language"
                        class="right-box__select"
                        v-model="editGlobalization.lang"
@@ -31,7 +31,7 @@
               </template>
             </el-select>
           </el-form-item>
-          <el-form-item :label='$t("i18n.value")' prop="value">
+          <el-form-item :label='$t("config.menus.value")' prop="value">
             <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>
           </el-form-item>
 <!--          <el-form-item :label='$t("i18n.remark")' prop="remark">-->
@@ -144,9 +144,6 @@ export default {
       this.$get('/sys/dict/all', { type: 'lang' }).then(response => {
         if (response.code === 200) {
           this.languageList = response.data
-          if (!this.editGlobalization.id) {
-            this.languageList[1].value = 'en'
-          }
         } else {
           this.$message.error(response.msg)
         }

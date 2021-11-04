@@ -25,8 +25,9 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name" class="nz-dropdown-menu__item-hover">
                       <el-checkbox :label="item3.id">{{item3.name}}</el-checkbox>
+                      <span class="right-box-select-num">{{item3.num}}</span>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -56,9 +57,12 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" class="nz-dropdown-menu__item">
 <!--                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>-->
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
+                     <div  v-for="(item4,index4) in item3.children" :key="index4" class="el-dropdown-menu__item nz-dropdown-menu__item-hover">
+                        <el-checkbox :label="item3.id+'-'+item4.id" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
+                       <span class="right-box-select-num">{{item4.num}}</span>
+                     </div>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -88,9 +92,12 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" class="nz-dropdown-menu__item">
                       <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item4.name" :a="item3.id+'-'+item4.id">{{item4.name}}</el-checkbox>
+                     <div :key="index4"  v-for="(item4,index4) in item3.children" class="el-dropdown-menu__item nz-dropdown-menu__item-hover">
+                        <el-checkbox :label="item3.id+'-'+item4.id" :title="item4.name" :a="item3.id+'-'+item4.id">{{item4.name}}</el-checkbox>
+                       <span class="right-box-select-num">{{item4.num}}</span>
+                     </div>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -260,25 +267,22 @@ export default {
       background: #fff !important;
       padding: 0;
       max-width: 200px;
-      overflow: hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
+      display: flex;
       .el-checkbox{
-        width: calc(100% - 20px);
+        flex: 1;
         height: 36px;
         padding: 0 0 0 20px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
         .el-checkbox__label{
           flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-      }
-      .el-checkbox:hover{
-        color: #fa901c;
-        background-color: #fafafa !important;
       }
       .children-title-name{
         width: calc(100% - 20px);
@@ -287,11 +291,36 @@ export default {
         font-size: 12px;
         color: #909399;
         line-height: 30px;
+        display: inline-block;
       }
+    }
+    .nz-dropdown-menu__item{
+      flex-direction: column;
     }
     .el-dropdown-menu__item:not(.is-disabled):hover{
       color: #606266;
       background: #fff !important;
+    }
+    .right-box-select-num {
+      display: inline-block;
+      width: 30px;
+      color: #999999;
+      text-align: right;
+      margin-right: 5px;
+    }
+    .nz-dropdown-menu__item-hover:not(.is-disabled):hover{
+      color: #fa901c;
+      background-color: #fafafa !important;
+      .el-checkbox{
+        color: #fa901c;
+      }
+    }
+    .nz-dropdown-menu__item-hover{
+      .el-checkbox.is-checked{
+        .el-checkbox__label{
+          color: #fa901c;
+        }
+      }
     }
   }
   .clear-all-select{

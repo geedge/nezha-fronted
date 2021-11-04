@@ -170,7 +170,7 @@ export function checkExprTempAge (rule, value, callback) {
   }, 100)
 }
 
-export function arrLength (rule, value, callback) { // 校验经纬度
+export function arrLength (rule, value, callback) { // 校验数组
   if (value.length > 0) {
     callback()
   } else {

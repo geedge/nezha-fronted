@@ -6,7 +6,7 @@
         <template>
           <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
             <template v-for="(item, j) in data.children">
-              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value" :title="item.key || item.name || item.label">{{item.key || item.name || item.label}}</el-checkbox>
+              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value" :title="item.key || item.name || item.label">{{item.key || item.name || item.label}} <span class="search-content-num">({{item.num || 0}})</span></el-checkbox>
             </template>
           </el-checkbox-group>
         </template>
@@ -306,7 +306,7 @@ export default {
               this.$set(c, 'labelWidth', labelWidth) // label区域宽
               this.$set(c, 'inputWidth', this.widthConstant.dropdownCheckBox.inputOriginalWidth) // 内容区域宽
             } else if (this.titleSearchListCopy[type].type === 'checkBox') {
-              const width = this.computeDistance(c.name) + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
+              const width = this.computeDistance(c.name + ' (' + c.num + ')') + this.widthConstant.checkBox.tagBlankTotal + this.widthConstant.checkBox.boxMargin
               this.$set(c, 'width', width) // 总宽
             }
           })
@@ -474,7 +474,7 @@ export default {
     line-height: 45px;
   }
   .el-checkbox{
-    line-height: 45px;
+    line-height: 40px;
   }
 }
 .more.search-items{
@@ -500,4 +500,7 @@ export default {
     font-size: 12px;
   }
 }
+  .search-content-num{
+    color: #999999;
+  }
 </style>
