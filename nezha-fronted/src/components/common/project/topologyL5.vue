@@ -1212,6 +1212,7 @@ export default {
           // 连线是否自动计算锚点
           // data.manualCps=true;
           data.animateColor = '#FA901C'
+          data.toArrowColor = '#000000'
           data.data = {
             animatePlay: false,
             strokeStyle: data.strokeStyle,
