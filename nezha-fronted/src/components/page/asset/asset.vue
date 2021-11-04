@@ -21,7 +21,8 @@
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="model"
           :params="searchLabel"
@@ -92,7 +93,8 @@
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="model"
           :params="searchLabel"
@@ -110,7 +112,7 @@
           <template v-slot:before>
             <div>
               <el-dropdown-item>
-                <div id="asset-batch-asset" v-has="'asset_edit'" @click.stop="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
+                <div id="asset-batch-asset" v-has="'asset_edit'" @click="batchEdit"><i class="nz-icon nz-icon-batch-edit"></i>{{$t('overall.batchEdit')}}</div>
               </el-dropdown-item>
               <el-dropdown-item>
                 <delete-button :type="'link'" :title="$t('overall.batchDel')" id="asset-list-batch-delete" v-has="'asset_delete'" :api="url" :delete-objs="batchDeleteObjs" @after="getTableData" @before="delFlag=true"></delete-button>
@@ -556,7 +558,7 @@ export default {
         })
       })
     },
-    getSearchableMetaData () {
+    getSearchableMetaData (metaData) {
       return new Promise(resolve => {
         this.$get('asset/field/meta', { pageSize: -1 }).then(response => {
           if (response.code === 200) {
@@ -569,7 +571,20 @@ export default {
               if (m.param) {
                 const param = JSON.parse(m.param)
                 if (param.items) {
-                  data.push({ ...m, children: param.items.map(p => { return { ...p, id: p.name, metaId: m.id } }) })
+                  // param.items.map(p => { return { ...p, id: p.name, metaId: m.id, num: metaData.find(meta => meta.id === m.id && meta.option === p.name).num } })
+                  data.push({
+                    ...m,
+                    children: param.items.map(p => {
+                      const metaFind = metaData.find(meta => meta.id === m.id && meta.option === p.name)
+                      return {
+                        ...p,
+                        id: p.name,
+                        name: p.name,
+                        metaId: m.id,
+                        num: metaFind ? metaFind.num : 0
+                      }
+                    })
+                  })
                 }
               }
             })
@@ -602,7 +617,7 @@ export default {
           // const titleSearchData = {}
           this.modelData.forEach(m => {
             m.value = []
-            arr.push({ ...m, name: m.brand.name + '/' + m.name, value: m.id })
+            arr.push({ ...m, name: m.brand.name + '/' + m.name, value: m.id, num: m.num })
             // if (titleSearchData[m.brand.name]) {
             //   titleSearchData[m.brand.name].children.push(m)
             // } else {

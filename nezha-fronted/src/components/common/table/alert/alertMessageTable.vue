@@ -91,7 +91,7 @@
               :id="scope.row[item.label].id"
               :that="scope.row[item.label]"
               :type="item.label"
-              :alert-table-dialog="true"
+              :alert-table-dialog="chartAlertList"
             ></alertLabel>
           </span>
         </template>
@@ -160,7 +160,8 @@ export default {
       default: true
     },
     alertMessageTabNew: Boolean,
-    loading: Boolean
+    loading: Boolean,
+    chartAlertList: Boolean
   },
   mixins: [table, bus],
   data () {

@@ -321,8 +321,13 @@ export default {
     closeRightBox () {
       this.rightBox.show = false
     },
-    clickProfile () {
+    clickProfile (refresh) {
       this.personalCenter()
+      if (refresh) {
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
+      }
     },
     closeDialog () {
       this.authBindShow = false

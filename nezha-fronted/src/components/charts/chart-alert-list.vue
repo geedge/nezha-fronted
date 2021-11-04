@@ -99,6 +99,7 @@
             :fromPath="'/alertList'"
             style="height: calc(100% - 50px)"
             :showOption="false"
+            :chart-alert-list="true"
           ></alertMessageTable>
           <Pagination :pageObj="screenPageObj"  @pageNo='screenPageNo' @pageSize='screenPageSize' ref="Pagination" ></Pagination>
           <loading  :ref="'localLoadingScreen'+chartIndex"></loading>
@@ -459,6 +460,9 @@ export default {
       })
     },
     messageDetail (row) {
+      if (row.alertRule.type == 3) {
+        return
+      }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
         this.graphShow = true

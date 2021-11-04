@@ -47,7 +47,8 @@
                 <i class="nz-icon-create-square nz-icon"></i>
               </button>
 
-              <top-tool-more-options
+             <top-tool-more-options
+                :delete-objs="batchDeleteObjs"
                 id="panel"
                 :params="filter"
                 :permissions="{
@@ -213,7 +214,8 @@ export default {
       panelId: 0,
       filterPanel: '',
       // ---图表相关参数--end
-      scrollbarWrap: null
+      scrollbarWrap: null,
+      batchDeleteObjs: []
     }
   },
   components: {

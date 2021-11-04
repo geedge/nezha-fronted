@@ -1,0 +1,10 @@
+diff a/nezha-fronted/src/components/common/rightBox/setting/globalizationBox.vue b/nezha-fronted/src/components/common/rightBox/setting/globalizationBox.vue	(rejected hunks)
+@@ -145,7 +145,7 @@
+         if (response.code === 200) {
+           this.languageList = response.data
+           if (!this.editGlobalization.id) {
+-            this.languageList[0].value = 'en'
++            this.languageList[1].value = 'en'
+           }
+         } else {
+           this.$message.error(response.msg)

@@ -43,15 +43,29 @@
         </div>
       </div>
       <div v-if="importBox.type == 2">
-        <div class="upload-body">
-          <button :id="id+'-xlsx-export-current'"  class="el-button el-button--default el-button--small" @click="exportCur">
-            <span>{{$t('overall.exportCur')}}</span>
-          </button>
-          <button  :id="id+'-xlsx-export-all'"  class="el-button el-button--default el-button--small" @click="exportAll">
-            <span>{{$t('overall.exportAll')}}</span>
-          </button>
+        <div class="upload-body" style="height: 200px">
+          <div class="export-box">
+            <span class="export-title">Records</span>
+            <el-radio-group v-model="importBox.record"  size="small">
+              <el-radio-button :label="item.value" v-for="(item,index) in recordArr" :key="index" :disabled="item.value==='records'&&!deleteObjs.length">{{item.name}}</el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="export-box">
+            <span class="export-title">File format</span>
+            <el-radio-group v-model="importBox.format"  size="small">
+              <el-radio-button :label="item.value" v-for="(item,index) in formatArr" :key="index" :disabled="item.value!==1">{{item.name}}</el-radio-button>
+            </el-radio-group>
+          </div>
         </div>
         <div slot="footer" class="footer">
+          <div class="el-message-box__btns">
+            <button :id="id+'-xlsx-import-export'"  class="nz-btn nz-btn-size-normal-new nz-btn-style-normal-new" @click="exportData">
+              <span style="text-transform:Capitalize">{{$t('config.operationlog.operations.export')}}</span>
+            </button>
+            <button :id="id+'-xlsx-import-close'" class="nz-btn el-button el-button--default el-button--small" @click="closeDialog">
+              <span>{{$t('overall.close')}}</span>
+            </button>
+          </div>
         </div>
       </div>
       <div v-if="importBox.type==3">
@@ -138,17 +152,29 @@ export default {
     paramsType: {
       type: String,
       default: ''
-    }
+    },
+    deleteObjs: Array
   },
   data () {
     return {
-      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1 },
+      importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
       importFile: null,
       importFileList: [],
       importResult: null,
       exportShow: false,
       panelLock: true,
-      language: localStorage.getItem('nz-language')
+      language: localStorage.getItem('nz-language'),
+      recordArr: [
+        { name: this.$t('overall.allData'), value: 'all' },
+        { name: this.$t('overall.selectRecords'), value: 'records' },
+        { name: this.$t('overall.current'), value: 'current' }
+      ],
+      formatArr: [
+        { name: 'XLSX', value: 1 },
+        { name: 'CSV', value: 2 },
+        { name: 'JSON', value: 3 }
+      ]
+
     }
   },
   mounted () {
@@ -244,6 +270,8 @@ export default {
         this.importResult = null
         this.importFileList = []
         this.importFile = null
+        this.importBox.value = 1
+        this.importBox.record = 'all'
       })
     },
     downloadTemplate () {
@@ -309,6 +337,7 @@ export default {
         delete params.searchName
       }
       params.language = localStorage.getItem('nz-language') || 'en'
+      params.format = this.importBox.format
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
@@ -341,9 +370,52 @@ export default {
       //   delete params.moduleId
       // }
       params.language = localStorage.getItem('nz-language') || 'en'
-
+      params.format = this.importBox.format
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
+    },
+    exportRecords() {
+      const params = JSON.parse(JSON.stringify(this.params))
+      if (this.params2) {
+        Object.keys(this.params2).forEach(key => {
+          if (params[key]) {
+            if (params[key].prototype.toString.call(val) === '[object Object]') {
+              Object.assign(params[key], this.params2[key])
+            } else if (params[key].prototype.toString.call(val) === '[object Array]') {
+              params[key].concat(this.params2[key])
+            }
+          } else {
+            params[key] = this.params2[key]
+          }
+        })
+      }
+      params.pageSize = -1
+      if (this.exportUrl.indexOf('panel') > -1) {
+        delete params.start_time
+        delete params.end_time
+        delete params.id
+        delete params.searchName
+      }
+      if (this.importUrl.indexOf('panel') > -1) {
+        delete params.panelId
+      }
+      // if (this.importUrl.indexOf('endpoint') > -1){
+      //   delete params.moduleId
+      // }
+      params.language = localStorage.getItem('nz-language') || 'en'
+      params.format = this.importBox.format
+      params.ids = this.deleteObjs.map(item => item.id).join(',')
+      this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
+      this.closeDialog()
+    },
+    exportData () {
+      if (this.importBox.record === 'all') {
+        this.exportAll()
+      } else if (this.importBox.record === 'current') {
+        this.exportCur()
+      } else if (this.importBox.record === 'records') {
+        this.exportRecords()
+      }
     },
     exportExcel (url, params, fileName) {
       if (this.paramsType) {
@@ -395,7 +467,7 @@ export default {
         this.importBox.width = '600px'
       } else if (type == 2) { // export
         this.importBox.title = this.$t('overall.exportExcel')
-        this.importBox.width = '300px'
+        this.importBox.width = '580px'
       }
     },
     getTimeString () {

@@ -14,7 +14,8 @@
                 type="button" @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="model"
           :params="searchLabel"

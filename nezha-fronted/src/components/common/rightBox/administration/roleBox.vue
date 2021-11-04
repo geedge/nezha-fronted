@@ -6,9 +6,9 @@
         <span v-cancel="{obj: editRole, func: esc}"><i class="nz-icon nz-icon-close"></i></span>
       </div>
     </div>
-    <div class="right-box__container">
+    <div class="right-box__container right-box-container__left">
       <div class="container__form">
-        <el-form :disabled="detail" :model="editRole" :rules="rules" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" ref="roleForm">
+        <el-form :disabled="detail" :model="editRole" :rules="rules" label-position="top" label-width="120px" ref="roleForm">
           <!--name-->
           <el-form-item :label="$t('config.roles.name')" prop="name">
             <el-input  maxlength="64" placeholder="" id="role-box-input-name"

@@ -35,7 +35,9 @@ const store = new Vuex.Store({
     showTopoScreen: false,
     logo: '',
     isShrink: localStorage.getItem('nz-left-menu-shrink') == 'true',
-    metricsList: []
+    metricsList: [],
+    langList: [],
+    i18nReady: false
   },
   getters: {
     getLinkData (state) {
@@ -71,6 +73,12 @@ const store = new Vuex.Store({
     getMetricsList (state) {
       return state.metricsList
     },
+    getLangList (state) {
+      return state.langList
+    },
+    i18nIsReady (state) {
+      return state.i18nReady
+    }
   },
   mutations: {
     /* 监听对象变化，用于顶部菜单与底部内容的同步 */
@@ -153,6 +161,12 @@ const store = new Vuex.Store({
     },
     setMetricsList (state, metricsList) {
       state.metricsList = [...metricsList]
+    },
+    setLangList (state, langList) {
+      state.langList = langList
+    },
+    i18nReady (state, ready) {
+      state.i18nReady = ready
     }
   },
   actions: {

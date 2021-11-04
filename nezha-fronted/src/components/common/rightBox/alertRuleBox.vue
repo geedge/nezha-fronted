@@ -344,7 +344,7 @@
 <script>
 import chartDataFormat from '../../charts/chartDataFormat'
 import promqlInput from '../../page/dashboard/explore/promqlInput'
-import { nzNumber } from '../js/validate'
+import { noSpecialChar, nzNumber } from '../js/validate'
 import editRigthBox from '../mixin/editRigthBox'
 import richTextEditor from '@/components/charts/richTextEditor'
 import promqlInputMixin from '@/components/common/mixin/promqlInput'
@@ -406,7 +406,8 @@ export default {
       editAlertRule: {},
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'change' }
         ],
         expr: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' },

@@ -21,7 +21,8 @@
         <button id="asset-create-asset" v-has="'asset_add'" :title="$t('overall.createAsset')" class="top-tool-btn" @click.stop="add">
           <i class="nz-icon nz-icon-create-square"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="model"
           :params="searchLabel"
@@ -87,7 +88,8 @@
                 @click="add">
           <i class="nz-icon-create-square nz-icon"></i>
         </button>
-        <top-tool-more-options
+       <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
           ref="export"
           id="alert-rule"
           :params="searchLabel"

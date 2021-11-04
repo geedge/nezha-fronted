@@ -25,8 +25,9 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name">
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" :title="item3.name" class="nz-dropdown-menu__item-hover">
                       <el-checkbox :label="item3.id">{{item3.name}}</el-checkbox>
+                      <span class="right-box-select-num">{{item3.num || 0}}</span>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -56,9 +57,12 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" class="nz-dropdown-menu__item">
 <!--                      <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>-->
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
+                     <div  v-for="(item4,index4) in item3.children" :key="index4" class="el-dropdown-menu__item nz-dropdown-menu__item-hover">
+                        <el-checkbox :label="item3.id+'-'+item4.id" :title="item3.name+'/'+item4.name">{{item3.name+'/'+item4.name}}</el-checkbox>
+                       <span class="right-box-select-num">{{item4.num || 0}}</span>
+                     </div>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>
@@ -88,9 +92,12 @@
               <el-dropdown-menu slot="dropdown" class="right-box-select-top right-public-box-dropdown-top detail-top-search-dropdown">
                 <div style="text-align: center;"><el-input style="width: calc(100% - 40px)" size="small" v-model="searchStr" @input="(val)=>{searchStrChange(val,key)}"  suffix-icon="el-icon-search"/></div>
                  <el-checkbox-group v-model="selectValue[item.key]">
-                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" >
+                    <el-dropdown-item v-for="(item3,index3) in item.children" :key="index3" class="nz-dropdown-menu__item">
                       <span :title="item3.name" class="children-title-name"> {{item3.name}}</span>
-                      <el-checkbox :label="item3.id+'-'+item4.id" :key="index4"  v-for="(item4,index4) in item3.children" :title="item4.name" :a="item3.id+'-'+item4.id">{{item4.name}}</el-checkbox>
+                     <div :key="index4"  v-for="(item4,index4) in item3.children" class="el-dropdown-menu__item nz-dropdown-menu__item-hover">
+                        <el-checkbox :label="item3.id+'-'+item4.id" :title="item4.name" :a="item3.id+'-'+item4.id">{{item4.name}}</el-checkbox>
+                       <span class="right-box-select-num">{{item4.num || 0}}</span>
+                     </div>
                     </el-dropdown-item>
                  </el-checkbox-group>
               </el-dropdown-menu>

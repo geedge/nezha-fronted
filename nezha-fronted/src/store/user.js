@@ -1,7 +1,7 @@
-import { post, get } from '../http'
+import { post, get } from '@/http'
 import router from '../router'
 import bus from '../libs/bus'
-import { sortByOrderNum } from '../permission'
+import { sortByOrderNum } from '@/permission'
 import moment from 'moment-timezone'
 import { theme } from '@/components/common/js/constants'
 

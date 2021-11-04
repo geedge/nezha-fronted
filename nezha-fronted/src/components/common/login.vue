@@ -7,12 +7,12 @@
         <div class="login-label"></div>
         <div class="login-input" v-if="!verifyShow">
           <i class="nz-icon nz-icon-user"></i>
-          <input id="usernameInput" v-model="loginData.username" name="userName" autocomplete="on" :placeholder="$t('login.username')" @keydown.enter="login"></input>
+          <input id="usernameInput" v-model="loginData.username" autocomplete="on" name="userName" placeholder="Username" @keydown.enter="login"></input>
         </div>
         <div class="login-label"></div>
         <div class="login-input"  v-if="!verifyShow">
           <i class="nz-icon nz-icon-password"></i>
-          <input v-model="loginData.pin" type="password" name="password" autocomplete="on" :placeholder="$t('login.pin')" @keydown.enter="login"></input>
+          <input v-model="loginData.pin" autocomplete="on" name="password" placeholder="Password" type="password" @keydown.enter="login"></input>
         </div>
         <div class="login-label"  v-if="verifyShow">{{$t('login.verifyTitle')}}</div>
         <div class="login-input"  v-if="verifyShow">
@@ -23,7 +23,7 @@
           {{$t('login.verifyContent')}}
         </div>
         <div class="login-foot">
-          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">{{$t("login.login")}}</button>
+          <button  v-if="!verifyShow" id="login" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="login">Login</button>
           <button  v-if="verifyShow" id="verify" v-loading="loading" :class="{'nz-btn-disabled': !license.valid}" class="login-btn" @click="verify">{{$t("login.verify")}}</button>
         </div>
         <div class="login-license">
@@ -151,7 +151,6 @@ export default {
       if (this.loading || !this.license.valid) {
         return
       }
-      // if (this.license.valid && this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {
         this.loading = true
         this.$post('/sys/login', this.loginData).then(res => {
@@ -160,27 +159,13 @@ export default {
             this.authToken = res.data.authToken
             this.lang = res.data.user.lang
             this.$i18n.locale = this.lang
-            // 获取国际化内容
-            const getI18nData = new Promise(resolve => get('/sys/i18n/lang').then(response => {
-              if (response.code === 200) {
-                const i18nData = response.data
-                resolve(i18nData)
-              } else {
-                resolve()
-              }
-            }))
             // 获取可选语言
-            const getLangList = new Promise(resolve => get('/sys/dict/all?type=lang').then(response => {
+            get('/sys/dict/all?type=lang').then(response => {
               if (response.code === 200) {
                 const langList = response.data.map(lang => ({ name: lang.name, value: lang.value }))
                 this.$store.commit('setLangList', langList)
                 localStorage.setItem('nz-language-list', JSON.stringify(langList))
               }
-              resolve()
-            }))
-            Promise.all([getI18nData, getLangList]).then(response => {
-              response[0] && loadI18n(response[0])
-              this.$store.commit('i18nReady', true)
             })
             sessionStorage.setItem('nz-token', res.data.authToken)
             if (res.data.authFlag === 1) {

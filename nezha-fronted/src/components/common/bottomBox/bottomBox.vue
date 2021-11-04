@@ -50,11 +50,12 @@
         <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :paramsType="'endpoint'" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab" @getTableData="getTableData"></panel-tab-new>
         <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></endpointQuery>
         <log-bottom-tab v-if="from === fromRoute.endpoint && targetTab === 'log' && hasLogConfig" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
-        <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
+        <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
         <panel-tab-new @getTableData="getTableData"  :paramsType="'template'" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--alertRule Tab-->
-        <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
+        <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
+        <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
         <!--model 下滑-->
         <asset-tab v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
       </div>
@@ -66,6 +67,7 @@
 import cabinetTab from './tabs/cabinetTab'
 import alertMessageTab from './tabs/alertMessageTab'
 import alertMessageTabNew from './tabs/alertMessageTabNew'
+import alertRuleEvalLog from './tabs/alertRuleEvalLog'
 import assetSubTab from './tabs/assetSubTab'
 import endpointQuery from './tabs/endpointQuery'
 import endpointTab from './tabs/endpointTab'
@@ -97,7 +99,8 @@ export default {
     endpointQuery,
     panelTabNew,
     assetTab,
-    assetSubTab
+    assetSubTab,
+    alertRuleEvalLog
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -203,7 +206,7 @@ export default {
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
             { prop: 'endpointQuery', name: 'Metrics' },
-            { prop: 'log', name: 'Log' },
+            { prop: 'log', name: 'Log' }
           ]
         },
         chartTemp: {
@@ -213,7 +216,8 @@ export default {
         },
         alertRule: {
           alertRule: [
-            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') }
+            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') },
+            { prop: 'evalLog', name: this.$t('overall.alertRuleEvalLog') }
           ]
         },
         model: [

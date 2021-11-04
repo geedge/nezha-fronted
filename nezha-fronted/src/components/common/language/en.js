@@ -35,6 +35,7 @@ const en = {
     project: 'Project', // '系统'
     monitor: 'Monitor', // 监控
     alert: 'Alert', // "告警"
+    alertRuleEvalLog: 'Eval log',
     asset: 'Asset', // '资产'
     config: 'Setting', // '设置'
     administration: 'Administration',
@@ -177,7 +178,12 @@ const en = {
     clearAllSelect: 'Clear the selection',
     disabled: 'Disabled',
     enabled: 'Enabled',
-    close: 'Close'
+    close: 'Close',
+    records: 'Records',
+    fileFormat: 'File format',
+    allData: 'All data',
+    selectRecords: 'Select records',
+    current: 'Current page'
   },
   pageSize: '/page',
   setup: {
@@ -1264,6 +1270,7 @@ const en = {
     rule: 'Rule', // '规则'
     alertMessage: 'Alert message', // "告警信息"
     alertRule: 'Alert rule', // "告警规则"
+    alertRuleMessage: 'Message',
     alertName: 'Name', // "告警名称"
     method: 'Method', // "告警名称"
     severity: 'Priority', // "等级"

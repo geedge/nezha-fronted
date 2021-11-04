@@ -37,8 +37,8 @@
                        placeholder=""
                        popper-class="right-box-select-top prevent-clickoutside"
                        size="small">
-              <template v-for="item in languageList">
-                <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <template v-for="item in langList">
+                <el-option :key="item.value" :label="item.name" :value="item.value"></el-option>
               </template>
             </el-select>
           </el-form-item>
@@ -75,7 +75,11 @@ export default {
       type: Object
     }
   },
-  computed: {},
+  computed: {
+    langList () {
+      return this.$store.getters.getLangList
+    }
+  },
   mixins: [editRigthBox],
   data () {
     return {
@@ -83,10 +87,6 @@ export default {
       url: 'sys/user/profile',
       rightBox: { profile: { show: false } },
       editProfile: {},
-      languageList: [
-        { value: 'en', label: 'English' },
-        { value: 'cn', label: '简体中文' }
-      ],
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' }
@@ -135,7 +135,13 @@ export default {
                 }
                 this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
                 this.esc(true)
-                this.$emit('clickProfile')
+                if (this.editProfile.lang !== localStorage.getItem('nz-language')) {
+                  localStorage.setItem('nz-language', this.editProfile.lang)
+                  this.$i18n.locale = this.editProfile.lang
+                  this.$emit('clickProfile', true)
+                } else {
+                  this.$emit('clickProfile', false)
+                }
               } else {
                 this.$message.error(res.msg)
               }

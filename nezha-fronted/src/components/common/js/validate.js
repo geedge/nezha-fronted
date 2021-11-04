@@ -76,7 +76,7 @@ export function nzNumber (rule, value, callback) {
 }
 
 export function noSpecialChar (rule, value, callback) {
-  const charReg = /^[\u4e00-\u9fa5a-z0-9A-Z-_.]+$/
+  const charReg = /[\u0000-\uFFFF]/
   setTimeout(() => {
     if (charReg.test(value)) {
       callback()
@@ -170,7 +170,7 @@ export function checkExprTempAge (rule, value, callback) {
   }, 100)
 }
 
-export function arrLength (rule, value, callback) { // 校验经纬度
+export function arrLength (rule, value, callback) { // 校验数组
   if (value.length > 0) {
     callback()
   } else {

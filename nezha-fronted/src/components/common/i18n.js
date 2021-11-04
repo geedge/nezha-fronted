@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import locale from 'element-ui/lib/locale'
 import VueI18n from 'vue-i18n'
-import { get } from '@/http'
-// import messages from './language'
 Vue.use(VueI18n)
 // 从localStorage获取语言选择。
 const i18n = new VueI18n({
@@ -15,15 +13,6 @@ export function loadI18n (i18nData) {
   if (i18nData) {
     Object.keys(i18nData).forEach(lang => {
       i18n.setLocaleMessage(lang, i18nData[lang])
-    })
-  } else {
-    get('/sys/i18n/lang').then(response => {
-      if (response.code === 200) {
-        i18nData = response.data
-        Object.keys(i18nData).forEach(lang => {
-          i18n.setLocaleMessage(lang, i18nData[lang])
-        })
-      }
     })
   }
 }

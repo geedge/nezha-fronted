@@ -21,7 +21,8 @@
           <button id="asset-create-asset" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
-          <top-tool-more-options
+         <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
             id="asset-list"
             :params="filter"
             :params-type="paramsType"
@@ -53,7 +54,8 @@
           <button id="endpoint-create-chart" v-has="'panel_chart_add'" :title="$t('overall.createChart')" class="top-tool-btn margin-r-10" @click.stop="addChart">
             <i class="nz-icon nz-icon-create-square"></i>
           </button>
-          <top-tool-more-options
+         <top-tool-more-options
+          :delete-objs="batchDeleteObjs"
             id="asset-list"
             :link="obj"
             :params="filter"
@@ -210,7 +212,8 @@ export default {
       // deleteObj: {}, // 删除对象
       // ---图表相关参数--end
       scrollbarWrap: null,
-      panelDataList: []
+      panelDataList: [],
+      batchDeleteObjs: []
     }
   },
   components: {

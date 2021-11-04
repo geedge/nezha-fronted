@@ -294,6 +294,15 @@ export function stringTimeParseToUnix (stringTime) {
   time = time + localOffset - offset * 60 * 60 * 1000
   return parseInt(time / 1000)
 }
+export function stringTimeParseToUnixMs (stringTime) {
+  let time = new Date(stringTime).getTime()
+  let offset = localStorage.getItem('nz-sys-timezone')
+  offset = moment.tz(offset).format('Z')
+  offset = Number.parseInt(offset)
+  const localOffset = new Date().getTimezoneOffset() * 60 * 1000 * -1 // 默认 一分钟显示时区偏移的结果
+  time = time + localOffset - offset * 60 * 60 * 1000
+  return parseInt(time)
+}
 export function getTime (size, unit) { // 计算时间
   const now = new Date(bus.computeTimezone(new Date().getTime()))
   if (unit) {
@@ -349,6 +358,28 @@ export function calcDurationByStringTime (startTime, endTime) {
 export function calcDurationByStringTimeB (startTime, endTime) {
   const durationSecond = stringTimeParseToUnix(endTime) - stringTimeParseToUnix(startTime)
   let result = `${durationSecond % 60}s`
+  if (durationSecond >= 60 * 60 * 24) {
+    result = `${(Math.floor(durationSecond / 3600)) % 24}h`
+    result = `${Math.floor(durationSecond / (60 * 60 * 24))}d ${result}`
+  } else if (durationSecond >= 60 * 60) {
+    result = `${(Math.floor(durationSecond / 60)) % 60}m`
+    result = `${Math.floor(durationSecond / (60 * 60))}h ${result}`
+  } else if (durationSecond >= 60) {
+    result = `${(Math.floor(durationSecond / 60)) % 60}m ${result}`
+  }
+
+  return result
+}
+export function calcDurationByStringTimeMs (startTime, endTime) {
+  let durationSecond = stringTimeParseToUnixMs(endTime) - stringTimeParseToUnixMs(startTime)
+  let result = ''
+  if (durationSecond < 1000) {
+    result = `${durationSecond % 1000}ms`
+    return result
+  } else {
+    durationSecond = durationSecond / 1000
+  }
+  result = `${durationSecond % 60}s`
   if (durationSecond >= 60 * 60 * 24) {
     result = `${(Math.floor(durationSecond / 3600)) % 24}h`
     result = `${Math.floor(durationSecond / (60 * 60 * 24))}d ${result}`
