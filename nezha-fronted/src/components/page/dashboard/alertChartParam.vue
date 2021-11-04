@@ -27,7 +27,7 @@
       </el-form-item>
       <el-form-item :label="$t('dashboard.panel.chartForm.alertParam.state')">
         <el-select class="form-item" size="small" popper-class="alert-form-pop right-box-select-top right-public-box-dropdown-top no-style-class" v-model="parameters.state" clearable id="alert-param-state">
-          <el-option v-for="(item, index) in states" :key="index" :label="item.label" :value="item.value"></el-option>
+          <el-option v-for="(item, index) in states" :key="index" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
     </el-form>

@@ -15,7 +15,7 @@
     >
       <template v-slot:top-tool-right>
         <el-select v-model="state" class="margin-r-10" size="small" value-key="value" @change="getTableData" popper-class="right-box-select-top right-public-box-dropdown-top">
-          <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
         </el-select>
         <button id="asset-filter" :class="[dataListLayout.indexOf('clickSearch') > -1?'is-focus':'' ]" class="top-tool-btn margin-r-10" @click.stop="showClickSearch">
           <i class="nz-icon nz-icon-funnel"></i>

@@ -1007,7 +1007,7 @@ export default {
     },
     // Severity Label
     returnSeverityLabel (key) {
-      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+      return this.$t(this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label)
     },
     getNodesArr () {
       const arr = []

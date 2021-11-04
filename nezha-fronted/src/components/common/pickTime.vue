@@ -14,7 +14,7 @@
         <transition name="el-zoom-in-top">
           <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown">
             <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i)">
-              {{i.label}}
+              {{$t(i.label)}}
             </li>
           </ul>
         </transition>

@@ -194,8 +194,9 @@ export default {
   },
   computed: {
     getStatusText () {
+      const self = this
       return function (status) {
-        return terminalLog.status[status]
+        return self.$t(terminalLog.status[status])
       }
     },
     getRemoteText () {

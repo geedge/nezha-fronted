@@ -48,7 +48,7 @@
         </template>
         <template v-if="item.prop === 'type'">
           <template v-if="scope.row.type">
-            {{$CONSTANTS.snmpProtocolTypes.find(t=>t.value == scope.row.type).label}}
+            {{$t($CONSTANTS.snmpProtocolTypes.find(t=>t.value == scope.row.type).label)}}
           </template>
           <template v-else>-</template>
         </template>

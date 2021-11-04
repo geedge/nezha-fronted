@@ -71,7 +71,7 @@
           </el-form-item>
           <el-form-item :label="$t('config.agent.agent.type')" class="half-form-item" prop="type">
             <el-select v-model="agentParam.type" class="right-box-row-with-btn" popper-class="right-box-select-top agent-select" placeholder="">
-              <el-option v-for="item in agent2.theData" :key="item.value" :label="item.label" :value="item.value" :disabled="federationEnabled && item.value == 2">
+              <el-option v-for="item in agent2.theData" :key="item.value" :label="$t(item.label)" :value="item.value" :disabled="federationEnabled && item.value == 2">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
             </el-select>
