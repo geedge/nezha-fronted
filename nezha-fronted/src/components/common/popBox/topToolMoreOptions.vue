@@ -237,7 +237,7 @@ export default {
         if (this.importUrl.indexOf('dc/cabinet') > -1) {
           form.append('dcIds', this.params.dcIds)
         }
-        form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+        // form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
         this.$post(this.importUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
           if (response.code == 200 && response.msg == 'success') {
             this.importResult = response.data
