@@ -66,6 +66,7 @@
 <script>
 import latlngPicker from '../latlngPicker'
 import editRigthBox from '../mixin/editRigthBox'
+import { noSpecialChar } from '@/components/common/js/validate'
 
 const regNum = /^[0-9]+.?[0-9]*/
 
@@ -84,7 +85,8 @@ export default {
       editDc: {},
       rules: {
         name: [
-          { required: true, message: this.$t('validate.required'), trigger: 'blur' }
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: noSpecialChar, trigger: 'change' }
         ]
         // state: [
         //   { required: true, message: this.$t('validate.required'), trigger: 'blur' }

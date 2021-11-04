@@ -16,7 +16,7 @@
             <el-input id="project-box-input-name" v-model="editProject.name" maxlength="64" show-word-limit size="small"></el-input>
           </el-form-item>
           <el-form-item :label='$t("overall.remark")'>
-            <el-input id="project-box-input-name" v-model="editProject.remark" maxlength="256" show-word-limit type="textarea"></el-input>
+            <el-input id="project-box-input-remark" v-model="editProject.remark" maxlength="256" show-word-limit type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </div>

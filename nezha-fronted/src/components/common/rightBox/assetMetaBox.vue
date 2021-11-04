@@ -160,7 +160,7 @@ export default {
       groupData: [],
       rules: {
         name: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
-        metaKey: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }, { pattern: /\w/, message: this.$t('validate.onlyWord'), trigger: 'change' }],
+        metaKey: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }, { pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: this.$t('validate.onlyWord'), trigger: 'change' }],
         groupId: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }],
         type: [{ required: true, message: this.$t('validate.required'), trigger: 'change' }]
       },

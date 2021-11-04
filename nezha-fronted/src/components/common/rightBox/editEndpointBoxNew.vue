@@ -196,7 +196,7 @@
               <el-tab-pane :label="$t('project.endpoint.parameter')" name="Parameter">
                 <div id="module-box-params" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.paramObj" :key="index" class="param-box-row">
-                    <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key">
+                    <el-form-item :prop="'paramObj.' + index + '.key'" class="param-box-row-key" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]">
                       <el-input v-model="item.key" placeholder="key" size="mini" ></el-input>
                     </el-form-item>
                     <span class="param-box-row-eq">=</span>
@@ -221,7 +221,7 @@
               <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
                 <div id="module-box-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                   <div v-for="(item, index) in editEndpoint.labelModule" :key="index" class="param-box-row">
-                    <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                    <el-form-item :prop="'labelModule.' + index + '.key'" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
                       <el-input v-model="item.key" placeholder="key" size="mini"></el-input>
                     </el-form-item>
                     <span class="param-box-row-eq">=</span>
@@ -276,7 +276,7 @@
                         class="half-form-item" :label="'Target label'"
                         :rules="[
                                      { required: item.action === 'replace', message: $t('validate.required'), trigger: 'blur' },
-                                     { pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]"
+                                     { pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]"
                       >
                         <el-input id="module-box-input-target_label" v-model="item.target_label" placeholder='' size="small"></el-input>
                       </el-form-item>
@@ -396,12 +396,12 @@
                   <el-tab-pane :label="$t('project.endpoint.labels2')" name="Labels">
                     <div id="module-box-logs-labels" ref="labelBoxScrollbar" style="height: 100%; overflow: auto;">
                       <div v-for="(item1, i) in item.labelModule" :key="i" class="param-box-row">
-                        <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_:][a-zA-Z0-9_:]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
-                          <el-input v-model="item1.key" placeholder="key" size="mini"></el-input>
+                        <el-form-item :prop="'configs.1.config.'+ index +'.labelModule.' + i + '.key'" :rules="[{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]" class="param-box-row-key">
+                          <el-input v-model="item1.key" placeholder="key" size="mini" @input="$forceUpdate()"></el-input>
                         </el-form-item>
                         <span class="param-box-row-eq">=</span>
                         <el-form-item class="param-box-row-value">
-                          <el-input v-model="item1.value" placeholder="value" size="mini"></el-input>
+                          <el-input v-model="item1.value" placeholder="value" size="mini" @input="$forceUpdate()"></el-input>
                         </el-form-item>
                         <span :id="'moduel-remove-label-'+i" class="param-box-row-symbol" @click="removeLogsLabel(index, i)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
                       </div>
@@ -442,7 +442,7 @@
                         <div  v-for="(expressions, eindex) in item2.expressions"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                           <el-form-item
                             :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.key'"
-                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' },{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]"
                             style="width: 45%;margin: 0"
                           >
                             <el-input v-model="item2.expressions[eindex].key" placeholder="key" size="mini" ></el-input>
@@ -506,7 +506,7 @@
                         <div  v-for="(expressions, eindex) in item2.labels"  :key="eindex" style="display: flex;justify-content: space-around;align-items: center;margin-bottom: 16px">
                           <el-form-item
                             :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.labels.'+eindex+'.key'"
-                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"
+                            :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' },{ pattern: /[a-zA-Z_][a-zA-Z0-9_]*/, message: $t('validate.key') ,trigger: 'blur'}]"
                             style="width: 45%;margin: 0"
                           >
                             <el-input v-model="item2.labels[eindex].key" placeholder="key" size="mini" ></el-input>
@@ -1164,7 +1164,7 @@ export default {
       this.editEndpoint.paramObj[index].value = newTags.map(item => item.text)
     },
     beforeAddingTag (tag) {
-      const regx = /[a-zA-Z_:][a-zA-Z0-9_:]*/
+      const regx = /[a-zA-Z_][a-zA-Z0-9_]*/
       if (regx.test(tag.tag.text)) {
         tag.addTag()
       } else {
@@ -1300,6 +1300,7 @@ export default {
     },
     addLogsLabel (index) {
       this.editEndpoint.configs[1].config[index].labelModule.push({ key: '', value: '' })
+      this.$forceUpdate()
     },
     removeLogsLabel (logsIndex, i) {
       if (this.editEndpoint.configs[1].config[logsIndex].labelModule.length === 1) {

@@ -296,7 +296,7 @@
 </template>
 
 <script>
-import { host, port, checkAssetAge } from '@/components/common/js/validate'
+import { host, port, noSpecialChar } from '@/components/common/js/validate'
 import { asset as assetConstants } from '@/components/common/js/constants'
 import selectAssetType from '@/components/common/popBox/selectAssetType'
 import locationCascader from '@/components/common/rightBox/locationCascader'
@@ -345,7 +345,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: checkAssetAge, trigger: 'blur' }
+          { validator: noSpecialChar, trigger: 'blur' }
         ],
         pid: [
           { required: true, message: this.$t('validate.required'), trigger: 'change' }
