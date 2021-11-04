@@ -9,6 +9,16 @@
   display: none;
   background-color: $--background-color-empty;
 }
+.el-dropdown-menu__item {
+  list-style: none;
+  line-height: 36px;
+  padding: 0 20px;
+  margin: 0;
+  font-size: 14px;
+  color: $--color-text-regular;
+  cursor: pointer;
+  outline: 0;
+}
 .el-loading-mask .el-loading-spinner{
   background: url(~@/assets/img/loading.gif) no-repeat;
   background-size: 48px 48px;

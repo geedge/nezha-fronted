@@ -209,39 +209,46 @@
   justify-content: center;
   height: 70px;
   box-shadow: -3px 0 8px -3px rgba(205,205,205,0.77);
-
-  .footer__btn {
-    margin: 0 15px;
-    height: 30px;
-    min-width: 74px;
-    padding: 0 15px;
-    color: white;
-    background-color: $--color-primary;
-    border: none;
-    border-radius: 4px;
-    outline: none;
-    box-sizing: border-box;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color linear .2s, color linear .1s;
-  }
-  .footer__btn:hover:not(.footer__btn--disabled) {
-    background-color: $--color-primary-light-2;
-  }
-  .footer__btn--light {
-    background-color: $--background-color-empty;
-    border: 1px solid $--border-color-base;
-    color: $--color-text-primary;
-  }
-  .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
-    background-color: $--background-color-empty;
-    border-color: $--color-primary-light-5;
-    color: $--color-primary;
-  }
-  .footer__btn--disabled {
-    opacity: .6;
-    cursor: default;
-  }
+}
+.footer__btn {
+  margin: 0 15px;
+  height: 30px;
+  min-width: 74px;
+  padding: 0 15px;
+  color: $--button-primary-color;
+  background-color: $--button-primary-background-color;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color linear .2s, color linear .1s;
+}
+.footer__btn:hover:not(.footer__btn--disabled) {
+  background-color: $--button-primary-hover-background-color;
+}
+.footer__btn:focus:not(.footer__btn--disabled) {
+  background-color: $--button-primary-active-background-color;
+}
+.footer__btn--light {
+  background-color: $--button-gray-background-color;
+  border: 1px solid $--button-gray-border-color;
+  color: $--button-gray-color;
+}
+.footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
+  background-color: $--button-gray-hover-background-color;
+  border: 1px solid $--button-gray-hover-border-color;
+  color: $--button-gray-hover-color;
+}
+.footer__btn.footer__btn--light:focus:not(.footer__btn--disabled) {
+  background-color: $--button-gray-active-background-color;
+  border: 1px solid $--button-gray-active-border-color;
+  color: $--button-gray-active-color;
+}
+.footer__btn--disabled {
+  opacity: .6;
+  cursor: default;
 }
 /* 隐藏label新增按钮处级联选择器的input */
 .hide-casc-input {

@@ -142,11 +142,3 @@
   color: $--color-text-secondary;
   padding: 20px;
 }
-#header-to-profile, #header-to-logout {
-  padding: 0 20px;
-  font-size: 14px;
-  color: $--color-text-regular;
-  &:hover {
-    color: $--color-primary-light-2;
-  }
-}
