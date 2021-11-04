@@ -6,7 +6,7 @@
         <template>
           <el-checkbox-group v-if="data.type === 'checkBox'" ref="searchContent" v-model="selectValue[data.key]" @change="selectValue.change === 0 && selectValue.change++">
             <template v-for="(item, j) in data.children">
-              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value" :title="item.key || item.name || item.label">{{item.key || item.name || item.label}} <span class="search-content-num">({{item.num}})</span></el-checkbox>
+              <el-checkbox v-show="j < data.index || data.showMore" :key="j" :label="item.value" :title="item.key || item.name || item.label">{{item.key || item.name || item.label}} <span class="search-content-num">({{item.num || 0}})</span></el-checkbox>
             </template>
           </el-checkbox-group>
         </template>
