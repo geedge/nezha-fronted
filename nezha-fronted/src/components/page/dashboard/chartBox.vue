@@ -292,8 +292,8 @@
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in lockList" :key="item.value" :label="$(item.label)" :value="item.value">
-                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                <el-option v-for="item in lockList" :key="item.value" :label="$t(item.label)" :value="item.value">
+                  <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
