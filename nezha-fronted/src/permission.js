@@ -34,22 +34,27 @@ router.beforeEach((to, from, next) => {
       }
     })
   } else if (sessionStorage.getItem('nz-token')) {
-    // 从localStorage加载i18n
-    if (!store.getters.i18nIsReady) {
-      Vue.http.get(configUrl).then(config => {
-        get(config.body.baseUrl + 'sys/i18n/lang').then(response => {
-          if (response.code === 200) {
-            loadI18n(response.data)
-            store.commit('i18nReady', true)
-          }
+    const i18nRequest = new Promise(resolve => {
+      // 从localStorage加载i18n
+      if (!store.getters.i18nIsReady) {
+        const langList = localStorage.getItem('nz-language-list')
+        if (langList) {
+          store.commit('setLangList', JSON.parse(langList))
+        }
+        Vue.http.get(configUrl).then(config => {
+          get(config.body.baseUrl + 'sys/i18n/lang').then(response => {
+            if (response.code === 200) {
+              loadI18n(response.data)
+              store.commit('i18nReady', true)
+              resolve()
+            }
+          })
         })
-      })
-      const langList = localStorage.getItem('nz-language-list')
-      if (langList) {
-        store.commit('setLangList', JSON.parse(langList))
+      } else {
+        resolve()
       }
-    }
-    new Promise(resolve => {
+    })
+    const permissionRequest = new Promise(resolve => {
       if (store.getters.menuList.length === 0) {
         Vue.http.get(configUrl).then(config => {
           post(config.body.baseUrl + 'sys/user/permissions', { token: sessionStorage.getItem('nz-token') }).then(res => {
@@ -62,7 +67,9 @@ router.beforeEach((to, from, next) => {
       } else {
         resolve()
       }
-    }).then(res => {
+    })
+    Promise.all([i18nRequest, permissionRequest]).then(response => {
+      console.info(response)
       if (to.path) {
         if (permissionWhiteList.indexOf(to.path) !== -1) {
           next()
