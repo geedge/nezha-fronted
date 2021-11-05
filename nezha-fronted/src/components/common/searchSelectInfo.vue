@@ -166,11 +166,11 @@ const searchSelectInfo = { // value: 传给后台的值；label：显示给用�
   dcState: [
     {
       value: 'ON',
-      label: 'Enable'
+      label: i18n.t('overall.enabled')
     },
     {
       value: 'OFF',
-      label: 'Disable'
+      label: i18n.t('overall.disabled')
     }
   ],
   varType: [

@@ -34,7 +34,7 @@
                             {{val.name}}
                         </div>
                         <div class="select_content" v-if="typeof val.val !='undefined' && val.val != null && ind!=sreach_num">
-                            <span>{{val.valString ? val.valString : val.val}}</span>
+                            <span>{{$t(val.valString ? val.valString : val.val)}}</span>
                             <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
