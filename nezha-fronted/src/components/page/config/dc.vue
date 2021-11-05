@@ -28,13 +28,13 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_view'
+                  import: 'dc_add',
+                  export: 'dc_view'
                 }"
-          class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="asset"
-          export-url="/asset/asset/export"
-          import-url="/asset/asset/import"
+          class="top-tool-export margin-r-10"
+          export-file-name="datacenter"
+          export-url="/dc/export"
+          import-url="/dc/import"
           @afterImport="getTableData"
         >
         </top-tool-more-options>
