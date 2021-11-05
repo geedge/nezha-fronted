@@ -77,6 +77,7 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import cabinetTable from '@/components/common/table/settings/cabinetTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import bus from '@/libs/bus'
 export default {
   name: 'cabinetTab',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
@@ -147,6 +148,7 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
+          bus.$emit('cabinet-tab')
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper

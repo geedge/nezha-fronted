@@ -155,6 +155,7 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import dcDetail from '@/components/common/detailView/list/dc/dcDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import bus from '@/libs/bus'
 
 export default {
   name: 'dc',
@@ -255,6 +256,9 @@ export default {
     }
   },
   mounted () {
+    bus.$on('cabinet-tab', () => {
+      this.getTableData()
+    })
     this.getUserData()
   },
   watch: {
