@@ -1148,6 +1148,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.searchScrollbar.update()
       })
+      this.select()
     },
     // 修改已有参数
     update_sreach (ind, e) {
@@ -1200,6 +1201,7 @@ export default {
       })
       this.select_list.splice(ind, 1)
       this.sreach_num--
+      this.select()
     },
     // 阻止冒泡事件
     stop_click (e) {
