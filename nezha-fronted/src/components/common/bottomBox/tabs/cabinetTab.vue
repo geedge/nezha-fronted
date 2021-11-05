@@ -148,7 +148,6 @@ export default {
           }
           this.tableData = response.data.list
           this.pageObj.total = response.data.total
-          bus.$emit('cabinet-tab')
           if (!this.scrollbarWrap) {
             this.$nextTick(() => {
               this.scrollbarWrap = this.$refs.dataTable.$refs.dataTable.bodyWrapper
@@ -156,6 +155,34 @@ export default {
             })
           }
         }
+      })
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      this.copyFlag = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+        bus.$emit('cabinet-tab')
+      }
+    },
+    del (row) {
+      const self = this
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(this.url + '?ids=' + row.id).then(response => {
+          if (response.code === 200) {
+            self.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            self.getTableData()
+            bus.$emit('cabinet-tab')
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
       })
     }
   },
