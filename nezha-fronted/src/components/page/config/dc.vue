@@ -160,7 +160,6 @@ import bus from '@/libs/bus'
 export default {
   name: 'dc',
   components: {
-    trafficSettingBox,
     dcBox,
     deleteButton,
     nzDataList,
@@ -168,10 +167,9 @@ export default {
     cabinetBox,
     topToolMoreOptions,
     nzDetailView,
-    dcDetail,
-    detailViewTopSearch
+    dcDetail
   },
-  mixins: [dataListMixin,detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'dc',
@@ -183,8 +181,9 @@ export default {
         tel: '',
         principal: '',
         state: 'ON',
-        longitude: undefined,
-        latitude: undefined
+        longitude: '',
+        latitude: '',
+        lnglat: ''
       },
       cabinet: {
         id: '',
