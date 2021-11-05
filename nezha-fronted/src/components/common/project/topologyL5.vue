@@ -176,8 +176,8 @@
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
                  :key="index"
-                 v-show="(item.rect.y - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) > - 10)"
-                 :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
+                 v-show="(item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
+                 :style="{position: 'absolute',top:item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
                  class="network-pop"
             >
 
@@ -209,8 +209,8 @@
                  :key="index"
                  :style="{
              position: 'absolute',
-             top:item.rect.y- 10 +'px',
-             left:item.rect.x - 10+'px',
+             top:item.rect.y + offsetY - 10 +'px',
+             left:item.rect.x + offsetX - 10+'px',
              transform:'scale('+(fromOverView?penToolTipScale:1)+')',
            }"
             >
@@ -499,7 +499,10 @@ export default {
       unitArr: [],
       topoScreenState: '', // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
       isPreview: false,
-      previewData: ''
+      previewData: '',
+      offsetX: 0,
+      offsetY: 0,
+      prevData: null
     }
   },
   components: {
@@ -1044,6 +1047,8 @@ export default {
     getNodesArr () {
       const arr = []
       if (!getTopology(this.topologyIndex)) return
+      this.offsetX = getTopology(this.topologyIndex).data.x
+      this.offsetY = getTopology(this.topologyIndex).data.y
       this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
           item.data = {
@@ -1508,7 +1513,7 @@ export default {
     onUpdateProps (node) {
       // 如果是node属性改变，需要传入node，重新计算node相关属性值
       // 如果是line属性改变，无需传参
-      getTopology(this.topologyIndex).updateProps(node)
+      getTopology(this.topologyIndex).updateProps(true, [node])
     },
 
     handleAvatarSuccess () {
