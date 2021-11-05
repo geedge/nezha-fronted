@@ -167,7 +167,7 @@ export default {
     },
     findTypeLabel (row) {
       const typeItem = this.chartTypeList.find(title => title.value === row.type)
-      return typeItem ? typeItem.label : '-'
+      return typeItem ? this.$t(typeItem.label) : '-'
     }
   }
 }
