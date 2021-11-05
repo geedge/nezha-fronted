@@ -69,7 +69,6 @@ router.beforeEach((to, from, next) => {
       }
     })
     Promise.all([i18nRequest, permissionRequest]).then(response => {
-      console.info(response)
       if (to.path) {
         if (permissionWhiteList.indexOf(to.path) !== -1) {
           next()

@@ -267,7 +267,6 @@ export default {
       this.calcPosition(e)
     },
     calcPosition (e) {
-      console.log(e)
       const boxWidth = this.boxWidth
       const distance = this.fromType === 'asset' ? 300 : 50
       const minus = (e.pageY - distance) + this.$refs.alertLabel.$el.offsetHeight - window.innerHeight
