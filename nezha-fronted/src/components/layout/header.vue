@@ -140,7 +140,9 @@ export default {
       if (lang != localStorage.getItem('nz-language')) {
         localStorage.setItem('nz-language', lang)
         this.$i18n.locale = lang
-        window.location.reload()
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       }
     },
     logout () {
