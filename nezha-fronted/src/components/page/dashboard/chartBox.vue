@@ -321,7 +321,7 @@
             <el-form-item v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
               <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
                 <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
-                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                  <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
                 </el-option>
               </el-select>
             </el-form-item>

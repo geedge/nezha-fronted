@@ -1184,6 +1184,7 @@ export default {
           // 连线是否自动计算锚点
           // data.manualCps=true;
           data.animateColor = '#FA901C'
+          data.toArrowColor = '#000000'
           data.data = {
             animatePlay: false,
             strokeStyle: data.strokeStyle,
@@ -1940,6 +1941,8 @@ export default {
     saveTopology () {
       this.previewData = ''
       this.isPreview = false
+      this.editTopologyFlag = true
+      this.showNoData = false
       const topologyData = getTopology(this.topologyIndex).pureData()
       this.editTopologyFlag = false
       topologyData.rule = false
@@ -2029,7 +2032,7 @@ export default {
         getTopology(this.topologyIndex).lock(1)
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
-        this.reload()
+        // this.reload()
       })
     },
     previewExit () { // 继续编辑
