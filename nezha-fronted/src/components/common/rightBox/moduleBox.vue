@@ -38,7 +38,7 @@
           </el-form-item>
           <!--Enpoint template-->
           <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
-            <el-tooltip effect="light" placement="top">
+            <el-tooltip effect="light" placement="top" popper-class="prevent-clickoutside">
               <div slot="content">
                 {{$t('project.module.tip.defaultEndpointSet')}}
                 <div></div>
