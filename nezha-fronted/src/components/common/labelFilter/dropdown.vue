@@ -3,7 +3,12 @@
     :class="{'is-focus': item.isFocus, 'is-hover': isHover}"
     class="nz-label-search"
   >
-    <div class="nz-label-search__label"><span>{{item.name}}:</span></div>
+    <div class="nz-label-search__label">
+      <span v-if="item.name && item.type === 'logs'">{{$t('overall.logs')}}:</span>
+      <span v-else-if="item.name && item.type === 'metrics'">{{$t('overall.metric')}}:</span>
+      <span v-else-if="item.name === '时间'">{{$t('overall.time')}}:</span>
+      <span v-else>{{item.name}}:</span>
+    </div>
     <el-cascader
       ref="cascader"
       v-bind="$attrs"

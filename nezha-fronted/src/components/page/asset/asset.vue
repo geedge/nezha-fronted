@@ -349,7 +349,7 @@ export default {
           index: -1
         },
         assetLabel: {
-          label: 'More',
+          label: this.$t('overall.assetLabel'),
           key: 'fields',
           type: 'dropdownCheckBox',
           children: [],

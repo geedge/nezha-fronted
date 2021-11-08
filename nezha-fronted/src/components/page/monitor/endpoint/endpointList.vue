@@ -366,7 +366,7 @@ export default {
       titleSearch: {},
       titleSearchList: {
         project: {
-          label: 'Project',
+          label: this.$t('overall.project'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -376,7 +376,7 @@ export default {
           index: -1
         },
         module: {
-          label: 'Module',
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -386,7 +386,7 @@ export default {
           index: -1
         },
         state: {
-          label: 'State',
+          label: this.$t('overall.state'),
           key: 'state',
           type: 'dropdownCheckBox',
           children: [],
@@ -408,7 +408,7 @@ export default {
       },
       detailSearchList: {
         project: {
-          label: 'Project',
+          label: this.$t('overall.project'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -418,7 +418,7 @@ export default {
           index: -1
         },
         module: {
-          label: 'Module',
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -428,7 +428,7 @@ export default {
           index: -1
         },
         state: {
-          label: 'State',
+          label: this.$t('overall.state'),
           key: 'stateDetail',
           type: 'dropdownCheckBox',
           children: [],
