@@ -613,11 +613,22 @@ export default {
       getTopology(this.topologyIndex).resize()
       getTopology(this.topologyIndex).centerView()
       // getTopology(this.topologyIndex).fitView(30)
+    },
+    shrink (n) {
+      setTimeout(()=>{
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView()
+      },500)
     }
   },
   computed: {
     topoScreen () {
       return this.$store.getters.getShowTopoScreen
+    },
+    shrink () {
+      return this.$store.getters.getIsShrink
     }
   },
   created () {
