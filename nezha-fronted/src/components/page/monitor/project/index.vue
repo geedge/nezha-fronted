@@ -40,6 +40,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.commit('setShowTopoScreen', false)
   },
   methods: {}
 }
