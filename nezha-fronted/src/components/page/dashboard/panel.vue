@@ -351,7 +351,7 @@ export default {
             const chartData = res.data.data
             // console.log(typeof chartData.param)
             if (typeof chartData.param === 'string') {
-              chartData.param = JSON.parse(chartData.param)
+              chartData.param = chartData.param ? JSON.parse(chartData.param) : {}
             }
             if (!chartData.param) {
               chartData.param = { url: '', threshold: '' }
