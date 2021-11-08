@@ -459,7 +459,6 @@ export default {
       this.panelIdInner = panelId
       this.data = chartItem
       this.detail = detail
-      console.log(this.detail)
       // console.info(this.data, this.detail)
       /* if (this.detail[0] && this.detail[0].type && this.detail[0].type == 'endpointInfo') { // endpointInfo的小图表
         this.$nextTick(() => {

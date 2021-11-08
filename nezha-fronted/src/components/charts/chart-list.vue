@@ -1488,7 +1488,6 @@ export default {
       chartInfo.name = this.$t('project.chart.endpointInfo')
       chartInfo.from = fromRoute.endpoint
       const basicInfo = JSON.parse(JSON.stringify(this.obj))
-      console.log(basicInfo)
       detail.push(
         {
           data: {
@@ -1553,11 +1552,11 @@ export default {
               model: basic.model ? basic.model.name : '-',
               tags: basic.fields,
               alert: basic.alertNum,
-              endpoint: basic.endpointNum
+              endpoint: basic.endpointNum,
               // purchaseDate: basic.purchaseDate,
               // vendor: basic.brand ? basic.brand.name : '-',
               // sn: basic.sn,
-              // pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
+              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
               // cabinetStart: basic.cabinetStart,
               // cabinetEnd: basic.cabinetEnd,
               // pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
