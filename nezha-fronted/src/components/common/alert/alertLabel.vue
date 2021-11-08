@@ -89,7 +89,7 @@
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
         <div class="alert-label-value">
           <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0 + ' ' + alertActiveStr()}}</span>
+          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
         </div>
       </div>
       <div class="alert-label-box">
@@ -130,7 +130,7 @@
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
         <div class="alert-label-value">
           <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0 + ' ' + alertActiveStr()}}</span>
+          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
         </div>
       </div>
       <div class="alert-label-box">
@@ -170,7 +170,7 @@
         <div class="alert-label-title">{{$t('overall.alert')}}</div>
         <div class="alert-label-value">
           <i v-if="alertLabelData" :class="alertLabelData && alertLabelData.alertNum > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;
-          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0 + ' ' + alertActiveStr()}}</span>
+          <span>{{alertLabelData && alertLabelData.alertNum ? alertLabelData.alertNum : 0}}</span>
         </div>
       </div>
       <div class="alert-label-box">
