@@ -151,7 +151,6 @@ export default {
       deep: true,
       handler (n) {
         this.titleSearchListCopy = JSON.parse(JSON.stringify(n))
-        console.log(this.titleSearchListCopy)
         this.$nextTick(() => {
           this.setEachCascWidth()
           this.needMore()
