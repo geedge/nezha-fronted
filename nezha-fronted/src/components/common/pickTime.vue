@@ -98,6 +98,7 @@ export default {
   methods: {
     selectInterval (val) {
       this.visible = false
+      clearInterval(this.intervalTimer)
       this.interval = val.value
       this.interLabel = val.label
       if (!this.showTimePicker && val && val.value != -1) {
