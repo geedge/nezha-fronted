@@ -14,7 +14,7 @@
               :style="{top: `${moreBtnTop(data.type)}px`}"
               class="search-more"
               @click="changShowMore(type)">
-          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+          {{$t('overall.more')}} <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
       <el-skeleton v-else-if="data.type === 'dropdownCheckBox'" :loading="!data.show" :rows="1" class="search-items">
@@ -38,7 +38,7 @@
               :style="{top: `${moreBtnTop(data.type)}px`}"
               class="search-more"
               @click="changShowMore(type)">
-          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+          {{$t('overall.more')}} <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
     </div>

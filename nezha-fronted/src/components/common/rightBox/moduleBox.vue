@@ -616,7 +616,7 @@ export default {
           }
         }
       ],
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       showAllBasicOption: false,
       rules: {
         name: [

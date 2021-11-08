@@ -83,7 +83,7 @@ export default {
   mixins: [editRigthBox],
   data () {
     return {
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       editModel: {},
       brandList: [], // brand 列表数据
       editModule: {},

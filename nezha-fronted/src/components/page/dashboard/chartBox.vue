@@ -573,7 +573,7 @@ export default {
   data () {
     return {
       fromRoute,
-      language: localStorage.getItem('nz-language'),
+      language: 3,
       optionBtn: {
         save: false
       },

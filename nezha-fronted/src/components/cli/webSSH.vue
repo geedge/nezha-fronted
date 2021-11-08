@@ -298,7 +298,7 @@ export default {
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       authProtocol: [
         {
           value: 1,
