@@ -622,7 +622,7 @@ export default {
       activeNameLogs: ['Basic'],
       expandedWalkData: [],
       editEndpointReset: {},
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       radio: 'password',
       editEndpoint: {},
       restaurants: [

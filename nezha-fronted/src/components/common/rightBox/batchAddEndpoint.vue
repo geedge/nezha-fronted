@@ -181,7 +181,7 @@ export default {
       },
       assetDataList: [],
       moduleList: [],
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {

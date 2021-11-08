@@ -1493,11 +1493,12 @@ export default {
           data: {
             id: basicInfo.id,
             name: basicInfo.name,
-            type: basicInfo.module.type,
+            // type: basicInfo.module.type,
             project: basicInfo.project.name,
             module: basicInfo.module.name,
+            asset: basicInfo.asset.manageIp,
             alerts: basicInfo.alertNum,
-            state: basicInfo.state === 1 ? 'up' : 'down'
+            state: basicInfo.configs
           },
           type: 'endpointInfo',
           title: this.$t('project.chart.basicTitle')
@@ -1538,23 +1539,27 @@ export default {
             // basic.cabinet = basic.cabinet ? basic.cabinet.name : '-'
             const obj = {
               id: basic.id,
-              host: basic.pingInfo ? basic.pingInfo.host : '-',
-              assetType: basic.type ? basic.type.name : '-',
+              // host: basic.pingInfo ? basic.pingInfo.host : '-',
+              // assetType: basic.type ? basic.type.name : '-',
+              name: basic.name ? basic.name : '-',
+              manageIp: basic.manageIp,
+              type: basic.type ? basic.type.name : '-',
               state: basic.state ? basic.state.name : '-',
               pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '',
               dataCenter: basic.dc ? basic.dc.name : '-',
               cabinet: basic.cabinet ? basic.cabinet.name : '-',
+              brand: basic.brand ? basic.brand.name : '-',
+              model: basic.model ? basic.model.name : '-',
+              tags: basic.fields,
               alert: basic.alertNum,
               endpoint: basic.endpointNum,
-              purchaseDate: basic.purchaseDate,
-              vendor: basic.brand ? basic.brand.name : '-',
-              model: basic.model ? basic.model.name : '-',
-              sn: basic.sn,
-              tags: basic.fields,
+              // purchaseDate: basic.purchaseDate,
+              // vendor: basic.brand ? basic.brand.name : '-',
+              // sn: basic.sn,
               pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
-              cabinetStart: basic.cabinetStart,
-              cabinetEnd: basic.cabinetEnd,
-              pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
+              // cabinetStart: basic.cabinetStart,
+              // cabinetEnd: basic.cabinetEnd,
+              // pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
               // principal: basic.dc ? basic.dc.principal : '-',
               // tel: basic.tel,
             }

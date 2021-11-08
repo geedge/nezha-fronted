@@ -41,12 +41,14 @@
                           <span class="content-text">{{assetKey[key]}}</span>
                           <div :class="itemTip(`key-${index}`, key, i, ready)" class="item-tip-hide item-tip-key el-popover">{{assetKey[key]}}</div>
                         </div>
-
                         <div :id="`value-${index}-${i}`" class="content-item-value item-tip">
-                        <span v-if="key === 'state'">
-                          {{value}}
-                        </span>
-                          <span v-else-if="key === 'alert'" :class="{'success': value <= 0, 'danger': value > 0}" class="as-button">{{value + ' ' + $t('overall.active')}}</span>
+                          <span v-if="key === 'name'">{{value}}</span>
+                          <span v-else-if="key === 'type'">{{value}}</span>
+                          <span v-else-if="key === 'state'">{{value}}</span>
+                          <span v-else-if="key === 'brand'">{{value}}</span>
+<!--                          <span v-else-if="key === 'model'">{{value}}</span>-->
+                          <span v-else-if="key === 'alert'" class="as-button"><i :class=" value > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;{{value}}</span>
+                          <span v-else-if="key === 'endpoint'" class="as-button"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;{{value}}</span>
                           <div v-else-if="key === 'tags'" class="no-overflow" style="padding-bottom: 5px;">
                             <template v-if="value && value.length > 0">
                               <nz-alert-tag v-for="(tagItem, tagIndex) in value" :key="tagItem.id" :cursor-point="false"
@@ -127,8 +129,39 @@
                           <div :class="itemTip(`key-${index}`, key, i, ready)" class="item-tip-hide item-tip-key el-popover">{{endpointKey[key]}}</div>
                         </div>
                         <div :id="`value-${index}-${i}`" class="content-item-value item-tip">
-                          <span class="content-text">{{value || value === 0 ? value : "&nbsp;"}}</span>
-                          <div :class="itemTip(`value-${index}`, key, i, ready)" class="item-tip-hide item-tip-value el-popover">{{value}}</div>
+                          <template>
+                            <span v-if="key === 'alerts'"><i :class=" value > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;{{value}}</span>
+                            <span v-else-if="key === 'asset'"><i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;{{value}}</span>
+                            <span v-else-if="key === 'module'"><i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;&nbsp;{{value}}</span>
+                            <span v-else-if="key === 'state'">
+                              <span style="width: auto">
+                                <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+                                <span v-if="value[0].state === 0">
+                                  <span class="active-icon red-bg inline-block"></span>
+                                </span>
+                                <span v-else-if="value[0].state === 1">
+                                  <span class="active-icon green-bg inline-block"></span>
+                                </span>
+                                <span v-else-if="value[0].state">
+                                  <span class="active-icon gray-bg inline-block"></span>
+                                </span>
+                              </span>
+                              <span style="width: auto">
+                                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+                                <span v-if="value[1].state === 0">
+                                  <span class="active-icon red-bg inline-block"></span>
+                                </span>
+                                <span v-else-if="value[1].state === 1">
+                                  <span class="active-icon green-bg inline-block"></span>
+                                </span>
+                                <span v-else-if="value[1].state">
+                                  <span class="active-icon gray-bg inline-block"></span>
+                                </span>
+                              </span>
+                            </span>
+                            <span v-else class="content-text">{{value || value === 0 ? value : "&nbsp;"}}</span>
+                            <div :class="itemTip(`value-${index}`, key, i, ready)" class="item-tip-hide item-tip-value el-popover">{{value}}</div>
+                          </template>
                         </div>
                       </div>
 
@@ -257,24 +290,29 @@ export default {
       oldSearchTime: [],
 
       assetKey: {
-        host: this.$t('asset.host'),
+        // host: this.$t('asset.host'),
         id: 'Id',
-        assetType: this.$t('asset.assetType'),
-        sn: this.$t('asset.device'),
+        name: this.$t('overall.name'),
+        manageIp: this.$t('overall.manageIp'),
+        type: this.$t('overall.type'),
+        // assetType: this.$t('asset.assetType'),
+        // sn: this.$t('asset.device'),
         state: this.$t('asset.assetState'),
         pingRtt: this.$t('asset.assetPing'),
         dataCenter: this.$t('asset.dataCenter'),
         cabinet: this.$t('asset.cabinet'),
+        brand: this.$t('asset.brand'),
         model: this.$t('asset.model'),
-        vendor: this.$t('asset.vendor'),
-        purchaseDate: this.$t('asset.procurementDate'),
+        tags: this.$t('overall.labels'),
+        alert: this.$t('asset.alerts'),
+        endpoint: this.$t('asset.modules')
+        // vendor: this.$t('asset.vendor'),
+        // purchaseDate: this.$t('asset.procurementDate'),
         // principal: this.$t('asset.principal'),
         // tel: this.$t('asset.principalTel'),
         // pingStatus: this.$t('asset.assetPing'),
-        pingLastReply: this.$t('asset.lastReply'),
-        endpoint: this.$t('asset.modules'),
-        alert: this.$t('asset.alerts'),
-        tags: this.$t('overall.tag')
+        // pingLastReply: this.$t('asset.lastReply'),
+
       },
       projectKey: {
         id: 'ID',
@@ -293,9 +331,10 @@ export default {
       endpointKey: {
         id: 'ID',
         name: this.$t('overall.name'),
-        type: this.$t('overall.type'),
+        // type: this.$t('overall.type'),
         project: this.$t('overall.project'),
         module: this.$t('project.module.module'),
+        asset: this.$t('overall.asset'),
         alerts: this.$t('project.endpoint.alerts'),
         state: this.$t('project.endpoint.state')
       }
@@ -518,3 +557,8 @@ export default {
   }
 }
 </script>
+<style>
+.colorFA901C{
+  color: #fa901c;
+}
+</style>

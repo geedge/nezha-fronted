@@ -14,7 +14,7 @@
               :style="{top: `${moreBtnTop(data.type)}px`}"
               class="search-more"
               @click="changShowMore(type)">
-          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+              {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
       <el-skeleton v-else-if="data.type === 'dropdownCheckBox'" :loading="!data.show" :rows="1" class="search-items">
@@ -38,7 +38,7 @@
               :style="{top: `${moreBtnTop(data.type)}px`}"
               class="search-more"
               @click="changShowMore(type)">
-          More <i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
+              {{$t('overall.more')}}<i :class="data.showMore ? 'arrow-up' : ''" class="el-icon-arrow-down arrow-down"/>
         </span>
       </el-skeleton>
     </div>
@@ -68,7 +68,7 @@ export default {
       default () {
         return {
           project: {
-            label: 'Project', // 显示的label
+            label: this.$t('overall.project'), // 显示的label
             key: 'projectIds', // 搜索使用的key
             type: 'checkBox', // 类型
             children: [], // 需要展示的子集
