@@ -163,7 +163,7 @@ export default {
       importResult: null,
       exportShow: false,
       panelLock: true,
-      language: localStorage.getItem('nz-language'),
+      language: this.$store.getters.language,
       recordArr: [
         { name: this.$t('overall.allData'), value: 'all' },
         { name: this.$t('overall.selectRecords'), value: 'records' },
