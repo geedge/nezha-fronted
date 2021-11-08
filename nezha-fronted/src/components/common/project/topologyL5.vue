@@ -615,12 +615,12 @@ export default {
       // getTopology(this.topologyIndex).fitView(30)
     },
     shrink (n) {
-      setTimeout(()=>{
+      setTimeout(() => {
         const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
         getTopology(this.topologyIndex).resize()
         getTopology(this.topologyIndex).centerView()
-      },500)
+      }, 500)
     }
   },
   computed: {
@@ -2114,7 +2114,7 @@ export default {
         })
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
-      }, 100)
+      }, 500)
     },
     contextmenuNone () {
       this.contextmenu = {
