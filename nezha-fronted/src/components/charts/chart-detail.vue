@@ -34,7 +34,6 @@
                 <el-collapse-transition>
                   <div v-show="show.indexOf(index) > -1" class="chart-sub-content">
                     <template v-for="(value, key, i) in item.data">
-
                       <!-- endpoint-detail、asset、model的assetInfo的asset详情-->
                       <div v-if="(data.from === fromRoute.endpoint || data.from === fromRoute.asset || data.from === fromRoute.model) && data.type === 'assetInfo' && item.type === 'basic' && assetKey[key]" :key="i" class="content-item">
                         <div :id="`key-${index}-${i}`" class="content-item-key item-tip">
@@ -46,7 +45,6 @@
                           <span v-else-if="key === 'type'">{{value}}</span>
                           <span v-else-if="key === 'state'">{{value}}</span>
                           <span v-else-if="key === 'brand'">{{value}}</span>
-<!--                          <span v-else-if="key === 'model'">{{value}}</span>-->
                           <span v-else-if="key === 'alert'" class="as-button"><i :class=" value > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;{{value}}</span>
                           <span v-else-if="key === 'endpoint'" class="as-button"><i class="nz-icon nz-icon-overview-endpoint monitorColor"></i>&nbsp;{{value}}</span>
                           <div v-else-if="key === 'tags'" class="no-overflow" style="padding-bottom: 5px;">
@@ -60,7 +58,7 @@
                                 </div>
                               </nz-alert-tag>
                             </template>
-                            <template v-else>&nbsp;</template>
+                            <template v-else>-</template>
                           </div>
                           <template v-else-if="key === 'cabinet'">
                             <span v-if="value&&item.data.cabinetStart&&item.data.cabinetEnd">{{value + '['+item.data.cabinetStart+'-'+item.data.cabinetEnd+']'}}</span>
@@ -129,37 +127,37 @@
                           <div :class="itemTip(`key-${index}`, key, i, ready)" class="item-tip-hide item-tip-key el-popover">{{endpointKey[key]}}</div>
                         </div>
                         <div :id="`value-${index}-${i}`" class="content-item-value item-tip">
-                          <template>
-                            <span v-if="key === 'alerts'"><i :class=" value > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;{{value}}</span>
-                            <span v-else-if="key === 'asset'"><i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;{{value}}</span>
-                            <span v-else-if="key === 'module'"><i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;&nbsp;{{value}}</span>
-                            <span v-else-if="key === 'state'">
-                              <span style="width: auto">
-                                <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
-                                <span v-if="value[0].state === 0">
-                                  <span class="active-icon red-bg inline-block"></span>
-                                </span>
-                                <span v-else-if="value[0].state === 1">
-                                  <span class="active-icon green-bg inline-block"></span>
-                                </span>
-                                <span v-else-if="value[0].state">
-                                  <span class="active-icon gray-bg inline-block"></span>
-                                </span>
+                          <span v-if="key === 'alert'"><i :class=" value > 0 ? 'red' : 'green'" class="nz-icon nz-icon-overview-alert"></i>&nbsp;{{value}}</span>
+                          <span v-else-if="key === 'asset'"><i class="nz-icon nz-icon-overview-project monitorColor color23BF9A"/>&nbsp;{{value}}</span>
+                          <span v-else-if="key === 'module'"><i style="cursor: pointer" class="nz-icon nz-icon-overview-module monitorColor"/>&nbsp;&nbsp;{{value}}</span>
+                          <span v-else-if="key === 'state'">
+                            <span style="width: auto">
+                              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+                              <span v-if="value[0].state === 0">
+                                <span class="active-icon red-bg inline-block"></span>
                               </span>
-                              <span style="width: auto">
-                                <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
-                                <span v-if="value[1].state === 0">
-                                  <span class="active-icon red-bg inline-block"></span>
-                                </span>
-                                <span v-else-if="value[1].state === 1">
-                                  <span class="active-icon green-bg inline-block"></span>
-                                </span>
-                                <span v-else-if="value[1].state">
-                                  <span class="active-icon gray-bg inline-block"></span>
-                                </span>
+                              <span v-else-if="value[0].state === 1">
+                                <span class="active-icon green-bg inline-block"></span>
+                              </span>
+                              <span v-else-if="value[0].state">
+                                <span class="active-icon gray-bg inline-block"></span>
                               </span>
                             </span>
-                            <span v-else class="content-text">{{value || value === 0 ? value : "&nbsp;"}}</span>
+                            <span style="width: auto">
+                              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+                              <span v-if="value[1].state === 0">
+                                <span class="active-icon red-bg inline-block"></span>
+                              </span>
+                              <span v-else-if="value[1].state === 1">
+                                <span class="active-icon green-bg inline-block"></span>
+                              </span>
+                              <span v-else-if="value[1].state">
+                                <span class="active-icon gray-bg inline-block"></span>
+                              </span>
+                            </span>
+                          </span>
+                          <template v-else-if="endpointKey[key]">
+                            <span class="content-text">{{value || value === 0 ? value : "&nbsp;"}}</span>
                             <div :class="itemTip(`value-${index}`, key, i, ready)" class="item-tip-hide item-tip-value el-popover">{{value}}</div>
                           </template>
                         </div>
@@ -335,7 +333,7 @@ export default {
         project: this.$t('overall.project'),
         module: this.$t('project.module.module'),
         asset: this.$t('overall.asset'),
-        alerts: this.$t('project.endpoint.alerts'),
+        alert: this.$t('project.endpoint.alerts'),
         state: this.$t('project.endpoint.state')
       }
     }
@@ -560,5 +558,8 @@ export default {
 <style>
 .colorFA901C{
   color: #fa901c;
+}
+.endpoint-cell-left{
+  margin-right: 5px;
 }
 </style>

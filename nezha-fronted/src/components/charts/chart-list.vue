@@ -1491,14 +1491,14 @@ export default {
       detail.push(
         {
           data: {
-            id: basicInfo.id,
-            name: basicInfo.name,
+            id: basicInfo.id ? basicInfo.id : '-',
+            name: basicInfo.name ? basicInfo.name : '-',
             // type: basicInfo.module.type,
-            project: basicInfo.project.name,
-            module: basicInfo.module.name,
-            asset: basicInfo.asset.manageIp,
-            alerts: basicInfo.alertNum,
-            state: basicInfo.configs
+            project: basicInfo.project ? basicInfo.project.name : '-',
+            module: basicInfo.module ? basicInfo.module.name : '-',
+            asset: basicInfo.asset ? basicInfo.asset.manageIp : '-',
+            alert: basicInfo.alertNum ? basicInfo.alertNum : 0,
+            state: basicInfo.configs ? basicInfo.configs : '-'
           },
           type: 'endpointInfo',
           title: this.$t('project.chart.basicTitle')
@@ -1542,21 +1542,21 @@ export default {
               // host: basic.pingInfo ? basic.pingInfo.host : '-',
               // assetType: basic.type ? basic.type.name : '-',
               name: basic.name ? basic.name : '-',
-              manageIp: basic.manageIp,
+              manageIp: basic.manageIp ? basic.manageIp : '-',
               type: basic.type ? basic.type.name : '-',
               state: basic.state ? basic.state.name : '-',
-              pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '',
+              pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '-',
               dataCenter: basic.dc ? basic.dc.name : '-',
               cabinet: basic.cabinet ? basic.cabinet.name : '-',
               brand: basic.brand ? basic.brand.name : '-',
               model: basic.model ? basic.model.name : '-',
-              tags: basic.fields,
-              alert: basic.alertNum,
-              endpoint: basic.endpointNum,
+              tags: basic.fields ? basic.fields : '-',
+              alert: basic.alertNum ? basic.alertNum : '-',
+              endpoint: basic.endpointNum ? basic.endpointNum : '-',
               // purchaseDate: basic.purchaseDate,
               // vendor: basic.brand ? basic.brand.name : '-',
               // sn: basic.sn,
-              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
+              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-'
               // cabinetStart: basic.cabinetStart,
               // cabinetEnd: basic.cabinetEnd,
               // pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
