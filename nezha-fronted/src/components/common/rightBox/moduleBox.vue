@@ -238,7 +238,7 @@
                              class="half-form-item" :label="'Source labels'"
                              :rules="[
                                        { required: item.action === 'replace' || item.action === 'keep' || item.action === 'drop', message: $t('validate.required'), trigger: 'change' },
-                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : '', trigger: 'change' }
+                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : requirdRelabel, trigger: 'change' }
                                      ]">
                        <vue-tags-input
                          v-model="item.tags"
@@ -583,6 +583,9 @@ export default {
   data () {
     return {
       walkData: [],
+      requirdRelabel (rule, value, callback) {
+        callback()
+      },
       chartTempList: [],
       activeName: 'Basic',
       activeNameLogs: ['Basic'],
