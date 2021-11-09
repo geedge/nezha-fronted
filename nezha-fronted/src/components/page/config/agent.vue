@@ -114,10 +114,10 @@ export default {
   mixins: [dataListMixin],
   computed: {
     wgetUrl () {
-      return 'wget --no-check-certificate --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
+      return 'wget -qO- --no-check-certificate --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
     },
     curlUrl () {
-      return 'curl -k -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
+      return 'curl -o- -k -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
     }
   },
   data () {
