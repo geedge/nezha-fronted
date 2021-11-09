@@ -185,7 +185,7 @@
                     <vue-tags-input
                       v-model="item.tags"
                       :maxlength="32"
-                      :placeholder="'add parameter'"
+                      :placeholder="$t('overall.addParameter')"
                       :tags="item.value"
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                     />
@@ -222,7 +222,7 @@
                 <div id="module-box-relabel" ref="labelBoxScrollbar" style="height: 100%; overflow: hidden;">
                   <div v-for="(item, index) in  this.editModule.configs[0].config.relabel_config" :key="index" class="">
                     <div class="pipeline-box">
-                      <span class="pipeline-title">{{'item' + index}}</span>
+                      <span class="pipeline-title">{{$t('project.endpoint.item') + index}}</span>
                       <span class="pipeline-option">
                       <i class="nz-icon nz-icon-shanchu1" @click="removeRelabel(index)"></i>
                     </span>
@@ -245,7 +245,7 @@
                          :maxlength="32"
                          ref="relabelTag"
                          tabindex="9999"
-                         :placeholder="'add parameter'"
+                         :placeholder="$t('overall.addParameter')"
                          :tags="item.source_labels"
                          @before-adding-tag="beforeAddingTag"
                          @blur="relabelTabBlur"
