@@ -98,7 +98,7 @@ import * as echarts from 'echarts'
 import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
-import {chartResizeTool, formatScientificNotation} from "@/components/common/js/tools";
+import { chartResizeTool, formatScientificNotation } from '@/components/common/js/tools'
 import chartDataList from '@/components/common/mixin/chartDataList'
 export default {
   name: 'pieChart', // 饼图 或者 柱状图的统计
@@ -761,7 +761,7 @@ export default {
                         <div style="max-width: 500px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom: 5px">${this.legend[params.seriesIndex].alias}</div>
                         <div style="font-size:12px;display:flex;justify-content: space-between;">
                             <div>value</div>
-                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot ? this.chartDot : 2 )}</div>
+                            <div>${chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(params.value[1], null, -1, this.chartDot ? this.chartDot : 2)}</div>
                         </div>
                     </div>
                 </div>

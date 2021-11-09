@@ -619,7 +619,6 @@ export default {
           }
         }
       ],
-      language: this.$store.getters.language,
       showAllBasicOption: false,
       rules: {
         name: [
@@ -1308,7 +1307,8 @@ export default {
       return (value) => {
         return this.getMibName(this.walkData, value)
       }
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   watch: {
     module: {

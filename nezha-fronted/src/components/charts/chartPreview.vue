@@ -200,7 +200,7 @@ import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import moment from 'moment-timezone'
-import {formatScientificNotation} from "@/components/common/js/tools";
+import { formatScientificNotation } from '@/components/common/js/tools'
 export default {
   name: 'chartPreview',
   components: {

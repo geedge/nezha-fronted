@@ -139,6 +139,7 @@ export default {
     changeLocal (lang) {
       localStorage.setItem('nz-language', lang)
       this.$store.commit('setLanguage', lang)
+      console.log(lang)
       this.$i18n.locale = lang
       setTimeout(() => {
         window.location.reload()

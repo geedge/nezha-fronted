@@ -870,7 +870,7 @@ export default {
               if (labelBool) {
                 objectInfo[val.label] = val.val
               }
-            }else {
+            } else {
               objectInfo[val.label] = val.valnum
             }
           } else if (val.type === 'selectSelf') {

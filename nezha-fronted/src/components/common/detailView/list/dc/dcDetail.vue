@@ -155,7 +155,7 @@ export default {
         // }
       })
       return str
-    },
+    }
   }
 }
 </script>

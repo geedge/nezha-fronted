@@ -129,7 +129,7 @@ export default {
       deep: true,
       handler (n) {
         if (n) {
-        this.$emit('selectedEndpointsChange', n)
+          this.$emit('selectedEndpointsChange', n)
         }
       }
     }

@@ -138,9 +138,9 @@
 
 <script>
 import operationRecord from './operationRecord'
-import QRCode from "qrcodejs2"
-import MessageBox from "element-ui/packages/message-box/src/main"
-import i18n from "@/components/common/i18n"
+import QRCode from 'qrcodejs2'
+import MessageBox from 'element-ui/packages/message-box/src/main'
+import i18n from '@/components/common/i18n'
 import profileBox from '@/components/common/rightBox/profileBox'
 
 export default {

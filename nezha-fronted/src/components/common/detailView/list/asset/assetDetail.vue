@@ -168,7 +168,7 @@ export default {
       }
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
-    },
+    }
   }
 }
 </script>

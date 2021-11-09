@@ -55,7 +55,7 @@ export default {
     walkData: { type: Array },
     currentWalk: { type: Array },
     expandedWalk: { type: Array },
-    disabled: {type: Boolean, default: false }
+    disabled: { type: Boolean, default: false }
   },
   data () {
     return {

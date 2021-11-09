@@ -48,7 +48,7 @@
 import detailViewLeftMixin from '@/components/common/mixin/detailViewLeftMixin'
 import alertLabel from '@/components/common/alert/alertLabel'
 import { terminalLog } from '@/components/common/js/constants'
-import {calcDurationByStringTimeB} from "@/components/common/js/tools";
+import { calcDurationByStringTimeB } from '@/components/common/js/tools'
 export default {
   name: 'terminalLogDetail',
   mixins: [detailViewLeftMixin],
@@ -157,7 +157,7 @@ export default {
       }
       this.$set(item, 'loading', loading)
       // this.$set(this.tableData,index,item);// 调用父组件
-    },
+    }
   }
 }
 </script>

@@ -587,7 +587,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
-import vm from "@/main";
+import vm from '@/main'
 
 export default {
   name: 'editEndpointBoxNew',
@@ -622,7 +622,6 @@ export default {
       activeNameLogs: ['Basic'],
       expandedWalkData: [],
       editEndpointReset: {},
-      language: this.$store.getters.language,
       radio: 'password',
       editEndpoint: {},
       restaurants: [
@@ -1495,7 +1494,8 @@ export default {
       return (value) => {
         return this.getMibName(this.walkData, value)
       }
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   watch: {
     module: {

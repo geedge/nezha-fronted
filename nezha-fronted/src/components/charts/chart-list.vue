@@ -1556,7 +1556,7 @@ export default {
               // purchaseDate: basic.purchaseDate,
               // vendor: basic.brand ? basic.brand.name : '-',
               // sn: basic.sn,
-              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
+              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-'
               // cabinetStart: basic.cabinetStart,
               // cabinetEnd: basic.cabinetEnd,
               // pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''

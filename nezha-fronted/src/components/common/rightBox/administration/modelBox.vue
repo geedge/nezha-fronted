@@ -78,12 +78,12 @@ export default {
       return function (username) {
         return localStorage.getItem('nz-username') == username
       }
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   mixins: [editRigthBox],
   data () {
     return {
-      language: this.$store.getters.language,
       editModel: {},
       brandList: [], // brand 列表数据
       editModule: {},

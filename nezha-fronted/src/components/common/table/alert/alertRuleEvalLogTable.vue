@@ -89,17 +89,17 @@ export default {
           label: this.$t('config.dc.state'),
           prop: 'state',
           show: true,
-          minWidth: 100,
+          minWidth: 100
         }, {
           label: this.$t('alert.alertRuleMessage'),
           prop: 'msg',
           show: true,
-          minWidth: 100,
+          minWidth: 100
         }, {
           label: this.$t('alert.silence.startTime'),
           prop: 'stts',
           show: true,
-          minWidth: 300,
+          minWidth: 300
         }, {
           label: this.$t('config.terminallog.duration'),
           prop: 'duration',

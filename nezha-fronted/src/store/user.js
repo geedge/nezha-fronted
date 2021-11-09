@@ -9,7 +9,7 @@ const user = {
     menuList: [],
     buttonList: [],
     roleList: [],
-    language: 'en'
+    language: localStorage.getItem('nz-language')
   },
   mutations: {
     setLanguage (state, language) {
@@ -34,7 +34,7 @@ const user = {
     menuList (state) {
       return state.menuList
     },
-    language (state) {
+    getLanguage (state) {
       return state.language
     },
     buttonList (state) {
@@ -59,6 +59,7 @@ const user = {
       localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
       store.commit('setLanguage', res.data.user.lang)
+      console.log(res.data.user.lang)
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
         store.commit('setMenuList', menuList)

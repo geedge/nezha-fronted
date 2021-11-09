@@ -1078,7 +1078,7 @@ export default {
       params.ids = this.batchDeleteObjs.map(item => item.id).join(',')
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
-    },
+    }
   },
   destroyed () {
     localStorage.removeItem('alertMessageProjectId')

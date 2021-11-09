@@ -155,6 +155,9 @@ export default {
     },
     deleteObjs: Array
   },
+  computed: {
+    language () { return this.$store.getters.getLanguage }
+  },
   data () {
     return {
       importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
@@ -163,7 +166,6 @@ export default {
       importResult: null,
       exportShow: false,
       panelLock: true,
-      language: this.$store.getters.language,
       recordArr: [
         { name: this.$t('overall.allData'), value: 'all' },
         { name: this.$t('overall.selectRecords'), value: 'records' },
@@ -376,7 +378,7 @@ export default {
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
-    exportRecords() {
+    exportRecords () {
       const params = JSON.parse(JSON.stringify(this.params))
       if (this.params2) {
         Object.keys(this.params2).forEach(key => {

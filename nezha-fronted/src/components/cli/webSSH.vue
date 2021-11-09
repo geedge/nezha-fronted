@@ -294,11 +294,12 @@ export default {
   components: {
     'my-console': Console
   },
-
+  computed: {
+    language () { return this.$store.getters.getLanguage }
+  },
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
-      language: this.$store.getters.language,
       authProtocol: [
         {
           value: 1,
