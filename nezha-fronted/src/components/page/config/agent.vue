@@ -46,11 +46,11 @@
     </transition>
     <el-dialog :title="$t('config.agent.agent.title')" :visible.sync="showAgentDownload" append-to-body class="nz-dialog agent-dialog" width="800px" @close="closeDialog">
       <div v-if="showAgentDownload" class="agent-box">
-        <el-form v-model="agentParam" class="right-box-form  right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
+        <el-form v-model="agentParam" class="right-box-form right-box-form-left" label-position = "top" label-width="120px" size="small" style="width: 100%">
           <div class="right-box-sub-title">{{$t('config.agent.agent.download')}}</div>
           <div style="margin-bottom: 20px;width: 100%"></div>
           <el-form-item :label="$t('config.agent.agent.osType')" class="half-form-item" prop="osType">
-            <el-select v-model="agentParam.osType" class="right-box-row-with-btn" popper-class="right-box-select-top agent-select" placeholder="">
+            <el-select v-model="agentParam.osType" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top agent-select" placeholder="">
               <el-option v-for="item in osTypes" :key="item.name" :label="item.label" :value="item.name">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
@@ -63,14 +63,14 @@
           <div style="margin-bottom: 20px;width: 100%"></div>
 
           <el-form-item :label="$t('config.dc.dc')" class="half-form-item" prop="dc">
-            <el-select v-model="agentParam.dc" class="right-box-row-with-btn" popper-class="right-box-select-top agent-select" placeholder="">
+            <el-select v-model="agentParam.dc" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top agent-select" placeholder="">
               <el-option v-for="item in allDc" :key="item.id" :label="item.name" :value="item.id">
                 <span class="panel-dropdown-label-txt" >{{item.name}}</span>
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('config.agent.agent.type')" class="half-form-item" prop="type">
-            <el-select v-model="agentParam.type" class="right-box-row-with-btn" popper-class="right-box-select-top agent-select" placeholder="">
+            <el-select v-model="agentParam.type" class="right-box-row-with-btn" popper-class="right-box-select-top right-public-box-dropdown-top agent-select" placeholder="">
               <el-option v-for="item in agent2.theData" :key="item.value" :label="$t(item.label)" :value="item.value" :disabled="federationEnabled && item.value == 2">
                 <span class="panel-dropdown-label-txt" >{{item.label}}</span>
               </el-option>
@@ -114,10 +114,10 @@ export default {
   mixins: [dataListMixin],
   computed: {
     wgetUrl () {
-      return 'wget -qO- --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
+      return 'wget -qO- --no-check-certificate --header="Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
     },
     curlUrl () {
-      return 'curl -o- -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
+      return 'curl -o- -k -H "Authorization:' + this.token + '" ' + this.ipAddr + '/agent/' + this.agentParam.dc + '/' + this.agentParam.type + '/install.sh | sudo -E bash'
     }
   },
   data () {
