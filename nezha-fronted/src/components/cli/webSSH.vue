@@ -197,14 +197,28 @@
           </div>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
+              <el-dropdown trigger="click" class="header-el-dropdown">
+              <span class="el-dropdown-link">
+                <span>{{selectValue}}</span>
+                <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+              </span>
+                <el-dropdown-menu style="width: 118px" class="el-dropdown__width right-box-select-top right-public-box-dropdown-top" placement="bottom-end" slot="dropdown">
+                  <el-dropdown-item
+                    @click.native="selectAssetAuth(item.label, item.value)"
+                    v-for="item in searchMetrics"
+                    :key="item.value"><i class="nz-icon" :class="item.icon" style="margin-right: 5px"/>{{item.label}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
               <v-selectpage
+                ref="selectPage"
                 style="flex: 1"
                 data="asset/asset"
+                :params="selectPageParams"
                 :tb-columns="columns"
                 key-field="id"
                 show-field="manageIp"
@@ -300,6 +314,20 @@ export default {
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
+      selectValue: 'SSH',
+      searchMetrics: [
+        {
+          value: 'SSH',
+          label: 'SSH'
+        },
+        {
+          value: 'Telnet',
+          label: 'Telnet'
+        }
+      ],
+      selectPageParams: {
+        authProtocol: 1
+      },
       authProtocol: [
         {
           value: 1,
@@ -466,6 +494,22 @@ export default {
     }
   },
   methods: {
+    selectAssetAuth (val, label) {
+      this.$refs.selectPage.remove()
+      if (val) {
+        this.selectValue = val
+        if (val === 'SSH') {
+          this.selectPageParams = { authProtocol: 1 }
+        } else {
+          this.selectPageParams = { authProtocol: 2 }
+        }
+      } else {
+        label = 'SSH'
+        this.selectPageParams = { authProtocol: 1 }
+      }
+      this.$refs.selectPage.pageNumber = 1
+      this.$refs.selectPage.pageChange()
+    },
     getUuid () {
       let uuid = uuidv1()
       const now = new Date().getTime()
@@ -887,11 +931,18 @@ export default {
     },
     assetShowChange () {
       this.assetShow = true
+      this.selectValue = 'SSH'
+      this.selectPageParams = { authProtocol: 1 }
+      if (this.$refs.selectPage) {
+        this.$refs.selectPage.remove()
+        this.$refs.selectPage.pageNumber = 1
+        this.$refs.selectPage.pageChange()
+      }
       // this.getAssetData()
     },
     getAssetData () {
       this.assetLoading = true
-      this.$get('asset/asset', { pageSize: -1 }).then(res => {
+      this.$get('asset/asset', { pageSize: -1, typeIds: '1,2' }).then(res => {
         this.assetLoading = false
         this.assetData = res.data.list
       })
@@ -1033,6 +1084,18 @@ export default {
   }
   .custom-footer{
     box-shadow: none;
+  }
+  .header-el-dropdown {
+    width: 64px;
+    margin-right: 0;
+    background: #f5f7fa;;
+    padding: 0 10px 0 10px;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #dcdfe6;
+    border-right: none ;
+  }
+  /deep/ div.v-selectpage div.sp-input-container div.sp-base {
+    border-radius: 0 4px 4px 0;
   }
 </style>
 <style lang="scss">
