@@ -38,7 +38,6 @@ import bus from '../../libs/bus'
 import timePicker from './timePicker'
 import multipleTime from './multipleTime'
 import chartUnit from './chartUnit'
-let timeout
 export default {
   name: 'pickTime',
   components: {
