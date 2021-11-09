@@ -468,7 +468,8 @@ export default {
     placeholder: {
       type: String,
       default: ''
-    }
+    },
+    targetTab: {}
   },
   methods: {
     // dc
@@ -1465,7 +1466,7 @@ export default {
             this.defaultValue != '' ? this.no_condition=this.defaultValue:''; */
     this.restructure_historyDate()
     setTimeout(() => {
-      if (this.$route.path === '/asset') {
+      if (this.$route.path === '/asset' || this.targetTab === 'asset') {
         this.getAssetStateData()
       }
       if (this.$route.path === '/agent') {
