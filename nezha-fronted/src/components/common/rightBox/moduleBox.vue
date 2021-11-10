@@ -1455,8 +1455,8 @@ export default {
     padding-left: 0;
   }
   /deep/ .el-tabs__item{
-    width: 90px;
-    padding: 0;
+    min-width: 90px;
+    padding: 0 10px 0 10px;
     text-align: center;
   }
   /deep/ .el-tabs__item.is-active{
