@@ -70,6 +70,7 @@
                   v-model="item.name"
                   :fetch-suggestions="querySearch"
                   class="inline-input silence-matchers-key"
+                  popper-class="right-box-select-top right-public-box-dropdown-top"
                   placeholder="key"
                   size="mini"
                   @select="handleSelect"

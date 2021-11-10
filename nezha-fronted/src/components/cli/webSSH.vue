@@ -239,12 +239,12 @@
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
             <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
-              <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
+              <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
-              <el-select value-key="id" popper-class="config-dropdown w260" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
+              <el-select value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
