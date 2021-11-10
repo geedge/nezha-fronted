@@ -464,7 +464,7 @@ export default {
   }
   .alert-label-box{
     display: flex;
-    justify-content:space-between;
+    /*justify-content:space-between;*/
   }
   .alert-label-title{
     text-align: left;
