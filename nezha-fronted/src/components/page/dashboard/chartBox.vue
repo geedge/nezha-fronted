@@ -444,11 +444,11 @@
             </el-radio-group>
           </el-form-item>
           <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'value'" id="chart-box-valueMapping-type1">
-            <template  v-for="(mapping, index) in editChart.param.valueMapping.mapping">
-              <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.value')" class="form-item--half-width-other" prop="span" >
+            <div  v-for="(mapping, index) in editChart.param.valueMapping.mapping" :key="index">
+              <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.value')" class="form-item--half-width-other" prop="span" >
                 <el-input v-model="mapping.value" size="small" style="display: inline-block;;" type="input"></el-input>
               </el-form-item>
-              <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.text')" class="form-item--half-width-other  form-item--half-width-other-two" prop="span">
+              <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" class="form-item--half-width-other  form-item--half-width-other-two" prop="span">
                 <el-input v-model="mapping.text" size="small" style="display: inline-block;width:calc(100% - 80px);" type="input"></el-input>
                 <!--颜色选择器 start-->
                 <div class="color-show">
@@ -457,11 +457,11 @@
                 <!--颜色选择器 end-->
                 <span  class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px" @click="delMapping(index)"><i class="nz-icon nz-icon-minus" style="color: #EC7F66"></i></span>
               </el-form-item>
-            </template>
+            </div>
           </template>
           <template v-if="(editChart.type == 'singleStat'||editChart.type == 'table')&&editChart.param.valueMapping.type == 'range'" id="chart-box-valueMapping-type2">
-            <template v-for="(mapping, index) in editChart.param.valueMapping.mapping">
-              <div :key="index" class="form-item--half-width-other" style="display: inline-block;margin-left: 15px">
+            <div v-for="(mapping, index) in editChart.param.valueMapping.mapping" :key="index">
+              <div class="form-item--half-width-other" style="display: inline-block;margin-left: 15px">
                 <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.from')" class="one-third-form-item-left" prop="span" >
                   <el-input v-model="mapping.from" size="small" type="input"></el-input>
                 </el-form-item>
@@ -469,17 +469,16 @@
                   <el-input v-model="mapping.to" size="small" type="input"></el-input>
                 </el-form-item>
               </div>
-              <el-form-item :key="index" :label="$t('dashboard.panel.chartForm.valMapping.text')" class="form-item--half-width-other-two range" prop="span">
+              <el-form-item :label="$t('dashboard.panel.chartForm.valMapping.text')" class="form-item--half-width-other-two range" prop="span">
                 <el-input v-model="mapping.text" size="small" style="display: inline-block;width:calc(100% - 80px);" type="input" ></el-input>
                 <!--颜色选择器 start-->
                 <div class="color-show">
                   <nezhaColor :color-val="mapping.color" :single="false" :value-arr="[{name:'bac',value:showPicker[index].bac,key:'bac'},{name:'text',value:showPicker[index].text,key:'text'}]" @colorChange="(val,key)=>{colorChange(mapping,key,val)}"/>
                 </div>
-
                 <!--颜色选择器 end-->
                 <span class="nz-icon-minus-medium" style="margin-left: 7px;padding: 6px" @click="delMapping(index)"><i class="nz-icon nz-icon-minus"  style="color: #EC7F66"></i></span>
               </el-form-item>
-            </template>
+            </div>
           </template>
 
           <!--value mapping end-->
@@ -1715,6 +1714,7 @@ export default {
       })
     },
     valueMappingChange: function (value) {
+      console.log(this.editChart.param.valueMapping.type)
       if (this.editChart.param.valueMapping.type == 'value') {
         this.editChart.param.valueMapping.mapping = [{ text: '', value: '', color: { bac: '#fff', text: '#000' } }]
         this.showPicker = [{ bac: false, text: false }]
