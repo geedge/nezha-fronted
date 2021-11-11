@@ -113,8 +113,8 @@
       fixed="right">
       <div slot="header" class="table-operation-title">{{$t('overall.option')}}</div>
       <div slot-scope="scope" class="table-operation-items">
-        <button v-if="scope.row.alertRule&&scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)"><i class="nz-icon nz-icon-view1"></i></button>
-        <el-dropdown v-has="['alertMessage_expired']" size="medium" trigger="click" @command="tableOperation">
+        <button v-if="scope.row.alertRule&&scope.row.alertRule.type !== 3" class="table-operation-item" @click="$emit('messageDetail', scope.row)" :disabled="scope.row.alertRule.type !== 1" :class="{'table-operation-item--disable': scope.row.alertRule.type !== 1}"><i class="nz-icon nz-icon-view1"></i></button>
+        <el-dropdown v-has="['alertMessage_expired', 'alertSilence_add']" size="medium" trigger="click" @command="tableOperation">
           <div class="table-operation-item table-operation-item--more">
             <i class="nz-icon nz-icon-more3"></i>
           </div>

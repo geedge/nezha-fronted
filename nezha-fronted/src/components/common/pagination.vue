@@ -15,7 +15,6 @@
         <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size" :popper-class="popClass" @visible-change="popperVisible">
           <el-option v-for="(item, index) in pageSizes" :key="index" :label="item.label" :value="item.value"></el-option>
         </el-select>
-
       </el-pagination>
   </div>
 </template>
@@ -102,6 +101,7 @@ export default {
         wraps.forEach(wrap => {
           if (wrap) {
             wrap.scrollTop = 0
+            wrap.scrollLeft = 0
           }
         })
       })
