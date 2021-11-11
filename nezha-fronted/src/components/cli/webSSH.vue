@@ -499,16 +499,17 @@ export default {
       if (val) {
         this.selectValue = val
         if (val === 'SSH') {
-          this.selectPageParams = { authProtocol: 1 }
+          this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
         } else {
-          this.selectPageParams = { authProtocol: 2 }
+          this.selectPageParams = { authProtocol: 2, pageNumber: 1 }
         }
       } else {
         label = 'SSH'
-        this.selectPageParams = { authProtocol: 1 }
+        this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
       }
-      this.$refs.selectPage.pageNumber = 1
-      this.$refs.selectPage.pageChange()
+      setTimeout(() => {
+        this.$refs.selectPage.pageChange()
+      }, 100)
     },
     getUuid () {
       let uuid = uuidv1()
@@ -932,10 +933,9 @@ export default {
     assetShowChange () {
       this.assetShow = true
       this.selectValue = 'SSH'
-      this.selectPageParams = { authProtocol: 1 }
+      this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
       if (this.$refs.selectPage) {
         this.$refs.selectPage.remove()
-        this.$refs.selectPage.pageNumber = 1
         this.$refs.selectPage.pageChange()
       }
       // this.getAssetData()
