@@ -95,64 +95,61 @@
           </span>
         </template>
         <template v-else-if="item.prop === 'configs'">
-<!--          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable">-->
-<!--            <span class="configs-endpoint metrics">{ Metrics }</span>-->
-<!--            <div class="endpointConfigsTips" slot="content">-->
-<!--              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[0].config)"></i></span>-->
-<!--              <pre >{{JSON.stringify(scope.row.configs[0].config,null,2)}}</pre>-->
-<!--            </div>-->
-<!--          </el-tooltip>-->
-<!--          <el-tooltip placement="right" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[1].enable">-->
-<!--            <span class="configs-endpoint logs">{ Logs }</span>-->
-<!--            <div class="endpointConfigsTips" slot="content">-->
-<!--              <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(scope.row.configs[1].config)"></i></span>-->
-<!--              <pre >{{JSON.stringify(scope.row.configs[1].config,null,2)}}</pre>-->
-<!--            </div>-->
-<!--          </el-tooltip>-->
-
-          <el-tooltip placement="left" effect="light" v-if="scope.row.configs[0].enable || scope.row.configs[1].enable">
-            <span class="configs-endpoint metrics">[{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]</span>
-            <div class="endpointConfigsTips" slot="content">
+          <span class="configs-endpoint metrics"
+                @mouseenter="labelHover(scope.row, item.prop, true, $event)"
+                @mouseleave="labelHover(scope.row, item.prop, false, $event, true)">
+            [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]
+          </span>
+          <nz-tooltip :that="scope.row[item.prop]"  v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
+            <div class="endpointConfigsTips" name="default">
               <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
               <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
             </div>
-          </el-tooltip>
+          </nz-tooltip>
         </template>
+
         <template v-else-if="item.prop === 'state'">
-          <el-popover placement="left" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[0].state<2">
-            <div>
+          <!--          metrics-->
+          <span style="width: auto;display: inline-block"
+                @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
+                @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
+          >
+            <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
+            <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
+              <span class="active-icon red-bg inline-block"></span>
+            </span>
+            <span v-else-if="scope.row.configs[0].state===1">
+              <span class="active-icon green-bg inline-block"></span>
+            </span>
+            <span v-else-if="scope.row.configs[0].state">
+              <span class="active-icon gray-bg inline-block"></span>
+            </span>
+          </span>
+          <nz-tooltip :that="scope.row.configs[0]"  v-if="scope.row.configs[0] && scope.row.configs[0].loading && scope.row.configs[0].state  > 1" :type="'configs[0]'">
+            <div name="default">
               <div v-html="suspendedStr(scope.row.configs[0].state)"></div>
             </div>
-            <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left"><i class="nz-icon nz-icon-Metrics colorFA901C" /> {{$t('project.endpoint.metrics')}} </span>
-              <span v-if="scope.row.configs[0].state===0 || !scope.row.configs[0].state">
-                <span class="active-icon red-bg inline-block"></span>
-              </span>
-              <span v-else-if="scope.row.configs[0].state===1">
-                <span class="active-icon green-bg inline-block"></span>
-              </span>
-              <span v-else-if="scope.row.configs[0].state">
-                <span class="active-icon gray-bg inline-block"></span>
-              </span>
-            </span>
-          </el-popover>
-          <el-popover placement="right" trigger="hover" width="100" :popper-class="''" :disabled="scope.row.configs[1].state<2">
-            <div>
+          </nz-tooltip>
+          <!--          logs-->
+         <span style="width: auto;display: inline-block"
+               @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
+               @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
+           <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
+           <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
+             <span class="active-icon red-bg inline-block"></span>
+           </span>
+           <span v-else-if="scope.row.configs[1].state===1">
+             <span class="active-icon green-bg inline-block"></span>
+           </span>
+           <span v-else-if="scope.row.configs[1].state">
+             <span class="active-icon gray-bg inline-block"></span>
+           </span>
+         </span>
+          <nz-tooltip :that="scope.row.configs[1]"  v-if="scope.row.configs[1] && scope.row.configs[1].loading && scope.row.configs[1].state > 1" :type="'configs[1]'">
+            <div name="default">
               <div v-html="suspendedStr(scope.row.configs[1].state)"></div>
             </div>
-            <span slot="reference" style="width: auto">
-              <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
-              <span v-if="scope.row.configs[1].state===0 || !scope.row.configs[1].state">
-                <span class="active-icon red-bg inline-block"></span>
-              </span>
-              <span v-else-if="scope.row.configs[1].state===1">
-                <span class="active-icon green-bg inline-block"></span>
-              </span>
-              <span v-else-if="scope.row.configs[1].state">
-                <span class="active-icon gray-bg inline-block"></span>
-              </span>
-            </span>
-          </el-popover>
+          </nz-tooltip>
         </template>
         <template v-else-if="item.prop === 'enabled'">
           <span v-if="scope.row[item.prop] === 1">{{$t('project.endpoint.enable')}}</span>
@@ -199,10 +196,12 @@
 <script>
 import table from '@/components/common/mixin/table'
 import alertLabel from '../../alert/alertLabel'
+import nzTooltip from '../../alert/nzTooltip'
 export default {
   name: 'endpointTable',
   components: {
-    alertLabel
+    alertLabel,
+    nzTooltip
   },
   mixins: [table],
   props: {
@@ -313,13 +312,34 @@ export default {
       return str
     },
     // label 鼠标划入
-    labelHover (item, type, loading, e) {
+    labelHover (item, type, loading, e, slow) {
       if (e) {
         const dom = e.currentTarget
         const position = dom.getBoundingClientRect()
         this.$set(item[type], 'position', position)
       }
-      this.$set(item[type], 'loading', loading)
+      if (slow) {
+        item[type].timeout = setTimeout(() => {
+          this.$set(item[type], 'loading', loading)
+        }, 200)
+      } else {
+        this.$set(item[type], 'loading', loading)
+      }
+      // this.$set(this.tableData,index,item);// 调用父组件
+    },
+    labelHoverConfigs (item, type, loading, e, slow) {
+      if (e) {
+        const dom = e.currentTarget
+        const position = dom.getBoundingClientRect()
+        this.$set(item.configs[type], 'position', position)
+      }
+      if (slow) {
+        item.configs[type].timeout = setTimeout(() => {
+          this.$set(item.configs[type], 'loading', loading)
+        }, 200)
+      } else {
+        this.$set(item.configs[type], 'loading', loading)
+      }
       // this.$set(this.tableData,index,item);// 调用父组件
     },
     clConfigs (item) {
@@ -354,6 +374,17 @@ export default {
     border-radius: 4px;
     padding: 2px 7px;
     color: #3C92F1;
+    position: relative;
+    display: inline-block;
+  }
+  .configs-endpoint .endpointConfigsTips {
+    display: none;
+  }
+  .configs-endpoint:hover .endpointConfigsTips {
+    display: block;
+    position: absolute;
+    right: 0;
+    left: 0;
   }
   .configs-endpoint.metrics{
     color: #3C92F1;
