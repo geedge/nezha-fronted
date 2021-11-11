@@ -501,7 +501,8 @@ export default {
       }
     },
     toProject (projectInfo) { // 跳转对应project页面
-      this.$store.commit('setOverViewProject', projectInfo)
+      this.$store.commit('currentProjectChange', projectInfo)
+      this.jumpTo('project')
     },
     queryAssetData () {
       return new Promise(resolve => {
