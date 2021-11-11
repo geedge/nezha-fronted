@@ -110,7 +110,7 @@
 <!--            </div>-->
 <!--          </el-tooltip>-->
 
-          <el-tooltip placement="left" effect="light" :popper-class="'endpointConfigsTips'" v-if="scope.row.configs[0].enable || scope.row.configs[1].enable">
+          <el-tooltip placement="left" effect="light" v-if="scope.row.configs[0].enable || scope.row.configs[1].enable">
             <span class="configs-endpoint metrics">[{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]</span>
             <div class="endpointConfigsTips" slot="content">
               <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
@@ -409,8 +409,8 @@ export default {
   }
   .copy-value-content{
     position: absolute;
-    right: 6px;
-    top: 6px;
+    right: 12px;
+    top: 8px;
   }
   .data-column__endpoint {
     background: #FFFFFF;
