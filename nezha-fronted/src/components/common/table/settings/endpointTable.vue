@@ -323,6 +323,10 @@ export default {
           this.$set(item[type], 'loading', loading)
         }, 200)
       } else {
+        if (item[type].timeout) {
+          clearTimeout(item[type].timeout)
+          item[type].timeout = null
+        }
         this.$set(item[type], 'loading', loading)
       }
       // this.$set(this.tableData,index,item);// 调用父组件

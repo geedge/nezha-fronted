@@ -70,6 +70,7 @@ export default {
     tooltipHover (show) {
       if (show) {
         clearTimeout(this.that.timeout)
+        this.that.timeout = null
       } else {
         this.that.loading = false
       }
