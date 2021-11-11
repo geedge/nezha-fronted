@@ -87,7 +87,7 @@ export default {
     position: fixed;
     background-color: white;
     z-index: 3000;
-    padding: 10px 23px 10px 10px;
+    padding: 8px;
     border-radius: 4px;
     box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
   }

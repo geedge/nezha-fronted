@@ -100,7 +100,7 @@
                 @mouseleave="labelHover(scope.row, item.prop, false, $event, true)">
             [{{scope.row.configs[0].enable ?  'Metrics':''}}{{scope.row.configs[0].enable&&scope.row.configs[1].enable?',':''}}{{scope.row.configs[1].enable ?  'logs' : ''}}]
           </span>
-          <nz-tooltip :that="scope.row[item.prop]"  v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
+          <nz-tooltip :that="scope.row[item.prop]" class="data-column__" v-if="scope.row[item.prop] && scope.row[item.prop].loading" :type="item.prop">
             <div class="endpointConfigsTips" name="default">
               <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue(clConfigs(scope.row))"></i></span>
               <pre class="copy-value-content__pre">{{JSON.stringify(clConfigs(scope.row),null,2)}}</pre>
@@ -436,22 +436,10 @@ export default {
     /*width: 70px;*/
     margin-right: 5px;
   }
-</style>
-<style>
-  .endpointConfigsTips{
-    min-width: 150px;
-    padding:3px 3px 0 8px ;
-  }
   .copy-value-content{
     position: absolute;
-    right: 12px;
-    top: 8px;
-  }
-  .data-column__endpoint {
-    background: #FFFFFF;
-    border: 1px solid #E7EAED;
-    box-shadow: 0 6px 16px 0 rgba(0,0,0,0.08);
-    border-radius: 3px 3px 3px 3px 0 0;
+    right: 8px;
+    top: 4px;
   }
   .copy-value-content__pre {
     height: 200px;
