@@ -1408,6 +1408,10 @@ export default {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
+            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            if (getTopology(this.topologyIndex)) {
+              getTopology(this.topologyIndex).canvasPos = domRect
+            }
             break
           }
           case 'locked': {
@@ -1924,6 +1928,7 @@ export default {
         }
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
       }, 100)
     },
 

@@ -1515,7 +1515,10 @@ export default {
         const arr = []
         arr.push(this.$get(`/asset/asset/${assetId}`))
         arr.push(this.$get(`/asset/asset/feature/${assetId}`))
-        this.$refs['editChart' + chartInfo.id][0].showLoad()
+        console.log(this.$refs['editChart' + chartInfo.id][0])
+        if (this.$refs['editChart' + chartInfo.id][0]) {
+          this.$refs['editChart' + chartInfo.id][0].showLoad()
+        }
 
         // this.$get('/asset/info?id=' + assetId).then(response => {
         //   if (response.code == 200) {
