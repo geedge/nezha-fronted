@@ -127,7 +127,7 @@ export default {
       license: {
         warnInfo: '',
         token: '',
-        valid: false
+        valid: true
       },
       uploadFileList: [],
       uploadFile: { file: '', path: '', uuid: '' },
@@ -148,7 +148,7 @@ export default {
   methods: {
     ...mapActions(['loginSuccess']),
     login () {
-      if (this.loading || !this.license.valid) {
+      if (this.loading || !this.license.valid || !this.license.token) {
         return
       }
       if (this.validateLogin() && (this.$route.path == '/' || this.$route.path == '/login')) {

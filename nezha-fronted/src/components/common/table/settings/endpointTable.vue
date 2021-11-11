@@ -110,7 +110,7 @@
 
         <template v-else-if="item.prop === 'state'">
           <!--          metrics-->
-          <span style="width: auto;display: inline-block"
+          <span style="width: auto;display: inline-block;cursor: pointer"
                 @mouseenter="labelHoverConfigs(scope.row, 0, true, $event)"
                 @mouseleave="labelHoverConfigs(scope.row, 0, false, $event)"
           >
@@ -131,7 +131,7 @@
             </div>
           </nz-tooltip>
           <!--          logs-->
-         <span style="width: auto;display: inline-block"
+         <span style="width: auto;display: inline-block;cursor: pointer"
                @mouseenter="labelHoverConfigs(scope.row, 1, true, $event)"
                @mouseleave="labelHoverConfigs(scope.row, 1, false, $event)">
            <span class="endpoint-cell-left" style="margin-left: 10px"><i class="nz-icon nz-icon-logs colorFA901C" /> {{$t('project.endpoint.logs')}} </span>
@@ -380,6 +380,7 @@ export default {
     color: #3C92F1;
     position: relative;
     display: inline-block;
+    cursor: pointer;
   }
   .configs-endpoint .endpointConfigsTips {
     display: none;
