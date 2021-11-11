@@ -14,7 +14,7 @@
         <transition name="el-zoom-in-top">
           <ul v-show="dropdownShow" class="el-dropdown-menu el-popper el-dropdown-menu--mini nz-dropdown">
             <li v-for="i in $CONSTANTS.intervalList" :key="i.value + i.label" :style="{color:interval === i.value || interval.value === i.value ? theme.themeColor : ''}" class="el-dropdown-menu__item dropdown-content" @click="selectInterval(i)">
-              {{i.label}}
+              {{$t(i.label)}}
             </li>
           </ul>
         </transition>
@@ -28,7 +28,6 @@ import bus from '../../libs/bus'
 import timePicker from './timePicker'
 import multipleTime from './multipleTime'
 import chartUnit from './chartUnit'
-let timeout
 export default {
   name: 'pickTime',
   components: {
@@ -92,6 +91,7 @@ export default {
   methods: {
     selectInterval (val) {
       this.visible = false
+      clearInterval(this.intervalTimer)
       this.interval = val.value
       this.interLabel = val.label
       if (!this.showTimePicker && val && val.value != -1) {

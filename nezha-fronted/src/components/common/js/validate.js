@@ -86,6 +86,21 @@ export function noSpecialChar (rule, value, callback) {
   }, 100)
 }
 
+export function latlng (rule, value, callback) {
+  const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7})$/
+  const latReg = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7})$/
+  setTimeout(() => {
+    const lnglat = value.split(',')
+    if (!lnglat || lnglat.length !== 2) {
+      callback(new Error(vm.$t('tip.lnglatError')))
+    } else if (!lngReg.test(lnglat[0]) || !latReg.test(lnglat[1])) {
+      callback(new Error(vm.$t('tip.lnglatError')))
+    } else {
+      callback()
+    }
+  }, 100)
+}
+
 export function integer (rule, value, callback) {
   setTimeout(() => {
     if (isNaN(Number(value))) {

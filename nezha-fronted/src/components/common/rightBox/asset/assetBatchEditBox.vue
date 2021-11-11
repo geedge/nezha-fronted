@@ -12,14 +12,14 @@
         <el-form ref="assetEditForm" :model="editData" :rules="rules" label-position="top" label-width="120px">
           <el-form-item :label="$t('overall.editType')" prop="editType">
             <el-select v-model="editData.editType" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
-              <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
+              <el-option v-for="type in assetConstants.editTypeOptions" :key="type.value" :label="$t(type.label)" :value="type.value"/>
             </el-select>
           </el-form-item>
           <!-- 第一级：Edit type = account -->
           <template v-if="editData.editType === assetConstants.editTypeData.account">
             <el-form-item :label="$t('asset.authProtocol')" prop="authProtocol">
               <el-select v-model="editData.authProtocol" class="right-box__select" :placeholder="$t('overall.select')" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
-                <el-option v-for="type in assetConstants.authProtocolOptions" :key="type.value" :label="type.label" :value="type.value"/>
+                <el-option v-for="type in assetConstants.authProtocolOptions" :key="type.value" :label="$t(type.label)"  :value="type.value"/>
               </el-select>
             </el-form-item>
             <!--   第二级：Protocol type = SSH -->
@@ -27,7 +27,7 @@
               <div class="form__sub-title">{{$t('asset.sshAccount')}}</div>
               <el-form-item :label="$t('asset.authType')" prop="authType">
                 <el-select v-model="editData.authType" class="right-box__select" popper-class="right-box-select-top prevent-clickoutside" size="small" value-key="value">
-                  <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="type.label" :value="type.value"/>
+                  <el-option v-for="type in assetConstants.authTypeOptions" :key="type.value" :label="$t(type.label)"  :value="type.value"/>
                 </el-select>
               </el-form-item>
               <!--     第三级：Auth type = username | key -->

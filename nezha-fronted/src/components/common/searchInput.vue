@@ -34,7 +34,7 @@
                             {{val.name}}
                         </div>
                         <div class="select_content" v-if="typeof val.val !='undefined' && val.val != null && ind!=sreach_num">
-                            <span>{{val.valString ? val.valString : val.val}}</span>
+                            <span>{{$t(val.valString ? val.valString : val.val)}}</span>
                             <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
@@ -42,133 +42,133 @@
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                    <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'selectString'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                    <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                <li v-for="(item,key) in selectInfoList[val.label]" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                               </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'terminalStatus'">
                               <el-scrollbar v-if="selectInfoList['terminalStatus'].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                    <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                                <li v-for="(item,key) in selectInfoList['terminalStatus']" :key="key" @click="stringSelectInfo(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                               </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'dc'">
                               <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                  <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                  <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                <li v-for="(item,key) in dcSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left" v-if="val.type == 'asset'">
                               <el-scrollbar v-if="assetSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
+                                    <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.host)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.host}}</li>
+                                <li v-for="(item,key) in assetSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.host)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'assetState'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
                               <el-scrollbar v-if="assetStateSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                    <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in assetStateSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'brand'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
                               <el-scrollbar v-if="brandSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                    <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in brandSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'group'" :style="'top:' + selectDom.top +'; left:'+selectDom.left" class="select_info_list">
                               <el-scrollbar v-if="groupSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                    <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in groupSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'project'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                               <el-scrollbar v-if="projectSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                    <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                <li v-for="(item,key) in projectSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'severity'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                               <el-scrollbar v-if="severitySelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                    <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in severitySelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <div v-if="val.type === 'alertTypes'" :style="'top:' + selectDom.top +'; left:'+selectDom.left " class="select_info_list">
                             <el-scrollbar v-if="alertTypesSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                               <ul>
-                                <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                                <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                               </ul>
                             </el-scrollbar>
                             <ul v-else>
-                              <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{item.name}}</li>
+                              <li v-for="(item,key) in alertTypesSelect" :key="key" :class="search_select_style_num==key?'search-style-ind':''" @click="selectObject(val, item, $event)">{{$t(item.name)}}</li>
                             </ul>
                           </div>
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'module'">
                               <el-scrollbar v-if="moduleSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
-                                    <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                    <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                                 </ul>
                               </el-scrollbar>
                               <ul v-else>
-                                <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                <li v-for="(item,key) in moduleSelect" :key="key" @click="selectObject(val, item, $event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                               </ul>
                             </div>
                             <!-- 新增日志模块action下拉选择 -->
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectAction'">
                                 <ul>
-                                    <li v-for="(item,key) in actionSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.value,$event)">{{item.value}}</li>
+                                    <li v-for="(item,key) in actionSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.value,$event)">{{$t(item.value)}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol下拉选择 -->
                              <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectType'">
                                 <ul>
-                                    <li v-for="(item,key) in schemaTypeSelect" :key="key" @click="tr_selectTypeInfo(item)">{{item.value}}</li>
+                                    <li v-for="(item,key) in schemaTypeSelect" :key="key" @click="tr_selectTypeInfo(item)">{{$t(item.value)}}</li>
                                 </ul>
                             </div>
                             <!-- 新增protocol二层下拉 -->
@@ -180,35 +180,35 @@
 <!--                           时间计划-->
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'&&val.id==5">
                                 <ul>
-                                    <li v-for="(item, i) in schlist" :key="i" @click="selectSul(item.name)">{{item.name}}</li>
+                                    <li v-for="(item, i) in schlist" :key="i" @click="selectSul(item.name)">{{$t(item.name)}}</li>
                                 </ul>
                             </div>
                           <!--endpoint 状态-->
                           <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'state'&&val.id==33">
                             <ul>
-                              <li v-for="(item,key) in selectInfoList['endpointState']" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.label}}</li>
+                              <li v-for="(item,key) in selectInfoList['endpointState']" :key="key" @click="tr_selectInfo(val.label,item.value,item.label,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.label)}}</li>
                             </ul>
                           </div>
                           <!--alertMessage idc-->
                           <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'idc'&&val.id==27">
                             <el-scrollbar v-if="dcSelect.length > 8" class="el-scrollbar-small" style="height: 240px;">
                               <ul>
-                                <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                               </ul>
                             </el-scrollbar>
                             <ul v-else>
-                              <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              <li v-for="(item,key) in dcSelect" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                             </ul>
                           </div>
                           <!--exprTemp ganem-->
                           <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'selectTemp'&&val.id==13">
                             <el-scrollbar v-if="gnameList.length > 8" class="el-scrollbar-small" style="height: 240px;">
                               <ul>
-                                <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                                <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                               </ul>
                             </el-scrollbar>
                             <ul v-else>
-                              <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{item.name}}</li>
+                              <li v-for="(item,key) in gnameList" :key="key" @click="tr_selectInfo(val.label,item.id,item.name,$event)" :class="search_select_style_num==key?'search-style-ind':''">{{$t(item.name)}}</li>
                             </ul>
                           </div>
                         </div>
@@ -468,7 +468,8 @@ export default {
     placeholder: {
       type: String,
       default: ''
-    }
+    },
+    targetTab: {}
   },
   methods: {
     // dc
@@ -870,7 +871,7 @@ export default {
               if (labelBool) {
                 objectInfo[val.label] = val.val
               }
-            }else {
+            } else {
               objectInfo[val.label] = val.valnum
             }
           } else if (val.type === 'selectSelf') {
@@ -1148,6 +1149,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.searchScrollbar.update()
       })
+      this.select()
     },
     // 修改已有参数
     update_sreach (ind, e) {
@@ -1200,6 +1202,7 @@ export default {
       })
       this.select_list.splice(ind, 1)
       this.sreach_num--
+      this.select()
     },
     // 阻止冒泡事件
     stop_click (e) {
@@ -1434,7 +1437,7 @@ export default {
     }
     this.restructure_historyDate()
     setTimeout(() => {
-      if (this.$route.path === '/asset') {
+      if (this.$route.path === '/asset' || this.targetTab === 'asset') {
         this.getAssetStateData()
       }
       if (this.$route.path === '/agent') {

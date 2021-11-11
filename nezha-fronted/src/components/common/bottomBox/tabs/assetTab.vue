@@ -2,6 +2,7 @@
   <div>
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :targetTab.sync="targetTab"
       :api="url"
       style="height: 100%"
       :custom-table-title.sync="tools.customTableTitle"
@@ -103,6 +104,7 @@ export default {
           name: this.$t('asset.state'),
           type: 'assetState',
           label: 'stateIds',
+          id: 'stateIds',
           readonly: true,
           disabled: false
         }]

@@ -1,6 +1,6 @@
 <template>
   <div class="system">
-    <el-tabs style="overflow: auto" type="border-card" @tab-click="selectTab" v-model="activeTab" class="system-tabs" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab == 'apiKey'}">
+    <el-tabs v-model="activeTab" :class="{'full-table':activeTab == 'notification'||activeTab == 'link'||activeTab === 'apiKey'}" class="system-tabs" style="overflow: auto" type="border-card" @tab-click="selectTab">
       <el-tab-pane :label="$t('config.system.basic.basic')" name="basic">
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
@@ -26,8 +26,13 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.mapConfig')" >
-              <latlng-picker :init-data="basic.map_center_config" ref="latlngPicker" :show-zoom="true"></latlng-picker>
+            <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
+              <div style="display: flex">
+                <el-input v-model="basic.lnglat" maxlength="256" placeholder="" style="width: calc(100% - 50px); padding-right: 50px;">
+                  <template slot="prepend">{{$t('config.system.basic.lnglat')}}</template>
+                </el-input>
+                <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
+              </div>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.snmpTrapPort')" prop="snmp_trap_listen_port">
               <el-input v-model="basic.snmp_trap_listen_port"   id="system-baisc-snmp_trap_listen_port"></el-input>
@@ -289,17 +294,6 @@
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('config.system.reset.type')">
-<!--              <div class="el-checkbox-group">-->
-<!--                <div v-for="(item,index) in resetOptions" :key="item.value+index" >-->
-<!--                  <label class="el-checkbox sys-reset-label" :for="item.value" >-->
-<!--                    <span class="el-checkbox__label" style="width: 100px;text-align: right;margin-right: 10px">{{item.label}}</span>-->
-<!--                    <span class="el-checkbox__input">-->
-<!--                      <input type="checkbox" name="resetType" :value="item.value" class="el-checkbox__original" aria-hidden="true" :id="item.value" @change="resetCheckBoxChange"/>-->
-<!--                      <span class="el-checkbox__inner"></span>-->
-<!--                    </span>-->
-<!--                  </label>-->
-<!--                </div>-->
-<!--              </div>-->
               <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top">
                 <template v-for="item in resetOptions" >
                   <el-option :label="item.label" :value="item.value" :key="item.label"></el-option>
@@ -320,7 +314,7 @@
 </template>
 
 <script>
-import { positiveInteger, port, hostPlus, host, uSize } from '../../common/js/validate'
+import { positiveInteger, port, hostPlus, host, uSize, latlng } from '../../common/js/validate'
 import latlngPicker from '../../common/latlngPicker'
 import bus from '../../../libs/bus'
 import draggable from 'vuedraggable'
@@ -349,6 +343,7 @@ export default {
         default_scrape_interval: '60',
         default_scrape_timeout: '30',
         snmp_trap_listen_port: 162,
+        lnglat: '',
         map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 }
       },
       basicCopy: null,
@@ -363,7 +358,11 @@ export default {
         snmp_trap_listen_port: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: port, trigger: 'blur' }],
         timezone: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         default_cabinet_usize: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }, { validator: uSize, trigger: 'blur' }],
-        query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }]
+        query_max_series: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        lnglat: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: latlng, trigger: 'blur' }
+        ]
       },
       timezoneOption: [],
       email: {
@@ -510,6 +509,13 @@ export default {
     }
   },
   methods: {
+    lnglatChange (lnglat, zoom) {
+      const lnglatData = lnglat.split('.')
+      this.basic.map_center_config.longitude = lnglatData[0]
+      this.basic.map_center_config.latitude = lnglatData[1]
+      this.basic.map_center_config.zoom = zoom
+      this.basic.lnglat = lnglat
+    },
     selectTab: function (tab) {
       this.querySetInfo(tab.name)
     },
@@ -540,6 +546,7 @@ export default {
             localStorage.setItem('nz-sys-default-cabinet-usize', this.basic.default_cabinet_usize)
             localStorage.setItem('nz-unsaved-change', this.basic.unsaved_change)
             this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
+            this.basic.lnglat = `${this.basic.map_center_config.longitude},${this.basic.map_center_config.latitude}`
           } else if (type == 'terminal') {
             localStorage.setItem('nz-sys-terminal-timeout', this.terminal.terminal_timeout)
             localStorage.setItem('nz-sys-terminal-telnet-user-tip', this.terminal.terminal_telnet_user_tip)

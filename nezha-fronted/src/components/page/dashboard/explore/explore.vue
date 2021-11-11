@@ -38,9 +38,8 @@ export default {
           this.exploreItems.splice(tabIndex, 1)
         } else {
           this.exploreItems.push(index === 0 ? 1 : 0)
-          console.log(this.$refs.exploreItem[0].showMetrics)
           if (!this.$refs.exploreItem[0].showMetrics) {
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
               this.$refs.exploreItem[1].selectMetricsLogs(this.$t('overall.logs'), 'nz-icon nz-icon-logs', 'Logs')
             })
           }

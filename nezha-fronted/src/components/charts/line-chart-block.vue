@@ -1529,8 +1529,12 @@ export default {
       this.$emit('on-duplicate-chart-block', this.data.id)
     },
     dateChange (time) {
+      const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+      this.setSearchTime(nowTimeType.type, nowTimeType.value, nowTimeType)
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
+      this.filter.value = this.searchTime[2]
+      this.filter.id = this.$refs.pickTime.$refs.timePicker.showTime.id
       // this.echartModalStore.clear()
       this.showLegend = false
       this.$refs['localLoadingScreen' + this.chartIndex].startLoading()
@@ -1539,6 +1543,28 @@ export default {
       } else {
         this.getQueryChart('dashboard')
       }
+    },
+    setSearchTime (type, val, nowTimeType) { // 设置searchTime
+      if (type === 'minute') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setMinutes(new Date(bus.computeTimezone(new Date().getTime())).getMinutes() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'm')
+      } else if (type === 'hour') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setHours(new Date(bus.computeTimezone(new Date().getTime())).getHours() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'h')
+      } else if (type === 'date') {
+        const startTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())).setDate(new Date(bus.computeTimezone(new Date().getTime())).getDate() - val), 'yyyy-MM-dd hh:mm:ss')
+        const endTime = bus.timeFormate(new Date(bus.computeTimezone(new Date().getTime())), 'yyyy-MM-dd hh:mm:ss')
+        this.$set(this.searchTime, 0, startTime)
+        this.$set(this.searchTime, 1, endTime)
+        this.$set(this.searchTime, 2, val + 'd')
+      }
+      this.$refs.pickTime.$refs.timePicker.searchTime = this.searchTime
     },
     // 查询数据,修改日期查询全屏数据
     getQueryChart (type) {

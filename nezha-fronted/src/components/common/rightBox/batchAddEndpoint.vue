@@ -163,6 +163,9 @@ export default {
   components: {
     'edit-endpoint-box-new': editEndpointBoxNew
   },
+  computed: {
+    language () { return this.$store.getters.getLanguage }
+  },
   data () {
     return {
       showError: false,
@@ -181,7 +184,6 @@ export default {
       },
       assetDataList: [],
       moduleList: [],
-      language: localStorage.getItem('nz-language'),
       ChartSearchShowFields: [ // ChartSearch 下拉搜索表头
         { title: 'ID', data: 'id' },
         {

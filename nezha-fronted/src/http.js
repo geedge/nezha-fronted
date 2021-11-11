@@ -5,13 +5,17 @@ axios.interceptors.request.use(config => {
   if (token) {
     config.headers.Authorization = token // 请求头token
   }
+  const lang = localStorage.getItem('nz-language')
+  if (lang) {
+    config.headers.Language = lang // 请求头token
+  }
   return config
 },
 err => Promise.reject(err)
 )
 const accountErrorCode = [518003, 518004, 518005, 518006, 518007, 518008] // 账号锁定等
 const licenceErrorCode = [711001]
-const noJumpPath = ['#/','#/login']
+const noJumpPath = ['#/', '#/login']
 
 // 若get请求的url中带问号，则将url上的参数截取，改为对象形式传参
 axios.interceptors.request.use(

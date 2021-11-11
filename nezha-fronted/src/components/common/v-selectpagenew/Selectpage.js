@@ -13,7 +13,7 @@ export default {
     'v-dropdown': dropdown,
     'sp-tag': () => import('v-selectpage/src/components/Tag'),
     'sp-select': () => import('v-selectpage/src/components/Select'),
-    'sp-page': () => import('v-selectpage/src/components/Pagination'),
+    'sp-page': () => import('./Pagination'),
     'sp-list': () => import('v-selectpage/src/components/List'),
     'sp-table': () => import('v-selectpage/src/components/Table')
   },

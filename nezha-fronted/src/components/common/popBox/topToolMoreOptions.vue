@@ -155,6 +155,9 @@ export default {
     },
     deleteObjs: Array
   },
+  computed: {
+    language () { return this.$store.getters.getLanguage }
+  },
   data () {
     return {
       importBox: { show: false, title: this.$t('overall.importExcel'), type: 1, record: 'all', format: 1 },
@@ -163,7 +166,6 @@ export default {
       importResult: null,
       exportShow: false,
       panelLock: true,
-      language: localStorage.getItem('nz-language'),
       recordArr: [
         { name: this.$t('overall.allData'), value: 'all' },
         { name: this.$t('overall.selectRecords'), value: 'records' },
@@ -237,7 +239,7 @@ export default {
         if (this.importUrl.indexOf('dc/cabinet') > -1) {
           form.append('dcIds', this.params.dcIds)
         }
-        form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
+        // form.append('language', localStorage.getItem('nz-language') ? localStorage.getItem('nz-language') : 'en')
         this.$post(this.importUrl, form, { 'Content-Type': 'multipart/form-data' }).then(response => {
           if (response.code == 200 && response.msg == 'success') {
             this.importResult = response.data
@@ -338,6 +340,7 @@ export default {
       }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
@@ -371,10 +374,11 @@ export default {
       // }
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },
-    exportRecords() {
+    exportRecords () {
       const params = JSON.parse(JSON.stringify(this.params))
       if (this.params2) {
         Object.keys(this.params2).forEach(key => {
@@ -405,6 +409,7 @@ export default {
       params.language = localStorage.getItem('nz-language') || 'en'
       params.format = this.importBox.format
       params.ids = this.deleteObjs.map(item => item.id).join(',')
+      delete params.statistics
       this.exportExcel(this.exportUrl, params, this.exportFileName + '-' + this.getTimeString() + '.xlsx')
       this.closeDialog()
     },

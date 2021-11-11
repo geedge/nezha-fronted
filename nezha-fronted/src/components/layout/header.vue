@@ -137,11 +137,13 @@ export default {
       })
     },
     changeLocal (lang) {
-      if (lang != localStorage.getItem('nz-language')) {
-        localStorage.setItem('nz-language', lang)
-        this.$i18n.locale = lang
+      localStorage.setItem('nz-language', lang)
+      this.$store.commit('setLanguage', lang)
+      console.log(lang)
+      this.$i18n.locale = lang
+      setTimeout(() => {
         window.location.reload()
-      }
+      }, 800)
     },
     logout () {
       this.$get('logout').then(() => {

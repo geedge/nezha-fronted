@@ -641,12 +641,16 @@ export default {
             }
           })
         })
+        this.finshGetData = false
         return
       }
       if (!param.query) delete param.query
       // 根据panelId获得panel下的所有图表
       // const groupId = true ? '&groupId=0' : ''
-      if (!params.panelId) { return } // 没有panelId不调用接口
+      if (!params.panelId) {
+        this.finshGetData = false
+        return
+      } // 没有panelId不调用接口
       this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
         if (response.code === 200) {
           setTimeout(() => {
@@ -1419,13 +1423,14 @@ export default {
       detail.push(
         {
           data: {
-            id: basicInfo.id,
-            name: basicInfo.name,
-            type: basicInfo.module.type,
-            project: basicInfo.project.name,
-            module: basicInfo.module.name,
-            alerts: basicInfo.alertNum,
-            state: basicInfo.state === 1 ? 'up' : 'down'
+            id: basicInfo.id ? basicInfo.id : '-',
+            name: basicInfo.name ? basicInfo.name : '-',
+            // type: basicInfo.module.type,
+            project: basicInfo.project ? basicInfo.project.name : '-',
+            module: basicInfo.module ? basicInfo.module.name : '-',
+            asset: basicInfo.asset ? basicInfo.asset.manageIp : '-',
+            alert: basicInfo.alertNum ? basicInfo.alertNum : 0,
+            state: basicInfo.configs ? basicInfo.configs : '-'
           },
           type: 'endpointInfo',
           title: this.$t('project.chart.basicTitle')
@@ -1466,23 +1471,27 @@ export default {
             // basic.cabinet = basic.cabinet ? basic.cabinet.name : '-'
             const obj = {
               id: basic.id,
-              host: basic.pingInfo ? basic.pingInfo.host : '-',
-              assetType: basic.type ? basic.type.name : '-',
+              // host: basic.pingInfo ? basic.pingInfo.host : '-',
+              // assetType: basic.type ? basic.type.name : '-',
+              name: basic.name ? basic.name : '-',
+              manageIp: basic.manageIp ? basic.manageIp : '-',
+              type: basic.type ? basic.type.name : '-',
               state: basic.state ? basic.state.name : '-',
-              pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '',
+              pingRtt: basic.pingInfo ? basic.pingInfo.rtt : '-',
               dataCenter: basic.dc ? basic.dc.name : '-',
               cabinet: basic.cabinet ? basic.cabinet.name : '-',
-              alert: basic.alertNum,
-              endpoint: basic.endpointNum,
-              purchaseDate: basic.purchaseDate,
-              vendor: basic.brand ? basic.brand.name : '-',
+              brand: basic.brand ? basic.brand.name : '-',
               model: basic.model ? basic.model.name : '-',
-              sn: basic.sn,
-              tags: basic.fields,
-              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-',
-              cabinetStart: basic.cabinetStart,
-              cabinetEnd: basic.cabinetEnd,
-              pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
+              tags: basic.fields ? basic.fields : '-',
+              alert: basic.alertNum ? basic.alertNum : 0,
+              endpoint: basic.endpointNum ? basic.endpointNum : 0,
+              // purchaseDate: basic.purchaseDate,
+              // vendor: basic.brand ? basic.brand.name : '-',
+              // sn: basic.sn,
+              pingStatus: basic.pingInfo ? basic.pingInfo.status : '-'
+              // cabinetStart: basic.cabinetStart,
+              // cabinetEnd: basic.cabinetEnd,
+              // pingLastReply: basic.pingInfo ? basic.pingInfo.lastUpdate : ''
               // principal: basic.dc ? basic.dc.principal : '-',
               // tel: basic.tel,
             }

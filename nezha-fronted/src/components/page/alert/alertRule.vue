@@ -27,14 +27,11 @@
           id="model"
           :params="searchLabel"
           :params2="searchCheckBox"
-          :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_view'
-                }"
+          :permissions="{import: 'alertRule_add', export: 'alertRule_view'}"
           class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="asset"
-          export-url="/asset/asset/export"
-          import-url="/asset/asset/import"
+          export-file-name="AlertRule"
+          export-url="/alert/rule/export"
+          import-url="/alert/rule/import"
           @afterImport="getTableData"
         >
         </top-tool-more-options>

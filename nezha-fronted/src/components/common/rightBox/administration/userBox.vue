@@ -189,7 +189,7 @@ export default {
       ],
       languageList: [
         { value: 'en', label: 'English' },
-        { value: 'cn', label: '简体中文' }
+        { value: 'zh', label: '简体中文' }
       ]
     }
   },

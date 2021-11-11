@@ -204,7 +204,7 @@
                       <vue-tags-input
                         v-model="item.tags"
                         :maxlength="32"
-                        :placeholder="'add parameter'"
+                        :placeholder="$t('overall.addParameter')"
                         :tags="item.value"
                         @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                       />
@@ -241,7 +241,7 @@
                 <div id="module-box-relabel" ref="labelBoxScrollbar" style="height: 100%; overflow: hidden;">
                   <div v-for="(item, index) in  this.editEndpoint.configs[0].config.relabel_config" :key="index" class="">
                     <div class="pipeline-box">
-                      <span class="pipeline-title">{{'item' + index}}</span>
+                      <span class="pipeline-title">{{$t('project.endpoint.item') + index}}</span>
                       <span class="pipeline-option">
                       <i class="nz-icon nz-icon-shanchu1" @click="removeRelabel(index)"></i>
                     </span>
@@ -264,7 +264,7 @@
                           :maxlength="32"
                           ref="relabelTag"
                           tabindex="9999"
-                          :placeholder="'add parameter'"
+                          :placeholder="$t('overall.addParameter')"
                           :tags="item.source_labels"
                           @before-adding-tag="beforeAddingTag"
                           @blur="relabelTabBlur"
@@ -587,7 +587,7 @@ import pipelineSelect from './pipelineSelect'
 import selectWalk from '../popBox/selectWalk'
 import editRigthBox from '../mixin/editRigthBox'
 import VueTagsInput from '@johmun/vue-tags-input'
-import vm from "@/main";
+import vm from '@/main'
 
 export default {
   name: 'editEndpointBoxNew',
@@ -622,7 +622,6 @@ export default {
       activeNameLogs: ['Basic'],
       expandedWalkData: [],
       editEndpointReset: {},
-      language: localStorage.getItem('nz-language'),
       radio: 'password',
       editEndpoint: {},
       restaurants: [
@@ -1495,7 +1494,8 @@ export default {
       return (value) => {
         return this.getMibName(this.walkData, value)
       }
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   watch: {
     module: {

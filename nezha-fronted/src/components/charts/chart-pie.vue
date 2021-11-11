@@ -94,7 +94,7 @@ import { getChart, setChart, getMousePoint } from '../common/js/common'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { randomcolor } from '../common/js/radomcolor/randomcolor'
 import chartDataList from '@/components/common/mixin/chartDataList'
-import {chartResizeTool} from "@/components/common/js/tools";
+import { chartResizeTool } from '@/components/common/js/tools'
 export default {
   name: 'pieChart',
   components: {

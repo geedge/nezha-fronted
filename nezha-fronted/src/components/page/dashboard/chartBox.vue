@@ -122,8 +122,8 @@
             <!--lock-->
             <el-form-item v-if="editChart.type ==='diagram'" :label="$t('dashboard.panel.chartForm.lock')" class="form-item--half-width" prop="lock">
               <el-select id="chart-box-statistics" v-model="editChart.param.lock" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in lockList" :key="item.value" :label="item.label" :value="item.value">
-                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                <el-option v-for="item in lockList" :key="item.value" :label="$t(item.label)" :value="item.value">
+                  <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -150,8 +150,8 @@
 
             <el-form-item v-if="editChart.type == 'singleStat' || editChart.type == 'pie'|| editChart.type=='table' || editChart.type == 'bar'" :label="$t('dashboard.panel.chartForm.statistics')" class="form-item--half-width" prop="param.statistics">
               <el-select id="chart-box-statistics" v-model="editChart.param.statistics" placeholder="" popper-class="right-box-select-top prevent-clickoutside" size="small" @change="$forceUpdate">
-                <el-option v-for="item in statisticsList" :key="item.value" :label="item.label" :value="item.value">
-                  <span class="panel-dropdown-label-txt" >{{item.label}}</span>
+                <el-option v-for="item in statisticsList" :key="item.value" :label="$t(item.label)" :value="item.value">
+                  <span class="panel-dropdown-label-txt" >{{$t(item.label)}}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -236,7 +236,7 @@
               <el-row style="margin-top: 18px">
                 <el-col class="legend-title">
                   {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
-                  <el-popover placement="top" trigger="hover" width="211">
+                  <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
                     <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
                   </el-popover>
@@ -259,7 +259,7 @@
           <div v-if="editChart.type == 'singleStat'||editChart.type == 'table'" class="form__sub-title">
           <span>
             {{$t('dashboard.panel.chartForm.valMapping.name')}}
-            <el-popover  placement="top" trigger="hover" width="275">
+            <el-popover  placement="top" trigger="hover" width="275" popper-class="prevent-clickoutside">
               <div style="white-space: pre-wrap;">{{$t('dashboard.panel.chartForm.valueMappingTip')}}</div>
               <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
             </el-popover>
@@ -403,7 +403,7 @@ export default {
   data () {
     return {
       fromRoute,
-      language: localStorage.getItem('nz-language'),
+      language: 3,
       optionBtn: {
         save: false
       },

@@ -159,10 +159,11 @@ export default {
       this.term.focus()
       const token = sessionStorage.getItem('nz-token')
       let baseUrl = JSON.parse(JSON.stringify(this.$axios.defaults.baseURL))
+      const protocol = window.location.protocol.indexOf('https') > -1 ? 'wss' : 'ws'
       if (baseUrl.startsWith('/')) {
-        baseUrl = 'ws://' + window.location.host + baseUrl
+        baseUrl = `${protocol}://` + window.location.host + baseUrl
       } else {
-        baseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'ws://')
+        baseUrl = baseUrl.replace('http://', 'ws://').replace('https://', 'wss://')
       }
       let url = ''
       if (this.terminal.type === 'asset') {

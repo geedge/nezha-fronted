@@ -516,6 +516,7 @@ export default {
     loadChartData (scrollTop) {
       if (this.dataList.length > 0) {
         this.dataList.forEach((item, index) => {
+          this.setChartSize(item, index)
           if (!item.isLoaded) {
             // 获得当前显示在浏览器的图表，从后台获取数据
             const chartBox = document.getElementById('chart-' + item.id)// this.$refs['editChart'+item.id][0];

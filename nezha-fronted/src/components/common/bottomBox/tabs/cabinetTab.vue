@@ -77,6 +77,7 @@ import subDataListMixin from '@/components/common/mixin/subDataList'
 import nzBottomDataList from '@/components/common/bottomBox/nzBottomDataList'
 import cabinetTable from '@/components/common/table/settings/cabinetTable'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
+import bus from '@/libs/bus'
 export default {
   name: 'cabinetTab',
   mixins: [dataListMixin, subDataListMixin, detailViewRightMixin],
@@ -154,6 +155,34 @@ export default {
             })
           }
         }
+      })
+    },
+    closeRightBox (refresh) {
+      this.rightBox.show = false
+      this.copyFlag = false
+      if (refresh) {
+        this.delFlag = true
+        this.getTableData()
+        bus.$emit('cabinet-tab')
+      }
+    },
+    del (row) {
+      const self = this
+      this.$confirm(this.$t('tip.confirmDelete'), {
+        confirmButtonText: this.$t('tip.yes'),
+        cancelButtonText: this.$t('tip.no'),
+        type: 'warning'
+      }).then(() => {
+        this.$delete(this.url + '?ids=' + row.id).then(response => {
+          if (response.code === 200) {
+            self.delFlag = true
+            this.$message({ duration: 2000, type: 'success', message: this.$t('tip.deleteSuccess') })
+            self.getTableData()
+            bus.$emit('cabinet-tab')
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
       })
     }
   },

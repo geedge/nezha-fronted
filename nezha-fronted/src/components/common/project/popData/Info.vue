@@ -9,11 +9,11 @@
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('overall.name') }}</span>
-          <span class="content-text">{{moduleInfo.name}}</span>
+          <span class="content-text">{{moduleInfo.name ? moduleInfo.name : '--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('overall.project') }}</span>
-          <span class="content-text">{{moduleInfo.project.name}}</span>
+          <span class="content-text">{{moduleInfo.project ? moduleInfo.project.name : '--'}}</span>
         </div>
         <div class="content-box">
           <span class="content-title">{{ $t('project.endpoint.endpoints') }}</span>

@@ -36,9 +36,10 @@
       <alertMessageTabNew  :showTitle="false" v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab="targetTab" @changeTab="changeTab"></alertMessageTabNew>
       <!--chartTemp的Tab-->
       <panel-tab-new @getTableData="getTableData"  :paramsType="'template'" :showTitle="false" v-if="from === fromRoute.chartTemp && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.chartTemp.chartTempTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
-      <!--alertRule Tab-->
-      <alertMessageTabNew :showTitle="false" v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab="targetTab"></alertMessageTabNew>
-      <!--model 下滑-->
+       <!--alertRule Tab-->
+       <alertMessageTabNew v-if="from === fromRoute.alertRule && targetTab === 'alertRuleAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertMessageTabNew>
+       <alertRuleEvalLog v-if="from === fromRoute.alertRule && targetTab === 'evalLog'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.alertRule.alertRule" @changeTab="changeTab" :targetTab.sync="targetTab"></alertRuleEvalLog>
+       <!--model 下滑-->
       <asset-tab :showTitle="false" v-if="(from === fromRoute.model) && targetTab === 'asset'" :tabs="tabs.model" ref="assetTab" :from="from" :obj="obj" @changeTab="changeTab" @exit="closeSubList"></asset-tab>
     </div>
   </div>
@@ -48,6 +49,7 @@
 import cabinetTab from '@/components/common/bottomBox/tabs/cabinetTab'
 import alertMessageTab from '@/components/common/bottomBox/tabs/alertMessageTab'
 import alertMessageTabNew from '@/components/common/bottomBox/tabs/alertMessageTabNew'
+import alertRuleEvalLog from '@/components/common/bottomBox/tabs/alertRuleEvalLog'
 import assetSubTab from '@/components/common/bottomBox/tabs/assetSubTab'
 import endpointQuery from '@/components/common/bottomBox/tabs/endpointQuery'
 import endpointTab from '@/components/common/bottomBox/tabs/endpointTab'
@@ -81,7 +83,8 @@ export default {
     panelTabNew,
     assetTab,
     assetSubTab,
-    'detail-right-top': detailRightTop
+    'detail-right-top': detailRightTop,
+    alertRuleEvalLog
   },
   props: {
     isFullScreen: Boolean, // 是否全屏
@@ -208,7 +211,8 @@ export default {
         },
         alertRule: {
           alertRule: [
-            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') }
+            { prop: 'alertRuleAlertMessage', name: this.$t('overall.alert') },
+            { prop: 'evalLog', name: this.$t('overall.alertRuleEvalLog') }
           ]
         },
         model: [

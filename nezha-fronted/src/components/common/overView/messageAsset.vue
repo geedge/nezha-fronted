@@ -280,9 +280,11 @@ export default {
       }
       if (boxWidth / 2 > e.pageX - 200) {
         this.assetData.position.left = e.pageX + 35
+        this.assetData.position.right = 0
         this.LRTriangle = true
       } else {
-        this.assetData.position.left = e.pageX - 35 - this.$refs.alertLabel.$el.offsetWidth
+        this.assetData.position.right = window.innerWidth - (e.pageX - 35)
+        this.assetData.position.left = 0
         this.LRTriangle = false
       }
     },

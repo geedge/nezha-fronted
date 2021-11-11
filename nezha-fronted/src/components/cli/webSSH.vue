@@ -150,14 +150,28 @@
           </div>
         </div>
       </el-dialog>
-      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px" destroy-on-close>
+      <el-dialog :modal-append-to-body='false'  :show-close="true" :visible.sync="assetShow" @close="closeAssetCustom" class="nz-dialog" width="620px">
         <div slot="title">Connect</div>
         <div >
           <el-form label-width="120px" size="small" :model="assetContent" label-position = "top" :rules="rules" ref="assetConnect" v-loading="assetLoading" >
             <el-form-item :label='$t("overall.asset")' prop="assetId" class="flex">
+              <el-dropdown trigger="click" class="header-el-dropdown">
+              <span class="el-dropdown-link">
+                <span>{{selectValue}}</span>
+                <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+              </span>
+                <el-dropdown-menu style="width: 118px" class="el-dropdown__width right-box-select-top right-public-box-dropdown-top" placement="bottom-end" slot="dropdown">
+                  <el-dropdown-item
+                    @click.native="selectAssetAuth(item.label, item.value)"
+                    v-for="item in searchMetrics"
+                    :key="item.value"><i class="nz-icon" :class="item.icon" style="margin-right: 5px"/>{{item.label}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
               <v-selectpage
+                ref="selectPage"
                 style="flex: 1"
                 data="asset/asset"
+                :params="selectPageParams"
                 :tb-columns="columns"
                 key-field="id"
                 show-field="manageIp"
@@ -178,12 +192,12 @@
         <div >
           <el-form label-width="120px" size="small" :model="customConnect" label-position = "top" :rules=" customConnect.authProtocol ===2 ? rulesCustom2: rulesCustom" ref="customConnect" v-loading="assetLoading" class="custom">
             <el-form-item :label='$t("webshell.protocol")' prop="authProtocol">
-              <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
+              <el-select  @change="protocolChange" value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authProtocol" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authProtocol" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label='$t("webshell.authType")' prop="authType"  @change="authTypeChange" >
-              <el-select value-key="id" popper-class="config-dropdown w260" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
+              <el-select value-key="id" popper-class="config-dropdown w260 right-box-select-top right-public-box-dropdown-top" v-model="customConnect.authType" :disabled="customConnect.authProtocol === 2" placeholder="" size="small" id="webshell-box-input-protocol">
                 <el-option v-for="item in authType" :id="'dc-principal-op-'+item.value" :key="item.value" :label="item.name" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -247,11 +261,26 @@ export default {
   components: {
     'my-console': Console
   },
-
+  computed: {
+    language () { return this.$store.getters.getLanguage }
+  },
   data () {
     const termFontSize = parseInt(localStorage.getItem('termFontSize'))
     return {
-      language: localStorage.getItem('nz-language'),
+      selectValue: 'SSH',
+      searchMetrics: [
+        {
+          value: 'SSH',
+          label: 'SSH'
+        },
+        {
+          value: 'Telnet',
+          label: 'Telnet'
+        }
+      ],
+      selectPageParams: {
+        authProtocol: 1
+      },
       authProtocol: [
         {
           value: 1,
@@ -418,6 +447,23 @@ export default {
     }
   },
   methods: {
+    selectAssetAuth (val, label) {
+      this.$refs.selectPage.remove()
+      if (val) {
+        this.selectValue = val
+        if (val === 'SSH') {
+          this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
+        } else {
+          this.selectPageParams = { authProtocol: 2, pageNumber: 1 }
+        }
+      } else {
+        label = 'SSH'
+        this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
+      }
+      setTimeout(() => {
+        this.$refs.selectPage.pageChange()
+      }, 100)
+    },
     getUuid () {
       let uuid = uuidv1()
       const now = new Date().getTime()
@@ -839,11 +885,17 @@ export default {
     },
     assetShowChange () {
       this.assetShow = true
+      this.selectValue = 'SSH'
+      this.selectPageParams = { authProtocol: 1, pageNumber: 1 }
+      if (this.$refs.selectPage) {
+        this.$refs.selectPage.remove()
+        this.$refs.selectPage.pageChange()
+      }
       // this.getAssetData()
     },
     getAssetData () {
       this.assetLoading = true
-      this.$get('asset/asset', { pageSize: -1 }).then(res => {
+      this.$get('asset/asset', { pageSize: -1, typeIds: '1,2' }).then(res => {
         this.assetLoading = false
         this.assetData = res.data.list
       })

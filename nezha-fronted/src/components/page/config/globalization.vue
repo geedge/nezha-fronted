@@ -78,19 +78,19 @@ export default {
             disabled: false
           },
           {
-            name: this.$t('i18n.code'),
+            name: this.$t('config.menus.code'),
             type: 'input',
             label: 'code',
             disabled: false
           },
           {
-            name: this.$t('i18n.lang'),
+            name: this.$t('config.menus.lang'),
             type: 'input',
             label: 'lang',
             disabled: false
           },
           {
-            name: this.$t('i18n.value'),
+            name: this.$t('config.menus.value'),
             type: 'input',
             label: 'value',
             disabled: false

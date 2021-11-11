@@ -331,3 +331,26 @@
 .popper__arrow {
   opacity: 0;
 }
+.export-box{
+  display: flex;
+  margin-top: 30px;
+  align-items: center;
+  .export-title {
+    display: inline-block;
+    width: 100px;
+    text-align: left;
+    font-size: 14px;
+    color: #666666;
+    letter-spacing: 0;
+    font-weight: 600;
+  }
+  /deep/ .el-radio-group{
+    flex: 1;
+    .el-radio-button--small {
+      width: 142px;
+      .el-radio-button__inner{
+        width: 100%;
+      }
+    }
+  }
+}

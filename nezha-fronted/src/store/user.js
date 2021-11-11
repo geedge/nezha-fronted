@@ -9,9 +9,13 @@ const user = {
   state: {
     menuList: [],
     buttonList: [],
-    roleList: []
+    roleList: [],
+    language: localStorage.getItem('nz-language')
   },
   mutations: {
+    setLanguage (state, language) {
+      state.language = language
+    },
     setMenuList (state, menuList) {
       state.menuList = [...menuList]
     },
@@ -30,6 +34,9 @@ const user = {
   getters: {
     menuList (state) {
       return state.menuList
+    },
+    getLanguage (state) {
+      return state.language
     },
     buttonList (state) {
       return state.buttonList
@@ -58,12 +65,13 @@ const user = {
       localStorage.setItem('nz-sys-asset-ping-switch', res.data.assetPingSwitch)
       localStorage.setItem('nz-unnsaved-change', res.data.unsavedChange)
       localStorage.setItem('nz-mfa-enable', Number(res.data.mfaAuthEnable) ? 1 : 0)
+      store.commit('setLanguage', res.data.user.lang)
+      console.log(res.data.user.lang)
       post('/sys/user/permissions', { token: res.data.token }).then(res => {
         const menuList = sortByOrderNum(res.data.menus)
         store.commit('setMenuList', menuList)
         store.commit('setButtonList', res.data.buttons)
         store.commit('setRoleList', res.data.roles)
-
         bus.$emit('login')
         router.push({
           path: 'overview',

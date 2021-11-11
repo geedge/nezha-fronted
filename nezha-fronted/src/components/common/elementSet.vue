@@ -1,6 +1,6 @@
 <template>
   <div class="pop-custom" :class="{'pop-custom-top' : tableClass || operationTrue}" v-clickoutside="esc">
-    <div class="pop-title">{{$t('overall.select')}}</div>
+    <div class="pop-title">{{$t('overall.selectColumns')}}</div>
     <div class="pop-box custom-labels">
       <div style="height: 100%; overflow: auto;">
         <!--NotSet 为true不可设置-->

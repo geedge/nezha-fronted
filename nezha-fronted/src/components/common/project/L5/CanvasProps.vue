@@ -667,7 +667,7 @@
                     controls-position="right"
                     size="small" name="x"
                     class="input"
-                    v-model.number="selection.pen.font.fontSize"
+                    v-model.number="selection.pen.fontSize"
                     :readonly="readonly"
                     required
                     @change="onChange()"></el-input-number>
@@ -687,7 +687,7 @@
                   <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
                              class="right-box-row-with-btn no-style-class" popper-class="chart-box-dropdown-small"
                              size="mini"
-                             v-model="selection.pen.font.textAlign" value-key="chartType" @change="onChange">
+                             v-model="selection.pen.textAlign" value-key="chartType" @change="onChange">
                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textAlignOptions">
                       <span class="panel-dropdown-label-txt">{{ item.name }}</span>
                     </el-option>
@@ -701,7 +701,7 @@
                   <el-select :placeholder="$t('el.select.placeholder')" :popper-append-to-body="true"
                              class="right-box-row-with-btn no-style-class" popper-class="chart-box-dropdown-small"
                              size="mini"
-                             v-model="selection.pen.font.textBaseline" value-key="chartType" @change="onChange">
+                             v-model="selection.pen.textBaseline" value-key="chartType" @change="onChange">
                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in textBaselineOptions">
                       <span class="panel-dropdown-label-txt">{{ item.name }}</span>
                     </el-option>
@@ -1659,7 +1659,7 @@ export default {
         }
       }
       if (name === 'fontColor') {
-        this.selection.pen.font.color = this.colorRGBtoHex(val)
+        // this.selection.pen.font.color = this.colorRGBtoHex(val)
       }
       this.selection.pen.data[name] = this.colorRGBtoHex(val)
       this.onChange()

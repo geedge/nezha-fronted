@@ -3,7 +3,9 @@
     :class="{'is-focus': item.isFocus, 'is-hover': isHover}"
     class="nz-label-search"
   >
-    <div class="nz-label-search__label"><span>{{item.name}}:</span></div>
+    <div class="nz-label-search__label">
+      <span>{{item.name}}:</span>
+    </div>
     <el-cascader
       ref="cascader"
       v-bind="$attrs"

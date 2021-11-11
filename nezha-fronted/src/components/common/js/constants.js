@@ -17,7 +17,7 @@ export const agent = {
           label: 'Per-datacenter',
           value: 2,
           text: 'Per-datacenter'
-        },
+        }
         // {
         //   label: 'Loki',
         //   value: 11,

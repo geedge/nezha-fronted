@@ -176,8 +176,8 @@
             <!--所有节点上的小图标-->
             <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
                  :key="index"
-                 v-show="(item.rect.y - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) > - 10)"
-                 :style="{position: 'absolute',top:item.rect.y - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
+                 v-show="(item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
+                 :style="{position: 'absolute',top:item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
                  class="network-pop"
             >
 
@@ -209,8 +209,8 @@
                  :key="index"
                  :style="{
              position: 'absolute',
-             top:item.rect.y- 10 +'px',
-             left:item.rect.x - 10+'px',
+             top:item.rect.y + offsetY - 10 +'px',
+             left:item.rect.x + offsetX - 10+'px',
              transform:'scale('+(fromOverView?penToolTipScale:1)+')',
            }"
             >
@@ -499,7 +499,10 @@ export default {
       unitArr: [],
       topoScreenState: '', // 记录编辑前的 $store.ShowTopoScreen 结束编辑后返回
       isPreview: false,
-      previewData: ''
+      previewData: '',
+      offsetX: 0,
+      offsetY: 0,
+      prevData: null
     }
   },
   components: {
@@ -610,11 +613,22 @@ export default {
       getTopology(this.topologyIndex).resize()
       getTopology(this.topologyIndex).centerView()
       // getTopology(this.topologyIndex).fitView(30)
+    },
+    shrink (n) {
+      setTimeout(() => {
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndex).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView()
+      }, 500)
     }
   },
   computed: {
     topoScreen () {
       return this.$store.getters.getShowTopoScreen
+    },
+    shrink () {
+      return this.$store.getters.getIsShrink
     }
   },
   created () {
@@ -638,87 +652,89 @@ export default {
       this.topologyLoading = true
       this.getTopologyData().then((data) => {
         this.openTopologyData(data).then(() => {
-          // 获取对应的值 给节点 连线添加对应动画
-          this.lineName = data.lineName ? data.lineName : this.lineName
-          this.chartGetData = []
-          const axiosArr = []
-          const promiseArr = []
-          const self = this
-          const pensPromise = (pen, arr, index) => {
-            return new Promise(function (resolve, reject) {
-              Promise.all(arr).then((res) => {
-                self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
-                self.setAnimation(pen, self.chartGetData[index].res)
-                resolve()
-              })
-            })
-          }
-          const endTime = this.filterTime[1]
-          const startTime = this.filterTime[0]
-          const step = bus.getStep(startTime, endTime)
-          data.pens && data.pens.forEach((item, index) => {
-            this.chartGetData.push({ id: item.id, res: [] })
-            let arr = []
-            if (item.data.valueMappingShow) {
-              arr = item.data.expressArr.map((ele) => {
-                let query = ele
-                if (!query) {
-                  return new Promise(resolve => {
-                    resolve({ data: '', status: 'no query' })
-                  })
-                }
-                query += '&nullType=' + 'connected'
-                return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
-              })
-            }
-            axiosArr.push({ item, arr })
-            promiseArr.push(pensPromise(item, arr, index))
-          })
-          Promise.all(promiseArr).then((res) => {
-            getTopology(this.topologyIndex).open(data)
-            getTopology(this.topologyIndex).lock(1)
-            this.objChange = false
-            let flag = false
-            const position = {
-              x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
-              y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
-            }
-            this.oldScale = getTopology(this.topologyIndex).data.scale
-            getTopology(this.topologyIndex).data.pens.forEach(item => {
-              if (flag) {
-                return
-              }
-              if (item.rect.ex > position.x || item.rect.ey > position.y) {
-                if (this.fromOverView) {
-                  getTopology(this.topologyIndex).fitView(20)
-                }
-                flag = true
-              }
-            })
-            getTopology(this.topologyIndex).resize()
-            getTopology(this.topologyIndex).centerView()
-            this.penToolTipScale = getTopology(this.topologyIndex).data.scale
-            setTimeout(() => {
-              getTopology(this.topologyIndex).data.pens.forEach(item => {
-                if (item.animatePlay) {
-                  item.stopAnimate()
-                  setTimeout(() => {
-                    item.startAnimate()
-                  })
-                }
-              }, 100)
-            })
-            // if(this.fromPrev){
-            //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
-            // }
-            // getTopology(this.topologyIndex).fitView();
-            this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
-            this.getNodesArr()
-          })
+          this.initPens(data)
         })
       })
     },
-
+    initPens (data) {
+      // 获取对应的值 给节点 连线添加对应动画
+      this.lineName = data.lineName ? data.lineName : this.lineName
+      this.chartGetData = []
+      const axiosArr = []
+      const promiseArr = []
+      const self = this
+      const pensPromise = (pen, arr, index) => {
+        return new Promise(function (resolve, reject) {
+          Promise.all(arr).then((res) => {
+            self.chartGetData[index].res = self.computeData(res, pen.data.aggregation, pen)
+            self.setAnimation(pen, self.chartGetData[index].res)
+            resolve()
+          })
+        })
+      }
+      const endTime = this.filterTime[1]
+      const startTime = this.filterTime[0]
+      const step = bus.getStep(startTime, endTime)
+      data.pens && data.pens.forEach((item, index) => {
+        this.chartGetData.push({ id: item.id, res: [] })
+        let arr = []
+        if (item.data.valueMappingShow) {
+          arr = item.data.expressArr.map((ele) => {
+            let query = ele
+            if (!query) {
+              return new Promise(resolve => {
+                resolve({ data: '', status: 'no query' })
+              })
+            }
+            query += '&nullType=' + 'connected'
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+          })
+        }
+        axiosArr.push({ item, arr })
+        promiseArr.push(pensPromise(item, arr, index))
+      })
+      Promise.all(promiseArr).then((res) => {
+        getTopology(this.topologyIndex).open(data)
+        getTopology(this.topologyIndex).lock(1)
+        this.objChange = false
+        let flag = false
+        const position = {
+          x: this.$refs['topology-canvas' + this.topologyIndexF].offsetWidth,
+          y: this.$refs['topology-canvas' + this.topologyIndexF].offsetHeight
+        }
+        this.oldScale = getTopology(this.topologyIndex).data.scale
+        getTopology(this.topologyIndex).data.pens.forEach(item => {
+          if (flag) {
+            return
+          }
+          if (item.rect.ex > position.x || item.rect.ey > position.y) {
+            if (this.fromOverView) {
+              getTopology(this.topologyIndex).fitView(20)
+            }
+            flag = true
+          }
+        })
+        getTopology(this.topologyIndex).resize()
+        getTopology(this.topologyIndex).centerView()
+        this.penToolTipScale = getTopology(this.topologyIndex).data.scale
+        setTimeout(() => {
+          getTopology(this.topologyIndex).data.pens.forEach(item => {
+            if (item.animatePlay) {
+              item.stopAnimate()
+              setTimeout(() => {
+                item.startAnimate()
+              })
+            }
+          }, 100)
+        })
+        // if(this.fromPrev){
+        //   getTopology(this.topologyIndex).scaleTo(data.scale/2)
+        // }
+        // getTopology(this.topologyIndex).fitView();
+        this.oldTopologyData = JSON.stringify(getTopology(this.topologyIndex).data)
+        this.getNodesArr()
+      })
+    },
     dateChange () {
       // const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
       // this.setSearchTime(nowTimeType.type, nowTimeType.value)
@@ -801,12 +817,22 @@ export default {
             this.topologyInfo.name = this.obj.name
             resolve(data)
           } else {
-            this.topologyInfo = {
-              fontSize: data.data.fontSize,
-              align: data.data.align,
-              fontColor: data.data.fontColor,
-              opacity: data.data.opacity,
-              name: data.name
+            if (data.data) {
+              this.topologyInfo = {
+                fontSize: data.data.fontSize,
+                align: data.data.align,
+                fontColor: data.data.fontColor,
+                opacity: data.data.opacity,
+                name: data.name
+              }
+            } else {
+              this.topologyInfo = {
+                fontSize: 14,
+                align: 'left',
+                fontColor: '#000000',
+                opacity: 1,
+                name: ''
+              }
             }
             if (this.fromOverView) { // 优化从首页来的加载速度
               const arr = data.pens.filter(item => !item.type)
@@ -1027,7 +1053,7 @@ export default {
     },
     // Severity Label
     returnSeverityLabel (key) {
-      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+      return this.$t(this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label)
     },
     // 获取module
     getModule () {
@@ -1044,6 +1070,8 @@ export default {
     getNodesArr () {
       const arr = []
       if (!getTopology(this.topologyIndex)) return
+      this.offsetX = getTopology(this.topologyIndex).data.x
+      this.offsetY = getTopology(this.topologyIndex).data.y
       this.nodesArr = getTopology(this.topologyIndex).data.pens.filter(item => {
         if (!item.data) {
           item.data = {
@@ -1212,6 +1240,7 @@ export default {
           // 连线是否自动计算锚点
           // data.manualCps=true;
           data.animateColor = '#FA901C'
+          data.toArrowColor = '#000000'
           data.data = {
             animatePlay: false,
             strokeStyle: data.strokeStyle,
@@ -1507,7 +1536,7 @@ export default {
     onUpdateProps (node) {
       // 如果是node属性改变，需要传入node，重新计算node相关属性值
       // 如果是line属性改变，无需传参
-      getTopology(this.topologyIndex).updateProps(node)
+      getTopology(this.topologyIndex).updateProps(true, [node])
     },
 
     handleAvatarSuccess () {
@@ -1875,6 +1904,8 @@ export default {
           index: 0,
           list: [JSON.parse(JSON.stringify(getTopology(this.topologyIndex).data))]
         }
+        const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+        getTopology(this.topologyIndex).canvasPos = domRect
       })
     },
 
@@ -1906,6 +1937,8 @@ export default {
     saveTopology () {
       this.previewData = ''
       this.isPreview = false
+      this.editTopologyFlag = true
+      this.showNoData = false
       const topologyData = getTopology(this.topologyIndex).pureData()
       let flag = true
       const arr = []
@@ -2050,7 +2083,8 @@ export default {
         getTopology(this.topologyIndex).lock(1)
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
-        this.reload()
+        this.initPens(topologyData)
+        // this.reload()
       })
     },
     previewExit () { // 继续编辑
@@ -2095,7 +2129,7 @@ export default {
         })
         getTopology(this.topologyIndex).centerView()
         this.getNodesArr()
-      }, 100)
+      }, 500)
     },
     contextmenuNone () {
       this.contextmenu = {

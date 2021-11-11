@@ -28,13 +28,13 @@
           :params="searchLabel"
           :params2="searchCheckBox"
           :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_view'
+                  import: 'dc_add',
+                  export: 'dc_view'
                 }"
-          class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="asset"
-          export-url="/asset/asset/export"
-          import-url="/asset/asset/import"
+          class="top-tool-export margin-r-10"
+          export-file-name="datacenter"
+          export-url="/dc/export"
+          import-url="/dc/import"
           @afterImport="getTableData"
         >
         </top-tool-more-options>
@@ -155,11 +155,11 @@ import nzDetailView from '@/components/common/detailView/nzDetailView'
 import detailViewMixin from '@/components/common/mixin/detailViewMixin'
 import dcDetail from '@/components/common/detailView/list/dc/dcDetail'
 import detailViewTopSearch from '@/components/common/detailView/detailViewTopSearch'
+import bus from '@/libs/bus'
 
 export default {
   name: 'dc',
   components: {
-    trafficSettingBox,
     dcBox,
     deleteButton,
     nzDataList,
@@ -167,10 +167,9 @@ export default {
     cabinetBox,
     topToolMoreOptions,
     nzDetailView,
-    dcDetail,
-    detailViewTopSearch
+    dcDetail
   },
-  mixins: [dataListMixin,detailViewMixin],
+  mixins: [dataListMixin, detailViewMixin],
   data () {
     return {
       url: 'dc',
@@ -182,8 +181,9 @@ export default {
         tel: '',
         principal: '',
         state: 'ON',
-        longitude: undefined,
-        latitude: undefined
+        longitude: '',
+        latitude: '',
+        lnglat: ''
       },
       cabinet: {
         id: '',
@@ -255,6 +255,9 @@ export default {
     }
   },
   mounted () {
+    bus.$on('cabinet-tab', () => {
+      this.getTableData()
+    })
     this.getUserData()
   },
   watch: {

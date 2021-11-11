@@ -38,7 +38,7 @@
           </el-form-item>
           <!--Enpoint template-->
           <div class="right-box-sub-title">{{ $t("overall.endpointTemplate") }}
-            <el-tooltip effect="light" placement="top">
+            <el-tooltip effect="light" placement="top" popper-class="prevent-clickoutside">
               <div slot="content">
                 {{$t('project.module.tip.defaultEndpointSet')}}
                 <div></div>
@@ -185,7 +185,7 @@
                     <vue-tags-input
                       v-model="item.tags"
                       :maxlength="32"
-                      :placeholder="'add parameter'"
+                      :placeholder="$t('overall.addParameter')"
                       :tags="item.value"
                       @tags-changed="(newTags)=>{tagsChange(newTags, index)}"
                     />
@@ -222,7 +222,7 @@
                 <div id="module-box-relabel" ref="labelBoxScrollbar" style="height: 100%; overflow: hidden;">
                   <div v-for="(item, index) in  this.editModule.configs[0].config.relabel_config" :key="index" class="">
                     <div class="pipeline-box">
-                      <span class="pipeline-title">{{'item' + index}}</span>
+                      <span class="pipeline-title">{{$t('project.endpoint.item') + index}}</span>
                       <span class="pipeline-option">
                       <i class="nz-icon nz-icon-shanchu1" @click="removeRelabel(index)"></i>
                     </span>
@@ -238,14 +238,14 @@
                              class="half-form-item" :label="'Source labels'"
                              :rules="[
                                        { required: item.action === 'replace' || item.action === 'keep' || item.action === 'drop', message: $t('validate.required'), trigger: 'change' },
-                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : '', trigger: 'change' }
+                                       { validator: item.action === 'replace' || item.action === 'keep' || item.action === 'drop'? arrLength : requirdRelabel, trigger: 'change' }
                                      ]">
                        <vue-tags-input
                          v-model="item.tags"
                          :maxlength="32"
                          ref="relabelTag"
                          tabindex="9999"
-                         :placeholder="'add parameter'"
+                         :placeholder="$t('overall.addParameter')"
                          :tags="item.source_labels"
                          @before-adding-tag="beforeAddingTag"
                          @blur="relabelTabBlur"
@@ -582,6 +582,9 @@ export default {
   data () {
     return {
       walkData: [],
+      requirdRelabel (rule, value, callback) {
+        callback()
+      },
       chartTempList: [],
       activeName: 'Basic',
       activeNameLogs: ['Basic'],
@@ -615,7 +618,6 @@ export default {
           }
         }
       ],
-      language: localStorage.getItem('nz-language'),
       showAllBasicOption: false,
       rules: {
         name: [
@@ -1304,7 +1306,8 @@ export default {
       return (value) => {
         return this.getMibName(this.walkData, value)
       }
-    }
+    },
+    language () { return this.$store.getters.getLanguage }
   },
   watch: {
     module: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="right-box right-box-dc" v-clickoutside="{obj:editDc,func:clickOutside}">
+  <div v-clickoutside="{obj:editDc, func:clickOutside}" class="right-box right-box-dc">
       <!-- begin--标题-->
       <div class="right-box__header">
         <div class="header__title">{{editDc.id ? ($t("config.dc.editDc")) : $t("config.dc.createDc")}}</div>
@@ -27,15 +27,17 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item :label='$t("config.dc.area")' prop="area">-->
-              <!--<select-area ref="selectArea" :areaData="areaData" :placement="'bottom-start'" @selectArea="selectArea" :currentArea="editDc.area.id">-->
-                <!--<template v-slot:trigger>-->
-                  <!--<el-input placeholder="" v-model="editDc.area.name" size="small" readonly="readonly" @click.native="toSelectArea"></el-input>-->
-                <!--</template>-->
-              <!--</select-area>-->
-            <!--</el-form-item>-->
-            <el-form-item :label="$t('config.dc.lnglat')" prop="state">
-              <latlng-picker ref="latlngPicker" :append-to-body="false" :show-zoom="false" :init-data= ' editDc.latitude? {latitude:editDc.latitude,longitude:editDc.longitude} : "" '></latlng-picker>
+            <el-form-item :label="$t('config.dc.lnglat')" prop="lnglat">
+              <div style="display: flex">
+                <el-input v-model="editDc.lnglat" maxlength="256" placeholder="" size="small" style="width: calc(100% - 50px);margin-right: 20px;"></el-input>
+                <latlng-picker
+                  ref="latlngPicker"
+                  :append-to-body="false"
+                  :init-data='editDc.lnglat'
+                  :show-zoom="false"
+                  @lnglatChange="lnglatChange"
+                ></latlng-picker>
+              </div>
             </el-form-item>
             <el-form-item :label='$t("config.dc.state")' prop="state">
               <el-switch
@@ -66,7 +68,7 @@
 <script>
 import latlngPicker from '../latlngPicker'
 import editRigthBox from '../mixin/editRigthBox'
-import { noSpecialChar } from '@/components/common/js/validate'
+import { noSpecialChar, latlng } from '@/components/common/js/validate'
 
 const regNum = /^[0-9]+.?[0-9]*/
 
@@ -86,11 +88,12 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('validate.required'), trigger: 'blur' },
-          { validator: noSpecialChar, trigger: 'change' }
+          { validator: noSpecialChar, trigger: 'blur' }
+        ],
+        lnglat: [
+          { required: true, message: this.$t('validate.required'), trigger: 'blur' },
+          { validator: latlng, trigger: 'blur' }
         ]
-        // state: [
-        //   { required: true, message: this.$t('validate.required'), trigger: 'blur' }
-        // ]
       },
       areaData: [],
       coordinateFlag: false
@@ -105,16 +108,12 @@ export default {
     clickOutside () {
       this.esc(false)
     },
-    // /* 弹出选择area弹框 */
-    // toSelectArea () {
-    //   this.$refs.selectArea.openBox(this.editDc.area)
-    // },
 
     /* 保存 */
     save () {
       if (this.prevent_opt.save) {
         return
-      };
+      }
       this.prevent_opt.save = true
       this.$refs.dcForm.validate((valid) => {
         if (valid) {
@@ -162,9 +161,12 @@ export default {
         }
       })
     },
+    lnglatChange (lnglat) {
+      this.editDc.lnglat = lnglat
+    },
     /* 删除 */
     del () {
-      if (this.prevent_opt.save) { return } ;
+      if (this.prevent_opt.save) { return }
       this.prevent_opt.save = true
       this.$confirm(this.$t('tip.confirmDelete'), {
         confirmButtonText: this.$t('tip.yes'),
@@ -184,25 +186,9 @@ export default {
         this.prevent_opt.save = false
       })
     },
-    // getAreaData() {
-    //   this.$get('area', {pid: 0}).then(response => {
-    //     if (response.code === 200) {
-    //       this.areaData = response.data.list;
-    //     }
-    //   });
-    // },
-
     selectArea (area) {
       this.editDc.area.id = area.id
       this.editDc.area.name = area.name
-    },
-    coordinateChange (val, str) { // 经纬度改变
-      if (regNum.test(this.editDc.longitude) || regNum.test(this.editDc.latitude)) {
-        this.coordinateFlag = true
-      } else {
-        this.coordinateFlag = false
-        this.$refs.dcForm.clearValidate(['longitude', 'latitude'])
-      }
     }
   },
   watch: {
@@ -211,10 +197,22 @@ export default {
       deep: true,
       handler (n, o) {
         this.isEdit = true
-        this.editDc = JSON.parse(JSON.stringify(n))
-        this.$nextTick(() => {
-          this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
-        })
+        if (!n.id) {
+          this.$get('/sysConfig?paramKey=map_center_config').then(response => {
+            if (response.code === 200) {
+              const mapParam = JSON.parse(response.data.paramKey.map_center_config)
+              this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${mapParam.longitude},${mapParam.latitude}` }
+              this.$nextTick(() => {
+                this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
+              })
+            }
+          })
+        } else {
+          this.editDc = { ...JSON.parse(JSON.stringify(n)), lnglat: `${n.longitude},${n.latitude}` }
+          this.$nextTick(() => {
+            this.$refs.latlngPicker.setLnglat(this.editDc.latitude, this.editDc.longitude)
+          })
+        }
       }
     }
   }

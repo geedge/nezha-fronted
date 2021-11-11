@@ -27,14 +27,11 @@
           id="model"
           :params="searchLabel"
           :params2="searchCheckBox"
-          :permissions="{
-                  import: 'asset_add',
-                  export: 'asset_view'
-                }"
+          :permissions="{import: 'monitor_endpoint_add', export: 'monitor_module_view'}"
           class="top-tool-export margin-l-10 margin-r-10"
-          export-file-name="asset"
-          export-url="/asset/asset/export"
-          import-url="/asset/asset/import"
+          export-file-name="endpoint"
+          export-url="monitor/endpoint/export"
+          import-url="monitor/endpoint/import"
           @afterImport="getTableData"
         >
         </top-tool-more-options>
@@ -369,7 +366,7 @@ export default {
       titleSearch: {},
       titleSearchList: {
         project: {
-          label: 'Project',
+          label: this.$t('overall.project'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -379,7 +376,7 @@ export default {
           index: -1
         },
         module: {
-          label: 'Module',
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -389,7 +386,7 @@ export default {
           index: -1
         },
         state: {
-          label: 'State',
+          label: this.$t('overall.state'),
           key: 'state',
           type: 'dropdownCheckBox',
           children: [],
@@ -411,7 +408,7 @@ export default {
       },
       detailSearchList: {
         project: {
-          label: 'Project',
+          label: this.$t('overall.project'),
           key: 'projectIds',
           type: 'checkBox',
           children: [],
@@ -421,7 +418,7 @@ export default {
           index: -1
         },
         module: {
-          label: 'Module',
+          label: this.$t('overall.module'),
           key: 'moduleIds',
           type: 'checkBox',
           children: [],
@@ -431,7 +428,7 @@ export default {
           index: -1
         },
         state: {
-          label: 'State',
+          label: this.$t('overall.state'),
           key: 'stateDetail',
           type: 'dropdownCheckBox',
           children: [],

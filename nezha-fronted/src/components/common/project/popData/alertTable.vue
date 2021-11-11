@@ -14,7 +14,7 @@
       >
         <template v-slot:top-tool-right>
           <el-select v-model="state" size="small" value-key="value" @change="getTableData">
-            <el-option v-for="item in stateOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
           </el-select>
         </template>
         <template v-slot:default="slotProps">
@@ -288,7 +288,7 @@ export default {
     },
     // Severity Label
     returnSeverityLabel (key) {
-      return this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label
+      return this.$t(this.$CONSTANTS.alertMessage.severityData.find(s => { return s.value == key }).label)
     },
     tableDataSort (item) {
       let orderBy = ''

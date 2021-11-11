@@ -1,14 +1,14 @@
 <template>
   <div class="latlng">
     <div class="input-box">
-      <div class="input-box-item">
-        <el-input  v-model="lnglat" @change="setLatlng" @focus="oldlnglat = lnglat" @blur="changeLnglat">
+      <div class="input-box-item" style="display: none;">
+        <el-input v-model="lnglat" @blur="setLatlng" @change="setLatlng">
           <template slot="prepend" v-if="showZoom">{{$t('config.system.basic.lnglat')}}</template>
         </el-input>
       </div>
       <div class="input-box-item" v-if="showZoom">
-        <el-input controls-position="right" :min="this.mapParam.minZoom" :max="this.mapParam.maxZoom" :step="1"  v-model="mapParam.zoom">
-          <template slot="prepend">{{$t('config.system.basic.zoom')}}</template>
+        <el-input v-model="zoom" :max="mapParam.maxZoom" :min="mapParam.minZoom" :step="1"  controls-position="right">
+          <template v-if="showZoom" slot="prepend">{{$t('config.system.basic.zoom')}}</template>
         </el-input>
       </div>
       <div class="input-box-item" style="margin-right: unset !important;width: 30px !important;flex:unset;" @click="mapConfigVisible = true"><i class="nz-icon nz-icon-weizhi" style="color:rgb(238, 157, 63)"></i></div>
@@ -39,28 +39,25 @@ export default {
       mapParam: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
       map: null,
       marker: null,
-      mapConfigVisible: false
+      mapConfigVisible: false,
+      changeZoom: false,
+      zoom: null
     }
   },
   watch: {
     initData: {
       immediate: true,
-      handler () {
-        if (this.initData) {
-          this.mapParam = JSON.parse(JSON.stringify(this.initData))
+      handler (n) {
+        this.queryDefaultMapConfig(n).then(() => {
           this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
-        } else {
-          this.queryDefaultMapConfig().then(() => {
-            this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
-          })
-        }
+        })
       }
     }
   },
   mounted () {
   },
   methods: {
-    initMap: function () {
+    initMap () {
       if (this.map) {
         this.map.remove()
         this.map = null
@@ -107,24 +104,26 @@ export default {
       this.map = map
       this.marker = marker
     },
-    mapClose: function () {
+    mapClose () {
+      this.changZoom = true
       this.mapConfigVisible = false
       const latlng = this.marker.getLatLng()
-      this.mapParam.longitude = latlng.lng.toFixed(3)
-      this.mapParam.latitude = latlng.lat.toFixed(3)
+      this.mapParam.longitude = latlng.lng.toFixed(7)
+      this.mapParam.latitude = latlng.lat.toFixed(7)
       this.lnglat = this.mapParam.longitude + ',' + this.mapParam.latitude
-
-      this.mapParam.zoom = this.map.getZoom()
+      this.zoom = this.map.getZoom()
+      this.setLatlng()
     },
-    setLatlng: function () {
+    setLatlng () {
       const lnglat = this.lnglat.split(',')
       this.mapParam.longitude = lnglat[0]
       this.mapParam.latitude = lnglat[1]
+      this.$emit('lnglatChange', this.lnglat, this.zoom)
     },
-    getAttribute: function () {
-      return JSON.parse(JSON.stringify(this.mapParam))
+    getAttribute () {
+      return JSON.parse(JSON.stringify({ ...this.mapParam, zoom: this.zoom }))
     },
-    setLnglat: function (lat, lng) {
+    setLnglat (lat, lng) {
       if (lat && lng) {
         this.mapParam.latitude = lat
         this.mapParam.longitude = lng
@@ -134,23 +133,31 @@ export default {
     changeLnglat () {
       const lnglat = this.lnglat.split(',')
       if (lnglat.length !== 2) {
-        this.lnglat = this.oldlnglat
         this.$message.error(this.$t('tip.lnglatError'))
         return false
       }
-      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,5}|1[0-7]?\d{1}\.\d{1,5}|180\.0{1,5})$/
-      const latReg = /^[\-\+]?([0-8]?\d{1}\.\d{1,5}|90\.0{1,5})$/
+      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{0,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{0,7})$/
+      const latReg = /^[\-\+]?([0-8]?\d{1}\.\d{0,7}|90\.0{0,7})$/
       if (!lngReg.test(lnglat[0]) || !latReg.test(lnglat[1])) {
-        this.lnglat = this.oldlnglat
+        // this.lnglat = this.oldlnglat
         this.$message.error(this.$t('tip.lnglatError'))
         return false
       }
     },
-    queryDefaultMapConfig: function () {
+    queryDefaultMapConfig (data) {
       return new Promise(resolve => {
         this.$get('/sysConfig?paramKey=map_center_config').then(response => {
           if (response.code == 200) {
-            this.mapParam = JSON.parse(response.data.paramKey.map_center_config)
+            const mapParam = JSON.parse(response.data.paramKey.map_center_config)
+            if (data) {
+              const coord = data.split(',')
+              this.mapParam = { ...mapParam, longitude: coord[0], latitude: coord[1] }
+            } else {
+              this.mapParam = { ...mapParam }
+            }
+            if (!this.zoom) {
+              this.zoom = mapParam.zoom
+            }
             resolve()
           }
         })

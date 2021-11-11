@@ -99,7 +99,7 @@ export default {
       this.$nextTick(() => {
         const wraps = document.querySelectorAll('.el-table__body-wrapper')
         wraps.forEach(wrap => {
-          if (wrap._ps_) {
+          if (wrap) {
             wrap.scrollTop = 0
           }
         })
