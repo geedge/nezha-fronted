@@ -124,6 +124,18 @@
     min-width: 0;
   }
 }
+.header-el-dropdown {
+  width: 64px;
+  margin-right: 0;
+  background: $--background-color-base;
+  padding: 0 10px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid $--border-color-base;
+  border-right: none ;
+}
+/deep/ div.v-selectpage div.sp-input-container div.sp-base {
+  border-radius: 0 4px 4px 0;
+}
 .fontSet{
   margin-left: 35px;
   width: 60px;
