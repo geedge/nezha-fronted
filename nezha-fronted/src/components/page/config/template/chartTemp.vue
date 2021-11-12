@@ -117,6 +117,7 @@ export default {
     return {
       url: 'visual/panel/chart',
       tableId: 'chartTemp',
+      orderBy: 'id',
       /* 搜素相关 */
       searchMsg: { // 给搜索框子组件传递的信息
         searchLabelList: [

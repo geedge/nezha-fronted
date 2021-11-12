@@ -1640,7 +1640,7 @@ export default {
     .localStorage_list_box{
         position: absolute;
         left: 10px;
-        top: 36px;
+        top: 30px;
         width: auto;
         min-width:250px;
         max-width: 350px;
