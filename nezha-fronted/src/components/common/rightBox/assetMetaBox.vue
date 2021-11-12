@@ -102,7 +102,7 @@
                   <span class="datetime-header">{{$t('config.assetLabel.interval')}}: </span>
                   <el-switch
                     v-model="editAssetMeta.param.interval"
-                    @change="$forceUpdate"
+                    @change="$forceUpdate()"
                     active-color="#ee9d3f">
                   </el-switch>
                 </el-row>
@@ -110,7 +110,7 @@
               <div v-if="editAssetMeta.type.toUpperCase()==='DOUBLE'">
                 <el-row>
                   <span class="datetime-header">{{$t('config.assetLabel.decimals')}}: </span>
-                  <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate" :min="0" :max="10" :controls="false" size="small"></el-input-number>
+                  <el-input-number v-model="editAssetMeta.param.decimals" @change="$forceUpdate()" :min="0" :max="10" :controls="false" size="small"></el-input-number>
                 </el-row>
               </div>
             </el-form-item>
