@@ -10,6 +10,8 @@ $--background-color-empty: #222329;
 $--background-color-base: #18171D;
 // 背景色1
 $--background-color-1: #444440;
+// 背景色2
+$--background-color-2: #000;
 
 // 左侧菜单背景色
 $--left-menu-background-color-base: $--background-color-empty;
@@ -86,32 +88,33 @@ $--dropdown-menu-box-shadow-color: rgba(8,3,3,0.77);
 $--input-background-color: $--background-color-base;
 
 /* 12.按钮 */
+// button-primary用于橙色按钮
 $--button-primary-color: #FFFFFE; // 普通按钮字色
 $--button-primary-background-color: $--color-primary; // 普通按钮背景色
 $--button-primary-hover-background-color: mix(#FFF, $--color-primary, 10%);
 $--button-primary-active-background-color: mix(#000, $--color-primary, 10%);
 
-// 黑暗模式下，灰按钮有两种色值，明亮模式下只有一种；为了区分黑暗模式的两种按钮，此处设button-gray和button-light-gray两种前缀，颜色一深一浅，明亮模式下这两种的色值是一样的；
-// button-gray用于普通列表顶部的按钮，button-light-gray用户dashboard、panel顶部按钮
-$--button-gray-color: $--color-text-secondary; // 灰色按钮字色
+// button-gray用于普通按钮
+$--button-gray-color: $--color-text-regular; // 灰色按钮字色
 $--button-gray-hover-color: mix(#FFF, $--color-primary, 15%); // 灰色按钮hover字色
 $--button-gray-active-color: mix(#000, $--color-primary, 15%); // 灰色按钮focus字色
-$--button-gray-background-color: $--background-color-base; // 灰色按钮背景色
+$--button-gray-background-color: $--background-color-empty; // 灰色按钮背景色
 $--button-gray-hover-background-color: $--background-color-base; // 灰色按钮hover背景色
 $--button-gray-active-background-color: $--background-color-base; // 灰色按钮focus背景色
 $--button-gray-border-color: #454545; // 灰色按钮边框色
 $--button-gray-hover-border-color: $--button-gray-hover-color; // 灰色按钮hover边框色
 $--button-gray-active-border-color: $--button-gray-active-color; // 灰色按钮focus边框色
 
-$--button-light-gray-color: $--color-text-secondary; // 灰色按钮字色
-$--button-light-gray-hover-color: $--button-gray-hover-color; // 灰色按钮hover字色
-$--button-light-gray-active-color: $--button-gray-active-color; // 灰色按钮focus字色
-$--button-light-gray-background-color: $--background-color-empty; // 灰色按钮背景色
-$--button-light-gray-hover-background-color: $--background-color-empty; // 灰色按钮hover背景色
-$--button-light-gray-active-background-color: $--background-color-empty; // 灰色按钮focus背景色
-$--button-light-gray-border-color: #454545; // 灰色按钮边框色
-$--button-light-gray-hover-border-color: $--button-gray-hover-border-color; // 灰色按钮hover边框色
-$--button-light-gray-active-border-color: $--button-gray-active-border-color; // 灰色按钮focus边框色
+// button-icon用于单图标按钮
+$--button-icon-color: $--color-text-regular; // 字色
+$--button-icon-hover-color: $--color-text-primary; // hover字色
+$--button-icon-active-color: $--color-text-primary; // focus字色
+$--button-icon-background-color: $--background-color-base; // 背景色
+$--button-icon-hover-background-color: $--background-color-empty; // hover背景色
+$--button-icon-active-background-color: $--background-color-empty; // focus背景色
+$--button-icon-border-color: #454545; // 边框色
+$--button-icon-hover-border-color: $--button-icon-border-color; // hover边框色
+$--button-icon-active-border-color: $--color-text-primary; // focus边框色
 
 
 
