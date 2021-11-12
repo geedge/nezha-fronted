@@ -17,7 +17,7 @@
               <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
-              <el-select v-model="basic.timezone" id="system-baisc-timezone" filterable popper-class="right-box-select-top">
+              <el-select v-model="basic.timezone" id="system-baisc-timezone" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
                   <div style="display: flex;justify-content: space-between;padding: 5px;">
                     <div >{{item.name}}</div>
@@ -84,7 +84,7 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.monitor.asset_ping_from')" prop="asset_ping_from">
-              <el-select v-model="monitor.asset_ping_from" popper-class="right-box-select-top">
+              <el-select v-model="monitor.asset_ping_from" popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option label="Global" value="1"></el-option>
                 <el-option label="Per-datacenter" value="2"></el-option>
               </el-select>
@@ -97,7 +97,7 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.monitor.metrics_storage_type')" prop="metrics_storage_type">
-              <el-select v-model="monitor.metrics_storage_type" popper-class="right-box-select-top">
+              <el-select v-model="monitor.metrics_storage_type" popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
                 <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
               </el-select>
@@ -134,7 +134,7 @@
               </el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.monitor.logs_storage_type')" prop="logs_storage_type">
-              <el-select v-model="monitor.logs_storage_type" popper-class="right-box-select-top">
+              <el-select v-model="monitor.logs_storage_type" popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option :label="$t('config.system.monitor.local')" value="1"></el-option>
                 <el-option :label="$t('config.system.monitor.s3')" value="2"></el-option>
               </el-select>
@@ -207,7 +207,7 @@
               <div class="el-form-item__tip">{{$t("config.system.email.testAccountTip")}}</div>
             </el-form-item>
             <el-form-item :label="$t('config.system.email.securityType')" prop="email_security_type">
-              <el-select v-model="email.email_security_type" :disabled="email.email_enable == 'off'" popper-class="right-box-select-top">
+              <el-select v-model="email.email_security_type" :disabled="email.email_enable == 'off'" popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option label="None" value="NONE"></el-option>
                 <el-option label="SSL" value="SSL"></el-option>
                 <el-option label="TLS" value="TLS"></el-option>
@@ -303,7 +303,7 @@
           <div class="system-title">{{$t('config.system.basic.title')}}</div>
           <el-form :model="reset"  label-width="180px" size="small" ref="resetForm" :rules="resetRules" :validate-on-rule-change="false" class="reset-form">
             <el-form-item  prop="type" :label="$t('config.system.reset.type')">
-              <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top">
+              <el-select v-model="reset.type" :placeholder="$t('el.select.placeholder')" multiple popper-class="right-box-select-top right-public-box-dropdown-top">
                 <template v-for="item in resetOptions" >
                   <el-option :label="item.label" :value="item.value" :key="item.label"></el-option>
                 </template>
