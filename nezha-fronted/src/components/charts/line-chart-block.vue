@@ -86,7 +86,7 @@
           </div>
         </template>
         <template v-else>
-          <div class='legend-container' ref="legendArea" v-show="firstShow">
+          <div class='legend-container' ref="legendArea" v-show="firstShow&&legendListMore.length">
             <table style="width: 100%" border="0" cellpadding="0" cellspacing="0">
               <th style="width: 100%"></th>
               <template v-for="(legendOption, index) in legendOptions">
