@@ -25,6 +25,7 @@ html {
 
 /* 默认主题和暗色主题 */
 .theme-light {
+  $--theme: light;
   @import './themes/theme-light.scss'; // 加载主题变量
   @import './themes/src/index.scss'; // 加载ele样式
   @import './components/index'; // 加载nezha组件样式
@@ -34,6 +35,7 @@ html {
 }
 
 .theme-dark {
+  $--theme: dark;
   @import './themes/theme-dark.scss'; // 加载主题变量
   @import './themes/src/index.scss'; // 加载ele样式
   @import './components/index'; // 加载nezha组件样式
