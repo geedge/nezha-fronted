@@ -4,7 +4,7 @@
       <div class="profile-change__Pin-from">
         <el-form :model="user" label-position = "top" label-width="150px" :rules="rules" ref="changePinForm">
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.oldPassword')" prop="pin">
-            <el-input v-model="user.pin" type="password" size="small"/>
+            <el-input v-model="user.oldPin" type="password" size="small"/>
           </el-form-item>
           <el-form-item class="profile-change__Pin-input" :label="$t('profile.newPassword')" prop="newPin">
             <el-input v-model="user.newPin" type="password" size="small"/>
@@ -50,13 +50,12 @@ export default {
     }
     return {
       user: {
-        pin: '',
+        oldPin: '',
         newPin: '',
         confirmPin: ''
       },
-      userId: localStorage.getItem('nz-user-id'),
       rules: {
-        pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        oldPin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         newPin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: validatePass, trigger: 'blur' }],
         confirmPin: [{ required: true, message: this.$t('config.user.reinputPin'), trigger: 'blur' }, { validator: validateConfirmPass, trigger: 'blur' }]
       },
@@ -80,14 +79,13 @@ export default {
       this.$refs.changePinForm.validate((valid) => {
         if (valid) {
           const paramObj = {
-            pin: this.user.pin,
-            newPin: this.user.newPin,
-            id: this.userId
+            oldPin: this.user.oldPin,
+            newPin: this.user.newPin
           }
-          this.$put('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin + '&id=' + paramObj.id).then(response => {
+          this.$put('/sys/user/pin', paramObj).then(response => {
             if (response && response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
-              this.user.pin = ''
+              this.user.oldPin = ''
               this.user.newPin = ''
               this.user.confirmPin = ''
             } else {
