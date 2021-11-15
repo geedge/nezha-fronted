@@ -6,7 +6,7 @@
           <div v-if="isLoading" class="panel-loading"></div>
         </transition>
       </div>
-      <div class="main-container" style="padding-right: 0">
+      <div class="main-container">
         <div class="top-tools">
           <div v-if="panelData.length == 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
@@ -80,7 +80,7 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div ref="dashboardScrollbar" id="dashboardScrollbar" class="border-t-1-de" style="height: calc(100% - 20px); overflow: auto;">
+          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box" style="height: calc(100% - 20px); overflow: auto;">
             <div class="box-content" v-loading="chartListLoading">
               <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
             </div>

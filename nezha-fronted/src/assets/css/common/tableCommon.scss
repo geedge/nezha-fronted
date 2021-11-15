@@ -102,7 +102,7 @@
   }
   .top-tool-btn:focus:not(.nz-btn-disabled), .top-tool-btn.is-focus {
     background-color: $--button-icon-active-background-color;
-    border: 1px solid $--button-icon-active-border-color;
+    border: 1px solid $--button-icon-active-border-color !important;
     color: $--button-icon-active-color;
 
     i {
@@ -111,7 +111,7 @@
   }
   .top-tool-btn--delete.top-tool-btn:focus:not(.nz-btn-disabled) {
     background-color: $--button-icon-hover-background-color;
-    border-color: #FFC4B9;
+    border: 1px solid #FFC4B9 !important;
     i {
       color: #F0745A;
     }

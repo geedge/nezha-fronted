@@ -4,7 +4,7 @@
   z-index: 3000;
   padding: 10px;
   border-radius: 4px;
-  box-shadow: -1px 1px 9px -1px rgba(205,205,205,0.77);
+  box-shadow: -1px 1px 10px -1px $--dropdown-menu-box-shadow-color;
 
   .alert-label-info{
     border-bottom: none;
@@ -62,7 +62,7 @@
   line-height: 0;
   border: 5px;
   border-style: dashed solid dashed dashed;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent $--popover-background-color transparent transparent;
   position: absolute;
   top: 20px;
   left: 0;

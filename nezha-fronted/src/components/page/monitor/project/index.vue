@@ -45,34 +45,3 @@ export default {
   methods: {}
 }
 </script>
-
-<style scoped lang="scss">
-.main-list{
-  height: 100%;
-  width: 100%;
-  display: flex;
-  background: #f6f6f6;
-  overflow-x: auto;
-  .projectList{
-    flex: 1;
-    width: calc(50% - 10px);
-    margin-right: 10px;
-    min-width: 745px;
-  }
-  .projectTopo{
-    flex: 1;
-    width: calc(50% - 10px);
-    margin-right: 10px;
-    min-width: 435px;
-  }
-  .hide{
-    display: none;
-  }
-  .ml10{
-    margin-left: 10px;
-  }
-}
-  /deep/ .main-container{
-    padding-right: 0px !important;
-  }
-</style>

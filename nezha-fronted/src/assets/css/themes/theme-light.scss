@@ -35,10 +35,14 @@ $--color-text-link: #3C92F1;
 /* 4.边框色 */
 // 普通边框色(覆盖element-ui内置变量)
 $--border-color-base: #DEDEDE;
-// 浅边框色(覆盖element-ui内置变量)
-$--border-color-light: #E7EAED;
 // 普通边框色focus
 $--border-color-base-focus: #C7C7C7;
+// 浅边框色(覆盖element-ui内置变量)
+$--border-color-light: #E7EAED;
+// 浅边框色hover
+$--border-color-light-hover: darken($--border-color-light, 10%);
+// 浅边框色focus
+$--border-color-light-focus: darken($--border-color-light, 20%);
 
 /* 5.提示色 */
 // 正常绿色(覆盖element-ui内置变量)
@@ -115,6 +119,18 @@ $--button-icon-active-background-color: $--background-color-empty; // focus背�
 $--button-icon-border-color: $--border-color-base; // 边框色
 $--button-icon-hover-border-color: $--border-color-base; // hover边框色
 $--button-icon-active-border-color: mix(#FFF, $--color-primary, 10%); // focus边框色
+
+/* 13.panel */
+$--chart-title-hover-background-color: $--background-color-1;
+$--chart-box-border-color: $--border-color-light;
+
+/* 14.popover */
+$--popover-background-color: $--background-color-empty;
+
+/* 15.侧滑 */
+$--right-box-shadow: -3px 0 8px -3px #ccc;
+$--right-box-sub-title-background-color: $--background-color-base;
+$--right-box-sub-title-border-color: $--right-box-sub-title-background-color;
 
 
 /*** themes/common.scss是与主题切换无关的变量 ***/

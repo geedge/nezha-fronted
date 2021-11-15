@@ -14,13 +14,13 @@ $--background-color-1: #444440;
 $--background-color-2: #000;
 
 // 左侧菜单背景色
-$--left-menu-background-color-base: $--background-color-empty;
+$--left-menu-background-color-base: #2D2E35;
 // 左侧菜单激活背景色
-$--left-menu-background-color-active: #191A1E;
+$--left-menu-background-color-active: #1D1D22;
 // 左侧菜单展开背景色
-$--left-menu-background-color-open: #191A1E;
+$--left-menu-background-color-open: #26262c;
 // 左侧菜单hover背景色
-$--menu-item-hover-fill: #191A1E;
+$--menu-item-hover-fill: #1D1D22;
 
 /* 3.字色 */
 // 标题字色
@@ -35,10 +35,15 @@ $--color-text-link: #3C92F1;
 /* 4.边框色 */
 // 普通边框色
 $--border-color-base: transparent;
-// 浅边框色
-$--border-color-light: #2e2e2e;
 // 普通边框色focus
 $--border-color-base-focus: #C7C7C7;
+// 浅边框色
+$--border-color-light: #454545;
+// 浅边框色hover
+$--border-color-light-hover: lighten($--border-color-light, 10%);
+// 浅边框色focus
+$--border-color-light-focus: lighten($--border-color-light, 20%);
+
 
 /* 5.提示色 */
 // 正常绿色
@@ -69,7 +74,7 @@ $--table-body-background-color: $--background-color-empty;
 /* 7.checkbox */
 // 背景色
 $--checkbox-background-color: $--background-color-empty;
-$--checkbox-border-color: #454545;
+$--checkbox-border-color: $--border-color-light;
 
 /* 8.滚动条 */
 // 背景色
@@ -101,7 +106,7 @@ $--button-gray-active-color: mix(#000, $--color-primary, 15%); // 灰色按钮fo
 $--button-gray-background-color: $--background-color-empty; // 灰色按钮背景色
 $--button-gray-hover-background-color: $--background-color-base; // 灰色按钮hover背景色
 $--button-gray-active-background-color: $--background-color-base; // 灰色按钮focus背景色
-$--button-gray-border-color: #454545; // 灰色按钮边框色
+$--button-gray-border-color: $--border-color-light; // 灰色按钮边框色
 $--button-gray-hover-border-color: $--button-gray-hover-color; // 灰色按钮hover边框色
 $--button-gray-active-border-color: $--button-gray-active-color; // 灰色按钮focus边框色
 
@@ -112,10 +117,22 @@ $--button-icon-active-color: $--color-text-primary; // focus字色
 $--button-icon-background-color: $--background-color-base; // 背景色
 $--button-icon-hover-background-color: $--background-color-empty; // hover背景色
 $--button-icon-active-background-color: $--background-color-empty; // focus背景色
-$--button-icon-border-color: #454545; // 边框色
+$--button-icon-border-color: $--border-color-light; // 边框色
 $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框色
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
 
+/* 13.panel */
+$--chart-title-hover-background-color: #323238;
+$--chart-box-border-color: $--border-color-light;
+
+/* 14.popover */
+$--popover-background-color: $--background-color-empty;
+$--popover-border-color: none;
+
+/* 15.侧滑 */
+$--right-box-shadow: -3px 0 8px -3px rgba(17,17,17,0.77);
+$--right-box-sub-title-background-color: #323238;
+$--right-box-sub-title-border-color: $--border-color-light;
 
 
 /*** themes/common.scss是与主题切换无关的变量 ***/

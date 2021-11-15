@@ -201,7 +201,7 @@
   position: relative;
 }
 .resize-box {
-  border: 1px solid $--border-color-light;
+  border: 1px solid $--chart-box-border-color;
   position: absolute;
   box-sizing: border-box;
   width: 100%;
@@ -306,7 +306,7 @@
     position: relative;
     background-color: $--background-color-empty;
     .chartTitle:hover {
-      background-color: $--background-color-1;
+      background-color: $--chart-title-hover-background-color;
     }
     .chartTitle {
       text-align: center;
@@ -361,7 +361,7 @@
       }
     }
     .chart-sub-title {
-      background-color: $--background-color-1;
+      background-color: $--chart-title-hover-background-color;
       font-size: 13px;
       color: $--color-text-regular;
       padding-left: 5px;
@@ -524,7 +524,7 @@
     position: relative;
     background-color: $--background-color-empty;
     .chartTitle:hover {
-      background-color: $--background-color-1;
+      background-color: $--chart-title-hover-background-color;
     }
     .chartTitle {
       text-align: center;

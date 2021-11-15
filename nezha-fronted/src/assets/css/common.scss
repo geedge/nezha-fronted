@@ -179,6 +179,21 @@ td .nz-icon-gear:before{
   box-shadow: -1px 1px 10px -1px $--dropdown-menu-box-shadow-color;
   border-radius: 2px;
 }
+.el-popover {
+  box-shadow: -1px 1px 10px -1px $--dropdown-menu-box-shadow-color !important;
+}
+.el-input__count-inner {
+  background-color: $--input-background-color !important;
+}
+.el-textarea {
+  .el-textarea__inner {
+    background-color: $--input-background-color !important;
+  }
+  .el-input__count {
+    background-color: $--input-background-color !important;
+  }
+}
+
 .icon {
   width: 5rem;
   height: 5rem;
@@ -192,4 +207,7 @@ td .nz-icon-gear:before{
   color: $--color-text-secondary;
   font-family: NotoSans !important;
   font-size: 12px !important;
+}
+.el-tree {
+  background-color: $--background-color-empty !important;
 }
