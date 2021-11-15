@@ -87,8 +87,8 @@ export function noSpecialChar (rule, value, callback) {
 }
 
 export function latlng (rule, value, callback) {
-  const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7})$/
-  const latReg = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7})$/
+  const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7}|0?\d{1,2}|1[0-7]?\d{1}|180)$/ // 经度正则验证
+  const latReg = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7}|[1-8]?\d{1}|90)$/ // 纬度正则验证
   setTimeout(() => {
     const lnglat = value.split(',')
     if (!lnglat || lnglat.length !== 2) {
