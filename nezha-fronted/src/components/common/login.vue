@@ -214,6 +214,9 @@ export default {
           localStorage.setItem('nz-username', this.loginData.username)
           localStorage.setItem('nz-prometheus-federation-enabled', res.data.prometheusFederationEnabled)
           localStorage.setItem('nz-language', this.lang)
+          res.data.user = {
+            lang: this.lang
+          }
           this.loginSuccess(res)
         } else {
           this.authToken = res.data.authToken
