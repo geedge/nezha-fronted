@@ -136,8 +136,8 @@ export default {
         this.$message.error(this.$t('tip.lnglatError'))
         return false
       }
-      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{0,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{0,7})$/
-      const latReg = /^[\-\+]?([0-8]?\d{1}\.\d{0,7}|90\.0{0,7})$/
+      const lngReg = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7}|0?\d{1,2}|1[0-7]?\d{1}|180)$/ // 经度正则验证
+      const latReg = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7}|[1-8]?\d{1}|90)$/ // 纬度正则验证
       if (!lngReg.test(lnglat[0]) || !latReg.test(lnglat[1])) {
         // this.lnglat = this.oldlnglat
         this.$message.error(this.$t('tip.lnglatError'))

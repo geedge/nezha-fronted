@@ -70,7 +70,8 @@ import latlngPicker from '../latlngPicker'
 import editRigthBox from '../mixin/editRigthBox'
 import { noSpecialChar, latlng } from '@/components/common/js/validate'
 
-const regNum = /^[0-9]+.?[0-9]*/
+const latitudeNum = /^[\-\+]?([1-8]?\d{1}\.\d{1,7}|90\.0{1,7}|[1-8]?\d{1}|90)$/ // 纬度正则验证
+const longitudeNum = /^[\-\+]?(0?\d{1,2}\.\d{1,7}|1[0-7]?\d{1}\.\d{1,7}|180\.0{1,7}|0?\d{1,2}|1[0-7]?\d{1}|180)$/ // 经度正则验证
 
 export default {
   name: 'dcBox',
@@ -139,10 +140,10 @@ export default {
             const attr = this.$refs.latlngPicker.getAttribute()
             param.latitude = attr.latitude
             param.longitude = attr.longitude
-            if (!regNum.test(param.longitude)) {
+            if (!longitudeNum.test(param.longitude)) {
               param.longitude = null
             }
-            if (!regNum.test(param.latitude)) {
+            if (!latitudeNum.test(param.latitude)) {
               param.latitude = null
             }
             this.$post('/dc', param).then(response => {
