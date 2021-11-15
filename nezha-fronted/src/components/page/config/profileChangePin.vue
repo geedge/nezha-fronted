@@ -32,10 +32,6 @@
 <script>
 export default {
   name: 'changePin',
-  props: {
-    curUser: { type: String },
-    showDialog: { type: Boolean, default: false }
-  },
   data () {
     const temp = this
     const validatePass = (rule, value, callback) => {
@@ -54,12 +50,11 @@ export default {
     }
     return {
       user: {
-        username: '',
         pin: '',
         newPin: '',
         confirmPin: ''
       },
-      sysUser: sessionStorage.getItem('nz-username'),
+      userId: localStorage.getItem('nz-user-id'),
       rules: {
         pin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         newPin: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: validatePass, trigger: 'blur' }],
@@ -68,9 +63,7 @@ export default {
       visible: false
     }
   },
-  created () {
-    this.user.username = this.curUser && this.curUser != '' ? this.curUser : sessionStorage.getItem('nz-username')
-  },
+  created () {},
   methods: {
     dialogOpened: function () {
       if (this.$refs.changePinForm) {
@@ -88,9 +81,10 @@ export default {
         if (valid) {
           const paramObj = {
             pin: this.user.pin,
-            newPin: this.user.newPin
+            newPin: this.user.newPin,
+            id: this.userId
           }
-          this.$put('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
+          this.$put('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin + '&id=' + paramObj.id).then(response => {
             if (response && response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.user.pin = ''
@@ -102,11 +96,6 @@ export default {
           })
         }
       })
-    }
-  },
-  watch: {
-    showDialog: function (n, o) {
-      this.visible = n
     }
   }
 }
