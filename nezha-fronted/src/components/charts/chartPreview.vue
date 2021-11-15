@@ -465,6 +465,26 @@ export default {
                         if (chartItem.type === 'endpointInfo') {
                           seriesItem.theData.type = 'line'
                         }
+                        if ((chartItem.type === 'line' || chartItem.type === 'stackArea' || chartItem.type === 'bar') && chartItem.param && chartItem.param.threshold) {
+                          seriesItem.theData.markLine = {
+                            silent: true,
+                            symbol: ['circle', 'circle'],
+                            label: {
+                              distance: this.computeDistance(chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(chartItem.param.threshold)),
+                              formatter (params) {
+                                return chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(params.value)
+                              }
+                            },
+                            lineStyle: {
+                              color: '#d64f40',
+                              width: 2,
+                              type: 'dotted'
+                            },
+                            data: [{
+                              yAxis: Number(chartItem.param.threshold)
+                            }]
+                          }
+                        }
                         // 图表中每条线的名字,后半部分
                         let host = ''// up,
                         if (queryItem.metric.__name__) {

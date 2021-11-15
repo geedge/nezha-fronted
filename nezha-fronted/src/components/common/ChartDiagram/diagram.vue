@@ -1253,19 +1253,19 @@ export default {
             const ePosition = window.ePosition
             const boxWidth = document.getElementsByClassName('page')[0].offsetWidth
             const boxHeight = document.getElementsByClassName('page')[0].offsetHeight
-            this.tooltipPosition.left = ePosition.layerX + 20
-            this.tooltipPosition.top = ePosition.layerY
+            this.tooltipPosition.left = ePosition.offsetX + 20
+            this.tooltipPosition.top = ePosition.offsetY
             this.$nextTick(() => {
               if (this.$refs.topoTooltip) {
-                if ((boxWidth / 2) > ePosition.layerX) {
-                  this.tooltipPosition.left = ePosition.layerX + 20
+                if ((boxWidth / 2) > ePosition.offsetX) {
+                  this.tooltipPosition.left = ePosition.offsetX + 20
                 } else {
-                  this.tooltipPosition.left = ePosition.layerX - 20 - this.$refs.topoTooltip.offsetWidth
+                  this.tooltipPosition.left = ePosition.offsetX - 20 - this.$refs.topoTooltip.offsetWidth
                 }
-                if (boxHeight > (ePosition.layerY + this.$refs.topoTooltip.offsetHeight)) {
-                  this.tooltipPosition.top = ePosition.layerY
+                if (boxHeight > (ePosition.offsetY + this.$refs.topoTooltip.offsetHeight)) {
+                  this.tooltipPosition.top = ePosition.offsetY
                 } else {
-                  this.tooltipPosition.top = ePosition.layerY - this.$refs.topoTooltip.offsetHeight
+                  this.tooltipPosition.top = ePosition.offsetY - this.$refs.topoTooltip.offsetHeight
                 }
               }
               if (this.isScreen) {
@@ -1407,6 +1407,10 @@ export default {
           case 'scale': {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
+            }
+            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            if (getTopology(this.topologyIndex)) {
+              getTopology(this.topologyIndex).canvasPos = domRect
             }
             break
           }
@@ -1924,6 +1928,7 @@ export default {
         }
         const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
         getTopology(this.topologyIndex).canvasPos = domRect
+        getTopology(this.topologyIndex).resize()
       }, 100)
     },
 
@@ -2015,7 +2020,6 @@ export default {
         item.animatePlay = item.data.animatePlay
         item.data.animateType = item.animateType
         if (item.type === 0 && JSON.stringify(item.data.imageId)) {
-          item.image = ''
           item.animateFrames = []
           item.animateReady = null
           delete item.img

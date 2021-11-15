@@ -450,7 +450,11 @@ export default {
       }
       this.$get('/alert/rule/' + row.alertRule.id).then(res => {
         this.currentMsg = { ...row, alertRule: { ...res.data } }
-        this.graphShow = true
+        if (row.alertRule.type !== 1) {
+          this.graphShow = false
+        } else {
+          this.graphShow = true
+        }
         this.$nextTick(() => {
           this.searchTimeDialog = [bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000), bus.computeTimezoneTime(new Date().getTime())]
           this.queryDate()
@@ -819,6 +823,7 @@ export default {
       })
     },
     reloadTable (obj) {
+      this.pageObj.pageNo = 1
       const params = JSON.parse(JSON.stringify(obj))
       if (this.detailType === 'view') {
         const obj = {}

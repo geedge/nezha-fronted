@@ -1,21 +1,21 @@
 <template>
   <div class="pagination">
-    <el-pagination
-      ref="page"
-      :current-page="pageObj.pageNo"
-      :page-size="Number(pageObj.pageSize)"
-      :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
-      :total="this.pageObj.total"
-      layout="total, prev, pager, next, slot"
-      @size-change="size"
-      @prev-click="prev"
-      @next-click="next"
-      @current-change="current"
-    >
-      <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" :popper-append-to-body="appendToBody"  :popper-class="popClass" class="pagination-size-select" size="mini" @change="size" @visible-change="popperVisible">
-        <el-option v-for="(item, index) in pageSizes" :key="index" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-    </el-pagination>
+      <el-pagination
+        ref="page"
+        @size-change="size"
+        @prev-click="prev"
+        @next-click="next"
+        @current-change="current"
+        :current-page="pageObj.pageNo"
+        :page-sizes="pageSizes?pageSizes:[20, 50, 100]"
+        :page-size="Number(pageObj.pageSize)"
+        layout="total, prev, pager, next, slot"
+        :total="this.pageObj.total"
+      >
+        <el-select v-model="pageSize" :placeholder="pageSize+$t('pageSize')" size="mini"  :popper-append-to-body="appendToBody" class="pagination-size-select" @change="size" :popper-class="popClass" @visible-change="popperVisible">
+          <el-option v-for="(item, index) in pageSizes" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-pagination>
   </div>
 </template>
 
@@ -101,6 +101,7 @@ export default {
         wraps.forEach(wrap => {
           if (wrap) {
             wrap.scrollTop = 0
+            wrap.scrollLeft = 0
           }
         })
       })

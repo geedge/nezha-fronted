@@ -13,7 +13,7 @@
         v-loading="tools.loading"
       >
         <template v-slot:top-tool-right>
-          <el-select v-model="state" size="small" value-key="value" @change="getTableData">
+          <el-select v-model="state" size="small" value-key="value" popper-class="right-box-select-top right-public-box-dropdown-top" @change="getTableData">
             <el-option v-for="item in stateOptions" :key="item.value" :label="$t(item.label)" :value="item.value"></el-option>
           </el-select>
         </template>

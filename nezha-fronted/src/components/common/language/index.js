@@ -1,6 +1,6 @@
-import en from './en'
-import cn from './cn'
+import newen from './newen'
+import newcn from './newcn'
 export default {
-  en: en,
-  cn: cn
+  en: newen,
+  cn: newcn
 }

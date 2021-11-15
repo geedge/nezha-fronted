@@ -1448,6 +1448,10 @@ export default {
             if (this.$refs.topTool) {
               this.$refs.topTool.scaleNum = parseInt(data * 100)
             }
+            const domRect = document.getElementById('topology-canvas' + this.topologyIndexF).getBoundingClientRect()
+            if (getTopology(this.topologyIndex)) {
+              getTopology(this.topologyIndex).canvasPos = domRect
+            }
             break
           }
           case 'locked': {
@@ -2052,7 +2056,6 @@ export default {
         item.animatePlay = item.data.animatePlay
         item.data.animateType = item.animateType
         if (item.type === 0 && JSON.stringify(item.data.imageId)) {
-          item.image = ''
           item.animateFrames = []
           item.animateReady = null
           delete item.img

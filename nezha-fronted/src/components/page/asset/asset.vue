@@ -485,6 +485,7 @@ export default {
       })
     },
     reloadTable (obj) {
+      this.pageObj.pageNo = 1
       const params = JSON.parse(JSON.stringify(obj))
       if (this.detailType === 'view') {
         const obj = {}

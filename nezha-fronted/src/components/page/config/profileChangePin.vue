@@ -90,13 +90,12 @@ export default {
             pin: this.user.pin,
             newPin: this.user.newPin
           }
-          this.$get('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
+          this.$put('/sys/user/pin?oldPin=' + paramObj.pin + '&newPin=' + paramObj.newPin).then(response => {
             if (response && response.code == 200) {
               this.$message({ duration: 2000, type: 'success', message: this.$t('tip.saveSuccess') })
               this.user.pin = ''
               this.user.newPin = ''
               this.user.confirmPin = ''
-              this.close()
             } else {
               this.$message.error(response.msg)
             }
