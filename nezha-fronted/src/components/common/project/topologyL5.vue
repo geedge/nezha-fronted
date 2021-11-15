@@ -2056,7 +2056,6 @@ export default {
         item.animatePlay = item.data.animatePlay
         item.data.animateType = item.animateType
         if (item.type === 0 && JSON.stringify(item.data.imageId)) {
-          item.image = ''
           item.animateFrames = []
           item.animateReady = null
           delete item.img
