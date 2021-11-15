@@ -14,7 +14,8 @@
                             <li v-for="(val,ind) in history_once" @click="select_history(ind,$event)" :key="ind" :id="'search-history-pick-'+ind">
                                 <span v-for="(item,key) in val" :key="key">
                                     <span class="name">{{item.name}}: </span>
-                                    <span class="value">{{item.val+' '}}</span>
+                                    <span class="value" v-if="item.val">{{item.val+' '}}</span>
+                                    <span class="value" v-else>{{' '}}</span>
                                 </span>
                             </li>
                         </ul>
@@ -964,6 +965,7 @@ export default {
     restructure_historyDate () {
       if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
         this.history_once = JSON.parse(localStorage.getItem('nz-history-' + this.where))
+        console.log(this.history_once)
       }
     },
     clear_search_list (e) {
