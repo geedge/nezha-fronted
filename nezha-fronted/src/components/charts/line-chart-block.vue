@@ -149,7 +149,7 @@
           </el-popover>
           </span>
           <div slot="title" >
-            <span class="nz-dialog-title" v-show="!isExplore">{{data.title}}</span>
+            <span class="nz-dialog-title" v-show="!isExplore">{{data.name}}</span>
             <span class="nz-dialog-title" v-show="isExplore">&nbsp;</span>
             <div class="float-right panel-calendar dialog-tool">
 
