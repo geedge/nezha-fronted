@@ -233,19 +233,19 @@
   background-color: $--button-primary-active-background-color;
 }
 .footer__btn--light {
-  background-color: $--button-gray-background-color;
-  border: 1px solid $--button-gray-border-color;
-  color: $--button-gray-color;
+  background-color: $--button-light-hover-background-color;
+  border: 1px solid $--button-light-border-color;
+  color: $--button-light-color;
 }
 .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
-  background-color: $--background-color-empty;
-  border-color: $--color-primary-light-5;
-  color: $--color-primary;
+  background-color: $--button-light-hover-background-color;
+  border: 1px solid $--button-primary-hover-background-color;
+  color: $--button-primary-background-color;
 }
 .footer__btn.footer__btn--light:focus:not(.footer__btn--disabled) {
-  background-color: $--button-gray-active-background-color;
-  border: 1px solid $--button-gray-active-border-color;
-  color: $--button-gray-active-color;
+  background-color: $--button-light-active-background-color;
+  border: 1px solid $--button-light-active-border-color;
+  color: $--button-light-active-color;
 }
 .footer__btn--disabled {
   opacity: .6;
