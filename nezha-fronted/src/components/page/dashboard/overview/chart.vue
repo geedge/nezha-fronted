@@ -417,7 +417,7 @@ export default {
       let str = '<div>'
       params instanceof Array || (params = [params])
       params.forEach((item, i) => {
-        const alias = this.queryAlias(i)
+        const alias = this.queryAlias(item.seriesIndex)
         if (i === 0 && alias.indexOf('Previous ') === -1) {
           const value = item.data[0]
           const tData = new Date(value)
