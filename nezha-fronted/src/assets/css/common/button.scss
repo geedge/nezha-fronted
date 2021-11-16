@@ -62,9 +62,8 @@
   padding: 0 5px;
 }
 .nz-btn.nz-btn-style-light-new {
-  background-color: $--button-gray-background-color;
-  border: 1px solid $--button-gray-border-color;
-  color: $--button-gray-color;
+  border: 1px solid $--button-light-border-color;
+  color: $--button-light-color;
 }
 .nz-btn.nz-btn-style-normal { /* 新版橙色按钮 */
   background: $--button-primary-background-color;
@@ -77,9 +76,9 @@
   border: 1px solid $--color-danger;
 }
 .nz-btn.nz-btn-style-gray { /* 灰色按钮 */
-  background: $--button-gray-background-color;
-  border: 1px solid $--button-gray-border-color;
-  color: $--button-gray-color;
+  background: $--button-light-background-color;
+  border: 1px solid $--button-light-border-color;
+  color: $--button-light-color;
   letter-spacing: 0;
 }
 .nz-btn-style-light-new:hover {
@@ -98,15 +97,15 @@
   border: 1px solid  #F38b73;
 }
 .nz-btn.nz-btn-style-gray:hover:not(.nz-btn-disabled) { /* 灰色按钮hover */
-  border: 1px solid $--button-gray-hover-border-color;
-  background: $--button-gray-hover-background-color;
-  color: $--button-gray-hover-color;
+  border: 1px solid $--button-light-hover-border-color;
+  background: $--button-light-hover-background-color;
+  color: $--button-light-hover-color;
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-gray:hover:not(.nz-btn-disabled) { /* 浅灰色按钮hover */
-  border: 1px solid $--button-gray-hover-border-color;
-  background: $--button-gray-hover-background-color;
-  color: $--button-gray-hover-color;
+  border: 1px solid $--button-light-hover-border-color;
+  background: $--button-light-hover-background-color;
+  color: $--button-light-hover-color;
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-normal:active:not(.nz-btn-disabled) { /* 橙色按钮active' */
@@ -120,15 +119,15 @@
   border-color: #Eb6D51;
 }
 .nz-btn.nz-btn-style-gray:active:not(.nz-btn-disabled) { /* 灰色按钮active*/
-  background: $--button-gray-active-background-color;
-  border: 1px solid $--button-gray-active-border-color;
-  color: $--button-gray-active-color;
+  background: $--button-light-active-background-color;
+  border: 1px solid $--button-light-active-border-color;
+  color: $--button-light-active-color;
   letter-spacing: 0;
 }
 .nz-btn.nz-btn-style-gray:active:not(.nz-btn-disabled) { /* 浅灰色按钮active*/
-  background: $--button-gray-active-background-color;
-  border: 1px solid $--button-gray-active-border-color;
-  color: $--button-gray-active-color;
+  background: $--button-light-active-background-color;
+  border: 1px solid $--button-light-active-border-color;
+  color: $--button-light-active-color;
   letter-spacing: 0;
 }
 

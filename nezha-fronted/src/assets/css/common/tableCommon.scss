@@ -78,7 +78,7 @@
     outline: none;
     border-radius: $--button-border-radius;
     background-color: $--button-icon-background-color;
-    transition: background-color linear .1s;
+    transition: background-color linear .2s, color linear .1s;
     color: $--button-icon-color;
 
     i {
@@ -272,7 +272,7 @@
           cursor: pointer;
           border-radius: $--button-border-radius;
           outline: none;
-          transition: background-color linear .1s;
+          transition: background-color linear .2s, color linear .1s;
         }
         .table-operation-item.table-operation-item--disable{
           border: 1px solid $--border-color-base;
@@ -417,7 +417,7 @@
       border-right: none;
       transform: translateX(1px);
       box-sizing: border-box;
-      transition: border-color linear .2s;
+      transition: background-color linear .2s, color linear .1s;
 
       span {
         font-size: 14px;

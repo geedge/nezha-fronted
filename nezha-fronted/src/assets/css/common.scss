@@ -211,3 +211,6 @@ td .nz-icon-gear:before{
 .el-tree {
   background-color: $--background-color-empty !important;
 }
+.el-table::before {
+  background-color: $--border-color-light !important;
+}

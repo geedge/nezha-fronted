@@ -92,7 +92,7 @@
       }
     }
     .profile-left__btn {
-      border: 1px solid $--button-gray-border-color;
+      border: 1px solid $--button-light-border-color;
       border-radius: 4px;
       background: $--background-color-empty;
       min-width: 132px;
@@ -223,6 +223,9 @@
     }
   }
 }
+.el-dialog {
+  background-color: $--background-color-empty;
+}
 .login-dialog-title{
   background-color: $--background-color-base;
   font-size: 14px;
@@ -269,6 +272,7 @@
 .qrCode-content{
   padding: 4px;
   margin-left: 10px;
+  background-color: #fff;
 }
 .qrCode-text{
   width: 60%;
