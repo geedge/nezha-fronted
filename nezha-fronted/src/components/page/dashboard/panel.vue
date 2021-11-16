@@ -246,13 +246,14 @@ export default {
       this.showPanel = val
       this.showPanel.type = 'dashboard'
       this.filter.panelId = this.showPanel.id
+      this.dateChange()
       // let curTime = this.$refs.calendarPanel.getCurrentTime();
-      const curTime = this.searchTime
-      this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
-      this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
-      // this.$refs.chartList.initCurrentRecordNum();
+      // const curTime = this.searchTime
+      // this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
+      // this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
+      // // this.$refs.chartList.initCurrentRecordNum();
+      // this.getData(this.filter)
       this.$refs.chartList.cleanData()
-      this.getData(this.filter)
     },
 
     del (u) {
