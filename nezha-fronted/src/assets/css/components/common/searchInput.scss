@@ -37,20 +37,14 @@
 .new-search .search-input-all{
   width: 226px !important;
   min-width: 226px;
-  background-color: $--input-background-color;
-  color: rgba(0,0,0,.55);
+  background-color: lighten($--background-color-base, 10%);
+  color: $--color-text-regular;
   height: 30px;
   line-height: 30px;
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
   display: flex;
   position: relative;
-  * {
-    background-color: $--input-background-color;
-  }
-}
-input {
-  background-color: $--background-color-base;
 }
 .search-input-all .btn-retract{
   padding: 0 4px;
@@ -134,7 +128,7 @@ input {
   height: auto;
   border: 1px solid $--border-color-base;
   background: $--background-color-empty;
-  color: #2e2e2e;
+  color: $--color-text-regular;
   text-align: left;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -148,7 +142,7 @@ input {
   text-align: center;
   position: relative;
   border-bottom: 1px solid $--border-color-base;
-  color: #2e2e2e;
+  color: $--color-text-regular;
 }
 .localStorage_list_box .list_box_title i{
   position: absolute;
@@ -174,7 +168,7 @@ input {
 }
 
 .localStorage_list_box ul li span{
-  color: #2e2e2e;
+  color: $--color-text-regular;
 }
 .localStorage_list_box ul li .value{
   font-weight: 600;
@@ -214,7 +208,7 @@ input {
   padding: 3px;
   background: $--background-color-base;
   line-height: 13px;
-  color: rgba(0,0,0,.55);
+  color: $--color-text-regular;
 }
 .selectinfo_box .select_content{
   float: left;
@@ -222,7 +216,7 @@ input {
   height: 13px;
   padding: 3px;
   background: darken($--background-color-base, 10%);
-  color: rgba(0,0,0,0.85);
+  color: $--color-text-regular;
   display: flex;
 }
 .selectinfo_box .select_content .nz-icon-close{
@@ -249,6 +243,7 @@ input {
   float: left;
   padding-left: 5px !important;
   box-sizing: border-box;
+  color: $--color-text-regular;
   outline: none;
 }
 .select_input input:focus {
@@ -301,7 +296,7 @@ input {
   box-shadow: none;
 }
 .sreach_input input::placeholder{
-  color: rgba(0,0,0,0.55)
+  color: $--color-text-regular;
 }
 .input_list{
   position: fixed;
