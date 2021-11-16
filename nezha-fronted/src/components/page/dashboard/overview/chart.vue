@@ -450,7 +450,7 @@ export default {
         str += chartDataFormat.getUnit(this.unit).compute(val, null, -1, dot)
         const previousItem = params.find((series) => ('Previous ' + item.seriesName) === series.seriesName)
         if (previousItem) {
-          str += '<span style="padding-left: 10px; display: inline-block;width: 100px;text-align: right">'
+          str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
           const previousval = formatScientificNotation(previousItem.data[1], dot)
           let minusVal = 0
           if (previousval <= val) {

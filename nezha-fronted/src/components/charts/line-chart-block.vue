@@ -790,13 +790,14 @@ export default {
               }
               const val = formatScientificNotation(item.data[1], paramsDot)
               sum += self.numberWithEConvent(val)
+
               str += '<div style="white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;display: flex; justify-content: space-between; min-width: 150px; max-width: 600px; line-height: 18px; font-size: 12px;">'
               str += `<div style="max-width: 500px;white-space:nowrap;overflow-x:hidden;text-overflow:ellipsis;"><span style='display:inline-block;margin-right:5px;border-radius:10px;width:15px;height:5px;background-color: ${color};}'></span>${tip ? (tip.alias ? tip.alias : tip.name) : item.seriesName}  </div>`
               str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
               str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, -1, paramsDot)
               if (previousItem) {
-                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
-                const previousval = formatScientificNotation(item.data[1], paramsDot)
+                str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
+                const previousval = formatScientificNotation(previousItem.data[1], paramsDot)
                 let minusVal = 0
                 if (previousval <= val) {
                   minusVal = val - previousval
@@ -1266,7 +1267,7 @@ export default {
                       str += '<div style="padding-left: 10px;min-width: 75px;text-align: right">'
                       str += chartDataFormat.getUnit(chartInfo.unit ? chartInfo.unit : 2).compute(val, null, self.chartDot)
                       if (previousItem) {
-                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right">'
+                        str += '<span style="padding-left: 10px; display: inline-block;width: 65px;text-align: right;box-sizing: border-box;padding-right: 10px">'
                         const previousval = formatScientificNotation(previousItem.data[1], 2)
                         let minusVal = 0
                         if (previousval <= val) {
@@ -1578,6 +1579,7 @@ export default {
             this.echartModalStore.showLoading();
           }
           */
+      let self = this
       let axiosArr = []
       this.$nextTick(() => {
         let startTime = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
@@ -1685,7 +1687,7 @@ export default {
                         label: {
                           distance: this.computeDistance(chartDataFormat.getUnit(this.data.unit ? this.data.unit : 2).compute(this.data.param.threshold)),
                           formatter: function (params) {
-                            return chartDataFormat.getUnit(this.data.unit ? this.data.unit : 2).compute(params.value)
+                            return chartDataFormat.getUnit(self.data ? self.data.unit : 2).compute(params.value)
                           }
                         },
                         lineStyle: {
