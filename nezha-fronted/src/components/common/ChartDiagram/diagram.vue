@@ -781,7 +781,13 @@ export default {
     openTopologyData (data) {
       return new Promise(resolve => {
         if (!getTopology(this.topologyIndex)) {
-          const canvas = new Topology('topology-canvas' + this.topologyIndexF, canvasOptions)
+          const options = {
+            ...canvasOptions
+          }
+          if (this.isPanel) {
+            options.disableScale = true
+          }
+          const canvas = new Topology('topology-canvas' + this.topologyIndexF, options)
           setTopology(this.topologyIndex, canvas)
         } else {
           getTopology(this.topologyIndex).open(data)

@@ -611,7 +611,7 @@ export default {
               const step = bus.getStep(this.filterTime[0], this.filterTime[1])
               promqlInputIndexs.push(index)
               queryExpression.push(item)
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step))
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
             }
           })
           if (requestArr.length > 0) {
