@@ -1515,7 +1515,6 @@ export default {
         const arr = []
         arr.push(this.$get(`/asset/asset/${assetId}`))
         arr.push(this.$get(`/asset/asset/feature/${assetId}`))
-        console.log(this.$refs['editChart' + chartInfo.id][0])
         if (this.$refs['editChart' + chartInfo.id][0]) {
           this.$refs['editChart' + chartInfo.id][0].showLoad()
         }

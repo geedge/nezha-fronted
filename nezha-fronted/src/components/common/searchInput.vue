@@ -965,7 +965,6 @@ export default {
     restructure_historyDate () {
       if (localStorage.getItem('nz-history-' + this.where) !== undefined && localStorage.getItem('nz-history-' + this.where) !== null) {
         this.history_once = JSON.parse(localStorage.getItem('nz-history-' + this.where))
-        console.log(this.history_once)
       }
     },
     clear_search_list (e) {
