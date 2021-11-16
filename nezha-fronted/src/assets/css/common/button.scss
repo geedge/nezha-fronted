@@ -61,6 +61,11 @@
   min-width: 40px;
   padding: 0 5px;
 }
+.nz-btn.nz-btn-style-light-new {
+  background-color: $--button-gray-background-color;
+  border: 1px solid $--button-gray-border-color;
+  color: $--button-gray-color;
+}
 .nz-btn.nz-btn-style-normal { /* 新版橙色按钮 */
   background: $--button-primary-background-color;
   color: $--button-primary-color;
@@ -76,6 +81,11 @@
   border: 1px solid $--button-gray-border-color;
   color: $--button-gray-color;
   letter-spacing: 0;
+}
+.nz-btn-style-light-new:hover {
+  background-color: $--background-color-empty;
+  border-color: $--color-primary-light-5;
+  color: $--color-primary;
 }
 .nz-btn.nz-btn-style-normal:hover:not(.nz-btn-disabled) { /* 橙色按钮hover */
   background: $--button-primary-hover-background-color;

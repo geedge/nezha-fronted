@@ -43,9 +43,9 @@
       }
 
       .footer__btn--light {
-        background-color: $--background-color-empty;
-        border: 1px solid $--border-color-base;
-        color: $--color-text-primary;
+        background-color: $--button-gray-background-color;
+        border: 1px solid $--button-gray-border-color;
+        color: $--button-gray-color;
       }
 
       .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {

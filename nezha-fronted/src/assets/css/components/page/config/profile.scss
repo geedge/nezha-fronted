@@ -92,7 +92,7 @@
       }
     }
     .profile-left__btn {
-      border: 1px solid $--border-color-base-focus;
+      border: 1px solid $--button-gray-border-color;
       border-radius: 4px;
       background: $--background-color-empty;
       min-width: 132px;
@@ -111,6 +111,23 @@
       }
       i {
         color: $--color-text-regular;
+        margin-right: 5px;
+        font-size: 18px
+      }
+    }
+    .profile-left__btn:hover {
+      background-color: $--background-color-empty;
+      border-color: $--color-primary-light-5;
+      color: $--color-primary;
+      span {
+        font-size: 14px;
+        color: $--color-primary;
+        text-align: left;
+        line-height: 22px;
+        font-weight: 400;
+      }
+      i {
+        color: $--color-primary;
         margin-right: 5px;
         font-size: 18px
       }
@@ -172,9 +189,6 @@
         opacity: .6;
         color: $--button-primary-hover-background-color;
         border: 1px solid $--button-primary-hover-background-color;
-      }
-      .footer__btn:hover {
-        opacity: .6;
       }
       .is-disabled,.is-disabled:hover{
         color: #C0C4CC;

@@ -238,9 +238,9 @@
   color: $--button-gray-color;
 }
 .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
-  background-color: $--button-gray-hover-background-color;
-  border: 1px solid $--button-gray-hover-border-color;
-  color: $--button-gray-hover-color;
+  background-color: $--background-color-empty;
+  border-color: $--color-primary-light-5;
+  color: $--color-primary;
 }
 .footer__btn.footer__btn--light:focus:not(.footer__btn--disabled) {
   background-color: $--button-gray-active-background-color;

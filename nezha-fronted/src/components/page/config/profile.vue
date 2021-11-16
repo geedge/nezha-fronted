@@ -49,15 +49,15 @@
        </div>
      </div>
       <div class="profile-left__button table-operation-items">
-        <el-button @click="profileEnable" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item"  v-if="mfaEnable != '1' && mfaLevel == 0">
+        <button @click="profileEnable" class="footer__btn"  v-if="mfaEnable != '1' && mfaLevel == 0">
           <span>{{$t('profile.enable')}}</span>
-        </el-button>
-        <el-button @click="profileDisable" size="small" class="profile-left__button-footer__btn footer__btns table-operation-item"  :class="{'footer__btn--disabled': mfaEnable == 1 ||  mfaLevel == 2}" v-if="mfaEnable == '1' || mfaLevel > 0" :disabled="mfaEnable == 1 ||  mfaLevel == 2 ">
+        </button>
+        <button @click="profileDisable" class="footer__btn footer__btn--light"  :class="{'footer__btn--disabled': mfaEnable == 1 ||  mfaLevel == 2}" v-if="mfaEnable == '1' || mfaLevel > 0" :disabled="mfaEnable == 1 ||  mfaLevel == 2 ">
           <span>{{$t('profile.close')}}</span>
-        </el-button>
-        <el-button @click="profileMfaLevel" size="small" class="profile-left__button-footer__btn footer__btn table-operation-item" v-if="mfaEnable == '1' || mfaLevel > 0" >
+        </button>
+        <button @click="profileMfaLevel" class="footer__btn" v-if="mfaEnable == '1' || mfaLevel > 0" >
           <span>{{$t('profile.update')}}</span>
-        </el-button>
+        </button>
       </div>
       <div class="profile-hr" style=""></div>
       <div class="profile-left__bottom">

@@ -27,7 +27,7 @@
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button :id="tableId+'-element-set-esc'" class="nz-btn nz-btn-size-small nz-btn-style-light" type="button" @click="esc">
+        <button :id="tableId+'-element-set-esc'" class="nz-btn nz-btn-size-small nz-btn-style-light-new" type="button" @click="esc">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
         <button :id="tableId+'-element-set-save'" class="nz-btn nz-btn-size-small nz-btn-style-normal" type="button" @click="save">
