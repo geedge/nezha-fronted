@@ -664,6 +664,7 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       } else {
         clearTimeout(this.timer)
@@ -671,8 +672,20 @@ export default {
           this.getTableData()
           clearTimeout(this.timer)
           this.timer = ''
+          this.scrollbarToTop()
         }, 1000)
       }
+    },
+    scrollbarToTop () {
+      this.$nextTick(() => {
+        const wraps = document.querySelectorAll('.el-table__body-wrapper')
+        wraps.forEach(wrap => {
+          if (wrap) {
+            wrap.scrollTop = 0
+            wrap.scrollLeft = 0
+          }
+        })
+      })
     },
     getSearchableStateData (data) {
       return new Promise(resolve => {
