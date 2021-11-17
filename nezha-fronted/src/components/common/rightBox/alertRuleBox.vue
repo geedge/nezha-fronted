@@ -112,7 +112,7 @@
           </el-form-item>
           <!--inr-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.inr')" prop="inr"  class="half-form-item">
-            <el-input id="alert-box-input-inr" v-model.number="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input>
+            <el-input-number id="alert-box-input-inr" :controls="false" v-model="editAlertRule.inr" :placeholder="$t('alert.config.inrPlaceholder')" size="small" type="text" :disabled="!showSnmpTrap"></el-input-number>
           </el-form-item>
           <!--last-->
           <el-form-item v-if="showSnmpTrap" :label="$t('alert.config.for')" prop="last"  class="half-form-item" :rules=" [
@@ -372,7 +372,7 @@ export default {
       }
     }
     const nzInr = (rule, value, callback) => {
-      if (!this.showSnmpTrap) {
+      if (!this.showSnmpTrap || (!value && isNaN(value))) {
         callback()
       }
       if (value < 15) {
@@ -736,5 +736,8 @@ export default {
   }
   /deep/ .query-row  .metric-selector-input-box {
     width: calc(100% - 120px);
+  }
+  /deep/ .el-input-number--small{
+    width: 100%;
   }
 </style>
