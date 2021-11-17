@@ -195,13 +195,6 @@ li {
 .nz-tab-item-active:first-letter{
   text-transform: capitalize;
 }
-.nz-tab-item-close {
-  color: rgba(245, 108, 108, 0.6);
-  cursor: pointer;
-}
-.nz-tab-item-close:hover {
-  color: rgba(245, 108, 108, 1);
-}
 .nz-tab-error {
   font-weight: normal;
 }
@@ -523,13 +516,6 @@ li {
 
 .el-scrollbar__wrap {
   overflow-x: hidden !important;
-}
-.el-scrollbar__thumb {
-  background-color: #ccc;
-  cursor: default;
-}
-.el-scrollbar__thumb:hover {
-  background-color: #bbb;
 }
 /*大中小三个尺寸，默认中*/
 .el-scrollbar__bar.is-vertical {

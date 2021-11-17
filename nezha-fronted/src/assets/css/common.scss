@@ -37,11 +37,14 @@
   left: unset !important;
   top: 30px;
 }
-
+.nz-icon-minus-medium {
+  color: $--color-text-regular;
+  cursor: pointer;
+}
 .nz-icon-copy {
   padding: 0 4px;
   color: $--color-primary;
-  background-color: #FDF5E9;
+  background-color: $--background-color-copy;
   border-radius: $--border-radius-small;
   cursor: pointer;
 }

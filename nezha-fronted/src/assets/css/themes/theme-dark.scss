@@ -12,6 +12,8 @@ $--background-color-base: #18171D;
 $--background-color-1: #444440;
 // 背景色2
 $--background-color-2: #000;
+// 背景色 copy
+$--background-color-copy: #454545;
 
 // 左侧菜单背景色
 $--left-menu-background-color-base: #2D2E35;
@@ -43,7 +45,6 @@ $--border-color-light: #454545;
 $--border-color-light-hover: lighten($--border-color-light, 10%);
 // 浅边框色focus
 $--border-color-light-focus: lighten($--border-color-light, 20%);
-
 
 /* 5.提示色 */
 // 正常绿色

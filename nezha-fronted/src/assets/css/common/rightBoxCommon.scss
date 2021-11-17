@@ -307,6 +307,9 @@
 .el-form-item__content .el-autocomplete .el-input-group {
   vertical-align: unset;
 }
+.el-cascader__dropdown {
+  background-color: $--background-color-empty !important;
+}
 .right-box-select-top {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
