@@ -2,6 +2,7 @@
   <div class="full-width-height endpoint-tab-new">
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :api="url"
       :layout="['searchInput', 'elementSet']"
       :search-msg="searchMsg"

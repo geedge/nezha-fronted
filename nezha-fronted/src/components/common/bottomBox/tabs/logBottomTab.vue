@@ -1,6 +1,7 @@
 <template>
  <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
     :custom-tool="true"
     :layout="[]"
     :show-pagination="false"

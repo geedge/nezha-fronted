@@ -1,6 +1,7 @@
 <template>
   <nz-bottom-data-list
-    :showTitle='showTitle'
+      :showTitle='showTitle'
+      :obj='obj'
     :api="url"
     :custom-table-title.sync="tools.customTableTitle"
     :layout="['elementSet']"

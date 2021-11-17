@@ -2,6 +2,7 @@
   <div class="full-width-height">
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :api="url"
       :custom-table-title.sync="tools.customTableTitle"
       :layout="['searchInput', 'elementSet']"

@@ -2,6 +2,7 @@
   <div class="full-width-height chart-list asset-detail">
     <nz-bottom-data-list
       :showTitle='showTitle'
+      :obj='obj'
       :layout="[]"
       :tabs="tabs"
       :targetTab="targetTab"

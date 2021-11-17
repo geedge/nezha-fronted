@@ -1,6 +1,7 @@
 <template>
  <nz-bottom-data-list
-    :showTitle='showTitle'
+      :showTitle='showTitle'
+      :obj='obj'
     :layout="[]"
     :tabs="tabs"
     @changeTab="changeTab"

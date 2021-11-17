@@ -670,6 +670,9 @@ export default {
       spanList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       limitOptions: [100, 200, 500, 1000, 2000],
       nullTypeList: [{
+        label: 'connected',
+        value: 'connected'
+      }, {
         label: 'null',
         value: 'null'
       }, {
