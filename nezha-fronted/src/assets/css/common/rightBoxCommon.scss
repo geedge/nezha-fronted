@@ -224,7 +224,7 @@
   box-sizing: border-box;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color linear .2s, color linear .1s;
+  transition:all .2s;
 }
 .footer__btn:hover:not(.footer__btn--disabled) {
   background-color: $--button-primary-hover-background-color;
@@ -232,7 +232,7 @@
 .footer__btn:focus:not(.footer__btn--disabled) {
   background-color: $--button-primary-active-background-color;
 }
-.footer__btn--light {
+.footer__btn.footer__btn--light {
   background-color: $--button-light-hover-background-color;
   border: 1px solid $--button-light-border-color;
   color: $--button-light-color;
@@ -240,7 +240,7 @@
 .footer__btn.footer__btn--light:hover:not(.footer__btn--disabled) {
   background-color: $--button-light-hover-background-color;
   border: 1px solid $--button-primary-hover-background-color;
-  color: $--button-primary-background-color;
+  color: $--button-light-hover-color;
 }
 .footer__btn.footer__btn--light:focus:not(.footer__btn--disabled) {
   background-color: $--button-light-active-background-color;

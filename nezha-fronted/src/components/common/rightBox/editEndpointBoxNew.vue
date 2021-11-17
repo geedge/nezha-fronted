@@ -187,7 +187,7 @@
                 </transition>
 
                 <div style="text-align: center">
-                <span class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="showAllBasicOption=!showAllBasicOption">
+                <span class="nz-btn nz-btn-size-normal nz-btn-style-light" style="border: none" @click="showAllBasicOption=!showAllBasicOption">
                   {{$t('overall.moreOption')}}
                   <i :class="showAllBasicOption?'is-active':''" class="nz-icon nz-icon-arrow-down need-rotate" ></i>
                 </span>
@@ -303,7 +303,7 @@
                       </div>
                     </transition>
                     <div style="text-align: center">
-                  <span class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="item.showAllRelabelOption=!item.showAllRelabelOption">
+                  <span class="nz-btn nz-btn-size-normal nz-btn-style-light" style="border: none" @click="item.showAllRelabelOption=!item.showAllRelabelOption">
                     {{$t('overall.moreOption')}}
                     <i :class="item.showAllRelabelOption?'is-active':''" class="nz-icon nz-icon-arrow-down need-rotate" ></i>
                   </span>

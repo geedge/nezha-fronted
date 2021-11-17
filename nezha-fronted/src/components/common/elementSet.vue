@@ -20,14 +20,14 @@
       </div>
     </div>
     <div class="custom-bottom-btns">
-      <button v-if="isCancel" :id="tableId+'-element-set-none'" class="nz-btn nz-btn-size-small nz-btn-style-light-new is-cancel" type="button" @click="batchHandler(false)">
+      <button v-if="isCancel" :id="tableId+'-element-set-none'" class="nz-btn nz-btn-size-small nz-btn-style-light is-cancel" type="button" @click="batchHandler(false)">
         <span class="top-tool-btn-txt">{{$t('overall.clear')}}</span>
       </button>
-      <button v-if="!isCancel" :id="tableId+'-element-set-all'" class="nz-btn nz-btn-size-small nz-btn-style-light-new" type="button" @click="batchHandler(true)">
+      <button v-if="!isCancel" :id="tableId+'-element-set-all'" class="nz-btn nz-btn-size-small nz-btn-style-light" type="button" @click="batchHandler(true)">
         <span class="top-tool-btn-txt">{{$t('overall.all')}}</span>
       </button>
       <div>
-        <button :id="tableId+'-element-set-esc'" class="nz-btn nz-btn-size-small nz-btn-style-light-new" type="button" @click="esc">
+        <button :id="tableId+'-element-set-esc'" class="nz-btn nz-btn-size-small nz-btn-style-light" type="button" @click="esc">
           <span class="top-tool-btn-txt">{{$t('overall.esc')}}</span>
         </button>
         <button :id="tableId+'-element-set-save'" class="nz-btn nz-btn-size-small nz-btn-style-normal" type="button" @click="save">
