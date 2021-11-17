@@ -1,17 +1,22 @@
 .promqlInput {
+  position: relative;
+  width: 100%;
+  display: flex;
   .no-resize{
     background: rgba(255,255,255,0);
   }
-  .promqlInput {
-    position: relative;
-    width: 100%;
-    display: flex;
-  }
 
-  .promqlInput .query-row {
+  .query-row {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    .input-box {
+      flex: auto;
+      margin-right: 10px;
+      .not-fixed-height.no-resize.el-textarea {
+
+      }
+    }
   }
 
   .input-box .append-msg {
@@ -33,11 +38,6 @@
 
   .query-options .option:focus, .query-options .option:hover {
     background-color:   rgb(247, 248, 250);
-  }
-
-  .query-row .input-box {
-    flex: auto;
-    margin-right: 10px;
   }
 
   .metric-btn {

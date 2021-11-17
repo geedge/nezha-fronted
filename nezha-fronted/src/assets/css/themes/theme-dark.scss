@@ -45,6 +45,8 @@ $--border-color-light: #454545;
 $--border-color-light-hover: lighten($--border-color-light, 10%);
 // 浅边框色focus
 $--border-color-light-focus: lighten($--border-color-light, 20%);
+// 深色边框
+$--border-color-bottom: #090909;
 
 /* 5.提示色 */
 // 正常绿色

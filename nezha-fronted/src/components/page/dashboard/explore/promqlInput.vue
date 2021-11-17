@@ -38,7 +38,7 @@
           <div v-if="errorMsg" class="append-msg error"><span>{{errorMsg}}</span></div>
           <div v-if="appendMsg" class="append-msg error"><span>{{appendMsg}}</span></div>
         </div>
-        <div class="top-tool-btn-group" style="margin-left: 10px">
+        <div class="top-tool-btn-group">
           <button v-if="plugins.indexOf('add') > -1" class="top-tool-btn"
                @click="addExpression"><i class="nz-icon nz-icon-plus"></i></button>
           <button v-if="plugins.indexOf('copy') > -1" class="top-tool-btn"
