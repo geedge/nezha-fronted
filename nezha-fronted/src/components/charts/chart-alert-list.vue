@@ -740,7 +740,7 @@ export default {
       this.getAlerScreetList()
     },
     promQueryParamConvert (obj) {
-      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'') + ')'
+      let r = '(' + obj.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '') + ')'
       let intoLabels = false
       obj.labels = JSON.parse(obj.labels)
       if (Object.keys(obj.labels).length > 0) {
