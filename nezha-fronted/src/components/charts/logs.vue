@@ -696,10 +696,14 @@ export default {
       if (/\{\{.+\}\}/.test(expression)) {
         const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
           const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(label + '=".+?"')
+          const reg = new RegExp(',' + label + '=".+?"')
+          const reg1 = new RegExp('{' + label + '=".+?"')
           let value = null
           if (reg.test(legend)) {
             const find = legend.match(reg)[0]
+            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
+          } else if (reg1.test(legend)) {
+            const find = legend.match(reg1)[0]
             value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
           }
           return value || label
