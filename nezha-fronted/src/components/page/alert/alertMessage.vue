@@ -112,6 +112,18 @@
                class="line-chart-block-modal nz-dialog endpoint-dialog"
                width="90%"
                @close="dialogClose">
+      <el-popover
+        v-if="isError"
+        placement="top-start"
+        :close-delay=10
+        trigger="hover"
+        popper-class="chart-error-popper">
+        <div >{{errorContent}}</div>
+        <span slot="reference"  class="panel-info-corner panel-info-corner--error">
+                <i class="nz-icon nz-icon-warning fa-model" ></i>
+                <span class="panel-info-corner-inner"></span>
+            </span>
+      </el-popover>
       <div slot="title">
         {{$t("project.endpoint.dialogTitle")}}
         <div class="float-right panel-calendar dialog-tool" style="display: flex">
@@ -350,7 +362,9 @@ export default {
         { name: 'XLSX', value: 1 },
         { name: 'CSV', value: 2 },
         { name: 'JSON', value: 3 }
-      ]
+      ],
+      errorContent: '',
+      isError: false
     }
   },
   computed: {
@@ -573,6 +587,17 @@ export default {
                   }
                 } else {
                   this.$message.error(response.data.error)
+                }
+              } else {
+                this.$refs.messageChart.endLoading()
+                this.chartLoading = false
+                this.isError = true
+                if (response.msg) {
+                  this.errorContent = response.msg
+                } else if (response.error) {
+                  this.errorContent = response.error
+                } else {
+                  this.errorContent = response
                 }
               }
             })
