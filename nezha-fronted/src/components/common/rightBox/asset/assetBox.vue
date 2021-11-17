@@ -276,7 +276,7 @@
             </transition>
             <template v-if="showAddressOption">
               <div style="text-align: center;margin-bottom: 40px">
-                <span class="nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="showAddress">
+                <span class="nz-btn-size-normal-new nz-btn-style-light" style="border: none" @click="showAddress">
                   {{$t('overall.moreOption')}}<i class="nz-icon nz-icon-arrow-down"></i>
                 </span>
               </div>

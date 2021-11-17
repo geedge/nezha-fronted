@@ -156,7 +156,7 @@
 
             <el-form-item>
               <!--              <button-->
-              <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button" id="system-basic-reset"-->
+              <!--                @click="resetForm('basicForm','basic')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button" id="system-basic-reset"-->
               <!--                :disabled="prevent_opt.save" :class="{'nz-btn-disabled':prevent_opt.save}"-->
               <!--              >{{$t('overall.reset')}}</button>-->
               <button id="system-monitor-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal"  type="button" @click="saveSetInfo('monitor','monitorForm')">{{$t('overall.submit')}}</button>
@@ -205,8 +205,8 @@
               </el-select>
             </el-form-item>
             <el-form-item style="padding-top: 20px;">
-<!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
-              <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('config.system.email.testConnection')}}</button>
+<!--              <button id="system-email-reset" @click="resetForm('emailForm','email')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
+              <button id="system-email-test" :class="{'nz-btn-disabled':email.email_enable == 'off','nz-btn-disabled':prevent_opt.save}" :disabled="email.email_enable == 'off' || prevent_opt.save" @click="testSetInfo('email','emailForm')" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button">{{$t('config.system.email.testConnection')}}</button>
               <button id="system-email-save" v-has="'system_email_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('email','emailForm')">{{$t('overall.submit')}}</button>
             </el-form-item>
           </el-form>
@@ -273,7 +273,7 @@
               </el-input>
             </el-form-item>
             <el-form-item>
-<!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" type="button">{{$t('overall.reset')}}</button>-->
+<!--              <button id='system-ldap-reset' @click="resetForm('ldapForm','ldap')" class="nz-btn nz-btn-size-normal-new nz-btn-style-light" type="button">{{$t('overall.reset')}}</button>-->
               <button id='system-ldap-test' :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button" @click="testSetInfo('ldap','ldapForm')">{{$t('config.system.email.testConnection')}}</button>
               <button id='system-ldap-save' v-has="'system_ldap_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="saveSetInfo('ldap','ldapForm')">{{$t('overall.submit')}}</button>
             </el-form-item>

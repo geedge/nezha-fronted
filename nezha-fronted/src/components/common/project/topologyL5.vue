@@ -100,12 +100,12 @@
 
         </span>
           <span class="float-right">
-          <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new"
+          <button @click="previewTopology" v-if="!isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light"
                   style="margin-right: 20px"
           >
              {{$t('project.topology.preview')}}
            </button>
-            <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light-new" @click="previewExit"
+            <button v-if="isPreview" class="nz-btn nz-btn-size-normal nz-btn-style-light" @click="previewExit"
                     style="margin-right: 20px"
             >
              {{$t('project.topology.previewExit')}}

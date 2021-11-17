@@ -100,8 +100,8 @@ $--button-primary-active-background-color: mix(#000, $--color-primary, 10%);
 
 // button-light用于普通按钮
 $--button-light-color: $--color-text-regular; // 灰色按钮字色
-$--button-light-hover-color: $--button-light-color; // 灰色按钮hover字色
-$--button-light-active-color: $--color-primary; // 灰色按钮focus字色
+$--button-light-hover-color: mix(#FFF, $--color-primary, 15%); // 灰色按钮hover字色
+$--button-light-active-color: mix(#000, $--color-primary, 15%); // 灰色按钮focus字色
 $--button-light-background-color: $--background-color-base; // 灰色按钮背景色
 $--button-light-hover-background-color: $--background-color-empty; // 灰色按钮hover背景色
 $--button-light-active-background-color: $--button-light-hover-background-color; // 灰色按钮focus背景色
