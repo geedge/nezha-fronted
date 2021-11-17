@@ -243,6 +243,7 @@ import chartBarStatis from './chart-bar-statistics'
 import logs from './logs'
 import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
+import { dealLegendAlias } from '@/components/common/js/tools'
 // import visNetwork from './visNetwork'
 export default {
   name: 'chartList',
@@ -900,7 +901,7 @@ export default {
                               host = chartItem.elements[innerPos].expression
                             }
                             // 处理legend别名
-                            let alias = this.$refs['editChart' + chartItem.id][0].dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                            let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                             if (!alias || alias === '') {
                               alias = host
                             }
@@ -1136,7 +1137,7 @@ export default {
             host += '}'
           }
           // 处理legend别名
-          let alias = this.$refs['editChart' + chartInfo.id][0].dealLegendAlias(host, chartInfo.elements[0].legend)
+          let alias = dealLegendAlias(host, chartInfo.elements[0].legend)
           if (!alias || alias === '') {
             alias = host
           }

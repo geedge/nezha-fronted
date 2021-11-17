@@ -640,27 +640,6 @@ export default {
         }, 100)
       })
     },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(',' + label + '=".+?"')
-          const reg1 = new RegExp('{' + label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          } else if (reg1.test(legend)) {
-            const find = legend.match(reg1)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
-    },
     clickLegend (legendName, index) {
       /* 点击legend
           * 1.当前如果是全高亮状态，则全部置灰，只留被点击的legend高亮

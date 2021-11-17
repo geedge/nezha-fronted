@@ -362,7 +362,7 @@ import alertTable from './popData/alertTable'
 import assetTable from './popData/assetTable'
 import endpointTable from './popData/endpointTable'
 import topoTooltip from './L5/topoTooltip'
-import { getMetricTypeValue } from '../js/tools'
+import { getMetricTypeValue, dealLegendAlias } from '../js/tools'
 import bus from '../../../libs/bus'
 // 注册到画布
 registerNode('rectangleImg', myShape, myAnchors, myIconRect, myTextRect)
@@ -1005,7 +1005,7 @@ export default {
                   host = pen.data.expressArr[innerPos]
                 }
                 // 处理legend别名
-                let alias = this.dealLegendAlias(host, pen.data.legends[innerPos])
+                let alias = dealLegendAlias(host, pen.data.legends[innerPos])
                 if (!alias || alias === '') {
                   alias = host
                 }
@@ -1018,27 +1018,6 @@ export default {
         })
       }
       return res
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(',' + label + '=".+?"')
-          const reg1 = new RegExp('{' + label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          } else if (reg1.test(legend)) {
-            const find = legend.match(reg1)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     // 获取project Info
     getProjectData (n) {

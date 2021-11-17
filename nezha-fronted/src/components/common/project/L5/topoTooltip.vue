@@ -40,6 +40,7 @@ import { fromRoute } from '@/components/common/js/constants'
 import chartTempData from '@/components/charts/chartTempData'
 import axios from 'axios'
 import chartDataFormat from '@/components/charts/chartDataFormat'
+import { dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'topoTooltip',
   components: {
@@ -299,7 +300,7 @@ export default {
                             host = chartItem.elements[innerPos].expression
                           }
                           // 处理legend别名
-                          let alias = this.$refs['editChart' + chartItem.type].dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                          let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                           if (!alias || alias === '') {
                             alias = host
                           }

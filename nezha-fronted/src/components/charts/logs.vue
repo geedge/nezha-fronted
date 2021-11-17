@@ -146,6 +146,7 @@ import logTab from '@/components/page/dashboard/explore/logTab'
 import bus from '@/libs/bus'
 import logsTempData from '@/components/charts/logsTempData'
 import { fromRoute } from '@/components/common/js/constants'
+import { dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'logs',
   components: {
@@ -543,7 +544,7 @@ export default {
                   host += '}'
                 }
                 // 处理legend别名
-                alias = this.dealLegendAlias(host, this.chartData.elements[index].legend)
+                alias = dealLegendAlias(host, this.chartData.elements[index].legend)
                 if (!alias || alias === '') {
                   alias = host
                 }
@@ -622,7 +623,7 @@ export default {
                   host += '}'
                 }
                 // 处理legend别名
-                alias = this.dealLegendAlias(host, this.chartData.elements[index].legend)
+                alias = dealLegendAlias(host, this.chartData.elements[index].legend)
                 if (!alias || alias === '') {
                   alias = host
                 }
@@ -691,27 +692,6 @@ export default {
         }
         reader.readAsText(error.response.data)
       })
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(',' + label + '=".+?"')
-          const reg1 = new RegExp('{' + label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          } else if (reg1.test(legend)) {
-            const find = legend.match(reg1)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     dateChange (time) {
       this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')

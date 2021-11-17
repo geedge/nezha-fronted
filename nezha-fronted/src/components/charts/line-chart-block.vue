@@ -211,7 +211,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
-import { getMetricTypeValue, chartResizeTool, formatScientificNotation } from '../common/js/tools'
+import { getMetricTypeValue, chartResizeTool, formatScientificNotation, dealLegendAlias} from '../common/js/tools'
 import moment from 'moment-timezone'
 import chartDataList from '@/components/common/mixin/chartDataList'
 
@@ -404,7 +404,6 @@ export default {
       const hasGrey = highlightNum < this.isGrey.length // 是否有置灰的
       const curIsGrey = this.isGrey[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
-
       const echart = getChart(this.chartIndex)
       if (echart) {
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -493,7 +492,6 @@ export default {
       const hasGrey = highlightNum < this.isGreyScreen.length // 是否有置灰的
       const curIsGrey = this.isGreyScreen[index] // 当前legend的状态
       const currentIsTheOnlyOneHighlight = !curIsGrey && highlightNum === 1 // 当前legend是否是目前唯一高亮的
-
       const echart = this.echartModalStore
       if (echart) {
         if (!hasGrey) { // 1.除当前legend外全置灰
@@ -1725,7 +1723,7 @@ export default {
                       if (!host || host === '') {
                         host = elements.expression
                       }
-                      let alias = this.dealLegendAlias(host, elements.legend)
+                      let alias = dealLegendAlias(host, elements.legend)
                       if (!alias || alias === '') {
                         alias = host
                       }
@@ -1822,27 +1820,6 @@ export default {
       this.firstShow = false
       this.$refs['localLoading' + this.chartIndex].startLoading()
       this.divFirstShow = true
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(',' + label + '=".+?"')
-          const reg1 = new RegExp('{' + label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          } else if (reg1.test(legend)) {
-            const find = legend.match(reg1)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     // 获取格式
     getNumStr (num) {

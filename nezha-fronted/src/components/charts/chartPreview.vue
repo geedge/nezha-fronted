@@ -200,7 +200,7 @@ import chartAlertList from './chart-alert-list'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import diagram from '@/components/common/ChartDiagram/diagram'
 import moment from 'moment-timezone'
-import { formatScientificNotation } from '@/components/common/js/tools'
+import { formatScientificNotation, dealLegendAlias } from '@/components/common/js/tools'
 export default {
   name: 'chartPreview',
   components: {
@@ -572,7 +572,7 @@ export default {
                             host = chartItem.elements[innerPos].expression
                           }
                           // 处理legend别名
-                          let alias = this.dealLegendAlias(host, chartItem.elements[innerPos].legend)
+                          let alias = dealLegendAlias(host, chartItem.elements[innerPos].legend)
                           if (!alias || alias === '') {
                             alias = host
                           }
@@ -1740,7 +1740,7 @@ export default {
                       if (!host || host === '') {
                         host = this.chart.elements[pos].expression
                       }
-                      let alias = this.dealLegendAlias(host, this.chart.elements[pos].legend)
+                      let alias = dealLegendAlias(host, this.chart.elements[pos].legend)
                       if (!alias || alias === '') {
                         alias = host
                       }
@@ -1779,27 +1779,6 @@ export default {
           }
         })
       })
-    },
-    dealLegendAlias: function (legend, expression) {
-      if (/\{\{.+\}\}/.test(expression)) {
-        const labelValue = expression.replace(/(\{\{.+?\}\})/g, function (i) {
-          const label = i.substr(i.indexOf('{{') + 2, i.indexOf('}}') - i.indexOf('{{') - 2)
-          const reg = new RegExp(',' + label + '=".+?"')
-          const reg1 = new RegExp('{' + label + '=".+?"')
-          let value = null
-          if (reg.test(legend)) {
-            const find = legend.match(reg)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          } else if (reg1.test(legend)) {
-            const find = legend.match(reg1)[0]
-            value = find.substr(find.indexOf('"') + 1, find.lastIndexOf('"') - find.indexOf('"') - 1)
-          }
-          return value || label
-        })
-        return labelValue
-      } else {
-        return expression
-      }
     },
     screenPageNo (val) {
       this.screenPageObj.pageNo = val
