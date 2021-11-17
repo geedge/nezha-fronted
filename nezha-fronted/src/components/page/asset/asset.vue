@@ -673,7 +673,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      if (this.$route.path === '/asset' && !this.titleSearchList.model.children.length) {
+      if (this.$route.path === '/asset' && this.titleSearchList) {
         this.$set(this.searchLabel, 'statistics', 1)
       }/* else {
         delete this.searchLabel.statistics

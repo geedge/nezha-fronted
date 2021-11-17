@@ -590,7 +590,7 @@ export default {
       }
       this.$set(this.searchLabel, 'pageNo', this.pageObj.pageNo)
       this.$set(this.searchLabel, 'pageSize', this.pageObj.pageSize)
-      if (this.$route.path === '/monitor/endpoint' && !this.titleSearchList.project.children.length) {
+      if (this.$route.path === '/monitor/endpoint') {
         this.$set(this.searchLabel, 'statistics', 1)
       }
       const params = {
