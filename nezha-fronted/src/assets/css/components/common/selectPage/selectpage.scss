@@ -1,0 +1,47 @@
+.el-picker-panel,.sp-base.sp-inputs,.sp-search,.sp-result-area,.sp-pagination{
+  background: $--background-color-empty !important;
+}
+.el-date-table td.today span {
+  color: $--button-primary-color !important;
+}
+.sp-table {
+  th {
+    color: $--color-text-primary !important;
+  }
+  td {
+    color: $--color-text-regular !important;
+  }
+}
+.sp-page-info,.sp-result-message {
+  color: $--color-text-regular !important;
+}
+.sp-selected-tag {
+  color: $--color-text-regular !important;
+  background-color: $--background-color-base !important;
+  i {
+    color: #aaa !important;
+  }
+}
+.sp-search-input {
+  background-color: $--select-page-background-color !important;
+  border: 1px solid $--border-color-light !important;
+  color: $--color-text-regular !important;
+}
+.sp-base.sp-inputs {
+  border: 1px solid $--border-color-light !important;
+}
+.sp-base.sp-inputs:hover,.sp-base.sp-inputs:focus {
+  border: 1px solid $--border-color-light-hover !important;
+}
+.v-dropdown-container.v-dropdown-no-border {
+  border: 1px solid $--border-color-light !important;
+}
+div.sp-result-area table.sp-table tbody tr.sp-over td {
+  background-color: $--select-page-hover-background-color !important;
+  color: $--button-light-hover-color !important;
+  cursor: pointer;
+}
+div.sp-result-area table.sp-table tbody tr.sp-selected td {
+  color: $--select-page-focus-color !important;
+  cursor: default;
+}

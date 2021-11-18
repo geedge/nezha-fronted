@@ -134,8 +134,10 @@ $--click-search-items-border-color: #C7C7C7; // border
 $--click-search-items-border-bottom-color: $--border-color-base; // border
 $--click-search-items-color: $--color-primary; // color
 
-/* model */
-$--model-background-color: #EEEEEE;
+// selectPage
+$--select-page-background-color: $--background-color-empty;
+$--select-page-hover-background-color: #f6f8fa;
+$--select-page-focus-color: #CCCCCC;
 
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;
