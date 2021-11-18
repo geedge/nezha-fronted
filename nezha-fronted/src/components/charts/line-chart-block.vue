@@ -428,6 +428,20 @@ export default {
           })
           this.$set(this.isGrey, index, !this.isGrey[index])
         }
+        const chartInfo = this.data
+        const dataArg = this.seriesItem.filter((seriesItem, seriesIndex) => !this.isGrey[seriesIndex])
+        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+        const maxValue = maxValueCopies.maxValue
+        // const minValue = maxValueCopies.minValue
+        // const dot = maxValueCopies.dot
+        const copies = maxValueCopies.copies
+        const unit = maxValueCopies.unit
+        getChart(this.chartIndex).setOption({
+          yAxis: {
+            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        })
       }
     },
     clickLegend2 (legendName, index) {
@@ -516,6 +530,20 @@ export default {
           })
           this.$set(this.isGreyScreen, index, !this.isGreyScreen[index])
         }
+        const chartInfo = this.data
+        const dataArg = this.seriesItemScreen.filter((seriesItem, seriesIndex) => !this.isGreyScreen[seriesIndex])
+        const maxValueCopies = this.getMaxValue(dataArg, chartInfo)
+        const maxValue = maxValueCopies.maxValue
+        // const minValue = maxValueCopies.minValue
+        // const dot = maxValueCopies.dot
+        const copies = maxValueCopies.copies
+        const unit = maxValueCopies.unit
+        echart.setOption({
+          yAxis: {
+            minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
+            maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        })
       }
     },
     clickScreenLegend2 (legendName, index) {
