@@ -304,7 +304,7 @@
           }
         }
         &>.table-operation-item:hover {
-          opacity: .8;
+          background-color: $--button-primary-hover-background-color;
         }
         .table-operation-item.table-operation-item--more {
           justify-content: center;
