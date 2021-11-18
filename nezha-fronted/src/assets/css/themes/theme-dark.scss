@@ -2,8 +2,6 @@
 
 /* 1.主色(覆盖element-ui内置变量) */
 $--color-primary: #FA901C;
-/* AssetBOX button 背景色 */
-$--asset-background-color-button: #222329;
 
 /* 2.背景色 */
 // 空白背景色
@@ -129,8 +127,14 @@ $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框�
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
 
 /* Asset */
-$--asset-icon-color: $--button-primary-color; //icon
-$--asset-border-color: $--border-color-light; // border
+$--asset-label-btn-icon-color: $--button-primary-color; //icon
+$--asset-label-btn-border-color: $--border-color-light; // border
+$--asset-label-btn-background-color: #222329; // background
+
+/* clickSearch */
+$--click-search-items-border-color: $--background-color-copy; // border
+$--click-search-items-border-bottom-color: #2E2E2E; // border-BOTTOM
+$--click-search-items-color: $--color-text-regular; // color
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

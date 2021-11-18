@@ -167,7 +167,7 @@
           justify-content: space-between;
           .form__labels-label__span {
             i {
-              color: $--asset-icon-color;
+              color: $--asset-label-btn-icon-color;
             }
           }
         }
@@ -177,12 +177,12 @@
       margin-bottom: 20px;
       width: 300px;
       height: 28px;
-      border: 1px solid $--asset-border-color;
+      border: 1px solid $--asset-label-btn-border-color;
       border-radius: $--border-radius-small;
-      background-color: $--asset-background-color-button;
+      background-color: $--asset-label-btn-background-color;
 
       i {
-        color: $--asset-icon-color;
+        color: $--asset-label-btn-icon-color;
       }
     }
     .form__flex-container {
