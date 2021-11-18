@@ -85,7 +85,7 @@
                 <div class="form__labels-label">
                   <span>{{label.name}}</span>
                   <div>
-                    <span @click="removeLabel(label)"><i class="nz-icon nz-icon-minus"></i></span>
+                    <span @click="removeLabel(label)" class="form__labels-label__span"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </div>
               </template>

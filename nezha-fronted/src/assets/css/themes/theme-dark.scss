@@ -2,6 +2,8 @@
 
 /* 1.主色(覆盖element-ui内置变量) */
 $--color-primary: #FA901C;
+/* AssetBOX button 背景色 */
+$--asset-background-color-button: #222329;
 
 /* 2.背景色 */
 // 空白背景色
@@ -125,6 +127,10 @@ $--button-icon-active-background-color: $--background-color-empty; // focus背�
 $--button-icon-border-color: $--border-color-light; // 边框色
 $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框色
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
+
+/* Asset */
+$--asset-icon-color: $--button-primary-color; //icon
+$--asset-border-color: $--border-color-light; // border
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

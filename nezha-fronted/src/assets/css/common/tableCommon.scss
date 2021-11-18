@@ -274,6 +274,9 @@
           outline: none;
           transition:all .2s;
         }
+        .el-dropdown {
+          border: 1px solid $--border-color-light;
+        }
         .table-operation-item.table-operation-item--disable{
           border: 1px solid $--border-color-base;
           background-color: $--border-color-base;
@@ -512,4 +515,8 @@
   width: 4px;
   height: 100%;
   cursor: col-resize;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: $--background-color-empty;
 }

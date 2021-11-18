@@ -214,7 +214,7 @@ td .nz-icon-gear:before{
 .el-tree {
   background-color: $--background-color-empty !important;
 }
-.el-table::before {
+.el-table::before,.el-table__fixed-right::before {
   background-color: $--border-color-light !important;
 }
 .el-message-box {
