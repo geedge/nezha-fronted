@@ -954,7 +954,7 @@ export default {
       this.sreach_num = this.select_list.length
       this.select_list.forEach(val => {
         this.searchLabelList.forEach((item, index) => {
-          if (val.id == item.id) {
+          if (val.label == item.label) {
             this.searchLabelList.splice(index, 1)
           }
         })

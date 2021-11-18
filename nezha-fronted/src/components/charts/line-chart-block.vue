@@ -211,7 +211,7 @@ import chartDataFormat from './chartDataFormat'
 import { randomcolor } from '../common/js/radomcolor/randomcolor.js'
 import chartConfig from '../page/dashboard/overview/chartConfig'
 import { getChart, setChart, lineChartMove, getMousePoint } from '../common/js/common'
-import { getMetricTypeValue, chartResizeTool, formatScientificNotation, dealLegendAlias} from '../common/js/tools'
+import { getMetricTypeValue, chartResizeTool, formatScientificNotation, dealLegendAlias } from '../common/js/tools'
 import moment from 'moment-timezone'
 import chartDataList from '@/components/common/mixin/chartDataList'
 
@@ -642,7 +642,7 @@ export default {
         // chartId='screenShowArea';
       }
       const chartWidth = ele.clientWidth
-      this.stepWidth = document.getElementById('listContainer').offsetWidth / 12
+      this.stepWidth = this.chartInfo.groupId ? (document.getElementById('listContainer').offsetWidth / 12) - 10 : document.getElementById('listContainer').offsetWidth / 12
       const stackIconBorderColor = (chartInfo.type === 'stackArea' ? '#53a3cb' : '#7e7e7e')
       const stackIconChooseBorderColor = (chartInfo.type === 'stackArea' ? '#7e7e7e' : '#53a3cb')
       let maxValueCopies = this.getMaxValue(dataArg, chartInfo)
