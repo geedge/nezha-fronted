@@ -132,7 +132,7 @@
               <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
             </div>
           </div>
-          <div :class="['page',fromOverView?'overview-page':'']">
+          <div :class="['page topo-page',fromOverView?'overview-page':'']">
             <!--画布部分-->
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full"  @contextmenu="onContextMenu($event)"></div>
             <!--设置属性-->

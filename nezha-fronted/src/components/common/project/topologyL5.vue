@@ -151,7 +151,7 @@
               <popDataInfo :moduleId="moduleId" :projectId="projectInfo.id"></popDataInfo>
             </div>
           </div>
-          <div :class="['page',fromOverView?'overview-page':'']" :style="{
+          <div :class="['page topo-page',fromOverView?'overview-page':'']" :style="{
             border: fromOverView ? 'none' :`1px solid ${theme.rightBoxBorderColor}`
           }">
             <!--画布部分-->
