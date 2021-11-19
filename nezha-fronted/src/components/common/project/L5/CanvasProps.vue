@@ -7,7 +7,8 @@
     <!--<span class="right-box-top-btn-txt">{{$t('overall.delete')}}</span>-->
     <!--</button>-->
     <!--所有属性-->
-    <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
+    <keep-alive>
+      <el-tabs v-model="tab" type="card" v-if="selection.pen" @tab-click="tabClick">
       <el-tab-pane :label="$t('project.topology.data')" name="1">
         <el-form v-model="selection.pen.data" class="pens-data" label-position="top">
           <!--module-->
@@ -772,8 +773,10 @@
         </el-collapse>
       </el-tab-pane>
     </el-tabs>
+    </keep-alive>
     <!--选中多个-->
-    <div v-else-if="selection.pens" class="">
+    <keep-alive>
+      <div v-if="selection.pens" class="">
       <el-collapse v-model="activeNames">
         <!--对齐方式-->
         <el-collapse-item :title="$t('project.topology.align')" name="1" v-if="selection.pens">
@@ -840,8 +843,10 @@
         </el-collapse-item>
       </el-collapse>
     </div>
+    </keep-alive>
     <!-- 选中为空 -->
-    <div v-else style="height: 100%">
+    <keep-alive>
+      <div v-if="!selection.pens&&!selection.pen" style="height: 100%">
       <div class="project-title">
         Project
       </div>
@@ -1104,7 +1109,7 @@
 
       </div>
     </div>
-
+    </keep-alive>
   </div>
 </template>
 
