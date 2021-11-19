@@ -37,11 +37,14 @@
   left: unset !important;
   top: 30px;
 }
-
+.nz-icon-minus-medium {
+  color: $--color-text-regular;
+  cursor: pointer;
+}
 .nz-icon-copy {
   padding: 0 4px;
   color: $--color-primary;
-  background-color: #FDF5E9;
+  background-color: $--background-color-copy;
   border-radius: $--border-radius-small;
   cursor: pointer;
 }
@@ -210,4 +213,24 @@ td .nz-icon-gear:before{
 }
 .el-tree {
   background-color: $--background-color-empty !important;
+}
+.el-table::before,.el-table__fixed-right::before {
+  background-color: $--border-color-light !important;
+}
+.el-message-box {
+  background-color: $--background-color-empty !important;
+  .el-button:nth-of-type(1) {
+    background-color: $--button-light-hover-background-color;
+    border: 1px solid $--button-light-border-color;
+    color: $--button-light-color;
+  }
+  .el-button:nth-of-type(1):hover {
+    background-color: $--button-light-hover-background-color !important;
+    border: 1px solid $--button-primary-hover-background-color !important;
+    color: $--button-primary-background-color !important;
+  }
+  .el-button.el-button--primary:hover {
+    background-color: $--button-primary-hover-background-color !important;
+    opacity: 1 !important;
+  }
 }

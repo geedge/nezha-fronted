@@ -79,7 +79,7 @@
     outline: none;
     border-radius: $--button-border-radius;
     background-color: $--button-icon-background-color;
-    transition: background-color linear .1s;
+    transition:all .2s;
     color: $--button-icon-color;
 
     i {
@@ -273,7 +273,10 @@
           cursor: pointer;
           border-radius: $--button-border-radius;
           outline: none;
-          transition: background-color linear .1s;
+          transition:all .2s;
+        }
+        .el-dropdown {
+          border: 1px solid $--border-color-light;
         }
         .table-operation-item.table-operation-item--disable{
           border: 1px solid $--border-color-base;
@@ -302,7 +305,7 @@
           }
         }
         &>.table-operation-item:hover {
-          opacity: .8;
+          background-color: $--button-primary-hover-background-color;
         }
         .table-operation-item.table-operation-item--more {
           justify-content: center;
@@ -398,6 +401,10 @@
     display: flex;
     align-items: center;
     margin-right: 20px;
+    height: 22px;
+    margin-top: 8px;
+    border: 1px solid $--click-search-items-border-color;
+    background: $--background-color-empty;
 
     .el-cascader {
       .el-tag {
@@ -406,19 +413,18 @@
     }
     &.is-focus, &.is-hover {
       .nz-label-search__label {
-        border-color: #c7c7c7;
+        border: none;
       }
     }
 
     .nz-label-search__label {
       padding-left: 6px;
-      height: 24px;
-      border: 1px solid RGBA(0,0,0,0.15);
+      height: 22px;
       line-height: 22px;
-      border-right: none;
+      border: none;
       transform: translateX(1px);
       box-sizing: border-box;
-      transition: border-color linear .2s;
+      transition:all .2s;
 
       span {
         font-size: 14px;
@@ -426,15 +432,16 @@
       }
 
       i {
-        line-height: 28px !important;
+        line-height: 22px !important;
       }
     }
     .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner {
       border-color: $--border-color-base-focus !important;
     }
     .el-input__inner {
-      height: 24px !important;
-      border-left: none;
+      height: 22px !important;
+      border: none;
+      background-color: $--background-color-empty;
     }
 
     .el-tag {
@@ -444,6 +451,9 @@
         top: 0;
       }
     }
+  }
+  .nz-label-search:hover {
+    border-color: #C7C7C7;
   }
 }
 .click-search-dropdown {
@@ -495,7 +505,7 @@
 }
 .table-no-data__title {
   font-size: 16px;
-  color: #333333;
+  color: $--color-text-primary;
   font-weight: 400;
 }
 
@@ -513,4 +523,8 @@
   width: 4px;
   height: 100%;
   cursor: col-resize;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: $--background-color-empty;
 }

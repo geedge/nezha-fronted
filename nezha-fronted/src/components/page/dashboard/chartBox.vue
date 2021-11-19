@@ -235,7 +235,7 @@
               ></promql-input>
               <el-row style="margin-top: 18px">
                 <el-col class="legend-title">
-                  {{$t('dashboard.panel.chartForm.legend')}}&nbsp;
+                  <span class="legend-title__span">{{$t('dashboard.panel.chartForm.legend')}}&nbsp;</span>
                   <el-popover placement="top" trigger="hover" width="211" popper-class="prevent-clickoutside">
                     <div :style="{'word-break':language!=='cn'?'keep-all':'break-all'}">{{$t('dashboard.panel.chartForm.legendTip')}}</div>
                     <i @mouseover="rz" class="nz-icon nz-icon-info-normal" slot="reference" style="font-size: 14px; -webkit-transform:scale(0.75);display:inline-block;"></i>
@@ -1738,9 +1738,5 @@ export default {
   }
   .el-color-dropdown{
     z-index: 2200!important;
-  }
-  .chart-box-unit .el-scrollbar{
-    height: 195px;
-    overflow-y: auto;
   }
 </style>

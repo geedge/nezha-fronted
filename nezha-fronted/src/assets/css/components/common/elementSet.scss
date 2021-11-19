@@ -34,7 +34,7 @@
   margin-top: 12px;
   width: 100%;
   height: 300px;
-  border: 1px solid $--button-gray-border-color !important;
+  border: 1px solid $--button-light-border-color !important;
 }
 .custom-labels i {
   color: #04b330;
@@ -42,6 +42,9 @@
   position: absolute;
   left: 5px;
   top: 6px;
+}
+.nz-btn.nz-btn-style-light {
+  background-color: $--background-color-empty;
 }
 .custom-label {
   padding: 2px 0 2px 25px;

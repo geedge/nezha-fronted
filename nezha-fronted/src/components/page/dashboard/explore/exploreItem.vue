@@ -11,7 +11,7 @@
           <el-row class="block-col-2" style="width: 300px;">
             <el-col>
               <el-dropdown trigger="click">
-              <span class="el-dropdown-link">
+              <span class="el-dropdown-link explore-dropdown__item">
                 <span><i :class="selectIcon"></i></span>
                 <span>{{selectValue}}</span>
                 <span><i class="el-icon-arrow-down el-icon--right"></i></span>

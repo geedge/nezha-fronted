@@ -1,17 +1,22 @@
 .promqlInput {
+  position: relative;
+  width: 100%;
+  display: flex;
   .no-resize{
     background: rgba(255,255,255,0);
   }
-  .promqlInput {
-    position: relative;
-    width: 100%;
-    display: flex;
-  }
 
-  .promqlInput .query-row {
+  .query-row {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    .input-box {
+      flex: auto;
+      margin-right: 10px;
+      .not-fixed-height.no-resize.el-textarea {
+
+      }
+    }
   }
 
   .input-box .append-msg {
@@ -35,11 +40,6 @@
     background-color:   rgb(247, 248, 250);
   }
 
-  .query-row .input-box {
-    flex: auto;
-    margin-right: 10px;
-  }
-
   .metric-btn {
     height: 29px !important;
     width: 105px;
@@ -55,7 +55,19 @@
     height: 300px;
     position: absolute;
     z-index: 2100;
-    background-color: #FFF;
+    background-color: $--background-color-empty;
+    width: 450px;
+    .el-cascader-menu__wrap {
+      height: 100%;
+      .el-scrollbar__view.el-cascader-menu__list {
+        .el-cascader-node {
+          padding: 0;
+          .el-cascader-node__label {
+            padding: 0;
+          }
+        }
+      }
+    }
   }
 
   .expr-title {
@@ -103,6 +115,10 @@
   .nz-cascade {
     padding: 0 10px 0 25px;
     position: relative;
+    overflow: hidden;
+    width: calc(100% - 50px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .nz-cascade .nz-icon-template2 {
     display: none;

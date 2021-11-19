@@ -807,7 +807,7 @@
             <div class="flex middle">
               <label></label>
               <div class="full pr10">
-                <button class="button primary nz-btn nz-btn-size-mini-new nz-btn-style-light-new" @click="onLayout">
+                <button class="button primary nz-btn nz-btn-size-mini-new nz-btn-style-light" @click="onLayout">
                   {{ $t('project.topology.onLayout') }}
                 </button>
               </div>

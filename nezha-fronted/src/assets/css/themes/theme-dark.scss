@@ -12,6 +12,8 @@ $--background-color-base: #18171D;
 $--background-color-1: #444440;
 // 背景色2
 $--background-color-2: #000;
+// 背景色 copy
+$--background-color-copy: #454545;
 
 // 左侧菜单背景色
 $--left-menu-background-color-base: #2D2E35;
@@ -43,7 +45,8 @@ $--border-color-light: #454545;
 $--border-color-light-hover: lighten($--border-color-light, 10%);
 // 浅边框色focus
 $--border-color-light-focus: lighten($--border-color-light, 20%);
-
+// 深色边框
+$--explore-border-color-bottom: #090909;
 
 /* 5.提示色 */
 // 正常绿色
@@ -88,6 +91,8 @@ $--dashboard-card-header-background-color: $--background-color-empty;
 
 /* 10.dropdown */
 $--dropdown-menu-box-shadow-color: rgba(8,3,3,0.77);
+/* 分页 dropdown */
+$--select-dropdown-background: $--background-color-empty;
 
 /* 11.input */
 $--input-background-color: $--background-color-base;
@@ -99,16 +104,16 @@ $--button-primary-background-color: $--color-primary; // 普通按钮背景色
 $--button-primary-hover-background-color: mix(#FFF, $--color-primary, 10%);
 $--button-primary-active-background-color: mix(#000, $--color-primary, 10%);
 
-// button-gray用于普通按钮
-$--button-gray-color: $--color-text-regular; // 灰色按钮字色
-$--button-gray-hover-color: mix(#FFF, $--color-primary, 15%); // 灰色按钮hover字色
-$--button-gray-active-color: mix(#000, $--color-primary, 15%); // 灰色按钮focus字色
-$--button-gray-background-color: $--background-color-empty; // 灰色按钮背景色
-$--button-gray-hover-background-color: $--background-color-base; // 灰色按钮hover背景色
-$--button-gray-active-background-color: $--background-color-base; // 灰色按钮focus背景色
-$--button-gray-border-color: $--border-color-light; // 灰色按钮边框色
-$--button-gray-hover-border-color: $--button-gray-hover-color; // 灰色按钮hover边框色
-$--button-gray-active-border-color: $--button-gray-active-color; // 灰色按钮focus边框色
+// button-light用于普通按钮
+$--button-light-color: $--color-text-regular; // 灰色按钮字色
+$--button-light-hover-color: mix(#FFF, $--color-primary, 15%); // 灰色按钮hover字色
+$--button-light-active-color: mix(#000, $--color-primary, 15%); // 灰色按钮focus字色
+$--button-light-background-color: $--background-color-empty; // 灰色按钮背景色
+$--button-light-hover-background-color: $--background-color-base; // 灰色按钮hover背景色
+$--button-light-active-background-color: $--background-color-base; // 灰色按钮focus背景色
+$--button-light-border-color: $--border-color-light; // 灰色按钮边框色
+$--button-light-hover-border-color: $--button-light-hover-color; // 灰色按钮hover边框色
+$--button-light-active-border-color: $--button-light-active-color; // 灰色按钮focus边框色
 
 // button-icon用于单图标按钮
 $--button-icon-color: $--color-text-regular; // 字色
@@ -120,6 +125,21 @@ $--button-icon-active-background-color: $--background-color-empty; // focus背�
 $--button-icon-border-color: $--border-color-light; // 边框色
 $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框色
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
+
+/* Asset */
+$--asset-label-btn-icon-color: $--button-primary-color; //icon
+$--asset-label-btn-border-color: $--border-color-light; // border
+$--asset-label-btn-background-color: #222329; // background
+
+/* clickSearch */
+$--click-search-items-border-color: $--background-color-copy; // border
+$--click-search-items-border-bottom-color: #2E2E2E; // border-BOTTOM
+$--click-search-items-color: $--color-text-regular; // color
+
+// selectPage
+$--select-page-background-color: $--background-color-empty;
+$--select-page-hover-background-color: $--button-light-hover-background-color;
+$--select-page-focus-color: #666666;
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

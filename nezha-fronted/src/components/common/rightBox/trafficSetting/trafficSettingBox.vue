@@ -10,13 +10,13 @@
           <el-input :disabled="true" v-model="dc.name" id="traffic-setting-name"></el-input>
         </el-form-item>
         <traffic-setting-tab ref="trafficSetting" :post-asset-list="assetList" v-for="(item,index) in traffic.setting" :index="index" :asset-setting="item" :key="uuids[index]" :id="uuids[index]" @delSelf="delAssetSetting" :validate-repeat-func="valiateRepeatFunc"></traffic-setting-tab>
-        <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal-new nz-btn-style-light-new" id="traffic-setting-add" style="margin:15px 1px 15px 15px" type="button">{{$t('config.dc.traffic.add')}}</button>
+        <button @click="addAssetSetting" class="nz-btn nz-btn-size-normal nz-btn-style-light" id="traffic-setting-add" style="margin:15px 1px 15px 15px" type="button">{{$t('config.dc.traffic.add')}}</button>
       </el-form>
     </div>
 
     <!--底部按钮-->
     <div class="right-box-bottom-btns">
-      <button id="traffic-setting-esc" v-cancel="{obj:traffic,func:esc}" class="nz-btn nz-btn-size-normal nz-btn-style-light-new" type="button">
+      <button id="traffic-setting-esc" v-cancel="{obj:traffic,func:esc}" class="nz-btn nz-btn-size-normal nz-btn-style-light" type="button">
         <span>{{$t('overall.cancel')}}</span>
       </button>
       <button id="traffic-setting-save" v-has="'dc_trafficSetting_save'" class="nz-btn nz-btn-size-normal nz-btn-style-normal" type="button" @click="save">

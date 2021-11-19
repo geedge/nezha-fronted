@@ -85,7 +85,7 @@
                 <div class="form__labels-label">
                   <span>{{label.name}}</span>
                   <div>
-                    <span @click="removeLabel(label)"><i class="nz-icon nz-icon-minus"></i></span>
+                    <span @click="removeLabel(label)" class="form__labels-label__span"><i class="nz-icon nz-icon-minus"></i></span>
                   </div>
                 </div>
               </template>
@@ -276,7 +276,7 @@
             </transition>
             <template v-if="showAddressOption">
               <div style="text-align: center;margin-bottom: 40px">
-                <span class="nz-btn-size-normal-new nz-btn-style-light-new" style="border: none" @click="showAddress">
+                <span class="nz-btn-size-normal-new nz-btn-style-light" style="border: none" @click="showAddress">
                   {{$t('overall.moreOption')}}<i class="nz-icon nz-icon-arrow-down"></i>
                 </span>
               </div>
