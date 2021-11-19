@@ -1,11 +1,9 @@
-.main-list {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  background-color: $--background-color-base;
-  overflow-x: auto;
-}
-.main-list--project {
+.main-list--project.main-list {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background-color: $--background-color-base;
+    overflow-x: auto;
   .projectList{
     flex: 1;
     width: calc(50% - 10px);
