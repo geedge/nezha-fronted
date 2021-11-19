@@ -1,0 +1,70 @@
+.panel-chart {
+  border: 1px solid $--chart-box-border-color;
+  height: 100%;
+
+  .chart-header {
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 0 10px;
+    height: 39px;
+
+    font-size: 14px;
+    line-height: 40px;
+    color: $--color-text-primary;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $--chart-title-hover-background-color;
+
+      .chart-header__tools {
+        .chart-header__tool .tool__icon {
+          visibility: visible;
+        }
+      }
+    }
+    .chart-header__title {
+      max-width: calc(100% - 100px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .chart-header__tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .chart-header__tool {
+        margin-left: 20px;
+        cursor: pointer;
+
+        .tool__icon {
+          visibility: hidden;
+          font-size: 14px;
+          color: $--color-text-primary;
+        }
+        .nz-chart-dropdown {
+          position: absolute;
+          top: 44px;
+          right: 0;
+          left: unset;
+          transform-origin: center top;
+          z-index: 1000;
+          width: 180px;
+          li {
+            padding-left: 15px !important;
+            padding-right: 0 !important;
+            width: calc(100% - 15px);
+            text-align: left;
+            i {
+              margin-right: 10px;
+            }
+            &:hover i {
+              color: $--color-primary;
+            }
+          }
+        }
+      }
+    }
+  }
+}

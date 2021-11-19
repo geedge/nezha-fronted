@@ -17,6 +17,7 @@
   .main-container {
     padding: 10px;
     height: 100%;
+    box-sizing: border-box;
     background-color: $--background-color-base;
     &>div {
       background-color: $--background-color-empty;

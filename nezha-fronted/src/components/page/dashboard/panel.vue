@@ -8,7 +8,7 @@
       </div>
       <div class="main-container">
         <div class="top-tools">
-          <div v-if="panelData.length == 0" class="top-tool-left" style="margin-left: 10px;">
+          <div v-if="panelData.length === 0" class="top-tool-left" style="margin-left: 10px;">
             <button id="panel-add-panel" class="nz-btn nz-btn-style-light nz-btn-size-small" @click="toAdd"><i class="nz-icon nz-icon-create-square"></i>&nbsp;&nbsp;{{$t("dashboard.panel.createPanelTitleSec")}}</button>
           </div>
           <template v-else>
@@ -80,9 +80,19 @@
           </template>
         </div>
         <div id="tableList" class="table-list">
-          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box" style="height: calc(100% - 20px); overflow: auto;">
+          <div id="dashboardScrollbar" ref="dashboardScrollbar" class="table-list-box" style="overflow: auto;">
             <div class="box-content" v-loading="chartListLoading">
-              <chart-list ref="chartList" :class="{'show-top':showTopBtn}" :from="fromRoute.panel" :panel-lock="panelLock" @on-edit-chart="editChart" @on-refresh-time="refreshTime"  @on-remove-chart="delChart" @panel-list-loading="load" @on-add-group-item-chart="addGroupItem"></chart-list>
+              <chart-list
+                ref="chartList"
+                :class="{'show-top':showTopBtn}"
+                :data-list="dataList"
+                :from="fromRoute.panel"
+                :panel-lock="panelLock"
+                @on-edit-chart="editChart"
+                @on-refresh-time="refreshTime"
+                @on-remove-chart="delChart"
+                @on-add-group-item-chart="addGroupItem"
+              ></chart-list>
             </div>
           </div>
         </div>
@@ -105,15 +115,15 @@
 
 <script>
 import ChartBox from './chartBox'
-import ChartList from '../../charts/chart-list'
+import ChartList from '../../chart/chartList'
 import bus from '../../../libs/bus'
 import pickTime from '../../common/pickTime'
 import selectPanel from '../../common/popBox/selectPanel'
 import panelBox from '@/components/common/rightBox/panelBox'
 import chartTempBox from '@/components/common/rightBox/chartTempBox'
 import topToolMoreOptions from '@/components/common/popBox/topToolMoreOptions'
-import Template from '@/components/page/config/template'
 import { fromRoute } from '@/components/common/js/constants'
+import chartData from '@/components/chart/testData'
 
 export default {
   name: 'panel',
@@ -122,7 +132,7 @@ export default {
       fromRoute,
       overScroll10: false,
       isLoading: true,
-      panelLock: true,
+      panelLock: false,
       showTopBtn: false, // top按钮
       visible: false,
       chartListLoading: true,
@@ -170,7 +180,6 @@ export default {
         panelId: '',
         varIds: []
       },
-      chartsData: [], // 中间部分图表相关数据
       panelData: [],
       panelDataDragTmp: [],
       searchMsg: { // 给搜索框子组件传递的信息
@@ -219,7 +228,6 @@ export default {
     }
   },
   components: {
-    Template,
     'chart-box': ChartBox,
     'chart-list': ChartList,
     'pick-time': pickTime,
@@ -251,7 +259,7 @@ export default {
       this.filter.start_time = bus.timeFormate(curTime[0], 'yyyy-MM-dd hh:mm:ss')
       this.filter.end_time = bus.timeFormate(curTime[1], 'yyyy-MM-dd hh:mm:ss')
       // this.$refs.chartList.initCurrentRecordNum();
-      this.$refs.chartList.cleanData()
+      // this.$refs.chartList.cleanData()
       this.getData(this.filter)
     },
 
@@ -405,12 +413,12 @@ export default {
             this.rightBox.chart.show = false
             const chartList = this.$refs.chartList.dataList
             for (let i = 0; i < chartList.length; i++) {
-              if (chartList[i].id === data.id) {
+              /*if (chartList[i].id === data.id) {
                 chartList.splice(i, 1)
               }
               if (chartList[i].type === 'group') {
                 chartList[i].children = chartList[i].children.filter((item) => item.id !== data.id)
-              }
+              }*/
               // if(data.next != -1){
               //   if(chartList[i].id === data.next){
               //     nextChart = chartList[i]
@@ -422,7 +430,7 @@ export default {
               //   }
               // }
             }
-            this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
+            //this.$refs.chartList.loadChartData(this.scrollbarWrap.scrollTop)
             // if(nextChart&&prevChart){ //删除图表为中间位置
             //   prevChart.next = nextChart.id;
             //   nextChart.prev = prevChart.id;
@@ -448,9 +456,11 @@ export default {
     },
     // 获取数据,用在子页面
     getData (params) {
+      console.info(0)
       if (!this.hasButton('panel_view')) {
         return
       }
+      this.chartListLoading = true
       if (params.start_time === '' || params.end_time === '') {
         const now = bus.getTimezontDateRange()
         const endTimeTmp = bus.timeFormate(now[1].getTime(), 'yyyy-MM-dd hh:mm:ss')
@@ -458,10 +468,19 @@ export default {
         params.start_time = startTimeTmp
         params.end_time = endTimeTmp
       }
-      if (this.$refs.chartList) {
-        this.$refs.chartList.initData(params)
-      }
-      // this.panelReloadOnlyPanel();
+      this.$get('visual/panel/chart?panelId=' + params.panelId + '&groupId=0' + '&pageSize=-1').then(response => {
+        if (response.code === 200) {
+          console.info(1)
+          this.chartListLoading = false
+          this.dataList = chartData.data.list.map(item => {
+            return {
+              ...item,
+              hide: item.name.indexOf(this.filter.searchName) === -1, // 搜索条件
+              loaded: false
+            }
+          })
+        }
+      })
     },
 
     /* 图表相关操作--end */
@@ -636,7 +655,7 @@ export default {
     },
     search: function () {
       if (this.$refs.chartList) {
-        this.$refs.chartList.searchCharts(this.filter.searchName)
+        // this.$refs.chartList.searchCharts(this.filter.searchName)
       }
     },
     // 滚动事件触发下拉加载
@@ -645,7 +664,7 @@ export default {
       this.scrollbarWrap.addEventListener('scroll', bus.debounce(function () {
         _self.showTopBtn = _self.scrollbarWrap.scrollTop > 50
         _self.overScroll10 = _self.scrollbarWrap.scrollTop > 50
-        _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
+        // _self.$refs.chartList.loadChartData(_self.scrollbarWrap.scrollTop)
       }, 300))
     },
     focusInput () {
@@ -683,13 +702,6 @@ export default {
           wrap.scrollTop = currentTop
         }
       }, 20)
-    },
-    load (dataList) {
-      if (dataList.length > 0) {
-        this.chartListLoading = false
-      } else {
-        this.chartListLoading = !dataList.length === 0
-      }
     }
   },
   created () {

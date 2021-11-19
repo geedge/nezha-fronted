@@ -1,0 +1,122 @@
+<template>
+  <div :id='`chartList${timestamp}`' class="chart-list">
+    <grid-layout
+      :col-num="12"
+      :is-draggable="!panelLock"
+      :is-resizable="!panelLock"
+      :layout.sync="copyDataList"
+      :margin="[10, 10]"
+      :row-height="stepWidth"
+      :use-css-transforms="true"
+      :vertical-compact="true"
+    >
+      <grid-item
+        v-for="(item, index) in copyDataList"
+        :key="item.id"
+        :h="item.h"
+        :i="item.i"
+        :w="item.w"
+        :x="item.x"
+        :y="item.y"
+        dragAllowFrom=".chart-header"
+        dragIgnoreFrom=".chart-header__tools"
+        @resize="resizeEvent"
+        @resized="resizedEvent"
+        @container-resized="containerResizedEvent"
+      >
+        <panel-chart
+          :ref="'chart' + item.id"
+          :chart-info="item"
+        ></panel-chart>
+      </grid-item>
+    </grid-layout>
+
+    <div v-if="noData" class="no-data">
+      <svg aria-hidden="true" class="icon">
+        <use xlink:href="#nz-icon-no-data-panel"></use>
+      </svg>
+      <div class="no-data-div">No data</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import VueGridLayout from 'vue-grid-layout'
+import { fromRoute } from '@/components/common/js/constants'
+import bus from '@/libs/bus'
+import chartTempData from '@/components/charts/chartTempData'
+import axios from 'axios'
+import chartDataFormat from '@/components/charts/chartDataFormat'
+import panelChart from '@/components/chart/panelChart'
+
+export default {
+  name: 'chartList',
+  props: {
+    // TODO isModel
+    from: { type: String },
+    obj: Object,
+    panelLock: { type: Boolean, default: true },
+    dataList: Array // 看板中所有图表信息
+  },
+  components: {
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem,
+    panelChart
+  },
+  data () {
+    return {
+      fromRoute,
+      filter: {}, // chart列表查询条件
+      copyDataList: [],
+      noData: false, // no data
+      // processedDataList: [], // 将dataList处理后的数据，组件中使用它不使用dataList
+      tempDom: { height: '', width: '' },
+      eventLog: [],
+      stepWidth: null,
+      timestamp: new Date().getTime()
+    }
+  },
+  methods: {
+    init () {
+      const dom = document.getElementById(`chartList${this.timestamp}`)
+      if (dom) {
+        this.stepWidth = Math.floor(dom.offsetWidth / 12)
+        const span = document.querySelector('.temp-dom')
+        this.tempDom.width = span.offsetWidth
+      }
+    },
+    resizeEvent (i, newH, newW, newHPx, newWPx) {
+      // TODO 分段重新渲染图表，或者暂时隐藏图表
+    },
+    resizedEvent (i, newH, newW, newHPx, newWPx) {
+      // TODO 重新渲染图表，向后端发送put请求
+    },
+    containerResizedEvent (i, newH, newW, newHPx, newWPx) {
+      // TODO 重新渲染图表
+    }
+  },
+  mounted () {
+    this.init()
+  },
+  watch: {
+    dataList: {
+      deep: true,
+      handler (n, o) {
+        this.noData = !n || n.length < 1
+        this.copyDataList = n.map(item => {
+          return {
+            ...item,
+            i: item.id
+          }
+        })
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.chart-list {
+  height: 100%;
+}
+</style>
