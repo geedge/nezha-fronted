@@ -805,7 +805,7 @@ export default {
           // data = JSON.parse(localStorage.getItem('topoData'))
           if (!res.data.topo || !data.pens) {
             data = {
-              bkColor: '#FFFFFF',
+              bkColor: '#FFFFFF00',
               gridSize: 10,
               gridColor: '#ededed',
               lineWidth: 1,
@@ -885,6 +885,9 @@ export default {
               }
               if (!data.bkImage) {
                 data.bkImage = undefined
+              }
+              if (data.bkColor === '#FFFFFF') {
+                data.bkColor = '#FFFFFF00'
               }
               Promise.all(promiseArr).then(res => {
                 res.forEach((response, index) => {

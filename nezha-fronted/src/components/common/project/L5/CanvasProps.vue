@@ -1709,7 +1709,7 @@ export default {
         return ''
       }
       ;
-      if (color.length <= 7) {
+      if (color.indexOf('#') === 0) {
         return color
       }
       const rgb = color.split(',')
