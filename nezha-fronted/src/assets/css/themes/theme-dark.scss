@@ -127,7 +127,6 @@ $--button-icon-hover-border-color: $--button-icon-border-color; // hover边框�
 $--button-icon-active-border-color: $--color-text-primary; // focus边框色
 
 /* Asset */
-$--asset-label-btn-icon-color: $--button-primary-color; //icon
 $--asset-label-btn-border-color: $--border-color-light; // border
 $--asset-label-btn-background-color: #222329; // background
 
@@ -140,6 +139,15 @@ $--click-search-items-color: $--color-text-regular; // color
 $--select-page-background-color: $--background-color-empty;
 $--select-page-hover-background-color: $--button-light-hover-background-color;
 $--select-page-focus-color: #666666;
+$--select-page-tag-background-color: $--background-color-empty;
+
+// icon字色
+$--nz-icon-color: $--button-primary-color;
+
+// value
+$--value-background-color: $--background-color-empty;
+$--value-input-background-color: $--background-color-base;
+$--value-color: $--table-header-font-color;
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;

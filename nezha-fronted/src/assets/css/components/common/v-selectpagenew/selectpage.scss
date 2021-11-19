@@ -1,5 +1,8 @@
-.el-picker-panel,.sp-base.sp-inputs,.sp-search,.sp-result-area,.sp-pagination{
-  background: $--background-color-empty !important;
+.el-picker-panel,.sp-base.sp-inputs{
+  background: $--input-background-color !important;
+}
+.sp-search,.sp-result-area,.sp-pagination {
+  background-color: $--background-color-empty !important;
 }
 .el-date-table td.today span {
   color: $--button-primary-color !important;
@@ -17,9 +20,15 @@
 }
 .sp-selected-tag {
   color: $--color-text-regular !important;
-  background-color: $--background-color-base !important;
+  background-color: $--select-page-tag-background-color !important;
   i {
-    color: #aaa !important;
+    color: $--color-text-regular !important;
+  }
+}
+.sp-selected-tag:hover {
+  background-color: $--background-color-empty !important;
+  i:hover {
+    color: $--color-text-primary !important;
   }
 }
 .sp-search-input {

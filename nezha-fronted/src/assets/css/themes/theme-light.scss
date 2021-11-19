@@ -125,7 +125,6 @@ $--button-icon-hover-border-color: $--border-color-base; // hover边框色
 $--button-icon-active-border-color: mix(#FFF, $--color-primary, 10%); // focus边框色
 
 /* Asset */
-$--asset-label-btn-icon-color: $--color-primary; //icon
 $--asset-label-btn-border-color: mix(#FFF, $--color-primary, 60%); // border
 $--asset-label-btn-background-color: #FFF4E8; // background
 
@@ -135,9 +134,18 @@ $--click-search-items-border-bottom-color: $--border-color-base; // border
 $--click-search-items-color: $--color-primary; // color
 
 // selectPage
-$--select-page-background-color: $--background-color-empty;
+$--select-page-background-color: $--background-color-base;
 $--select-page-hover-background-color: #f6f8fa;
 $--select-page-focus-color: #CCCCCC;
+$--select-page-tag-background-color: #e4eaee;
+
+// icon 字色
+$--nz-icon-color: $--color-primary; //icon
+
+// value
+$--value-background-color: #5C6BC0;
+$--value-color: #FFFFFF;
+$--value-input-background-color: $--value-color;
 
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;

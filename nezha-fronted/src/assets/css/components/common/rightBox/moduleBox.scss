@@ -140,7 +140,7 @@
     top: 15px;
     background: rgba(236,127,102,0.1);
     padding: 2px 6px;
-    color: #EC7F66;
+    color: $--nz-icon-color;
   }
   .endpoint-title{
     border: 1px solid $--border-color-light;
@@ -227,11 +227,27 @@
   border: none!important;
 }
 .param-box-row-symbol {
-  color: $--color-text-regular;
+  color: $--color-text-regular !important;
 }
 .module-form__label {
   padding-bottom: 6px;
   font-size: 14px;
   line-height: 16px;
   color: $--color-text-regular;
+}
+.el-tooltip__popper.prevent-clickoutside {
+  background-color: $--background-color-empty;
+}
+.vue-tags-input,.ti-new-tag-input {
+  background-color: $--value-input-background-color !important;
+  .ti-input {
+    border: 1px solid $--border-color-light;
+    .ti-tag.ti-valid {
+      background-color: $--value-background-color;
+      color: $--value-color;
+    }
+    .ti-new-tag-input {
+      color: $--color-text-regular !important;
+    }
+  }
 }

@@ -167,7 +167,7 @@
           justify-content: space-between;
           .form__labels-label__span {
             i {
-              color: $--asset-label-btn-icon-color;
+              color: $--nz-icon-color;
             }
           }
         }
@@ -182,7 +182,7 @@
       background-color: $--asset-label-btn-background-color;
 
       i {
-        color: $--asset-label-btn-icon-color;
+        color: $--nz-icon-color;
       }
     }
     .form__flex-container {
