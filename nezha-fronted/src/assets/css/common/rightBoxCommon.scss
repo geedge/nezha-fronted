@@ -267,6 +267,7 @@
 .limit-height .el-cascader-menu {
   max-height: 200px;
   overflow: auto;
+  overflow-x: hidden;
 }
 
 .form-items--half-width-group {
