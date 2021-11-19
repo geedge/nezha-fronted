@@ -1606,7 +1606,7 @@ export default {
     },
     onClickName (name) {
       this.pen.name = name
-      // this.pen.calcControlPoints()
+      this.selection.pen.calcControlPoints()
       this.drowdown = 0
       if (this.selection.pen) {
         this.selection.pen.name = name
