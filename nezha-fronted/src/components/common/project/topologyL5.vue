@@ -174,7 +174,7 @@
               <CanvasContextMenu :index="topologyIndexF" :props.sync="props"></CanvasContextMenu>
             </div>
             <!--所有节点上的小图标-->
-            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&item.data.iconToolState&&!fromPrev"
+            <div v-for="(item,index) in nodesArr" v-if="!editTopologyFlag&&!fromPrev"
                  :key="index"
                  v-show="(item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1)) > -10) && (item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) > - 10)"
                  :style="{position: 'absolute',top:item.rect.y + offsetY  - (48*(fromOverView?penToolTipScale:1))+'px',left:item.rect.center.x + offsetX - (24*(fromOverView?penToolTipScale:1)) +'px',transform:'scale('+(fromOverView?penToolTipScale:1)+')'}"
