@@ -234,3 +234,13 @@ td .nz-icon-gear:before{
     opacity: 1 !important;
   }
 }
+.right-box .right-box-form-add,.right-box .right-box-form-minus-box{
+  padding:4px 6px;
+  background: $--background-color-copy;
+  border-radius: $--border-radius-small;
+  border: 1px solid $--span-nz-icon-border-color;
+  cursor: pointer;
+  .nz-icon-plus {
+    color: $--nz-icon-color;
+  }
+}

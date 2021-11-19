@@ -542,7 +542,7 @@
           <div class="right-box-line"></div>
           <div id="module-box-preview" ref="previewBoxScrollbar"  class="configs-copy-value"  style="overflow: auto;">
             <span class="copy-value-content"> <i class="nz-icon nz-icon-override" @click="copyValue"></i></span>
-            <pre style="overflow-y: auto;height:100%">{{configsCopyValue}}</pre>
+            <pre>{{configsCopyValue}}</pre>
           </div>
         </el-form>
       </div>

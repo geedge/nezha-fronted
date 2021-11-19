@@ -3,6 +3,19 @@
   padding: 10px 0 10px 10px;
   background-color: $--background-color-base;
   box-sizing: border-box;
+  pre {
+    border: 1px solid $--border-color-base;
+    border-left: 4px solid #e6522c;
+    border-radius: 0;
+    font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+    background-color: $--background-color-empty;
+    color: $--color-text-primary;
+    padding: 15px;
+  }
+
+  pre code {
+    white-space: pre;
+  }
 
   .el-table--border::after, .el-table--group::after, .el-table::before {
     height: 0;
@@ -278,20 +291,6 @@
 .toc a code {
   color: #337ab7;
   background-color: transparent;
-}
-
-pre {
-  border: 1px solid $--border-color-base;
-  border-left: 4px solid #e6522c;
-  border-radius: 0;
-  font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
-  background-color: $--background-color-empty;
-  color: $--color-text-primary;
-  padding: 15px;
-}
-
-pre code {
-  white-space: pre;
 }
 
 code {

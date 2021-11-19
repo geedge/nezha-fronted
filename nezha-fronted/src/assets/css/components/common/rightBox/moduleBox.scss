@@ -53,7 +53,7 @@
     padding-left: 0;
   }
   .el-tabs__item{
-    width: 90px;
+    min-width: 90px;
     padding: 0 10px;
     text-align: center;
   }
@@ -102,10 +102,6 @@
     padding: 10px 0px 10px 15px;
     width:100%;
     margin-left: 0px;
-    pre{
-      max-height: 300px;
-      min-height: 100px;
-    }
   }
   .configs-copy-value .copy-value-content{
     position: absolute;
@@ -138,8 +134,9 @@
     position: absolute;
     right: 20px;
     top: 15px;
-    background: rgba(236,127,102,0.1);
+    background: $--background-color-copy;
     padding: 2px 6px;
+    border: 1px solid $--span-nz-icon-border-color;
     color: $--nz-icon-color;
   }
   .endpoint-title{
@@ -169,13 +166,13 @@
     }
   }
   .value-mapping-add {
-    background: rgba(250,144,28,0.1);
-    border: 1px solid #FFE0BD;
     margin-bottom: 10px;
     height: 24px;
-    line-height: 24px;
-    color: $--color-primary;
+    line-height: 23px;
     box-sizing: border-box;
+    background: $--background-color-copy;
+    border: 1px solid $--span-nz-icon-border-color;
+    color: $--nz-icon-color;
   }
   #module-box-relabel .vue-tags-input{
     max-width: unset;
@@ -196,6 +193,15 @@
       letter-spacing: 0;
       font-weight: 600;
       text-transform: Capitalize;
+    }
+  }
+  .configs-copy-value {
+    pre {
+      color: $--color-text-primary;
+      padding: 15px;
+    }
+    i {
+      color: $--color-text-regular;
     }
   }
 }
@@ -249,5 +255,8 @@
     .ti-new-tag-input {
       color: $--color-text-regular !important;
     }
+  }
+  .ti-input:hover {
+    border: 1px solid $--border-color-light-hover;
   }
 }
