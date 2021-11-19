@@ -152,7 +152,7 @@
             </div>
           </div>
           <div :class="['page',fromOverView?'overview-page':'']" :style="{
-            border: fromOverView ? 'none' :`1px solid ${theme.borderColorLight}`
+            border: fromOverView ? 'none' :`1px solid $--color-text-regular`
           }">
             <!--画布部分-->
             <div :id="'topology-canvas' + topologyIndexF" :ref="'topology-canvas'+ topologyIndexF" class="full" @contextmenu="onContextMenu($event)"></div>

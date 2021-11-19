@@ -45,3 +45,6 @@ div.sp-result-area table.sp-table tbody tr.sp-selected td {
   color: $--select-page-focus-color !important;
   cursor: default;
 }
+div.sp-pagination ul li a:hover {
+  color: $--color-text-regular !important;
+}

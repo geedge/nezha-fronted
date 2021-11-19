@@ -114,3 +114,8 @@
 .search-content-box {
   border-bottom: 1px solid $--click-search-items-border-bottom-color !important;
 }
+.el-skeleton {
+  .el-skeleton__item.el-skeleton__p.is-first {
+    background-color: $--background-color-base;
+  }
+}
