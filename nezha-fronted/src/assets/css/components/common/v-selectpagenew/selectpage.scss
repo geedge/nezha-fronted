@@ -1,4 +1,4 @@
-.el-picker-panel,.sp-base.sp-inputs{
+.el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input{
   background: $--input-background-color !important;
 }
 .sp-search,.sp-result-area,.sp-pagination {
@@ -36,10 +36,10 @@
   border: 1px solid $--border-color-light !important;
   color: $--color-text-regular !important;
 }
-.sp-base.sp-inputs {
+.sp-base.sp-inputs,.sp-base.sp-input {
   border: 1px solid $--border-color-light !important;
 }
-.sp-base.sp-inputs:hover,.sp-base.sp-inputs:focus {
+.sp-base.sp-inputs:hover,.sp-base.sp-input:hover,.sp-base.sp-inputs:focus,.sp-base.sp-input:focus {
   border: 1px solid $--border-color-light-hover !important;
 }
 .v-dropdown-container.v-dropdown-no-border {
@@ -56,4 +56,22 @@ div.sp-result-area table.sp-table tbody tr.sp-selected td {
 }
 div.sp-pagination ul li a:hover {
   color: $--color-text-regular !important;
+}
+div.v-selectpage div.sp-input-container div.sp-input {
+  color: $--color-text-regular !important;
+}
+div.v-selectpage div.sp-input-container.sp-open div.sp-input {
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  color: $--color-text-regular !important;
+}
+.sp-button {
+  .sp-caret {
+    color: $--color-text-regular !important;
+  }
+}
+.sp-button.open {
+  .sp-caret {
+    color: $--color-text-regular !important;
+  }
 }

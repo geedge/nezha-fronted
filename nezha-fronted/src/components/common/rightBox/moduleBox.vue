@@ -427,7 +427,7 @@
                         >
                           <el-input v-model="item2.expressions[eindex].key" placeholder="key" size="mini" ></el-input>
                         </el-form-item>
-                        =
+                        <span class="param-box-row-eq">=</span>
                         <el-form-item
                           :prop="'configs.1.config.'+ index +'.pipeline.' + index2 + '.expressions.'+eindex+'.value'"
                           :rules="[{ required: true, message: $t('validate.required'), trigger: 'blur' }]"

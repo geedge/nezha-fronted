@@ -33,6 +33,8 @@ $--color-text-regular: #BEBEBE;
 $--color-text-secondary: #999998;
 // 链接字色
 $--color-text-link: #3C92F1;
+// title 字色
+$--color-title-primary: $--color-text-primary;
 
 /* 4.边框色 */
 // 普通边框色
@@ -149,6 +151,9 @@ $--span-nz-icon-border-color: $--border-color-light-hover;
 $--value-background-color: $--background-color-empty;
 $--value-input-background-color: $--background-color-base;
 $--value-color: $--table-header-font-color;
+
+// time picker
+$--time-picker-hover-color: #FFFFFF;
 
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;
