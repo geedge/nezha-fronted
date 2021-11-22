@@ -58,6 +58,8 @@ axios.interceptors.response.use(
       if (accountErrorCode.indexOf(response.data.code) !== -1 && noJumpPath.indexOf(window.location.hash) == -1) {
         window.location.href = '/'
       }
+    } else {
+      return response
     }
     return response
   },
@@ -72,7 +74,13 @@ export function get (url, params) {
     }).then(response => {
       resolve(response.data)
     }).catch(err => {
+      if (err.response.headers && err.response.headers['content-type'].indexOf('application/json') === -1) {
+        resolve(err.response)
+      }
       if (err.response) {
+        if (!err.response.data.error) {
+          err.response.data.error = err.response.data.msg
+        }
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)

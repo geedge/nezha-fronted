@@ -672,8 +672,11 @@ export default {
 
                   this.$refs['promql-' + promqlIndex][0].setError('')
                 } else {
-                  // console.log(response)
-                  this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                  if (response.error) {
+                    this.$refs['promql-' + promqlIndex][0].setError(response.error)
+                  } else {
+                    this.$refs['promql-' + promqlIndex][0].setError(response)
+                  }
                 }
               })
 
