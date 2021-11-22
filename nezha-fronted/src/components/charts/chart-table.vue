@@ -94,6 +94,7 @@
 <!--            <span class="float-right  dialog-tool" @click="screenRefreshChart" style="margin-right: 15px"><i class="global-active-color nz-icon nz-icon-refresh"/></span>-->
           </div>
           <el-table :data="seriesItemScreen" border height="95%" style="margin-top: 10px;"
+                    ref="tableScreen"
                     @sort-change="tableDataSortScreen" tooltip-effect="light">
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.time')" min-width="100" prop="time"
                              :sort-orders="['ascending', 'descending']" :sortable="'custom'"></el-table-column>
@@ -107,7 +108,7 @@
             <el-table-column :label="$t('dashboard.panel.chartTableColumn.value')" class-name="costom-value" min-width="90" prop="value"
                              :resizable="false" :sort-orders="['ascending', 'descending']" :sortable="'custom'">
               <template slot-scope="scope">
-                <div :style="{color:mapping?mapping.color.text:'#000',background:mapping?mapping.color.bac:'#fff'}" >
+                <div :style="{color:scope.row.mapping?scope.row.mapping.color.text:'#000',background:scope.row.mapping?scope.row.mapping.color.bac:'#fff'}" >
                   <span style="padding: 0px 10px;">{{ scope.row.value}}</span>
                 </div>
               </template>
