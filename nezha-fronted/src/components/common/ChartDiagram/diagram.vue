@@ -348,7 +348,7 @@ const canvasOptions = {
   translateKey: 'None',
   disableEmptyLine: true,
   autoExpandDistance: 0,
-  minScale: 0.01
+  minScale: 0.2
   // scaleKey: -1
 }
 export default {
