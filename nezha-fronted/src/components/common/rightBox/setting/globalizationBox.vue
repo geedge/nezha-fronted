@@ -32,7 +32,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label='$t("config.menus.value")' prop="value">
-            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>
+            <el-input placeholder="" maxlength="256" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>
           </el-form-item>
 <!--          <el-form-item :label='$t("i18n.remark")' prop="remark">-->
 <!--            <el-input placeholder="" maxlength="64" show-word-limit v-model="editGlobalization.value" size="small" id="dc-box-input-value"></el-input>-->

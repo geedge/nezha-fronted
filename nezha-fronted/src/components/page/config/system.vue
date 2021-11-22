@@ -5,25 +5,47 @@
         <div class="system-config-form basicForm" v-if="activeTab === 'basic'">
           <el-form :model="basic"  label-width="180px" size="small" ref="basicForm" :rules="basicRules" :validate-on-rule-change="false">
             <div class="system-title">{{$t('config.system.basic.title')}}</div>
-            <el-form-item :label="$t('config.system.basic.systemName')" prop="system_name">
-              <el-input v-model="basic.system_name" id="system-baisc-system_name"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.sessionTimeout')" prop="session_timeout">
-              <el-input v-model.number="basic.session_timeout" >
-                <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
-              </el-input>
-            </el-form-item>
-            <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
-              <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
+            <el-form-item :label="$t('config.system.basic.language')" prop="language">
+              <el-select id="account-input-language"
+                         class="right-box__select"
+                         v-model="basic.language"
+                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                         size="small">
+                <template v-for="item in languageList">
+                  <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </template>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.timezone')" prop="timezone">
-              <el-select v-model="basic.timezone" id="system-baisc-timezone" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
+              <el-select v-model="basic.timezone" id="system-basic-timezone" filterable popper-class="right-box-select-top right-public-box-dropdown-top">
                 <el-option v-for="(item,index) in timezoneOption" :key="index" :label="item.name" :value="item.name" >
                   <div style="display: flex;justify-content: space-between;padding: 5px;">
                     <div >{{item.name}}</div>
                     <div class="utc-item">{{timezoneOptionHandler(item.offset)}}</div>
                   </div>
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.defTheme')" prop="timezone">
+              <el-select id="account-input-language"
+                         class="right-box__select"
+                         v-model="basic.theme"
+                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                         size="small">
+                <template v-for="item in themeList">
+                  <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </template>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.dataFormat')" prop="timezone">
+              <el-select id="account-input-language"
+                         class="right-box__select"
+                         v-model="basic.date_format"
+                         popper-class="right-box-select-top right-public-box-dropdown-top prevent-clickoutside"
+                         size="small">
+                <template v-for="item in dateFormatList">
+                  <el-option :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </template>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.mapConfig')" class="basic-lnglat" prop="lnglat">
@@ -34,17 +56,54 @@
                 <latlng-picker ref="latlngPicker" :init-data="basic.lnglat" :show-zoom="true" @lnglatChange="lnglatChange"></latlng-picker>
               </div>
             </el-form-item>
+            <el-form-item :label="$t('config.system.basic.sessionTimeout')" prop="session_timeout">
+              <el-input v-model.number="basic.session_timeout" >
+                <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
+              </el-input>
+            </el-form-item>
             <el-form-item :label="$t('config.system.basic.snmpTrapPort')" prop="snmp_trap_listen_port">
               <el-input v-model="basic.snmp_trap_listen_port"   id="system-baisc-snmp_trap_listen_port"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.defaultCabinetUsize')" prop="default_cabinet_usize">
+              <el-input v-model.number="basic.default_cabinet_usize" id="system-baisc-default_cabinet_usize"></el-input>
             </el-form-item>
             <el-form-item :label="$t('config.system.basic.unsaved')" prop="unsaved_change">
               <el-switch v-model="basic.unsaved_change" active-color="rgb(238, 157, 63)"  active-value='on' inactive-value='off' id="system-baisc-unsaved_change">
               </el-switch>
             </el-form-item>
-            <el-form-item :label="$t('config.system.basic.mfa')" prop="mfa_auth_enable">
-              <el-switch v-model="basic.mfa_auth_enable" active-color="rgb(238, 157, 63)"  :active-value='"1"' :inactive-value='"0"' id="system-baisc-mfs_change">
+            <div class="system-title">{{$t('config.system.basic.pinPolicy')}}&nbsp;<span class="el-form-item__tip">({{$t('config.system.basic.pinPolicyValue')}})</span></div>
+            <el-form-item :label="$t('config.system.basic.gloEnable')" prop="mfa_auth_enable">
+              <el-switch v-model="basic.mfa_auth_enable" active-color="rgb(238, 157, 63)"  :active-value='"1"' :inactive-value='"0"' id="system-basic-mfs_change">
               </el-switch>
-              <div class="el-form-item__tip">{{$t('config.system.basic.TwoFactorAuthentication')}}</div>
+<!--              <div class="el-form-item__tip">{{$t('config.system.basic.TwoFactorAuthentication')}}</div>-->
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.enable')" prop="enable">
+              <el-switch v-model="basic.pin_policy.enable" active-color="rgb(238, 157, 63)"  active-value='1' inactive-value='0' id="system-basic-enable">
+              </el-switch>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.length')" prop="length">
+              <el-input v-model="basic.pin_policy.length" id="system-basic-length"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.passContain')" prop="">
+              <el-checkbox v-model="basic.pin_policy.num" :true-label="1" :false-label="0" checked>{{$t('config.system.basic.num')}}</el-checkbox>
+              <el-checkbox v-model="basic.pin_policy.lower" :true-label="1" :false-label="0" checked>{{$t('config.system.basic.lower')}}</el-checkbox>
+              <el-checkbox v-model="basic.pin_policy.upper" :true-label="1" :false-label="0" checked>{{$t('config.system.basic.upper')}}</el-checkbox>
+              <el-checkbox v-model="basic.pin_policy.spec" :true-label="1" :false-label="0" checked>{{$t('config.system.basic.spec')}}</el-checkbox>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.passPeriod')" prop="valid" style="padding-bottom: 15px">
+              <el-input v-model="basic.pin_policy.valid" id="system-basic-pass">
+                <template slot="append"><span >{{$t('config.system.basic.day')}}</span></template>
+              </el-input>
+              <div class="el-form-item__tip">{{$t('config.system.basic.passPeriodValue')}}</div>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.retry')" class="half-form-item" prop="retry" style="padding-bottom: 15px">
+              <el-input v-model="basic.pin_policy.retry" id="system-basic-retry"></el-input>
+              <div class="el-form-item__tip" style="width: 512px;">({{$t('config.system.basic.retryValue')}})</div>
+            </el-form-item>
+            <el-form-item :label="$t('config.system.basic.lockTime')" class="half-form-item" prop="lockTime" style="margin-left: 66px">
+              <el-input v-model="basic.pin_policy.lockTime" id="system-basic-lock-time">
+                <template slot="append"><span >{{$t('config.system.basic.minute')}}</span></template>
+              </el-input>
             </el-form-item>
             <el-form-item>
               <button id="system-basic-save" v-has="'system_basic_save'" :class="{'nz-btn-disabled':prevent_opt.save}" :disabled="prevent_opt.save" class="nz-btn nz-btn-size-normal nz-btn-style-normal" style="margin-top: 8px;"  type="button" @click="saveSetInfo('basic','basicForm')">{{$t('overall.submit')}}</button>
@@ -331,12 +390,15 @@ export default {
       basic: {
         // alert_api: '',
         asset_ping_interval: '300', // 检查周期，单位：s
+        language: 'en',
         session_timeout: '30',
         storage_local_retention: 15 * 24,
         system_name: '',
         system_logo: '',
         current_site_url: '',
         timezone: '',
+        date_format: 'yyyy-MM-dd HH:mm:ss',
+        theme: 'Light',
         default_cabinet_usize: '',
         query_max_series: '',
         unsaved_change: 'on',
@@ -344,7 +406,8 @@ export default {
         default_scrape_timeout: '30',
         snmp_trap_listen_port: 162,
         lnglat: '',
-        map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 }
+        map_center_config: { longitude: 116.39, latitude: 39.9, zoom: 4, minZoom: 1, maxZoom: 10 },
+        pin_policy: {}
       },
       basicCopy: null,
       basicRules: {
@@ -505,7 +568,18 @@ export default {
           value: 'sysconfig'
         }
       ],
-      activeTab: 'basic'
+      activeTab: 'basic',
+      languageList: [
+        { value: 'en', label: 'English' },
+        { value: 'zh', label: '简体中文' }
+      ],
+      themeList: [
+        { value: 'light', label: 'Light' },
+        { value: 'dark', label: 'Dark' }
+      ],
+      dateFormatList: [
+        { value: 1, label: 'yyyy-MM-dd HH:mm:ss' }
+      ]
     }
   },
   methods: {
@@ -546,6 +620,7 @@ export default {
             localStorage.setItem('nz-sys-default-cabinet-usize', this.basic.default_cabinet_usize)
             localStorage.setItem('nz-unsaved-change', this.basic.unsaved_change)
             this.basic.map_center_config = JSON.parse(this.basic.map_center_config)
+            this.basic.pin_policy = JSON.parse(this.basic.pin_policy)
             this.basic.lnglat = `${this.basic.map_center_config.longitude},${this.basic.map_center_config.latitude}`
           } else if (type == 'terminal') {
             localStorage.setItem('nz-sys-terminal-timeout', this.terminal.terminal_timeout)

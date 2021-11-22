@@ -259,3 +259,13 @@
   font-size: 12px;
   line-height: 20px;
 }
+.half-form-item.el-form-item {
+  display: inline-block;
+  width: 230px;
+  .el-form-item__content {
+    width: 230px;
+   .el-input.el-input--small,.el-input.el-input-group--append {
+     width: calc(100% - 18px);
+   }
+  }
+}
