@@ -9,7 +9,7 @@
       </div>
       <div class="top-tool-right" v-if="!customTool">
         <div v-if="layout.indexOf('searchInput') > -1" class="top-tool-search margin-r-20">
-          <search-input :searchMsg="searchMsg" :position="'bottom' + targetTab + obj.id" @search="search" :targetTab="targetTab"></search-input>
+          <search-input v-if="searchInputShow" :searchMsg="searchMsg" :position="'bottom' + targetTab + obj.id" @search="search" :targetTab="targetTab"></search-input>
         </div>
         <slot name="top-tool-right"></slot>
         <button v-if="layout.indexOf('elementSet') > -1" id="account-column-setting" class="top-tool-btn margin-r-20"
@@ -118,11 +118,20 @@ export default {
   data () {
     return {
       fromRoute: fromRoute,
+      searchInputShow: true,
       tools: {
         toTopBtnTop: this.$tableHeight.toTopBtnTop, // to-top按钮的top属性
         tableHover: false, // 控制滚动条和top按钮同时出现
         showCustomTableTitle: false // 自定义列弹框是否显示
       }
+    }
+  },
+  watch: {
+    obj (n) {
+      this.searchInputShow = false
+      setTimeout(() => {
+        this.searchInputShow = true
+      }, 100)
     }
   },
   methods: {
