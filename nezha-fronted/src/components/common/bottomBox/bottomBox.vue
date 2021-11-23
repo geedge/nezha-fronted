@@ -48,7 +48,7 @@
         <panel-tab-new @getTableData="getTableData" :paramsType="'module'" v-if="from === fromRoute.module && targetTab === 'panel'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="tabs.module.moduleTabTitle" :targetTab.sync="targetTab" @changeTab="changeTab"></panel-tab-new>
         <!--endpoint列表的tab-->
         <panel-tab-new v-if="from === fromRoute.endpoint && targetTab === 'panelTab'" v-show="subResizeShow" :from="from" :obj="obj" :paramsType="'endpoint'" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab" @getTableData="getTableData"></panel-tab-new>
-        <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'endpointQuery'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></endpointQuery>
+        <endpointQuery v-if="from === fromRoute.endpoint && targetTab === 'Metrics'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></endpointQuery>
         <log-bottom-tab v-if="from === fromRoute.endpoint && targetTab === 'log' && hasLogConfig" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></log-bottom-tab>
         <alertMessageTabNew  v-if="from === fromRoute.endpoint && targetTab === 'endpointAlertMessage'" v-show="subResizeShow" :from="from" :obj="obj" :tabs="endpointTabs" :targetTab.sync="targetTab" @changeTab="changeTab"></alertMessageTabNew>
         <!--chartTemp的Tab-->
@@ -205,7 +205,7 @@ export default {
           endpointTabTitle: [
             { prop: 'panelTab', name: this.$t('overall.detail') },
             { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-            { prop: 'endpointQuery', name: 'Metrics' },
+            { prop: 'Metrics', name: 'Metrics' },
             { prop: 'log', name: 'Log' }
           ]
         },
@@ -255,7 +255,7 @@ export default {
       const tabs = [
         { prop: 'panelTab', name: this.$t('overall.detail') },
         { prop: 'endpointAlertMessage', name: this.$t('overall.alert') },
-        { prop: 'endpointQuery', name: 'Metrics' }
+        { prop: 'Metrics', name: 'Metrics' }
       ]
       if (hasLog) {
         tabs.push({ prop: 'log', name: 'Log' })
