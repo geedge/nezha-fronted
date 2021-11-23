@@ -412,6 +412,7 @@ export default {
       basicCopy: null,
       basicRules: {
         system_name: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
+        language: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }],
         // alert_api: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: host, trigger: 'blur' }],
         asset_ping_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
         default_scrape_interval: [{ required: true, message: this.$t('validate.required'), trigger: 'blur' }, { validator: positiveInteger, trigger: 'blur' }],
@@ -578,7 +579,9 @@ export default {
         { value: 'dark', label: 'Dark' }
       ],
       dateFormatList: [
-        { value: 1, label: 'yyyy-MM-dd HH:mm:ss' }
+        { value: 'dd/MM/yyyy HH:mm:ss', label: 'dd/MM/yyyy HH:mm:ss' },
+        { value: 'MM/dd/yyyy HH:mm:ss', label: 'MM/dd/yyyy HH:mm:ss' },
+        { value: 'yyyy-MM-dd HH:mm:ss', label: 'yyyy-MM-dd HH:mm:ss' }
       ]
     }
   },
@@ -648,6 +651,7 @@ export default {
           if (type == 'basic') {
             const mapConfig = this.$refs.latlngPicker.getAttribute()
             param.map_center_config = JSON.stringify(mapConfig)
+            param.pin_policy = JSON.stringify(this.basic.pin_policy)
           }
           const postParam = Object.assign({}, param)
           for (const key in postParam[type]) {
