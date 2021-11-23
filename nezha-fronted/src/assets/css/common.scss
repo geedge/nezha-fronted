@@ -244,3 +244,26 @@ td .nz-icon-gear:before{
     color: $--nz-icon-color;
   }
 }
+.el-time-panel {
+  background-color: $--background-color-empty;
+  .el-time-panel__footer {
+    border: 1px solid $--border-color-light;
+  }
+}
+//.editor-core {
+//  p {
+//    color: $--color-text-regular;
+//  }
+//}
+//.ql-toolbar.ql-snow,.ql-container.ql-snow {
+//  border: 1px solid $--border-color-light;
+//  .ql-header {
+//    color: $--color-text-primary;
+//  }
+//  .ql-stroke {
+//    stroke: $--color-text-primary;
+//  }
+//  .ql-picker-options {
+//    background-color: $--background-color-empty;
+//  }
+//}

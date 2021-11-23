@@ -1,4 +1,4 @@
-.el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input{
+.el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input,.el-picker-panel__footer{
   background: $--input-background-color !important;
 }
 .sp-search,.sp-result-area,.sp-pagination {
@@ -32,46 +32,60 @@
   }
 }
 .sp-search-input {
-  background-color: $--select-page-background-color !important;
-  border: 1px solid $--border-color-light !important;
-  color: $--color-text-regular !important;
+  background-color: $--select-page-background-color;
+  border: 1px solid $--border-color-light;
+  color: $--color-text-regular;
 }
 .sp-base.sp-inputs,.sp-base.sp-input {
-  border: 1px solid $--border-color-light !important;
+  border: 1px solid $--border-color-light;
 }
 .sp-base.sp-inputs:hover,.sp-base.sp-input:hover,.sp-base.sp-inputs:focus,.sp-base.sp-input:focus {
-  border: 1px solid $--border-color-light-hover !important;
+  border: 1px solid $--border-color-light-hover;
 }
 .v-dropdown-container.v-dropdown-no-border {
-  border: 1px solid $--border-color-light !important;
+  border: 1px solid $--border-color-light;
 }
 div.sp-result-area table.sp-table tbody tr.sp-over td {
-  background-color: $--select-page-hover-background-color !important;
-  color: $--button-light-hover-color !important;
+  background-color: $--select-page-hover-background-color;
+  color: $--button-light-hover-color;
   cursor: pointer;
 }
 div.sp-result-area table.sp-table tbody tr.sp-selected td {
-  color: $--select-page-focus-color !important;
+  color: $--select-page-focus-color;
   cursor: default;
 }
 div.sp-pagination ul li a:hover {
-  color: $--color-text-regular !important;
+  color: $--color-text-regular;
 }
 div.v-selectpage div.sp-input-container div.sp-input {
-  color: $--color-text-regular !important;
+  color: $--color-text-regular;
 }
 div.v-selectpage div.sp-input-container.sp-open div.sp-input {
   border: 1px solid #aaa;
   border-radius: 2px;
-  color: $--color-text-regular !important;
+  color: $--color-text-regular;
 }
 .sp-button {
   .sp-caret {
-    color: $--color-text-regular !important;
+    color: $--color-text-regular;
   }
 }
 .sp-button.open {
   .sp-caret {
-    color: $--color-text-regular !important;
+    color: $--color-text-regular;
   }
+}
+.el-picker-panel__footer {
+  border-top: 1px solid $--border-color-light;
+  span {
+    color: $--color-text-regular;
+  }
+  .el-button--text {
+    span {
+      color: $--color-primary;
+    }
+  }
+}
+.el-date-picker__time-header,.el-date-table th {
+  border-bottom: 1px solid $--border-color-light;
 }
