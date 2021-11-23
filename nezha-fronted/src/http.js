@@ -74,16 +74,12 @@ export function get (url, params) {
     }).then(response => {
       resolve(response.data)
     }).catch(err => {
-      if (err.response.headers && err.response.headers['content-type'].indexOf('application/json') === -1) {
-        resolve(err.response)
-      }
       if (err.response) {
-        if (!err.response.data.error) {
-          err.response.data.error = err.response.data.msg
-        }
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -98,6 +94,8 @@ export function post (url, params, headers) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -112,6 +110,8 @@ export function put (url, params, headers) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
@@ -126,6 +126,8 @@ export function del (url, params) {
         resolve(err.response.data)
       } else if (err.message) {
         resolve(err.message)
+      } else {
+        resolve(err)
       }
     })
   })
