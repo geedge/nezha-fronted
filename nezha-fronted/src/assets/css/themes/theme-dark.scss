@@ -153,6 +153,22 @@ $--value-color: $--table-header-font-color;
 // time picker
 $--time-picker-hover-color: #FFFFFF;
 
+/* overview */
+// color
+$--overview-asset-icon-color: $--time-picker-hover-color;
+$--overview-project-icon-color: $--time-picker-hover-color;
+$--overview-module-icon-color: $--time-picker-hover-color;
+$--overview-endpoint-icon-color: $--time-picker-hover-color;
+$--overview-alert-icon-color: $--time-picker-hover-color;
+// background
+$--overview-module-icon-background-color: #5F80D5;
+$--overview-endpoint-icon-background-color: #7F87EA;
+$--overview-alert-icon-background-color: #EFA25D;
+$--overview-asset-icon-background-color: #568FFF;
+$--overview-project-icon-background-color: #4DB4FF;
+// border
+$--overview-border-color: $--background-color-empty;
+
 /* 13.panel */
 $--chart-title-hover-background-color: #323238;
 $--chart-box-border-color: $--border-color-light;

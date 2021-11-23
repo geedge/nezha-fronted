@@ -24,7 +24,7 @@
       <div class="content-row-box">
         <div class="content-col-box">
           <div id="overview-to-asset" v-loading="assetLoading" class="content-col-content clickable" @click="jumpTo('asset')">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-project"></i></div>
+            <div class="content-col-content-icon overview-to-asset__background"><i class="nz-icon nz-icon-overview-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${assetData}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">
@@ -40,7 +40,7 @@
         </div>
         <div class="content-col-box">
           <div v-loading="projectLoading" class="content-col-content clickable" @click="jumpTo('project')">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-project"></i></div>
+            <div class="content-col-content-icon overview-to-project__background"><i class="nz-icon nz-icon-project"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${projectData.total}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">
@@ -55,7 +55,7 @@
         </div>
         <div class="content-col-box">
           <div v-loading="moduleLoading" class="content-col-content clickable" @click="jumpTo('module')">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-module"></i></div>
+            <div class="content-col-content-icon overview-to-module__background"><i class="nz-icon nz-icon-overview-module"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${moduleData.total}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">
@@ -70,7 +70,7 @@
         </div>
         <div class="content-col-box">
           <div v-loading="endpointLoading" class="content-col-content clickable" @click="jumpTo('endpoint')">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
+            <div class="content-col-content-icon overview-to-endpoint__background"><i class="nz-icon nz-icon-overview-endpoint"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${endpointData.num}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">
@@ -85,7 +85,7 @@
         </div>
         <div class="content-col-box">
           <div id="overview-to-alertlist" v-loading="alertMessageLoading" class="content-col-content clickable" @click="jumpTo('alertList')">
-            <div class="content-col-content-icon"><i class="nz-icon nz-icon-overview-alert"></i></div>
+            <div class="content-col-content-icon overview-to-alert__background"><i class="nz-icon nz-icon-overview-alert"></i></div>
             <div class="content-num-box">
               <el-tooltip :content="`${alertMessageData.num}`" class="item" effect="light" placement="top">
                 <div class="content-col-content-num">

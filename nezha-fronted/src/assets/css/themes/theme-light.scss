@@ -151,6 +151,21 @@ $--value-input-background-color: $--value-color;
 // time picker
 $--time-picker-hover-color: $--value-color;
 
+/* overview */
+$--overview-asset-icon-color: #80A7F4;
+$--overview-project-icon-color: #F6B275;
+$--overview-module-icon-color: #7AD0BC;
+$--overview-endpoint-icon-color: #969DEA;
+$--overview-alert-icon-color: #EE9A87;
+// background
+$--overview-module-icon-background-color: $--value-color;
+$--overview-endpoint-icon-background-color: $--value-color;
+$--overview-alert-icon-background-color: $--value-color;
+$--overview-asset-icon-background-color: $--value-color;
+$--overview-project-icon-background-color: $--value-color;
+// border
+$--overview-border-color: #E5EAEF;
+
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;
 $--chart-box-border-color: $--border-color-light;

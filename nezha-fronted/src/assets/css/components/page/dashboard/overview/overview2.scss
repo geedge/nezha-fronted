@@ -14,6 +14,7 @@
     margin: 0;
     position: absolute;
     z-index: 1;
+    color: $--color-text-primary;
   }
   .el-carousel__indicator--horizontal .el-carousel__button{
     background-color: #C0C4CC;
@@ -24,6 +25,9 @@
   }
   .el-carousel__indicator--horizontal.is-active .el-carousel__button{
     opacity: 1;
+  }
+  .nz-table2 {
+    height: 100% !important;
   }
 }
 .overview-content-header{
@@ -282,12 +286,27 @@
   font-size: 0.7rem;
   font-style: italic;
 }
+.overview-to-alert__background {
+  background-color: $--overview-alert-icon-background-color;
+}
+.overview-to-asset__background {
+  background-color: $--overview-asset-icon-background-color;
+}
+.overview-to-project__background {
+  background-color: $--overview-project-icon-background-color;
+}
+.overview-to-module__background {
+  background-color: $--overview-module-icon-background-color;
+}
+.overview-to-endpoint__background {
+  background-color: $--overview-endpoint-icon-background-color;
+}
 .content-col-content-icon {
   height: 3.75rem;
   width: 3.75rem;
   border-radius: 50%;
   box-sizing: border-box;
-  border: 1px solid #e5eaef;
+  border: 1px solid $--overview-border-color;
   position: relative;
   .nz-icon {
     font-size: 1.75rem !important;
@@ -297,21 +316,21 @@
     transform: translate(-50%, -50%);
   }
   .nz-icon-overview-project {
-    color: #80A7F4;
+    color: $--overview-asset-icon-color;
   }
   .nz-icon-project {
     font-size: 1.75rem !important;
-    color: #F6B275;
+    color: $--overview-project-icon-color;
   }
   .nz-icon-overview-module {
-    color: #7AD0BC;
+    color: $--overview-module-icon-color;
   }
   .nz-icon-overview-endpoint {
-    color: #969DEA;
+    color: $--overview-endpoint-icon-color;
   }
   .nz-icon-overview-alert {
     font-size: 1.75rem !important;
-    color: #EE9A87;
+    color: $--overview-alert-icon-color;
   }
 }
 .content-num-box {

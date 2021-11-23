@@ -10,6 +10,12 @@
     border-bottom: none;
     font-size: 13px;
     line-height: 26px;
+    .active {
+      color: $--color-primary;
+      border-bottom: none;
+      cursor: default;
+      font-weight: bold;
+    }
   }
   .alert-label-box{
     display: flex;
