@@ -436,10 +436,22 @@ export default {
         // const dot = maxValueCopies.dot
         const copies = maxValueCopies.copies
         const unit = maxValueCopies.unit
-        getChart(this.chartIndex).setOption({
+        const option = {
           yAxis: {
             minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
             maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        }
+        if (!maxValueCopies.copies) {
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        }
+        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+          delete option.yAxis.maxInterval
+        }
+        getChart(this.chartIndex).setOption({
+          yAxis: {
+           ...option.yAxis
           }
         })
       }
@@ -538,10 +550,22 @@ export default {
         // const dot = maxValueCopies.dot
         const copies = maxValueCopies.copies
         const unit = maxValueCopies.unit
-        echart.setOption({
+        const option = {
           yAxis: {
             minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
             maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+          }
+        }
+        if (!maxValueCopies.copies) {
+          option.yAxis.min = 0
+          option.yAxis.max = 1
+        }
+        if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+          delete option.yAxis.maxInterval
+        }
+        echart.setOption({
+          yAxis: {
+            ...option.yAxis
           }
         })
       }
@@ -659,6 +683,7 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       const oldDot = maxValueCopies.oldDot
+      console.log(maxValueCopies, chartDataFormat.Interval(maxValue, copies, unit.type, 'min'), chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5))
       let option = {
         title: {
           show: false
@@ -1879,11 +1904,23 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       // const oldDot = maxValueCopies.oldDot
-      getChart(this.chartIndex).setOption({
-        series: this.seriesItem,
+      const option = {
         yAxis: {
           minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
           maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+        }
+      }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      }
+      if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+        delete option.yAxis.maxInterval
+      }
+      getChart(this.chartIndex).setOption({
+        series: this.seriesItem,
+        yAxis: {
+          ...option.yAxis
         }
       })
       if (this.hasLegendOptions) {
@@ -1912,11 +1949,23 @@ export default {
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
       // const oldDot = maxValueCopies.oldDot
-      this.echartModalStore.setOption({
-        series: this.seriesItemScreen,
+      const option = {
         yAxis: {
           minInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'min'),
           maxInterval: chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5)
+        }
+      }
+      if (!maxValueCopies.copies) {
+        option.yAxis.min = 0
+        option.yAxis.max = 1
+      }
+      if (unit.type == 'Time' || option.yAxis.maxInterval === 1) {
+        delete option.yAxis.maxInterval
+      }
+      this.echartModalStore.setOption({
+        series: this.seriesItemScreen,
+        yAxis: {
+          ...option.yAxis
         }
       })
       if (this.hasLegendOptions) {
