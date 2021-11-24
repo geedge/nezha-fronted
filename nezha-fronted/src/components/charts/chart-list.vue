@@ -304,7 +304,8 @@ export default {
     obj: Object,
     panelLock: { type: Boolean, default: false },
     hasGroup: { type: Boolean, default: true },
-    panelDataList: Array
+    panelDataList: Array,
+    nowTimeType: {}
   },
 
   components: {
@@ -973,7 +974,12 @@ export default {
           let startTime = ''
           let endTime = ''
           if (filterType === 'refresh') { // 刷新
-            const now = new Date(bus.computeTimezone(new Date().getTime()))
+            let now = null
+            if (this.nowTimeType.id === 0 && this.nowTimeType.value === -1) {
+              now = new Date(this.filter.start_time)
+            } else {
+              now = new Date(bus.computeTimezone(new Date().getTime()))
+            }
             const origin = new Date(this.filter.end_time)
             const numInterval = now.getTime() - origin.getTime()
             if (numInterval >= 60000) { // 大于1分钟，则start、end均往后移numInterval，否则时间不变

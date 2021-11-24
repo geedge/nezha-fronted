@@ -686,7 +686,7 @@ export default {
                 resolve({ data: '', status: 'no query' })
               })
             }
-            query += '&nullType=' + 'connected'
+            query += '&nullType=' + 'null'
             return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
         }
