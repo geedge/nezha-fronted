@@ -749,7 +749,7 @@ export default {
               if (chartInfo.type == 'logs') {
                 return chartTempData
               }
-              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+              return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
             // 一个图表的所有element单独获取数据
             axios.all(axiosArr).then((res) => {
@@ -1232,7 +1232,7 @@ export default {
             chartInfo.param.nullType = chartInfo.param.nullType || 'null'
             query += '&nullType=' + chartInfo.param.nullType
           }
-          this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {
+          this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {
             if (response.status === 'success') {
               if (response.data.result) {
                 const series = {

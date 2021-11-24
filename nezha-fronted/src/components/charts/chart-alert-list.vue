@@ -497,7 +497,7 @@ export default {
       const axiosArr = []
       const paramStr = this.currentMsg ? JSON.stringify(this.promQueryParamConvert(this.currentMsg)) : null
       if (paramStr && paramStr.trim() != '""') {
-        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + paramStr.substring(1, paramStr.length - 1) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step))
+        axiosArr.push(axios.get('/prom/api/v1/query_range?query=' + escape(this.currentMsg.alertRule.expr.replace(/\"/g, '\'').replace(/\s+/g, '')) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&step=' + step + '&filter=' + escape(unescape(this.promQueryParamLabels(this.currentMsg.labels)))))
         this.legend = []
         this.chartDatas = []
         axios.all(axiosArr).then(res => {
@@ -771,6 +771,14 @@ export default {
       }
       return r
     },
+    promQueryParamLabels (labels) {
+      const obj = JSON.parse(labels)
+      const filterArr = ['alertname', 'severity_id', 'severity', 'rule_type']
+      filterArr.forEach(key => {
+        delete obj[key]
+      })
+      return JSON.stringify(obj)
+    },
     elementsetShow (s, e) {
       const eventfixed = {
         shezhi: 0,
@@ -982,7 +990,7 @@ export default {
       const start = this.searchTimeDialog[0] ? this.searchTimeDialog[0] : bus.computeTimezoneTime(new Date().getTime() - 1 * 60 * 60 * 1000)
       const end = this.searchTimeDialog[1] ? this.searchTimeDialog[1] : bus.computeTimezoneTime(new Date().getTime())
       this.expressions = [this.currentMsg.alertRule.expr]
-      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + this.currentMsg.alertRule.expr + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit).then(res => {
+      this.$get('/logs/loki/api/v1/query_range?format=1&query=' + escape(this.currentMsg.alertRule.expr) + '&start=' + this.$stringTimeParseToUnix(start) + '&end=' + this.$stringTimeParseToUnix(end) + '&limit=' + limit + '&filter=' + escape(unescape(this.promQueryParamLabels(this.currentMsg.labels)))).then(res => {
         this.chartLoading = false
         const logData = [res.data]
         this.resultType = res.data.resultType

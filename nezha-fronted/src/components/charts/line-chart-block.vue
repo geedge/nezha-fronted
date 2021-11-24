@@ -1651,7 +1651,7 @@ export default {
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
           if (this.$refs.pickTime.$refs.multipleTime && this.$refs.pickTime.$refs.multipleTime.searchTime.length) { // 判断是否需要添加比较
             startTime = bus.timeFormate(this.$refs.pickTime.$refs.multipleTime.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
@@ -1664,7 +1664,7 @@ export default {
                 this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
                 query += '&nullType=' + this.chartInfo.param.nullType
               }
-              axiosArr.push(this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
+              axiosArr.push(this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step))
             })
           }
         } else if (type === 'dashboard') { // 概览模式,指标概览中使用
@@ -1675,14 +1675,14 @@ export default {
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
-            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
+            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           } else {
             let query = this.data.elements[0].expression
             if (this.chartInfo.type === 'line' || this.chartInfo.type === 'bar' || this.chartInfo.type === 'stackArea') { // 如果是这三个 默认给null
               this.chartInfo.param.nullType = this.chartInfo.param.nullType || 'null'
               query += '&nullType=' + this.chartInfo.param.nullType
             }
-            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
+            axiosArr = [this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)]
           }
         }
         // 一个图表

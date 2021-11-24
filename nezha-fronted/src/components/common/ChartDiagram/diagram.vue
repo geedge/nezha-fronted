@@ -682,7 +682,7 @@ export default {
               })
             }
             query += '&nullType=' + 'null'
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
         }
         axiosArr.push({ item, arr })

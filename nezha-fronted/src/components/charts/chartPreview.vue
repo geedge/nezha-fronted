@@ -427,7 +427,7 @@ export default {
               chartItem.param.nullType = chartItem.param.nullType || 'null'
               str += '&nullType=' + chartItem.param.nullType
             }
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
           })
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {
@@ -1669,9 +1669,9 @@ export default {
             str += '&nullType=' + chartItem.param.nullType
           }
           if (chartItem.type === 'table' && chartItem.param && chartItem.param.last == 1) {
-            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
           }
-          return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+          return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
         })
         // 一个图表
         axios.all(axiosArr).then(res => {

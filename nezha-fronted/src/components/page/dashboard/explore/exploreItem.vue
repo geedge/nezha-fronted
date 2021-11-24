@@ -472,7 +472,7 @@ export default {
         const requestArr = []
         this.expressions.forEach((item, index) => {
           if (item != '') {
-            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
+            requestArr.push(this.$get('/logs/loki/api/v1/query_range?format=1&query=' + escape(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&limit=' + limit))
           }
         })
         if (requestArr.length > 0) {
@@ -615,7 +615,7 @@ export default {
               const step = bus.getStep(this.filterTime[0], this.filterTime[1])
               promqlInputIndexs.push(index)
               queryExpression.push(item)
-              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + item + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
+              requestArr.push(this.$get('/prom/api/v1/query_range?query=' + escape(item) + '&start=' + this.$stringTimeParseToUnix(this.filterTime[0]) + '&end=' + this.$stringTimeParseToUnix(this.filterTime[1]) + '&step=' + step + '&nullType=null'))
             }
           })
           if (requestArr.length > 0) {
@@ -700,7 +700,7 @@ export default {
           const requestArr = []
           this.expressions.forEach((item, index) => {
             if (item !== '') {
-              requestArr.push(this.$get('/prom/api/v1/query?query=' + item))
+              requestArr.push(this.$get('/prom/api/v1/query?query=' + escape(item)))
             }
           })
           if (requestArr.length > 0) {
