@@ -8,30 +8,49 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueResource)
 
-const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state'] // 免登陆白名单
+const loginWhiteList = ['/setup', '/sys/license/upload', '/sys/license/state', '/sys/appearance'] // 免登陆白名单
 const permissionWhiteList = ['/profile', '/menu', ...loginWhiteList] // 权限白名单
 
 router.beforeEach((to, from, next) => {
   const configUrl = 'static/config.json?Timestamp=' + new Date().getTime()
-  if (to.path === '/login') { // 拦截登录页面，系统初始化检查
+  if (to.path === '/login') { // 拦截登录页面，现货区外观设置 再系统初始化检查
     Vue.http.get(configUrl).then(config => {
-      get(config.body.baseUrl + 'setup/inited').then(res => {
-        if (res.code === 200) {
-          if (res.inited === 0) {
-            next({ path: '/setup' })
-          } else {
-            next()
-          }
-        }
-      })
-      if (!store.getters.i18nIsReady) {
-        get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
+      const appearance = new Promise(resolve => {
+        get(config.body.baseUrl + '/sys/appearance').then(res => {
+          // console.log(res)
           if (res.code === 200) {
-            loadI18n(res.data)
-            store.commit('i18nReady', true)
+            localStorage.setItem('nz-sys-name', res.data.system_name)
+            localStorage.setItem('nz-sys-logo', res.data.system_logo)
+            localStorage.setItem('nz-sys-favicon', res.data.system_favicon)
+            localStorage.setItem('nz-language', res.data.lang)
+            localStorage.setItem('nz-sys-timezone', res.data.timezone)
+            localStorage.setItem('nz-sys-bgImg', res.data.system_bgImg)
+            localStorage.setItem('nz-default-theme', res.data.theme)
+            localStorage.setItem('nz-default-dateFormat', res.data.dateFormat)
+            changeFavicon(res.data.system_favicon)
+          }
+          resolve()
+        })
+      })
+      appearance.then(() => {
+        get(config.body.baseUrl + 'setup/inited').then(res => {
+          if (res.code === 200) {
+            if (res.inited === 0) {
+              next({ path: '/setup' })
+            } else {
+              next()
+            }
           }
         })
-      }
+        if (!store.getters.i18nIsReady) {
+          get(config.body.baseUrl + 'sys/i18n/lang').then(res => {
+            if (res.code === 200) {
+              loadI18n(res.data)
+              store.commit('i18nReady', true)
+            }
+          })
+        }
+      })
     })
   } else if (sessionStorage.getItem('nz-token')) {
     const i18nRequest = new Promise(resolve => {
@@ -165,4 +184,18 @@ export function sortByOrderNum (menuList) {
 
 function getChildMenu (menu) {
   return menu.children.filter(m => m.type == 1)
+}
+function changeFavicon (link) { // 设置网页标签的图片
+  let $favicon = document.querySelector('link[rel="icon"]')
+  // If a <link rel="icon"> element already exists,
+  // change its href to the given link.
+  if ($favicon !== null) {
+    $favicon.href = link
+    // Otherwise, create a new element and append it to <head>.
+  } else {
+    $favicon = document.createElement('link')
+    $favicon.rel = 'icon'
+    $favicon.href = link
+    document.head.appendChild($favicon)
+  }
 }

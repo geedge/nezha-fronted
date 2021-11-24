@@ -50,6 +50,7 @@ export default {
         self.logo = e.value
       }
     })
+    this.logo = localStorage.getItem('nz-sys-logo')
   },
   computed: {
     menuList () {

@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" id="login-bgimg">
     <div class="model"></div>
     <div class="login-main">
       <div class="logo"><img src="../../assets/img/logo-big.png"></div>
@@ -142,7 +142,8 @@ export default {
       dialogLoading: false,
       fileShow: false,
       fileContent: '',
-      recoveryCode: []
+      recoveryCode: [],
+      bgImg: '' // 背景图
     }
   },
   methods: {
@@ -157,7 +158,7 @@ export default {
           if (res.code == 200) {
             // 登录成功，记录用户名、token和lang
             this.authToken = res.data.authToken
-            this.lang = res.data.user.lang
+            this.lang = res.data.user.lang || localStorage.getItem('nz-language')
             this.$i18n.locale = this.lang
             // 获取可选语言
             get('/sys/dict/all?type=lang').then(response => {
@@ -329,6 +330,10 @@ export default {
     document.getElementById('usernameInput').focus()
     this.licenseStat()
     this.initEvent()
+    this.bgImg = localStorage.getItem('nz-sys-bgImg')
+    if (this.bgImg) {
+      document.getElementById('login-bgimg').style['background-image'] = `url(${this.bgImg})`
+    }
   }
 }
 </script>
