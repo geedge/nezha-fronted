@@ -4,7 +4,7 @@
   border: none;
   outline: none;
   cursor: pointer;
-  border-left: 1px solid $--border-color-base;
+  border-left: 1px solid $--border-color-light;
   background-color: lighten($--background-color-base, 10%);
 
   i {
@@ -32,7 +32,7 @@
   position: relative;
   line-height: 25px;
   border-radius: 2px;
-  border: 1px solid $--border-color-base;
+  border: 1px solid $--border-color-light;
 }
 .new-search .search-input-all{
   width: 226px !important;
