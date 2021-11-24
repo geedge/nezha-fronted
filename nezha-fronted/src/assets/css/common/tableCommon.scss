@@ -274,18 +274,18 @@
           outline: none;
           transition:all .2s;
         }
-        .el-dropdown {
-          border: 1px solid $--border-color-light;
-        }
         .table-operation-item.table-operation-item--disable{
-          border: 1px solid $--border-color-base;
-          background-color: $--border-color-base;
+          border: 1px solid $--button-light-border-color;
+          background-color: $--button-light-border-color;
           opacity: 0.6;
           outline: none;
           i {
             font-size: 14px;
-            color: $--background-color-empty;
+            color: $--button-primary-color;
           }
+        }
+        .table-operation-item.table-operation-item--disable:hover {
+          background-color: $--button-light-border-color;
         }
         &>.table-operation-item {
           justify-content: center;
@@ -309,7 +309,7 @@
         .table-operation-item.table-operation-item--more {
           justify-content: center;
           align-items: center;
-          border: 1px solid $--border-color-base;
+          border: 1px solid $--button-icon-border-color;
           width: 30px;
           i {
             color: $--color-text-secondary;

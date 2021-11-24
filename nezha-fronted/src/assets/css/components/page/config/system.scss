@@ -96,19 +96,19 @@
   cursor: pointer;
   color: $--color-text-primary;
 }
-/deep/ .el-form-item--small .el-form-item__error{
+.el-form-item--small .el-form-item__error{
   padding-top: 0;
 }
 .linkUrlTip{
   width: 430px;
 }
-.system-config-form.terminal  /deep/ .el-input-number--small{
+.system-config-form.terminal .el-input-number--small{
   width: 512px;
 }
-.system-config-form.basicForm  /deep/ .el-input-number--small{
+.system-config-form.basicForm .el-input-number--small{
   width: 512px;
 }
-.system-config-form  /deep/ .el-input input{
+.system-config-form .el-input input{
   text-align: left;
 }
 .utc-item {
@@ -195,6 +195,39 @@
   .el-tabs--border-card>.el-tabs__header .el-tabs__item:not(:first-child) {
     margin-left: 5px;
   }
+  .el-input-group__prepend {
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--border-color-light;
+    border-right: none;
+  }
+  .el-input-group__append {
+    background-color: $--right-box-sub-title-background-color;
+    border: 1px solid $--border-color-light;
+    border-left: none;
+  }
+  .el-input-number__decrease,.el-input-number__increase,.el-input-number__decrease.is-disabled,.el-input-number__increase.is-disabled {
+    background-color: $--popover-background-color;
+  }
+  .el-input-number__decrease {
+    border-left: 1px solid $--border-color-light !important;
+  }
+  .el-input-number__increase {
+    border-left: 1px solid $--border-color-light;
+    border-bottom: 1px solid $--border-color-light !important;
+  }
+  .el-input-number__decrease.is-disabled {
+    border-left: 1px solid $--border-color-light;
+  }
+  .el-input-number__increase.is-disabled {
+    border-left: 1px solid $--border-color-light;
+    border-bottom: 1px solid $--border-color-light;
+  }
+  .el-input__inner:hover {
+    border-color: $--border-color-light-hover;
+  }
+  .el-input__inner:focus {
+    border-color: $--color-primary;
+  }
 }
 .system-config-form .el-form-item__content{
   width: 512px;
@@ -210,12 +243,13 @@
   border-top: unset;
   height: 100%;
 }
-.system-tabs .el-tabs--border-card{
+.system-tabs.el-tabs--border-card{
   box-shadow: unset !important;
   height: 100%;
   width: 100%;
   border-bottom: unset;
   border-left: unset;
+  background-color: $--background-color-empty;
 }
 .reset-form .el-checkbox-group{
   margin-left: -28px !important;

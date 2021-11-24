@@ -140,8 +140,8 @@ $--select-page-focus-color: #CCCCCC;
 $--select-page-color: #232F3E;
 $--select-page-tag-background-color: #e4eaee;
 $--select-page-border-color: $--border-color-base-focus;
-$--select-page-btn-color: #409eff;
-$--select-page-btn-border-color: #409eff;
+$--select-page-btn-color: $--color-primary;
+$--select-page-btn-border-color: $--color-primary;
 $--select-page-btn-background-color: #FFFFFF;
 
 
@@ -171,6 +171,10 @@ $--overview-asset-icon-background-color: $--value-color;
 $--overview-project-icon-background-color: $--value-color;
 // border
 $--overview-border-color: #E5EAEF;
+
+/* system */
+$--system-input-background-color: $--background-color-empty;
+
 
 /* 13.panel */
 $--chart-title-hover-background-color: $--background-color-1;
