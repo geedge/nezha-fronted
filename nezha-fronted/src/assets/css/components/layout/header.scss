@@ -9,9 +9,9 @@
       height: 32px;
       display: inline-block;
       line-height: 32px;
-      background: rgba(60,146,241,0.10);
+      background: $--profile-span-background-color;
       font-size: 14px;
-      color: #3C92F1;
+      color: $--profile-span-color;
       letter-spacing: 0;
       font-weight: 500;
       text-transform: capitalize;

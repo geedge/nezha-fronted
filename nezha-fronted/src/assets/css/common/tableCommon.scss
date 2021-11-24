@@ -276,16 +276,16 @@
         }
         .table-operation-item.table-operation-item--disable{
           border: 1px solid $--button-light-border-color;
-          background-color: $--button-light-border-color;
+          background-color: $--background-color-disabled;
           opacity: 0.6;
           outline: none;
           i {
             font-size: 14px;
-            color: $--button-primary-color;
+            color: $--color-text-disabled;
           }
         }
         .table-operation-item.table-operation-item--disable:hover {
-          background-color: $--button-light-border-color;
+          background-color: $--background-color-disabled;
         }
         &>.table-operation-item {
           justify-content: center;
