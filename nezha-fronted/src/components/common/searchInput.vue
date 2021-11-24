@@ -39,7 +39,7 @@
                             <i class="nz-icon nz-icon-close" style="cursor: pointer" @click="close_selcet_list(ind,$event)"></i>
                         </div>
                         <div v-else-if="!change_sreach_show && ind==sreach_num && val.id!==7 " class="select_input">
-                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keyup="enter(val, $event)" @click="stop_click">
+                            <input type="text" autocomplete="off" id="sreach_input" v-model="input_sreach" :readonly="val.readonly"  @keydown="enter(val, $event)" @click="stop_click">
                             <div class="select_info_list" :style="'top:' + selectDom.top +'; left:'+selectDom.left " v-if="val.type == 'select'">
                               <el-scrollbar v-if="selectInfoList[val.label].length > 8" class="el-scrollbar-small" style="height: 240px;">
                                 <ul>
@@ -1085,7 +1085,7 @@ export default {
         }
       } else {
         if (keyCode == 8) {
-          if (this.delcriteriaBool) {
+          if (this.delcriteriaBool || !this.input_sreach) {
             this.searchMsg.searchLabelList.forEach((val, k) => {
               if (this.select_list[this.sreach_num].label == val.label) {
                 this.searchLabelList.splice(k + 1, 0, val)
@@ -1164,7 +1164,7 @@ export default {
         this.input_list = true
         this.change_sreach_show = false
         this.sreach_num = ind
-        this.input_sreach = this.select_list[ind].val
+        this.input_sreach = this.select_list[ind].val ? this.select_list[ind].val : ''
         if (this.select_list[ind].type == 'input') {
           this.downBool = true
         } else {
