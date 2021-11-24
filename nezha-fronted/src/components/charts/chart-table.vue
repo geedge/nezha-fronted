@@ -397,6 +397,7 @@ export default {
           }
           this.mapping = mapping
           item.mapping = mapping
+          item.oldValue = item.value
           item.value = mapping ? mapping.text.replace('{{value}}', item.value).replace('{{name}}', item.element.alias) : chartDataFormat.getUnit(chartItem.unit ? chartItem.unit : 2).compute(value, null, 2)
         }
         return item

@@ -720,6 +720,10 @@ export const tableSet = {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
+      if (prop === 'value') {
+        val1 = obj1.oldValue
+        val2 = obj2.oldValue
+      }
       if (!isNaN(val1) && !isNaN(val2) && prop === 'value') {
         val1 = Number(val1)
         val2 = Number(val2)
@@ -754,7 +758,11 @@ export const tableSet = {
     return function (obj1, obj2) {
       let val1 = obj1[prop]
       let val2 = obj2[prop]
-      if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop !== 'time') {
+      if (prop === 'value') {
+        val1 = obj1.oldValue
+        val2 = obj2.oldValue
+      }
+      if (!isNaN(Number(val1)) && !isNaN(Number(val2)) && prop === 'value') {
         val1 = Number(val1)
         val2 = Number(val2)
       }

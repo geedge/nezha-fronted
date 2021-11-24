@@ -682,8 +682,7 @@ export default {
       let dot = this.chartDot = maxValueCopies.dot
       const copies = maxValueCopies.copies
       const unit = maxValueCopies.unit
-      const oldDot = maxValueCopies.oldDot
-      console.log(maxValueCopies, chartDataFormat.Interval(maxValue, copies, unit.type, 'min'), chartDataFormat.Interval(maxValue, copies, unit.type, 'max') * Math.ceil(dataArg.length / 5))
+      // const oldDot = maxValueCopies.oldDot
       let option = {
         title: {
           show: false
