@@ -100,7 +100,7 @@
           <div class="table-list" id="tableList">
             <div ref="dashboardScrollbar" id="dashboardScrollbar" style="height: 100%; overflow: auto;">
               <div class="box-content">
-                <chart-list :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
+                <chart-list :nowTimeType='nowTimeType' :draggable="draggable" :from="from" :is-model="from === fromRoute.model" :obj="obj" @on-edit-chart="editChart"
                             @on-refresh-time="refreshTime" @on-remove-chart="delChart" ref="chartList" :panel-lock="panelLock" :panel-data-list="panelDataList"
                             @on-add-group-item-chart="addGroupItem"></chart-list>
               </div>
@@ -220,7 +220,8 @@ export default {
       // ---图表相关参数--end
       scrollbarWrap: null,
       panelDataList: [],
-      batchDeleteObjs: []
+      batchDeleteObjs: [],
+      nowTimeType: {}
     }
   },
   components: {
@@ -354,6 +355,7 @@ export default {
       // this.searchTime = [...val];
       if (this.$refs.pickTime) {
         const nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
+        this.nowTimeType = this.$refs.pickTime.$refs.timePicker.nowTimeType
         this.setSearchTime(nowTimeType.type, nowTimeType.value)
         this.filter.start_time = bus.timeFormate(this.searchTime[0], 'yyyy-MM-dd hh:mm:ss')
         this.filter.end_time = bus.timeFormate(this.searchTime[1], 'yyyy-MM-dd hh:mm:ss')
