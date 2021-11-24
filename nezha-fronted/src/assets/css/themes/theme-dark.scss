@@ -139,7 +139,13 @@ $--click-search-items-color: $--color-text-regular; // color
 $--select-page-background-color: $--background-color-empty;
 $--select-page-hover-background-color: $--button-light-hover-background-color;
 $--select-page-focus-color: #666666;
+$--select-page-color: $--button-primary-color;
 $--select-page-tag-background-color: $--background-color-empty;
+$--select-page-border-color: $--border-color-light;
+$--select-page-btn-color: mix(#FFF, $--color-primary, 15%);
+$--select-page-btn-border-color:  mix(#FFF, $--color-primary, 15%);
+$--select-page-btn-background-color: $--background-color-base;
+
 
 // icon字色
 $--nz-icon-color: $--button-primary-color;

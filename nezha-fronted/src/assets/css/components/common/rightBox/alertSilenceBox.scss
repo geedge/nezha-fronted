@@ -1,13 +1,21 @@
 .range-time {
   .el-radio-button--small .el-radio-button__inner,.el-radio-group {
     width: 100%;
+  }
+  .el-radio-group {
+    border-left: 1px solid $--border-color-light;
+  }
+  .el-radio-button__inner {
+    border: 1px solid  $--border-color-light;
+    border-left: 0;
     background-color: $--background-color-empty;
   }
-
+  .el-button.is-plain {
+    background-color: $--background-color-empty;
+  }
   .el-radio-button {
     width: 14.2%
   }
-
   .el-date-editor.el-range-editor.el-input__inner.el-date-editor--datetimerange.el-range-editor--mini {
     width: 100%;
   }

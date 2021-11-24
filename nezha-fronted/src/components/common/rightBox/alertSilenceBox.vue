@@ -81,7 +81,7 @@
                 <el-input v-model="item.value" class="silence-matchers-value" placeholder="value"  size="mini"></el-input>
                 <el-checkbox v-model="item.regex" :false-label="0" :true-label="1" class="silence-matchers-regex" >Regex</el-checkbox>
               </el-form-item>
-              <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1" style="color:#666;"></i></span>
+              <span :id="'moduel-remove-label-'+index" class="param-box-row-symbol" @click="removematchers(index)"><i class="nz-icon nz-icon-shanchu1"></i></span>
             </div>
             <div class="" style="text-align: center;">
                <span id="module-add-label" type="button" @click="addmatchers" class="right-box-form-add module-add-label right-box-form-minus-box module-add-label" style="">

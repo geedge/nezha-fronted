@@ -1,34 +1,34 @@
 .el-picker-panel,.sp-base.sp-inputs,.sp-base.sp-input,.el-picker-panel__footer{
-  background: $--input-background-color !important;
+  background: $--input-background-color;
 }
 .sp-search,.sp-result-area,.sp-pagination {
-  background-color: $--background-color-empty !important;
+  background-color: $--background-color-empty;
 }
-.el-date-table td.today span {
-  color: $--button-primary-color !important;
+.el-date-table td.today.available span {
+  color: $--select-page-color !important;
 }
 .sp-table {
   th {
-    color: $--color-text-primary !important;
+    color: $--color-text-primary;
   }
   td {
-    color: $--color-text-regular !important;
+    color: $--color-text-regular;
   }
 }
 .sp-page-info,.sp-result-message {
-  color: $--color-text-regular !important;
+  color: $--color-text-regular;
 }
 .sp-selected-tag {
-  color: $--color-text-regular !important;
-  background-color: $--select-page-tag-background-color !important;
+  color: $--color-text-regular;
+  background-color: $--select-page-tag-background-color;
   i {
-    color: $--color-text-regular !important;
+    color: $--color-text-regular;
   }
 }
 .sp-selected-tag:hover {
-  background-color: $--background-color-empty !important;
+  background-color: $--background-color-empty;
   i:hover {
-    color: $--color-text-primary !important;
+    color: $--color-text-primary;
   }
 }
 .sp-search-input {
@@ -85,7 +85,23 @@ div.v-selectpage div.sp-input-container.sp-open div.sp-input {
       color: $--color-primary;
     }
   }
+  .el-button--default {
+    margin-left: 10px;
+    color: $--button-primary-color;
+    background: $--select-page-btn-background-color;
+    border: 1px solid $--border-color-light;
+  }
+  .el-button.is-plain:hover {
+    background-color: $--select-page-btn-background-color;
+    border-color: $--select-page-btn-border-color;
+    span {
+      color: $--select-page-btn-color;
+    }
+  }
 }
-.el-date-picker__time-header,.el-date-table th {
+.el-date-table th {
   border-bottom: 1px solid $--border-color-light;
+}
+.el-date-picker__time-header {
+  border-bottom: 1px solid $--select-page-border-color;
 }
