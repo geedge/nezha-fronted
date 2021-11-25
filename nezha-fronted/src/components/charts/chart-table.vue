@@ -359,6 +359,8 @@ export default {
 
       this.seriesItemScreen = this.seriesItem
       this.screenModal = true
+      this.screenPageObj.pageNo = 1
+      this.screenPageObj.pageSize = this.pageObj.pageSize
     },
     // 设置数据, filter区分
     setData (chartItem, seriesItem, panelId, filter, area, errorMsg) {
