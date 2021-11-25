@@ -26,6 +26,9 @@
       flex: 1;
       height: calc(100% - 100px);
     }
+    .detail-row.selected {
+      background-color: $--detail-left-background-color;
+    }
     .nz-detail-view-pagination {
       height: 30px;
       text-align: center;
@@ -68,17 +71,15 @@
     color: $--color-text-regular;
     vertical-align: middle;
   }
-  /deep/ .bottom-log {
+.bottom-log {
     height: 100%;
     overflow-y: auto;
     padding-top: 15px;
   }
 }
-.detail-view {
-  .list-page div.main-container{
+.list-page div.main-container{
     height: calc(100% - 20px);
     width: calc(100% - 20px);
-  }
 }
 .nz-detail-view-no-data {
   border-top: 1px solid $--border-color-light;

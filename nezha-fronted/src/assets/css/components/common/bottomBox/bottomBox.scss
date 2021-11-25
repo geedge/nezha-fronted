@@ -32,6 +32,15 @@
   &>.nz-table2 {
     height: 100%;
     padding-top: 20px !important;
+    .table-list {
+      background-color: $--background-color-empty;
+      .list-width {
+        width: 100%;
+        padding: 0 10px 5px;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+    }
   }
 }
 .sub-top-tools .top-tool-btn-txt .nz-icon{
@@ -46,9 +55,10 @@
 .has-sub-popper {
   color: $--color-danger;
 }
-.sub-box {
+.sub-box.bottom-box {
   height: 50%;
   position: relative;
+  padding: 0;
 }
 .sub-list {
   height: calc(100% - 9px);
@@ -137,4 +147,9 @@
 }
 .symbol-select .el-input__inner {
   padding-left: 8px;
+}
+.list-page.endpoint,.list-page.asset {
+  .nz-table2 {
+    height: 100%;
+  }
 }

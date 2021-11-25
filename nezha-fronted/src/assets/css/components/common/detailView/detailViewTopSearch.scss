@@ -6,7 +6,7 @@
     border-radius: 2px;
   }
   .search-detail-box:hover{
-    background: #F9F9F9;
+    background: $--background-color-base;
   }
   .search-detail-box.select-dropdown{
     background: #F9F9F9;
@@ -51,6 +51,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
     .el-checkbox{
       width: calc(100% - 20px);
       height: 36px;
@@ -79,7 +80,7 @@
   }
   .el-dropdown-menu__item:not(.is-disabled):hover{
     color: $--color-text-secondary;
-    background: $--background-color-empty !important;
+    background: $--background-color-base !important;
   }
 }
 .clear-all-select{
