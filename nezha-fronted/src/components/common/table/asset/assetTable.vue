@@ -87,13 +87,19 @@
         <template v-else-if="item.prop === 'clientState'">
           <div v-if="scope.row[item.prop]===1">
             <div class="active-icon green-bg inline-block"></div>
-            {{ $t('overall.normal') }}
+            OK
           </div>
           <div v-else-if="scope.row[item.prop]===0">
-            <div class="active-icon red-bg inline-block"></div> {{ $t('overall.unusual') }}
+            <div class="active-icon gray-bg inline-block"></div> {{ $t('config.user.disable') }}
           </div>
-          <div v-else-if="scope.row[item.prop]===-1">
+          <div v-else-if="scope.row[item.prop]===2">
+            <div class="active-icon red-bg inline-block"></div> {{ $t('asset.connectionTimedOut') }}
+          </div>
+          <div v-else-if="scope.row[item.prop]===3">
             <div class="active-icon red-bg inline-block"></div> {{ $t('overall.AuthenticationFailed') }}
+          </div>
+          <div v-else-if="scope.row[item.prop]===4">
+            <div class="active-icon red-bg inline-block"></div> {{ $t('config.terminallog.statusItem.unknownError') }}
           </div>
           <template v-else>-</template>
         </template>
