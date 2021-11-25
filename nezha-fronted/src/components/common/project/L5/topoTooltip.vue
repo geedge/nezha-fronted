@@ -137,7 +137,7 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            let query = filterItem.expression
+            let query = escape(filterItem.expression)
             if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
               chartInfo.param.nullType = chartInfo.param.nullType || 'null'
               query += '&nullType=' + chartInfo.param.nullType
@@ -148,7 +148,7 @@ export default {
             if (this.from === fromRoute.chartTemp) {
               return chartTempData
             }
-            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
           })
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {

@@ -418,7 +418,7 @@ export default {
         this.$nextTick(() => {
           const axiosArr = chartItem.elements.map((ele) => {
             const filterItem = ele
-            const query = filterItem.expression
+            const query = escape(filterItem.expression)
             // if(chartItem.type === 'table'&&chartItem.param&&chartItem.param.last == 1){
             //   return this.$get('/prom/api/v1/query_range?query=' + query + "&start=" + this.$stringTimeParseToUnix(endTime) + "&end=" + this.$stringTimeParseToUnix(endTime) + '&step=' + step);
             // }
@@ -427,7 +427,7 @@ export default {
               chartItem.param.nullType = chartItem.param.nullType || 'null'
               str += '&nullType=' + chartItem.param.nullType
             }
-            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
           })
           // 一个图表的所有element单独获取数据
           axios.all(axiosArr).then((res) => {
@@ -1662,16 +1662,16 @@ export default {
         const step = bus.getStep(startTime, endTime)
         axiosArr = this.chart.elements.map((ele) => {
           const filterItem = ele
-          const query = filterItem.expression
+          const query = escape(filterItem.expression)
           let str = ''
           if ((chartItem.type === 'line' || chartItem.type === 'bar' || chartItem.type === 'stackArea' || chartItem.type === 'table') && chartItem.param) { // 如果是这三个 默认给null
             chartItem.param.nullType = chartItem.param.nullType || 'null'
             str += '&nullType=' + chartItem.param.nullType
           }
           if (chartItem.type === 'table' && chartItem.param && chartItem.param.last == 1) {
-            return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+            return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(endTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
           }
-          return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
+          return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step + str)
         })
         // 一个图表
         axios.all(axiosArr).then(res => {

@@ -734,7 +734,7 @@ export default {
           this.$nextTick(() => {
             const axiosArr = chartItem.elements.map((ele) => {
               const filterItem = ele
-              let query = filterItem.expression
+              let query = escape(filterItem.expression)
               if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea' || chartInfo.type === 'table') && chartInfo.param) { // 如果是这三个 默认给null
                 chartInfo.param.nullType = chartInfo.param.nullType || 'null'
                 query += '&nullType=' + chartInfo.param.nullType
@@ -749,7 +749,7 @@ export default {
               if (chartInfo.type == 'logs') {
                 return chartTempData
               }
-              return this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
+              return this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=' + step)
             })
             // 一个图表的所有element单独获取数据
             axios.all(axiosArr).then((res) => {
@@ -1227,12 +1227,12 @@ export default {
         const endTime = bus.timeFormate(now, 'yyyy-MM-dd hh:mm:ss')
         // const step = bus.getStep(startTime, endTime)
         this.$nextTick(() => {
-          let query = chartInfo.elements[0].expression
+          let query = escape(chartInfo.elements[0].expression)
           if ((chartInfo.type === 'line' || chartInfo.type === 'bar' || chartInfo.type === 'stackArea') && chartInfo.param) {
             chartInfo.param.nullType = chartInfo.param.nullType || 'null'
             query += '&nullType=' + chartInfo.param.nullType
           }
-          this.$get('/prom/api/v1/query_range?query=' + escape(query) + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {
+          this.$get('/prom/api/v1/query_range?query=' + query + '&start=' + this.$stringTimeParseToUnix(startTime) + '&end=' + this.$stringTimeParseToUnix(endTime) + '&step=5m').then(response => {
             if (response.status === 'success') {
               if (response.data.result) {
                 const series = {
